@@ -1,0 +1,3 @@
+include ':app'
+include ':AdbLib'
+rootProject.name = "Permission Manager X"

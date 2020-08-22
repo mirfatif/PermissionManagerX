@@ -1,0 +1,3 @@
+[submodule "AdbLib"]
+	path = AdbLib
+	url = https://github.com/mirfatif/AdbLib

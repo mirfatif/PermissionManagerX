@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:animateLayoutChanges="true">
+
+    <View
+        android:id="@+id/reference_indication_view"
+        android:layout_width="4dp"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/icon_view"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        tools:ignore="ContentDescription" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/permission_name_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/protection_level_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/app_ops_time_view"
+            android:layout_width="match_parent"
+            android:textColor="@android:color/holo_red_light"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp" />
+
+        <TextView
+            android:id="@+id/app_ops_ref_state_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp" />
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/permission_state_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:padding="8dp" />
+
+    <LinearLayout
+        android:id="@+id/permission_state_spinner_container"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="end|center_vertical"
+        android:padding="8dp">
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/permission_state_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="end|center_vertical"
+            android:background="@null" />
+
+        <TextView
+            android:id="@+id/app_ops_default_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:layout_margin="1dp"
+            android:text="@string/_default"
+            tools:ignore="SmallSp" />
+
+    </LinearLayout>
+
+</LinearLayout>

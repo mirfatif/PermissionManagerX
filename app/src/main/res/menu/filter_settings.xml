@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <item
+    android:id="@+id/action_reset_defaults"
+    android:title="@string/filter_settings_reset_defaults_menu_item"
+    app:showAsAction="never" />
+
+  <item
+    android:id="@+id/action_clear_excluded_apps"
+    android:title="@string/filter_settings_clear_excluded_apps_menu_item"
+    app:showAsAction="never" />
+
+  <item
+    android:id="@+id/action_clear_excluded_perms"
+    android:title="@string/filter_settings_clear_excluded_perms_menu_item"
+    app:showAsAction="never" />
+
+  <item
+      android:id="@+id/action_clear_extra_app_ops"
+      android:title="@string/filter_settings_clear_extra_app_ops_menu_item"
+      app:showAsAction="never" />
+
+</menu>

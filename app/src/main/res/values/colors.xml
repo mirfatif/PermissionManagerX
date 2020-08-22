@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="accentColor">#007F7F</color>
+    <color name="accentTransparent">#1A007F7F</color>
+    <color name="snackBarBackground">#303030</color>
+    <color name="darkTransparent">#B3000000</color>
+    <color name="disabledStateColor">#7F7F7F</color>
+</resources>
