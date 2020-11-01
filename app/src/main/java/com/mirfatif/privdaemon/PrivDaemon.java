@@ -91,7 +91,7 @@ public class PrivDaemon {
         pkgOpsList = appOpsService.getUidOps(uid, ops);
       } catch (NullPointerException e) {
         // Hey Android! You are buggy.
-        if (DEBUGGING) e.printStackTrace();
+        if (DEBUG) e.printStackTrace();
         return new ArrayList<>();
       }
     }
@@ -337,7 +337,7 @@ public class PrivDaemon {
   private static long lastThrowableTimestamp = 0;
 
   private static void rateLimitThrowable(Throwable t) {
-    if (!DEBUGGING && System.currentTimeMillis() - lastThrowableTimestamp < 1000) {
+    if (!DEBUG && System.currentTimeMillis() - lastThrowableTimestamp < 1000) {
       return;
     }
     t.printStackTrace();
@@ -347,7 +347,7 @@ public class PrivDaemon {
   private static long lastLogTimestamp = 0;
 
   private static void rateLimitLog(String tag, String msg, boolean isError) {
-    if (DEBUGGING) {
+    if (DEBUG) {
       if (isError) Log.e(tag, msg + " - " + System.nanoTime());
       else Log.i(tag, msg + " - " + System.nanoTime());
     } else if (System.currentTimeMillis() - lastLogTimestamp >= 1000) {
@@ -358,11 +358,11 @@ public class PrivDaemon {
   }
 
   private void debugLog(String message) {
-    if (DEBUGGING) Log.d(MY_NAME, message + " - " + System.nanoTime());
+    Log.d(MY_NAME, message + " - " + System.nanoTime());
   }
 
   // verbose logging
-  private static boolean DEBUGGING = false;
+  private static boolean DEBUG = false;
 
   // the last String response, afterwards only serialized Objects are sent over stream
   public static final String HELLO = "HELLO";
@@ -399,7 +399,7 @@ public class PrivDaemon {
       return;
     }
 
-    DEBUGGING = Boolean.parseBoolean(arguments[0]);
+    DEBUG = Boolean.parseBoolean(arguments[0]);
 
     // hidden API
     for (int pid : Process.getPidsForCommands(new String[] {MY_NAME})) {
@@ -413,11 +413,11 @@ public class PrivDaemon {
     Socket client = null;
     int port = 0;
     if (Arrays.asList(arguments).contains(CREATE_SOCKET)) {
-      if (DEBUGGING) Log.d(MY_NAME, "Creating server socket");
+      if (DEBUG) Log.d(MY_NAME, "Creating server socket");
       try {
         server = new ServerSocket(0, 0, Inet4Address.getByAddress(new byte[] {127, 0, 0, 1}));
         port = server.getLocalPort();
-        if (DEBUGGING) Log.d(MY_NAME, "Listening at port " + port);
+        if (DEBUG) Log.d(MY_NAME, "Listening at port " + port);
       } catch (IOException e) {
         e.printStackTrace();
         return;
@@ -437,7 +437,7 @@ public class PrivDaemon {
       try {
         Log.i(MY_NAME, "Waiting for connection");
         client = server.accept();
-        if (DEBUGGING) {
+        if (DEBUG) {
           Log.d(MY_NAME, "Connection from " + client.getInetAddress() + ":" + client.getPort());
         }
 
@@ -458,7 +458,7 @@ public class PrivDaemon {
       // stop listening when app process is killed
       readCommandLoop:
       while ((line = reader.readLine()) != null) {
-        mPrivDaemon.debugLog("Received command: " + line);
+        if (DEBUG) mPrivDaemon.debugLog("Received command: " + line);
         /**
          * trim() is required; AdbLib, or more precisely {@link
          * com.cgutman.adblib.AdbProtocol#generateMessage(int, int, int, byte[])}, adds some garbage
@@ -472,7 +472,7 @@ public class PrivDaemon {
             mPrivDaemon.sendResponse(GET_READY);
             break;
           case STOP_LOGGING:
-            DEBUGGING = false;
+            DEBUG = false;
             Log.i(MY_NAME, STOP_LOGGING);
             mPrivDaemon.sendResponse(null);
             break;
@@ -528,11 +528,11 @@ public class PrivDaemon {
         }
       }
       if (client != null) {
-        if (DEBUGGING) Log.d(MY_NAME, "Closing client socket");
+        if (DEBUG) Log.d(MY_NAME, "Closing client socket");
         client.close();
       }
       if (server != null) {
-        if (DEBUGGING) Log.d(MY_NAME, "Closing server socket");
+        if (DEBUG) Log.d(MY_NAME, "Closing server socket");
         server.close();
       }
       Log.i(MY_NAME, "Bye bye!");
