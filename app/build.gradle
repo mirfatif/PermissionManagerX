@@ -1,8 +1,5 @@
 apply plugin: 'com.android.application'
 
-def gitTagsCount = Integer.parseInt(('git tag'.execute([], project.rootDir) | 'wc -l'.execute()).text.trim())
-def gitCurrentTag = 'git describe --tags --abbrev=0'.execute([], project.rootDir).text.trim()
-
 android {
     compileSdkVersion 29
     buildToolsVersion "30.0.2"
@@ -11,8 +8,8 @@ android {
         applicationId "com.mirfatif.permissionmanagerx"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode gitTagsCount
-        versionName gitCurrentTag
+        versionCode 101
+        versionName "v1.01"
     }
 
     buildTypes {
