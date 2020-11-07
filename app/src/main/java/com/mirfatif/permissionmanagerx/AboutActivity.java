@@ -41,6 +41,8 @@ public class AboutActivity extends AppCompatActivity {
 
     findViewById(R.id.source_code)
         .setOnClickListener(v -> Utils.openWebUrl(this, getString(R.string.source_url)));
+    findViewById(R.id.issues)
+        .setOnClickListener(v -> Utils.openWebUrl(this, getString(R.string.issues_url)));
 
     findViewById(R.id.logging).setOnClickListener(v -> handleLogging());
   }

@@ -217,6 +217,9 @@
     <string name="no_browser_installed">"No web browser app installed"</string>
     <string name="collect_logs">Collect Logs</string>
     <string name="collect_logs_summary">Save highly verbose log to file</string>
+    <string name="report_issues">Report Issues</string>
+    <string name="report_issues_summary">Bugs, improvements, suggestions…</string>
+    <string name="issues_url">https://github.com/mirfatif/PermissionManagerX/issues</string>
     <string name="select_log_file">Select file to save log</string>
     <string name="stop_logging">Stop Logging</string>
     <string name="logging_stopped">Logging stopped</string>
