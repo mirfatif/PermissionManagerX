@@ -159,6 +159,22 @@
                 android:drawablePadding="4dp"
                 android:text="@string/faq8_ans" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:drawableStart="@drawable/bullet"
+                android:drawablePadding="4dp"
+                android:text="@string/faq9" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:drawableStart="@drawable/bullet_trans"
+                android:drawablePadding="4dp"
+                android:text="@string/faq9_ans" />
+
             <View
                 android:layout_width="match_parent"
                 android:background="@color/accentColor"
