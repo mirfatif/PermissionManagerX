@@ -1,0 +1,1 @@
+eXtended Permission Manager - a small app to manage permissions and AppOps

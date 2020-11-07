@@ -1,8 +1,10 @@
 # PermissionManagerX
 eXtended Permission Manager for Android - view and set Manifest Permissions and AppOps
 
+<a href='https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' height='100pt'/></a>
+
 ## Features
-For each installed app, on single screen, you can:
+Using e<b>X</b>tended <b>Permission Manager</b>, for each installed app, on single screen, you can:
 
 * View, grant or revoke manifest permissions
 * View AppOps permissions and choose one of multiple modes
@@ -15,10 +17,11 @@ The app evolved from a shell script to a GUI for my personal needs. After a ROM 
 In short, <b>AppOps</b> provide a fine-grained control over many of the manifest permissions. Plus it provides additional controls like background execution, vibration, clipboard access etc. Explore the app to see more.
 
 ## Required Privileges / Permissions
-In order to let Permission Manager X serve you at its best, either the device must be <b>rooted</b> or you need to enable <b>ADB over network</b>.
-<b>android.permission.INTERNET</b> is required to use ADB over network. No connections are made outside the device.
+
+* In order to let Permission Manager X serve you at its best, either the device must be <b>rooted</b> or you need to enable <b>ADB over network</b>.
+* <b>android.permission.INTERNET</b> is required to use ADB over network. No connections are made outside the device.
 
 ## Screenshots
 
-<img src="Screenshots/PMX1.jpg" width="250"> <img src="Screenshots/PMX2.jpg" width="250"> <img src="Screenshots/PMX3.jpg" width="250">
-<img src="Screenshots/PMX4.jpg" width="250"> <img src="Screenshots/PMX5.jpg" width="250"> <img src="Screenshots/PMX6.jpg" width="250">
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" width="250">
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.jpg" width="250">
