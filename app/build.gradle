@@ -82,3 +82,7 @@ allprojects {
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
 }
+
+apply plugin: 'com.github.sherter.google-java-format'
+preBuild.dependsOn(verifyGoogleJavaFormat)
+preBuild.mustRunAfter(verifyGoogleJavaFormat)
