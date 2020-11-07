@@ -52,6 +52,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -850,7 +851,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     if (item.getItemId() == R.id.action_donate) {
-      View layout = getLayoutInflater().inflate(R.layout.qr_code_alert_dialog, null);
+      View layout = getLayoutInflater().inflate(R.layout.donate_alert_dialog, null);
+      ((TextView) layout.findViewById(R.id.play_store_link))
+          .setMovementMethod(
+              BetterLinkMovementMethod.newInstance()
+                  .setOnLinkClickListener(
+                      (tView, url) -> {
+                        Utils.openWebUrl(this, url);
+                        return true;
+                      }));
       new AlertDialog.Builder(this).setView(layout).create().show();
       return true;
     }

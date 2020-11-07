@@ -224,6 +224,8 @@
     <!--Donate-->
     <string name="bitcoin">Bitcoin</string>
     <string name="bitcoin_address">18ijfsv5fcDKQ6CTe4wycKxZMmti4oUXjW</string>
+    <string name="play_store_link"><a href="https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx">Paid
+        version on Play Store</a></string>
 
     <!--HelpActivity FAQs-->
     <string name="faq">FAQs</string>
