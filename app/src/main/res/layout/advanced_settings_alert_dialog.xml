@@ -1,113 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:animateLayoutChanges="true">
+
+  <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingStart="24dp"
     android:paddingEnd="24dp"
     android:paddingBottom="8dp"
-    android:orientation="vertical"
-    android:animateLayoutChanges="true">
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="match_parent"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="4dp"
+      android:layout_marginBottom="4dp">
+
+      <TextView
+        android:id="@+id/use_hidden_apis_title"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp">
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/black"
+        android:text="@string/use_hidden_apis"/>
 
-        <TextView
-            android:id="@+id/use_hidden_apis_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:textColor="@android:color/black"
-            android:text="@string/use_hidden_apis" />
-
-        <CheckBox
-            android:id="@+id/use_hidden_apis"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="24dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="-2dp" />
+      <CheckBox
+        android:id="@+id/use_hidden_apis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="24dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="-2dp"/>
 
     </LinearLayout>
 
     <View
-        android:layout_width="match_parent"
-        android:background="@color/accentColor"
-        android:layout_height="1dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp" />
+      android:layout_width="match_parent"
+      android:background="@color/accentColor"
+      android:layout_height="1dp"
+      android:layout_marginTop="8dp"
+      android:layout_marginBottom="8dp"/>
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/root_only_settings"
-        android:layout_marginBottom="8dp"
-        android:textColor="@color/accentColor" />
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/root_only_settings"
+      android:layout_marginBottom="8dp"
+      android:textColor="@color/accentColor"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="4dp"
+      android:layout_marginBottom="4dp">
+
+      <TextView
+        android:id="@+id/use_socket_title"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp">
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/black"
+        android:text="@string/talk_to_daemon_over_socket"/>
 
-        <TextView
-            android:id="@+id/use_socket_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:textColor="@android:color/black"
-            android:text="@string/talk_to_daemon_over_socket" />
-
-        <CheckBox
-            android:id="@+id/use_socket"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="24dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="-2dp" />
+      <CheckBox
+        android:id="@+id/use_socket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="24dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="-2dp"/>
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="4dp"
+      android:layout_marginBottom="4dp">
+
+      <TextView
+        android:id="@+id/daemon_uid_list_title"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp">
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/black"
+        android:text="@string/run_daemon_as"/>
 
-        <TextView
-            android:id="@+id/daemon_uid_list_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:textColor="@android:color/black"
-            android:text="@string/run_daemon_as" />
+      <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/daemon_uid_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="24dp"
+        android:entries="@array/daemon_uids"
+        android:gravity="end"
+        android:background="@null"
+        android:layout_marginStart="4dp"/>
 
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/daemon_uid_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="24dp"
-            android:entries="@array/daemon_uids"
-            android:gravity="end"
-            android:background="@null"
-            android:layout_marginStart="4dp"/>
-
-        <ImageView
-            android:id="@+id/daemon_uid_list_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:layout_gravity="center_vertical|end"
-            android:src="@drawable/arrow_drop_down"
-            tools:ignore="ContentDescription" />
+      <ImageView
+        android:id="@+id/daemon_uid_list_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_gravity="center_vertical|end"
+        android:src="@drawable/arrow_drop_down"
+        tools:ignore="ContentDescription"/>
 
     </LinearLayout>
 
-</LinearLayout>
+  </LinearLayout>
+</ScrollView>
