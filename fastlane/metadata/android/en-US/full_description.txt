@@ -1,19 +1,18 @@
-<big><b>Features:</b></big>
-Using e<b>X</b>tended <b>Permission Manager</b>, for each installed app, on single screen, you can:
-<ul>
-  <li>View, grant or revoke manifest permissions</li>
-  <li>View AppOps permissions and choose one of multiple modes</li>
-  <li>Set your desired reference value for every changeable permission</li>
-</ul>
+<i>Permission Manager X</i> is a small app to manage permissions and AppOps for the apps installed on your device. It evolved from a shell script to a GUI for my personal needs. After a ROM upgrade or changing device, it's a time-taking process to review all installed apps for granted permissions and revoke the unnecessary ones (after all  <b><i>privacy matters</i></b>). To come up with a solution, you can set <b>reference states</b> of permissions which can be quickly backed up and restored. Colored bars at left indicate reference states and make it quite easy to review packages and permissions at a glance.
 
-The app evolved from a shell script to a GUI for my personal needs. After a ROM upgrade or changing device, it's a time-taking process to review all installed apps for granted permissions and revoke the unnecessary ones (after all  <b><i>privacy matters</i></b>). To come up with a solution, you can set <b>reference states</b> of permissions which can be quickly backed up and restored. Colored bars at left indicate reference states and make it quite easy to review packages and permissions at a glance.
-
-<b>Manifest permissions</b> are those normally called permissions e.g. Storage, Camera etc. AppOps (app operations) is a robust framework Android uses at back end for access control. With every Android release manifest permissions are becoming more dependent on AppOps. So it's fun to control both simultaneously and see how they relate to each other.
+<b>Manifest permissions</b> are normally simply called „permissions“ (e.g. Storage, Camera). <b>AppOps</b> (app operations) is a robust framework Android uses as back-end for access control. With every Android release manifest permissions are becoming more dependent on AppOps. So it's fun to control both simultaneously and see how they relate to each other.
 
 In short, <b>AppOps</b> provide a fine-grained control over many of the manifest permissions. Plus it provides additional controls like background execution, vibration, clipboard access etc. Explore the app to see more.
 
+<big><b>Features:</b></big>
+
+Using e<b>X</b>tended <b>Permission Manager</b>, for each installed app, on single screen, you can:
+
+* View, grant or revoke manifest permissions
+* View AppOps permissions and choose one of multiple modes
+* Set your desired reference value for every changeable permission
+
 <big><b>Required Privileges / Permissions:</b></big>
-<ul>
-  <li>In order to let Permission Manager X serve you at its best, either the device must be <b>rooted</b> or you need to enable <b>ADB over network</b>.</li>
-  <li><b>android.permission.INTERNET</b> is required to use ADB over network. No connections are made outside the device.</li>
-</ul>
+
+* In order to let <i>Permission Manager X</i> serve you at its best, either the device must be <b>rooted</b> or you need to enable <b>ADB over network</b>.
+* <code>android.permission.INTERNET</code> is required to use ADB over network. No connections are made outside the device.
