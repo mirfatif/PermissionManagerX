@@ -1,7 +1,11 @@
 # PermissionManagerX
 eXtended Permission Manager for Android - view and set Manifest Permissions and AppOps
 
-<a href='https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' height='100pt'/></a>
+<!--a href="https://f-droid.org/packages/com.mirfatif.permissionmanagerx"><img alt="Get it on F-Droid" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" height="100"></a-->
+<a href="https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="100"></a>
+<a href="https://apt.izzysoft.de/fdroid/index/apk/com.mirfatif.permissionmanagerx"><img alt="Get it on F-Droid" src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="100"></a>
+<a href="https://amzn.to/2Ij50j4"><img alt="Available at Amazon AppStore" src="https://user-images.githubusercontent.com/33040459/98554253-56c9d600-22c2-11eb-83ba-bd24fb1263ae.png" height="100"></a>
+<a href="https://labs.xda-developers.com/store/app/com.mirfatif.permissionmanagerx"><img alt="Get it on XDALabs" src="https://user-images.githubusercontent.com/33040459/98555696-110e0d00-22c4-11eb-8dd2-35903886cfce.png" height="100"></a>
 
 ## Features
 Using e<b>X</b>tended <b>Permission Manager</b>, for each installed app, on single screen, you can:
@@ -20,6 +24,24 @@ In short, <b>AppOps</b> provide a fine-grained control over many of the manifest
 
 * In order to let Permission Manager X serve you at its best, either the device must be <b>rooted</b> or you need to enable <b>ADB over network</b>.
 * <b>android.permission.INTERNET</b> is required to use ADB over network. No connections are made outside the device.
+
+## How to Build
+* `build.gradle` calls 2 shell scripts to build native binaries and a `.dex` file. So Linux environment is expected with all standard tools.
+* Download code: `git clone --recurse-submodules https://github.com/mirfatif/PermissionManagerX.git && cd PermissionManagerX`
+* Set `sdk.dir` in `local.properties` to the directory containing Android SDK API level (platform) 29 and build-tools 30.0.2 (and obviously the latest SDK `tools` and `platform-tools`).
+* App uses a number of AOSP's hidden/internal APIs which are not available with standard SDK. Replace `android.jar` with the one downloaded from here: https://github.com/anggrayudi/android-hidden-api.
+* Set `ndk.dir` in `local.properties` to the directory containing Android NDK (I used r21d (21.3)).
+* Set `JAVA_HOME` environment variable to JDK 11 (`verifyGoogleJavaFormat` task won't work with JDK 1.8). Or `java` and `javac` must be on `PATH`.
+* Run `./gradlew` with appropriate task name appended. Or use IntelliJ IDEA / Android Studio.
+
+## Third-Party Libraries
+Credits and thanks to the developers of:
+* https://github.com/anggrayudi/android-hidden-api
+* https://github.com/cgutman/AdbLib
+* https://github.com/sherter/google-java-format-gradle-plugin
+* https://github.com/material-components/material-components-android
+* https://github.com/saket/Better-Link-Movement-Method
+* https://github.com/square/leakcanary
 
 ## Screenshots
 
