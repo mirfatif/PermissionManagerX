@@ -1,20 +1,23 @@
 #!/bin/sh -ex
 
+# must be set in order to get CLASSPATH and to use 'dx' tool
 [ -n "$ANDROID_SDK" ]
-[ -n "$ANDROID_STUDIO" ]
 
 BCP="$ANDROID_SDK/platforms/android-29/android.jar"
 
-MY_DIR=$(realpath $(dirname $0))
+# 'java' and 'javac' must be on PATH
+[ -z "$JAVA_HOME" ] || export PATH=${JAVA_HOME}/bin:$PATH
 
-cd $MY_DIR/app/src/main/java/com/mirfatif/privdaemon
+MY_DIR=$(realpath "$(dirname "$0")")
+
+cd "$MY_DIR/app/src/main/java/com/mirfatif/privdaemon"
 
 SOURCE=*.java
 DEX=$MY_DIR/app/src/main/assets/daemon.dex
 
-if [ -f $DEX ]; then
+if [ -f "$DEX" ]; then
 	for file in $SOURCE; do
-		if [ $file -nt $DEX ]; then
+		if [ "$file" -nt "$DEX" ]; then
 			BUILD=Y
 			break
 		fi
@@ -26,16 +29,14 @@ fi
 
 rm -rf build
 mkdir -p build
-$ANDROID_STUDIO/jre/bin/javac -g -deprecation -source 1.8 -target 1.8 -d build \
-	-bootclasspath $BCP -classpath $MY_DIR/app/src/main/java${LIBS} *.java
+javac -g -deprecation -source 1.8 -target 1.8 -d build \
+	-bootclasspath "$BCP" -classpath "$MY_DIR/app/src/main/java${LIBS}" *.java
 
 #cd $MY_DIR/app/build/intermediates/javac/debug/classes
 #cd $MY_DIR/app/build/intermediates/javac/release/classes
 
-rm -f $DEX
+rm -f "$DEX"
 
-export PATH=$ANDROID_STUDIO/jre/bin:$PATH
-
-$ANDROID_SDK/build-tools/30.0.2/dx --min-sdk-version=24 --verbose --dex --output=$DEX build/
+"$ANDROID_SDK"/build-tools/30.0.2/dx --min-sdk-version=24 --verbose --dex --output="$DEX" build/
 
 rm -rf build

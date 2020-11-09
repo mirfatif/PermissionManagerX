@@ -52,7 +52,13 @@ dependencies {
 }
 
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def sdkDir = properties.getProperty('sdk.dir')
+def ndkDir = properties.getProperty('ndk.dir')
+
 task buildDaemon(type: Exec) {
+    environment 'ANDROID_SDK', sdkDir
     workingDir "${buildDir}/../.."
     commandLine './build_daemon.sh'
     doLast {
@@ -63,6 +69,7 @@ task buildDaemon(type: Exec) {
 }
 
 task buildSetPriv(type: Exec) {
+    environment 'ANDROID_NDK', ndkDir
     workingDir "${buildDir}/../.."
     commandLine './build_set_priv.sh'
     doLast {
