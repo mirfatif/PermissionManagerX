@@ -1,4 +1,4 @@
-# PermissionManagerX
+# PermissionManagerX [![Download](https://img.shields.io/github/v/release/mirfatif/PermissionManagerX?label="Download")](https://github.com/mirfatif/PermissionManagerX/releases/latest)
 eXtended Permission Manager for Android - view and set Manifest Permissions and AppOps
 
 <!--a href="https://f-droid.org/packages/com.mirfatif.permissionmanagerx"><img alt="Get it on F-Droid" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" height="100"></a-->
