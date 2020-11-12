@@ -235,7 +235,7 @@ class Utils {
     return new String(newCodePoints, 0, outOffset);
   }
 
-  static void openWebUrl(Activity activity, String url) {
+  static boolean openWebUrl(Activity activity, String url) {
     List<ResolveInfo> customTabsServices =
         App.getContext()
             .getPackageManager()
@@ -249,7 +249,7 @@ class Utils {
       } catch (ActivityNotFoundException e) {
         Toast.makeText(App.getContext(), R.string.no_browser_installed, Toast.LENGTH_LONG).show();
       }
-      return;
+      return true;
     }
 
     CustomTabColorSchemeParams colorSchemeParams =
@@ -265,6 +265,22 @@ class Utils {
             .build();
 
     customTabsIntent.launchUrl(activity, Uri.parse(url));
+
+    return true;
+  }
+
+  static boolean sendMail(Activity activity, String body) {
+    Intent emailIntent = new Intent(Intent.ACTION_SENDTO).setData(Uri.parse("mailto:"));
+    emailIntent.putExtra(
+        Intent.EXTRA_EMAIL, new String[] {App.getContext().getString(R.string.email_address)});
+    emailIntent.putExtra(Intent.EXTRA_SUBJECT, App.getContext().getString(R.string.app_name));
+    if (body != null) emailIntent.putExtra(Intent.EXTRA_TEXT, body);
+    try {
+      activity.startActivity(emailIntent);
+    } catch (ActivityNotFoundException e) {
+      Toast.makeText(App.getContext(), R.string.no_email_app_installed, Toast.LENGTH_LONG).show();
+    }
+    return true;
   }
 
   static boolean isNightMode(Activity activity) {

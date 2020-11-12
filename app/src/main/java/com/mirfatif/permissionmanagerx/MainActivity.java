@@ -1,6 +1,7 @@
 package com.mirfatif.permissionmanagerx;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -851,17 +852,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     if (item.getItemId() == R.id.action_donate) {
-      View layout = getLayoutInflater().inflate(R.layout.donate_alert_dialog, null);
-      ((TextView) layout.findViewById(R.id.play_store_link))
-          .setMovementMethod(
-              BetterLinkMovementMethod.newInstance()
-                  .setOnLinkClickListener(
-                      (tView, url) -> {
-                        Utils.openWebUrl(this, url);
-                        return true;
-                      }));
-      new AlertDialog.Builder(this).setView(layout).create().show();
-      return true;
+      return showDonateDialog();
     }
 
     if (item.getItemId() == R.id.action_about) {
@@ -1060,6 +1051,45 @@ public class MainActivity extends AppCompatActivity {
 
     // do not show success/failure dialogs on activity changes
     backupRestoreResult.removeObservers(this);
+  }
+
+  //////////////////////////////////////////////////////////////////
+  ////////////////////////////// DONATE ////////////////////////////
+  //////////////////////////////////////////////////////////////////
+
+  private boolean showDonateDialog() {
+    View layout = getLayoutInflater().inflate(R.layout.donate_alert_dialog, null);
+
+    ((TextView) layout.findViewById(R.id.bitcoin_link))
+        .setMovementMethod(
+            BetterLinkMovementMethod.newInstance()
+                .setOnLinkClickListener((textView, uri) -> handleBitcoinClick()));
+
+    ((TextView) layout.findViewById(R.id.bank_account_link))
+        .setMovementMethod(
+            BetterLinkMovementMethod.newInstance()
+                .setOnLinkClickListener(
+                    (tView, url) ->
+                        Utils.sendMail(this, getString(R.string.bank_account_request))));
+
+    ((TextView) layout.findViewById(R.id.play_store_link))
+        .setMovementMethod(
+            BetterLinkMovementMethod.newInstance()
+                .setOnLinkClickListener((tView, url) -> Utils.openWebUrl(this, url)));
+
+    new AlertDialog.Builder(this).setView(layout).create().show();
+    return true;
+  }
+
+  private boolean handleBitcoinClick() {
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+    intent.setData(Uri.parse("bitcoin:" + getString(R.string.bitcoin_address)));
+    if (getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_ALL).isEmpty()) {
+      Toast.makeText(App.getContext(), R.string.no_bitcoin_app_installed, Toast.LENGTH_LONG).show();
+    } else {
+      startActivity(intent);
+    }
+    return true;
   }
 
   //////////////////////////////////////////////////////////////////

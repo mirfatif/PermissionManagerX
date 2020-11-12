@@ -25,11 +25,7 @@ public class HelpActivity extends AppCompatActivity {
   void handleUrl(TextView textView) {
     textView.setMovementMethod(
         BetterLinkMovementMethod.newInstance()
-            .setOnLinkClickListener(
-                (tView, url) -> {
-                  Utils.openWebUrl(this, url);
-                  return true;
-                }));
+            .setOnLinkClickListener((tView, url) -> Utils.openWebUrl(this, url)));
   }
 
   @Override

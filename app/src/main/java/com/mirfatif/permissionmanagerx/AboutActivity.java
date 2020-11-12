@@ -1,6 +1,5 @@
 package com.mirfatif.permissionmanagerx;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,7 +36,7 @@ public class AboutActivity extends AppCompatActivity {
 
     setLogTitle();
 
-    findViewById(R.id.contact).setOnClickListener(v -> sendEmail());
+    findViewById(R.id.contact).setOnClickListener(v -> Utils.sendMail(this, null));
 
     findViewById(R.id.source_code)
         .setOnClickListener(v -> Utils.openWebUrl(this, getString(R.string.source_url)));
@@ -45,19 +44,6 @@ public class AboutActivity extends AppCompatActivity {
         .setOnClickListener(v -> Utils.openWebUrl(this, getString(R.string.issues_url)));
 
     findViewById(R.id.logging).setOnClickListener(v -> handleLogging());
-  }
-
-  private void sendEmail() {
-    Intent emailIntent =
-        new Intent(Intent.ACTION_SENDTO)
-            .setData(Uri.parse("mailto:"))
-            .putExtra(Intent.EXTRA_EMAIL, new String[] {getString(R.string.email_address)})
-            .putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
-    try {
-      startActivity(emailIntent);
-    } catch (ActivityNotFoundException e) {
-      Toast.makeText(App.getContext(), R.string.no_email_app_installed, Toast.LENGTH_LONG).show();
-    }
   }
 
   private boolean logInProgress = false;

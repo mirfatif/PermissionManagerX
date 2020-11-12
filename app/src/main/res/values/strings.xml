@@ -225,8 +225,11 @@
     <string name="logging_stopped">Logging stopped</string>
 
     <!--Donate-->
-    <string name="bitcoin">Bitcoin</string>
+    <string name="bitcoin_link"><a href="bitcoin:">Bitcoin</a></string>
     <string name="bitcoin_address">18ijfsv5fcDKQ6CTe4wycKxZMmti4oUXjW</string>
+    <string name="no_bitcoin_app_installed">"Bitcoin Wallet app not found"</string>
+    <string name="bank_account_link"><a href="mailto:">Ask for Bank Account</a></string>
+    <string name="bank_account_request">Hello,\n\nI need your IBAN and SWIFT/BIC to make a donation.</string>
     <string name="play_store_link"><a href="https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx">Paid
         version on Play Store</a></string>
 
