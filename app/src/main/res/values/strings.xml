@@ -1,242 +1,242 @@
 <resources>
-    <string name="app_name">Permission Manager X</string>
+  <string name="app_name">Permission Manager X</string>
 
-    <!--General strings-->
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="save">Save</string>
-    <string name="_default">Default</string>
-    <string name="open">open</string>
-    <string name="close">close</string>
+  <!--General strings-->
+  <string name="yes">Yes</string>
+  <string name="no">No</string>
+  <string name="save">Save</string>
+  <string name="_default">Default</string>
+  <string name="open">open</string>
+  <string name="close">close</string>
 
-    <!--MainActivity Preferences-->
-    <string name="main_settings_daemon_uid_key">main_settings_daemon_uid</string>
+  <!--MainActivity Preferences-->
+  <string name="main_settings_daemon_uid_key">main_settings_daemon_uid</string>
 
-    <!--MainActivity Preferences corresponding to default bool values-->
-    <string name="main_settings_deep_search_key">main_settings_deep_search</string>
-    <bool name="main_settings_deep_search_default">false</bool>
-    <string name="main_settings_case_sensitive_search_key">main_settings_case_sensitive_search</string>
-    <bool name="main_settings_case_sensitive_search_default">false</bool>
-    <string name="main_settings_dark_theme_key">main_settings_dark_theme</string>
-    <bool name="main_settings_dark_theme_default">true</bool>
-    <string name="main_settings_use_hidden_apis_key">main_settings_use_hidden_apis</string>
-    <bool name="main_settings_use_hidden_apis_default">true</bool>
-    <string name="main_settings_use_socket_key">main_settings_use_socket</string>
-    <bool name="main_settings_use_socket_default">false</bool>
-    <string name="main_settings_root_granted_key">main_settings_root_granted</string>
-    <bool name="main_settings_root_granted_default">false</bool>
-    <string name="main_settings_adb_connected_key">main_settings_adb_connected</string>
-    <bool name="main_settings_adb_connected_default">false</bool>
+  <!--MainActivity Preferences corresponding to default bool values-->
+  <string name="main_settings_deep_search_key">main_settings_deep_search</string>
+  <bool name="main_settings_deep_search_default">false</bool>
+  <string name="main_settings_case_sensitive_search_key">main_settings_case_sensitive_search</string>
+  <bool name="main_settings_case_sensitive_search_default">false</bool>
+  <string name="main_settings_dark_theme_key">main_settings_dark_theme</string>
+  <bool name="main_settings_dark_theme_default">true</bool>
+  <string name="main_settings_use_hidden_apis_key">main_settings_use_hidden_apis</string>
+  <bool name="main_settings_use_hidden_apis_default">true</bool>
+  <string name="main_settings_use_socket_key">main_settings_use_socket</string>
+  <bool name="main_settings_use_socket_default">false</bool>
+  <string name="main_settings_root_granted_key">main_settings_root_granted</string>
+  <bool name="main_settings_root_granted_default">false</bool>
+  <string name="main_settings_adb_connected_key">main_settings_adb_connected</string>
+  <bool name="main_settings_adb_connected_default">false</bool>
 
-    <!--MainActivity Navigation Drawer / menu items-->
-    <string name="search_menu_item">Search</string>
-    <string name="filter_menu_item">Exclusion Filters</string>
-    <string name="root_menu_item">Root Access</string>
-    <string name="adb_menu_item">ADB Shell</string>
-    <string name="dark_theme_menu_item">Force Dark Theme</string>
-    <string name="backup_restore_menu_item">Backup / Restore</string>
-    <string name="help_menu_item">Help</string>
-    <string name="donate_menu_item">Donate</string>
-    <string name="about_menu_item">About</string>
-    <string name="advanced_settings_menu_item">Advanced Settings</string>
-    <string name="hidden_apis">Hidden APIs</string>
-    <string name="use_hidden_apis">Use Hidden APIs</string>
-    <string name="root_only_settings">Root-Only Settings</string>
-    <string name="talk_to_daemon_over_socket">Talk to Daemon over Socket</string>
-    <string name="run_daemon_as">Run Privileged Daemon as</string>
-    <string name="daemon_uid_system">System</string>
-    <string name="daemon_uid_root">Root</string>
-    <string name="daemon_uid_adb">ADB</string>
+  <!--MainActivity Navigation Drawer / menu items-->
+  <string name="search_menu_item">Search</string>
+  <string name="filter_menu_item">Exclusion Filters</string>
+  <string name="root_menu_item">Root Access</string>
+  <string name="adb_menu_item">ADB Shell</string>
+  <string name="dark_theme_menu_item">Force Dark Theme</string>
+  <string name="backup_restore_menu_item">Backup / Restore</string>
+  <string name="help_menu_item">Help</string>
+  <string name="donate_menu_item">Donate</string>
+  <string name="about_menu_item">About</string>
+  <string name="advanced_settings_menu_item">Advanced Settings</string>
+  <string name="hidden_apis">Hidden APIs</string>
+  <string name="use_hidden_apis">Use Hidden APIs</string>
+  <string name="root_only_settings">Root-Only Settings</string>
+  <string name="talk_to_daemon_over_socket">Talk to Daemon over Socket</string>
+  <string name="run_daemon_as">Run Privileged Daemon as</string>
+  <string name="daemon_uid_system">System</string>
+  <string name="daemon_uid_root">Root</string>
+  <string name="daemon_uid_adb">ADB</string>
 
-    <!--MainActivity strings-->
-    <string name="deep_search">Deep Search (Permissions)</string>
-    <string name="case_sensitive_search">Case Sensitive Search</string>
-    <string name="grant_root_or_adb">Grant root access or connect to ADB to start Privileged Daemon.</string>
-    <string name="logging">Logging</string>
-    <string name="start_logging">Start logging</string>
-    <string name="logging_warning">App may respond slow due to logging, and log file may grow up to very
+  <!--MainActivity strings-->
+  <string name="deep_search">Deep Search (Permissions)</string>
+  <string name="case_sensitive_search">Case Sensitive Search</string>
+  <string name="grant_root_or_adb">Grant root access or connect to ADB to start Privileged Daemon.</string>
+  <string name="logging">Logging</string>
+  <string name="start_logging">Start logging</string>
+  <string name="logging_warning">App may respond slow due to logging, and log file may grow up to very
         large size. After 5 minutes logging is auto-stopped.</string>
-    <string name="logging_failed">Logging failed</string>
-    <string name="daemon_logging_failed">Logging for privileged daemon failed</string>
-    <string name="creating_packages_list">Creating packages list</string>
-    <string name="reading_reference_perms">Reading reference perms</string>
-    <string name="mapping_op_to_switch">Mapping op to switch</string>
-    <string name="listing_op_default_modes">Listing op default modes</string>
-    <string name="mapping_perms_to_ops">Mapping perms to ops</string>
-    <string name="starting_daemon">Starting daemon</string>
-    <string name="checking_root_access">Checking root access</string>
-    <string name="checking_adb_access">Checking ADB access</string>
-    <string name="root_granted">Root granted</string>
-    <string name="getting_root_fail">Getting root privileges failed</string>
-    <string name="are_you_rooted">. Are you rooted?</string>
-    <string name="connected_to_adb">Connected to ADB</string>
-    <string name="adb_connect_fail">Connecting to ADB failed</string>
-    <string name="adb_connect_fail_long">Connecting to ADB failed. Enable <b><i>ADB Over Network</i></b>
+  <string name="logging_failed">Logging failed</string>
+  <string name="daemon_logging_failed">Logging for privileged daemon failed</string>
+  <string name="creating_packages_list">Creating packages list</string>
+  <string name="reading_reference_perms">Reading reference perms</string>
+  <string name="mapping_op_to_switch">Mapping op to switch</string>
+  <string name="listing_op_default_modes">Listing op default modes</string>
+  <string name="mapping_perms_to_ops">Mapping perms to ops</string>
+  <string name="starting_daemon">Starting daemon</string>
+  <string name="checking_root_access">Checking root access</string>
+  <string name="checking_adb_access">Checking ADB access</string>
+  <string name="root_granted">Root granted</string>
+  <string name="getting_root_fail">Getting root privileges failed</string>
+  <string name="are_you_rooted">. Are you rooted?</string>
+  <string name="connected_to_adb">Connected to ADB</string>
+  <string name="adb_connect_fail">Connecting to ADB failed</string>
+  <string name="adb_connect_fail_long">Connecting to ADB failed. Enable <b><i>ADB Over Network</i></b>
         and come back to connect. Allow ADB authentication if prompted.</string>
-    <string name="daemon_failed">Starting privileged daemon failed</string>
-    <string name="backup">Backup</string>
-    <string name="restore">Restore</string>
-    <string name="choose_backup_restore">You can backup or restore preferences and permission references.</string>
-    <string name="select_backup_file">Select backup file</string>
-    <string name="backup_in_progress">Backup in progress</string>
-    <string name="restore_in_progress">Restore in progress</string>
-    <string name="backup_restore_process_entries">Processed %1$d preferences and
+  <string name="daemon_failed">Starting privileged daemon failed</string>
+  <string name="backup">Backup</string>
+  <string name="restore">Restore</string>
+  <string name="choose_backup_restore">You can backup or restore preferences and permission references.</string>
+  <string name="select_backup_file">Select backup file</string>
+  <string name="backup_in_progress">Backup in progress</string>
+  <string name="restore_in_progress">Restore in progress</string>
+  <string name="backup_restore_process_entries">Processed %1$d preferences and
         %2$d permission references.</string>
-    <string name="backup_restore_bad_entries">\nSkipped %1$d bad entries.</string>
-    <string name="backup_restore_failed">Failed. Some error occurred.</string>
-    <string name="privileges">"Privileges"</string>
-    <string name="hidden_apis_warning">Hidden APIs are blacklisted on your device, switching to daemon mode.
+  <string name="backup_restore_bad_entries">\nSkipped %1$d bad entries.</string>
+  <string name="backup_restore_failed">Failed. Some error occurred.</string>
+  <string name="privileges">"Privileges"</string>
+  <string name="hidden_apis_warning">Hidden APIs are blacklisted on your device, switching to daemon mode.
     </string>
-    <string name="hidden_apis_confirmation">Some ROMs allow using system\'s hidden APIs. Daemon mode might
+  <string name="hidden_apis_confirmation">Some ROMs allow using system\'s hidden APIs. Daemon mode might
         be slower. Stop using hidden APIs?</string>
-    <string name="granting_permission_failed">Granting permission failed</string>
+  <string name="granting_permission_failed">Granting permission failed</string>
 
-    <!-- Buttons-->
-    <string name="disable">Disable</string>
-    <string name="enable">Enable</string>
-    <string name="exclude">Exclude</string>
-    <string name="clear_reference">Clear Ref</string>
-    <string name="set_reference">Set Ref</string>
+  <!-- Buttons-->
+  <string name="disable">Disable</string>
+  <string name="enable">Enable</string>
+  <string name="exclude">Exclude</string>
+  <string name="clear_reference">Clear Ref</string>
+  <string name="set_reference">Set Ref</string>
 
-    <!--PackageActivity menu items-->
-    <string name="package_information_menu_item">App Info</string>
-    <string name="reset_app_ops">Reset AppOps</string>
-    <string name="reset_app_ops_confirmation">Reset all AppOps to default modes?</string>
-    <string name="clear_references">Clear References</string>
-    <string name="clear_references_confirmation">Clear all permission references?</string>
-    <string name="set_references">Set References</string>
-    <string name="set_references_confirmation">Set all current permission states as references?
+  <!--PackageActivity menu items-->
+  <string name="package_information_menu_item">App Info</string>
+  <string name="reset_app_ops">Reset AppOps</string>
+  <string name="reset_app_ops_confirmation">Reset all AppOps to default modes?</string>
+  <string name="clear_references">Clear References</string>
+  <string name="clear_references_confirmation">Clear all permission references?</string>
+  <string name="set_references">Set References</string>
+  <string name="set_references_confirmation">Set all current permission states as references?
     </string>
 
-    <!--PackageActivity Dialogs-->
-    <string name="exclude_app_from_visible_list">Exclude app from visible list.</string>
-    <string name="enable_app_or_exclude_from_visible_list">Enable app or exclude from visible list.</string>
-    <string name="disable_app_or_exclude_from_visible_list">Disable app or exclude from visible list.</string>
+  <!--PackageActivity Dialogs-->
+  <string name="exclude_app_from_visible_list">Exclude app from visible list.</string>
+  <string name="enable_app_or_exclude_from_visible_list">Enable app or exclude from visible list.</string>
+  <string name="disable_app_or_exclude_from_visible_list">Disable app or exclude from visible list.</string>
 
-    <!--PackageActivity-->
-    <string name="something_bad_happened">Something bad happened</string>
-    <string name="uid_mode_app_ops_warning">This is a UID mode AppOps.
+  <!--PackageActivity-->
+  <string name="something_bad_happened">Something bad happened</string>
+  <string name="uid_mode_app_ops_warning">This is a UID mode AppOps.
         Changing it also affects %1$d other packages.\nContinue?
     </string>
-    <string name="extra_ops_cant_be_excluded">Extra AppOps cannot be excluded from visible list.</string>
-    <string name="exclude_perm_from_list">Exclude permission from visible list.</string>
-    <string name="set_perm_state_reference">Set %1$s state as reference.</string>
-    <string name="clear_perm_state_reference">Clear %1$s state as reference.</string>
-    <string name="permission_filtered_out">permission filtered out</string>
-    <string name="count_permissions_filtered_out">%1$d permissions filtered out</string>
-    <string name="requested_no_permissions">Requested no permissions</string>
-    <string name="protection_level">Protection level: %1$s</string>
-    <string name="should_be">Should be %1$s</string>
+  <string name="extra_ops_cant_be_excluded">Extra AppOps cannot be excluded from visible list.</string>
+  <string name="exclude_perm_from_list">Exclude permission from visible list.</string>
+  <string name="set_perm_state_reference">Set %1$s state as reference.</string>
+  <string name="clear_perm_state_reference">Clear %1$s state as reference.</string>
+  <string name="permission_filtered_out">permission filtered out</string>
+  <string name="count_permissions_filtered_out">%1$d permissions filtered out</string>
+  <string name="requested_no_permissions">Requested no permissions</string>
+  <string name="protection_level">Protection level: %1$s</string>
+  <string name="should_be">Should be %1$s</string>
 
-    <!--PreferenceActivity-->
-    <string name="filter_settings">Filter Settings</string>
-    <string name="excluded_apps_summary">Long press on a package name to exclude it</string>
-    <string name="excluded_perms_summary">Long press on a permission name to exclude it</string>
-    <string name="extra_app_ops_summary">AppOps always shown in every app</string>
-    <string name="extra_app_ops_summary_count">(Total: %1$d)</string>
-    <string name="and_other_count">and %1$d other</string>
-    <string name="and_others_count">and %1$d others</string>
+  <!--PreferenceActivity-->
+  <string name="filter_settings">Filter Settings</string>
+  <string name="excluded_apps_summary">Long press on a package name to exclude it</string>
+  <string name="excluded_perms_summary">Long press on a permission name to exclude it</string>
+  <string name="extra_app_ops_summary">AppOps always shown in every app</string>
+  <string name="extra_app_ops_summary_count">(Total: %1$d)</string>
+  <string name="and_other_count">and %1$d other</string>
+  <string name="and_others_count">and %1$d others</string>
 
-    <!--PreferencesActivity packages titles, keys and defaults-->
-    <string name="filter_settings_packages_title">Packages</string>
-    <string name="filter_settings_exclude_no_icon_apps_key">filter_settings_exclude_no_icon_apps</string>
-    <bool name="filter_settings_exclude_no_icon_apps_default">true</bool>
-    <string name="filter_settings_exclude_no_icon_apps_title">Exclude apps without icons</string>
-    <string name="filter_settings_exclude_user_apps_key">filter_settings_exclude_user_apps</string>
-    <bool name="filter_settings_exclude_user_apps_default">false</bool>
-    <string name="filter_settings_exclude_user_apps_title">Exclude user apps</string>
-    <string name="filter_settings_exclude_system_apps_key">filter_settings_exclude_system_apps</string>
-    <bool name="filter_settings_exclude_system_apps_default">false</bool>
-    <string name="filter_settings_exclude_system_apps_title">Exclude system apps</string>
-    <string name="filter_settings_exclude_framework_apps_key">filter_settings_exclude_framework_apps</string>
-    <bool name="filter_settings_exclude_framework_apps_default">true</bool>
-    <string name="filter_settings_exclude_framework_apps_title">Exclude framework apps</string>
-    <string name="filter_settings_exclude_disabled_apps_key">filter_settings_exclude_disabled_apps</string>
-    <bool name="filter_settings_exclude_disabled_apps_default">true</bool>
-    <string name="filter_settings_exclude_disabled_apps_title">Exclude disabled apps</string>
-    <string name="filter_settings_exclude_no_perms_apps_key">filter_settings_exclude_no_perms_apps</string>
-    <bool name="filter_settings_exclude_no_perms_apps_default">true</bool>
-    <string name="filter_settings_exclude_no_perms_apps_title">Exclude apps without permissions</string>
-    <string name="filter_settings_excluded_apps_key">filter_settings_excluded_apps</string>
-    <string name="filter_settings_excluded_apps_title">Manually excluded apps</string>
+  <!--PreferencesActivity packages titles, keys and defaults-->
+  <string name="filter_settings_packages_title">Packages</string>
+  <string name="filter_settings_exclude_no_icon_apps_key">filter_settings_exclude_no_icon_apps</string>
+  <bool name="filter_settings_exclude_no_icon_apps_default">true</bool>
+  <string name="filter_settings_exclude_no_icon_apps_title">Exclude apps without icons</string>
+  <string name="filter_settings_exclude_user_apps_key">filter_settings_exclude_user_apps</string>
+  <bool name="filter_settings_exclude_user_apps_default">false</bool>
+  <string name="filter_settings_exclude_user_apps_title">Exclude user apps</string>
+  <string name="filter_settings_exclude_system_apps_key">filter_settings_exclude_system_apps</string>
+  <bool name="filter_settings_exclude_system_apps_default">false</bool>
+  <string name="filter_settings_exclude_system_apps_title">Exclude system apps</string>
+  <string name="filter_settings_exclude_framework_apps_key">filter_settings_exclude_framework_apps</string>
+  <bool name="filter_settings_exclude_framework_apps_default">true</bool>
+  <string name="filter_settings_exclude_framework_apps_title">Exclude framework apps</string>
+  <string name="filter_settings_exclude_disabled_apps_key">filter_settings_exclude_disabled_apps</string>
+  <bool name="filter_settings_exclude_disabled_apps_default">true</bool>
+  <string name="filter_settings_exclude_disabled_apps_title">Exclude disabled apps</string>
+  <string name="filter_settings_exclude_no_perms_apps_key">filter_settings_exclude_no_perms_apps</string>
+  <bool name="filter_settings_exclude_no_perms_apps_default">true</bool>
+  <string name="filter_settings_exclude_no_perms_apps_title">Exclude apps without permissions</string>
+  <string name="filter_settings_excluded_apps_key">filter_settings_excluded_apps</string>
+  <string name="filter_settings_excluded_apps_title">Manually excluded apps</string>
 
-    <!--PreferencesActivity permissions titles, keys and defaults-->
-    <string name="filter_settings_permissions_title">Permissions</string>
-    <string name="filter_settings_exclude_not_changeable_perms_key">filter_settings_exclude_not_changeable_perms</string>
-    <bool name="filter_settings_exclude_not_changeable_perms_default">true</bool>
-    <string name="filter_settings_exclude_not_changeable_perms_title">Exclude permissions not changeable</string>
-    <string name="filter_settings_exclude_not_granted_perms_key">filter_settings_exclude_not_granted_perms</string>
-    <bool name="filter_settings_exclude_not_granted_perms_default">false</bool>
-    <string name="filter_settings_exclude_not_granted_perms_title">Exclude permissions not granted</string>
-    <string name="filter_settings_excluded_perms_key">filter_settings_excluded_perms</string>
-    <string name="filter_settings_excluded_perms_title">Manually excluded permissions</string>
+  <!--PreferencesActivity permissions titles, keys and defaults-->
+  <string name="filter_settings_permissions_title">Permissions</string>
+  <string name="filter_settings_exclude_not_changeable_perms_key">filter_settings_exclude_not_changeable_perms</string>
+  <bool name="filter_settings_exclude_not_changeable_perms_default">true</bool>
+  <string name="filter_settings_exclude_not_changeable_perms_title">Exclude permissions not changeable</string>
+  <string name="filter_settings_exclude_not_granted_perms_key">filter_settings_exclude_not_granted_perms</string>
+  <bool name="filter_settings_exclude_not_granted_perms_default">false</bool>
+  <string name="filter_settings_exclude_not_granted_perms_title">Exclude permissions not granted</string>
+  <string name="filter_settings_excluded_perms_key">filter_settings_excluded_perms</string>
+  <string name="filter_settings_excluded_perms_title">Manually excluded permissions</string>
 
-    <!--PreferencesActivity manifest permissions titles, keys and defaults-->
-    <string name="filter_settings_exclude_invalid_perms_key">filter_settings_exclude_invalid_perms</string>
-    <bool name="filter_settings_exclude_invalid_perms_default">true</bool>
-    <string name="filter_settings_exclude_invalid_perms_title">Exclude invalid permissions</string>
-    <string name="filter_settings_exclude_normal_perms_key">filter_settings_exclude_normal_perms</string>
-    <bool name="filter_settings_exclude_normal_perms_default">false</bool>
-    <string name="filter_settings_exclude_normal_perms_title">Exclude normal permissions</string>
-    <string name="filter_settings_exclude_dangerous_perms_key">filter_settings_exclude_dangerous_perms</string>
-    <bool name="filter_settings_exclude_dangerous_perms_default">false</bool>
-    <string name="filter_settings_exclude_dangerous_perms_title">Exclude dangerous permissions</string>
-    <string name="filter_settings_exclude_signature_perms_key">filter_settings_exclude_signature_perms</string>
-    <bool name="filter_settings_exclude_signature_perms_default">false</bool>
-    <string name="filter_settings_exclude_signature_perms_title">Exclude signature permissions</string>
-    <string name="filter_settings_exclude_privileged_perms_key">filter_settings_exclude_privileged_perms</string>
-    <bool name="filter_settings_exclude_privileged_perms_default">false</bool>
-    <string name="filter_settings_exclude_privileged_perms_title">Exclude privileged permissions</string>
+  <!--PreferencesActivity manifest permissions titles, keys and defaults-->
+  <string name="filter_settings_exclude_invalid_perms_key">filter_settings_exclude_invalid_perms</string>
+  <bool name="filter_settings_exclude_invalid_perms_default">true</bool>
+  <string name="filter_settings_exclude_invalid_perms_title">Exclude invalid permissions</string>
+  <string name="filter_settings_exclude_normal_perms_key">filter_settings_exclude_normal_perms</string>
+  <bool name="filter_settings_exclude_normal_perms_default">false</bool>
+  <string name="filter_settings_exclude_normal_perms_title">Exclude normal permissions</string>
+  <string name="filter_settings_exclude_dangerous_perms_key">filter_settings_exclude_dangerous_perms</string>
+  <bool name="filter_settings_exclude_dangerous_perms_default">false</bool>
+  <string name="filter_settings_exclude_dangerous_perms_title">Exclude dangerous permissions</string>
+  <string name="filter_settings_exclude_signature_perms_key">filter_settings_exclude_signature_perms</string>
+  <bool name="filter_settings_exclude_signature_perms_default">false</bool>
+  <string name="filter_settings_exclude_signature_perms_title">Exclude signature permissions</string>
+  <string name="filter_settings_exclude_privileged_perms_key">filter_settings_exclude_privileged_perms</string>
+  <bool name="filter_settings_exclude_privileged_perms_default">false</bool>
+  <string name="filter_settings_exclude_privileged_perms_title">Exclude privileged permissions</string>
 
-    <!--PreferencesActivity AppOps permissions titles, keys and defaults-->
-    <string name="filter_settings_exclude_appops_perms_key">filter_settings_exclude_appops_perms</string>
-    <bool name="filter_settings_exclude_appops_perms_default">false</bool>
-    <string name="filter_settings_exclude_appops_perms_title">Exclude AppOps</string>
-    <string name="filter_settings_exclude_not_set_appops_key">filter_settings_exclude_not_set_appops</string>
-    <bool name="filter_settings_exclude_not_set_appops_default">false</bool>
-    <string name="filter_settings_exclude_not_set_appops_title">Exclude AppOps not set (Defaults)</string>
-    <string name="filter_settings_extra_appops_key">filter_settings_extra_appops</string>
-    <string name="filter_settings_extra_appops_title">Extra AppOps, never excluded</string>
+  <!--PreferencesActivity AppOps permissions titles, keys and defaults-->
+  <string name="filter_settings_exclude_appops_perms_key">filter_settings_exclude_appops_perms</string>
+  <bool name="filter_settings_exclude_appops_perms_default">false</bool>
+  <string name="filter_settings_exclude_appops_perms_title">Exclude AppOps</string>
+  <string name="filter_settings_exclude_not_set_appops_key">filter_settings_exclude_not_set_appops</string>
+  <bool name="filter_settings_exclude_not_set_appops_default">false</bool>
+  <string name="filter_settings_exclude_not_set_appops_title">Exclude AppOps not set (Defaults)</string>
+  <string name="filter_settings_extra_appops_key">filter_settings_extra_appops</string>
+  <string name="filter_settings_extra_appops_title">Extra AppOps, never excluded</string>
 
-    <!--PreferenceActivity menu items-->
-    <string name="filter_settings_reset_defaults_menu_item">Reset To Defaults</string>
-    <string name="filter_settings_reset_confirmation">Reset filter settings to default values?</string>
-    <string name="filter_settings_clear_excluded_apps_menu_item">Clear Excluded Apps</string>
-    <string name="filter_settings_clear_apps_confirmation">Clear all excluded apps?</string>
-    <string name="filter_settings_clear_excluded_perms_menu_item">Clear Excluded Perms</string>
-    <string name="filter_settings_clear_perms_confirmation">Clear all excluded permissions?</string>
-    <string name="filter_settings_clear_extra_app_ops_menu_item">Clear Extra AppOps</string>
-    <string name="filter_settings_clear_app_ops_confirmation">Clear all extra (always shown) AppOps?</string>
+  <!--PreferenceActivity menu items-->
+  <string name="filter_settings_reset_defaults_menu_item">Reset To Defaults</string>
+  <string name="filter_settings_reset_confirmation">Reset filter settings to default values?</string>
+  <string name="filter_settings_clear_excluded_apps_menu_item">Clear Excluded Apps</string>
+  <string name="filter_settings_clear_apps_confirmation">Clear all excluded apps?</string>
+  <string name="filter_settings_clear_excluded_perms_menu_item">Clear Excluded Perms</string>
+  <string name="filter_settings_clear_perms_confirmation">Clear all excluded permissions?</string>
+  <string name="filter_settings_clear_extra_app_ops_menu_item">Clear Extra AppOps</string>
+  <string name="filter_settings_clear_app_ops_confirmation">Clear all extra (always shown) AppOps?</string>
 
-    <!--AboutActivity-->
-    <string name="source">Source</string>
-    <string name="source_url">https://github.com/mirfatif/PermissionManagerX</string>
-    <string name="email">Email</string>
-    <string name="email_address">mirfatif@gmail.com</string>
-    <string name="no_email_app_installed">No email app installed</string>
-    <string name="no_browser_installed">"No web browser app installed"</string>
-    <string name="collect_logs">Collect Logs</string>
-    <string name="collect_logs_summary">Save highly verbose log to file</string>
-    <string name="report_issues">Report Issues</string>
-    <string name="report_issues_summary">Bugs, improvements, suggestions…</string>
-    <string name="issues_url">https://github.com/mirfatif/PermissionManagerX/issues</string>
-    <string name="select_log_file">Select file to save log</string>
-    <string name="stop_logging">Stop Logging</string>
-    <string name="logging_stopped">Logging stopped</string>
+  <!--AboutActivity-->
+  <string name="source">Source</string>
+  <string name="source_url">https://github.com/mirfatif/PermissionManagerX</string>
+  <string name="email">Email</string>
+  <string name="email_address">mirfatif@gmail.com</string>
+  <string name="no_email_app_installed">No email app installed</string>
+  <string name="no_browser_installed">"No web browser app installed"</string>
+  <string name="collect_logs">Collect Logs</string>
+  <string name="collect_logs_summary">Save highly verbose log to file</string>
+  <string name="report_issues">Report Issues</string>
+  <string name="report_issues_summary">Bugs, improvements, suggestions…</string>
+  <string name="issues_url">https://github.com/mirfatif/PermissionManagerX/issues</string>
+  <string name="select_log_file">Select file to save log</string>
+  <string name="stop_logging">Stop Logging</string>
+  <string name="logging_stopped">Logging stopped</string>
 
-    <!--Donate-->
-    <string name="bitcoin_link"><a href="bitcoin:">Bitcoin</a></string>
-    <string name="bitcoin_address">18ijfsv5fcDKQ6CTe4wycKxZMmti4oUXjW</string>
-    <string name="no_bitcoin_app_installed">"Bitcoin Wallet app not found"</string>
-    <string name="bank_account_link"><a href="mailto:">Ask for Bank Account</a></string>
-    <string name="bank_account_request">Hello,\n\nI need your IBAN and SWIFT/BIC to make a donation.</string>
-    <string name="play_store_link"><a href="https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx">Paid
+  <!--Donate-->
+  <string name="bitcoin_link"><a href="bitcoin:">Bitcoin</a></string>
+  <string name="bitcoin_address">18ijfsv5fcDKQ6CTe4wycKxZMmti4oUXjW</string>
+  <string name="no_bitcoin_app_installed">"Bitcoin Wallet app not found"</string>
+  <string name="bank_account_link"><a href="mailto:">Ask for Bank Account</a></string>
+  <string name="bank_account_request">Hello,\n\nI need your IBAN and SWIFT/BIC to make a donation.</string>
+  <string name="play_store_link"><a href="https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx">Paid
         version on Play Store</a></string>
 
-    <!--HelpActivity FAQs-->
-    <string name="faq">FAQs</string>
-    <string name="faq1"><b>Why is root or ADB shell access required?</b></string>
-    <string name="faq1_ans">Android won\'t let user apps change manifest permissions and AppOps. Reading AppOps
+  <!--HelpActivity FAQs-->
+  <string name="faq">FAQs</string>
+  <string name="faq1"><b>Why is root or ADB shell access required?</b></string>
+  <string name="faq1_ans">Android won\'t let user apps change manifest permissions and AppOps. Reading AppOps
         without root or ADB is possible provided that hidden APIs are not blacklisted on your device, which is
         <a href="https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces">very unlikely</a>
         on Android 9+.\nThat\'s why we run a separate daemon with high privileges to circumvent the restrictions.\nBy
@@ -244,112 +244,112 @@
         functionality might be crippled usually due to lacking permissions.\nOn rooted devices UID can be changed
         in <b><i>Advanced Settings</i></b>.
     </string>
-    <string name="faq2"><b>How to enable ADB over network?</b></string>
-    <string name="faq2_ans">Please read
+  <string name="faq2"><b>How to enable ADB over network?</b></string>
+  <string name="faq2_ans">Please read
         <a href="https://developer.android.com/studio/command-line/adb#wireless">here</a>
         and <a href="https://android.stackexchange.com/a/216474">here</a>.
     </string>
-    <string name="faq3"><b>Why are GET_APP_OPS_STATS and INTERNET permissions required?</b></string>
-    <string name="faq3_ans">GET_APP_OPS_STATS is required to read AppOps provided that hidden APIs
+  <string name="faq3"><b>Why are GET_APP_OPS_STATS and INTERNET permissions required?</b></string>
+  <string name="faq3_ans">GET_APP_OPS_STATS is required to read AppOps provided that hidden APIs
         work.\nINTERNET permission is required to make use of ADB over network. No connections are made
         outside the device.
     </string>
-    <string name="faq4"><b>Why don\'t I see XYZ app in packages list?</b></string>
-    <string name="faq4_ans">Please check <i>Exclusion Filters</i>. Almost all of the stock Android packages are
+  <string name="faq4"><b>Why don\'t I see XYZ app in packages list?</b></string>
+  <string name="faq4_ans">Please check <i>Exclusion Filters</i>. Almost all of the stock Android packages are
         excluded by default. You can exclude/include any package you want from/to visible list.
     </string>
-    <string name="faq5"><b>Why don\'t I see XYZ permission in ABC package?</b></string>
-    <string name="faq5_ans">Please check <i>Exclusion Filters</i>.</string>
-    <string name="faq6"><b>What are <i>invalid permissions</i> in Exclusion Filters?</b></string>
-    <string name="faq6_ans">If an app is requesting a manifest permission but it\'s not declared (provided) by
+  <string name="faq5"><b>Why don\'t I see XYZ permission in ABC package?</b></string>
+  <string name="faq5_ans">Please check <i>Exclusion Filters</i>.</string>
+  <string name="faq6"><b>What are <i>invalid permissions</i> in Exclusion Filters?</b></string>
+  <string name="faq6_ans">If an app is requesting a manifest permission but it\'s not declared (provided) by
         Android framework or any of the installed packages, it\'s an invalid permission.
     </string>
-    <string name="faq7"><b>What are <i>extra AppOps</i> in Exclusion Filters?</b></string>
-    <string name="faq7_ans">Not all AppOps are being used for all installed apps. But you can enforce an
+  <string name="faq7"><b>What are <i>extra AppOps</i> in Exclusion Filters?</b></string>
+  <string name="faq7_ans">Not all AppOps are being used for all installed apps. But you can enforce an
         AppOp to any app. Selected Extra AppOps appear in all apps\' permission lists so that you can set them.
     </string>
-    <string name="faq8"><b>Why can\'t I change XYZ permission?</b></string>
-    <string name="faq8_ans">Manifest permissions with only <i>Dangerous</i> protection level (and a few others)
+  <string name="faq8"><b>Why can\'t I change XYZ permission?</b></string>
+  <string name="faq8_ans">Manifest permissions with only <i>Dangerous</i> protection level (and a few others)
         are changeable. AppOps not dependent on some other AppOp are changeable. Additionally some critical
         framework apps are protected; changing them might brick the device.
     </string>
-    <string name="faq9"><b>How to use the app in secondary profile / multi-user environment?</b></string>
-    <string name="faq9_ans">Install the app for every profile / user separately. Preferences, reference states,
+  <string name="faq9"><b>How to use the app in secondary profile / multi-user environment?</b></string>
+  <string name="faq9_ans">Install the app for every profile / user separately. Preferences, reference states,
         backup / restore, everything in every profile works independent of the other profiles.\nOn rooted
         device make sure that root is allowed to profiles / users other than owner / primary user. E.g.
         in case of Magisk set <i>Multiuser Mode</i> to <i>Device Owner Managed</i>.
     </string>
 
-    <!--HelpActivity Permission References-->
-    <string name="perm_references">Permission References</string>
-    <string name="perm_reference_help1">You can set a reference value for permission which can be backed up
+  <!--HelpActivity Permission References-->
+  <string name="perm_references">Permission References</string>
+  <string name="perm_reference_help1">You can set a reference value for permission which can be backed up
         and restored on ROM change or device change.
         So it takes only a few moments to look at all installed packages and figure out which permissions aren\'t
         correctly set. Long press a permission to set or clear its reference state.
     </string>
-    <string name="perm_reference_help2"><font color="#FFC107"><b>Orange</b></font>
+  <string name="perm_reference_help2"><font color="#FFC107"><b>Orange</b></font>
         state indicates that no reference value is set
     </string>
-    <string name="perm_reference_help3"><font color="#00FF00"><b>Green</b></font>
+  <string name="perm_reference_help3"><font color="#00FF00"><b>Green</b></font>
         indicates that reference value matches currently set value
     </string>
-    <string name="perm_reference_help4"><font color="#FF0000"><b>Red</b></font>
+  <string name="perm_reference_help4"><font color="#FF0000"><b>Red</b></font>
         indicates that reference value and set value differ
     </string>
 
-    <!--HelpActivity Packages-->
-    <string name="package_help1">Colored strip at left indicates <b>reference state</b></string>
-    <string name="package_help2">First line shows package <b>label</b></string>
-    <string name="package_help3">Second line shows package <b>name</b> and <b>UID</b></string>
-    <string name="package_help4">Third line (optionally) shows package\'s state:
+  <!--HelpActivity Packages-->
+  <string name="package_help1">Colored strip at left indicates <b>reference state</b></string>
+  <string name="package_help2">First line shows package <b>label</b></string>
+  <string name="package_help3">Second line shows package <b>name</b> and <b>UID</b></string>
+  <string name="package_help4">Third line (optionally) shows package\'s state:
         <b>Critical</b> (Framework), <b>Framework</b> or <b>System</b> app.
         Also if the app is <b>Disabled</b>. No state is shown for <b>Enabled</b>, <b>User</b> apps.
     </string>
-    <string name="package_help5">Last line shows <b>count</b> of visible manifest permissions out of
+  <string name="package_help5">Last line shows <b>count</b> of visible manifest permissions out of
         total manifest permissions. And visible AppOps permissions out of total AppOps permissions.
         Invisible permissions are those excluded by applied filters.
     </string>
 
-    <!--HelpActivity Permissions-->
-    <string name="perm_help1">Colored strip at left indicates <b>reference state</b></string>
-    <string name="perm_help2">First line shows <b>permission name</b></string>
-    <string name="perm_help3">Second line shows permission\'s
+  <!--HelpActivity Permissions-->
+  <string name="perm_help1">Colored strip at left indicates <b>reference state</b></string>
+  <string name="perm_help2">First line shows <b>permission name</b></string>
+  <string name="perm_help3">Second line shows permission\'s
         <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a>:
         <b>Normal</b>, <b>Dangerous</b>, <b>Signature</b>, <b>Development</b>, <b>Privileged</b>,
         <b>Fixed</b>, <b>AppOps</b> or <b>Unknown</b>.
         Also if AppOp is <b>per Package</b> or <b>per UID</b>.
         And if it is an <b>Extra</b> AppOp (never excluded in filter settings).
     </string>
-    <string name="perm_help4">Third line (in case of AppOp) shows <b>last access time</b></string>
-    <string name="perm_help5">Fourth line (in case of AppOp) shows the referenced value if
+  <string name="perm_help4">Third line (in case of AppOp) shows <b>last access time</b></string>
+  <string name="perm_help5">Fourth line (in case of AppOp) shows the referenced value if
         it doesn\'t match the current set value.</string>
-    <string name="perm_help6">If an AppOp is never set,
+  <string name="perm_help6">If an AppOp is never set,
         word: <b><i>Default</i></b> is shown below currently set value.
     </string>
 
-    <!--HelpActivity Search-->
-    <string name="search_help1">Normally package label, name and UID are searched from visible list.
+  <!--HelpActivity Search-->
+  <string name="search_help1">Normally package label, name and UID are searched from visible list.
         With deep search permission name and other parameters are queried. Exclusion filters are effective
         when making search. You can use the following special keywords in search:
     </string>
-    <string name="search_help2">App state:\n
+  <string name="search_help2">App state:\n
         <b><i>:Critical :Framework :System :User :Disabled</i></b>
     </string>
-    <string name="search_help3">Reference state:\n
+  <string name="search_help3">Reference state:\n
         <b><i>:ORANGE :GREEN :RED</i></b>
     </string>
-    <string name="search_help4">Permissions protection level:\n
+  <string name="search_help4">Permissions protection level:\n
         <b><i>:Normal :Dangerous :Signature</i></b>\n
         <b><i>:Development :Privileged :Fixed</i></b>\n
         <b><i>:AppOps :Unknown</i></b>
     </string>
-    <string name="search_help5">Per UID AppOps:\n
+  <string name="search_help5">Per UID AppOps:\n
         <b><i>:UID</i></b>
     </string>
-    <string name="search_help6">AppOps with last access time:\n
+  <string name="search_help6">AppOps with last access time:\n
         <b><i>:TIME</i></b>
     </string>
-    <string name="search_help7">Extra AppOps (never excluded in filter settings):\n
+  <string name="search_help7">Extra AppOps (never excluded in filter settings):\n
         <b><i>:Extra</i></b>
     </string>
 </resources>
