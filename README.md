@@ -25,6 +25,11 @@ In short, <b>AppOps</b> provide a fine-grained control over many of the manifest
 * In order to let Permission Manager X serve you at its best, either the device must be <b>rooted</b> or you need to enable <b>ADB over network</b>.
 * <b>android.permission.INTERNET</b> is required to use ADB over network. No connections are made outside the device.
 
+## Screenshots
+
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" width="250">
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.jpg" width="250">
+
 ## How to Build
 * `build.gradle` calls 2 shell scripts to build native binaries and a `.dex` file. So Linux environment is expected with all standard tools.
 * Download code: `git clone --recurse-submodules https://github.com/mirfatif/PermissionManagerX.git && cd PermissionManagerX`
@@ -43,7 +48,16 @@ Credits and thanks to the developers of:
 * https://github.com/saket/Better-Link-Movement-Method
 * https://github.com/square/leakcanary
 
-## Screenshots
+## License [![License](https://img.shields.io/github/license/mirfatif/PermissionManagerX?label="License")](https://github.com/mirfatif/PermissionManagerX/blob/master/LICENSE)
+    Permission Manager X is free software: you can redistribute it and/or modify
+    it under the terms of the Affero GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" width="250">
-<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.jpg" width="250">
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    Affero GNU General Public License for more details.
+
+    You should have received a copy of the Affero GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
