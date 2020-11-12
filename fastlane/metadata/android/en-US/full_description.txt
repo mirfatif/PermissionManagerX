@@ -1,6 +1,6 @@
 <i>Permission Manager X</i> is a small app to manage permissions and AppOps for the apps installed on your device. It evolved from a shell script to a GUI for my personal needs. After a ROM upgrade or changing device, it's a time-taking process to review all installed apps for granted permissions and revoke the unnecessary ones (after all  <b><i>privacy matters</i></b>). To come up with a solution, you can set <b>reference states</b> of permissions which can be quickly backed up and restored. Colored bars at left indicate reference states and make it quite easy to review packages and permissions at a glance.
 
-<b>Manifest permissions</b> are normally simply called „permissions“ (e.g. Storage, Camera). <b>AppOps</b> (app operations) is a robust framework Android uses as back-end for access control. With every Android release manifest permissions are becoming more dependent on AppOps. So it's fun to control both simultaneously and see how they relate to each other.
+<b>Manifest permissions</b> are normally simply called "permissions" (e.g. Storage, Camera). <b>AppOps</b> (app operations) is a robust framework Android uses as back-end for access control. With every Android release manifest permissions are becoming more dependent on AppOps. So it's fun to control both simultaneously and see how they relate to each other.
 
 In short, <b>AppOps</b> provide a fine-grained control over many of the manifest permissions. Plus it provides additional controls like background execution, vibration, clipboard access etc. Explore the app to see more.
 
