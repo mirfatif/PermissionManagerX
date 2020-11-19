@@ -136,6 +136,10 @@ class PackageParser {
     }
   }
 
+  int getPackagesListSize() {
+    return mPackagesList.size();
+  }
+
   private long lastPackageManagerCall = 0;
   private long mUpdatePackageListRefId;
   private Future<?> updatePackagesFuture;
@@ -157,10 +161,6 @@ class PackageParser {
     }
     updatePackagesFuture =
         Utils.updatePackagesExecutor(() -> updatePackagesListInBg(doRepeatUpdates, myId));
-  }
-
-  int getPackagesListSize() {
-    return mPackagesList.size();
   }
 
   private void updatePackagesListInBg(boolean doRepeatUpdates, long myId) {
