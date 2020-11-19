@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.permsdb;
 
 import androidx.room.Dao;
 import androidx.room.Insert;

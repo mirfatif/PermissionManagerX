@@ -6,6 +6,7 @@ import android.util.Xml;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.preference.PreferenceManager;
+import com.mirfatif.permissionmanagerx.permsdb.PermissionEntity;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

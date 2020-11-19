@@ -2,13 +2,13 @@ package com.mirfatif.permissionmanagerx;
 
 import android.text.format.DateUtils;
 
-class Permission {
+public class Permission {
 
-  static final String PROTECTION_DANGEROUS = "Dangerous";
-  static final String PROTECTION_NORMAL = "Normal";
-  static final String PROTECTION_SIGNATURE = "Signature";
-  static final String GRANTED = "Granted";
-  static final String REVOKED = "Revoked";
+  public static final String PROTECTION_DANGEROUS = "Dangerous";
+  public static final String PROTECTION_NORMAL = "Normal";
+  public static final String PROTECTION_SIGNATURE = "Signature";
+  public static final String GRANTED = "Granted";
+  public static final String REVOKED = "Revoked";
 
   private final int mOrder;
   private final int mIconResId;
@@ -34,7 +34,7 @@ class Permission {
   private final boolean mIsSystemApp;
   private final CharSequence mPermDesc;
 
-  Permission(
+  public Permission(
       int order,
       int iconResId,
       boolean isAppOps,
@@ -89,7 +89,7 @@ class Permission {
     return mIconResId;
   }
 
-  boolean isAppOps() {
+  public boolean isAppOps() {
     return mIsAppOps;
   }
 
@@ -97,7 +97,7 @@ class Permission {
     return mIsPerUid;
   }
 
-  boolean isAppOpsSet() {
+  public boolean isAppOpsSet() {
     return mIsAppOpsSet;
   }
 
@@ -127,35 +127,35 @@ class Permission {
     return mDependsOn;
   }
 
-  void setExtraAppOp() {
+  public void setExtraAppOp() {
     mIsExtraAppOp = true;
   }
 
-  boolean isExtraAppOp() {
+  public boolean isExtraAppOp() {
     return mIsExtraAppOp;
   }
 
-  String getName() {
+  public String getName() {
     return mPermissionName;
   }
 
-  boolean isGranted() {
+  public boolean isGranted() {
     return mIsGranted;
   }
 
-  String getProtectionLevel() {
+  public String getProtectionLevel() {
     return mProtectionLevel;
   }
 
-  boolean isPrivileged() {
+  public boolean isPrivileged() {
     return mIsPrivileged;
   }
 
-  boolean isProviderMissing() {
+  public boolean isProviderMissing() {
     return mProviderMissing;
   }
 
-  Boolean isReferenced() {
+  public Boolean isReferenced() {
     return mIsReferenced;
   }
 
@@ -163,7 +163,7 @@ class Permission {
     return mReference;
   }
 
-  boolean isChangeable() {
+  public boolean isChangeable() {
     if (MySettings.getInstance().isCriticalApp(mPackageName)) return false;
     if (mIsAppOps) {
       return mDependsOn == null;
@@ -202,7 +202,7 @@ class Permission {
     return protectionLevel;
   }
 
-  boolean contains(String queryText) {
+  public boolean contains(String queryText) {
     boolean isCaseSensitive = MySettings.getInstance().isCaseSensitiveSearch();
     if (!isCaseSensitive) queryText = queryText.toUpperCase();
 

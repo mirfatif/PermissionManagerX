@@ -9,6 +9,7 @@ import androidx.preference.CheckBoxPreference;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
+import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import java.util.Set;
 
 // OnSharedPreferenceChangeListener must be global to avoid GC

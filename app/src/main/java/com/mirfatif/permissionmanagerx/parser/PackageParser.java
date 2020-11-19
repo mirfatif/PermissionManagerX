@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.parser;
 
 import android.annotation.SuppressLint;
 import android.app.AppOpsManager;
@@ -14,6 +14,16 @@ import android.os.Process;
 import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import com.mirfatif.permissionmanagerx.App;
+import com.mirfatif.permissionmanagerx.MySettings;
+import com.mirfatif.permissionmanagerx.Package;
+import com.mirfatif.permissionmanagerx.PermGroupsMapping;
+import com.mirfatif.permissionmanagerx.PermGroupsMapping.GroupOrderPair;
+import com.mirfatif.permissionmanagerx.Permission;
+import com.mirfatif.permissionmanagerx.PrivDaemonHandler;
+import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.Utils;
+import com.mirfatif.permissionmanagerx.permsdb.PermissionEntity;
 import com.mirfatif.privdaemon.MyPackageOps;
 import com.mirfatif.privdaemon.PrivDaemon;
 import java.util.ArrayList;
@@ -23,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-class PackageParser {
+public class PackageParser {
 
   static final String TAG = "PackageParser";
 
@@ -53,15 +63,15 @@ class PackageParser {
   static final int PM_GET_SIGNATURES = PackageManager.GET_SIGNATURES;
 
   // to show progress
-  static final int CREATE_PACKAGES_LIST = -1;
-  static final int REF_PERMS_LIST = -2;
-  static final int OP_TO_SWITCH_LIST = -3;
-  static final int OP_TO_DEF_MODE_LIST = -4;
-  static final int PERM_TO_OP_CODE_MAP = -5;
+  public static final int CREATE_PACKAGES_LIST = -1;
+  public static final int REF_PERMS_LIST = -2;
+  public static final int OP_TO_SWITCH_LIST = -3;
+  public static final int OP_TO_DEF_MODE_LIST = -4;
+  public static final int PERM_TO_OP_CODE_MAP = -5;
 
   // create singleton instance of PackageParser so that all activities can update mPackagesListLive
   // whenever needed
-  static synchronized PackageParser getInstance() {
+  public static synchronized PackageParser getInstance() {
     if (mPackageParser == null) mPackageParser = new PackageParser();
     return mPackageParser;
   }
@@ -69,7 +79,7 @@ class PackageParser {
   private PackageParser() {}
 
   // only to be set once from ViewModel
-  void initiateVariables() {
+  public void initiateVariables() {
     mPackageManager = App.getContext().getPackageManager();
     mMySettings = MySettings.getInstance();
     mAppOpsParser = new AppOpsParser(mPackageManager);
@@ -94,24 +104,24 @@ class PackageParser {
     return packageInfo.signatures;
   }
 
-  LiveData<List<Package>> getPackagesListLive() {
+  public LiveData<List<Package>> getPackagesListLive() {
     updatePackagesList(true); // update list on app (re)launch
     return mPackagesListLive;
   }
 
-  LiveData<Package> getChangedPackage() {
+  public LiveData<Package> getChangedPackage() {
     return mChangedPackage;
   }
 
-  LiveData<Integer> getProgressMax() {
+  public LiveData<Integer> getProgressMax() {
     return mProgressMax;
   }
 
-  LiveData<Integer> getProgressNow() {
+  public LiveData<Integer> getProgressNow() {
     return mProgressNow;
   }
 
-  Package getPackage(int position) {
+  public Package getPackage(int position) {
     if (position < 0 || position >= mPackagesList.size()) {
       Log.e("PackageParser", "getPackage(): bad position: " + position);
       return null;
@@ -119,7 +129,7 @@ class PackageParser {
     return mPackagesList.get(position);
   }
 
-  int getPackagePosition(Package pkg) {
+  public int getPackagePosition(Package pkg) {
     int position = mPackagesList.indexOf(pkg);
     if (position == -1) {
       Log.e("PackageParser", "getPackagePosition(): bad Package provided");
@@ -128,7 +138,7 @@ class PackageParser {
     return position;
   }
 
-  void removePackage(Package pkg) {
+  public void removePackage(Package pkg) {
     if (mPackagesList.remove(pkg)) {
       submitLiveData(mPackagesList);
     } else {
@@ -136,7 +146,7 @@ class PackageParser {
     }
   }
 
-  int getPackagesListSize() {
+  public int getPackagesListSize() {
     return mPackagesList.size();
   }
 
@@ -144,7 +154,7 @@ class PackageParser {
   private long mUpdatePackageListRefId;
   private Future<?> updatePackagesFuture;
 
-  void updatePackagesList(boolean doRepeatUpdates) {
+  public void updatePackagesList(boolean doRepeatUpdates) {
     if (mMySettings.DEBUG)
       Utils.debugLog("updatePackagesList", "doRepeatUpdates: " + doRepeatUpdates);
     long myId = mUpdatePackageListRefId = System.nanoTime(); // to handle concurrent calls
@@ -364,7 +374,7 @@ class PackageParser {
   }
 
   // when calling from PackageActivity for existing package
-  void updatePackage(Package pkg) {
+  public void updatePackage(Package pkg) {
     if (mMySettings.DEBUG) Utils.debugLog("PackageParser", "updatePackage(): " + pkg.getLabel());
     PackageInfo packageInfo = getPackageInfo(pkg.getName(), true);
 
@@ -414,12 +424,12 @@ class PackageParser {
 
   // Update changed package and permissions from PackageActivity.
   // Calls to Room database require background execution and are time taking too.
-  void updatePermReferences(String pkgName, String permName, String state) {
+  public void updatePermReferences(String pkgName, String permName, String state) {
     mPermRefList.remove(pkgName + "_" + permName);
     if (state != null) mPermRefList.put(pkgName + "_" + permName, state);
   }
 
-  void buildPermRefList() {
+  public void buildPermRefList() {
     if (mMySettings.DEBUG) Utils.debugLog("updatePackagesListInBg", "buildPermRefList() called");
     mPermRefList = new HashMap<>();
     for (PermissionEntity entity : mMySettings.getPermDb().getAll()) {
@@ -847,11 +857,11 @@ class PackageParser {
     String reference;
   }
 
-  List<String> buildAppOpsList() {
+  public List<String> buildAppOpsList() {
     return mAppOpsParser.buildAppOpsList();
   }
 
-  List<String> buildAppOpsModes() {
+  public List<String> buildAppOpsModes() {
     return mAppOpsParser.buildAppOpsModes();
   }
 
@@ -876,7 +886,7 @@ class PackageParser {
   private long mHandleSearchQueryRefId;
   private Future<?> searchQueryFuture;
 
-  void handleSearchQuery(boolean doRepeatUpdates) {
+  public void handleSearchQuery(boolean doRepeatUpdates) {
     if (!mMySettings.isSearching()) {
       Utils.runInFg(() -> mPackagesListLive.setValue(mPackagesList));
       if (mMySettings.DEBUG)

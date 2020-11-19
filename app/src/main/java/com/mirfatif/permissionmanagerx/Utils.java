@@ -38,7 +38,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-class Utils {
+public class Utils {
 
   private Utils() {}
 
@@ -46,7 +46,7 @@ class Utils {
 
   private static Handler mMainThreadHandler;
 
-  static void runInFg(Runnable runnable) {
+  public static void runInFg(Runnable runnable) {
     if (mMainThreadHandler == null) mMainThreadHandler = new Handler(Looper.getMainLooper());
     mMainThreadHandler.post(runnable);
   }
@@ -62,7 +62,7 @@ class Utils {
 
   private static ExecutorService mUpdatePackagesExecutor;
 
-  static Future<?> updatePackagesExecutor(Runnable runnable) {
+  public static Future<?> updatePackagesExecutor(Runnable runnable) {
     if (mUpdatePackagesExecutor == null) {
       mUpdatePackagesExecutor = Executors.newSingleThreadExecutor();
     }
@@ -71,7 +71,7 @@ class Utils {
 
   private static ExecutorService mSearchQueryExecutor;
 
-  static Future<?> searchQueryExecutor(Runnable runnable) {
+  public static Future<?> searchQueryExecutor(Runnable runnable) {
     if (mSearchQueryExecutor == null) {
       mSearchQueryExecutor = Executors.newSingleThreadExecutor();
     }
@@ -183,9 +183,9 @@ class Utils {
     return false;
   }
 
-  static final int INT_FIELD_ERROR = -1;
+  public static final int INT_FIELD_ERROR = -1;
 
-  static int getIntField(String name, Class<?> cls, String tag) {
+  public static int getIntField(String name, Class<?> cls, String tag) {
     try {
       Field idField = cls.getDeclaredField(name);
       return idField.getInt(idField);
@@ -214,7 +214,7 @@ class Utils {
   }
 
   // org.apache.commons.lang3.StringUtils.capitalize()
-  static String capitalizeString(String str) {
+  public static String capitalizeString(String str) {
     final int strLen = str.length();
     if (strLen == 0) return str;
 
@@ -290,7 +290,7 @@ class Utils {
 
   static final MutableLiveData<Boolean> mHiddenAPIsNotWorking = new MutableLiveData<>(false);
 
-  static void hiddenAPIsNotWorking(String tag, String error) {
+  public static void hiddenAPIsNotWorking(String tag, String error) {
     Log.e(tag, error);
     mMySettings.mHiddenAPIsWorking = false;
     runInFg(() -> mHiddenAPIsNotWorking.setValue(true));
@@ -393,13 +393,13 @@ class Utils {
     Log.i("stopLogging()", PrivDaemon.STOP_LOGGING);
   }
 
-  static void debugLog(String tag, String message) {
+  public static void debugLog(String tag, String message) {
     Log.d(tag, message + " - " + System.nanoTime());
   }
 
   private static long daemonDeadLogTs = 0;
 
-  static void logDaemonDead(String tag) {
+  public static void logDaemonDead(String tag) {
     if (mMySettings.DEBUG || System.currentTimeMillis() - daemonDeadLogTs > 1000) {
       Log.e(tag, "Privileged daemon is not running");
       daemonDeadLogTs = System.currentTimeMillis();

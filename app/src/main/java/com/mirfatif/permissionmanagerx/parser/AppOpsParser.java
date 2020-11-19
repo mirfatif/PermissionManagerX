@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.parser;
 
 import android.app.AppOpsManager;
 import android.content.Context;
@@ -8,6 +8,9 @@ import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.util.Log;
 import com.android.internal.app.IAppOpsService;
+import com.mirfatif.permissionmanagerx.MySettings;
+import com.mirfatif.permissionmanagerx.PrivDaemonHandler;
+import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.privdaemon.MyPackageOps;
 import com.mirfatif.privdaemon.PrivDaemon;
 import java.util.ArrayList;

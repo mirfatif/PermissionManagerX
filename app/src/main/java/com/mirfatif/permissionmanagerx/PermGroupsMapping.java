@@ -2,8 +2,8 @@ package com.mirfatif.permissionmanagerx;
 
 import java.util.Arrays;
 
-class PermGroupsMapping {
-  GroupOrderPair getOrderAndGroup(String perm, boolean isAppOp) {
+public class PermGroupsMapping {
+  public GroupOrderPair getOrderAndGroup(String perm, boolean isAppOp) {
     int index = Arrays.asList(isAppOp ? appOps : perms).indexOf(perm);
     GroupOrderPair groupOrderPair = new GroupOrderPair();
     groupOrderPair.order = index >= 0 ? index : groups.length;
@@ -1766,9 +1766,9 @@ class PermGroupsMapping {
         "TURN_ON_SCREEN",
         "WRITE_WALLPAPER"
       };
-}
 
-class GroupOrderPair {
-  int order;
-  String group;
+  public static class GroupOrderPair {
+    public int order;
+    public String group;
+  }
 }

@@ -45,7 +45,7 @@ public class App extends Application {
         });
   }
 
-  static Context getContext() {
+  public static Context getContext() {
     return mAppContext;
   }
 }

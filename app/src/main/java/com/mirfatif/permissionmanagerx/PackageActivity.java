@@ -26,6 +26,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import com.mirfatif.permissionmanagerx.parser.PackageParser;
+import com.mirfatif.permissionmanagerx.permsdb.PermissionEntity;
 import com.mirfatif.privdaemon.PrivDaemon;
 import java.util.ArrayList;
 import java.util.Comparator;

@@ -40,6 +40,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.privdaemon.PrivDaemon;
 import java.io.IOException;
 import java.io.InputStream;

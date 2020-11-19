@@ -6,6 +6,9 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.text.TextUtils;
 import androidx.preference.PreferenceManager;
 import androidx.room.Room;
+import com.mirfatif.permissionmanagerx.parser.PackageParser;
+import com.mirfatif.permissionmanagerx.permsdb.PermissionDao;
+import com.mirfatif.permissionmanagerx.permsdb.PermissionDatabase;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,7 +23,7 @@ public class MySettings {
 
   private static MySettings mMySettings;
 
-  static synchronized MySettings getInstance() {
+  public static synchronized MySettings getInstance() {
     if (mMySettings == null) mMySettings = new MySettings();
     return mMySettings;
   }
@@ -36,11 +39,11 @@ public class MySettings {
     mExtraAppOpsPrefKey = getString(R.string.filter_settings_extra_appops_key);
   }
 
-  boolean mPrivDaemonAlive = false;
-  boolean mDoRepeatUpdates = true;
+  public boolean mPrivDaemonAlive = false;
+  public boolean mDoRepeatUpdates = true;
 
   Boolean doLogging = false;
-  boolean DEBUG = false;
+  public boolean DEBUG = false;
 
   boolean getBoolPref(int keyResId) {
     String prefKey = getString(keyResId);
@@ -78,7 +81,7 @@ public class MySettings {
 
   private PermissionDao mPermDb;
 
-  PermissionDao getPermDb() {
+  public PermissionDao getPermDb() {
     if (mPermDb == null) {
       Class<PermissionDatabase> dbClass = PermissionDatabase.class;
       String dbName = "permissions.db";
@@ -87,13 +90,13 @@ public class MySettings {
     return mPermDb;
   }
 
-  String mQueryText;
+  public String mQueryText;
 
-  boolean isSearching() {
+  public boolean isSearching() {
     return !TextUtils.isEmpty(mQueryText);
   }
 
-  boolean isDeepSearchEnabled() {
+  public boolean isDeepSearchEnabled() {
     return getBoolPref(R.string.main_settings_deep_search_key);
   }
 
@@ -120,68 +123,68 @@ public class MySettings {
   }
 
   // apps
-  boolean excludeNoIconApps() {
+  public boolean excludeNoIconApps() {
     return getBoolPref(R.string.filter_settings_exclude_no_icon_apps_key);
   }
 
-  boolean excludeUserApps() {
+  public boolean excludeUserApps() {
     return getBoolPref(R.string.filter_settings_exclude_user_apps_key);
   }
 
-  boolean excludeSystemApps() {
+  public boolean excludeSystemApps() {
     return getBoolPref(R.string.filter_settings_exclude_system_apps_key);
   }
 
-  boolean excludeFrameworkApps() {
+  public boolean excludeFrameworkApps() {
     return getBoolPref(R.string.filter_settings_exclude_framework_apps_key);
   }
 
-  boolean excludeDisabledApps() {
+  public boolean excludeDisabledApps() {
     return getBoolPref(R.string.filter_settings_exclude_disabled_apps_key);
   }
 
-  boolean excludeNoPermissionsApps() {
+  public boolean excludeNoPermissionsApps() {
     return getBoolPref(R.string.filter_settings_exclude_no_perms_apps_key);
   }
 
   // permissions
-  boolean excludeInvalidPermissions() {
+  public boolean excludeInvalidPermissions() {
     return getBoolPref(R.string.filter_settings_exclude_invalid_perms_key);
   }
 
-  boolean excludeNotChangeablePerms() {
+  public boolean excludeNotChangeablePerms() {
     return getBoolPref(R.string.filter_settings_exclude_not_changeable_perms_key);
   }
 
-  boolean excludeNotGrantedPerms() {
+  public boolean excludeNotGrantedPerms() {
     return getBoolPref(R.string.filter_settings_exclude_not_granted_perms_key);
   }
 
-  boolean excludeNormalPerms() {
+  public boolean excludeNormalPerms() {
     return getBoolPref(R.string.filter_settings_exclude_normal_perms_key);
   }
 
-  boolean excludeDangerousPerms() {
+  public boolean excludeDangerousPerms() {
     return getBoolPref(R.string.filter_settings_exclude_dangerous_perms_key);
   }
 
-  boolean excludeSignaturePerms() {
+  public boolean excludeSignaturePerms() {
     return getBoolPref(R.string.filter_settings_exclude_signature_perms_key);
   }
 
-  boolean excludePrivilegedPerms() {
+  public boolean excludePrivilegedPerms() {
     return getBoolPref(R.string.filter_settings_exclude_privileged_perms_key);
   }
 
-  boolean excludeAppOpsPerms() {
+  public boolean excludeAppOpsPerms() {
     return getBoolPref(R.string.filter_settings_exclude_appops_perms_key);
   }
 
-  boolean excludeNotSetAppOps() {
+  public boolean excludeNotSetAppOps() {
     return getBoolPref(R.string.filter_settings_exclude_not_set_appops_key);
   }
 
-  boolean canReadAppOps() {
+  public boolean canReadAppOps() {
     return useHiddenAPIs() || mPrivDaemonAlive;
   }
 
@@ -192,7 +195,7 @@ public class MySettings {
 
   private List<String> mAppOpsList;
 
-  List<String> getAppOpsList() {
+  public List<String> getAppOpsList() {
     if (mAppOpsList == null) {
       mAppOpsList = PackageParser.getInstance().buildAppOpsList();
     }
@@ -208,7 +211,7 @@ public class MySettings {
 
   private List<String> mAppOpsModes;
 
-  List<String> getAppOpsModes() {
+  public List<String> getAppOpsModes() {
     if (mAppOpsModes == null) {
       mAppOpsModes = PackageParser.getInstance().buildAppOpsModes();
     }
@@ -217,7 +220,7 @@ public class MySettings {
 
   boolean mHiddenAPIsWorking = true;
 
-  boolean useHiddenAPIs() {
+  public boolean useHiddenAPIs() {
     return getBoolPref(R.string.main_settings_use_hidden_apis_key)
         && mHiddenAPIsWorking
         && isAppOpsGranted();
@@ -253,7 +256,7 @@ public class MySettings {
     return getExcludedAppsSet().size();
   }
 
-  boolean isPkgExcluded(String packageName) {
+  public boolean isPkgExcluded(String packageName) {
     return getExcludedAppsSet().contains(packageName);
   }
 
@@ -338,7 +341,7 @@ public class MySettings {
     return getExcludedPerms().size();
   }
 
-  boolean isPermExcluded(String permissionName) {
+  public boolean isPermExcluded(String permissionName) {
     return getExcludedPerms().contains(permissionName);
   }
 
@@ -357,7 +360,7 @@ public class MySettings {
   private String mExtraAppOpsPrefKey;
   private Set<String> mExtraAppOps;
 
-  Set<String> getExtraAppOps() {
+  public Set<String> getExtraAppOps() {
     if (mExtraAppOps == null) {
       populateExtraAppOpsList(false);
     }
@@ -368,7 +371,7 @@ public class MySettings {
     return getExtraAppOps().size();
   }
 
-  boolean isExtraAppOp(String opName) {
+  public boolean isExtraAppOp(String opName) {
     return getExtraAppOps().contains(opName);
   }
 

@@ -20,7 +20,7 @@ public class Package {
   private int mTotalAppOpsCount;
   private int mAppOpsCount;
 
-  void updatePackage(
+  public void updatePackage(
       String label,
       String name,
       List<Permission> permissionList,
@@ -41,11 +41,11 @@ public class Package {
     mIsReferenced = reference;
   }
 
-  String getLabel() {
+  public String getLabel() {
     return mPackageLabel;
   }
 
-  String getName() {
+  public String getName() {
     return mPackageName;
   }
 
@@ -73,23 +73,23 @@ public class Package {
     return !isCriticalApp() && !mIsFrameworkApp;
   }
 
-  void setTotalPermCount(int count) {
+  public void setTotalPermCount(int count) {
     mTotalPermCount = count;
   }
 
-  int getTotalPermCount() {
+  public int getTotalPermCount() {
     return mTotalPermCount;
   }
 
-  void setPermCount(int count) {
+  public void setPermCount(int count) {
     mPermCount = count;
   }
 
-  int getPermCount() {
+  public int getPermCount() {
     return mPermCount;
   }
 
-  void setTotalAppOpsCount(int count) {
+  public void setTotalAppOpsCount(int count) {
     mTotalAppOpsCount = count;
   }
 
@@ -97,11 +97,11 @@ public class Package {
     return mTotalAppOpsCount;
   }
 
-  void setAppOpsCount(int count) {
+  public void setAppOpsCount(int count) {
     mAppOpsCount = count;
   }
 
-  int getAppOpsCount() {
+  public int getAppOpsCount() {
     return mAppOpsCount;
   }
 
@@ -117,7 +117,7 @@ public class Package {
     return mIsReferenced;
   }
 
-  boolean contains(String queryText) {
+  public boolean contains(String queryText) {
     boolean isCaseSensitive = MySettings.getInstance().isCaseSensitiveSearch();
     if (!isCaseSensitive) queryText = queryText.toUpperCase();
 

@@ -14,7 +14,7 @@ import java.io.PrintWriter;
 import java.net.Inet4Address;
 import java.net.Socket;
 
-class PrivDaemonHandler {
+public class PrivDaemonHandler {
 
   static final String TAG = "PrivDaemonHandler";
 
@@ -23,7 +23,7 @@ class PrivDaemonHandler {
 
   private static PrivDaemonHandler mPrivDaemonHandler;
 
-  static synchronized PrivDaemonHandler getInstance() {
+  public static synchronized PrivDaemonHandler getInstance() {
     if (mPrivDaemonHandler == null) {
       mPrivDaemonHandler = new PrivDaemonHandler();
     }
@@ -228,7 +228,7 @@ class PrivDaemonHandler {
     }
   }
 
-  Object sendRequest(String request) {
+  public Object sendRequest(String request) {
     synchronized (PrivDaemonHandler.class) {
       MySettings mySettings = MySettings.getInstance();
       if (!mySettings.mPrivDaemonAlive) {
