@@ -16,6 +16,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class MySettings {
 
@@ -69,13 +70,41 @@ public class MySettings {
   }
 
   int getDaemonUid() {
-    return mPrefs.getInt(App.getContext().getString(R.string.main_settings_daemon_uid_key), 1000);
+    return mPrefs.getInt(getString(R.string.main_settings_daemon_uid_key), 1000);
   }
 
   void setDaemonUid(int uid) {
     mPrefs
         .edit()
         .putInt(App.getContext().getString(R.string.main_settings_daemon_uid_key), uid)
+        .apply();
+  }
+
+  void plusAppLaunchCount() {
+    String appLaunchCountKey = getString(R.string.main_settings_app_launch_count_key);
+    mPrefs.edit().putInt(appLaunchCountKey, mPrefs.getInt(appLaunchCountKey, 0) + 1).apply();
+  }
+
+  boolean shouldNotAskForRating() {
+    long lastTS = mPrefs.getLong(getString(R.string.main_settings_ask_for_rating_ts_key), 0);
+    if (lastTS == 0) {
+      setAskForRatingTs(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(5));
+      return true;
+    }
+    String appLaunchCountKey = getString(R.string.main_settings_app_launch_count_key);
+    boolean ask = mPrefs.getInt(appLaunchCountKey, 0) >= 5;
+    ask = ask && (System.currentTimeMillis() - lastTS) >= TimeUnit.DAYS.toMillis(5);
+    if (ask) {
+      mPrefs.edit().putInt(appLaunchCountKey, 0).apply();
+      setAskForRatingTs(System.currentTimeMillis());
+    }
+    return !ask;
+  }
+
+  void setAskForRatingTs(long timeStamp) {
+    mPrefs
+        .edit()
+        .putLong(getString(R.string.main_settings_ask_for_rating_ts_key), timeStamp)
         .apply();
   }
 

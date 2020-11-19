@@ -11,6 +11,8 @@
 
   <!--MainActivity Preferences-->
   <string name="main_settings_daemon_uid_key">main_settings_daemon_uid</string>
+  <string name="main_settings_ask_for_rating_ts_key">main_settings_ask_for_rating_ts</string>
+  <string name="main_settings_app_launch_count_key">main_settings_app_launch_count</string>
 
   <!--MainActivity Preferences corresponding to default bool values-->
   <string name="main_settings_deep_search_key">main_settings_deep_search</string>
@@ -90,6 +92,10 @@
   <string name="hidden_apis_confirmation">Some ROMs allow using system\'s hidden APIs. Daemon mode might
         be slower. Stop using hidden APIs?</string>
   <string name="granting_permission_failed">Granting permission failed</string>
+  <string name="purchase_and_rate_the_app">Liking the app?\nPlease consider purchasing and rating on
+    Play Store to support the development.</string>
+  <string name="thank_you">Thank you</string>
+  <string name="play_store_url">https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx</string>
 
   <!-- Buttons-->
   <string name="disable">Disable</string>
@@ -97,6 +103,7 @@
   <string name="exclude">Exclude</string>
   <string name="clear_reference">Clear Ref</string>
   <string name="set_reference">Set Ref</string>
+  <string name="shut_up">Shut up</string>
 
   <!--PackageActivity menu items-->
   <string name="package_information_menu_item">App Info</string>

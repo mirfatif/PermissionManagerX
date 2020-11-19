@@ -217,6 +217,9 @@ public class MainActivity extends AppCompatActivity {
     // clear search query on activity refresh
     if (mSearchView != null) collapseSearchView();
     else mMySettings.mQueryText = null;
+
+    // increment app launch count
+    mMySettings.plusAppLaunchCount();
   }
 
   private boolean setNightTheme() {
@@ -393,6 +396,7 @@ public class MainActivity extends AppCompatActivity {
                           5000)
                       .show();
                 }
+                askForRating();
               }
             });
 
@@ -543,6 +547,27 @@ public class MainActivity extends AppCompatActivity {
             Log.e("setPackageEnabledState", "Response is " + res);
           }
         });
+  }
+
+  private void askForRating() {
+    if (mMySettings.shouldNotAskForRating()) return;
+    new AlertDialog.Builder(this)
+        .setMessage(R.string.purchase_and_rate_the_app)
+        .setPositiveButton(
+            android.R.string.ok,
+            (dialog, which) -> {
+              Utils.openWebUrl(this, getString(R.string.play_store_url));
+              Toast.makeText(App.getContext(), R.string.thank_you, Toast.LENGTH_LONG).show();
+            })
+        .setNegativeButton(android.R.string.cancel, null)
+        .setNeutralButton(
+            R.string.shut_up,
+            (dialog, which) -> {
+              mMySettings.setAskForRatingTs(Long.MAX_VALUE);
+              Toast.makeText(App.getContext(), "\ud83d\ude1f", Toast.LENGTH_LONG).show();
+            })
+        .create()
+        .show();
   }
 
   //////////////////////////////////////////////////////////////////
