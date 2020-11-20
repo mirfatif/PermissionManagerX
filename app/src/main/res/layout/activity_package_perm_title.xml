@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/permission_title_view"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:maxLines="1"
-    app:autoSizeTextType="uniform"
-    android:textStyle="bold"
-    android:textSize="18sp"
-    android:textColor="@android:color/black"
-    android:paddingTop="16dp"
-    android:paddingStart="24dp"
-    android:paddingEnd="24dp">
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/permission_title_view"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:maxLines="1"
+  app:autoSizeTextType="uniform"
+  android:textStyle="bold"
+  android:textSize="18sp"
+  android:textColor="@android:color/black"
+  android:paddingTop="16dp"
+  android:paddingStart="24dp"
+  android:paddingEnd="24dp">
 
 </TextView>

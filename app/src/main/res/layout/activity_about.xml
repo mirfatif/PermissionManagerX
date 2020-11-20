@@ -1,223 +1,223 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:animateLayoutChanges="true">
+
+  <LinearLayout
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:animateLayoutChanges="true">
+    android:layout_height="wrap_content">
+
+    <View
+      android:layout_width="match_parent"
+      android:background="@color/accentColor"
+      android:layout_height="1dp"/>
 
     <LinearLayout
-        android:orientation="vertical"
+      android:layout_width="match_parent"
+      android:layout_margin="8dp"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+      <ImageView
+        android:id="@+id/icon"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:src="@drawable/icon"
+        tools:ignore="ContentDescription"/>
+
+      <TextView
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="@string/app_name"/>
+
+      <TextView
+        android:id="@+id/version"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="8dp"
+        tools:text="Version: "/>
+
+      <View
+        android:layout_width="match_parent"
+        android:background="@color/accentColor"
+        android:layout_height="1dp"/>
+
+      <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <View
-            android:layout_width="match_parent"
-            android:background="@color/accentColor"
-            android:layout_height="1dp" />
+        <ImageView
+          android:layout_width="24dp"
+          android:layout_height="24dp"
+          android:layout_gravity="center"
+          android:layout_marginEnd="8dp"
+          android:src="@drawable/email"
+          tools:ignore="ContentDescription"/>
 
         <LinearLayout
+          android:id="@+id/contact"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:paddingTop="8dp"
+          android:paddingBottom="8dp"
+          android:orientation="vertical"
+          android:background="?android:attr/selectableItemBackground">
+
+          <TextView
             android:layout_width="match_parent"
-            android:layout_margin="8dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:text="@string/email"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
 
-            <ImageView
-                android:id="@+id/icon"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:src="@drawable/icon"
-                tools:ignore="ContentDescription" />
-
-            <TextView
-                android:layout_gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:text="@string/app_name" />
-
-            <TextView
-                android:id="@+id/version"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="8dp"
-                tools:text="Version: " />
-
-            <View
-                android:layout_width="match_parent"
-                android:background="@color/accentColor"
-                android:layout_height="1dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="8dp"
-                    android:src="@drawable/email"
-                    tools:ignore="ContentDescription" />
-
-                <LinearLayout
-                    android:id="@+id/contact"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:orientation="vertical"
-                    android:background="?android:attr/selectableItemBackground">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/email"
-                        android:textStyle="bold"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/email_address"
-                        android:layout_marginTop="2dp" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:background="@color/accentColor"
-                android:layout_height="1dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="8dp"
-                    android:src="@drawable/github_mark"
-                    tools:ignore="ContentDescription" />
-
-                <LinearLayout
-                    android:id="@+id/source_code"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:orientation="vertical"
-                    android:background="?android:attr/selectableItemBackground">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/source"
-                        android:textStyle="bold"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/source_url"
-                        android:layout_marginTop="2dp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:background="@color/accentColor"
-                android:layout_height="1dp" />
-
-            <LinearLayout
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
-
-                <ImageView
-                  android:layout_width="24dp"
-                  android:layout_height="24dp"
-                  android:layout_gravity="center"
-                  android:layout_marginEnd="8dp"
-                  android:src="@drawable/issues"
-                  tools:ignore="ContentDescription" />
-
-                <LinearLayout
-                  android:id="@+id/issues"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:paddingTop="8dp"
-                  android:paddingBottom="8dp"
-                  android:orientation="vertical"
-                  android:background="?android:attr/selectableItemBackground">
-
-                    <TextView
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:text="@string/report_issues"
-                      android:textStyle="bold"
-                      android:textSize="16sp" />
-
-                    <TextView
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:text="@string/report_issues_summary"
-                      android:layout_marginTop="2dp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <View
-              android:layout_width="match_parent"
-              android:background="@color/accentColor"
-              android:layout_height="1dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="8dp"
-                    android:src="@drawable/log"
-                    tools:ignore="ContentDescription" />
-
-                <LinearLayout
-                    android:id="@+id/logging"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:orientation="vertical"
-                    android:background="?android:attr/selectableItemBackground">
-
-                    <TextView
-                        android:id="@+id/logging_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/collect_logs"
-                        android:textStyle="bold"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/collect_logs_summary"
-                        android:layout_marginTop="2dp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:background="@color/accentColor"
-                android:layout_height="1dp" />
-
+          <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/email_address"
+            android:layout_marginTop="2dp"/>
         </LinearLayout>
+
+      </LinearLayout>
+
+      <View
+        android:layout_width="match_parent"
+        android:background="@color/accentColor"
+        android:layout_height="1dp"/>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+          android:layout_width="24dp"
+          android:layout_height="24dp"
+          android:layout_gravity="center"
+          android:layout_marginEnd="8dp"
+          android:src="@drawable/github_mark"
+          tools:ignore="ContentDescription"/>
+
+        <LinearLayout
+          android:id="@+id/source_code"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:paddingTop="8dp"
+          android:paddingBottom="8dp"
+          android:orientation="vertical"
+          android:background="?android:attr/selectableItemBackground">
+
+          <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/source"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+
+          <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/source_url"
+            android:layout_marginTop="2dp"/>
+        </LinearLayout>
+      </LinearLayout>
+
+      <View
+        android:layout_width="match_parent"
+        android:background="@color/accentColor"
+        android:layout_height="1dp"/>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+          android:layout_width="24dp"
+          android:layout_height="24dp"
+          android:layout_gravity="center"
+          android:layout_marginEnd="8dp"
+          android:src="@drawable/issues"
+          tools:ignore="ContentDescription"/>
+
+        <LinearLayout
+          android:id="@+id/issues"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:paddingTop="8dp"
+          android:paddingBottom="8dp"
+          android:orientation="vertical"
+          android:background="?android:attr/selectableItemBackground">
+
+          <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/report_issues"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+
+          <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/report_issues_summary"
+            android:layout_marginTop="2dp"/>
+        </LinearLayout>
+      </LinearLayout>
+
+      <View
+        android:layout_width="match_parent"
+        android:background="@color/accentColor"
+        android:layout_height="1dp"/>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+          android:layout_width="24dp"
+          android:layout_height="24dp"
+          android:layout_gravity="center"
+          android:layout_marginEnd="8dp"
+          android:src="@drawable/log"
+          tools:ignore="ContentDescription"/>
+
+        <LinearLayout
+          android:id="@+id/logging"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:paddingTop="8dp"
+          android:paddingBottom="8dp"
+          android:orientation="vertical"
+          android:background="?android:attr/selectableItemBackground">
+
+          <TextView
+            android:id="@+id/logging_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/collect_logs"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+
+          <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/collect_logs_summary"
+            android:layout_marginTop="2dp"/>
+        </LinearLayout>
+      </LinearLayout>
+
+      <View
+        android:layout_width="match_parent"
+        android:background="@color/accentColor"
+        android:layout_height="1dp"/>
+
     </LinearLayout>
+  </LinearLayout>
 
 </ScrollView>

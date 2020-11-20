@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+  xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/action_search"
-        android:icon="@android:drawable/ic_menu_search"
-        android:title="@string/search_menu_item"
-        app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:showAsAction="ifRoom" />
+  <item
+    android:id="@+id/action_search"
+    android:icon="@android:drawable/ic_menu_search"
+    android:title="@string/search_menu_item"
+    app:actionViewClass="androidx.appcompat.widget.SearchView"
+    app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/action_information"
-        android:icon="@drawable/info"
-        android:title="@string/package_information_menu_item"
-        app:showAsAction="ifRoom" />
+  <item
+    android:id="@+id/action_information"
+    android:icon="@drawable/info"
+    android:title="@string/package_information_menu_item"
+    app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/action_reset_app_ops"
-        android:title="@string/reset_app_ops"
-        app:showAsAction="never" />
+  <item
+    android:id="@+id/action_reset_app_ops"
+    android:title="@string/reset_app_ops"
+    app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_set_all_references"
-        android:title="@string/set_references"
-        app:showAsAction="never" />
+  <item
+    android:id="@+id/action_set_all_references"
+    android:title="@string/set_references"
+    app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_clear_references"
-        android:title="@string/clear_references"
-        app:showAsAction="never" />
+  <item
+    android:id="@+id/action_clear_references"
+    android:title="@string/clear_references"
+    app:showAsAction="never"/>
 
 </menu>

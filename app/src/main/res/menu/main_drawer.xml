@@ -1,61 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+  xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <group android:id="@+id/group1">
-        <item
-            android:id="@+id/action_filter"
-            android:title="@string/filter_menu_item"
-            android:icon="@drawable/filter" />
-    </group>
+  <group android:id="@+id/group1">
+    <item
+      android:id="@+id/action_filter"
+      android:title="@string/filter_menu_item"
+      android:icon="@drawable/filter"/>
+  </group>
 
-    <group android:id="@+id/group2">
-        <item
-            android:id="@+id/action_root"
-            app:actionViewClass="android.widget.CheckBox"
-            android:title="@string/root_menu_item"
-            android:icon="@drawable/root" />
+  <group android:id="@+id/group2">
+    <item
+      android:id="@+id/action_root"
+      app:actionViewClass="android.widget.CheckBox"
+      android:title="@string/root_menu_item"
+      android:icon="@drawable/root"/>
 
-        <item
-            android:id="@+id/action_adb"
-            app:actionViewClass="android.widget.CheckBox"
-            android:title="@string/adb_menu_item"
-            android:icon="@drawable/shell" />
+    <item
+      android:id="@+id/action_adb"
+      app:actionViewClass="android.widget.CheckBox"
+      android:title="@string/adb_menu_item"
+      android:icon="@drawable/shell"/>
 
-        <item
-            android:id="@+id/action_advanced_settings"
-            android:title="@string/advanced_settings_menu_item"
-            android:icon="@drawable/advanced" />
-    </group>
+    <item
+      android:id="@+id/action_advanced_settings"
+      android:title="@string/advanced_settings_menu_item"
+      android:icon="@drawable/advanced"/>
+  </group>
 
-    <group android:id="@+id/group3">
-        <item
-            android:id="@+id/action_dark_theme"
-            app:actionViewClass="android.widget.CheckBox"
-            android:title="@string/dark_theme_menu_item"
-            android:icon="@drawable/theme" />
+  <group android:id="@+id/group3">
+    <item
+      android:id="@+id/action_dark_theme"
+      app:actionViewClass="android.widget.CheckBox"
+      android:title="@string/dark_theme_menu_item"
+      android:icon="@drawable/theme"/>
 
-        <item
-            android:id="@+id/action_backup_restore"
-            android:title="@string/backup_restore_menu_item"
-            android:icon="@drawable/backup_restore" />
-    </group>
+    <item
+      android:id="@+id/action_backup_restore"
+      android:title="@string/backup_restore_menu_item"
+      android:icon="@drawable/backup_restore"/>
+  </group>
 
-    <group android:id="@+id/group4">
-        <item
-            android:id="@+id/action_help"
-            android:title="@string/help_menu_item"
-            android:icon="@drawable/help" />
+  <group android:id="@+id/group4">
+    <item
+      android:id="@+id/action_help"
+      android:title="@string/help_menu_item"
+      android:icon="@drawable/help"/>
 
-        <item
-            android:id="@+id/action_donate"
-            android:title="@string/donate_menu_item"
-            android:icon="@drawable/donate" />
+    <item
+      android:id="@+id/action_donate"
+      android:title="@string/donate_menu_item"
+      android:icon="@drawable/donate"/>
 
-        <item
-            android:id="@+id/action_about"
-            android:title="@string/about_menu_item"
-            android:icon="@drawable/info"
-            app:iconTint="@color/accentColor" />
-    </group>
+    <item
+      android:id="@+id/action_about"
+      android:title="@string/about_menu_item"
+      android:icon="@drawable/info"
+      app:iconTint="@color/accentColor"/>
+  </group>
 </menu>

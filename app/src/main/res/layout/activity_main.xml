@@ -1,151 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activity_main"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:animateLayoutChanges="true">
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/activity_main"
+  android:layout_height="match_parent"
+  android:layout_width="match_parent"
+  android:animateLayoutChanges="true">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+  <androidx.coordinatorlayout.widget.CoordinatorLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_behavior="com.mirfatif.permissionmanagerx.MoveUpwardBehavior">
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+          android:id="@+id/search_settings_container"
+          android:visibility="gone"
+          android:background="@color/accentTransparent"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+
+          <CheckBox
+            android:id="@+id/deep_search"
+            android:text="@string/deep_search"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="2dp"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
+          <CheckBox
+            android:id="@+id/case_sensitive_search"
+            android:text="@string/case_sensitive_search"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
+        </LinearLayout>
+
+        <View
+          android:layout_width="match_parent"
+          android:background="@color/accentColor"
+          android:layout_height="1dp"/>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+          android:id="@+id/refresh_layout"
+          android:layout_width="match_parent"
+          android:layout_height="0dp"
+          android:layout_weight="1">
+
+          <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"/>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <LinearLayout
+          android:id="@+id/progress_bar_container"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@color/snackBarBackground"
+          android:orientation="horizontal"
+          android:visibility="gone">
+
+          <TextView
+            android:id="@+id/progress_now"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textColor="@android:color/white"/>
+
+          <ProgressBar
+            android:id="@+id/progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:progressTint="@color/accentColor"
+            android:indeterminateTint="@color/accentColor"
+            android:indeterminateBehavior="cycle"/>
+
+          <TextView
+            android:id="@+id/progress_max"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:textColor="@android:color/white"/>
+
+        </LinearLayout>
+
+      </LinearLayout>
+
+      <FrameLayout
+        android:id="@+id/round_progress_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="com.mirfatif.permissionmanagerx.MoveUpwardBehavior">
+        <ProgressBar
+          style="@style/Widget.AppCompat.ProgressBar"
+          android:background="@drawable/circle_background"
+          android:indeterminateDrawable="@drawable/circle_progress_bar"
+          android:layout_width="200dp"
+          android:layout_height="200dp"
+          android:layout_gravity="center"
+          android:indeterminate="true"
+          android:indeterminateBehavior="cycle"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+        <TextView
+          android:id="@+id/round_progress_text"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:maxWidth="160dp"
+          android:maxHeight="120dp"
+          android:ellipsize="end"
+          android:fontFamily="sans-serif-smallcaps"
+          android:textStyle="bold"
+          android:textColor="@android:color/white"
+          android:textAlignment="center"
+          android:gravity="center"
+          android:layout_gravity="center"/>
 
-                <LinearLayout
-                    android:id="@+id/search_settings_container"
-                    android:visibility="gone"
-                    android:background="@color/accentTransparent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+      </FrameLayout>
 
-                    <CheckBox
-                        android:id="@+id/deep_search"
-                        android:text="@string/deep_search"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="2dp"
-                        android:maxLines="1"
-                        android:ellipsize="end" />
+    </FrameLayout>
 
-                    <CheckBox
-                        android:id="@+id/case_sensitive_search"
-                        android:text="@string/case_sensitive_search"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:ellipsize="end" />
+  </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:background="@color/accentColor"
-                    android:layout_height="1dp" />
-
-                <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                    android:id="@+id/refresh_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scrollbars="vertical" />
-
-                </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-                <LinearLayout
-                    android:id="@+id/progress_bar_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/snackBarBackground"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:id="@+id/progress_now"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:textColor="@android:color/white" />
-
-                    <ProgressBar
-                        android:id="@+id/progress_bar"
-                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:layout_weight="1"
-                        android:progressTint="@color/accentColor"
-                        android:indeterminateTint="@color/accentColor"
-                        android:indeterminateBehavior="cycle" />
-
-                    <TextView
-                        android:id="@+id/progress_max"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:textColor="@android:color/white" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <FrameLayout
-                android:id="@+id/round_progress_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ProgressBar
-                    style="@style/Widget.AppCompat.ProgressBar"
-                    android:background="@drawable/circle_background"
-                    android:indeterminateDrawable="@drawable/circle_progress_bar"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:layout_gravity="center"
-                    android:indeterminate="true"
-                    android:indeterminateBehavior="cycle" />
-
-                <TextView
-                    android:id="@+id/round_progress_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxWidth="160dp"
-                    android:maxHeight="120dp"
-                    android:ellipsize="end"
-                    android:fontFamily="sans-serif-smallcaps"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"
-                    android:textAlignment="center"
-                    android:gravity="center"
-                    android:layout_gravity="center" />
-
-            </FrameLayout>
-
-        </FrameLayout>
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:menu="@menu/main_drawer" />
+  <com.google.android.material.navigation.NavigationView
+    android:id="@+id/nav_view"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    app:menu="@menu/main_drawer"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>

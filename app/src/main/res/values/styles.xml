@@ -1,42 +1,42 @@
 <resources>
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight">
+  <!-- Base application theme. -->
+  <style name="AppTheme" parent="Theme.AppCompat.DayNight">
 
-        <!--Preference Group Titles, Dialog Button Text-->
-        <item name="colorAccent">@color/accentColor</item>
+    <!--Preference Group Titles, Dialog Button Text-->
+    <item name="colorAccent">@color/accentColor</item>
 
-        <!--Check Boxes, Switch Active State, Indeterminate Progress Bar. If not set, uses colorAccent-->
-        <!--<item name="colorControlActivated">@color/accentColor</item>-->
+    <!--Check Boxes, Switch Active State, Indeterminate Progress Bar. If not set, uses colorAccent-->
+    <!--<item name="colorControlActivated">@color/accentColor</item>-->
 
-        <!--Status Bar-->
-        <item name="colorPrimaryDark">@color/accentColor</item>
+    <!--Status Bar-->
+    <item name="colorPrimaryDark">@color/accentColor</item>
 
-        <!--Action Bar-->
-        <item name="colorPrimary">@color/accentTransparent</item>
+    <!--Action Bar-->
+    <item name="colorPrimary">@color/accentTransparent</item>
 
-        <item name="android:spinnerItemStyle">@style/mySpinnerItemStyle</item>
-        <!--<item name="alertDialogTheme">@style/myAlertDialogTheme</item>-->
-    </style>
+    <item name="android:spinnerItemStyle">@style/mySpinnerItemStyle</item>
+    <!--<item name="alertDialogTheme">@style/myAlertDialogTheme</item>-->
+  </style>
 
-    <style name="mySpinnerItemStyle">
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/spinner_color</item>
-    </style>
+  <style name="mySpinnerItemStyle">
+    <item name="android:textStyle">bold</item>
+    <item name="android:textColor">@color/spinner_color</item>
+  </style>
 
-    <style name="myAlertDialogTheme" parent="ThemeOverlay.AppCompat.Dialog.Alert">
-        <item name="buttonBarButtonStyle">@style/myAlertDialogButtonStyle</item>
-        <item name="android:windowTitleStyle">@style/myAlertDialogTitleStyle</item>
-    </style>
+  <style name="myAlertDialogTheme" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+    <item name="buttonBarButtonStyle">@style/myAlertDialogButtonStyle</item>
+    <item name="android:windowTitleStyle">@style/myAlertDialogTitleStyle</item>
+  </style>
 
-    <!--Overrides disabled button color too-->
-    <style name="myAlertDialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
-        <item name="android:textColor">@color/accentColor</item>
-    </style>
+  <!--Overrides disabled button color too-->
+  <style name="myAlertDialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+    <item name="android:textColor">@color/accentColor</item>
+  </style>
 
-    <!--Does not work-->
-    <style name="myAlertDialogTitleStyle" parent="@style/TextAppearance.AppCompat.Title">
-        <item name="maxLines">1</item>
-        <item name="autoSizeTextType">uniform</item>
-    </style>
+  <!--Does not work-->
+  <style name="myAlertDialogTitleStyle" parent="@style/TextAppearance.AppCompat.Title">
+    <item name="maxLines">1</item>
+    <item name="autoSizeTextType">uniform</item>
+  </style>
 
 </resources>
