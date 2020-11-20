@@ -72,14 +72,16 @@ public class PackageParser {
   // create singleton instance of PackageParser so that all activities can update mPackagesListLive
   // whenever needed
   public static synchronized PackageParser getInstance() {
-    if (mPackageParser == null) mPackageParser = new PackageParser();
+    if (mPackageParser == null) {
+      mPackageParser = new PackageParser();
+      mPackageParser.initializeVariables();
+    }
     return mPackageParser;
   }
 
   private PackageParser() {}
 
-  // only to be set once from ViewModel
-  public void initiateVariables() {
+  private void initializeVariables() {
     mPackageManager = App.getContext().getPackageManager();
     mMySettings = MySettings.getInstance();
     mAppOpsParser = new AppOpsParser(mPackageManager);

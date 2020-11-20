@@ -25,7 +25,10 @@ public class MySettings {
   private static MySettings mMySettings;
 
   public static synchronized MySettings getInstance() {
-    if (mMySettings == null) mMySettings = new MySettings();
+    if (mMySettings == null) {
+      mMySettings = new MySettings();
+      mMySettings.initializeVariables();
+    }
     return mMySettings;
   }
 
@@ -33,7 +36,7 @@ public class MySettings {
 
   private SharedPreferences mPrefs;
 
-  void initializeVariables() {
+  private void initializeVariables() {
     mPrefs = PreferenceManager.getDefaultSharedPreferences(App.getContext());
     mExcludedAppsPrefKey = getString(R.string.filter_settings_excluded_apps_key);
     mExcludedPermsPrefKey = getString(R.string.filter_settings_excluded_perms_key);

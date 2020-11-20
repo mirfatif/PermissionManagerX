@@ -9,17 +9,17 @@ import java.util.List;
 
 public class MyViewModel extends AndroidViewModel {
 
-  private final PackageParser mPackageParser;
+  final PackageParser mPackageParser;
+  final MySettings mMySettings;
+  final PrivDaemonHandler mDaemonHandler;
 
   public MyViewModel(@NonNull Application application) {
     super(application);
 
-    // create instances
+    // create and hold global instances
     mPackageParser = PackageParser.getInstance();
-    mPackageParser.initiateVariables();
-
-    MySettings.getInstance().initializeVariables();
-    PrivDaemonHandler.getInstance();
+    mMySettings = MySettings.getInstance();
+    mDaemonHandler = PrivDaemonHandler.getInstance();
   }
 
   LiveData<List<Package>> getPackagesListLive() {

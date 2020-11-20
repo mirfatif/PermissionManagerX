@@ -107,8 +107,7 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // Create ViewModel instance and associate with current Activity. ViewModel initiates and
-    // holds
+    // Create ViewModel instance and associate with current Activity. ViewModel initialize and holds
     // instances of other classes which must be retained irrespective of lifecycle of Activities
     mMyViewModel = new ViewModelProvider(this).get(MyViewModel.class);
 
@@ -118,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
     mPrivDaemonHandler = PrivDaemonHandler.getInstance();
 
     /**
-     * Must be after initiating {@link mMySettings}. Activity is recreated on switching to Dark
+     * Must be after initializing {@link mMySettings}. Activity is recreated on switching to Dark
      * Theme, so return here.
      */
     if (setNightTheme()) return;
