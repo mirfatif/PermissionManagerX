@@ -44,6 +44,8 @@ public class AboutActivity extends AppCompatActivity {
         .setOnClickListener(v -> Utils.openWebUrl(this, getString(R.string.issues_url)));
 
     findViewById(R.id.logging).setOnClickListener(v -> handleLogging());
+    findViewById(R.id.rating)
+        .setOnClickListener(v -> Utils.openWebUrl(this, getString(R.string.play_store_url)));
   }
 
   private boolean logInProgress = false;

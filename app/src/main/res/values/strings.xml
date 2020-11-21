@@ -230,6 +230,8 @@
   <string name="select_log_file">Select file to save log</string>
   <string name="stop_logging">Stop Logging</string>
   <string name="logging_stopped">Logging stopped</string>
+  <string name="app_rating">Rate Me</string>
+  <string name="app_rating_summary">Rating and review on Play Store</string>
 
   <!--Donate-->
   <string name="bitcoin_link"><a href="bitcoin:">Bitcoin</a></string>
