@@ -84,12 +84,6 @@ preBuild.mustRunAfter(buildDaemon)
 preBuild.dependsOn(buildSetPriv)
 preBuild.mustRunAfter(buildSetPriv)
 
-allprojects {
-    tasks.withType(JavaCompile) {
-        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-    }
-}
-
 apply plugin: 'com.github.sherter.google-java-format'
 preBuild.dependsOn(verifyGoogleJavaFormat)
 preBuild.mustRunAfter(verifyGoogleJavaFormat)
