@@ -80,8 +80,10 @@ public class PrivDaemonHandler {
     OutputStream stdOutStream = null;
     BufferedReader inReader;
 
+    // required if running as root (ADBD or su)
+    if (!Utils.extractBinary()) return false;
+
     if (isRootGranted) {
-      if (!Utils.extractBinary()) return false;
       if (useSocket) params += " " + PrivDaemon.CREATE_SOCKET;
 
       Process process = Utils.runCommand("su", TAG, false);
