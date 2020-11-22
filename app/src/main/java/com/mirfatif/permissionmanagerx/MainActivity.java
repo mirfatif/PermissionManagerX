@@ -24,6 +24,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatSpinner;
@@ -32,6 +33,7 @@ import androidx.appcompat.widget.SearchView.OnQueryTextListener;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
   static final String START_LOGGING = "com.mirfatif.permissionmanagerx.START_LOGGING";
   static final String PACKAGE_POSITION = "com.mirfatif.permissionmanagerx.PACKAGE_POSITION";
   static final String APP_OPS_PERM = "android.permission.GET_APP_OPS_STATS";
+  static final String GRANT_ROOT_OR_ADB = "GRANT_ROOT_OR_ADB";
 
   private MySettings mMySettings;
   private PackageParser mPackageParser;
@@ -69,8 +72,8 @@ public class MainActivity extends AppCompatActivity {
   private SwipeRefreshLayout mRefreshLayout;
   private LinearLayoutManager mLayoutManager;
   private ProgressBar mProgressBar;
-  private FrameLayout mRoundProgressContainer;
-  private TextView mRoundProgressTextView;
+  FrameLayout mRoundProgressContainer;
+  TextView mRoundProgressTextView;
   private LinearLayout mProgressBarContainer;
   private SearchView mSearchView;
   private MyViewModel mMyViewModel;
@@ -82,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
   private DrawerLayout mDrawerLayout;
   private ActionBarDrawerToggle mDrawerToggle;
   private NavigationView mNavigationView;
+
+  final FragmentManager mFM = getSupportFragmentManager();
 
   @Override
   protected void onNewIntent(Intent intent) {
@@ -250,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
 
   private PkgLongClickListener getPkgLongClickListener() {
     return pkg -> {
-      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      Builder builder = new Builder(this);
       builder.setPositiveButton(
           R.string.exclude,
           (dialogInterface, i) -> {
@@ -284,9 +289,10 @@ public class MainActivity extends AppCompatActivity {
 
       // Set message, create and show the AlertDialog
       AlertDialog dialog = builder.setTitle(pkg.getLabel()).setMessage(message).create();
-      dialog.show();
-
-      dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(enabled);
+      boolean finalEnabled = enabled;
+      dialog.setOnShowListener(
+          d -> dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(finalEnabled));
+      new AlertDialogFragment(dialog).show(mFM, "PKG_OPTIONS", false);
     };
   }
 
@@ -320,12 +326,13 @@ public class MainActivity extends AppCompatActivity {
 
                 setNavigationMenu();
 
-                new AlertDialog.Builder(this)
-                    .setPositiveButton(android.R.string.ok, null)
-                    .setTitle(R.string.privileges)
-                    .setMessage(R.string.hidden_apis_warning)
-                    .create()
-                    .show();
+                AlertDialog dialog =
+                    new Builder(this)
+                        .setPositiveButton(android.R.string.ok, null)
+                        .setTitle(R.string.privileges)
+                        .setMessage(R.string.hidden_apis_warning)
+                        .create();
+                new AlertDialogFragment(dialog).show(mFM, "HIDDEN_APIS_WARNING", false);
               }
             });
   }
@@ -516,13 +523,14 @@ public class MainActivity extends AppCompatActivity {
 
   private void setPackageEnabledState(Package pkg) {
     if (!mMySettings.mPrivDaemonAlive) {
-      new AlertDialog.Builder(this)
-          .setPositiveButton(
-              android.R.string.ok, (dialog, which) -> mDrawerLayout.openDrawer(GravityCompat.START))
-          .setTitle(R.string.privileges)
-          .setMessage(R.string.grant_root_or_adb)
-          .create()
-          .show();
+      AlertDialog dialog =
+          new Builder(this)
+              .setPositiveButton(
+                  android.R.string.ok, (d, which) -> mDrawerLayout.openDrawer(GravityCompat.START))
+              .setTitle(R.string.privileges)
+              .setMessage(R.string.grant_root_or_adb)
+              .create();
+      new AlertDialogFragment(dialog).show(mFM, GRANT_ROOT_OR_ADB, false);
       return;
     }
 
@@ -550,23 +558,24 @@ public class MainActivity extends AppCompatActivity {
 
   private void askForRating() {
     if (mMySettings.shouldNotAskForRating()) return;
-    new AlertDialog.Builder(this)
-        .setMessage(R.string.purchase_and_rate_the_app)
-        .setPositiveButton(
-            android.R.string.ok,
-            (dialog, which) -> {
-              Utils.openWebUrl(this, getString(R.string.play_store_url));
-              Toast.makeText(App.getContext(), R.string.thank_you, Toast.LENGTH_LONG).show();
-            })
-        .setNegativeButton(android.R.string.cancel, null)
-        .setNeutralButton(
-            R.string.shut_up,
-            (dialog, which) -> {
-              mMySettings.setAskForRatingTs(Long.MAX_VALUE);
-              Toast.makeText(App.getContext(), "\ud83d\ude1f", Toast.LENGTH_LONG).show();
-            })
-        .create()
-        .show();
+    AlertDialog dialog =
+        new Builder(this)
+            .setMessage(R.string.purchase_and_rate_the_app)
+            .setPositiveButton(
+                android.R.string.ok,
+                (d, which) -> {
+                  Utils.openWebUrl(this, getString(R.string.play_store_url));
+                  Toast.makeText(App.getContext(), R.string.thank_you, Toast.LENGTH_LONG).show();
+                })
+            .setNegativeButton(android.R.string.cancel, null)
+            .setNeutralButton(
+                R.string.shut_up,
+                (d, which) -> {
+                  mMySettings.setAskForRatingTs(Long.MAX_VALUE);
+                  Toast.makeText(App.getContext(), "\ud83d\ude1f", Toast.LENGTH_LONG).show();
+                })
+            .create();
+    new AlertDialogFragment(dialog).show(mFM, "RATING", false);
   }
 
   //////////////////////////////////////////////////////////////////
@@ -691,14 +700,15 @@ public class MainActivity extends AppCompatActivity {
       } else {
         Log.e("startPrivDaemon", "Root access: unavailable, ADB shell: unavailable");
 
-        AlertDialog.Builder builder =
-            new AlertDialog.Builder(this)
+        Builder builder =
+            new Builder(this)
                 .setPositiveButton(
                     android.R.string.ok,
                     (dialog, which) -> mDrawerLayout.openDrawer(GravityCompat.START))
                 .setTitle(R.string.privileges)
                 .setMessage(getString(R.string.grant_root_or_adb));
-        Utils.runInFg(() -> builder.create().show());
+        Utils.runInFg(
+            () -> new AlertDialogFragment(builder.create()).show(mFM, GRANT_ROOT_OR_ADB, false));
       }
     }
 
@@ -841,14 +851,15 @@ public class MainActivity extends AppCompatActivity {
                   });
               restartPrivDaemon();
             } else {
+              Builder builder =
+                  new Builder(this)
+                      .setPositiveButton(android.R.string.ok, null)
+                      .setTitle(R.string.privileges)
+                      .setMessage(R.string.adb_connect_fail_long);
               Utils.runInFg(
                   () ->
-                      new AlertDialog.Builder(this)
-                          .setPositiveButton(android.R.string.ok, null)
-                          .setTitle(R.string.privileges)
-                          .setMessage(R.string.adb_connect_fail_long)
-                          .create()
-                          .show());
+                      new AlertDialogFragment(builder.create())
+                          .show(mFM, "ADB_CONNECT_FAILED", false));
             }
           });
       return true;
@@ -920,39 +931,40 @@ public class MainActivity extends AppCompatActivity {
     int selectedItemPosition = spinnerItems.indexOf(getString(resId));
     daemonUidSpinner.setSelection(selectedItemPosition);
 
-    new AlertDialog.Builder(this)
-        .setTitle(R.string.advanced_settings_menu_item)
-        .setView(layout)
-        .setPositiveButton(
-            R.string.save,
-            (dialog, which) -> {
-              boolean startDaemon = false;
-              if (useHiddenAPIs != useHiddenAPIsView.isChecked()) {
-                startDaemon = saveHiddenAPIsSettings(useHiddenAPIsView.isChecked());
-              }
+    AlertDialog dialog =
+        new Builder(this)
+            .setTitle(R.string.advanced_settings_menu_item)
+            .setView(layout)
+            .setPositiveButton(
+                R.string.save,
+                (d, which) -> {
+                  boolean startDaemon = false;
+                  if (useHiddenAPIs != useHiddenAPIsView.isChecked()) {
+                    startDaemon = saveHiddenAPIsSettings(useHiddenAPIsView.isChecked());
+                  }
 
-              boolean restartDaemon = false;
-              if (useSocket != useSocketView.isChecked()) {
-                mMySettings.savePref(R.string.main_settings_use_socket_key, !useSocket);
-                restartDaemon = true;
-              }
+                  boolean restartDaemon = false;
+                  if (useSocket != useSocketView.isChecked()) {
+                    mMySettings.savePref(R.string.main_settings_use_socket_key, !useSocket);
+                    restartDaemon = true;
+                  }
 
-              int selectedItemNewPosition = daemonUidSpinner.getSelectedItemPosition();
-              if (selectedItemPosition != selectedItemNewPosition) {
-                String newSelection = spinnerItems.get(selectedItemNewPosition);
-                int uid = 1000;
-                if (newSelection.equals(getString(R.string.daemon_uid_root))) uid = 0;
-                else if (newSelection.equals(getString(R.string.daemon_uid_adb))) uid = 2000;
-                mMySettings.setDaemonUid(uid);
-                restartDaemon = true;
-              }
+                  int selectedItemNewPosition = daemonUidSpinner.getSelectedItemPosition();
+                  if (selectedItemPosition != selectedItemNewPosition) {
+                    String newSelection = spinnerItems.get(selectedItemNewPosition);
+                    int uid = 1000;
+                    if (newSelection.equals(getString(R.string.daemon_uid_root))) uid = 0;
+                    else if (newSelection.equals(getString(R.string.daemon_uid_adb))) uid = 2000;
+                    mMySettings.setDaemonUid(uid);
+                    restartDaemon = true;
+                  }
 
-              if (restartDaemon) restartPrivDaemon();
-              else if (startDaemon) Utils.runInBg(() -> startPrivDaemon(false));
-            })
-        .setNegativeButton(android.R.string.cancel, null)
-        .create()
-        .show();
+                  if (restartDaemon) restartPrivDaemon();
+                  else if (startDaemon) Utils.runInBg(() -> startPrivDaemon(false));
+                })
+            .setNegativeButton(android.R.string.cancel, null)
+            .create();
+    new AlertDialogFragment(dialog).show(mFM, "ADVANCED_SETTINGS", false);
   }
 
   private boolean saveHiddenAPIsSettings(boolean useHiddenAPIs) {
@@ -963,20 +975,21 @@ public class MainActivity extends AppCompatActivity {
       return true;
     }
 
-    new AlertDialog.Builder(this)
-        .setPositiveButton(
-            R.string.yes,
-            (dialog, which) -> {
-              mMySettings.savePref(R.string.main_settings_use_hidden_apis_key, false);
+    AlertDialog dialog =
+        new Builder(this)
+            .setPositiveButton(
+                R.string.yes,
+                (d, which) -> {
+                  mMySettings.savePref(R.string.main_settings_use_hidden_apis_key, false);
 
-              // start daemon if not running
-              Utils.runInBg(() -> startPrivDaemon(false));
-            })
-        .setNegativeButton(R.string.no, null)
-        .setTitle(R.string.hidden_apis)
-        .setMessage(R.string.hidden_apis_confirmation)
-        .create()
-        .show();
+                  // start daemon if not running
+                  Utils.runInBg(() -> startPrivDaemon(false));
+                })
+            .setNegativeButton(R.string.no, null)
+            .setTitle(R.string.hidden_apis)
+            .setMessage(R.string.hidden_apis_confirmation)
+            .create();
+    new AlertDialogFragment(dialog).show(mFM, "HIDDEN_APIS_CONFIRM", false);
     return false;
   }
 
@@ -985,14 +998,15 @@ public class MainActivity extends AppCompatActivity {
   //////////////////////////////////////////////////////////////////
 
   private void doBackupRestore() {
-    new AlertDialog.Builder(this)
-        .setPositiveButton(R.string.backup, (dialog, which) -> doBackupRestore(true))
-        .setNegativeButton(R.string.restore, (dialog, which) -> doBackupRestore(false))
-        .setNeutralButton(android.R.string.cancel, null)
-        .setTitle(getString(R.string.backup) + " / " + getString(R.string.restore))
-        .setMessage(R.string.choose_backup_restore)
-        .create()
-        .show();
+    AlertDialog dialog =
+        new Builder(this)
+            .setPositiveButton(R.string.backup, (d, which) -> doBackupRestore(true))
+            .setNegativeButton(R.string.restore, (d, which) -> doBackupRestore(false))
+            .setNeutralButton(android.R.string.cancel, null)
+            .setTitle(getString(R.string.backup) + " / " + getString(R.string.restore))
+            .setMessage(R.string.choose_backup_restore)
+            .create();
+    new AlertDialogFragment(dialog).show(mFM, "BACKUP_RESTORE", false);
   }
 
   private void doBackupRestore(boolean isBackup) {
@@ -1067,12 +1081,13 @@ public class MainActivity extends AppCompatActivity {
     else message = getString(R.string.backup_restore_process_entries, result[1], result[2]);
     if (result[3] > 0) message += getString(R.string.backup_restore_bad_entries, result[3]);
 
-    new AlertDialog.Builder(this)
-        .setPositiveButton(android.R.string.ok, null)
-        .setTitle(isBackup ? R.string.backup : R.string.restore)
-        .setMessage(message)
-        .create()
-        .show();
+    AlertDialog dialog =
+        new Builder(this)
+            .setPositiveButton(android.R.string.ok, null)
+            .setTitle(isBackup ? R.string.backup : R.string.restore)
+            .setMessage(message)
+            .create();
+    new AlertDialogFragment(dialog).show(mFM, "BACKUP_RESTORE", false);
 
     // do not show success/failure dialogs on activity changes
     backupRestoreResult.removeObservers(this);
@@ -1102,7 +1117,7 @@ public class MainActivity extends AppCompatActivity {
             BetterLinkMovementMethod.newInstance()
                 .setOnLinkClickListener((tView, url) -> Utils.openWebUrl(this, url)));
 
-    new AlertDialog.Builder(this).setView(layout).create().show();
+    new AlertDialogFragment(new Builder(this).setView(layout).create()).show(mFM, "DONATION", true);
     return true;
   }
 
@@ -1137,13 +1152,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     Utils.startLoggingTimer();
+    Builder builder =
+        new Builder(this)
+            .setTitle(R.string.logging)
+            .setMessage(R.string.logging_warning)
+            .setPositiveButton(android.R.string.ok, null);
     Utils.runInFg(
-        () ->
-            new AlertDialog.Builder(this)
-                .setTitle(R.string.logging)
-                .setMessage(R.string.logging_warning)
-                .setPositiveButton(android.R.string.ok, null)
-                .create()
-                .show());
+        () -> new AlertDialogFragment(builder.create()).show(mFM, "LOGGING_WARNING", false));
   }
 }

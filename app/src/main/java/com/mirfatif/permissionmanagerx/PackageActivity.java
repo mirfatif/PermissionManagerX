@@ -22,6 +22,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,6 +46,8 @@ public class PackageActivity extends AppCompatActivity {
   private Package mPackage;
   private SwipeRefreshLayout mRefreshLayout;
   private PermissionAdapter mPermissionAdapter;
+
+  private final FragmentManager mFM = getSupportFragmentManager();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -111,13 +114,15 @@ public class PackageActivity extends AppCompatActivity {
         int affectedPackagesCount = getPackageManager().getPackagesForUid(mPackage.getUid()).length;
 
         if (affectedPackagesCount > 1) {
-          new Builder(this)
-              .setPositiveButton(
-                  R.string.yes, (dialog, which) -> setAppOpsMode(permission, selectedValue, true))
-              .setNegativeButton(R.string.no, null)
-              .setMessage(getString(R.string.uid_mode_app_ops_warning, affectedPackagesCount - 1))
-              .create()
-              .show();
+          AlertDialog dialog =
+              new Builder(this)
+                  .setPositiveButton(
+                      R.string.yes, (d, which) -> setAppOpsMode(permission, selectedValue, true))
+                  .setNegativeButton(R.string.no, null)
+                  .setMessage(
+                      getString(R.string.uid_mode_app_ops_warning, affectedPackagesCount - 1))
+                  .create();
+          new AlertDialogFragment(dialog).show(mFM, "CHANGE_UID_MODE", false);
         } else {
           setAppOpsMode(permission, selectedValue, true);
         }
@@ -191,14 +196,15 @@ public class PackageActivity extends AppCompatActivity {
         layoutParams.gravity = Gravity.TOP;
         layoutParams.y = yLocation;
       }
-      dialog.show();
+
+      new AlertDialogFragment(dialog).show(mFM, "PERM_DETAILS", false);
     };
   }
 
   private PermLongClickListener getPermLongClickListener() {
     return permission -> {
       String permState = getPermState(permission);
-      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      Builder builder = new Builder(this);
       builder.setPositiveButton(
           R.string.exclude,
           (dialogInterface, i) -> {
@@ -267,10 +273,13 @@ public class PackageActivity extends AppCompatActivity {
       }
       builder.setMessage(message);
 
-      AlertDialog alertDialog = builder.create();
-      alertDialog.show();
-      alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(permission.isChangeable());
-      alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(!permission.isExtraAppOp());
+      AlertDialog dialog = builder.create();
+      dialog.setOnShowListener(
+          d -> {
+            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(permission.isChangeable());
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(!permission.isExtraAppOp());
+          });
+      new AlertDialogFragment(dialog).show(mFM, "PERM_OPTIONS", false);
     };
   }
 
@@ -399,85 +408,88 @@ public class PackageActivity extends AppCompatActivity {
     }
 
     if (item.getItemId() == R.id.action_reset_app_ops && checkPrivileges()) {
-      new AlertDialog.Builder(this)
-          .setPositiveButton(
-              R.string.yes,
-              (dialog, which) -> {
-                int userId = Process.myUid() / 100000;
-                String cmd = PrivDaemon.RESET_APP_OPS + " " + userId + " " + mPackage.getName();
-                Utils.runInBg(
-                    () -> {
-                      Object res = mPrivDaemonHandler.sendRequest(cmd);
-                      updatePackage();
-                      if (res != null) {
-                        Utils.runInFg(
-                            () ->
-                                Toast.makeText(
-                                        App.getContext(),
-                                        R.string.something_bad_happened,
-                                        Toast.LENGTH_LONG)
-                                    .show());
-                        Log.e("resetAppOps", "Response is " + res);
-                      }
-                    });
-              })
-          .setNegativeButton(R.string.no, null)
-          .setTitle(mPackage.getLabel())
-          .setMessage(R.string.reset_app_ops_confirmation)
-          .create()
-          .show();
+      AlertDialog dialog =
+          new Builder(this)
+              .setPositiveButton(
+                  R.string.yes,
+                  (d, which) -> {
+                    int userId = Process.myUid() / 100000;
+                    String cmd = PrivDaemon.RESET_APP_OPS + " " + userId + " " + mPackage.getName();
+                    Utils.runInBg(
+                        () -> {
+                          Object res = mPrivDaemonHandler.sendRequest(cmd);
+                          updatePackage();
+                          if (res != null) {
+                            Utils.runInFg(
+                                () ->
+                                    Toast.makeText(
+                                            App.getContext(),
+                                            R.string.something_bad_happened,
+                                            Toast.LENGTH_LONG)
+                                        .show());
+                            Log.e("resetAppOps", "Response is " + res);
+                          }
+                        });
+                  })
+              .setNegativeButton(R.string.no, null)
+              .setTitle(mPackage.getLabel())
+              .setMessage(R.string.reset_app_ops_confirmation)
+              .create();
+      new AlertDialogFragment(dialog).show(mFM, "RESET_APP_OPS_CONFIRM", false);
     }
 
     if (item.getItemId() == R.id.action_set_all_references) {
-      new AlertDialog.Builder(this)
-          .setPositiveButton(
-              R.string.yes,
-              (dialog, which) ->
-                  Utils.runInBg(
-                      () -> {
-                        List<BackupEntry> permEntries = new ArrayList<>();
-                        for (Permission permission : mPermissionsList) {
-                          if (!permission.isChangeable()) continue;
+      AlertDialog dialog =
+          new Builder(this)
+              .setPositiveButton(
+                  R.string.yes,
+                  (d, which) ->
+                      Utils.runInBg(
+                          () -> {
+                            List<BackupEntry> permEntries = new ArrayList<>();
+                            for (Permission permission : mPermissionsList) {
+                              if (!permission.isChangeable()) continue;
 
-                          String permState = getPermState(permission);
+                              String permState = getPermState(permission);
 
-                          BackupEntry backupEntry = new BackupEntry();
-                          backupEntry.key = mPackage.getName();
-                          backupEntry.value = permState;
-                          backupEntry.type = permission.getName();
-                          permEntries.add(backupEntry);
+                              BackupEntry backupEntry = new BackupEntry();
+                              backupEntry.key = mPackage.getName();
+                              backupEntry.value = permState;
+                              backupEntry.type = permission.getName();
+                              permEntries.add(backupEntry);
 
-                          mPackageParser.updatePermReferences(
-                              mPackage.getName(), permission.getName(), permState);
-                        }
-                        BackupRestore.updatePermissionEntities(permEntries);
-                        updatePackage();
-                      }))
-          .setNegativeButton(R.string.no, null)
-          .setTitle(mPackage.getLabel())
-          .setMessage(R.string.set_references_confirmation)
-          .create()
-          .show();
+                              mPackageParser.updatePermReferences(
+                                  mPackage.getName(), permission.getName(), permState);
+                            }
+                            BackupRestore.updatePermissionEntities(permEntries);
+                            updatePackage();
+                          }))
+              .setNegativeButton(R.string.no, null)
+              .setTitle(mPackage.getLabel())
+              .setMessage(R.string.set_references_confirmation)
+              .create();
+      new AlertDialogFragment(dialog).show(mFM, "SET_REF_CONFIRM", false);
     }
     if (item.getItemId() == R.id.action_clear_references) {
-      new AlertDialog.Builder(this)
-          .setPositiveButton(
-              R.string.yes,
-              (dialog, which) ->
-                  Utils.runInBg(
-                      () -> {
-                        mMySettings.getPermDb().deletePackage(mPackage.getName());
-                        for (Permission permission : mPermissionsList) {
-                          mPackageParser.updatePermReferences(
-                              mPackage.getName(), permission.getName(), null);
-                        }
-                        updatePackage();
-                      }))
-          .setNegativeButton(R.string.no, null)
-          .setTitle(mPackage.getLabel())
-          .setMessage(R.string.clear_references_confirmation)
-          .create()
-          .show();
+      AlertDialog dialog =
+          new Builder(this)
+              .setPositiveButton(
+                  R.string.yes,
+                  (d, which) ->
+                      Utils.runInBg(
+                          () -> {
+                            mMySettings.getPermDb().deletePackage(mPackage.getName());
+                            for (Permission permission : mPermissionsList) {
+                              mPackageParser.updatePermReferences(
+                                  mPackage.getName(), permission.getName(), null);
+                            }
+                            updatePackage();
+                          }))
+              .setNegativeButton(R.string.no, null)
+              .setTitle(mPackage.getLabel())
+              .setMessage(R.string.clear_references_confirmation)
+              .create();
+      new AlertDialogFragment(dialog).show(mFM, "CLEAR_REF_CONFIRM", false);
     }
 
     // do not recreate parent (Main) activity
@@ -523,21 +535,22 @@ public class PackageActivity extends AppCompatActivity {
       return true;
     }
 
-    new AlertDialog.Builder(this)
-        .setPositiveButton(
-            android.R.string.ok,
-            (dialog, which) -> {
-              startActivity(
-                  new Intent(App.getContext(), MainActivity.class)
-                      .setAction(MainActivity.SHOW_DRAWER)
-                      .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
-              finish();
-            })
-        .setNegativeButton(android.R.string.cancel, null)
-        .setTitle(R.string.privileges)
-        .setMessage(R.string.grant_root_or_adb)
-        .create()
-        .show();
+    AlertDialog dialog =
+        new Builder(this)
+            .setPositiveButton(
+                android.R.string.ok,
+                (d, which) -> {
+                  startActivity(
+                      new Intent(App.getContext(), MainActivity.class)
+                          .setAction(MainActivity.SHOW_DRAWER)
+                          .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                  finish();
+                })
+            .setNegativeButton(android.R.string.cancel, null)
+            .setTitle(R.string.privileges)
+            .setMessage(R.string.grant_root_or_adb)
+            .create();
+    new AlertDialogFragment(dialog).show(mFM, MainActivity.GRANT_ROOT_OR_ADB, false);
     return false;
   }
 

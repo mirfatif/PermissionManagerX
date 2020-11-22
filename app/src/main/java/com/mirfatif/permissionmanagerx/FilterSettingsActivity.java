@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -15,6 +16,7 @@ import java.util.Objects;
 public class FilterSettingsActivity extends AppCompatActivity {
 
   private MySettings mMySettings;
+  private final FragmentManager mFM = getSupportFragmentManager();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +57,7 @@ public class FilterSettingsActivity extends AppCompatActivity {
       Utils.debugLog("FilterSettingsActivity", "onOptionsItemSelected(): " + item.getTitle());
     if (item.getItemId() == R.id.action_reset_defaults) {
       // Build an AlertDialog and set listeners on buttons
-      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      Builder builder = new Builder(this);
       builder.setPositiveButton(
           R.string.yes,
           (dialogInterface, i) -> {
@@ -68,14 +70,13 @@ public class FilterSettingsActivity extends AppCompatActivity {
       // Set message, create and show the AlertDialog
       builder.setTitle(R.string.filter_settings);
       builder.setMessage(R.string.filter_settings_reset_confirmation);
-      AlertDialog alertDialog = builder.create();
-      alertDialog.show();
+      new AlertDialogFragment(builder.create()).show(mFM, "RESET_FILTER_SETTINGS", false);
       return true;
     }
 
     if (item.getItemId() == R.id.action_clear_excluded_apps) {
       // Build an AlertDialog and set listeners on buttons
-      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      Builder builder = new Builder(this);
       builder.setPositiveButton(
           R.string.yes,
           (dialogInterface, i) ->
@@ -86,13 +87,12 @@ public class FilterSettingsActivity extends AppCompatActivity {
       // Set message, create and show the AlertDialog
       builder.setTitle(R.string.filter_settings);
       builder.setMessage(R.string.filter_settings_clear_apps_confirmation);
-      AlertDialog alertDialog = builder.create();
-      alertDialog.show();
+      new AlertDialogFragment(builder.create()).show(mFM, "CLEAR_EXCLUDED_APPS", false);
       return true;
     }
 
     if (item.getItemId() == R.id.action_clear_excluded_perms) {
-      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      Builder builder = new Builder(this);
       builder.setPositiveButton(
           R.string.yes,
           (dialogInterface, i) ->
@@ -101,22 +101,23 @@ public class FilterSettingsActivity extends AppCompatActivity {
       builder.setNegativeButton(R.string.no, null);
       builder.setTitle(R.string.filter_settings);
       builder.setMessage(R.string.filter_settings_clear_perms_confirmation);
-      AlertDialog alertDialog = builder.create();
-      alertDialog.show();
+      new AlertDialogFragment(builder.create()).show(mFM, "CLEAR_EXCLUDED_PERMS", false);
       return true;
     }
 
     if (item.getItemId() == R.id.action_clear_extra_app_ops) {
-      new AlertDialog.Builder(this)
-          .setPositiveButton(
-              R.string.yes,
-              (dialogInterface, i) ->
-                  mMySettings.savePref(R.string.filter_settings_extra_appops_key, new HashSet<>()))
-          .setNegativeButton(R.string.no, null)
-          .setTitle(R.string.filter_settings)
-          .setMessage(R.string.filter_settings_clear_app_ops_confirmation)
-          .create()
-          .show();
+      AlertDialog dialog =
+          new Builder(this)
+              .setPositiveButton(
+                  R.string.yes,
+                  (dialogInterface, i) ->
+                      mMySettings.savePref(
+                          R.string.filter_settings_extra_appops_key, new HashSet<>()))
+              .setNegativeButton(R.string.no, null)
+              .setTitle(R.string.filter_settings)
+              .setMessage(R.string.filter_settings_clear_app_ops_confirmation)
+              .create();
+      new AlertDialogFragment(dialog).show(mFM, "CLEAR_EXTRA_APP_OPS", false);
       return true;
     }
 
