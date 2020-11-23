@@ -106,7 +106,7 @@
 
       </LinearLayout>
 
-      <FrameLayout
+      <com.mirfatif.permissionmanagerx.MyFrameLayout
         android:id="@+id/round_progress_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -135,7 +135,7 @@
           android:gravity="center"
           android:layout_gravity="center"/>
 
-      </FrameLayout>
+      </com.mirfatif.permissionmanagerx.MyFrameLayout>
 
     </FrameLayout>
 

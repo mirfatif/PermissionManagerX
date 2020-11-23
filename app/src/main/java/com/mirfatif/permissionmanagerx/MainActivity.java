@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
   private SwipeRefreshLayout mRefreshLayout;
   private LinearLayoutManager mLayoutManager;
   private ProgressBar mProgressBar;
-  FrameLayout mRoundProgressContainer;
+  MyFrameLayout mRoundProgressContainer;
   TextView mRoundProgressTextView;
   private LinearLayout mProgressBarContainer;
   private SearchView mSearchView;
