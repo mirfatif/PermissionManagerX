@@ -73,9 +73,11 @@
   <string name="are_you_rooted">. Are you rooted?</string>
   <string name="connected_to_adb">Connected to ADB</string>
   <string name="adb_connect_fail">Connecting to ADB failed</string>
-  <string name="adb_connect_fail_long">Connecting to ADB failed. Enable <b><i>ADB Over Network</i></b>
-        and come back to connect. Allow ADB authentication if prompted.</string>
+  <string name="adb_connect_fail_long">Connecting to ADB failed.\n- Enable <b><i>ADB Over Network</i></b>
+        and come back to connect.\n- Allow ADB authentication if prompted.</string>
   <string name="daemon_failed">Starting privileged daemon failed</string>
+  <string name="run_main_app">Make sure that you run the app from primary user profile and grant
+    privileges at least once.</string>
   <string name="backup">Backup</string>
   <string name="restore">Restore</string>
   <string name="choose_backup_restore">You can backup or restore preferences and permission references.</string>

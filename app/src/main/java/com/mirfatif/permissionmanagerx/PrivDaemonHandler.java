@@ -40,7 +40,7 @@ public class PrivDaemonHandler {
     File dexFile = new File(App.getContext().getExternalFilesDir(null), dex);
     File scriptFile = new File(App.getContext().getExternalFilesDir(null), script);
 
-    int userId = android.os.Process.myUid() / 100000;
+    int userId = Utils.getUserId();
     if (userId == 0) {
       if (Utils.extractionFails(dex, dexFile) || Utils.extractionFails(script, scriptFile)) {
         return false;

@@ -54,7 +54,7 @@ class Adb {
       adbConnection.connect();
 
       String runScript = "run.sh";
-      int userId = android.os.Process.myUid() / 100000;
+      int userId = Utils.getUserId();
       File runScriptPath = new File(App.getContext().getExternalFilesDir(null), runScript);
       if (userId == 0 && Utils.extractionFails(runScript, runScriptPath)) {
         closeQuietly();

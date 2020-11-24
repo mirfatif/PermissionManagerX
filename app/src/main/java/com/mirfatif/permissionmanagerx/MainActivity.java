@@ -536,7 +536,7 @@ public class MainActivity extends AppCompatActivity {
     Utils.runInBg(
         () -> {
           boolean enabled = pkg.isEnabled();
-          String command = pkg.getName() + " " + Process.myUid() / 100000;
+          String command = pkg.getName() + " " + Utils.getUserId();
           if (enabled) {
             command = PrivDaemon.DISABLE_PACKAGE + " " + command;
           } else {
@@ -690,11 +690,31 @@ public class MainActivity extends AppCompatActivity {
 
         Boolean res = mPrivDaemonHandler.startDaemon();
         String message = null;
-        if (res == null) message = getString(R.string.daemon_logging_failed);
-        else if (!res) message = getString(R.string.daemon_failed);
+        boolean showDialog = false;
+        if (res == null) {
+          message = getString(R.string.daemon_logging_failed);
+        } else if (!res) {
+          message = getString(R.string.daemon_failed);
+          if (Utils.getUserId() != 0) {
+            message += ". " + getString(R.string.run_main_app);
+            showDialog = true;
+          }
+        }
+
         if (message != null) {
-          String finalMessage = message;
-          Utils.runInFg(() -> Snackbar.make(mProgressBarContainer, finalMessage, 10000).show());
+          if (!showDialog) {
+            String finalMessage = message;
+            Utils.runInFg(() -> Snackbar.make(mProgressBarContainer, finalMessage, 10000).show());
+          } else {
+            Builder builder =
+                new Builder(this)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .setTitle(R.string.privileges)
+                    .setMessage(message);
+            Utils.runInFg(
+                () ->
+                    new AlertDialogFragment(builder.create()).show(mFM, GRANT_ROOT_OR_ADB, false));
+          }
         }
       } else {
         Log.e("startPrivDaemon", "Root access: unavailable, ADB shell: unavailable");
@@ -743,9 +763,14 @@ public class MainActivity extends AppCompatActivity {
 
   private void checkAppOpsPerm() {
     if (!mMySettings.isAppOpsGranted() && mMySettings.mPrivDaemonAlive) {
-      int userId = Process.myUid() / 100000;
       String command =
-          PrivDaemon.GRANT_PERMISSION + " " + getPackageName() + " " + APP_OPS_PERM + " " + userId;
+          PrivDaemon.GRANT_PERMISSION
+              + " "
+              + getPackageName()
+              + " "
+              + APP_OPS_PERM
+              + " "
+              + Utils.getUserId();
 
       if (mMySettings.DEBUG) Utils.debugLog("startPrivDaemon", "Sending command: " + command);
       mPrivDaemonHandler.sendRequest(command);
@@ -850,11 +875,15 @@ public class MainActivity extends AppCompatActivity {
                   });
               restartPrivDaemon();
             } else {
+              String message = getString(R.string.adb_connect_fail_long);
+              if (Utils.getUserId() != 0) {
+                message += "\n- " + getString(R.string.run_main_app);
+              }
               Builder builder =
                   new Builder(this)
                       .setPositiveButton(android.R.string.ok, null)
                       .setTitle(R.string.privileges)
-                      .setMessage(R.string.adb_connect_fail_long);
+                      .setMessage(message);
               Utils.runInFg(
                   () ->
                       new AlertDialogFragment(builder.create())

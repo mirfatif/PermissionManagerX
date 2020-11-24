@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Process;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
@@ -413,8 +412,12 @@ public class PackageActivity extends AppCompatActivity {
               .setPositiveButton(
                   R.string.yes,
                   (d, which) -> {
-                    int userId = Process.myUid() / 100000;
-                    String cmd = PrivDaemon.RESET_APP_OPS + " " + userId + " " + mPackage.getName();
+                    String cmd =
+                        PrivDaemon.RESET_APP_OPS
+                            + " "
+                            + Utils.getUserId()
+                            + " "
+                            + mPackage.getName();
                     Utils.runInBg(
                         () -> {
                           Object res = mPrivDaemonHandler.sendRequest(cmd);
@@ -507,7 +510,7 @@ public class PackageActivity extends AppCompatActivity {
     Utils.runInBg(
         () -> {
           String command =
-              mPackage.getName() + " " + permission.getName() + " " + Process.myUid() / 100000;
+              mPackage.getName() + " " + permission.getName() + " " + Utils.getUserId();
           if (permission.isGranted()) {
             command = PrivDaemon.REVOKE_PERMISSION + " " + command;
           } else {

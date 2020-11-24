@@ -10,7 +10,6 @@ import android.content.pm.PermissionInfo;
 import android.content.pm.Signature;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Process;
 import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -632,8 +631,8 @@ public class PackageParser {
       Utils.logDaemonDead(TAG + ": getPermissionFlags");
       return -1;
     } else {
-      int userId = Process.myUid() / 100000;
-      String command = PrivDaemon.GET_PERMISSION_FLAGS + " " + perm + " " + pkg + " " + userId;
+      String command =
+          PrivDaemon.GET_PERMISSION_FLAGS + " " + perm + " " + pkg + " " + Utils.getUserId();
       Object object = mPrivDaemonHandler.sendRequest(command);
       if (object instanceof Integer) {
         return (int) object;
