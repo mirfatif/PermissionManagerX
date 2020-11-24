@@ -107,6 +107,16 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override
+  protected void onSaveInstanceState(@NonNull Bundle outState) {
+
+    // We can't save state of AlertDialogFragment since AlertDialog is passed as a constructor
+    // argument. Otherwise separate AlertDialogFragment class needs to be created for every dialog.
+    AlertDialogFragment.removeAll(mFM);
+
+    super.onSaveInstanceState(outState);
+  }
+
+  @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
