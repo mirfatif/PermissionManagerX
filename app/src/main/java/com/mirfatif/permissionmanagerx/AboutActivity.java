@@ -31,8 +31,7 @@ public class AboutActivity extends AppCompatActivity {
 
     mMySettings = MySettings.getInstance();
 
-    String version = BuildConfig.VERSION_NAME + " | " + BuildConfig.VERSION_CODE;
-    ((TextView) findViewById(R.id.version)).setText(version);
+    ((TextView) findViewById(R.id.version)).setText(BuildConfig.VERSION_NAME);
 
     setLogTitle();
 

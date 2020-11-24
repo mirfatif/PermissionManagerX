@@ -8,8 +8,8 @@ android {
         applicationId "com.mirfatif.permissionmanagerx"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 101
-        versionName "v1.01"
+        versionCode 102
+        versionName "v1.02"
     }
 
     buildTypes {
