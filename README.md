@@ -25,6 +25,10 @@ In short, <b>AppOps</b> provide a fine-grained control over many of the manifest
 * In order to let Permission Manager X serve you at its best, either the device must be <b>rooted</b> or you need to enable <b>ADB over network</b>.
 * <b>android.permission.INTERNET</b> is required to use ADB over network. No connections are made outside the device.
 
+## Note:
+
+* The app is tested on stock Android 7-10. Some highly customized ROMs may behave unexpectedly.
+
 ## Screenshots
 
 <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" width="250">
