@@ -59,9 +59,9 @@ import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 
 public class MainActivity extends AppCompatActivity {
 
-  static final String SHOW_DRAWER = "com.mirfatif.permissionmanagerx.SHOW_DRAWER";
-  static final String START_LOGGING = "com.mirfatif.permissionmanagerx.START_LOGGING";
-  static final String PACKAGE_POSITION = "com.mirfatif.permissionmanagerx.PACKAGE_POSITION";
+  static final String ACTION_SHOW_DRAWER = BuildConfig.APPLICATION_ID + ".SHOW_DRAWER";
+  static final String ACTION_START_LOGGING = BuildConfig.APPLICATION_ID + ".START_LOGGING";
+  static final String EXTRA_PKG_POSITION = BuildConfig.APPLICATION_ID + ".PKG_POSITION";
   static final String APP_OPS_PERM = "android.permission.GET_APP_OPS_STATS";
   static final String GRANT_ROOT_OR_ADB = "GRANT_ROOT_OR_ADB";
 
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     if (intent.getAction() == null) return;
 
     // called from PackageActivity
-    if (intent.getAction().equals(SHOW_DRAWER)) {
+    if (intent.getAction().equals(ACTION_SHOW_DRAWER)) {
       Utils.runInBg(
           () -> {
             while (getWindow() == null) SystemClock.sleep(100);
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // called from AboutActivity
-    if (intent.getAction().equals(START_LOGGING)) recreate();
+    if (intent.getAction().equals(ACTION_START_LOGGING)) recreate();
   }
 
   @Override
@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
       if (mMySettings.DEBUG)
         Utils.debugLog("MainActivity", "PkgClickListener: Package received: " + pkg.getLabel());
       Intent intent = new Intent().setClass(App.getContext(), PackageActivity.class);
-      intent.putExtra(PACKAGE_POSITION, mPackageParser.getPackagePosition(pkg));
+      intent.putExtra(EXTRA_PKG_POSITION, mPackageParser.getPackagePosition(pkg));
       startActivity(intent);
     };
   }

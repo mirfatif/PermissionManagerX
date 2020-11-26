@@ -88,7 +88,9 @@ public class AboutActivity extends AppCompatActivity {
     mMySettings.DEBUG = true;
     Utils.runCommand("logcat -c", "Logging", null);
     Intent intent = new Intent(App.getContext(), MainActivity.class);
-    intent.setAction(MainActivity.START_LOGGING).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+    intent
+        .setAction(MainActivity.ACTION_START_LOGGING)
+        .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
     Utils.runInFg(
         () -> {
           startActivity(intent);

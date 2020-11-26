@@ -53,7 +53,7 @@ public class PackageActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_package);
 
-    int position = getIntent().getIntExtra(MainActivity.PACKAGE_POSITION, -1);
+    int position = getIntent().getIntExtra(MainActivity.EXTRA_PKG_POSITION, -1);
     if (position == -1) {
       Toast.makeText(App.getContext(), R.string.something_bad_happened, Toast.LENGTH_LONG).show();
       finish();
@@ -545,7 +545,7 @@ public class PackageActivity extends AppCompatActivity {
                 (d, which) -> {
                   startActivity(
                       new Intent(App.getContext(), MainActivity.class)
-                          .setAction(MainActivity.SHOW_DRAWER)
+                          .setAction(MainActivity.ACTION_SHOW_DRAWER)
                           .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
                   finish();
                 })
