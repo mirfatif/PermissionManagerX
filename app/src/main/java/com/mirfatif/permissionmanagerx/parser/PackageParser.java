@@ -37,11 +37,11 @@ public class PackageParser {
   static final String TAG = "PackageParser";
 
   private static PackageParser mPackageParser;
-  private PackageManager mPackageManager;
-  private MySettings mMySettings;
-  private AppOpsParser mAppOpsParser;
-  private PrivDaemonHandler mPrivDaemonHandler;
-  private PermGroupsMapping mPermGroupsMapping;
+  private final PackageManager mPackageManager;
+  private final MySettings mMySettings;
+  private final AppOpsParser mAppOpsParser;
+  private final PrivDaemonHandler mPrivDaemonHandler;
+  private final PermGroupsMapping mPermGroupsMapping;
 
   private final MutableLiveData<List<Package>> mPackagesListLive = new MutableLiveData<>();
   private final MutableLiveData<Package> mChangedPackage = new MutableLiveData<>();
@@ -73,14 +73,11 @@ public class PackageParser {
   public static synchronized PackageParser getInstance() {
     if (mPackageParser == null) {
       mPackageParser = new PackageParser();
-      mPackageParser.initializeVariables();
     }
     return mPackageParser;
   }
 
-  private PackageParser() {}
-
-  private void initializeVariables() {
+  private PackageParser() {
     mPackageManager = App.getContext().getPackageManager();
     mMySettings = MySettings.getInstance();
     mAppOpsParser = new AppOpsParser(mPackageManager);

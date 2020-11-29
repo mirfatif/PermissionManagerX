@@ -27,16 +27,13 @@ public class MySettings {
   public static synchronized MySettings getInstance() {
     if (mMySettings == null) {
       mMySettings = new MySettings();
-      mMySettings.initializeVariables();
     }
     return mMySettings;
   }
 
-  private MySettings() {}
+  private final SharedPreferences mPrefs;
 
-  private SharedPreferences mPrefs;
-
-  private void initializeVariables() {
+  private MySettings() {
     mPrefs = PreferenceManager.getDefaultSharedPreferences(App.getContext());
     mExcludedAppsPrefKey = getString(R.string.filter_settings_excluded_apps_key);
     mExcludedPermsPrefKey = getString(R.string.filter_settings_excluded_perms_key);
@@ -258,7 +255,7 @@ public class MySettings {
         && isAppOpsGranted();
   }
 
-  private String mExcludedAppsPrefKey;
+  private final String mExcludedAppsPrefKey;
   private Set<String> mExcludedApps;
   private CharSequence[] mExcludedAppsLabels;
   private CharSequence[] mExcludedAppsNames;
@@ -351,7 +348,7 @@ public class MySettings {
     }
   }
 
-  private String mExcludedPermsPrefKey;
+  private final String mExcludedPermsPrefKey;
   private Set<String> mExcludedPerms;
   private CharSequence[] mExcludedPermsNames;
 
@@ -389,7 +386,7 @@ public class MySettings {
     mExcludedPermsNames = excludedPermsList.toArray(new CharSequence[0]);
   }
 
-  private String mExtraAppOpsPrefKey;
+  private final String mExtraAppOpsPrefKey;
   private Set<String> mExtraAppOps;
 
   public Set<String> getExtraAppOps() {
