@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mirfatif.permissionmanagerx.PermissionAdapter.ItemViewHolder;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PermissionAdapter extends ListAdapter<Permission, ItemViewHolder> {
 
@@ -26,6 +28,7 @@ public class PermissionAdapter extends ListAdapter<Permission, ItemViewHolder> {
   private final PermClickListenerWithLoc mPermClickListener;
   private final PermLongClickListener mPermLongClickListener;
   private ArrayAdapter<String> mArrayAdapter;
+  private ArrayAdapter<String> mArrayAdapterBg;
 
   PermissionAdapter(
       PermClickListener switchToggleListener,
@@ -137,14 +140,64 @@ public class PermissionAdapter extends ListAdapter<Permission, ItemViewHolder> {
         }
 
         if (mArrayAdapter == null) {
+          List<String> appOpsModes = MySettings.getInstance().getAppOpsModes();
+          List<String> appOpsModesEllipsized = new ArrayList<>();
+          for (String mode : appOpsModes) {
+            appOpsModesEllipsized.add(Utils.ellipsize(mode, 8));
+          }
+
           mArrayAdapter =
               new ArrayAdapter<>(
                   spinner.getContext(),
                   android.R.layout.simple_spinner_item,
-                  MySettings.getInstance().getAppOpsModes());
+                  appOpsModesEllipsized);
+
+          mArrayAdapterBg =
+              new ArrayAdapter<String>(
+                  spinner.getContext(),
+                  android.R.layout.simple_spinner_item,
+                  appOpsModesEllipsized) {
+                @Override
+                public boolean areAllItemsEnabled() {
+                  return false;
+                }
+
+                @Override
+                public boolean isEnabled(int position) {
+                  if (appOpsModes.get(position).equals("Foreground")) {
+                    return false;
+                  }
+                  return super.isEnabled(position);
+                }
+
+                // Cannot use color selector here for TextView. It only honors states: "normal",
+                // "selected" and "focused", not "disabled".
+                @Override
+                public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                  View view = super.getDropDownView(position, convertView, parent);
+                  if (appOpsModes.get(position).equals("Foreground")) {
+                    // Find TextView from android.R.layout.simple_spinner_dropdown_item.
+                    TextView tView = view.findViewById(android.R.id.text1);
+                    // Check null to avoid broken behavior on different Android versions.
+                    if (tView != null) {
+                      tView.setTextColor(spinner.getContext().getColor(R.color.disabledStateColor));
+                    }
+                  }
+                  return view;
+                }
+              };
+
           mArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+          mArrayAdapterBg.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         }
-        spinner.setAdapter(mArrayAdapter);
+
+        if (permission.getName().equals("RUN_IN_BACKGROUND")
+            || permission.getName().equals("RUN_ANY_IN_BACKGROUND")) {
+          spinner.setAdapter(mArrayAdapterBg);
+        } else {
+          spinner.setAdapter(mArrayAdapter);
+        }
+
         spinner.setSelection(permission.getAppOpsMode());
         spinner.setOnItemSelectedListener(
             new AdapterView.OnItemSelectedListener() {

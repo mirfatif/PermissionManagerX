@@ -242,6 +242,11 @@ public class Utils {
     return new String(newCodePoints, 0, outOffset);
   }
 
+  public static String ellipsize(String str, int len) {
+    if (str == null || str.length() <= len) return str;
+    return str.substring(0, len - 3).concat("…");
+  }
+
   static boolean openWebUrl(Activity activity, String url) {
     List<ResolveInfo> customTabsServices =
         App.getContext()
