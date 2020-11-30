@@ -1,10 +1,15 @@
 package com.mirfatif.permissionmanagerx;
 
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.util.Log;
 import android.util.Xml;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+import android.view.View;
+import android.widget.Toast;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.preference.PreferenceManager;
 import com.mirfatif.permissionmanagerx.permsdb.PermissionEntity;
 import java.io.ByteArrayInputStream;
@@ -35,6 +40,7 @@ import org.xmlpull.v1.XmlSerializer;
 public class BackupRestore {
 
   static final String TAG = "BackupRestore";
+  private static final String TAG_BACKUP_RESTORE = "BACKUP_RESTORE";
 
   private static final MySettings mMySettings = MySettings.getInstance();
 
@@ -60,14 +66,64 @@ public class BackupRestore {
   private final String PERMISSIONS = "permissions";
   private final String PERM = "perm";
 
+  private final MainActivity mActivity;
   private final SharedPreferences mPreferences;
 
-  BackupRestore() {
+  BackupRestore(MainActivity activity) {
+    mActivity = activity;
     mPreferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
+
+    AlertDialog dialog =
+        new Builder(mActivity)
+            .setPositiveButton(R.string.backup, (d, which) -> doBackupRestore(true))
+            .setNegativeButton(R.string.restore, (d, which) -> doBackupRestore(false))
+            .setNeutralButton(android.R.string.cancel, null)
+            .setTitle(getString(R.string.backup) + " / " + getString(R.string.restore))
+            .setMessage(R.string.choose_backup_restore)
+            .create();
+    new AlertDialogFragment(dialog).show(mActivity.mFM, TAG_BACKUP_RESTORE, false);
   }
 
-  void backup(OutputStream outputStream) {
-    showProgressBar(TYPE_BACKUP);
+  private void doBackupRestore(boolean isBackup) {
+    Toast.makeText(App.getContext(), R.string.select_backup_file, Toast.LENGTH_LONG).show();
+    ActivityResultCallback<Uri> callback =
+        uri -> Utils.runInBg(() -> doBackupRestoreInBg(isBackup, uri));
+    if (isBackup) {
+      mActivity
+          .registerForActivityResult(new ActivityResultContracts.CreateDocument(), callback)
+          .launch("PermissionManagerX_" + Utils.getCurrDateTime() + ".xml");
+    } else {
+      mActivity
+          .registerForActivityResult(new ActivityResultContracts.OpenDocument(), callback)
+          .launch(new String[] {"text/xml"});
+    }
+  }
+
+  private void doBackupRestoreInBg(boolean isBackup, Uri uri) {
+    if (isBackup) {
+      try (OutputStream outStream =
+          mActivity.getApplication().getContentResolver().openOutputStream(uri, "w")) {
+        backup(outStream);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    } else {
+      try (InputStream inputStream =
+          mActivity.getApplication().getContentResolver().openInputStream(uri)) {
+        /**
+         * So that not saved preferences are restored. Must be in background so that {@link
+         * PrivDaemonHandler#sendRequest(String)} in {@link PackageParser#buildAppOpsList()} in ADB
+         * daemon mode is not called on main thread
+         */
+        mMySettings.resetToDefaults();
+        restore(inputStream);
+      } catch (IOException ignored) {
+      }
+    }
+  }
+
+  private void backup(OutputStream outputStream) {
+    showProgressBar(true);
     XmlSerializer serializer = Xml.newSerializer();
     StringWriter stringWriter = new StringWriter();
     try {
@@ -77,7 +133,7 @@ public class BackupRestore {
       serializer.startTag(null, PREFERENCES);
     } catch (IOException e) {
       e.printStackTrace();
-      callFailed(TYPE_BACKUP);
+      failed(true);
       return;
     }
 
@@ -116,7 +172,7 @@ public class BackupRestore {
         serializer.endTag(null, PREF);
       } catch (IOException e) {
         e.printStackTrace();
-        callFailed(TYPE_BACKUP);
+        failed(true);
         return;
       }
     }
@@ -126,7 +182,7 @@ public class BackupRestore {
       serializer.startTag(null, PERMISSIONS);
     } catch (IOException e) {
       e.printStackTrace();
-      callFailed(TYPE_BACKUP);
+      failed(true);
       return;
     }
 
@@ -141,7 +197,7 @@ public class BackupRestore {
         serializer.endTag(null, PERM);
       } catch (IOException e) {
         e.printStackTrace();
-        callFailed(TYPE_BACKUP);
+        failed(true);
         return;
       }
     }
@@ -153,7 +209,7 @@ public class BackupRestore {
       serializer.flush();
     } catch (IOException e) {
       e.printStackTrace();
-      callFailed(TYPE_BACKUP);
+      failed(true);
       return;
     }
 
@@ -177,11 +233,11 @@ public class BackupRestore {
     } catch (IOException ignored) {
     }
 
-    callSucceeded(TYPE_BACKUP, prefEntries.size(), permEntities.size(), badEntries);
+    succeeded(true, prefEntries.size(), permEntities.size(), badEntries);
   }
 
-  void restore(InputStream inputStream) {
-    showProgressBar(TYPE_RESTORE);
+  private void restore(InputStream inputStream) {
+    showProgressBar(false);
     // create a copy of InputStream before consuming it
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
     byte[] buffer = new byte[1024];
@@ -202,7 +258,7 @@ public class BackupRestore {
     // preferences
     List<BackupEntry> prefEntries = getKeyValueEntries(inputStream1, PREFERENCES, PREF);
     if (prefEntries == null) {
-      callFailed(TYPE_RESTORE);
+      failed(false);
       return;
     }
 
@@ -238,13 +294,13 @@ public class BackupRestore {
     // permissions
     List<BackupEntry> permEntries = getKeyValueEntries(inputStream2, PERMISSIONS, PERM);
     if (permEntries == null) {
-      callFailed(TYPE_RESTORE);
+      failed(false);
       return;
     }
 
     updatePermissionEntities(permEntries);
 
-    callSucceeded(TYPE_RESTORE, prefEntries.size(), permEntries.size(), badEntries);
+    succeeded(false, prefEntries.size(), permEntries.size(), badEntries);
   }
 
   private List<BackupEntry> getKeyValueEntries(
@@ -304,26 +360,54 @@ public class BackupRestore {
     mMySettings.getPermDb().insertAll(permEntities.toArray(new PermissionEntity[0]));
   }
 
-  static final int TYPE_BACKUP = 1;
-  static final int TYPE_RESTORE = 2;
-  static final int FAILED = -1;
-
-  private final MutableLiveData<int[]> backupRestoreResult = new MutableLiveData<>();
-
-  LiveData<int[]> getBackupRestoreResult() {
-    return backupRestoreResult;
+  private String getString(int resId) {
+    return App.getContext().getString(resId);
   }
 
-  private void showProgressBar(int type) {
-    Utils.runInFg(() -> backupRestoreResult.setValue(new int[] {type}));
+  private void showProgressBar(boolean isBackup) {
+    Utils.runInFg(
+        () -> {
+          mActivity.mRoundProgressTextView.setText(
+              isBackup
+                  ? getString(R.string.backup_in_progress)
+                  : getString(R.string.restore_in_progress));
+          mActivity.mRoundProgressContainer.setVisibility(View.VISIBLE);
+        });
   }
 
-  private void callFailed(int type) {
-    Utils.runInFg(() -> backupRestoreResult.setValue(new int[] {type, FAILED}));
+  private void failed(boolean isBackup) {
+    Utils.runInFg(() -> mActivity.mRoundProgressContainer.setVisibility(View.GONE));
+    showFinalDialog(isBackup, getString(R.string.backup_restore_failed));
   }
 
-  private void callSucceeded(int type, int prefs, int perms, int badEntries) {
-    Utils.runInFg(() -> backupRestoreResult.setValue(new int[] {type, prefs, perms, badEntries}));
+  private void succeeded(boolean isBackup, int prefs, int perms, int badEntries) {
+    Utils.runInFg(() -> mActivity.mRoundProgressContainer.setVisibility(View.GONE));
+    if (!isBackup) {
+      mMySettings.populateExcludedAppsList(false);
+      mMySettings.populateExcludedPermsList();
+      mMySettings.populateExtraAppOpsList(false);
+      mActivity.mPackageParser.buildPermRefList();
+      mActivity.updatePackagesList(false);
+    }
+
+    String message = mActivity.getString(R.string.backup_restore_process_entries, prefs, perms);
+    if (badEntries > 0) {
+      message += mActivity.getString(R.string.backup_restore_bad_entries, badEntries);
+    }
+
+    showFinalDialog(isBackup, message);
+  }
+
+  private void showFinalDialog(boolean isBackup, String message) {
+    Builder builder =
+        new Builder(mActivity)
+            .setPositiveButton(android.R.string.ok, null)
+            .setTitle(isBackup ? R.string.backup : R.string.restore)
+            .setMessage(message);
+    Utils.runInFg(
+        () ->
+            new AlertDialogFragment(builder.create())
+                .show(mActivity.mFM, TAG_BACKUP_RESTORE, false));
   }
 }
 

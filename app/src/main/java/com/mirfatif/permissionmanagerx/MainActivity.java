@@ -18,8 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
@@ -33,7 +31,6 @@ import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -43,9 +40,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.privdaemon.PrivDaemon;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -60,10 +54,10 @@ public class MainActivity extends AppCompatActivity {
   static final String ACTION_START_LOGGING = BuildConfig.APPLICATION_ID + ".START_LOGGING";
   static final String EXTRA_PKG_POSITION = BuildConfig.APPLICATION_ID + ".PKG_POSITION";
   static final String APP_OPS_PERM = "android.permission.GET_APP_OPS_STATS";
-  static final String GRANT_ROOT_OR_ADB = "GRANT_ROOT_OR_ADB";
+  static final String TAG_GRANT_ROOT_OR_ADB = "GRANT_ROOT_OR_ADB";
 
   private MySettings mMySettings;
-  private PackageParser mPackageParser;
+  PackageParser mPackageParser;
   private PrivDaemonHandler mPrivDaemonHandler;
   private SwipeRefreshLayout mRefreshLayout;
   private LinearLayoutManager mLayoutManager;
@@ -501,7 +495,7 @@ public class MainActivity extends AppCompatActivity {
     super.onBackPressed();
   }
 
-  private void updatePackagesList(boolean doRepeatUpdates) {
+  void updatePackagesList(boolean doRepeatUpdates) {
     if (mMySettings.DEBUG)
       Utils.debugLog("MainActivity", "updatePackagesList: doRepeatUpdates: " + doRepeatUpdates);
     mPackageParser.updatePackagesList(doRepeatUpdates);
@@ -531,7 +525,7 @@ public class MainActivity extends AppCompatActivity {
               .setTitle(R.string.privileges)
               .setMessage(R.string.grant_root_or_adb)
               .create();
-      new AlertDialogFragment(dialog).show(mFM, GRANT_ROOT_OR_ADB, false);
+      new AlertDialogFragment(dialog).show(mFM, TAG_GRANT_ROOT_OR_ADB, false);
       return;
     }
 
@@ -711,7 +705,8 @@ public class MainActivity extends AppCompatActivity {
                     .setMessage(message);
             Utils.runInFg(
                 () ->
-                    new AlertDialogFragment(builder.create()).show(mFM, GRANT_ROOT_OR_ADB, false));
+                    new AlertDialogFragment(builder.create())
+                        .show(mFM, TAG_GRANT_ROOT_OR_ADB, false));
           }
         }
       } else {
@@ -725,7 +720,8 @@ public class MainActivity extends AppCompatActivity {
                 .setTitle(R.string.privileges)
                 .setMessage(getString(R.string.grant_root_or_adb));
         Utils.runInFg(
-            () -> new AlertDialogFragment(builder.create()).show(mFM, GRANT_ROOT_OR_ADB, false));
+            () ->
+                new AlertDialogFragment(builder.create()).show(mFM, TAG_GRANT_ROOT_OR_ADB, false));
       }
     }
 
@@ -902,7 +898,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     if (item.getItemId() == R.id.action_backup_restore) {
-      doBackupRestore();
+      new BackupRestore(this);
       return true;
     }
 
@@ -1015,106 +1011,6 @@ public class MainActivity extends AppCompatActivity {
             .create();
     new AlertDialogFragment(dialog).show(mFM, "HIDDEN_APIS_CONFIRM", false);
     return false;
-  }
-
-  //////////////////////////////////////////////////////////////////
-  ///////////////////////// BACKUP RESTORE /////////////////////////
-  //////////////////////////////////////////////////////////////////
-
-  private void doBackupRestore() {
-    AlertDialog dialog =
-        new Builder(this)
-            .setPositiveButton(R.string.backup, (d, which) -> doBackupRestore(true))
-            .setNegativeButton(R.string.restore, (d, which) -> doBackupRestore(false))
-            .setNeutralButton(android.R.string.cancel, null)
-            .setTitle(getString(R.string.backup) + " / " + getString(R.string.restore))
-            .setMessage(R.string.choose_backup_restore)
-            .create();
-    new AlertDialogFragment(dialog).show(mFM, "BACKUP_RESTORE", false);
-  }
-
-  private void doBackupRestore(boolean isBackup) {
-    Toast.makeText(App.getContext(), R.string.select_backup_file, Toast.LENGTH_LONG).show();
-    ActivityResultCallback<Uri> callback =
-        uri -> Utils.runInBg(() -> doBackupRestoreInBg(isBackup, uri));
-    if (isBackup) {
-      registerForActivityResult(new ActivityResultContracts.CreateDocument(), callback)
-          .launch("PermissionManagerX_" + Utils.getCurrDateTime() + ".xml");
-    } else {
-      registerForActivityResult(new ActivityResultContracts.OpenDocument(), callback)
-          .launch(new String[] {"text/xml"});
-    }
-  }
-
-  private void doBackupRestoreInBg(boolean isBackup, Uri uri) {
-    BackupRestore backupRestore = new BackupRestore();
-    Utils.runInFg(
-        () -> {
-          LiveData<int[]> backRestResult = backupRestore.getBackupRestoreResult();
-          backRestResult.observe(this, result -> handleBackupRestoreResult(result, backRestResult));
-        });
-
-    if (isBackup) {
-      try (OutputStream outStream =
-          getApplication().getContentResolver().openOutputStream(uri, "w")) {
-        backupRestore.backup(outStream);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    } else {
-      try (InputStream inputStream = getApplication().getContentResolver().openInputStream(uri)) {
-        /**
-         * So that not saved preferences are restored. Must be in background so that {@link
-         * PrivDaemonHandler#sendRequest(String)} in {@link PackageParser#buildAppOpsList()} in ADB
-         * daemon mode is not called on main thread
-         */
-        mMySettings.resetToDefaults();
-        backupRestore.restore(inputStream);
-      } catch (IOException ignored) {
-      }
-    }
-  }
-
-  private void handleBackupRestoreResult(int[] result, LiveData<int[]> backupRestoreResult) {
-    boolean isBackup = result[0] == BackupRestore.TYPE_BACKUP;
-    if (result.length == 1) {
-      mRoundProgressTextView.setText(
-          isBackup
-              ? getString(R.string.backup_in_progress)
-              : getString(R.string.restore_in_progress));
-      mRoundProgressContainer.setVisibility(View.VISIBLE);
-      return;
-    }
-
-    boolean failed = result[1] == BackupRestore.FAILED;
-    mRoundProgressContainer.setVisibility(View.GONE);
-
-    if (!isBackup && !failed) {
-      Utils.runInBg(
-          () -> {
-            mMySettings.populateExcludedAppsList(false);
-            mMySettings.populateExcludedPermsList();
-            mMySettings.populateExtraAppOpsList(false);
-            mPackageParser.buildPermRefList();
-            updatePackagesList(false);
-          });
-    }
-
-    String message;
-    if (failed) message = getString(R.string.backup_restore_failed);
-    else message = getString(R.string.backup_restore_process_entries, result[1], result[2]);
-    if (result[3] > 0) message += getString(R.string.backup_restore_bad_entries, result[3]);
-
-    AlertDialog dialog =
-        new Builder(this)
-            .setPositiveButton(android.R.string.ok, null)
-            .setTitle(isBackup ? R.string.backup : R.string.restore)
-            .setMessage(message)
-            .create();
-    new AlertDialogFragment(dialog).show(mFM, "BACKUP_RESTORE", false);
-
-    // do not show success/failure dialogs on activity changes
-    backupRestoreResult.removeObservers(this);
   }
 
   //////////////////////////////////////////////////////////////////

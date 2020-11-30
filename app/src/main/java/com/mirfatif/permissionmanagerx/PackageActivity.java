@@ -548,7 +548,7 @@ public class PackageActivity extends AppCompatActivity {
             .setTitle(R.string.privileges)
             .setMessage(R.string.grant_root_or_adb)
             .create();
-    new AlertDialogFragment(dialog).show(mFM, MainActivity.GRANT_ROOT_OR_ADB, false);
+    new AlertDialogFragment(dialog).show(mFM, MainActivity.TAG_GRANT_ROOT_OR_ADB, false);
     return false;
   }
 
