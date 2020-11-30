@@ -113,9 +113,12 @@ public class PermissionAdapter extends ListAdapter<Permission, ItemViewHolder> {
         groupIconView.setImageResource(permission.getIconResId());
       }
 
+      spinnerContainer.setOnClickListener(null);
+
       if (permission.isAppOps()) {
         if (permission.dependsOn() == null) {
           spinnerContainer.setVisibility(View.VISIBLE);
+          spinnerContainer.setOnClickListener(v -> spinner.performClick());
         } else {
           spinnerContainer.setVisibility(View.INVISIBLE);
         }
