@@ -16,8 +16,9 @@ import java.util.Set;
 public class FilterSettingsFragment extends PreferenceFragmentCompat
     implements OnSharedPreferenceChangeListener {
 
-  FilterSettingsActivity mParentActivity;
-  MySettings mMySettings;
+  private FilterSettingsActivity mParentActivity;
+  private MySettings mMySettings;
+  private SharedPreferences mPrefs;
 
   private CheckBoxPreference excludeNoIconAppsView;
   private CheckBoxPreference excludeUserAppsView;
@@ -43,8 +44,8 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
   public void onAttach(@NonNull Context context) {
     super.onAttach(context);
     mParentActivity = (FilterSettingsActivity) getActivity();
-    PreferenceManager.getDefaultSharedPreferences(context)
-        .unregisterOnSharedPreferenceChangeListener(this);
+    mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+    mPrefs.unregisterOnSharedPreferenceChangeListener(this);
     mMySettings = MySettings.getInstance();
   }
 
@@ -52,15 +53,13 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
   @Override
   public void onPause() {
     super.onPause();
-    PreferenceManager.getDefaultSharedPreferences(mParentActivity)
-        .unregisterOnSharedPreferenceChangeListener(this);
+    mPrefs.unregisterOnSharedPreferenceChangeListener(this);
   }
 
   @Override
   public void onResume() {
     super.onResume();
-    PreferenceManager.getDefaultSharedPreferences(mParentActivity)
-        .registerOnSharedPreferenceChangeListener(this);
+    mPrefs.registerOnSharedPreferenceChangeListener(this);
   }
 
   @Override

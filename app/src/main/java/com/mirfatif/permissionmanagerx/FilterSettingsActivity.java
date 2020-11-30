@@ -10,7 +10,6 @@ import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import java.util.HashSet;
 import java.util.Objects;
 
 public class FilterSettingsActivity extends AppCompatActivity {
@@ -78,9 +77,7 @@ public class FilterSettingsActivity extends AppCompatActivity {
       // Build an AlertDialog and set listeners on buttons
       Builder builder = new Builder(this);
       builder.setPositiveButton(
-          R.string.yes,
-          (dialogInterface, i) ->
-              mMySettings.savePref(R.string.filter_settings_excluded_apps_key, new HashSet<>()));
+          R.string.yes, (dialogInterface, i) -> mMySettings.clearExcludedAppsList());
 
       builder.setNegativeButton(R.string.no, null);
 
@@ -94,9 +91,7 @@ public class FilterSettingsActivity extends AppCompatActivity {
     if (item.getItemId() == R.id.action_clear_excluded_perms) {
       Builder builder = new Builder(this);
       builder.setPositiveButton(
-          R.string.yes,
-          (dialogInterface, i) ->
-              mMySettings.savePref(R.string.filter_settings_excluded_perms_key, new HashSet<>()));
+          R.string.yes, (dialogInterface, i) -> mMySettings.clearExcludedPermsList());
 
       builder.setNegativeButton(R.string.no, null);
       builder.setTitle(R.string.filter_settings);
@@ -109,10 +104,7 @@ public class FilterSettingsActivity extends AppCompatActivity {
       AlertDialog dialog =
           new Builder(this)
               .setPositiveButton(
-                  R.string.yes,
-                  (dialogInterface, i) ->
-                      mMySettings.savePref(
-                          R.string.filter_settings_extra_appops_key, new HashSet<>()))
+                  R.string.yes, (dialogInterface, i) -> mMySettings.clearExtraAppOpsList())
               .setNegativeButton(R.string.no, null)
               .setTitle(R.string.filter_settings)
               .setMessage(R.string.filter_settings_clear_app_ops_confirmation)

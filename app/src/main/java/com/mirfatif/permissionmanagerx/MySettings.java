@@ -32,9 +32,11 @@ public class MySettings {
   }
 
   private final SharedPreferences mPrefs;
+  private final SharedPreferences mEncPrefs;
 
   private MySettings() {
     mPrefs = PreferenceManager.getDefaultSharedPreferences(App.getContext());
+    mEncPrefs = Utils.getEncPrefs();
     mExcludedAppsPrefKey = getString(R.string.filter_settings_excluded_apps_key);
     mExcludedPermsPrefKey = getString(R.string.filter_settings_excluded_perms_key);
     mExtraAppOpsPrefKey = getString(R.string.filter_settings_extra_appops_key);
@@ -46,10 +48,14 @@ public class MySettings {
   Boolean doLogging = false;
   public boolean DEBUG = false;
 
-  boolean getBoolPref(int keyResId) {
+  boolean getBoolPref(int keyResId, boolean encPref) {
     String prefKey = getString(keyResId);
     int boolKeyId = Utils.getIntField(prefKey + "_default", R.bool.class, TAG);
-    return mPrefs.getBoolean(prefKey, App.getContext().getResources().getBoolean(boolKeyId));
+    if (encPref) {
+      return mEncPrefs.getBoolean(prefKey, App.getContext().getResources().getBoolean(boolKeyId));
+    } else {
+      return mPrefs.getBoolean(prefKey, App.getContext().getResources().getBoolean(boolKeyId));
+    }
   }
 
   Set<String> getSetPref(int keyId) {
@@ -60,8 +66,12 @@ public class MySettings {
     return App.getContext().getString(keyResId);
   }
 
-  void savePref(int key, boolean bool) {
-    mPrefs.edit().putBoolean(getString(key), bool).apply();
+  void savePref(int key, boolean bool, boolean encPref) {
+    if (encPref) {
+      mEncPrefs.edit().putBoolean(getString(key), bool).apply();
+    } else {
+      mPrefs.edit().putBoolean(getString(key), bool).apply();
+    }
   }
 
   void savePref(int key, Set<String> stringSet) {
@@ -82,27 +92,27 @@ public class MySettings {
 
   void plusAppLaunchCount() {
     String appLaunchCountKey = getString(R.string.main_settings_app_launch_count_key);
-    mPrefs.edit().putInt(appLaunchCountKey, mPrefs.getInt(appLaunchCountKey, 0) + 1).apply();
+    mEncPrefs.edit().putInt(appLaunchCountKey, mEncPrefs.getInt(appLaunchCountKey, 0) + 1).apply();
   }
 
   boolean shouldNotAskForRating() {
-    long lastTS = mPrefs.getLong(getString(R.string.main_settings_ask_for_rating_ts_key), 0);
+    long lastTS = mEncPrefs.getLong(getString(R.string.main_settings_ask_for_rating_ts_key), 0);
     if (lastTS == 0) {
       setAskForRatingTs(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(5));
       return true;
     }
     String appLaunchCountKey = getString(R.string.main_settings_app_launch_count_key);
-    boolean ask = mPrefs.getInt(appLaunchCountKey, 0) >= 5;
+    boolean ask = mEncPrefs.getInt(appLaunchCountKey, 0) >= 5;
     ask = ask && (System.currentTimeMillis() - lastTS) >= TimeUnit.DAYS.toMillis(5);
     if (ask) {
-      mPrefs.edit().putInt(appLaunchCountKey, 0).apply();
+      mEncPrefs.edit().putInt(appLaunchCountKey, 0).apply();
       setAskForRatingTs(System.currentTimeMillis());
     }
     return !ask;
   }
 
   void setAskForRatingTs(long timeStamp) {
-    mPrefs
+    mEncPrefs
         .edit()
         .putLong(getString(R.string.main_settings_ask_for_rating_ts_key), timeStamp)
         .apply();
@@ -126,19 +136,35 @@ public class MySettings {
   }
 
   public boolean isDeepSearchEnabled() {
-    return getBoolPref(R.string.main_settings_deep_search_key);
+    return getBoolPref(R.string.main_settings_deep_search_key, false);
+  }
+
+  void setDeepSearchEnabled(boolean enabled) {
+    savePref(R.string.main_settings_deep_search_key, enabled, false);
   }
 
   boolean isCaseSensitiveSearch() {
-    return getBoolPref(R.string.main_settings_case_sensitive_search_key);
+    return getBoolPref(R.string.main_settings_case_sensitive_search_key, false);
+  }
+
+  void setCaseSensitiveSearch(boolean isSensitive) {
+    savePref(R.string.main_settings_case_sensitive_search_key, isSensitive, false);
   }
 
   boolean isRootGranted() {
-    return getBoolPref(R.string.main_settings_root_granted_key);
+    return getBoolPref(R.string.main_settings_root_granted_key, true);
+  }
+
+  void setRootGranted(boolean granted) {
+    savePref(R.string.main_settings_root_granted_key, granted, true);
   }
 
   boolean isAdbConnected() {
-    return getBoolPref(R.string.main_settings_adb_connected_key);
+    return getBoolPref(R.string.main_settings_adb_connected_key, true);
+  }
+
+  void setAdbConnected(boolean connected) {
+    savePref(R.string.main_settings_adb_connected_key, connected, true);
   }
 
   private List<String> mCriticalApps;
@@ -153,68 +179,68 @@ public class MySettings {
 
   // apps
   public boolean excludeNoIconApps() {
-    return getBoolPref(R.string.filter_settings_exclude_no_icon_apps_key);
+    return getBoolPref(R.string.filter_settings_exclude_no_icon_apps_key, false);
   }
 
   public boolean excludeUserApps() {
-    return getBoolPref(R.string.filter_settings_exclude_user_apps_key);
+    return getBoolPref(R.string.filter_settings_exclude_user_apps_key, false);
   }
 
   public boolean excludeSystemApps() {
-    return getBoolPref(R.string.filter_settings_exclude_system_apps_key);
+    return getBoolPref(R.string.filter_settings_exclude_system_apps_key, false);
   }
 
   public boolean excludeFrameworkApps() {
-    return getBoolPref(R.string.filter_settings_exclude_framework_apps_key);
+    return getBoolPref(R.string.filter_settings_exclude_framework_apps_key, false);
   }
 
   public boolean excludeDisabledApps() {
-    return getBoolPref(R.string.filter_settings_exclude_disabled_apps_key);
+    return getBoolPref(R.string.filter_settings_exclude_disabled_apps_key, false);
   }
 
   public boolean excludeNoPermissionsApps() {
-    return getBoolPref(R.string.filter_settings_exclude_no_perms_apps_key);
+    return getBoolPref(R.string.filter_settings_exclude_no_perms_apps_key, false);
   }
 
   // permissions
   public boolean excludeInvalidPermissions() {
-    return getBoolPref(R.string.filter_settings_exclude_invalid_perms_key);
+    return getBoolPref(R.string.filter_settings_exclude_invalid_perms_key, false);
   }
 
   public boolean excludeNotChangeablePerms() {
-    return getBoolPref(R.string.filter_settings_exclude_not_changeable_perms_key);
+    return getBoolPref(R.string.filter_settings_exclude_not_changeable_perms_key, false);
   }
 
   public boolean excludeNotGrantedPerms() {
-    return getBoolPref(R.string.filter_settings_exclude_not_granted_perms_key);
+    return getBoolPref(R.string.filter_settings_exclude_not_granted_perms_key, false);
   }
 
   public boolean excludeNormalPerms() {
-    return getBoolPref(R.string.filter_settings_exclude_normal_perms_key);
+    return getBoolPref(R.string.filter_settings_exclude_normal_perms_key, false);
   }
 
   public boolean excludeDangerousPerms() {
-    return getBoolPref(R.string.filter_settings_exclude_dangerous_perms_key);
+    return getBoolPref(R.string.filter_settings_exclude_dangerous_perms_key, false);
   }
 
   public boolean excludeSignaturePerms() {
-    return getBoolPref(R.string.filter_settings_exclude_signature_perms_key);
+    return getBoolPref(R.string.filter_settings_exclude_signature_perms_key, false);
   }
 
   public boolean excludePrivilegedPerms() {
-    return getBoolPref(R.string.filter_settings_exclude_privileged_perms_key);
+    return getBoolPref(R.string.filter_settings_exclude_privileged_perms_key, false);
   }
 
   public boolean excludeAppOpsPerms() {
-    return getBoolPref(R.string.filter_settings_exclude_appops_perms_key);
+    return getBoolPref(R.string.filter_settings_exclude_appops_perms_key, false);
   }
 
   public boolean excludeNotSetAppOps() {
-    return getBoolPref(R.string.filter_settings_exclude_not_set_appops_key);
+    return getBoolPref(R.string.filter_settings_exclude_not_set_appops_key, false);
   }
 
   public boolean canReadAppOps() {
-    return useHiddenAPIs() || mPrivDaemonAlive;
+    return canUseHiddenAPIs() || mPrivDaemonAlive;
   }
 
   boolean isAppOpsGranted() {
@@ -249,10 +275,32 @@ public class MySettings {
 
   boolean mHiddenAPIsWorking = true;
 
-  public boolean useHiddenAPIs() {
-    return getBoolPref(R.string.main_settings_use_hidden_apis_key)
-        && mHiddenAPIsWorking
-        && isAppOpsGranted();
+  public boolean canUseHiddenAPIs() {
+    return useHiddenAPIs() && mHiddenAPIsWorking && isAppOpsGranted();
+  }
+
+  boolean useHiddenAPIs() {
+    return getBoolPref(R.string.main_settings_use_hidden_apis_key, true);
+  }
+
+  void setUseHiddenAPIs(boolean isChecked) {
+    savePref(R.string.main_settings_use_hidden_apis_key, isChecked, true);
+  }
+
+  boolean forceDarkMode() {
+    return getBoolPref(R.string.main_settings_dark_theme_key, false);
+  }
+
+  void setForceDarkMode(boolean force) {
+    savePref(R.string.main_settings_dark_theme_key, force, false);
+  }
+
+  boolean useSocket() {
+    return getBoolPref(R.string.main_settings_use_socket_key, true);
+  }
+
+  void setUseSocket(boolean useSocket) {
+    savePref(R.string.main_settings_use_socket_key, useSocket, true);
   }
 
   private final String mExcludedAppsPrefKey;
@@ -348,6 +396,17 @@ public class MySettings {
     }
   }
 
+  void clearExcludedAppsList() {
+    savePref(R.string.filter_settings_excluded_apps_key, new HashSet<>());
+  }
+
+  void removePkgFromExcludedApps(String pkgName) {
+    Set<String> excludedApps = getSetPref(R.string.filter_settings_excluded_apps_key);
+    if (excludedApps == null) excludedApps = new HashSet<>();
+    excludedApps.add(pkgName);
+    savePref(R.string.filter_settings_excluded_apps_key, new HashSet<>(excludedApps));
+  }
+
   private final String mExcludedPermsPrefKey;
   private Set<String> mExcludedPerms;
   private CharSequence[] mExcludedPermsNames;
@@ -384,6 +443,17 @@ public class MySettings {
 
     mExcludedPerms = new HashSet<>(excludedPermsList);
     mExcludedPermsNames = excludedPermsList.toArray(new CharSequence[0]);
+  }
+
+  void clearExcludedPermsList() {
+    savePref(R.string.filter_settings_excluded_perms_key, new HashSet<>());
+  }
+
+  void removePermFromExcludedPerms(String permName) {
+    Set<String> excludedPerms = getSetPref(R.string.filter_settings_excluded_perms_key);
+    if (excludedPerms == null) excludedPerms = new HashSet<>();
+    excludedPerms.add(permName);
+    savePref(R.string.filter_settings_excluded_perms_key, new HashSet<>(excludedPerms));
   }
 
   private final String mExtraAppOpsPrefKey;
@@ -434,6 +504,10 @@ public class MySettings {
     }
   }
 
+  void clearExtraAppOpsList() {
+    savePref(R.string.filter_settings_extra_appops_key, new HashSet<>());
+  }
+
   synchronized void updateList(String key) {
     if (key.equals(mExcludedAppsPrefKey)) populateExcludedAppsList(false);
     else if (key.equals(mExcludedPermsPrefKey)) populateExcludedPermsList();
@@ -451,7 +525,7 @@ public class MySettings {
         .remove(getString(R.string.filter_settings_exclude_system_apps_key))
         .remove(getString(R.string.filter_settings_exclude_framework_apps_key))
         .remove(getString(R.string.filter_settings_exclude_disabled_apps_key))
-        .remove(getString(R.string.filter_settings_excluded_apps_key))
+        .remove(mExcludedAppsPrefKey)
         .remove(getString(R.string.filter_settings_exclude_no_perms_apps_key))
         .remove(getString(R.string.filter_settings_exclude_invalid_perms_key))
         .remove(getString(R.string.filter_settings_exclude_not_changeable_perms_key))
@@ -462,8 +536,8 @@ public class MySettings {
         .remove(getString(R.string.filter_settings_exclude_privileged_perms_key))
         .remove(getString(R.string.filter_settings_exclude_appops_perms_key))
         .remove(getString(R.string.filter_settings_exclude_not_set_appops_key))
-        .remove(getString(R.string.filter_settings_excluded_perms_key))
-        .remove(getString(R.string.filter_settings_extra_appops_key))
+        .remove(mExcludedPermsPrefKey)
+        .remove(mExtraAppOpsPrefKey)
         .apply();
 
     // StringSet is not cleared (null) by remove() or clear() sometimes.

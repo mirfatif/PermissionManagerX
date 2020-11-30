@@ -48,11 +48,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import me.saket.bettermovementmethod.BetterLinkMovementMethod;
@@ -236,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private boolean setNightTheme() {
-    if (!mMySettings.getBoolPref(R.string.main_settings_dark_theme_key)) {
+    if (!mMySettings.forceDarkMode()) {
       AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
       return false;
     }
@@ -267,17 +264,12 @@ public class MainActivity extends AppCompatActivity {
       Builder builder = new Builder(this);
       builder.setPositiveButton(
           R.string.exclude,
-          (dialogInterface, i) -> {
-            Set<String> savedExcApps =
-                mMySettings.getSetPref(R.string.filter_settings_excluded_apps_key);
-            Set<String> excludedApps = new HashSet<>(Collections.singletonList(pkg.getName()));
-            if (savedExcApps != null) excludedApps.addAll(savedExcApps);
-            Utils.runInBg(
-                () -> {
-                  mMySettings.savePref(R.string.filter_settings_excluded_apps_key, excludedApps);
-                  mPackageParser.removePackage(pkg);
-                });
-          });
+          (dialogInterface, i) ->
+              Utils.runInBg(
+                  () -> {
+                    mMySettings.removePkgFromExcludedApps(pkg.getName());
+                    mPackageParser.removePackage(pkg);
+                  }));
 
       builder.setNegativeButton(android.R.string.cancel, null);
 
@@ -311,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
 
     // do not show again if user opted not to try hidden APIs already, or on app resume if
     // observer removed already
-    if (!mMySettings.useHiddenAPIs()) {
+    if (!mMySettings.canUseHiddenAPIs()) {
       if (mMySettings.DEBUG)
         Utils.debugLog("setWarningLiveObserver", "Not setting because hidden APIs are disabled");
       return;
@@ -331,7 +323,7 @@ public class MainActivity extends AppCompatActivity {
               if (!mMySettings.mPrivDaemonAlive) {
                 Utils.runInBg(() -> startPrivDaemon(false));
               } else {
-                mMySettings.savePref(R.string.main_settings_use_hidden_apis_key, false);
+                mMySettings.setUseHiddenAPIs(false);
 
                 setNavigationMenu();
 
@@ -599,8 +591,7 @@ public class MainActivity extends AppCompatActivity {
 
     deepSearchSettings.setOnClickListener(
         v -> {
-          mMySettings.savePref(
-              R.string.main_settings_deep_search_key, deepSearchSettings.isChecked());
+          mMySettings.setDeepSearchEnabled(deepSearchSettings.isChecked());
           handleSearchQuery(true);
           if (mMySettings.DEBUG)
             Utils.debugLog("deepSearch", String.valueOf(deepSearchSettings.isChecked()));
@@ -608,9 +599,7 @@ public class MainActivity extends AppCompatActivity {
 
     caseSensitiveSearchSettings.setOnClickListener(
         v -> {
-          mMySettings.savePref(
-              R.string.main_settings_case_sensitive_search_key,
-              caseSensitiveSearchSettings.isChecked());
+          mMySettings.setCaseSensitiveSearch(caseSensitiveSearchSettings.isChecked());
           handleSearchQuery(false);
           if (mMySettings.DEBUG)
             Utils.debugLog(
@@ -656,13 +645,13 @@ public class MainActivity extends AppCompatActivity {
 
   private boolean checkRootPrivileges() {
     boolean res = Utils.runCommand("su -c id  -u", "checkRootPrivileges", "0");
-    mMySettings.savePref(R.string.main_settings_root_granted_key, res);
+    mMySettings.setRootGranted(res);
     return res;
   }
 
   private boolean checkAdbConnected() {
     boolean res = Adb.isConnected();
-    mMySettings.savePref(R.string.main_settings_adb_connected_key, res);
+    mMySettings.setAdbConnected(res);
     return res;
   }
 
@@ -680,8 +669,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     Utils.runInFg(() -> mRoundProgressTextView.setText(R.string.checking_adb_access));
-    boolean adbChecked = mMySettings.getBoolPref(R.string.main_settings_adb_connected_key);
-    if (adbChecked && !checkAdbConnected()) {
+    if (mMySettings.isAdbConnected() && !checkAdbConnected()) {
       Utils.runInFg(
           () ->
               Toast.makeText(App.getContext(), R.string.adb_connect_fail, Toast.LENGTH_LONG)
@@ -747,8 +735,8 @@ public class MainActivity extends AppCompatActivity {
     /**
      * On first run, set warning observer before possibly triggering {@link
      * AppOpsParser#hiddenAPIsNotWorking(String)}. On later runs set/remove observer as the {@link
-     * MySettings#useHiddenAPIs()} settings are changed. Must be after granting {@link APP_OPS_PERM}
-     * so that {@link MySettings#useHiddenAPIs()} returns true.
+     * MySettings#canUseHiddenAPIs()} settings are changed. Must be after granting {@link
+     * APP_OPS_PERM} so that {@link MySettings#canUseHiddenAPIs()} returns true.
      */
     Utils.runInFg(this::setWarningLiveObserver);
 
@@ -806,9 +794,7 @@ public class MainActivity extends AppCompatActivity {
 
     setBoxCheckedAndSetListener(menu, R.id.action_root, mMySettings.isRootGranted());
     setBoxCheckedAndSetListener(menu, R.id.action_adb, mMySettings.isAdbConnected());
-
-    boolean darkTheme = mMySettings.getBoolPref(R.string.main_settings_dark_theme_key);
-    setBoxCheckedAndSetListener(menu, R.id.action_dark_theme, darkTheme);
+    setBoxCheckedAndSetListener(menu, R.id.action_dark_theme, mMySettings.forceDarkMode());
   }
 
   private void setBoxCheckedAndSetListener(Menu menu, int id, boolean checked) {
@@ -842,7 +828,7 @@ public class MainActivity extends AppCompatActivity {
     if (item.getItemId() == R.id.action_root) {
       CheckBox rootCheckBox = (CheckBox) item.getActionView();
       if (!rootCheckBox.isChecked()) {
-        mMySettings.savePref(R.string.main_settings_root_granted_key, false);
+        mMySettings.setRootGranted(false);
         return true;
       }
 
@@ -869,7 +855,7 @@ public class MainActivity extends AppCompatActivity {
     if (item.getItemId() == R.id.action_adb) {
       CheckBox adbCheckBox = (CheckBox) item.getActionView();
       if (!adbCheckBox.isChecked()) {
-        mMySettings.savePref(R.string.main_settings_adb_connected_key, false);
+        mMySettings.setAdbConnected(false);
         return true;
       }
 
@@ -910,7 +896,7 @@ public class MainActivity extends AppCompatActivity {
 
     if (item.getItemId() == R.id.action_dark_theme) {
       CheckBox darkCheckBox = (CheckBox) item.getActionView();
-      mMySettings.savePref(R.string.main_settings_dark_theme_key, darkCheckBox.isChecked());
+      mMySettings.setForceDarkMode(darkCheckBox.isChecked());
       setNightTheme();
       return true;
     }
@@ -956,10 +942,10 @@ public class MainActivity extends AppCompatActivity {
       ((TextView) layout.findViewById(R.id.daemon_uid_list_title)).setTextColor(Color.WHITE);
     }
 
-    boolean useHiddenAPIs = mMySettings.getBoolPref(R.string.main_settings_use_hidden_apis_key);
+    boolean useHiddenAPIs = mMySettings.useHiddenAPIs();
     useHiddenAPIsView.setChecked(useHiddenAPIs);
 
-    boolean useSocket = mMySettings.getBoolPref(R.string.main_settings_use_socket_key);
+    boolean useSocket = mMySettings.useSocket();
     useSocketView.setChecked(useSocket);
 
     List<String> spinnerItems = Arrays.asList(getResources().getStringArray(R.array.daemon_uids));
@@ -983,7 +969,7 @@ public class MainActivity extends AppCompatActivity {
 
                   boolean restartDaemon = false;
                   if (useSocket != useSocketView.isChecked()) {
-                    mMySettings.savePref(R.string.main_settings_use_socket_key, !useSocket);
+                    mMySettings.setUseSocket(!useSocket);
                     restartDaemon = true;
                   }
 
@@ -1007,7 +993,7 @@ public class MainActivity extends AppCompatActivity {
 
   private boolean saveHiddenAPIsSettings(boolean useHiddenAPIs) {
     if (useHiddenAPIs) {
-      mMySettings.savePref(R.string.main_settings_use_hidden_apis_key, true);
+      mMySettings.setUseHiddenAPIs(true);
 
       // make sure read AppOps permission is granted
       return true;
@@ -1018,7 +1004,7 @@ public class MainActivity extends AppCompatActivity {
             .setPositiveButton(
                 R.string.yes,
                 (d, which) -> {
-                  mMySettings.savePref(R.string.main_settings_use_hidden_apis_key, false);
+                  mMySettings.setUseHiddenAPIs(false);
 
                   // start daemon if not running
                   Utils.runInBg(() -> startPrivDaemon(false));

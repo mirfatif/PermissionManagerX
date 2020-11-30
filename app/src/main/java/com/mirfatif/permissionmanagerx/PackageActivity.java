@@ -31,10 +31,8 @@ import com.mirfatif.permissionmanagerx.permsdb.PermissionEntity;
 import com.mirfatif.privdaemon.PrivDaemon;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public class PackageActivity extends AppCompatActivity {
 
@@ -206,18 +204,15 @@ public class PackageActivity extends AppCompatActivity {
       Builder builder = new Builder(this);
       builder.setPositiveButton(
           R.string.exclude,
-          (dialogInterface, i) -> {
-            Set<String> excludedPerms =
-                mMySettings.getSetPref(R.string.filter_settings_excluded_perms_key);
-            if (excludedPerms == null) excludedPerms = new HashSet<>();
-            else excludedPerms = new HashSet<>(excludedPerms);
-            excludedPerms.add(permission.getName());
-            mMySettings.savePref(R.string.filter_settings_excluded_perms_key, excludedPerms);
-            Utils.runInBg(this::updatePackage);
+          (dialogInterface, i) ->
+              Utils.runInBg(
+                  () -> {
+                    mMySettings.removePermFromExcludedPerms(permission.getName());
+                    updatePackage();
 
-            // other packages are also affected
-            mPackageParser.updatePackagesList(false);
-          });
+                    // other packages are also affected
+                    mPackageParser.updatePackagesList(false);
+                  }));
       builder.setNegativeButton(android.R.string.cancel, null);
 
       boolean isReferenced = permission.isReferenced() != null && permission.isReferenced();

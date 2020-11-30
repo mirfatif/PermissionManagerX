@@ -37,7 +37,7 @@ public class AppOpsParser {
 
   List<MyPackageOps> getOpsForPackage(int uid, String packageName, Integer op) {
     String _op = op == null ? "null" : String.valueOf(op);
-    if (mMySettings.useHiddenAPIs()) {
+    if (mMySettings.canUseHiddenAPIs()) {
       try {
         if (mAppOpsService == null) {
           // getService() hidden API
@@ -81,7 +81,7 @@ public class AppOpsParser {
   List<Integer> buildOpToDefaultModeList() {
     if (mMySettings.DEBUG) Utils.debugLog("PackageParser", "buildOpToDefaultModeList() called");
     List<Integer> opToDefModeList = new ArrayList<>();
-    if (mMySettings.useHiddenAPIs()) {
+    if (mMySettings.canUseHiddenAPIs()) {
       try {
         for (int i = 0; i < getOpNum(); i++) {
           // hidden API
@@ -111,7 +111,7 @@ public class AppOpsParser {
   List<Integer> buildOpToSwitchList() {
     if (mMySettings.DEBUG) Utils.debugLog("PackageParser", "buildOpToSwitchList() called");
     List<Integer> opToSwitchList = new ArrayList<>();
-    if (mMySettings.useHiddenAPIs()) {
+    if (mMySettings.canUseHiddenAPIs()) {
       try {
         for (int i = 0; i < getOpNum(); i++) {
           // hidden API
@@ -141,7 +141,7 @@ public class AppOpsParser {
   Map<String, Integer> buildPermissionToOpCodeMap() {
     if (mMySettings.DEBUG) Utils.debugLog("PackageParser", "buildPermissionToOpCodeMap() called");
     Map<String, Integer> permToOpCodeMap = new HashMap<>();
-    if (mMySettings.useHiddenAPIs()) {
+    if (mMySettings.canUseHiddenAPIs()) {
       try {
         for (String item : PrivDaemon.buildPermToOpCodeList(mPackageManager, null)) {
           String[] keyValue = item.split(":");
@@ -174,7 +174,7 @@ public class AppOpsParser {
     if (mMySettings.excludeAppOpsPerms() || !mMySettings.canReadAppOps()) return null;
     List<String> appOpsList = new ArrayList<>();
 
-    if (mMySettings.useHiddenAPIs()) {
+    if (mMySettings.canUseHiddenAPIs()) {
       try {
         for (int i = 0; i < getOpNum(); i++) {
           // hidden API
@@ -206,7 +206,7 @@ public class AppOpsParser {
     if (mMySettings.excludeAppOpsPerms() || !mMySettings.canReadAppOps()) return null;
     List<String> appOpsModes = new ArrayList<>();
 
-    if (mMySettings.useHiddenAPIs()) {
+    if (mMySettings.canUseHiddenAPIs()) {
       try {
         for (Object item : PrivDaemon.modeToName()) {
           appOpsModes.add(Utils.capitalizeString((String) item));
@@ -233,7 +233,7 @@ public class AppOpsParser {
   }
 
   private int getOpNum() {
-    if (mMySettings.useHiddenAPIs()) {
+    if (mMySettings.canUseHiddenAPIs()) {
       /** {@link AppOpsManager#_NUM_OP} gets hard-coded */
       // hidden API
       int NUM_OP = Utils.getIntField("_NUM_OP", AppOpsManager.class, TAG + " getOpNum()");

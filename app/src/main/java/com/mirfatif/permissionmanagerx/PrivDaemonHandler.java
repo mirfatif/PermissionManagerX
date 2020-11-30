@@ -73,7 +73,7 @@ public class PrivDaemonHandler {
             + System.getenv("PATH");
 
     boolean isRootGranted = mySettings.isRootGranted();
-    boolean useSocket = mySettings.getBoolPref(R.string.main_settings_use_socket_key);
+    boolean useSocket = mySettings.useSocket();
 
     Adb adb = null;
     InputStream stdInStream = null;

@@ -644,7 +644,7 @@ public class PackageParser {
   private int getSystemFixedFlag() {
     if (systemFixedFlag != -1) return systemFixedFlag;
 
-    if (mMySettings.useHiddenAPIs()) {
+    if (mMySettings.canUseHiddenAPIs()) {
       // hidden API
       int flag = Utils.getIntField("FLAG_PERMISSION_SYSTEM_FIXED", PackageManager.class, TAG);
       if (flag != Utils.INT_FIELD_ERROR) {

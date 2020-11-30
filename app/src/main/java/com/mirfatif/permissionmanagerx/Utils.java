@@ -3,6 +3,7 @@ package com.mirfatif.permissionmanagerx;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
@@ -17,6 +18,11 @@ import androidx.browser.customtabs.CustomTabColorSchemeParams;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.browser.customtabs.CustomTabsService;
 import androidx.lifecycle.MutableLiveData;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.EncryptedSharedPreferences.PrefKeyEncryptionScheme;
+import androidx.security.crypto.EncryptedSharedPreferences.PrefValueEncryptionScheme;
+import androidx.security.crypto.MasterKey;
+import androidx.security.crypto.MasterKey.KeyScheme;
 import com.mirfatif.privdaemon.PrivDaemon;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -28,6 +34,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
+import java.security.GeneralSecurityException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -324,6 +331,20 @@ public class Utils {
 
   public static int getUserId() {
     return android.os.Process.myUid() / 100000;
+  }
+
+  static SharedPreferences getEncPrefs() {
+    try {
+      return EncryptedSharedPreferences.create(
+          App.getContext(),
+          BuildConfig.APPLICATION_ID + "_enc_prefs",
+          new MasterKey.Builder(App.getContext()).setKeyScheme(KeyScheme.AES256_GCM).build(),
+          PrefKeyEncryptionScheme.AES256_SIV,
+          PrefValueEncryptionScheme.AES256_GCM);
+    } catch (GeneralSecurityException | IOException e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
   }
 
   //////////////////////////////////////////////////////////////////
