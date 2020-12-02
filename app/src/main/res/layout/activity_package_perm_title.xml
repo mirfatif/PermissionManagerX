@@ -8,7 +8,7 @@
   app:autoSizeTextType="uniform"
   android:textStyle="bold"
   android:textSize="18sp"
-  android:textColor="@android:color/black"
+  android:textColor="@color/dialog_text_color"
   android:paddingTop="16dp"
   android:paddingStart="24dp"
   android:paddingEnd="24dp">

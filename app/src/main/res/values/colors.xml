@@ -5,4 +5,5 @@
   <color name="snackBarBackground">#303030</color>
   <color name="darkTransparent">#B3000000</color>
   <color name="disabledStateColor">#7F7F7F</color>
+  <color name="dialog_text_color">@android:color/black</color>
 </resources>

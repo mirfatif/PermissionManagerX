@@ -2,7 +2,6 @@ package com.mirfatif.permissionmanagerx;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -252,7 +251,6 @@ public class PackageActivity extends AppCompatActivity {
       View layout = getLayoutInflater().inflate(R.layout.activity_package_perm_title, null);
       TextView titleView = layout.findViewById(R.id.permission_title_view);
       titleView.setText(permission.getName());
-      if (Utils.isNightMode(this)) titleView.setTextColor(Color.WHITE);
       builder.setCustomTitle(titleView);
 
       String message;

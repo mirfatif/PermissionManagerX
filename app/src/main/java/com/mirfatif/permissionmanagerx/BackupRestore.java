@@ -1,10 +1,12 @@
 package com.mirfatif.permissionmanagerx;
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.util.Log;
 import android.util.Xml;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -69,9 +71,15 @@ public class BackupRestore {
   private final MainActivity mActivity;
   private final SharedPreferences mPreferences;
 
+  private boolean mSkipUninstalledApps = false;
+
   BackupRestore(MainActivity activity) {
     mActivity = activity;
     mPreferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
+
+    View layout = activity.getLayoutInflater().inflate(R.layout.backup_restore_alert_dialog, null);
+    CheckBox checkbox = layout.findViewById(R.id.skip_uninstalled_packages);
+    checkbox.setOnClickListener(v -> mSkipUninstalledApps = checkbox.isChecked());
 
     AlertDialog dialog =
         new Builder(mActivity)
@@ -79,7 +87,7 @@ public class BackupRestore {
             .setNegativeButton(R.string.restore, (d, which) -> doBackupRestore(false))
             .setNeutralButton(android.R.string.cancel, null)
             .setTitle(getString(R.string.backup) + " / " + getString(R.string.restore))
-            .setMessage(R.string.choose_backup_restore)
+            .setView(layout)
             .create();
     new AlertDialogFragment(dialog).show(mActivity.mFM, TAG_BACKUP_RESTORE, false);
   }
@@ -188,6 +196,17 @@ public class BackupRestore {
 
     // permissions
     List<PermissionEntity> permEntities = mMySettings.getPermDb().getAll();
+
+    if (mSkipUninstalledApps) {
+      List<PermissionEntity> permEntitiesCleaned = new ArrayList<>();
+      for (PermissionEntity entity : permEntities) {
+        if (isInstalled(entity.pkgName)) {
+          permEntitiesCleaned.add(entity);
+        }
+      }
+      permEntities = permEntitiesCleaned;
+    }
+
     for (PermissionEntity entity : permEntities) {
       try {
         serializer.startTag(null, PERM);
@@ -298,6 +317,16 @@ public class BackupRestore {
       return;
     }
 
+    if (mSkipUninstalledApps) {
+      List<BackupEntry> permEntriesCleaned = new ArrayList<>();
+      for (BackupEntry entry : permEntries) {
+        if (isInstalled(entry.key)) {
+          permEntriesCleaned.add(entry);
+        }
+      }
+      permEntries = permEntriesCleaned;
+    }
+
     updatePermissionEntities(permEntries);
 
     succeeded(false, prefEntries.size(), permEntries.size(), badEntries);
@@ -339,6 +368,17 @@ public class BackupRestore {
       return null;
     }
     return backupEntryList;
+  }
+
+  private final List<String> mInstalledPackages = new ArrayList<>();
+
+  private boolean isInstalled(String pkgName) {
+    if (mInstalledPackages.isEmpty()) {
+      for (PackageInfo info : mActivity.getPackageManager().getInstalledPackages(0)) {
+        mInstalledPackages.add(info.packageName);
+      }
+    }
+    return mInstalledPackages.contains(pkgName);
   }
 
   static void updatePermissionEntities(List<BackupEntry> permEntries) {

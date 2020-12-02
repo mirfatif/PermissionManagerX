@@ -20,12 +20,12 @@
       android:layout_marginBottom="4dp">
 
       <TextView
-        android:id="@+id/use_hidden_apis_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:textColor="@android:color/black"
+        android:textColor="@color/dialog_text_color"
+        android:textSize="16sp"
         android:text="@string/use_hidden_apis"/>
 
       <CheckBox
@@ -48,6 +48,7 @@
     <TextView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:textSize="16sp"
       android:text="@string/root_only_settings"
       android:layout_marginBottom="8dp"
       android:textColor="@color/accentColor"/>
@@ -59,12 +60,12 @@
       android:layout_marginBottom="4dp">
 
       <TextView
-        android:id="@+id/use_socket_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:textColor="@android:color/black"
+        android:textColor="@color/dialog_text_color"
+        android:textSize="16sp"
         android:text="@string/talk_to_daemon_over_socket"/>
 
       <CheckBox
@@ -84,12 +85,12 @@
       android:layout_marginBottom="4dp">
 
       <TextView
-        android:id="@+id/daemon_uid_list_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:textColor="@android:color/black"
+        android:textColor="@color/dialog_text_color"
+        android:textSize="16sp"
         android:text="@string/run_daemon_as"/>
 
       <androidx.appcompat.widget.AppCompatSpinner

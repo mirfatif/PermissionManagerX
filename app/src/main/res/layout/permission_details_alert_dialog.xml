@@ -14,7 +14,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:autoSizeTextType="uniform"
-    android:maxLines="1"/>
+    android:maxLines="1"
+    android:textColor="@color/dialog_text_color"/>
 
   <TextView
     android:id="@+id/perm_group_view"
@@ -23,7 +24,8 @@
     android:layout_marginStart="4dp"
     android:layout_marginEnd="4dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
+    android:layout_height="wrap_content"
+    android:textColor="@color/dialog_text_color"/>
 
   <TextView
     android:id="@+id/protection_level_view"
@@ -33,15 +35,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:autoSizeTextType="uniform"
-    android:maxLines="1"/>
+    android:maxLines="1"
+    android:textColor="@color/dialog_text_color"/>
 
   <TextView
     android:id="@+id/perm_desc_view"
     android:visibility="gone"
     android:layout_marginTop="2dp"
+    android:layout_marginBottom="4dp"
     android:layout_marginStart="4dp"
     android:layout_marginEnd="4dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
+    android:layout_height="wrap_content"
+    android:textColor="@color/dialog_text_color"/>
 
 </LinearLayout>

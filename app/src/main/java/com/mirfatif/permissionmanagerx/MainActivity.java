@@ -2,7 +2,6 @@ package com.mirfatif.permissionmanagerx;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Process;
@@ -931,12 +930,6 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView arrow = layout.findViewById(R.id.daemon_uid_list_arrow);
     arrow.setOnClickListener(v -> daemonUidSpinner.performClick());
-
-    if (Utils.isNightMode(this)) {
-      ((TextView) layout.findViewById(R.id.use_hidden_apis_title)).setTextColor(Color.WHITE);
-      ((TextView) layout.findViewById(R.id.use_socket_title)).setTextColor(Color.WHITE);
-      ((TextView) layout.findViewById(R.id.daemon_uid_list_title)).setTextColor(Color.WHITE);
-    }
 
     boolean useHiddenAPIs = mMySettings.useHiddenAPIs();
     useHiddenAPIsView.setChecked(useHiddenAPIs);

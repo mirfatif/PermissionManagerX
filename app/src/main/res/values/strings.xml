@@ -88,6 +88,7 @@
         %2$d permission references.</string>
   <string name="backup_restore_bad_entries">\nSkipped %1$d bad entries.</string>
   <string name="backup_restore_failed">Failed. Some error occurred.</string>
+  <string name="skip_uninstalled_packages">Skip uninstalled packages</string>
   <string name="privileges">"Privileges"</string>
   <string name="hidden_apis_warning">Hidden APIs are blacklisted on your device, switching to daemon mode.
     </string>
