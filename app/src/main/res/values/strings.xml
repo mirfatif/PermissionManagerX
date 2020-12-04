@@ -79,6 +79,9 @@
     Play Store to support the development.</string>
   <string name="thank_you">Thank you</string>
   <string name="play_store_url">https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx</string>
+  <string name="crash_report">Crash Report</string>
+  <string name="ask_to_report_crash">We are sorry. The app had a problem and crashed.\nWould you
+    like to email the \"%1$s\" file to the developer so that the bug can be fixed?</string>
   <string name="packages">Packages</string>
   <string name="permissions">Permissions</string>
 

@@ -46,6 +46,7 @@ public class MySettings {
 
   public boolean mPrivDaemonAlive = false;
   public boolean mDoRepeatUpdates = true;
+  boolean mAskToSendCrashReport = true;
 
   Boolean doLogging = false;
   public boolean DEBUG = false;
@@ -96,6 +97,17 @@ public class MySettings {
   void plusAppLaunchCount() {
     String appLaunchCountKey = getString(R.string.pref_main_app_launch_count_enc_key);
     mEncPrefs.edit().putInt(appLaunchCountKey, mEncPrefs.getInt(appLaunchCountKey, 0) + 1).apply();
+  }
+
+  long getCrashReportTs() {
+    return mEncPrefs.getLong(getString(R.string.pref_main_crash_report_ts_enc_key), 0);
+  }
+
+  void setCrashReportTs() {
+    mEncPrefs
+        .edit()
+        .putLong(getString(R.string.pref_main_crash_report_ts_enc_key), System.currentTimeMillis())
+        .apply();
   }
 
   boolean shouldNotAskForRating() {

@@ -12,6 +12,7 @@
 
   <!--MainActivity Preferences-->
   <string name="pref_main_daemon_uid_key">pref_main_daemon_uid</string>
+  <string name="pref_main_crash_report_ts_enc_key">pref_main_crash_report_ts_enc</string>
   <string name="pref_main_ask_for_rating_ts_enc_key">pref_main_ask_for_rating_ts_enc</string>
   <string name="pref_main_app_launch_count_enc_key">pref_main_app_launch_count_enc</string>
 

@@ -1,5 +1,6 @@
 package com.mirfatif.permissionmanagerx;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -26,6 +27,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.SearchView.OnQueryTextListener;
+import androidx.core.content.FileProvider;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -39,6 +41,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.privdaemon.PrivDaemon;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -548,7 +551,74 @@ public class MainActivity extends AppCompatActivity {
         });
   }
 
+  private boolean sendCrashReport() {
+    if (!mMySettings.mAskToSendCrashReport) return false;
+    mMySettings.mAskToSendCrashReport = false;
+
+    File logDir = new File(getExternalFilesDir(null), App.crashLogDir);
+    if (!logDir.exists()) return false;
+    File[] logFiles = logDir.listFiles();
+    if (logFiles == null || logFiles.length == 0) return false;
+
+    long crashReportTs = mMySettings.getCrashReportTs();
+    mMySettings.setCrashReportTs();
+
+    File fileToDelete, fileToSend = null;
+    for (File logFile : logFiles) {
+      if (!logFile.isFile()) continue;
+      if (!logFile.getName().startsWith(App.logFilePrefix)) continue;
+      if (!logFile.getName().endsWith(App.logFileSuffix)) continue;
+      if (logFile.lastModified() > crashReportTs
+          && (fileToSend == null || logFile.lastModified() > fileToSend.lastModified())) {
+        fileToDelete = fileToSend;
+        fileToSend = logFile;
+      } else {
+        fileToDelete = logFile;
+      }
+      if (fileToDelete != null && !fileToDelete.delete()) {
+        Log.e("sendCrashReport", "Failed to delete " + logFile);
+      }
+    }
+
+    if (fileToSend == null) return false;
+
+    String authority = "com.mirfatif.permissionmanagerx.fileprovider";
+    Uri logFileUri = FileProvider.getUriForFile(this, authority, fileToSend);
+
+    Builder builder =
+        new Builder(this)
+            .setTitle(R.string.crash_report)
+            .setMessage(getString(R.string.ask_to_report_crash, fileToSend.getName()))
+            .setPositiveButton(
+                android.R.string.ok,
+                (dialog, which) -> {
+                  Intent intent = new Intent(Intent.ACTION_SEND);
+                  intent
+                      .setData(logFileUri)
+                      .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                      .setType("*/*")
+                      .putExtra(
+                          Intent.EXTRA_EMAIL, new String[] {getString(R.string.email_address)})
+                      .putExtra(
+                          Intent.EXTRA_SUBJECT, getString(R.string.app_name) + " - Crash Report")
+                      .putExtra(Intent.EXTRA_TEXT, "Find attachment.")
+                      .putExtra(Intent.EXTRA_STREAM, logFileUri);
+
+                  try {
+                    startActivity(intent);
+                  } catch (ActivityNotFoundException e) {
+                    Toast.makeText(
+                            App.getContext(), R.string.no_email_app_installed, Toast.LENGTH_LONG)
+                        .show();
+                  }
+                })
+            .setNegativeButton(android.R.string.cancel, null);
+    new AlertDialogFragment(builder.create()).show(mFM, "CRASH_REPORT", true);
+    return true;
+  }
+
   private void askForRating() {
+    if (sendCrashReport()) return;
     if (mMySettings.shouldNotAskForRating()) return;
     AlertDialog dialog =
         new Builder(this)

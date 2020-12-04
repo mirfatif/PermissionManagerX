@@ -14,6 +14,10 @@ public class App extends Application {
   private static Context mAppContext;
   private Thread.UncaughtExceptionHandler defaultExceptionHandler;
 
+  static final String crashLogDir = "crash_logs";
+  static final String logFilePrefix = "PMX_";
+  static final String logFileSuffix = ".log";
+
   @Override
   public void onCreate() {
     super.onCreate();
@@ -30,15 +34,17 @@ public class App extends Application {
             }
           }
 
-          File logDir = new File(getExternalFilesDir(null), "crash_logs");
+          File logDir = new File(getExternalFilesDir(null), crashLogDir);
           if (logDir.exists() || logDir.mkdirs()) {
-            String logFile = "PMX_" + Utils.getCurrDateTime() + ".log";
+            String logFile = logFilePrefix + Utils.getCurrDateTime() + logFileSuffix;
             try {
               PrintWriter writer = new PrintWriter(new File(logDir, logFile));
               e.printStackTrace(writer);
               writer.close();
             } catch (FileNotFoundException ignored) {
             }
+          } else {
+            Log.e("App", "Failed to create " + logDir);
           }
 
           defaultExceptionHandler.uncaughtException(t, e);
