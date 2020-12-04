@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -145,7 +146,7 @@ public class BackupRestore {
       return;
     }
 
-    int badEntries = 0;
+    int invalidPrefs = 0;
 
     // preferences
     Map<String, ?> prefEntries = mPreferences.getAll();
@@ -167,8 +168,8 @@ public class BackupRestore {
         if (stringBuilder != null) value = stringBuilder;
       } else if (value instanceof String) type = STRING;
       else {
-        Log.e(TAG, "Unrecognizable value: " + value.toString());
-        badEntries++;
+        Log.e(TAG, "Unknown preference type: " + value.toString());
+        invalidPrefs++;
         continue;
       }
 
@@ -196,12 +197,15 @@ public class BackupRestore {
 
     // permissions
     List<PermissionEntity> permEntities = mMySettings.getPermDb().getAll();
+    int skippedApps = 0;
 
     if (mSkipUninstalledApps) {
       List<PermissionEntity> permEntitiesCleaned = new ArrayList<>();
       for (PermissionEntity entity : permEntities) {
         if (isInstalled(entity.pkgName)) {
           permEntitiesCleaned.add(entity);
+        } else {
+          skippedApps++;
         }
       }
       permEntities = permEntitiesCleaned;
@@ -252,7 +256,7 @@ public class BackupRestore {
     } catch (IOException ignored) {
     }
 
-    succeeded(true, prefEntries.size(), permEntities.size(), badEntries);
+    succeeded(true, prefEntries.size(), permEntities.size(), invalidPrefs, skippedApps);
   }
 
   private void restore(InputStream inputStream) {
@@ -272,7 +276,7 @@ public class BackupRestore {
     InputStream inputStream1 = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
     InputStream inputStream2 = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
 
-    int badEntries = 0;
+    int invalidPrefs = 0;
 
     // preferences
     List<BackupEntry> prefEntries = getKeyValueEntries(inputStream1, PREFERENCES, PREF);
@@ -283,6 +287,13 @@ public class BackupRestore {
 
     SharedPreferences.Editor prefEdit = mPreferences.edit();
     for (BackupEntry entry : prefEntries) {
+
+      if (!isValidPrefKey(entry.key)) {
+        Log.e(TAG, "Invalid preference: " + entry.key);
+        invalidPrefs++;
+        continue;
+      }
+
       switch (entry.type) {
         case BOOLEAN:
           prefEdit.putBoolean(entry.key, Boolean.parseBoolean(entry.value));
@@ -303,8 +314,8 @@ public class BackupRestore {
           prefEdit.putString(entry.key, entry.value);
           break;
         default:
-          Log.e(TAG, "Bad type: " + entry.type);
-          badEntries++;
+          Log.e(TAG, "Unknown preference type: " + entry.type);
+          invalidPrefs++;
           break;
       }
       prefEdit.apply();
@@ -317,11 +328,14 @@ public class BackupRestore {
       return;
     }
 
+    int skippedApps = 0;
     if (mSkipUninstalledApps) {
       List<BackupEntry> permEntriesCleaned = new ArrayList<>();
       for (BackupEntry entry : permEntries) {
         if (isInstalled(entry.key)) {
           permEntriesCleaned.add(entry);
+        } else {
+          skippedApps++;
         }
       }
       permEntries = permEntriesCleaned;
@@ -329,7 +343,7 @@ public class BackupRestore {
 
     updatePermissionEntities(permEntries);
 
-    succeeded(false, prefEntries.size(), permEntries.size(), badEntries);
+    succeeded(false, prefEntries.size(), permEntries.size(), invalidPrefs, skippedApps);
   }
 
   private List<BackupEntry> getKeyValueEntries(
@@ -368,6 +382,24 @@ public class BackupRestore {
       return null;
     }
     return backupEntryList;
+  }
+
+  private final List<String> mPrefKeys = new ArrayList<>();
+
+  private boolean isValidPrefKey(String prefKey) {
+    if (mPrefKeys.isEmpty()) {
+      for (Field field : R.string.class.getDeclaredFields()) {
+        String strName = field.getName();
+        if (!strName.startsWith("pref_")) continue;
+        if (!strName.endsWith("_key")) continue;
+        if (strName.endsWith("_enc_key")) continue;
+
+        int strKeyResId = Utils.getIntField(strName, R.string.class, TAG);
+        String _prefKey = getString(strKeyResId);
+        mPrefKeys.add(_prefKey);
+      }
+    }
+    return mPrefKeys.contains(prefKey);
   }
 
   private final List<String> mInstalledPackages = new ArrayList<>();
@@ -420,7 +452,8 @@ public class BackupRestore {
     showFinalDialog(isBackup, getString(R.string.backup_restore_failed));
   }
 
-  private void succeeded(boolean isBackup, int prefs, int perms, int badEntries) {
+  private void succeeded(
+      boolean isBackup, int prefs, int perms, int invalidPrefs, int skippedApps) {
     Utils.runInFg(() -> mActivity.mRoundProgressContainer.setVisibility(View.GONE));
     if (!isBackup) {
       mMySettings.populateExcludedAppsList(false);
@@ -431,8 +464,11 @@ public class BackupRestore {
     }
 
     String message = mActivity.getString(R.string.backup_restore_process_entries, prefs, perms);
-    if (badEntries > 0) {
-      message += mActivity.getString(R.string.backup_restore_bad_entries, badEntries);
+    if (invalidPrefs > 0) {
+      message += mActivity.getString(R.string.backup_restore_invalid_prefs, invalidPrefs);
+    }
+    if (skippedApps > 0) {
+      message += mActivity.getString(R.string.backup_restore_uninstalled_apps, skippedApps);
     }
 
     showFinalDialog(isBackup, message);

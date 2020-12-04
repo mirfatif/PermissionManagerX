@@ -234,7 +234,7 @@
         android:layout_marginBottom="4dp"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:text="@string/filter_settings_packages_title"/>
+        android:text="@string/packages"/>
 
       <ImageView
         android:layout_width="wrap_content"
@@ -290,7 +290,7 @@
         android:layout_marginBottom="4dp"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:text="@string/filter_settings_permissions_title"/>
+        android:text="@string/permissions"/>
 
       <ImageView
         android:layout_width="wrap_content"

@@ -67,38 +67,37 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     setPreferencesFromResource(R.xml.filter_settings_preferences, rootKey);
 
     excludeNoIconAppsView =
-        findPreference(getString(R.string.filter_settings_exclude_no_icon_apps_key));
-    excludeUserAppsView = findPreference(getString(R.string.filter_settings_exclude_user_apps_key));
-    excludeSystemAppsView =
-        findPreference(getString(R.string.filter_settings_exclude_system_apps_key));
+        findPreference(getString(R.string.pref_filter_exclude_no_icon_apps_key));
+    excludeUserAppsView = findPreference(getString(R.string.pref_filter_exclude_user_apps_key));
+    excludeSystemAppsView = findPreference(getString(R.string.pref_filter_exclude_system_apps_key));
     excludeFrameworkAppsView =
-        findPreference(getString(R.string.filter_settings_exclude_framework_apps_key));
+        findPreference(getString(R.string.pref_filter_exclude_framework_apps_key));
     excludeDisabledAppsView =
-        findPreference(getString(R.string.filter_settings_exclude_disabled_apps_key));
+        findPreference(getString(R.string.pref_filter_exclude_disabled_apps_key));
     excludeNoPermsAppsView =
-        findPreference(getString(R.string.filter_settings_exclude_no_perms_apps_key));
-    excludedAppsView = findPreference(getString(R.string.filter_settings_excluded_apps_key));
+        findPreference(getString(R.string.pref_filter_exclude_no_perms_apps_key));
+    excludedAppsView = findPreference(getString(R.string.pref_filter_excluded_apps_key));
 
     excludeInvalidPermsView =
-        findPreference(getString(R.string.filter_settings_exclude_invalid_perms_key));
+        findPreference(getString(R.string.pref_filter_exclude_invalid_perms_key));
     excludeNotChangeablePermsView =
-        findPreference(getString(R.string.filter_settings_exclude_not_changeable_perms_key));
+        findPreference(getString(R.string.pref_filter_exclude_not_changeable_perms_key));
     excludeNotGrantedPermsView =
-        findPreference(getString(R.string.filter_settings_exclude_not_granted_perms_key));
+        findPreference(getString(R.string.pref_filter_exclude_not_granted_perms_key));
     excludeNormalPermsView =
-        findPreference(getString(R.string.filter_settings_exclude_normal_perms_key));
+        findPreference(getString(R.string.pref_filter_exclude_normal_perms_key));
     excludeDangerousPermsView =
-        findPreference(getString(R.string.filter_settings_exclude_dangerous_perms_key));
+        findPreference(getString(R.string.pref_filter_exclude_dangerous_perms_key));
     excludeSignaturePermsView =
-        findPreference(getString(R.string.filter_settings_exclude_signature_perms_key));
+        findPreference(getString(R.string.pref_filter_exclude_signature_perms_key));
     excludePrivilegedPermsView =
-        findPreference(getString(R.string.filter_settings_exclude_privileged_perms_key));
+        findPreference(getString(R.string.pref_filter_exclude_privileged_perms_key));
     excludeAppOpsPermsView =
-        findPreference(getString(R.string.filter_settings_exclude_appops_perms_key));
+        findPreference(getString(R.string.pref_filter_exclude_appops_perms_key));
     excludeNotSetAppOpsView =
-        findPreference(getString(R.string.filter_settings_exclude_not_set_appops_key));
-    excludedPermsView = findPreference(getString(R.string.filter_settings_excluded_perms_key));
-    extraAppOpsView = findPreference(getString(R.string.filter_settings_extra_appops_key));
+        findPreference(getString(R.string.pref_filter_exclude_not_set_appops_key));
+    excludedPermsView = findPreference(getString(R.string.pref_filter_excluded_perms_key));
+    extraAppOpsView = findPreference(getString(R.string.pref_filter_extra_appops_key));
 
     updateViews();
 

@@ -390,9 +390,7 @@ public class MainActivity extends AppCompatActivity {
                   mRefreshLayout.setRefreshing(false);
                   Snackbar.make(
                           mProgressBarContainer,
-                          mPackageParser.getPackagesListSize()
-                              + " "
-                              + getString(R.string.filter_settings_packages_title),
+                          mPackageParser.getPackagesListSize() + " " + getString(R.string.packages),
                           5000)
                       .show();
                 }
