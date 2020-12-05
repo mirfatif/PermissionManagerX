@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
   static final String APP_OPS_PERM = "android.permission.GET_APP_OPS_STATS";
   static final String TAG_GRANT_ROOT_OR_ADB = "GRANT_ROOT_OR_ADB";
 
-  private MySettings mMySettings;
+  MySettings mMySettings;
   PackageParser mPackageParser;
   private PrivDaemonHandler mPrivDaemonHandler;
   private SwipeRefreshLayout mRefreshLayout;
@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
   private TextView mProgressNowView;
   private TextView mProgressMaxView;
   private PackageAdapter mPackageAdapter;
+  private MainActivityFlavor mMainActivityFlavor;
 
   private DrawerLayout mDrawerLayout;
   private ActionBarDrawerToggle mDrawerToggle;
@@ -131,6 +132,9 @@ public class MainActivity extends AppCompatActivity {
 
     // to show drawer icon
     Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+    // flavor specific methods
+    mMainActivityFlavor = new MainActivityFlavor(this);
 
     mDrawerLayout = findViewById(R.id.activity_main);
     mDrawerToggle =
@@ -397,7 +401,9 @@ public class MainActivity extends AppCompatActivity {
                           5000)
                       .show();
                 }
-                askForRating();
+                if (!sendCrashReport()) {
+                  mMainActivityFlavor.askForRating();
+                }
               }
             });
 
@@ -617,27 +623,16 @@ public class MainActivity extends AppCompatActivity {
     return true;
   }
 
-  private void askForRating() {
-    if (sendCrashReport()) return;
-    if (mMySettings.shouldNotAskForRating()) return;
-    AlertDialog dialog =
-        new Builder(this)
-            .setMessage(R.string.purchase_and_rate_the_app)
-            .setPositiveButton(
-                android.R.string.ok,
-                (d, which) -> {
-                  Utils.openWebUrl(this, getString(R.string.play_store_url));
-                  Toast.makeText(App.getContext(), R.string.thank_you, Toast.LENGTH_LONG).show();
-                })
-            .setNegativeButton(android.R.string.cancel, null)
-            .setNeutralButton(
-                R.string.shut_up,
-                (d, which) -> {
-                  mMySettings.setAskForRatingTs(Long.MAX_VALUE);
-                  Toast.makeText(App.getContext(), "\ud83d\ude1f", Toast.LENGTH_LONG).show();
-                })
-            .create();
-    new AlertDialogFragment(dialog).show(mFM, "RATING", false);
+  @Override
+  protected void onResume() {
+    super.onResume();
+    if (mMainActivityFlavor != null) mMainActivityFlavor.onResumed();
+  }
+
+  @Override
+  protected void onDestroy() {
+    if (mMainActivityFlavor != null) mMainActivityFlavor.onDestroyed();
+    super.onDestroy();
   }
 
   //////////////////////////////////////////////////////////////////
