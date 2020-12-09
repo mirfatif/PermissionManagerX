@@ -4,6 +4,11 @@
 
   <group android:id="@+id/group1">
     <item
+      android:id="@+id/action_settings"
+      android:title="@string/settings_menu_item"
+      android:icon="@drawable/settings"/>
+
+    <item
       android:id="@+id/action_filter"
       android:title="@string/filter_menu_item"
       android:icon="@drawable/filter"/>
@@ -25,7 +30,7 @@
     <item
       android:id="@+id/action_advanced_settings"
       android:title="@string/advanced_settings_menu_item"
-      android:icon="@drawable/advanced"/>
+      android:icon="@drawable/advanced_settings"/>
   </group>
 
   <group android:id="@+id/group3">

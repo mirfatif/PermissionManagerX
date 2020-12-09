@@ -8,9 +8,14 @@
   <string name="_default">Default</string>
   <string name="open">open</string>
   <string name="close">close</string>
+  <string name="hour">%1$d Hour</string>
+  <string name="hours">%1$d Hours</string>
+  <string name="day">%1$d Day</string>
+  <string name="days">%1$d Days</string>
 
   <!--MainActivity Navigation Drawer / menu items-->
   <string name="search_menu_item">Search</string>
+  <string name="settings_menu_item">Settings</string>
   <string name="filter_menu_item">Exclusion Filters</string>
   <string name="root_menu_item">Root Access</string>
   <string name="adb_menu_item">ADB Shell</string>

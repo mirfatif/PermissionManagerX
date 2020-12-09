@@ -820,6 +820,9 @@ public class MainActivity extends AppCompatActivity {
     setBoxCheckedAndSetListener(menu, R.id.action_root, mMySettings.isRootGranted());
     setBoxCheckedAndSetListener(menu, R.id.action_adb, mMySettings.isAdbConnected());
     setBoxCheckedAndSetListener(menu, R.id.action_dark_theme, mMySettings.forceDarkMode());
+
+    menu.findItem(R.id.action_donate).setVisible(MainActivityFlavor.SHOW_ACTION_DONATE);
+    menu.findItem(R.id.action_settings).setVisible(MainActivityFlavor.SHOW_ACTION_SETTINGS);
   }
 
   private void setBoxCheckedAndSetListener(Menu menu, int id, boolean checked) {
@@ -844,6 +847,11 @@ public class MainActivity extends AppCompatActivity {
     if (mMySettings.DEBUG)
       Utils.debugLog("handleNavigationItemChecked", item.getTitle().toString());
     mDrawerLayout.closeDrawer(GravityCompat.START, true);
+
+    if (item.getItemId() == R.id.action_settings) {
+      mMainActivityFlavor.openSettings();
+      return true;
+    }
 
     if (item.getItemId() == R.id.action_filter) {
       startActivity(new Intent(App.getContext(), FilterSettingsActivity.class));
