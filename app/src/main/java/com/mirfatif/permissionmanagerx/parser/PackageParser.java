@@ -25,6 +25,8 @@ import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.permsdb.PermissionEntity;
 import com.mirfatif.privdaemon.MyPackageOps;
 import com.mirfatif.privdaemon.PrivDaemon;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -164,7 +166,18 @@ public class PackageParser {
         Utils.updatePackagesExecutor(() -> updatePackagesListInBg(doRepeatUpdates, myId));
   }
 
-  private void updatePackagesListInBg(boolean doRepeatUpdates, long myId) {
+  // For RefCheckWorker
+  @SuppressWarnings("UnusedDeclaration")
+  public List<Package> updatePackagesList() {
+    long myId = mUpdatePackageListRefId = System.nanoTime();
+    updatePackagesListInBg(false, myId);
+    if (myId != mUpdatePackageListRefId) {
+      return null; // Interrupted in between
+    }
+    return mPackagesList;
+  }
+
+  private synchronized void updatePackagesListInBg(boolean doRepeatUpdates, long myId) {
     long startTime = System.currentTimeMillis();
 
     // Don't trouble Android on every call.
@@ -265,17 +278,20 @@ public class PackageParser {
 
     if (isMax) {
       Utils.runInFg(() -> mProgressMax.setValue(value));
+      propertyChange.firePropertyChange(PROP_MAX_PROGRESS, 0, value);
       return;
     }
 
     if (isFinal) {
       Utils.runInFg(() -> mProgressNow.setValue(value));
+      propertyChange.firePropertyChange(PROP_NOW_PROGRESS, 0, value);
       return;
     }
 
     // set progress updates, but not too frequent
     if ((System.currentTimeMillis() - mLastProgressTimeStamp) > 50) {
       Utils.runInFg(() -> mProgressNow.setValue(value));
+      propertyChange.firePropertyChange(PROP_NOW_PROGRESS, 0, value);
       mLastProgressTimeStamp = System.currentTimeMillis();
     }
   }
@@ -939,5 +955,22 @@ public class PackageParser {
     if (mMySettings.DEBUG)
       Utils.debugLog("handleSearchQuery", "Posting " + packageList.size() + " packages");
     Utils.runInFg(() -> mPackagesListLive.setValue(packageList));
+  }
+
+  //////////////////////////////////////////////////////////////////
+  /////////////////////////// OBSERVABLE ///////////////////////////
+  //////////////////////////////////////////////////////////////////
+  private final PropertyChangeSupport propertyChange = new PropertyChangeSupport(this);
+  public static final String PROP_MAX_PROGRESS = "PROP_MAX_PROGRESS";
+  public static final String PROP_NOW_PROGRESS = "PROP_NOW_PROGRESS";
+
+  @SuppressWarnings("UnusedDeclaration")
+  public void addPropertyChangeListener(PropertyChangeListener listener) {
+    propertyChange.addPropertyChangeListener(listener);
+  }
+
+  @SuppressWarnings("UnusedDeclaration")
+  public void removePropertyChangeListener(PropertyChangeListener listener) {
+    propertyChange.removePropertyChangeListener(listener);
   }
 }
