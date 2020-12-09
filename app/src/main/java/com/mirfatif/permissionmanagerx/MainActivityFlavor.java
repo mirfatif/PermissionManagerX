@@ -7,6 +7,9 @@ import androidx.appcompat.app.AlertDialog.Builder;
 
 class MainActivityFlavor {
 
+  static final boolean SHOW_ACTION_DONATE = true;
+  static final boolean SHOW_ACTION_SETTINGS = false;
+
   private final MainActivity mActivity;
 
   MainActivityFlavor(MainActivity activity) {
@@ -35,6 +38,7 @@ class MainActivityFlavor {
     new AlertDialogFragment(dialog).show(mActivity.mFM, "RATING", false);
   }
 
+  @SuppressWarnings("UnusedDeclaration")
   void onCreated(Intent intent) {}
 
   void onCreateOptionsMenu() {}
@@ -42,4 +46,6 @@ class MainActivityFlavor {
   void onResumed() {}
 
   void onDestroyed() {}
+
+  void openSettings() {}
 }
