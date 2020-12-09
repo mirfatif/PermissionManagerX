@@ -52,8 +52,8 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
   // unregister so that changes in other activities don't trigger this
   @Override
   public void onPause() {
-    super.onPause();
     mPrefs.unregisterOnSharedPreferenceChangeListener(this);
+    super.onPause();
   }
 
   @Override
@@ -237,7 +237,9 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     } else {
       String message = (String) values.toArray()[0];
       if (count == 2) {
-        message += " " + getString(R.string.and_other_count, 1);
+        // Without providing context, getString() crashes with: "Fragment ... not attached to a
+        // context" on rotation. getActivity() may also return null.
+        message += " " + mParentActivity.getString(R.string.and_other_count, 1);
       } else if (count > 2) {
         message += " " + getString(R.string.and_others_count, count - 1);
       }

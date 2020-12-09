@@ -9,7 +9,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import java.util.Objects;
 
 public class FilterSettingsActivity extends AppCompatActivity {
@@ -26,10 +25,12 @@ public class FilterSettingsActivity extends AppCompatActivity {
 
     mMySettings = MySettings.getInstance();
 
-    FragmentManager fragmentManager = getSupportFragmentManager();
-    FragmentTransaction transaction = fragmentManager.beginTransaction();
-    transaction.replace(R.id.fragment_container, new FilterSettingsFragment());
-    transaction.commit();
+    if (savedInstanceState == null) {
+      getSupportFragmentManager()
+          .beginTransaction()
+          .replace(R.id.fragment_container, new FilterSettingsFragment())
+          .commit();
+    }
   }
 
   // Override methods of AppCompatActivity related to options menu
