@@ -52,7 +52,7 @@ import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 
 public class MainActivity extends AppCompatActivity {
 
-  static final String ACTION_SHOW_DRAWER = BuildConfig.APPLICATION_ID + ".SHOW_DRAWER";
+  public static final String ACTION_SHOW_DRAWER = BuildConfig.APPLICATION_ID + ".SHOW_DRAWER";
   static final String ACTION_START_LOGGING = BuildConfig.APPLICATION_ID + ".START_LOGGING";
   static final String EXTRA_PKG_POSITION = BuildConfig.APPLICATION_ID + ".PKG_POSITION";
   static final String APP_OPS_PERM = "android.permission.GET_APP_OPS_STATS";
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
   MyFrameLayout mRoundProgressContainer;
   TextView mRoundProgressTextView;
   private LinearLayout mProgressBarContainer;
-  private SearchView mSearchView;
+  SearchView mSearchView;
   private MyViewModel mMyViewModel;
   private Integer mProgressMax;
   private TextView mProgressNowView;
@@ -89,15 +89,19 @@ public class MainActivity extends AppCompatActivity {
 
     // called from PackageActivity
     if (intent.getAction().equals(ACTION_SHOW_DRAWER)) {
-      Utils.runInBg(
-          () -> {
-            while (getWindow() == null) SystemClock.sleep(100);
-            Utils.runInFg(() -> mDrawerLayout.openDrawer(GravityCompat.START));
-          });
+      openDrawer();
     }
 
     // called from AboutActivity
     if (intent.getAction().equals(ACTION_START_LOGGING)) recreate();
+  }
+
+  private void openDrawer() {
+    Utils.runInBg(
+        () -> {
+          while (getWindow() == null) SystemClock.sleep(100);
+          Utils.runInFg(() -> mDrawerLayout.openDrawer(GravityCompat.START));
+        });
   }
 
   @Override
@@ -141,6 +145,10 @@ public class MainActivity extends AppCompatActivity {
         new ActionBarDrawerToggle(this, mDrawerLayout, android.R.string.ok, R.string.close);
     mDrawerLayout.addDrawerListener(mDrawerToggle);
     mDrawerToggle.syncState();
+
+    if (getIntent().getAction().equals(ACTION_SHOW_DRAWER)) {
+      openDrawer();
+    }
 
     // drawer items
     mNavigationView = findViewById(R.id.nav_view);
@@ -230,6 +238,8 @@ public class MainActivity extends AppCompatActivity {
 
     // increment app launch count
     mMySettings.plusAppLaunchCount();
+
+    mMainActivityFlavor.onCreated(getIntent());
   }
 
   private boolean setNightTheme() {
@@ -474,6 +484,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Show a search hint
     mSearchView.setQueryHint(getString(R.string.search_menu_item));
+
+    mMainActivityFlavor.onCreateOptionsMenu();
 
     return super.onCreateOptionsMenu(menu);
   }
