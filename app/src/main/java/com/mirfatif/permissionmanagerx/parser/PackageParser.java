@@ -61,13 +61,6 @@ public class PackageParser {
   @SuppressWarnings("deprecation")
   static final int PM_GET_SIGNATURES = PackageManager.GET_SIGNATURES;
 
-  // to show progress
-  public static final int CREATE_PACKAGES_LIST = -1;
-  public static final int REF_PERMS_LIST = -2;
-  public static final int OP_TO_SWITCH_LIST = -3;
-  public static final int OP_TO_DEF_MODE_LIST = -4;
-  public static final int PERM_TO_OP_CODE_MAP = -5;
-
   // create singleton instance of PackageParser so that all activities can update mPackagesListLive
   // whenever needed
   public static synchronized PackageParser getInstance() {
@@ -292,6 +285,29 @@ public class PackageParser {
   // do not update RecyclerView too frequently
   private boolean shouldUpdateLiveData() {
     return (System.currentTimeMillis() - packagesListUpdateTimeStamp) > 100;
+  }
+
+  // to show progress
+  private static final int CREATE_PACKAGES_LIST = -1;
+  private static final int REF_PERMS_LIST = -2;
+  private static final int OP_TO_SWITCH_LIST = -3;
+  private static final int OP_TO_DEF_MODE_LIST = -4;
+  private static final int PERM_TO_OP_CODE_MAP = -5;
+
+  public int getProgressTextResId(int progressMax) {
+    switch (progressMax) {
+      case PackageParser.CREATE_PACKAGES_LIST:
+        return R.string.creating_packages_list;
+      case PackageParser.REF_PERMS_LIST:
+        return R.string.reading_reference_perms;
+      case PackageParser.OP_TO_SWITCH_LIST:
+        return R.string.mapping_op_to_switch;
+      case PackageParser.OP_TO_DEF_MODE_LIST:
+        return R.string.listing_op_default_modes;
+      case PackageParser.PERM_TO_OP_CODE_MAP:
+        return R.string.mapping_perms_to_ops;
+    }
+    return 0;
   }
 
   //////////////////////////////////////////////////////////////////

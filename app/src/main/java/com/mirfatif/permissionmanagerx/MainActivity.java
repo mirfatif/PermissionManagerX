@@ -372,23 +372,7 @@ public class MainActivity extends AppCompatActivity {
                   mProgressMaxView.setText("");
                   mProgressBarContainer.setVisibility(View.VISIBLE);
                 }
-                switch (progressMax) {
-                  case PackageParser.CREATE_PACKAGES_LIST:
-                    progressTextView.setText(R.string.creating_packages_list);
-                    break;
-                  case PackageParser.REF_PERMS_LIST:
-                    progressTextView.setText(R.string.reading_reference_perms);
-                    break;
-                  case PackageParser.OP_TO_SWITCH_LIST:
-                    progressTextView.setText(R.string.mapping_op_to_switch);
-                    break;
-                  case PackageParser.OP_TO_DEF_MODE_LIST:
-                    progressTextView.setText(R.string.listing_op_default_modes);
-                    break;
-                  case PackageParser.PERM_TO_OP_CODE_MAP:
-                    progressTextView.setText(R.string.mapping_perms_to_ops);
-                    break;
-                }
+                progressTextView.setText(mPackageParser.getProgressTextResId(progressMax));
                 return;
               }
 
