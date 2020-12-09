@@ -240,7 +240,7 @@ public class PackageParser {
         Utils.debugLog("updatePackagesListInBg", "Updating package: " + packageInfo.packageName);
 
       Package pkg = new Package();
-      if ((isPkgUpdated(packageInfo, pkg)) && !isFilteredOut(pkg)) {
+      if (isPkgUpdated(packageInfo, pkg)) {
         packageList.add(pkg);
       }
 
@@ -257,14 +257,6 @@ public class PackageParser {
       Utils.debugLog(
           "updatePackagesListInBg",
           "Total time: " + (System.currentTimeMillis() - startTime) + "ms");
-  }
-
-  private boolean isFilteredOut(Package pkg) {
-    if (isFilteredOutNoPermPkg(pkg)) return true;
-    return mMySettings.isSearching()
-        && mMySettings.isDeepSearchEnabled()
-        && pkg.getPermCount() == 0
-        && pkg.getAppOpsCount() == 0;
   }
 
   //////////////////////////////////////////////////////////////////
@@ -374,6 +366,9 @@ public class PackageParser {
       mPackageIconsList.put(packageInfo.packageName, icon);
     }
 
+    // Update the package even if it's being filtered out due to permissions. It's because if this
+    // method is being called from within PackageActivity, permissions list must be updated so that
+    // the change is visible to the user.
     pkg.updatePackage(
         appInfo.loadLabel(mPackageManager).toString(),
         packageInfo.packageName,
@@ -385,7 +380,16 @@ public class PackageParser {
         appInfo.uid,
         pkgIsReferenced);
     if (mMySettings.DEBUG) Utils.debugLog("PackageParser", "isPkgUpdated(): Package created");
-    return true;
+
+    // Exclude packages with no manifest permissions
+    if (isFilteredOutNoPermPkg(pkg)) return false;
+
+    // If package has some permissions but currently if we are in deep (permission) search and
+    // all permissions are filtered out, package should also be filtered out.
+    return !mMySettings.isSearching()
+        || !mMySettings.isDeepSearchEnabled()
+        || pkg.getPermCount() != 0
+        || pkg.getAppOpsCount() != 0;
   }
 
   private boolean isSystemApp(PackageInfo packageInfo) {
@@ -408,8 +412,8 @@ public class PackageParser {
     if (mMySettings.DEBUG) Utils.debugLog("PackageParser", "updatePackage(): " + pkg.getLabel());
     PackageInfo packageInfo = getPackageInfo(pkg.getName(), true);
 
-    // package uninstalled or disabled from MainActivity
-    if (packageInfo == null || !(isPkgUpdated(packageInfo, pkg))) {
+    // package uninstalled, or disabled from MainActivity, or ref state changed during deep search
+    if (packageInfo == null || !isPkgUpdated(packageInfo, pkg)) {
       removePackage(pkg);
       return;
     }
@@ -472,6 +476,8 @@ public class PackageParser {
     pkg.setTotalPermCount(requestedPermissions == null ? 0 : requestedPermissions.length);
 
     List<Permission> permissionsList = new ArrayList<>();
+    // If manifest permission list is empty, we consider it an app without permissions, because
+    // count of AppOps might never be zero if some extra app ops are set in list.
     if (isFilteredOutNoPermPkg(pkg)) return permissionsList;
 
     Permission permission;
