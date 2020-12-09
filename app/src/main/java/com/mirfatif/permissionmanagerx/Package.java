@@ -1,6 +1,7 @@
 package com.mirfatif.permissionmanagerx;
 
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import java.util.List;
 
 public class Package {
@@ -113,11 +114,32 @@ public class Package {
     return mUid;
   }
 
-  Boolean isReferenced() {
+  public Boolean isReferenced() {
     return mIsReferenced;
   }
 
+  public static final String ORANGE_STATE = ":ORANGE";
+  public static final String RED_STATE = ":RED";
+
   public boolean contains(String queryText) {
+    boolean isEmpty = true;
+    for (String str : queryText.split("\\|")) {
+      if (TextUtils.isEmpty(str)) continue;
+      isEmpty = false;
+      if (contains_(str)) return true;
+    }
+    return isEmpty;
+  }
+
+  private boolean contains_(String queryText) {
+    for (String str : queryText.split("&")) {
+      if (TextUtils.isEmpty(str)) continue;
+      if (!_contains(str)) return false;
+    }
+    return true;
+  }
+
+  private boolean _contains(String queryText) {
     boolean isCaseSensitive = MySettings.getInstance().isCaseSensitiveSearch();
     if (!isCaseSensitive) queryText = queryText.toUpperCase();
 
@@ -130,7 +152,7 @@ public class Package {
               ? ":Critical"
               : (mIsFrameworkApp ? ":Framework" : (mIsSystemApp ? ":System" : ":User"))),
           (mIsEnabled ? "" : ":Disabled"),
-          (mIsReferenced == null ? ":ORANGE" : (mIsReferenced ? ":GREEN" : ":RED"))
+          (mIsReferenced == null ? ORANGE_STATE : (mIsReferenced ? ":GREEN" : RED_STATE))
         }) {
       if (!isCaseSensitive) field = field.toUpperCase();
       if (field.contains(queryText)) return true;

@@ -1,5 +1,6 @@
 package com.mirfatif.permissionmanagerx;
 
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 public class Permission {
@@ -203,6 +204,24 @@ public class Permission {
   }
 
   public boolean contains(String queryText) {
+    boolean isEmpty = true;
+    for (String str : queryText.split("\\|")) {
+      if (TextUtils.isEmpty(str)) continue;
+      isEmpty = false;
+      if (contains_(str)) return true;
+    }
+    return isEmpty;
+  }
+
+  private boolean contains_(String queryText) {
+    for (String str : queryText.split("&")) {
+      if (TextUtils.isEmpty(str)) continue;
+      if (!_contains(str)) return false;
+    }
+    return true;
+  }
+
+  private boolean _contains(String queryText) {
     boolean isCaseSensitive = MySettings.getInstance().isCaseSensitiveSearch();
     if (!isCaseSensitive) queryText = queryText.toUpperCase();
 
