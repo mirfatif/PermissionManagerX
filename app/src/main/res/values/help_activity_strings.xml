@@ -4,119 +4,133 @@
   <string name="faq">FAQs</string>
   <string name="faq1"><b>Why is root or ADB shell access required?</b></string>
   <string name="faq1_ans">Android won\'t let user apps change manifest permissions and AppOps. Reading AppOps
-        without root or ADB is possible provided that hidden APIs are not blacklisted on your device, which is
-        <a href="https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces">very unlikely</a>
-        on Android 9+.\nThat\'s why we run a separate daemon with high privileges to circumvent the restrictions.\nBy
-        default daemon is run with ADB UID (2000) or (if rooted) System UID (1000). However on some ROMs the ADB
-        functionality might be crippled usually due to lacking permissions.\nOn rooted devices UID can be changed
-        in <b><i>Advanced Settings</i></b>.
-    </string>
+    without root or ADB is possible provided that hidden APIs are not blacklisted on your device, which is
+    <a href="https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces">very unlikely</a>
+    on Android 9+.\nThat\'s why we run a separate daemon with high privileges to circumvent the restrictions.\nBy
+    default daemon is run with ADB UID (2000) or (if rooted) System UID (1000). However on some ROMs the ADB
+    functionality might be crippled usually due to lacking permissions.\nOn rooted devices UID can be changed
+    in <b><i>Advanced Settings</i></b>.
+  </string>
   <string name="faq2"><b>How to enable ADB over network?</b></string>
   <string name="faq2_ans">Please read
-        <a href="https://developer.android.com/studio/command-line/adb#wireless">here</a>
-        and <a href="https://android.stackexchange.com/a/216474">here</a>.
-    </string>
+    <a href="https://developer.android.com/studio/command-line/adb#wireless">here</a>
+    and <a href="https://android.stackexchange.com/a/216474">here</a>.
+  </string>
   <string name="faq3"><b>Why are GET_APP_OPS_STATS and INTERNET permissions required?</b></string>
   <string name="faq3_ans">GET_APP_OPS_STATS is required to read AppOps provided that hidden APIs
-        work.\nINTERNET permission is required to make use of ADB over network. No connections are made
-        outside the device.
-    </string>
+    work.\nINTERNET permission is required to make use of ADB over network. No connections are made
+    outside the device.
+  </string>
   <string name="faq4"><b>Why don\'t I see XYZ app in packages list?</b></string>
   <string name="faq4_ans">Please check <i>Exclusion Filters</i>. Almost all of the stock Android packages are
-        excluded by default. You can exclude/include any package you want from/to visible list.
-    </string>
+    excluded by default. You can exclude/include any package you want from/to visible list.
+  </string>
   <string name="faq5"><b>Why don\'t I see XYZ permission in ABC package?</b></string>
   <string name="faq5_ans">Please check <i>Exclusion Filters</i>.</string>
+  <string name="faq5_2"><b>Why don\'t I see XYZ AppOps in ABC package?</b></string>
+  <string name="faq5_2_ans">Please check <i>Exclusion Filters</i>.\nOr ABC package might not be using
+    XYZ operation. You don\'t need to be worried about this.</string>
   <string name="faq6"><b>What are <i>invalid permissions</i> in Exclusion Filters?</b></string>
   <string name="faq6_ans">If an app is requesting a manifest permission but it\'s not declared (provided) by
-        Android framework or any of the installed packages, it\'s an invalid permission.
-    </string>
+    Android framework or any of the installed packages, it\'s an invalid permission.
+  </string>
   <string name="faq7"><b>What are <i>extra AppOps</i> in Exclusion Filters?</b></string>
   <string name="faq7_ans">Not all AppOps are being used for all installed apps. But you can enforce an
-        AppOp to any app. Selected Extra AppOps appear in all apps\' permission lists so that you can set them.
-    </string>
+    AppOp to any app. Selected Extra AppOps appear in all apps\' permission lists so that you can set them.
+  </string>
   <string name="faq8"><b>Why can\'t I change XYZ permission?</b></string>
   <string name="faq8_ans">Manifest permissions with only <i>Dangerous</i> protection level (and a few others)
-        are changeable. AppOps not dependent on some other AppOp are changeable. Additionally some critical
-        framework apps are protected; changing them might brick the device.
-    </string>
+    are changeable. AppOps not dependent on some other AppOp are changeable. Additionally some critical
+    framework apps are protected; changing them might brick the device.
+  </string>
   <string name="faq9"><b>How to use the app in secondary profile / multi-user environment?</b></string>
   <string name="faq9_ans">Install the app for every profile / user separately. Preferences, reference states,
-        backup / restore, everything in every profile works independent of the other profiles.\nOn rooted
-        device make sure that root is allowed to profiles / users other than owner / primary user. E.g.
-        in case of Magisk set <i>Multiuser Mode</i> to <i>Device Owner Managed</i>.
-    </string>
+    backup / restore, everything in every profile works independent of the other profiles.\nOn rooted
+    device make sure that root is allowed to profiles / users other than owner / primary user. E.g.
+    in case of Magisk set <i>Multiuser Mode</i> to <i>Device Owner Managed</i>.
+  </string>
+  <string name="faq10"><b>What are different AppOps modes and which should I use?</b></string>
+  <string name="faq10_ans">Normally you should <i>Allow</i> or <i>Ignore</i>. Or you may want to
+    allow an operation only when the app is in <i>Foreground</i> (only on Pie+). <i>Deny</i> is
+    the intense version of <i>Ignore</i> which may crash the requesting app. <i>Default</i> is the
+    system\'s default behavior which differs for different AppOps.\nOfficial documentation:
+    <a href="https://developer.android.com/reference/android/app/AppOpsManager#access-control">AppOpsManager</a>.
+  </string>
 
   <!--HelpActivity Permission References-->
   <string name="perm_references">Permission References</string>
   <string name="perm_reference_help1">You can set a reference value for permission which can be backed up
-        and restored on ROM change or device change.
-        So it takes only a few moments to look at all installed packages and figure out which permissions aren\'t
-        correctly set. Long press a permission to set or clear its reference state.
-    </string>
+    and restored on ROM change or device change.
+    So it takes only a few moments to look at all installed packages and figure out which permissions aren\'t
+    correctly set. Long press a permission to set or clear its reference state.
+  </string>
   <string name="perm_reference_help2"><font color="#FFC107"><b>Orange</b></font>
-        state indicates that no reference value is set
-    </string>
+    state indicates that no reference value is set
+  </string>
   <string name="perm_reference_help3"><font color="#00FF00"><b>Green</b></font>
-        indicates that reference value matches currently set value
-    </string>
+    indicates that reference value matches currently set value
+  </string>
   <string name="perm_reference_help4"><font color="#FF0000"><b>Red</b></font>
-        indicates that reference value and set value differ
-    </string>
+    indicates that reference value and set value differ
+  </string>
 
   <!--HelpActivity Packages-->
   <string name="package_help1">Colored strip at left indicates <b>reference state</b></string>
   <string name="package_help2">First line shows package <b>label</b></string>
   <string name="package_help3">Second line shows package <b>name</b> and <b>UID</b></string>
   <string name="package_help4">Third line (optionally) shows package\'s state:
-        <b>Critical</b> (Framework), <b>Framework</b> or <b>System</b> app.
-        Also if the app is <b>Disabled</b>. No state is shown for <b>Enabled</b>, <b>User</b> apps.
-    </string>
+    <b>Critical</b> (Framework), <b>Framework</b> or <b>System</b> app.
+    Also if the app is <b>Disabled</b>. No state is shown for <b>Enabled</b>, <b>User</b> apps.
+  </string>
   <string name="package_help5">Last line shows <b>count</b> of visible manifest permissions out of
-        total manifest permissions. And visible AppOps permissions out of total AppOps permissions.
-        Invisible permissions are those excluded by applied filters.
-    </string>
+    total manifest permissions. And visible AppOps permissions out of total AppOps permissions.
+    Invisible permissions are those excluded by applied filters.
+  </string>
 
   <!--HelpActivity Permissions-->
   <string name="perm_help1">Colored strip at left indicates <b>reference state</b></string>
   <string name="perm_help2">First line shows <b>permission name</b></string>
   <string name="perm_help3">Second line shows permission\'s
-        <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a>:
-        <b>Normal</b>, <b>Dangerous</b>, <b>Signature</b>, <b>Development</b>, <b>Privileged</b>,
-        <b>Fixed</b>, <b>AppOps</b> or <b>Unknown</b>.
-        Also if AppOp is <b>per Package</b> or <b>per UID</b>.
-        And if it is an <b>Extra</b> AppOp (never excluded in filter settings).
-    </string>
+    <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a>:
+    <b>Normal</b>, <b>Dangerous</b>, <b>Signature</b>, <b>Development</b>, <b>Privileged</b>,
+    <b>Fixed</b>, <b>AppOps</b> or <b>Unknown</b>.
+    Also if AppOp is <b>per Package</b> or <b>per UID</b>.
+    And if it is an <b>Extra</b> AppOp (never excluded in filter settings).
+  </string>
   <string name="perm_help4">Third line (in case of AppOp) shows <b>last access time</b></string>
   <string name="perm_help5">Fourth line (in case of AppOp) shows the referenced value if
-        it doesn\'t match the current set value.</string>
+    it doesn\'t match the current set value.
+  </string>
   <string name="perm_help6">If an AppOp is never set,
-        word: <b><i>Default</i></b> is shown below currently set value.
-    </string>
+    word: <b><i>Default</i></b> is shown below currently set value.
+  </string>
 
   <!--HelpActivity Search-->
-  <string name="search_help1">Normally package label, name and UID are searched from visible list.
-        With deep search permission name and other parameters are queried. Exclusion filters are effective
-        when making search. You can use the following special keywords in search:
-    </string>
+  <string name="search_help1">Normally package label, name and UID are searched from visible
+    list.\nWith deep search permission name and other parameters are queried.\nNote that exclusion
+    filters are effective when making search.\nYou can use the following special keywords in search:
+  </string>
   <string name="search_help2">App state:\n
-        <b><i>:Critical :Framework :System :User :Disabled</i></b>
-    </string>
+    <b><i>:Critical :Framework :System :User :Disabled</i></b>
+  </string>
   <string name="search_help3">Reference state:\n
-        <b><i>:ORANGE :GREEN :RED</i></b>
-    </string>
+    <b><i>:ORANGE :GREEN :RED</i></b>
+  </string>
   <string name="search_help4">Permissions protection level:\n
-        <b><i>:Normal :Dangerous :Signature</i></b>\n
-        <b><i>:Development :Privileged :Fixed</i></b>\n
-        <b><i>:AppOps :Unknown</i></b>
-    </string>
+    <b><i>:Normal :Dangerous :Signature</i></b>\n
+    <b><i>:Development :Privileged :Fixed</i></b>\n
+    <b><i>:AppOps :Unknown</i></b>
+  </string>
   <string name="search_help5">Per UID AppOps:\n
-        <b><i>:UID</i></b>
-    </string>
+    <b><i>:UID</i></b>
+  </string>
   <string name="search_help6">AppOps with last access time:\n
-        <b><i>:TIME</i></b>
-    </string>
+    <b><i>:TIME</i></b>
+  </string>
   <string name="search_help7">Extra AppOps (never excluded in filter settings):\n
-        <b><i>:Extra</i></b>
-    </string>
+    <b><i>:Extra</i></b>
+  </string>
+  <string name="search_help8">&amp; (AND) and | (OR) operators:\n
+    <b><i>Foo|Bar&amp;Baz</i></b>
+  </string>
 </resources>

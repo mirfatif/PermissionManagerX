@@ -17,15 +17,17 @@ public class HelpActivity extends AppCompatActivity {
       getSupportActionBar().setTitle(R.string.help_menu_item);
     }
 
-    handleUrl(findViewById(R.id.faq1_ans));
-    handleUrl(findViewById(R.id.faq2_ans));
-    handleUrl(findViewById(R.id.perm_help3));
+    handleUrl(R.id.faq1_ans);
+    handleUrl(R.id.faq2_ans);
+    handleUrl(R.id.faq10_ans);
+    handleUrl(R.id.perm_help3);
   }
 
-  void handleUrl(TextView textView) {
-    textView.setMovementMethod(
-        BetterLinkMovementMethod.newInstance()
-            .setOnLinkClickListener((tView, url) -> Utils.openWebUrl(this, url)));
+  void handleUrl(int resId) {
+    ((TextView) findViewById(resId))
+        .setMovementMethod(
+            BetterLinkMovementMethod.newInstance()
+                .setOnLinkClickListener((tView, url) -> Utils.openWebUrl(this, url)));
   }
 
   @Override
