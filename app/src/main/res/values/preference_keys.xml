@@ -11,12 +11,14 @@
   -->
 
   <!--MainActivity Preferences-->
-  <string name="pref_main_daemon_uid_key">pref_main_daemon_uid</string>
   <string name="pref_main_crash_report_ts_enc_key">pref_main_crash_report_ts_enc</string>
   <string name="pref_main_ask_for_rating_ts_enc_key">pref_main_ask_for_rating_ts_enc</string>
-  <string name="pref_main_app_launch_count_enc_key">pref_main_app_launch_count_enc</string>
 
-  <!--MainActivity Preferences corresponding to default bool values-->
+  <!--MainActivity Preferences corresponding to default values-->
+  <string name="pref_main_daemon_uid_key">pref_main_daemon_uid</string>
+  <integer name="pref_main_daemon_uid_default">1000</integer>
+  <string name="pref_main_app_launch_count_enc_key">pref_main_app_launch_count_enc</string>
+  <integer name="pref_main_app_launch_count_enc_default">0</integer>
   <string name="pref_main_deep_search_key">pref_main_deep_search</string>
   <bool name="pref_main_deep_search_default">false</bool>
   <string name="pref_main_case_sensitive_search_key">pref_main_case_sensitive_search</string>
@@ -33,7 +35,7 @@
   <bool name="pref_main_adb_connected_enc_default">false</bool>
 
   <!--PreferencesActivity packages titles, keys and defaults-->
-  <string name="pref_filter_packages_title">Packages</string>
+  <string name="pref_filter_packages_cat_title">Packages</string>
   <string name="pref_filter_exclude_no_icon_apps_key">pref_filter_exclude_no_icon_apps</string>
   <bool name="pref_filter_exclude_no_icon_apps_default">true</bool>
   <string name="pref_filter_exclude_no_icon_apps_title">Exclude apps without icons</string>
@@ -56,7 +58,7 @@
   <string name="pref_filter_excluded_apps_title">Manually excluded apps</string>
 
   <!--PreferencesActivity permissions titles, keys and defaults-->
-  <string name="pref_filter_permissions_title">Permissions</string>
+  <string name="pref_filter_permissions_cat_title">Permissions</string>
   <string name="pref_filter_exclude_not_changeable_perms_key">pref_filter_exclude_not_changeable_perms</string>
   <bool name="pref_filter_exclude_not_changeable_perms_default">true</bool>
   <string name="pref_filter_exclude_not_changeable_perms_title">Exclude permissions not changeable</string>
@@ -67,6 +69,7 @@
   <string name="pref_filter_excluded_perms_title">Manually excluded permissions</string>
 
   <!--PreferencesActivity manifest permissions titles, keys and defaults-->
+  <string name="pref_filter_man_permissions_cat_title">Manifest Permissions</string>
   <string name="pref_filter_exclude_invalid_perms_key">pref_filter_exclude_invalid_perms</string>
   <bool name="pref_filter_exclude_invalid_perms_default">true</bool>
   <string name="pref_filter_exclude_invalid_perms_title">Exclude invalid permissions</string>
@@ -84,6 +87,7 @@
   <string name="pref_filter_exclude_privileged_perms_title">Exclude privileged permissions</string>
 
   <!--PreferencesActivity AppOps permissions titles, keys and defaults-->
+  <string name="pref_filter_app_ops_permissions_cat_title">AppOps Permissions</string>
   <string name="pref_filter_exclude_appops_perms_key">pref_filter_exclude_appops_perms</string>
   <bool name="pref_filter_exclude_appops_perms_default">false</bool>
   <string name="pref_filter_exclude_appops_perms_title">Exclude AppOps</string>

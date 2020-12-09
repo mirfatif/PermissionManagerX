@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <PreferenceCategory android:title="@string/pref_filter_packages_title">
+  <PreferenceCategory android:title="@string/pref_filter_packages_cat_title">
 
     <CheckBoxPreference
       android:defaultValue="@bool/pref_filter_exclude_no_icon_apps_default"
@@ -39,7 +39,7 @@
 
   </PreferenceCategory>
 
-  <PreferenceCategory android:title="@string/pref_filter_permissions_title">
+  <PreferenceCategory android:title="@string/pref_filter_permissions_cat_title">
     <CheckBoxPreference
       android:defaultValue="@bool/pref_filter_exclude_not_changeable_perms_default"
       android:key="@string/pref_filter_exclude_not_changeable_perms_key"
@@ -56,7 +56,7 @@
 
   </PreferenceCategory>
 
-  <PreferenceCategory android:title="Manifest Permissions">
+  <PreferenceCategory android:title="@string/pref_filter_man_permissions_cat_title">
     <CheckBoxPreference
       android:defaultValue="@bool/pref_filter_exclude_invalid_perms_default"
       android:key="@string/pref_filter_exclude_invalid_perms_key"
@@ -84,7 +84,7 @@
 
   </PreferenceCategory>
 
-  <PreferenceCategory android:title="AppOps Permissions">
+  <PreferenceCategory android:title="@string/pref_filter_app_ops_permissions_cat_title">
 
     <CheckBoxPreference
       android:defaultValue="@bool/pref_filter_exclude_appops_perms_default"

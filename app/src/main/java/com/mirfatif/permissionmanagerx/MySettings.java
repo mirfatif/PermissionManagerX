@@ -51,13 +51,23 @@ public class MySettings {
   Boolean doLogging = false;
   public boolean DEBUG = false;
 
-  boolean getBoolPref(int keyResId) {
+  public boolean getBoolPref(int keyResId) {
     String prefKey = getString(keyResId);
     int boolKeyId = Utils.getIntField(prefKey + "_default", R.bool.class, TAG);
     if (prefKey.endsWith("_enc")) {
       return mEncPrefs.getBoolean(prefKey, App.getContext().getResources().getBoolean(boolKeyId));
     } else {
       return mPrefs.getBoolean(prefKey, App.getContext().getResources().getBoolean(boolKeyId));
+    }
+  }
+
+  public int getIntPref(int keyResId) {
+    String prefKey = getString(keyResId);
+    int intKeyId = Utils.getIntField(prefKey + "_default", R.integer.class, TAG);
+    if (prefKey.endsWith("_enc")) {
+      return mEncPrefs.getInt(prefKey, App.getContext().getResources().getInteger(intKeyId));
+    } else {
+      return mPrefs.getInt(prefKey, App.getContext().getResources().getInteger(intKeyId));
     }
   }
 
@@ -69,12 +79,21 @@ public class MySettings {
     return App.getContext().getString(keyResId);
   }
 
-  void savePref(int key, boolean bool) {
+  public void savePref(int key, boolean bool) {
     String prefKey = getString(key);
     if (prefKey.endsWith("_enc")) {
       mEncPrefs.edit().putBoolean(prefKey, bool).apply();
     } else {
       mPrefs.edit().putBoolean(prefKey, bool).apply();
+    }
+  }
+
+  void savePref(int key, int integer) {
+    String prefKey = getString(key);
+    if (prefKey.endsWith("_enc")) {
+      mEncPrefs.edit().putInt(prefKey, integer).apply();
+    } else {
+      mPrefs.edit().putInt(prefKey, integer).apply();
     }
   }
 
@@ -84,19 +103,16 @@ public class MySettings {
   }
 
   int getDaemonUid() {
-    return mPrefs.getInt(getString(R.string.pref_main_daemon_uid_key), 1000);
+    return getIntPref(R.string.pref_main_daemon_uid_key);
   }
 
   void setDaemonUid(int uid) {
-    mPrefs
-        .edit()
-        .putInt(App.getContext().getString(R.string.pref_main_daemon_uid_key), uid)
-        .apply();
+    savePref(R.string.pref_main_daemon_uid_key, uid);
   }
 
   void plusAppLaunchCount() {
-    String appLaunchCountKey = getString(R.string.pref_main_app_launch_count_enc_key);
-    mEncPrefs.edit().putInt(appLaunchCountKey, mEncPrefs.getInt(appLaunchCountKey, 0) + 1).apply();
+    int appLaunchCountId = R.string.pref_main_app_launch_count_enc_key;
+    savePref(appLaunchCountId, getIntPref(appLaunchCountId) + 1);
   }
 
   long getCrashReportTs() {
@@ -116,11 +132,11 @@ public class MySettings {
       setAskForRatingTs(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(5));
       return true;
     }
-    String appLaunchCountKey = getString(R.string.pref_main_app_launch_count_enc_key);
-    boolean ask = mEncPrefs.getInt(appLaunchCountKey, 0) >= 5;
+    int appLaunchCountId = R.string.pref_main_app_launch_count_enc_key;
+    boolean ask = getIntPref(appLaunchCountId) >= 5;
     ask = ask && (System.currentTimeMillis() - lastTS) >= TimeUnit.DAYS.toMillis(5);
     if (ask) {
-      mEncPrefs.edit().putInt(appLaunchCountKey, 0).apply();
+      savePref(appLaunchCountId, 0);
       setAskForRatingTs(System.currentTimeMillis());
     }
     return !ask;
