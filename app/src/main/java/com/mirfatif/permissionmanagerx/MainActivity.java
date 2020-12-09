@@ -172,7 +172,15 @@ public class MainActivity extends AppCompatActivity {
       Utils.runInBg(this::startLogging);
     }
 
-    Future<?> checkRootAndAdbFuture = Utils.runInBg(this::checkRootAndAdb);
+    Future<?> checkRootAndAdbFuture =
+        Utils.runInBg(
+            () -> {
+              Utils.runInFg(() -> mRoundProgressTextView.setText(R.string.checking_root_access));
+              Utils.checkRootVerbose();
+              Utils.runInFg(() -> mRoundProgressTextView.setText(R.string.checking_adb_access));
+              Utils.checkAdbVerbose();
+            });
+
     Utils.runInBg(
         () -> {
           try {
@@ -711,43 +719,6 @@ public class MainActivity extends AppCompatActivity {
   //////////////////////////// PRIVILEGES //////////////////////////
   //////////////////////////////////////////////////////////////////
 
-  private boolean checkRootPrivileges() {
-    boolean res = Utils.runCommand("su -c id  -u", "checkRootPrivileges", "0");
-    mMySettings.setRootGranted(res);
-    return res;
-  }
-
-  private boolean checkAdbConnected() {
-    boolean res = Adb.isConnected();
-    mMySettings.setAdbConnected(res);
-    return res;
-  }
-
-  private void checkRootAndAdb() {
-    Utils.runInFg(() -> mRoundProgressTextView.setText(R.string.checking_root_access));
-    boolean rootChecked = mMySettings.isRootGranted();
-    if (rootChecked && !checkRootPrivileges()) {
-      Utils.runInFg(
-          () ->
-              Toast.makeText(App.getContext(), R.string.getting_root_fail, Toast.LENGTH_LONG)
-                  .show());
-      if (mMySettings.DEBUG) Utils.debugLog("checkRootAndAdb", "Getting root privileges failed");
-    } else if (mMySettings.DEBUG) {
-      Utils.debugLog("checkRootAndAdb", "Getting root privileges succeeded");
-    }
-
-    Utils.runInFg(() -> mRoundProgressTextView.setText(R.string.checking_adb_access));
-    if (mMySettings.isAdbConnected() && !checkAdbConnected()) {
-      Utils.runInFg(
-          () ->
-              Toast.makeText(App.getContext(), R.string.adb_connect_fail, Toast.LENGTH_LONG)
-                  .show());
-      if (mMySettings.DEBUG) Utils.debugLog("checkRootAndAdb", "Connecting to ADB failed");
-    } else if (mMySettings.DEBUG) {
-      Utils.debugLog("checkRootAndAdb", "Connecting to ADB succeeded");
-    }
-  }
-
   private synchronized void startPrivDaemon(boolean isFirstRun) {
     if (!mMySettings.mPrivDaemonAlive) {
       if (mMySettings.DEBUG) Utils.debugLog("startPrivDaemon", "Daemon is dead");
@@ -906,7 +877,7 @@ public class MainActivity extends AppCompatActivity {
 
       Utils.runInBg(
           () -> {
-            if (checkRootPrivileges()) {
+            if (Utils.checkRoot()) {
               Utils.runInFg(
                   () -> {
                     Snackbar.make(mProgressBarContainer, R.string.root_granted, 5000).show();
@@ -933,7 +904,7 @@ public class MainActivity extends AppCompatActivity {
 
       Utils.runInBg(
           () -> {
-            if (checkAdbConnected()) {
+            if (Utils.checkAdb()) {
               Utils.runInFg(
                   () -> {
                     Snackbar.make(mProgressBarContainer, R.string.connected_to_adb, 5000).show();

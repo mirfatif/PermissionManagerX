@@ -60,7 +60,7 @@ public class Utils {
 
   private static ExecutorService mExecutor;
 
-  static Future<?> runInBg(Runnable runnable) {
+  public static Future<?> runInBg(Runnable runnable) {
     if (mExecutor == null) {
       mExecutor = Executors.newCachedThreadPool();
     }
@@ -174,7 +174,7 @@ public class Utils {
       if (lastUpdated > filePath.lastModified()) {
         inputStream = App.getContext().getAssets().open(fileName);
         outputStream = new FileOutputStream(filePath);
-        if (!(Utils.copyStream(inputStream, outputStream))) return true;
+        if (!(copyStream(inputStream, outputStream))) return true;
         outputStream.flush();
       }
     } catch (IOException e) {
@@ -434,6 +434,62 @@ public class Utils {
       Log.e(tag, "Privileged daemon is not running");
       daemonDeadLogTs = System.currentTimeMillis();
     }
+  }
+
+  //////////////////////////////////////////////////////////////////
+  /////////////////////////// PRIVILEGES ///////////////////////////
+  //////////////////////////////////////////////////////////////////
+
+  public static boolean checkRootVerbose() {
+    if (mMySettings.isRootGranted()) {
+      if (!checkRoot()) {
+        runInFg(
+            () ->
+                Toast.makeText(App.getContext(), R.string.getting_root_fail, Toast.LENGTH_LONG)
+                    .show());
+        if (mMySettings.DEBUG) {
+          debugLog("checkRoot", "Getting root privileges failed");
+        }
+      } else {
+        if (mMySettings.DEBUG) {
+          debugLog("checkRoot", "Getting root privileges succeeded");
+        }
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static boolean checkAdbVerbose() {
+    if (mMySettings.isAdbConnected()) {
+      if (!checkAdb()) {
+        runInFg(
+            () ->
+                Toast.makeText(App.getContext(), R.string.adb_connect_fail, Toast.LENGTH_LONG)
+                    .show());
+        if (mMySettings.DEBUG) {
+          debugLog("checkAdb", "Connecting to ADB failed");
+        }
+      } else {
+        if (mMySettings.DEBUG) {
+          debugLog("checkAdb", "Connecting to ADB succeeded");
+        }
+        return true;
+      }
+    }
+    return false;
+  }
+
+  static boolean checkRoot() {
+    boolean res = runCommand("su -c id  -u", "checkRoot", "0");
+    mMySettings.setRootGranted(res);
+    return res;
+  }
+
+  static boolean checkAdb() {
+    boolean res = Adb.isConnected();
+    mMySettings.setAdbConnected(res);
+    return res;
   }
 }
 
