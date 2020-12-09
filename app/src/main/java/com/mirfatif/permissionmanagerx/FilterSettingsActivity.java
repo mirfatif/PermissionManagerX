@@ -20,7 +20,7 @@ public class FilterSettingsActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_filter_settings);
+    setContentView(R.layout.activity_fragment_container);
 
     Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.filter_menu_item);
 
@@ -28,7 +28,7 @@ public class FilterSettingsActivity extends AppCompatActivity {
 
     FragmentManager fragmentManager = getSupportFragmentManager();
     FragmentTransaction transaction = fragmentManager.beginTransaction();
-    transaction.replace(R.id.filter_settings_container, new FilterSettingsFragment());
+    transaction.replace(R.id.fragment_container, new FilterSettingsFragment());
     transaction.commit();
   }
 
