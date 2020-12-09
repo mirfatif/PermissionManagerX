@@ -1,5 +1,6 @@
 package com.mirfatif.permissionmanagerx;
 
+import android.content.Intent;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
@@ -33,6 +34,10 @@ class MainActivityFlavor {
             .create();
     new AlertDialogFragment(dialog).show(mActivity.mFM, "RATING", false);
   }
+
+  void onCreated(Intent intent) {}
+
+  void onCreateOptionsMenu() {}
 
   void onResumed() {}
 
