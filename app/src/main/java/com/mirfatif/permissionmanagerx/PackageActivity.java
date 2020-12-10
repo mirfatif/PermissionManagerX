@@ -97,12 +97,7 @@ public class PackageActivity extends AppCompatActivity {
   private PermSpinnerSelectListener getSpinnerSelectListener() {
     return (permission, selectedValue) -> {
       if (!checkPrivileges()) {
-        // to force revert spinner selection
-        Utils.runInBg(
-            () -> {
-              updatePackage();
-              Utils.runInFg(() -> mPermissionAdapter.notifyDataSetChanged());
-            });
+        updateSpinnerSelection(false);
         return;
       }
 
@@ -114,7 +109,7 @@ public class PackageActivity extends AppCompatActivity {
               new Builder(this)
                   .setPositiveButton(
                       R.string.yes, (d, which) -> setAppOpsMode(permission, selectedValue, true))
-                  .setNegativeButton(R.string.no, null)
+                  .setNegativeButton(R.string.no, (dialog1, which) -> updateSpinnerSelection(false))
                   .setMessage(
                       getString(R.string.uid_mode_app_ops_warning, affectedPackagesCount - 1))
                   .create();
@@ -149,7 +144,6 @@ public class PackageActivity extends AppCompatActivity {
                   + mode;
           if (mMySettings.DEBUG) Utils.debugLog("setAppOpsMode", "Sending command: " + command);
           Object res = mPrivDaemonHandler.sendRequest(command);
-          updatePackage();
 
           // new Permission objects are created, so cannot check previous one for new state
           if (res != null) {
@@ -161,10 +155,23 @@ public class PackageActivity extends AppCompatActivity {
             Log.e("setAppOpsMode", "Response is " + res);
           }
 
-          // to avoid Spinner value fluctuation
-          SystemClock.sleep(500);
+          updateSpinnerSelection(true);
+        });
+  }
 
-          // to force revert spinner selection if failed
+  // to force revert spinner selection in case of no privileges, user denial, or failure
+  private void updateSpinnerSelection(boolean delay) {
+    Utils.runInBg(
+        () -> {
+          updatePackage();
+          if (delay) SystemClock.sleep(500); // To avoid Spinner value flash
+          Utils.runInFg(() -> mPermissionAdapter.notifyDataSetChanged());
+
+          // Some AppOps may take a little while to update e.g.
+          // LEGACY_STORAGE always reverts back to Allow.
+          if (!delay) return;
+          SystemClock.sleep(500);
+          updatePackage();
           Utils.runInFg(() -> mPermissionAdapter.notifyDataSetChanged());
         });
   }
