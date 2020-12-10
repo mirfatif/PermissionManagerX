@@ -94,7 +94,7 @@ public class Package {
     mTotalAppOpsCount = count;
   }
 
-  int getTotalAppOpsCount() {
+  public int getTotalAppOpsCount() {
     return mTotalAppOpsCount;
   }
 

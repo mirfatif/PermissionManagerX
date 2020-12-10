@@ -366,9 +366,12 @@ public class PackageParser {
       mPackageIconsList.put(packageInfo.packageName, icon);
     }
 
+    // Exclude packages with no manifest permissions and no AppOps (excluding extra)
+    if (isFilteredOutNoPermPkg(pkg)) return false;
+
     // Update the package even if it's being filtered out due to permissions. It's because if this
     // method is being called from within PackageActivity, permissions list must be updated so that
-    // the change is visible to the user.
+    // the change is visible to the user in PackageActivity.
     pkg.updatePackage(
         appInfo.loadLabel(mPackageManager).toString(),
         packageInfo.packageName,
@@ -380,9 +383,6 @@ public class PackageParser {
         appInfo.uid,
         pkgIsReferenced);
     if (mMySettings.DEBUG) Utils.debugLog("PackageParser", "isPkgUpdated(): Package created");
-
-    // Exclude packages with no manifest permissions
-    if (isFilteredOutNoPermPkg(pkg)) return false;
 
     // If package has some permissions but currently if we are in deep (permission) search and
     // all permissions are filtered out, package should also be filtered out.
@@ -449,7 +449,9 @@ public class PackageParser {
   }
 
   private boolean isFilteredOutNoPermPkg(Package pkg) {
-    return mMySettings.excludeNoPermissionsApps() && pkg.getTotalPermCount() == 0;
+    return mMySettings.excludeNoPermissionsApps()
+        && pkg.getTotalPermCount() == 0
+        && pkg.getTotalAppOpsCount() == 0;
   }
 
   //////////////////////////////////////////////////////////////////
@@ -473,12 +475,7 @@ public class PackageParser {
 
   private List<Permission> getPermissionsList(PackageInfo packageInfo, Package pkg) {
     String[] requestedPermissions = packageInfo.requestedPermissions;
-    pkg.setTotalPermCount(requestedPermissions == null ? 0 : requestedPermissions.length);
-
     List<Permission> permissionsList = new ArrayList<>();
-    // If manifest permission list is empty, we consider it an app without permissions, because
-    // count of AppOps might never be zero if some extra app ops are set in list.
-    if (isFilteredOutNoPermPkg(pkg)) return permissionsList;
 
     Permission permission;
     int permCount = 0;
@@ -517,24 +514,34 @@ public class PackageParser {
             "getPermissionsList(): Parsing AppOps not corresponding to any manifest permission");
       appOpsCount2 = createSetAppOps(packageInfo, permissionsList, processedAppOps);
 
-      if (mMySettings.DEBUG)
-        Utils.debugLog("PackageParser", "getPermissionsList(): Parsing extra AppOps");
-      // irrelevant / extra AppOps, not set and not corresponding to any manifest permission
-      List<Integer> ops1 = new ArrayList<>();
-      for (String opName : mMySettings.getExtraAppOps()) {
-        int op = mMySettings.getAppOpsList().indexOf(opName);
-        if (!processedAppOps.contains(op)) ops1.add(op);
-      }
+      // Do not count extra AppOps if app has no manifest permission and no other AppOp.
+      // Otherwise no apps will be excluded on excludeNoPermissionsApps() basis if even one extra
+      // AppOps is selected in list.
+      if (!mMySettings.excludeNoPermissionsApps()
+          || requestedPermissions != null
+          || appOpsCount2[0] != 0) {
 
-      if (ops1.size() != 0) {
-        int[] ops2 = new int[ops1.size()];
-        for (int i = 0; i < ops1.size(); i++) {
-          ops2[i] = ops1.get(i);
+        if (mMySettings.DEBUG)
+          Utils.debugLog("PackageParser", "getPermissionsList(): Parsing extra AppOps");
+
+        // irrelevant / extra AppOps, not set and not corresponding to any manifest permission
+        List<Integer> ops1 = new ArrayList<>();
+        for (String opName : mMySettings.getExtraAppOps()) {
+          int op = mMySettings.getAppOpsList().indexOf(opName);
+          if (!processedAppOps.contains(op)) ops1.add(op);
         }
-        appOpsCount3 = createExtraAppOps(packageInfo, permissionsList, ops2);
+
+        if (ops1.size() != 0) {
+          int[] ops2 = new int[ops1.size()];
+          for (int i = 0; i < ops1.size(); i++) {
+            ops2[i] = ops1.get(i);
+          }
+          appOpsCount3 = createExtraAppOps(packageInfo, permissionsList, ops2);
+        }
       }
     }
 
+    pkg.setTotalPermCount(requestedPermissions == null ? 0 : requestedPermissions.length);
     pkg.setPermCount(permCount);
     pkg.setTotalAppOpsCount(appOpsCount1[0] + appOpsCount2[0] + appOpsCount3[0]);
     pkg.setAppOpsCount(appOpsCount1[1] + appOpsCount2[1] + appOpsCount3[1]);
