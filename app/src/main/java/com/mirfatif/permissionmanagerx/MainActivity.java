@@ -295,19 +295,23 @@ public class MainActivity extends AppCompatActivity {
           pkg.isEnabled() ? R.string.disable : R.string.enable,
           (dialog, which) -> setPackageEnabledState(pkg));
 
-      String message = pkg.getName() + "\n\n";
+      String message;
       boolean enabled = true;
       if (!pkg.isChangeable() || pkg.getName().equals(getPackageName())) {
-        message += getString(R.string.exclude_app_from_visible_list);
+        message = getString(R.string.exclude_app_from_visible_list);
         enabled = false;
       } else if (pkg.isEnabled()) {
-        message += getString(R.string.disable_app_or_exclude_from_visible_list);
+        message = getString(R.string.disable_app_or_exclude_from_visible_list);
       } else {
-        message += getString(R.string.enable_app_or_exclude_from_visible_list);
+        message = getString(R.string.enable_app_or_exclude_from_visible_list);
       }
 
+      View layout = getLayoutInflater().inflate(R.layout.activity_main_pkg_alert_dialog, null);
+      ((TextView) layout.findViewById(R.id.package_name_view)).setText(pkg.getName());
+      ((TextView) layout.findViewById(R.id.message_view)).setText(message);
+
       // Set message, create and show the AlertDialog
-      AlertDialog dialog = builder.setTitle(pkg.getLabel()).setMessage(message).create();
+      AlertDialog dialog = builder.setTitle(pkg.getLabel()).setView(layout).create();
       boolean finalEnabled = enabled;
       dialog.setOnShowListener(
           d -> dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(finalEnabled));
