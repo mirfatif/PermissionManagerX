@@ -168,11 +168,13 @@ public class PackageParser {
 
   // For RefCheckWorker
   @SuppressWarnings("UnusedDeclaration")
-  public List<Package> updatePackagesList() {
-    long myId = mUpdatePackageListRefId = System.nanoTime();
-    updatePackagesListInBg(false, myId);
-    if (myId != mUpdatePackageListRefId) {
-      return null; // Interrupted in between
+  public List<Package> getPackagesList(boolean update) {
+    if (update) {
+      long myId = mUpdatePackageListRefId = System.nanoTime();
+      updatePackagesListInBg(false, myId);
+      if (myId != mUpdatePackageListRefId) {
+        return null; // Interrupted in between
+      }
     }
     return mPackagesList;
   }
