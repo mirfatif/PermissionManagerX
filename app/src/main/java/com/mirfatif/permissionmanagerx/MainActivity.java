@@ -406,6 +406,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!sendCrashReport()) {
                   mMainActivityFlavor.askForRating();
                 }
+                mMainActivityFlavor.onPackagesUpdated();
               }
             });
 
@@ -442,40 +443,7 @@ public class MainActivity extends AppCompatActivity {
 
     MenuItem searchMenuItem = menu.findItem(R.id.action_search);
     mSearchView = searchMenuItem.getActionView().findViewById(R.id.action_search);
-    mSearchView.setMaxWidth(Integer.MAX_VALUE);
-
-    // Start listeners on Search view
-    // https://stackoverflow.com/a/31490543/9165920
-    mSearchView.setOnQueryTextListener(
-        new OnQueryTextListener() {
-          @Override
-          public boolean onQueryTextSubmit(String query) {
-            if (mMySettings.DEBUG) Utils.debugLog("searchQueryTextSubmit", query);
-            handleSearchQuery(false);
-            return true;
-          }
-
-          @Override
-          public boolean onQueryTextChange(String newText) {
-            if (mMySettings.DEBUG) Utils.debugLog("searchQueryTextChange", newText);
-            handleSearchQuery(false);
-            return true;
-          }
-        });
-
-    // clear search query when no text is entered
-    mSearchView.setOnQueryTextFocusChangeListener(
-        (v, hasFocus) -> {
-          if (mMySettings.DEBUG) Utils.debugLog("searchQueryFocussed", String.valueOf(hasFocus));
-          showSearchActionSettings();
-          mDrawerLayout.closeDrawer(GravityCompat.START, true);
-          if (!hasFocus && TextUtils.isEmpty(mSearchView.getQuery())) {
-            collapseSearchView();
-          }
-        });
-
-    // Show a search hint
-    mSearchView.setQueryHint(getString(R.string.search_menu_item));
+    setUpSearchView();
 
     mMainActivityFlavor.onCreateOptionsMenu();
 
@@ -643,27 +611,63 @@ public class MainActivity extends AppCompatActivity {
   ///////////////////////////// SEARCH /////////////////////////////
   //////////////////////////////////////////////////////////////////
 
+  private void setUpSearchView() {
+    // Start listeners on SearchView
+    // https://stackoverflow.com/a/31490543/9165920
+    mSearchView.setOnQueryTextListener(
+        new OnQueryTextListener() {
+          @Override
+          public boolean onQueryTextSubmit(String query) {
+            if (mMySettings.DEBUG) Utils.debugLog("searchQueryTextSubmit", query);
+            handleSearchQuery(false);
+            return true;
+          }
+
+          @Override
+          public boolean onQueryTextChange(String newText) {
+            if (mMySettings.DEBUG) Utils.debugLog("searchQueryTextChange", newText);
+            handleSearchQuery(false);
+            return true;
+          }
+        });
+
+    // Clear search query when no text is entered.
+    mSearchView.setOnQueryTextFocusChangeListener(
+        (v, hasFocus) -> {
+          if (mMySettings.DEBUG) Utils.debugLog("searchQueryFocussed", String.valueOf(hasFocus));
+          showSearchActionSettings();
+          mDrawerLayout.closeDrawer(GravityCompat.START, true);
+          if (!hasFocus && TextUtils.isEmpty(mSearchView.getQuery())) {
+            collapseSearchView();
+          }
+        });
+
+    mSearchView.setQueryHint(getString(R.string.search_menu_item)); // Show a search hint
+    mSearchView.setMaxWidth(Integer.MAX_VALUE); // Hide package name
+  }
+
   private void showSearchActionSettings() {
     CheckBox deepSearchSettings = findViewById(R.id.deep_search);
     CheckBox caseSensitiveSearchSettings = findViewById(R.id.case_sensitive_search);
+
+    deepSearchSettings.setOnCheckedChangeListener(null);
+    caseSensitiveSearchSettings.setOnCheckedChangeListener(null);
+
     deepSearchSettings.setChecked(mMySettings.isDeepSearchEnabled());
     caseSensitiveSearchSettings.setChecked(mMySettings.isCaseSensitiveSearch());
 
-    deepSearchSettings.setOnClickListener(
-        v -> {
-          mMySettings.setDeepSearchEnabled(deepSearchSettings.isChecked());
+    deepSearchSettings.setOnCheckedChangeListener(
+        (buttonView, isChecked) -> {
+          mMySettings.setDeepSearchEnabled(isChecked);
           handleSearchQuery(true);
-          if (mMySettings.DEBUG)
-            Utils.debugLog("deepSearch", String.valueOf(deepSearchSettings.isChecked()));
+          if (mMySettings.DEBUG) Utils.debugLog("deepSearch", String.valueOf(isChecked));
         });
 
-    caseSensitiveSearchSettings.setOnClickListener(
-        v -> {
-          mMySettings.setCaseSensitiveSearch(caseSensitiveSearchSettings.isChecked());
+    caseSensitiveSearchSettings.setOnCheckedChangeListener(
+        (buttonView, isChecked) -> {
+          mMySettings.setCaseSensitiveSearch(isChecked);
           handleSearchQuery(false);
-          if (mMySettings.DEBUG)
-            Utils.debugLog(
-                "caseSensitiveSearch", String.valueOf(caseSensitiveSearchSettings.isChecked()));
+          if (mMySettings.DEBUG) Utils.debugLog("caseSensitiveSearch", String.valueOf(isChecked));
         });
 
     findViewById(R.id.search_settings_container).setVisibility(View.VISIBLE);

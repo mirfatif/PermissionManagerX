@@ -48,4 +48,6 @@ class MainActivityFlavor {
   void onDestroyed() {}
 
   void openSettings() {}
+
+  void onPackagesUpdated() {}
 }
