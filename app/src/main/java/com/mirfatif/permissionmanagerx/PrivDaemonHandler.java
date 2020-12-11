@@ -32,7 +32,7 @@ public class PrivDaemonHandler {
 
   private PrivDaemonHandler() {}
 
-  Boolean startDaemon() {
+  public Boolean startDaemon() {
     MySettings mySettings = MySettings.getInstance();
 
     String dex = "daemon.dex";
