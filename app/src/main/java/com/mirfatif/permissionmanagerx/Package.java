@@ -118,8 +118,14 @@ public class Package {
     return mIsReferenced;
   }
 
-  public static final String ORANGE_STATE = ":ORANGE";
-  public static final String RED_STATE = ":RED";
+  public static final String SEARCH_CRITICAL = ":Critical";
+  public static final String SEARCH_FRAMEWORK = ":Framework";
+  public static final String SEARCH_SYSTEM = ":System";
+  public static final String SEARCH_USER = ":User";
+  public static final String SEARCH_DISABLED = ":Disabled";
+  public static final String SEARCH_GREEN = ":GREEN";
+  public static final String SEARCH_ORANGE = ":ORANGE";
+  public static final String SEARCH_RED = ":RED";
 
   public boolean contains(String queryText) {
     boolean isEmpty = true;
@@ -149,10 +155,12 @@ public class Package {
           mPackageName,
           String.valueOf(mUid),
           (isCriticalApp()
-              ? ":Critical"
-              : (mIsFrameworkApp ? ":Framework" : (mIsSystemApp ? ":System" : ":User"))),
-          (mIsEnabled ? "" : ":Disabled"),
-          (mIsReferenced == null ? ORANGE_STATE : (mIsReferenced ? ":GREEN" : RED_STATE))
+              ? SEARCH_CRITICAL
+              : (mIsFrameworkApp
+                  ? SEARCH_FRAMEWORK
+                  : (mIsSystemApp ? SEARCH_SYSTEM : SEARCH_USER))),
+          (mIsEnabled ? "" : SEARCH_DISABLED),
+          (mIsReferenced == null ? SEARCH_ORANGE : (mIsReferenced ? SEARCH_GREEN : SEARCH_RED))
         }) {
       if (!isCaseSensitive) field = field.toUpperCase();
       if (field.contains(queryText)) return true;

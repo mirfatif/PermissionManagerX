@@ -221,6 +221,14 @@ public class Permission {
     return true;
   }
 
+  public static final String SEARCH_APP_OPS = ":AppOps";
+  public static final String SEARCH_UID = ":UID";
+  public static final String SEARCH_PRIVILEGED = ":Privileged";
+  public static final String SEARCH_DEV = ":Development";
+  public static final String SEARCH_FIXED = ":Fixed";
+  public static final String SEARCH_TIME = ":TIME";
+  public static final String SEARCH_EXTRA = ":Extra";
+
   private boolean _contains(String queryText) {
     boolean isCaseSensitive = MySettings.getInstance().isCaseSensitiveSearch();
     if (!isCaseSensitive) queryText = queryText.toUpperCase();
@@ -229,14 +237,16 @@ public class Permission {
         new String[] {
           mPermissionName,
           ":" + mProtectionLevel,
-          ((mIsAppOps || mIsManifestPermAppOps) ? ":AppOps" : ""),
-          ((mIsAppOps && mIsPerUid) ? ":UID" : ""),
-          (mIsPrivileged ? ":Privileged" : ""),
-          (mIsDevelopment ? ":Development" : ""),
-          (mIsSystemFixed ? ":Fixed" : ""),
-          (mIsReferenced == null ? ":ORANGE" : (mIsReferenced ? ":GREEN" : ":RED")),
-          (!getAppOpsAccessTime().equals("null") ? ":TIME" : ""),
-          (mIsExtraAppOp ? ":Extra" : "")
+          ((mIsAppOps || mIsManifestPermAppOps) ? SEARCH_APP_OPS : ""),
+          ((mIsAppOps && mIsPerUid) ? SEARCH_UID : ""),
+          (mIsPrivileged ? SEARCH_PRIVILEGED : ""),
+          (mIsDevelopment ? SEARCH_DEV : ""),
+          (mIsSystemFixed ? SEARCH_FIXED : ""),
+          (mIsReferenced == null
+              ? Package.SEARCH_ORANGE
+              : (mIsReferenced ? Package.SEARCH_GREEN : Package.SEARCH_RED)),
+          (!getAppOpsAccessTime().equals("null") ? SEARCH_TIME : ""),
+          (mIsExtraAppOp ? SEARCH_EXTRA : "")
         }) {
       if (!isCaseSensitive) field = field.toUpperCase();
       if (field.contains(queryText)) return true;
