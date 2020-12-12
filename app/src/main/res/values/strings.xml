@@ -41,7 +41,8 @@
   <string name="logging">Logging</string>
   <string name="start_logging">Start logging</string>
   <string name="logging_warning">App may respond slow due to logging, and log file may grow up to very
-        large size. After 5 minutes logging is auto-stopped.</string>
+    large size. After 5 minutes logging is auto-stopped.
+  </string>
   <string name="logging_failed">Logging failed</string>
   <string name="daemon_logging_failed">Logging for privileged daemon failed</string>
   <string name="creating_packages_list">Creating packages list</string>
@@ -58,35 +59,38 @@
   <string name="connected_to_adb">Connected to ADB</string>
   <string name="adb_connect_fail">Connecting to ADB failed</string>
   <string name="adb_connect_fail_long">Connecting to ADB failed.\n- Enable <b><i>ADB Over Network</i></b>
-        and come back to connect.\n- Allow ADB authentication if prompted.</string>
+    and come back to connect.\n- Allow ADB authentication if prompted.
+  </string>
   <string name="daemon_failed">Starting privileged daemon failed</string>
   <string name="run_main_app">Make sure that you run the app from primary user profile and grant
-    privileges at least once.</string>
+    privileges at least once.
+  </string>
   <string name="backup">Backup</string>
   <string name="restore">Restore</string>
   <string name="choose_backup_restore">You can backup or restore preferences and permission references.</string>
   <string name="select_backup_file">Select backup file</string>
   <string name="backup_in_progress">Backup in progress</string>
   <string name="restore_in_progress">Restore in progress</string>
-  <string name="backup_restore_process_entries">Processed %1$d preferences and
-        %2$d permission references.</string>
+  <string name="backup_restore_process_entries">Processed %1$d preferences and %2$d permission references.</string>
   <string name="backup_restore_invalid_prefs">\nSkipped %1$d invalid preferences.</string>
   <string name="backup_restore_uninstalled_apps">\nSkipped %1$d uninstalled apps.</string>
   <string name="backup_restore_failed">Failed. Some error occurred.</string>
   <string name="skip_uninstalled_packages">Skip uninstalled packages</string>
   <string name="privileges">"Privileges"</string>
-  <string name="hidden_apis_warning">Hidden APIs are blacklisted on your device, switching to daemon mode.
-    </string>
+  <string name="hidden_apis_warning">Hidden APIs are blacklisted on your device, switching to daemon mode.</string>
   <string name="hidden_apis_confirmation">Some ROMs allow using system\'s hidden APIs. Daemon mode might
-        be slower. Stop using hidden APIs?</string>
+    be slower. Stop using hidden APIs?
+  </string>
   <string name="granting_permission_failed">Granting permission failed</string>
   <string name="purchase_and_rate_the_app">Liking the app?\nPlease consider purchasing and rating on
-    Play Store to support the development.</string>
+    Play Store to support the development.
+  </string>
   <string name="thank_you">Thank you</string>
   <string name="play_store_url">https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx</string>
   <string name="crash_report">Crash Report</string>
   <string name="ask_to_report_crash">We are sorry. The app had a problem and crashed.\nWould you
-    like to email the \"%1$s\" file to the developer so that the bug can be fixed?</string>
+    like to email the \"%1$s\" file to the developer so that the bug can be fixed?
+  </string>
   <string name="packages">Packages</string>
   <string name="permissions">Permissions</string>
 
@@ -105,8 +109,7 @@
   <string name="clear_references">Clear References</string>
   <string name="clear_references_confirmation">Clear all permission references?</string>
   <string name="set_references">Set References</string>
-  <string name="set_references_confirmation">Set all current permission states as references?
-    </string>
+  <string name="set_references_confirmation">Set all current permission states as references?</string>
 
   <!--PackageActivity Dialogs-->
   <string name="exclude_app_from_visible_list">Exclude app from visible list.</string>
@@ -116,8 +119,8 @@
   <!--PackageActivity-->
   <string name="something_bad_happened">Something bad happened</string>
   <string name="uid_mode_app_ops_warning">This is a UID mode AppOps.
-        Changing it also affects %1$d other packages.\nContinue?
-    </string>
+    Changing it also affects %1$d other packages.\nContinue?
+  </string>
   <string name="extra_ops_cant_be_excluded">Extra AppOps cannot be excluded from visible list.</string>
   <string name="exclude_perm_from_list">Exclude permission from visible list.</string>
   <string name="set_perm_state_reference">Set %1$s state as reference.</string>
@@ -174,5 +177,10 @@
   <string name="bank_account_link"><a href="mailto:">Ask for Bank Account</a></string>
   <string name="bank_account_request">Hello,\n\nI need your IBAN and SWIFT/BIC to make a donation.</string>
   <string name="play_store_link"><a href="https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx">Paid
-        version on Play Store</a></string>
+    version on Play Store</a>
+  </string>
+  <string name="redeem_code_link"><a href="mailto:">Ask for Redeem Code</a></string>
+  <string name="redeem_code_request">Hello,\n\nI have made a donation of amount ____ to PMX. Please
+    provide a Play Store redeem code if available.
+  </string>
 </resources>

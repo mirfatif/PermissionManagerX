@@ -1064,20 +1064,24 @@ public class MainActivity extends AppCompatActivity {
             BetterLinkMovementMethod.newInstance()
                 .setOnLinkClickListener((textView, uri) -> handleBitcoinClick()));
 
-    ((TextView) layout.findViewById(R.id.bank_account_link))
-        .setMovementMethod(
-            BetterLinkMovementMethod.newInstance()
-                .setOnLinkClickListener(
-                    (tView, url) ->
-                        Utils.sendMail(this, getString(R.string.bank_account_request))));
+    sendMail(layout, R.id.bank_account_link, R.string.bank_account_request);
 
     ((TextView) layout.findViewById(R.id.play_store_link))
         .setMovementMethod(
             BetterLinkMovementMethod.newInstance()
                 .setOnLinkClickListener((tView, url) -> Utils.openWebUrl(this, url)));
 
+    sendMail(layout, R.id.redeem_code_link, R.string.redeem_code_request);
+
     new AlertDialogFragment(new Builder(this).setView(layout).create()).show(mFM, "DONATION", true);
     return true;
+  }
+
+  private void sendMail(View layout, int viewResId, int msgResId) {
+    ((TextView) layout.findViewById(viewResId))
+        .setMovementMethod(
+            BetterLinkMovementMethod.newInstance()
+                .setOnLinkClickListener((v, url) -> Utils.sendMail(this, getString(msgResId))));
   }
 
   private boolean handleBitcoinClick() {
