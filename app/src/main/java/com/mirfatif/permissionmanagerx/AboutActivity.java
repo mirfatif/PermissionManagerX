@@ -58,8 +58,11 @@ public class AboutActivity extends AppCompatActivity {
       Utils.runInBg(
           () -> {
             Utils.stopLogging();
-            setLogTitle();
-            Snackbar.make(findViewById(R.id.logging), R.string.logging_stopped, 5000).show();
+            Utils.runInFg(
+                () -> {
+                  setLogTitle();
+                  Snackbar.make(findViewById(R.id.logging), R.string.logging_stopped, 5000).show();
+                });
           });
       return;
     }

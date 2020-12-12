@@ -40,6 +40,7 @@ public class App extends Application {
             String logFile = logFilePrefix + Utils.getCurrDateTime() + logFileSuffix;
             try {
               PrintWriter writer = new PrintWriter(new File(logDir, logFile));
+              writer.println(Utils.getDeviceInfo());
               e.printStackTrace(writer);
               writer.close();
             } catch (FileNotFoundException ignored) {

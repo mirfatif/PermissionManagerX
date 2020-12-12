@@ -9,6 +9,7 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Build.VERSION;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -352,11 +353,32 @@ public class Utils {
     }
   }
 
+  static String getDeviceInfo() {
+    return "Android "
+        + VERSION.SDK_INT
+        + "\nBuild type: "
+        + Build.TYPE
+        + "\nDevice: "
+        + Build.DEVICE
+        + "\nManufacturer: "
+        + Build.MANUFACTURER
+        + "\nModel: "
+        + Build.MODEL
+        + "\nProduct: "
+        + Build.PRODUCT;
+  }
+
   //////////////////////////////////////////////////////////////////
   ///////////////////////////// LOGGING ////////////////////////////
   //////////////////////////////////////////////////////////////////
 
   static boolean doLoggingFails(String[] command) {
+    try {
+      writeToLogFile(getDeviceInfo());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
     Process process = runCommand(command[0], "Logging", true);
     if (process == null) return true;
 
