@@ -121,7 +121,9 @@ public class BackupRestore {
     if (isBackup) {
       try (OutputStream outStream =
           mActivity.getApplication().getContentResolver().openOutputStream(uri, "w")) {
-        backup(outStream);
+        if (!backup(outStream)) {
+          failed(true);
+        }
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -134,13 +136,15 @@ public class BackupRestore {
          * daemon mode is not called on main thread
          */
         mMySettings.resetToDefaults();
-        restore(inputStream);
+        if (!restore(inputStream)) {
+          failed(false);
+        }
       } catch (IOException ignored) {
       }
     }
   }
 
-  void backup(OutputStream outputStream) {
+  boolean backup(OutputStream outputStream) {
     showProgressBar(true);
     XmlSerializer serializer = Xml.newSerializer();
     StringWriter stringWriter = new StringWriter();
@@ -151,8 +155,7 @@ public class BackupRestore {
       serializer.startTag(null, PREFERENCES);
     } catch (IOException e) {
       e.printStackTrace();
-      failed(true);
-      return;
+      return false;
     }
 
     int invalidPrefs = 0;
@@ -190,8 +193,7 @@ public class BackupRestore {
         serializer.endTag(null, PREF);
       } catch (IOException e) {
         e.printStackTrace();
-        failed(true);
-        return;
+        return false;
       }
     }
 
@@ -200,8 +202,7 @@ public class BackupRestore {
       serializer.startTag(null, PERMISSIONS);
     } catch (IOException e) {
       e.printStackTrace();
-      failed(true);
-      return;
+      return false;
     }
 
     // permissions
@@ -229,8 +230,7 @@ public class BackupRestore {
         serializer.endTag(null, PERM);
       } catch (IOException e) {
         e.printStackTrace();
-        failed(true);
-        return;
+        return false;
       }
     }
 
@@ -241,8 +241,7 @@ public class BackupRestore {
       serializer.flush();
     } catch (IOException e) {
       e.printStackTrace();
-      failed(true);
-      return;
+      return false;
     }
 
     // pretty formatting
@@ -266,9 +265,10 @@ public class BackupRestore {
     }
 
     succeeded(true, prefEntries.size(), permEntities.size(), invalidPrefs, skippedApps);
+    return true;
   }
 
-  private void restore(InputStream inputStream) {
+  private boolean restore(InputStream inputStream) {
     showProgressBar(false);
     // create a copy of InputStream before consuming it
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -290,8 +290,7 @@ public class BackupRestore {
     // preferences
     List<BackupEntry> prefEntries = getKeyValueEntries(inputStream1, PREFERENCES, PREF);
     if (prefEntries == null) {
-      failed(false);
-      return;
+      return false;
     }
 
     SharedPreferences.Editor prefEdit = mPreferences.edit();
@@ -333,8 +332,7 @@ public class BackupRestore {
     // permissions
     List<BackupEntry> permEntries = getKeyValueEntries(inputStream2, PERMISSIONS, PERM);
     if (permEntries == null) {
-      failed(false);
-      return;
+      return false;
     }
 
     int skippedApps = 0;
@@ -353,6 +351,7 @@ public class BackupRestore {
     updatePermissionEntities(permEntries);
 
     succeeded(false, prefEntries.size(), permEntries.size(), invalidPrefs, skippedApps);
+    return true;
   }
 
   private List<BackupEntry> getKeyValueEntries(
