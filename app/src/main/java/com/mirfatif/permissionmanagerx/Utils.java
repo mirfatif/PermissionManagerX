@@ -50,8 +50,6 @@ public class Utils {
 
   private Utils() {}
 
-  private static final MySettings mMySettings = MySettings.getInstance();
-
   private static Handler mMainThreadHandler;
 
   public static void runInFg(Runnable runnable) {
@@ -305,7 +303,7 @@ public class Utils {
 
   public static void hiddenAPIsNotWorking(String tag, String error) {
     Log.e(tag, error);
-    mMySettings.mHiddenAPIsWorking = false;
+    MySettings.getInstance().mHiddenAPIsWorking = false;
     runInFg(() -> mHiddenAPIsNotWorking.setValue(true));
     runInFg(() -> mHiddenAPIsNotWorking.setValue(false)); // for using again
   }
@@ -420,7 +418,7 @@ public class Utils {
   static BufferedWriter mLogcatWriter;
 
   private static void writeToLogFile(String line) throws IOException {
-    if (!mMySettings.DEBUG) return;
+    if (!MySettings.getInstance().DEBUG) return;
     synchronized (Utils.class) {
       mLogcatWriter.write(line);
       mLogcatWriter.newLine();
@@ -432,14 +430,15 @@ public class Utils {
   }
 
   static synchronized void stopLogging() {
-    if (!mMySettings.DEBUG) return;
-    mMySettings.doLogging = false;
-    mMySettings.DEBUG = false;
+    MySettings mySettings = MySettings.getInstance();
+    if (!mySettings.DEBUG) return;
+    mySettings.doLogging = false;
+    mySettings.DEBUG = false;
     try {
       if (mLogcatWriter != null) mLogcatWriter.close();
     } catch (IOException ignored) {
     }
-    if (mMySettings.mPrivDaemonAlive) {
+    if (mySettings.mPrivDaemonAlive) {
       PrivDaemonHandler.getInstance().sendRequest(PrivDaemon.STOP_LOGGING);
     }
     Log.i("stopLogging()", PrivDaemon.STOP_LOGGING);
@@ -452,7 +451,7 @@ public class Utils {
   private static long daemonDeadLogTs = 0;
 
   public static void logDaemonDead(String tag) {
-    if (mMySettings.DEBUG || System.currentTimeMillis() - daemonDeadLogTs > 1000) {
+    if (MySettings.getInstance().DEBUG || System.currentTimeMillis() - daemonDeadLogTs > 1000) {
       Log.e(tag, "Privileged daemon is not running");
       daemonDeadLogTs = System.currentTimeMillis();
     }
@@ -463,17 +462,18 @@ public class Utils {
   //////////////////////////////////////////////////////////////////
 
   public static boolean checkRootVerbose() {
-    if (mMySettings.isRootGranted()) {
+    MySettings mySettings = MySettings.getInstance();
+    if (mySettings.isRootGranted()) {
       if (!checkRoot()) {
         runInFg(
             () ->
                 Toast.makeText(App.getContext(), R.string.getting_root_fail, Toast.LENGTH_LONG)
                     .show());
-        if (mMySettings.DEBUG) {
+        if (mySettings.DEBUG) {
           debugLog("checkRoot", "Getting root privileges failed");
         }
       } else {
-        if (mMySettings.DEBUG) {
+        if (mySettings.DEBUG) {
           debugLog("checkRoot", "Getting root privileges succeeded");
         }
         return true;
@@ -483,17 +483,18 @@ public class Utils {
   }
 
   public static boolean checkAdbVerbose() {
-    if (mMySettings.isAdbConnected()) {
+    MySettings mySettings = MySettings.getInstance();
+    if (mySettings.isAdbConnected()) {
       if (!checkAdb()) {
         runInFg(
             () ->
                 Toast.makeText(App.getContext(), R.string.adb_connect_fail, Toast.LENGTH_LONG)
                     .show());
-        if (mMySettings.DEBUG) {
+        if (mySettings.DEBUG) {
           debugLog("checkAdb", "Connecting to ADB failed");
         }
       } else {
-        if (mMySettings.DEBUG) {
+        if (mySettings.DEBUG) {
           debugLog("checkAdb", "Connecting to ADB succeeded");
         }
         return true;
@@ -504,13 +505,13 @@ public class Utils {
 
   static boolean checkRoot() {
     boolean res = runCommand("su -c id  -u", "checkRoot", "0");
-    mMySettings.setRootGranted(res);
+    MySettings.getInstance().setRootGranted(res);
     return res;
   }
 
   static boolean checkAdb() {
     boolean res = Adb.isConnected();
-    mMySettings.setAdbConnected(res);
+    MySettings.getInstance().setAdbConnected(res);
     return res;
   }
 }

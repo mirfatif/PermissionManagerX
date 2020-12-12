@@ -45,7 +45,7 @@ public class BackupRestore {
   static final String TAG = "BackupRestore";
   private static final String TAG_BACKUP_RESTORE = "BACKUP_RESTORE";
 
-  private static final MySettings mMySettings = MySettings.getInstance();
+  private final MySettings mMySettings;
 
   private final String KEY = "key";
   private final String VALUE = "value";
@@ -76,11 +76,13 @@ public class BackupRestore {
 
   BackupRestore() {
     mActivity = null;
+    mMySettings = MySettings.getInstance();
     mPreferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
   }
 
   BackupRestore(MainActivity activity) {
     mActivity = activity;
+    mMySettings = MySettings.getInstance();
     mPreferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
   }
 
@@ -421,8 +423,9 @@ public class BackupRestore {
   }
 
   static void updatePermissionEntities(List<BackupEntry> permEntries) {
+    MySettings mySettings = MySettings.getInstance();
     Map<String, Integer> map = new HashMap<>();
-    for (PermissionEntity entity : mMySettings.getPermDb().getAll()) {
+    for (PermissionEntity entity : mySettings.getPermDb().getAll()) {
       map.put(entity.pkgName + "_" + entity.permName, entity.id);
     }
 
@@ -436,7 +439,7 @@ public class BackupRestore {
       if (id != null && id > 0) entity.id = id;
       permEntities.add(entity);
     }
-    mMySettings.getPermDb().insertAll(permEntities.toArray(new PermissionEntity[0]));
+    mySettings.getPermDb().insertAll(permEntities.toArray(new PermissionEntity[0]));
   }
 
   private String getString(int resId) {
