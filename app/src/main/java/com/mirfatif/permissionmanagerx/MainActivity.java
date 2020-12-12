@@ -943,7 +943,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     if (item.getItemId() == R.id.action_backup_restore) {
-      new BackupRestore(this);
+      new BackupRestore(this).doBackupRestore();
       return true;
     }
 

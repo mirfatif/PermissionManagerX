@@ -74,11 +74,18 @@ public class BackupRestore {
 
   private boolean mSkipUninstalledApps = false;
 
+  BackupRestore() {
+    mActivity = null;
+    mPreferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
+  }
+
   BackupRestore(MainActivity activity) {
     mActivity = activity;
     mPreferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
+  }
 
-    View layout = activity.getLayoutInflater().inflate(R.layout.backup_restore_alert_dialog, null);
+  void doBackupRestore() {
+    View layout = mActivity.getLayoutInflater().inflate(R.layout.backup_restore_alert_dialog, null);
     CheckBox checkbox = layout.findViewById(R.id.skip_uninstalled_packages);
     checkbox.setOnClickListener(v -> mSkipUninstalledApps = checkbox.isChecked());
 
@@ -131,7 +138,7 @@ public class BackupRestore {
     }
   }
 
-  private void backup(OutputStream outputStream) {
+  void backup(OutputStream outputStream) {
     showProgressBar(true);
     XmlSerializer serializer = Xml.newSerializer();
     StringWriter stringWriter = new StringWriter();
@@ -406,7 +413,7 @@ public class BackupRestore {
 
   private boolean isInstalled(String pkgName) {
     if (mInstalledPackages.isEmpty()) {
-      for (PackageInfo info : mActivity.getPackageManager().getInstalledPackages(0)) {
+      for (PackageInfo info : App.getContext().getPackageManager().getInstalledPackages(0)) {
         mInstalledPackages.add(info.packageName);
       }
     }
@@ -437,6 +444,7 @@ public class BackupRestore {
   }
 
   private void showProgressBar(boolean isBackup) {
+    if (mActivity == null) return;
     Utils.runInFg(
         () -> {
           mActivity.mRoundProgressTextView.setText(
@@ -448,12 +456,20 @@ public class BackupRestore {
   }
 
   private void failed(boolean isBackup) {
+    if (mActivity == null) {
+      Log.e(TAG, (isBackup ? "Backup" : "Restore") + " failed");
+      return;
+    }
     Utils.runInFg(() -> mActivity.mRoundProgressContainer.setVisibility(View.GONE));
     showFinalDialog(isBackup, getString(R.string.backup_restore_failed));
   }
 
   private void succeeded(
       boolean isBackup, int prefs, int perms, int invalidPrefs, int skippedApps) {
+    if (mActivity == null) {
+      Log.i(TAG, (isBackup ? "Backup" : "Restore") + " succeeded");
+      return;
+    }
     Utils.runInFg(() -> mActivity.mRoundProgressContainer.setVisibility(View.GONE));
     if (!isBackup) {
       mMySettings.populateExcludedAppsList(false);
@@ -475,6 +491,7 @@ public class BackupRestore {
   }
 
   private void showFinalDialog(boolean isBackup, String message) {
+    if (mActivity == null) return;
     Builder builder =
         new Builder(mActivity)
             .setPositiveButton(android.R.string.ok, null)

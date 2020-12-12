@@ -1,5 +1,6 @@
 package com.mirfatif.permissionmanagerx.permsdb;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -8,6 +9,10 @@ import java.util.List;
 
 @Dao
 public interface PermissionDao {
+  @SuppressWarnings("UnusedDeclaration")
+  @Query("SELECT * FROM PermissionEntity")
+  LiveData<List<PermissionEntity>> watchAll();
+
   @Query("SELECT * FROM PermissionEntity")
   List<PermissionEntity> getAll();
 

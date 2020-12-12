@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 
 public class App extends Application {
 
+  AppFlavor mAppFlavor;
   private static Context mAppContext;
   private Thread.UncaughtExceptionHandler defaultExceptionHandler;
 
@@ -49,6 +50,8 @@ public class App extends Application {
 
           defaultExceptionHandler.uncaughtException(t, e);
         });
+    mAppFlavor = new AppFlavor(this);
+    mAppFlavor.onCreated();
   }
 
   public static Context getContext() {
