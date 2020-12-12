@@ -623,14 +623,14 @@ public class MainActivity extends AppCompatActivity {
           @Override
           public boolean onQueryTextSubmit(String query) {
             if (mMySettings.DEBUG) Utils.debugLog("searchQueryTextSubmit", query);
-            handleSearchQuery(false);
+            handleSearchQuery();
             return true;
           }
 
           @Override
           public boolean onQueryTextChange(String newText) {
             if (mMySettings.DEBUG) Utils.debugLog("searchQueryTextChange", newText);
-            handleSearchQuery(false);
+            handleSearchQuery();
             return true;
           }
         });
@@ -663,14 +663,14 @@ public class MainActivity extends AppCompatActivity {
     deepSearchSettings.setOnCheckedChangeListener(
         (buttonView, isChecked) -> {
           mMySettings.setDeepSearchEnabled(isChecked);
-          handleSearchQuery(true);
+          handleSearchQuery();
           if (mMySettings.DEBUG) Utils.debugLog("deepSearch", String.valueOf(isChecked));
         });
 
     caseSensitiveSearchSettings.setOnCheckedChangeListener(
         (buttonView, isChecked) -> {
           mMySettings.setCaseSensitiveSearch(isChecked);
-          handleSearchQuery(false);
+          handleSearchQuery();
           if (mMySettings.DEBUG) Utils.debugLog("caseSensitiveSearch", String.valueOf(isChecked));
         });
 
@@ -681,11 +681,11 @@ public class MainActivity extends AppCompatActivity {
     if (mMySettings.DEBUG) Utils.debugLog("searchView", "Collapsing");
     mSearchView.onActionViewCollapsed();
     mSearchView.setQuery(null, false);
-    handleSearchQuery(false); // mSearchView.setQuery(null, true) does not work
+    handleSearchQuery(); // mSearchView.setQuery(null, true) does not work
     findViewById(R.id.search_settings_container).setVisibility(View.GONE);
   }
 
-  private void handleSearchQuery(boolean doDeepSearch) {
+  private void handleSearchQuery() {
     CharSequence queryText = mSearchView.getQuery();
     boolean isSearching = mMySettings.isSearching();
 
@@ -700,7 +700,7 @@ public class MainActivity extends AppCompatActivity {
 
     if (mMySettings.DEBUG) Utils.debugLog("handleSearchQuery", "Text set to: " + queryText);
 
-    if (doDeepSearch || mMySettings.isDeepSearchEnabled()) {
+    if (mMySettings.isDeepSearchEnabled()) {
       updatePackagesList(true);
     } else {
       mPackageParser.handleSearchQuery(true);
