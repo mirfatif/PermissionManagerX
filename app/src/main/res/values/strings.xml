@@ -152,6 +152,8 @@
   <string name="source_url">https://github.com/mirfatif/PermissionManagerX</string>
   <string name="email">Email</string>
   <string name="email_address">mirfatif@gmail.com</string>
+  <string name="telegram_group">Telegram Group</string>
+  <string name="telegram_link">https://t.me/PermissionManagerX</string>
   <string name="no_email_app_installed">No email app installed</string>
   <string name="no_browser_installed">"No web browser app installed"</string>
   <string name="collect_logs">Collect Logs</string>

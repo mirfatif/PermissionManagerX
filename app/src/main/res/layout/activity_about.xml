@@ -102,6 +102,48 @@
           android:layout_height="24dp"
           android:layout_gravity="center"
           android:layout_marginEnd="8dp"
+          android:src="@drawable/telegram"
+          tools:ignore="ContentDescription"/>
+
+        <LinearLayout
+          android:id="@+id/telegram"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:paddingTop="8dp"
+          android:paddingBottom="8dp"
+          android:orientation="vertical"
+          android:background="?android:attr/selectableItemBackground">
+
+          <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/telegram_group"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+
+          <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/telegram_link"
+            android:layout_marginTop="2dp"/>
+        </LinearLayout>
+
+      </LinearLayout>
+
+      <View
+        android:layout_width="match_parent"
+        android:background="@color/accentColor"
+        android:layout_height="1dp"/>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+          android:layout_width="24dp"
+          android:layout_height="24dp"
+          android:layout_gravity="center"
+          android:layout_marginEnd="8dp"
           android:src="@drawable/github_mark"
           tools:ignore="ContentDescription"/>
 

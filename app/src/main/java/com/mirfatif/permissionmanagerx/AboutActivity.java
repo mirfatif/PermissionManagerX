@@ -32,19 +32,17 @@ public class AboutActivity extends AppCompatActivity {
     mMySettings = MySettings.getInstance();
 
     ((TextView) findViewById(R.id.version)).setText(BuildConfig.VERSION_NAME);
-
-    setLogTitle();
-
+    openWebUrl(R.id.telegram, R.string.telegram_link);
+    openWebUrl(R.id.source_code, R.string.source_url);
+    openWebUrl(R.id.issues, R.string.issues_url);
+    openWebUrl(R.id.rating, R.string.play_store_url);
     findViewById(R.id.contact).setOnClickListener(v -> Utils.sendMail(this, null));
-
-    findViewById(R.id.source_code)
-        .setOnClickListener(v -> Utils.openWebUrl(this, getString(R.string.source_url)));
-    findViewById(R.id.issues)
-        .setOnClickListener(v -> Utils.openWebUrl(this, getString(R.string.issues_url)));
-
+    setLogTitle();
     findViewById(R.id.logging).setOnClickListener(v -> handleLogging());
-    findViewById(R.id.rating)
-        .setOnClickListener(v -> Utils.openWebUrl(this, getString(R.string.play_store_url)));
+  }
+
+  private void openWebUrl(int viewResId, int linkResId) {
+    findViewById(viewResId).setOnClickListener(v -> Utils.openWebUrl(this, getString(linkResId)));
   }
 
   private boolean logInProgress = false;
