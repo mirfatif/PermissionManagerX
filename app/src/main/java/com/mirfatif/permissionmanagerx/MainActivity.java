@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 
 public class MainActivity extends AppCompatActivity {
@@ -407,9 +408,12 @@ public class MainActivity extends AppCompatActivity {
                           5000)
                       .show();
                 }
-                if (!sendCrashReport()) {
-                  mMainActivityFlavor.askForRating();
-                }
+                Utils.runInBg(
+                    () -> {
+                      if (!sendCrashReport()) {
+                        mMainActivityFlavor.askForRating();
+                      }
+                    });
                 mMainActivityFlavor.onPackagesUpdated();
               }
             });
@@ -557,12 +561,18 @@ public class MainActivity extends AppCompatActivity {
       } else {
         fileToDelete = logFile;
       }
-      if (fileToDelete != null && !fileToDelete.delete()) {
+      // Delete log files older than a month
+      if (fileToDelete != null
+          && fileToDelete.lastModified() > TimeUnit.DAYS.toMillis(30)
+          && !fileToDelete.delete()) {
         Log.e("sendCrashReport", "Failed to delete " + logFile);
       }
     }
 
     if (fileToSend == null) return false;
+
+    // Be ashamed of your performance, don't ask for rating in near future
+    mMySettings.setAskForRatingTs(System.currentTimeMillis());
 
     String authority = "com.mirfatif.permissionmanagerx.fileprovider";
     Uri logFileUri = FileProvider.getUriForFile(this, authority, fileToSend);
@@ -595,7 +605,7 @@ public class MainActivity extends AppCompatActivity {
                   }
                 })
             .setNegativeButton(android.R.string.cancel, null);
-    new AlertDialogFragment(builder.create()).show(mFM, "CRASH_REPORT", true);
+    Utils.runInFg(() -> new AlertDialogFragment(builder.create()).show(mFM, "CRASH_REPORT", true));
     return true;
   }
 
