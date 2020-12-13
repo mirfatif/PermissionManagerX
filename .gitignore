@@ -17,6 +17,7 @@
 #   custom   #
 ##############
 publish-checklist.txt
+build_signed_release.sh
 *icon.svg
 banner.svg
 .idea/
