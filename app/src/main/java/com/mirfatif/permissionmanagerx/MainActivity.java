@@ -550,6 +550,7 @@ public class MainActivity extends AppCompatActivity {
     mMySettings.setCrashReportTs();
 
     File fileToDelete, fileToSend = null;
+    long deleteThreshold = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(30);
     for (File logFile : logFiles) {
       if (!logFile.isFile()) continue;
       if (!logFile.getName().startsWith(App.logFilePrefix)) continue;
@@ -563,7 +564,7 @@ public class MainActivity extends AppCompatActivity {
       }
       // Delete log files older than a month
       if (fileToDelete != null
-          && fileToDelete.lastModified() > TimeUnit.DAYS.toMillis(30)
+          && deleteThreshold > fileToDelete.lastModified()
           && !fileToDelete.delete()) {
         Log.e("sendCrashReport", "Failed to delete " + logFile);
       }
