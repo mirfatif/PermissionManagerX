@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.privdaemon.PrivDaemon;
@@ -25,9 +26,8 @@ public class AboutActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_about);
 
-    if (getSupportActionBar() != null) {
-      getSupportActionBar().setTitle(R.string.about_menu_item);
-    }
+    ActionBar actionBar = getSupportActionBar();
+    if (actionBar != null) actionBar.setTitle(R.string.about_menu_item);
 
     mMySettings = MySettings.getInstance();
 

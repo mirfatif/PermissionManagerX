@@ -16,6 +16,7 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,7 +32,6 @@ import com.mirfatif.privdaemon.PrivDaemon;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 public class PackageActivity extends AppCompatActivity {
 
@@ -60,7 +60,8 @@ public class PackageActivity extends AppCompatActivity {
     mPackageParser = PackageParser.getInstance();
     mPackage = mPackageParser.getPackage(position);
 
-    Objects.requireNonNull(getSupportActionBar()).setTitle(mPackage.getLabel());
+    ActionBar actionBar = getSupportActionBar();
+    if (actionBar != null) actionBar.setTitle(mPackage.getLabel());
 
     mMySettings = MySettings.getInstance();
     mPrivDaemonHandler = PrivDaemonHandler.getInstance();

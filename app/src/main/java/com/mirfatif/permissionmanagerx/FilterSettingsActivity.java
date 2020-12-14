@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
-import java.util.Objects;
 
 public class FilterSettingsActivity extends AppCompatActivity {
 
@@ -21,7 +21,8 @@ public class FilterSettingsActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_fragment_container);
 
-    Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.filter_menu_item);
+    ActionBar actionBar = getSupportActionBar();
+    if (actionBar != null) actionBar.setTitle(R.string.filter_menu_item);
 
     mMySettings = MySettings.getInstance();
 

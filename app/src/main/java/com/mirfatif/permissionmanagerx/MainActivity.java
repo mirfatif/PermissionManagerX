@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
@@ -45,7 +46,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -136,7 +136,8 @@ public class MainActivity extends AppCompatActivity {
     if (setNightTheme()) return;
 
     // to show drawer icon
-    Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+    ActionBar actionBar = getSupportActionBar();
+    if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
 
     // flavor specific methods
     mMainActivityFlavor = new MainActivityFlavor(this);
