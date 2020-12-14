@@ -102,6 +102,16 @@ public class MySettings {
     updateList(getString(key));
   }
 
+  private boolean mLowMemory = false;
+
+  public boolean isLowMemory() {
+    return mLowMemory;
+  }
+
+  synchronized void setLowMemory(boolean lowMemory) {
+    mLowMemory = lowMemory;
+  }
+
   int getDaemonUid() {
     return getIntPref(R.string.pref_main_daemon_uid_key);
   }

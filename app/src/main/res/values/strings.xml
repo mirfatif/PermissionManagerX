@@ -13,6 +13,9 @@
   <string name="day">%1$d Day</string>
   <string name="days">%1$d Days</string>
 
+  <!--App-->
+  <string name="device_low_memory">Device is getting critically low on memory</string>
+
   <!--MainActivity Navigation Drawer / menu items-->
   <string name="search_menu_item">Search</string>
   <string name="settings_menu_item">Settings</string>

@@ -1,6 +1,9 @@
 package com.mirfatif.permissionmanagerx;
 
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,6 +21,7 @@ public class PackageAdapter extends ListAdapter<Package, ItemViewHolder> {
 
   private final PkgClickListener mPkgClickListener;
   private final PkgLongClickListener mPkgLongClickListener;
+  private final PackageManager mPackageManager;
 
   // orange state color
   static final int ORANGE = 0xFFFFC107;
@@ -26,6 +30,7 @@ public class PackageAdapter extends ListAdapter<Package, ItemViewHolder> {
     super(new DiffUtilItemCallBack());
     mPkgClickListener = pkgClickListener;
     mPkgLongClickListener = pkgLongClickListener;
+    mPackageManager = App.getContext().getPackageManager();
   }
 
   // Override Adapter method
@@ -84,7 +89,16 @@ public class PackageAdapter extends ListAdapter<Package, ItemViewHolder> {
         referenceView.setBackgroundColor(Color.GREEN);
       }
 
-      iconView.setImageDrawable(pkg.getIcon());
+      Drawable icon = pkg.getIcon();
+      if (icon == null) {
+        try {
+          icon = mPackageManager.getApplicationIcon(pkg.getName());
+        } catch (NameNotFoundException e) {
+          e.printStackTrace();
+        }
+      }
+
+      iconView.setImageDrawable(icon);
       packageLabelView.setText(pkg.getLabel());
       packageNameView.setText(pkg.getName() + " (" + pkg.getUid() + ")");
 

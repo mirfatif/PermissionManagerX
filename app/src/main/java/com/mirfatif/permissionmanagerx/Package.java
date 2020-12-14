@@ -110,6 +110,10 @@ public class Package {
     return mIcon;
   }
 
+  public void releaseIcon() {
+    mIcon = null;
+  }
+
   int getUid() {
     return mUid;
   }

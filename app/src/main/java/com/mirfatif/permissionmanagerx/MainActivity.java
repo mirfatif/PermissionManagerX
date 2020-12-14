@@ -53,6 +53,8 @@ import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 
 public class MainActivity extends AppCompatActivity {
 
+  static final String TAG = "MainActivity";
+
   public static final String ACTION_SHOW_DRAWER = BuildConfig.APPLICATION_ID + ".SHOW_DRAWER";
   static final String ACTION_START_LOGGING = BuildConfig.APPLICATION_ID + ".START_LOGGING";
   static final String EXTRA_PKG_POSITION = BuildConfig.APPLICATION_ID + ".PKG_POSITION";
@@ -272,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
   private PkgClickListener getPkgClickListener() {
     return pkg -> {
       if (mMySettings.DEBUG)
-        Utils.debugLog("MainActivity", "PkgClickListener: Package received: " + pkg.getLabel());
+        Utils.debugLog(TAG, "PkgClickListener: Package received: " + pkg.getLabel());
       Intent intent = new Intent().setClass(App.getContext(), PackageActivity.class);
       intent.putExtra(EXTRA_PKG_POSITION, mPackageParser.getPackagePosition(pkg));
       startActivity(intent);
@@ -462,8 +464,7 @@ public class MainActivity extends AppCompatActivity {
   // required for navigation drawer tap to work
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    if (mMySettings.DEBUG)
-      Utils.debugLog("MainActivity", "onOptionsItemSelected(): " + item.getTitle());
+    if (mMySettings.DEBUG) Utils.debugLog(TAG, "onOptionsItemSelected(): " + item.getTitle());
     return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
   }
 
@@ -484,7 +485,7 @@ public class MainActivity extends AppCompatActivity {
 
   void updatePackagesList(boolean doRepeatUpdates) {
     if (mMySettings.DEBUG)
-      Utils.debugLog("MainActivity", "updatePackagesList: doRepeatUpdates: " + doRepeatUpdates);
+      Utils.debugLog(TAG, "updatePackagesList: doRepeatUpdates: " + doRepeatUpdates);
     mPackageParser.updatePackagesList(doRepeatUpdates);
   }
 
@@ -1113,7 +1114,7 @@ public class MainActivity extends AppCompatActivity {
 
   private void startLogging() {
     mMySettings.doLogging = null;
-    if (mMySettings.DEBUG) Utils.debugLog("Logging", "Start logging");
+    Utils.debugLog("Logging", "Start logging");
     String command = "logcat --pid " + Process.myPid();
 
     if (Utils.doLoggingFails(new String[] {command})) {

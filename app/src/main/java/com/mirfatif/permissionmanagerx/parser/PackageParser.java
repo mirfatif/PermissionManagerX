@@ -261,6 +261,17 @@ public class PackageParser {
           "Total time: " + (System.currentTimeMillis() - startTime) + "ms");
   }
 
+  public void releaseIcons() {
+    Utils.runInBg(
+        () -> {
+          for (Package pkg : mPackagesList) {
+            pkg.releaseIcon();
+          }
+          mPackageIconsList.clear();
+          System.gc();
+        });
+  }
+
   //////////////////////////////////////////////////////////////////
   /////////////////////////// PROGRESS /////////////////////////////
   //////////////////////////////////////////////////////////////////
@@ -344,6 +355,10 @@ public class PackageParser {
     if (mMySettings.DEBUG)
       Utils.debugLog("PackageParser", "isPkgUpdated(): building permissions list");
     List<Permission> permissionsList = getPermissionsList(packageInfo, pkg);
+
+    // Exclude packages with no manifest permissions and no AppOps (excluding extra)
+    if (isFilteredOutNoPermPkg(pkg)) return false;
+
     Boolean pkgIsReferenced = true;
     for (Permission perm : permissionsList) {
       if (perm.isReferenced() != null && !perm.isReferenced()) {
@@ -363,13 +378,10 @@ public class PackageParser {
 
     // icon loading is costly call
     Drawable icon = mPackageIconsList.get(packageInfo.packageName);
-    if (icon == null) {
+    if (!mMySettings.isLowMemory() && icon == null) {
       icon = appInfo.loadIcon(mPackageManager);
       mPackageIconsList.put(packageInfo.packageName, icon);
     }
-
-    // Exclude packages with no manifest permissions and no AppOps (excluding extra)
-    if (isFilteredOutNoPermPkg(pkg)) return false;
 
     // Update the package even if it's being filtered out due to permissions. It's because if this
     // method is being called from within PackageActivity, permissions list must be updated so that
