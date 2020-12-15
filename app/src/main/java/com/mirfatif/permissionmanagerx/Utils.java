@@ -9,7 +9,6 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Build.VERSION;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -25,6 +24,7 @@ import androidx.security.crypto.EncryptedSharedPreferences.PrefValueEncryptionSc
 import androidx.security.crypto.MasterKey;
 import androidx.security.crypto.MasterKey.KeyScheme;
 import com.mirfatif.privdaemon.PrivDaemon;
+import com.mirfatif.privdaemon.Util;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -36,10 +36,8 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.security.GeneralSecurityException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -328,11 +326,6 @@ public class Utils {
     }
   }
 
-  static String getCurrDateTime() {
-    return new SimpleDateFormat("dd-MMM-yy_HH-mm-ss", Locale.ENGLISH)
-        .format(System.currentTimeMillis());
-  }
-
   public static int getUserId() {
     return android.os.Process.myUid() / 100000;
   }
@@ -351,19 +344,14 @@ public class Utils {
     }
   }
 
-  static String getDeviceInfo() {
-    return "Android "
-        + VERSION.SDK_INT
-        + "\nBuild type: "
-        + Build.TYPE
-        + "\nDevice: "
-        + Build.DEVICE
-        + "\nManufacturer: "
-        + Build.MANUFACTURER
-        + "\nModel: "
-        + Build.MODEL
-        + "\nProduct: "
-        + Build.PRODUCT;
+  static File createCrashLogDir() {
+    File logDir = new File(App.getContext().getExternalFilesDir(null), "crash_logs");
+    if (logDir.exists() || logDir.mkdirs()) {
+      return logDir;
+    } else {
+      Log.e("getCrashLogDir", "Failed to create " + logDir);
+    }
+    return null;
   }
 
   //////////////////////////////////////////////////////////////////
@@ -372,7 +360,7 @@ public class Utils {
 
   static boolean doLoggingFails(String[] command) {
     try {
-      writeToLogFile(getDeviceInfo());
+      writeToLogFile(Util.getDeviceInfo());
     } catch (IOException e) {
       e.printStackTrace();
     }

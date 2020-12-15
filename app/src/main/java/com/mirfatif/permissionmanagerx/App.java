@@ -11,6 +11,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
+import com.mirfatif.privdaemon.Util;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -25,10 +26,6 @@ public class App extends Application {
   private Thread.UncaughtExceptionHandler defaultExceptionHandler;
 
   private MySettings mMySettings;
-
-  static final String crashLogDir = "crash_logs";
-  static final String logFilePrefix = "PMX_";
-  static final String logFileSuffix = ".log";
 
   @Override
   public void onCreate() {
@@ -48,18 +45,15 @@ public class App extends Application {
             }
           }
 
-          File logDir = new File(getExternalFilesDir(null), crashLogDir);
-          if (logDir.exists() || logDir.mkdirs()) {
-            String logFile = logFilePrefix + Utils.getCurrDateTime() + logFileSuffix;
+          File logDir = Utils.createCrashLogDir();
+          if (logDir != null) {
             try {
-              PrintWriter writer = new PrintWriter(new File(logDir, logFile));
-              writer.println(Utils.getDeviceInfo());
+              PrintWriter writer = new PrintWriter(Util.getCrashLogFile(logDir.toString(), false));
+              writer.println(Util.getDeviceInfo());
               e.printStackTrace(writer);
               writer.close();
             } catch (FileNotFoundException ignored) {
             }
-          } else {
-            Log.e(TAG, "Failed to create " + logDir);
           }
 
           defaultExceptionHandler.uncaughtException(t, e);

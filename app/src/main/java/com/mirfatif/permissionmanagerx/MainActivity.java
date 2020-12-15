@@ -42,6 +42,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.privdaemon.PrivDaemon;
+import com.mirfatif.privdaemon.Util;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -543,8 +544,8 @@ public class MainActivity extends AppCompatActivity {
     if (!mMySettings.mAskToSendCrashReport) return false;
     mMySettings.mAskToSendCrashReport = false;
 
-    File logDir = new File(getExternalFilesDir(null), App.crashLogDir);
-    if (!logDir.exists()) return false;
+    File logDir = Utils.createCrashLogDir();
+    if (logDir == null) return false;
     File[] logFiles = logDir.listFiles();
     if (logFiles == null || logFiles.length == 0) return false;
 
@@ -555,8 +556,13 @@ public class MainActivity extends AppCompatActivity {
     long deleteThreshold = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(30);
     for (File logFile : logFiles) {
       if (!logFile.isFile()) continue;
-      if (!logFile.getName().startsWith(App.logFilePrefix)) continue;
-      if (!logFile.getName().endsWith(App.logFileSuffix)) continue;
+      if (!logFile.getName().startsWith(Util.LOG_FILE_PREFIX)
+          && !logFile.getName().startsWith(Util.LOG_FILE_DAEMON_PREFIX)) {
+        continue;
+      }
+      if (!logFile.getName().endsWith(Util.LOG_FILE_SUFFIX)) {
+        continue;
+      }
       if (logFile.lastModified() > crashReportTs
           && (fileToSend == null || logFile.lastModified() > fileToSend.lastModified())) {
         fileToDelete = fileToSend;
@@ -580,10 +586,17 @@ public class MainActivity extends AppCompatActivity {
     String authority = "com.mirfatif.permissionmanagerx.fileprovider";
     Uri logFileUri = FileProvider.getUriForFile(this, authority, fileToSend);
 
+    String message;
+    if (fileToSend.getName().startsWith(Util.LOG_FILE_PREFIX)) {
+      message = getString(R.string.ask_to_report_app_crash, fileToSend.getName());
+    } else {
+      message = getString(R.string.ask_to_report_daemon_crash, fileToSend.getName());
+    }
+
     Builder builder =
         new Builder(this)
             .setTitle(R.string.crash_report)
-            .setMessage(getString(R.string.ask_to_report_crash, fileToSend.getName()))
+            .setMessage(message)
             .setPositiveButton(
                 android.R.string.ok,
                 (dialog, which) -> {

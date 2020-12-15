@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.preference.PreferenceManager;
 import com.mirfatif.permissionmanagerx.permsdb.PermissionEntity;
+import com.mirfatif.privdaemon.Util;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -109,7 +110,7 @@ public class BackupRestore {
     if (isBackup) {
       mActivity
           .registerForActivityResult(new ActivityResultContracts.CreateDocument(), callback)
-          .launch("PermissionManagerX_" + Utils.getCurrDateTime() + ".xml");
+          .launch("PermissionManagerX_" + Util.getCurrDateTime() + ".xml");
     } else {
       mActivity
           .registerForActivityResult(new ActivityResultContracts.OpenDocument(), callback)

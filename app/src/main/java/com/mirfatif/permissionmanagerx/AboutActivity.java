@@ -12,6 +12,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.privdaemon.PrivDaemon;
+import com.mirfatif.privdaemon.Util;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.OutputStream;
@@ -70,7 +71,7 @@ public class AboutActivity extends AppCompatActivity {
     Toast.makeText(App.getContext(), R.string.select_log_file, Toast.LENGTH_LONG).show();
     ActivityResultCallback<Uri> callback = uri -> Utils.runInBg(() -> doLoggingInBg(uri));
     registerForActivityResult(new ActivityResultContracts.CreateDocument(), callback)
-        .launch("PermissionManagerX_" + Utils.getCurrDateTime() + ".log");
+        .launch("PermissionManagerX_" + Util.getCurrDateTime() + ".log");
   }
 
   private void doLoggingInBg(Uri uri) {

@@ -58,6 +58,8 @@ public class PrivDaemonHandler {
     String params =
         mySettings.DEBUG
             + " "
+            + Utils.createCrashLogDir()
+            + " "
             + daemonUid
             + " "
             + userId

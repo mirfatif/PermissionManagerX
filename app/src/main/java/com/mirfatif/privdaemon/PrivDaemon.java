@@ -13,12 +13,15 @@ import android.os.ServiceManager;
 import android.util.Log;
 import com.android.internal.app.IAppOpsService;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Field;
 import java.net.Inet4Address;
 import java.net.ServerSocket;
@@ -392,6 +395,11 @@ public class PrivDaemon {
 
   public static void main(String[] arguments) {
 
+    String logDir = arguments[1];
+    if (!logDir.equals("null")) {
+      setDefaultExceptionHandler(logDir);
+    }
+
     try (BufferedReader reader = new BufferedReader(new FileReader("/proc/self/cmdline"))) {
       MY_NAME = reader.readLine().split("\0")[0];
     } catch (IOException e) {
@@ -540,5 +548,22 @@ public class PrivDaemon {
       e.printStackTrace();
       Log.e(MY_NAME, "Read error, shutting down");
     }
+  }
+
+  private static UncaughtExceptionHandler defaultExceptionHandler;
+
+  private static void setDefaultExceptionHandler(String logDir) {
+    defaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+    Thread.setDefaultUncaughtExceptionHandler(
+        (t, e) -> {
+          try {
+            PrintWriter writer = new PrintWriter(Util.getCrashLogFile(logDir, true));
+            writer.println(Util.getDeviceInfo());
+            e.printStackTrace(writer);
+            writer.close();
+          } catch (FileNotFoundException ignored) {
+          }
+          defaultExceptionHandler.uncaughtException(t, e);
+        });
   }
 }
