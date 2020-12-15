@@ -53,6 +53,9 @@ Credits and thanks to the developers of:
 * https://github.com/square/leakcanary
 
 ## License [![License](https://img.shields.io/github/license/mirfatif/PermissionManagerX?label="License")](https://github.com/mirfatif/PermissionManagerX/blob/master/LICENSE)
+
+You **CANNOT** use and distribute the app icon in anyway, except for **Permission Manager X** app.
+
     Permission Manager X is free software: you can redistribute it and/or modify
     it under the terms of the Affero GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
