@@ -480,6 +480,7 @@ public class BackupRestore {
       mMySettings.populateExtraAppOpsList(false);
       mActivity.mPackageParser.buildPermRefList();
       mActivity.updatePackagesList(false);
+      mActivity.mMainActivityFlavor.onRestoreDone();
     }
 
     String message = mActivity.getString(R.string.backup_restore_process_entries, prefs, perms);

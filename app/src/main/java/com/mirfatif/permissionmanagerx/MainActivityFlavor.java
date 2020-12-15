@@ -50,4 +50,6 @@ class MainActivityFlavor {
   void openSettings() {}
 
   void onPackagesUpdated() {}
+
+  void onRestoreDone() {}
 }

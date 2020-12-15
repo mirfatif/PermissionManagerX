@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
   private TextView mProgressNowView;
   private TextView mProgressMaxView;
   private PackageAdapter mPackageAdapter;
-  private MainActivityFlavor mMainActivityFlavor;
+  MainActivityFlavor mMainActivityFlavor;
 
   private DrawerLayout mDrawerLayout;
   private ActionBarDrawerToggle mDrawerToggle;
