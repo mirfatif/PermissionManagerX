@@ -19,10 +19,10 @@
   <integer name="pref_main_daemon_uid_default">1000</integer>
   <string name="pref_main_app_launch_count_enc_key">pref_main_app_launch_count_enc</string>
   <integer name="pref_main_app_launch_count_enc_default">0</integer>
-  <string name="pref_main_deep_search_key">pref_main_deep_search</string>
-  <bool name="pref_main_deep_search_default">false</bool>
-  <string name="pref_main_case_sensitive_search_key">pref_main_case_sensitive_search</string>
-  <bool name="pref_main_case_sensitive_search_default">false</bool>
+  <string name="pref_main_deep_search_enc_key">pref_main_deep_search_enc</string>
+  <bool name="pref_main_deep_search_enc_default">false</bool>
+  <string name="pref_main_case_sensitive_search_enc_key">pref_main_case_sensitive_search_enc</string>
+  <bool name="pref_main_case_sensitive_search_enc_default">false</bool>
   <string name="pref_main_dark_theme_key">pref_main_dark_theme</string>
   <bool name="pref_main_dark_theme_default">true</bool>
   <string name="pref_main_use_hidden_apis_enc_key">pref_main_use_hidden_apis_enc</string>

@@ -177,19 +177,19 @@ public class MySettings {
   }
 
   public boolean isDeepSearchEnabled() {
-    return getBoolPref(R.string.pref_main_deep_search_key);
+    return getBoolPref(R.string.pref_main_deep_search_enc_key);
   }
 
   void setDeepSearchEnabled(boolean enabled) {
-    savePref(R.string.pref_main_deep_search_key, enabled);
+    savePref(R.string.pref_main_deep_search_enc_key, enabled);
   }
 
   boolean isCaseSensitiveSearch() {
-    return getBoolPref(R.string.pref_main_case_sensitive_search_key);
+    return getBoolPref(R.string.pref_main_case_sensitive_search_enc_key);
   }
 
   void setCaseSensitiveSearch(boolean isSensitive) {
-    savePref(R.string.pref_main_case_sensitive_search_key, isSensitive);
+    savePref(R.string.pref_main_case_sensitive_search_enc_key, isSensitive);
   }
 
   boolean isRootGranted() {
