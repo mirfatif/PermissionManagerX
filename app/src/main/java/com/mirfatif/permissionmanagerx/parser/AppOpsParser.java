@@ -2,8 +2,8 @@ package com.mirfatif.permissionmanagerx.parser;
 
 import android.app.AppOpsManager;
 import android.content.Context;
+import android.content.pm.IPackageManager;
 import android.content.pm.PackageManager;
-import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.util.Log;
@@ -26,25 +26,37 @@ public class AppOpsParser {
   private final PrivDaemonHandler mPrivDaemonHandler;
   private final PackageManager mPackageManager;
 
+  // IPackageManager returns bigger permissions list than PackageManager
+  private IPackageManager mIPackageManager;
+
+  // AppOpsManager doesn't have getUidOps()
+  private IAppOpsService mAppOpsService;
+
   AppOpsParser(PackageManager packageManager) {
     mPackageManager = packageManager;
     mMySettings = MySettings.getInstance();
     mPrivDaemonHandler = PrivDaemonHandler.getInstance();
-  }
 
-  // AppOpsManager doesn't have getUidOps()
-  private IAppOpsService mAppOpsService;
+    // asInterface() and getService() hidden APIs
+    try {
+      mAppOpsService =
+          IAppOpsService.Stub.asInterface(ServiceManager.getService(Context.APP_OPS_SERVICE));
+    } catch (NoSuchMethodError e) {
+      Utils.hiddenAPIsNotWorking(TAG, e.toString());
+    }
+    try {
+      // asInterface() and getService() hidden APIs
+      mIPackageManager = IPackageManager.Stub.asInterface(ServiceManager.getService("package"));
+    } catch (NoSuchMethodError e) {
+      // We can use simple PackageManager
+      Log.e(TAG, e.toString());
+    }
+  }
 
   List<MyPackageOps> getOpsForPackage(int uid, String packageName, Integer op) {
     String _op = op == null ? "null" : String.valueOf(op);
     if (mMySettings.canUseHiddenAPIs()) {
       try {
-        if (mAppOpsService == null) {
-          // getService() hidden API
-          IBinder iBinderAppOps = ServiceManager.getService(Context.APP_OPS_SERVICE);
-          // asInterface() hidden API
-          mAppOpsService = IAppOpsService.Stub.asInterface(iBinderAppOps);
-        }
         return PrivDaemon.getMyPackageOpsList(mAppOpsService, uid, packageName, _op);
       } catch (RemoteException e) {
         Log.e(TAG, e.toString());
@@ -79,7 +91,9 @@ public class AppOpsParser {
   }
 
   List<Integer> buildOpToDefaultModeList() {
-    if (mMySettings.DEBUG) Utils.debugLog("PackageParser", "buildOpToDefaultModeList() called");
+    if (mMySettings.DEBUG) {
+      Utils.debugLog("PackageParser", "buildOpToDefaultModeList() called");
+    }
     List<Integer> opToDefModeList = new ArrayList<>();
     if (mMySettings.canUseHiddenAPIs()) {
       try {
@@ -109,7 +123,9 @@ public class AppOpsParser {
   }
 
   List<Integer> buildOpToSwitchList() {
-    if (mMySettings.DEBUG) Utils.debugLog("PackageParser", "buildOpToSwitchList() called");
+    if (mMySettings.DEBUG) {
+      Utils.debugLog("PackageParser", "buildOpToSwitchList() called");
+    }
     List<Integer> opToSwitchList = new ArrayList<>();
     if (mMySettings.canUseHiddenAPIs()) {
       try {
@@ -139,11 +155,20 @@ public class AppOpsParser {
   }
 
   Map<String, Integer> buildPermissionToOpCodeMap() {
-    if (mMySettings.DEBUG) Utils.debugLog("PackageParser", "buildPermissionToOpCodeMap() called");
+    if (mMySettings.DEBUG) {
+      Utils.debugLog("PackageParser", "buildPermissionToOpCodeMap() called");
+    }
     Map<String, Integer> permToOpCodeMap = new HashMap<>();
-    if (mMySettings.canUseHiddenAPIs()) {
+    if (mMySettings.canUseHiddenAPIs()
+        && (mIPackageManager != null || !mMySettings.mPrivDaemonAlive)) {
       try {
-        for (String item : PrivDaemon.buildPermToOpCodeList(mPackageManager, null)) {
+        List<String> mapping;
+        if (mIPackageManager == null) {
+          mapping = PrivDaemon.buildPermToOpCodeList(mPackageManager, null);
+        } else {
+          mapping = PrivDaemon.buildPermToOpCodeList(null, mIPackageManager);
+        }
+        for (String item : mapping) {
           String[] keyValue = item.split(":");
           permToOpCodeMap.put(keyValue[0], Integer.parseInt(keyValue[1]));
         }
@@ -170,7 +195,9 @@ public class AppOpsParser {
   }
 
   List<String> buildAppOpsList() {
-    if (mMySettings.DEBUG) Utils.debugLog("PackageParser", "buildAppOpsList() called");
+    if (mMySettings.DEBUG) {
+      Utils.debugLog("PackageParser", "buildAppOpsList() called");
+    }
     if (mMySettings.excludeAppOpsPerms() || !mMySettings.canReadAppOps()) return null;
     List<String> appOpsList = new ArrayList<>();
 
@@ -202,7 +229,9 @@ public class AppOpsParser {
   }
 
   List<String> buildAppOpsModes() {
-    if (mMySettings.DEBUG) Utils.debugLog("PackageParser", "buildAppOpsModes() called");
+    if (mMySettings.DEBUG) {
+      Utils.debugLog("PackageParser", "buildAppOpsModes() called");
+    }
     if (mMySettings.excludeAppOpsPerms() || !mMySettings.canReadAppOps()) return null;
     List<String> appOpsModes = new ArrayList<>();
 
