@@ -1,3 +1,4 @@
-include ':app'
+include ':priv_daemon'
 include ':AdbLib'
+include ':app'
 rootProject.name = "Permission Manager X"

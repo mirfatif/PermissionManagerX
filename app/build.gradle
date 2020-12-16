@@ -29,7 +29,6 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation project(path: ':AdbLib')
 
     implementation 'androidx.appcompat:appcompat:1.3.0-alpha02'
@@ -52,26 +51,48 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.5'
 }
 
+task buildDaemon() {
+    def isDebug = false
+    for (String taskName : gradle.startParameter.taskNames) {
+        if (taskName.contains("Debug")) {
+            isDebug = true
+            break
+        }
+    }
+    def src = "release/minifyReleaseWithR8"
+    if (isDebug) {
+        src = "debug/mergeProjectDexDebug"
+        dependsOn(':priv_daemon:assembleDebug')
+        mustRunAfter(':priv_daemon:assembleDebug')
+    } else {
+        dependsOn(':priv_daemon:assembleRelease')
+        mustRunAfter(':priv_daemon:assembleRelease')
+    }
 
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-def sdkDir = properties.getProperty('sdk.dir')
-def ndkDir = properties.getProperty('ndk.dir')
-
-task buildDaemon(type: Exec) {
-    environment 'ANDROID_SDK', sdkDir
-    workingDir "${buildDir}/../.."
-    commandLine './build_daemon.sh'
     doLast {
-        if (execResult.getExitValue() != 0) {
-            println "buildDaemon failed!"
+        def dexFile = 'daemon.dex'
+        def dstDir = new File(rootDir, "app/src/main/assets/")
+        def dstFile = new File(dstDir, dexFile)
+        delete dstFile
+        copy {
+            from new File(rootDir, "priv_daemon/build/intermediates/dex/" + src + "/classes.dex")
+            into dstDir
+            rename { fileName -> dexFile }
+        }
+        if (!dstFile.exists()) {
+            throw new GradleException("buildDaemon failed!\n" + dstFile.getPath() + " does not exist")
         }
     }
 }
+preBuild.dependsOn(buildDaemon)
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def ndkDir = properties.getProperty('ndk.dir')
 
 task buildSetPriv(type: Exec) {
     environment 'ANDROID_NDK', ndkDir
-    workingDir "${buildDir}/../.."
+    workingDir "$rootDir"
     commandLine './build_set_priv.sh'
     doLast {
         if (execResult.getExitValue() != 0) {
@@ -79,12 +100,7 @@ task buildSetPriv(type: Exec) {
         }
     }
 }
-
-preBuild.dependsOn(buildDaemon)
-preBuild.mustRunAfter(buildDaemon)
 preBuild.dependsOn(buildSetPriv)
-preBuild.mustRunAfter(buildSetPriv)
 
 apply plugin: 'com.github.sherter.google-java-format'
 preBuild.dependsOn(verifyGoogleJavaFormat)
-preBuild.mustRunAfter(verifyGoogleJavaFormat)

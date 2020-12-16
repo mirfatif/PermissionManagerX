@@ -1,0 +1,35 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "30.0.2"
+
+    defaultConfig {
+        applicationId "com.mirfatif.privdaemon"
+        minSdkVersion 24
+        targetSdkVersion 29
+        versionCode 100
+        versionName "1.00"
+    }
+    buildFeatures {
+        buildConfig = false
+    }
+    buildTypes {
+        release {
+            multiDexEnabled false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    dependenciesInfo {
+        includeInApk false
+    }
+}
+
+apply plugin: 'com.github.sherter.google-java-format'
+preBuild.dependsOn(verifyGoogleJavaFormat)
