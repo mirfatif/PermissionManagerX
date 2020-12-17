@@ -10,6 +10,8 @@ import androidx.preference.MultiSelectListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 
 // OnSharedPreferenceChangeListener must be global to avoid GC
@@ -154,88 +156,106 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
 
     // Lists in Preferences must have been updated before starting settings fragment, otherwise
     // MultiSelectPreferenceList shows unchecked items.
-    // Or handle them manually as below
+    // Or handle them manually as below.
 
-    // apps
-    CharSequence[] entries = mMySettings.getExcludedAppsLabels();
-    CharSequence[] entryValues = mMySettings.getExcludedAppsNames();
-    int count = mMySettings.getExcludedAppsCount();
+    // Apps
+    Utils.runInBg(
+        () -> {
+          Set<String> excludedApps = mMySettings.getExcludedApps();
+          Utils.runInFg(() -> updateExcludedAppsView(excludedApps));
+        });
 
-    excludedAppsView.setEntries(entries); // item names in list
-    excludedAppsView.setEntryValues(entryValues); // corresponding values of shown items
-    excludedAppsView.setValues(mMySettings.getExcludedAppsSet()); // checked entry values
+    // Permissions
+    Utils.runInBg(
+        () -> {
+          Set<String> excludedPerms = mMySettings.getExcludedPerms();
+          Utils.runInFg(() -> updateExcludedPermsView(excludedPerms));
+        });
 
-    // disable if no excluded apps
-    if (count == 0) {
+    // Extra AppOps
+    Utils.runInBg(
+        () -> {
+          // Need to be on background thread.
+          List<String> appOpsList = mMySettings.getAppOpsList();
+          appOpsList.sort(Comparator.comparing(String::toUpperCase));
+          Set<String> extraAppOps = mMySettings.getExtraAppOps();
+
+          Utils.runInFg(
+              () -> updateExtraAppOpsView(appOpsList.toArray(new String[0]), extraAppOps));
+        });
+  }
+
+  private void updateExcludedAppsView(Set<String> excludedAppsSet) {
+    CharSequence[] excludedApps = excludedAppsSet.toArray(new String[0]);
+    int appCount = mMySettings.getExcludedAppsCount();
+
+    excludedAppsView.setEntries(mMySettings.getExcludedAppsLabels());
+    excludedAppsView.setEntryValues(excludedApps);
+    excludedAppsView.setValues(excludedAppsSet);
+
+    // Disable if no excluded apps
+    if (appCount == 0) {
       excludedAppsView.setEnabled(false);
       excludedAppsView.setSummary(R.string.excluded_apps_summary);
     } else {
       excludedAppsView.setEnabled(true);
-      CharSequence message = entryValues[0];
-      if (count == 2) {
+      CharSequence message = excludedApps[0];
+      if (appCount == 2) {
         message += " " + getString(R.string.and_other_count, 1);
-      } else if (count > 2) {
-        message += " " + getString(R.string.and_others_count, count - 1);
+      } else if (appCount > 2) {
+        message += " " + getString(R.string.and_others_count, appCount - 1);
       }
       excludedAppsView.setSummary(message);
     }
+  }
 
-    // permissions
-    entries = mMySettings.getExcludedPermsNames();
-    count = mMySettings.getExcludedPermsCount();
-    excludedPermsView.setEntries(entries);
-    excludedPermsView.setEntryValues(entries);
+  private void updateExcludedPermsView(Set<String> excludedPermsSet) {
+    CharSequence[] excludedPerms = excludedPermsSet.toArray(new String[0]);
+    int permCount = mMySettings.getExcludedPermsCount();
 
-    // disable if no excluded permissions
-    if (count == 0) {
+    excludedPermsView.setEntries(excludedPerms);
+    excludedPermsView.setEntryValues(excludedPerms);
+    excludedPermsView.setValues(excludedPermsSet);
+
+    // Disable if no excluded permissions
+    if (permCount == 0) {
       excludedPermsView.setEnabled(false);
       excludedPermsView.setSummary(R.string.excluded_perms_summary);
     } else {
       excludedPermsView.setEnabled(true);
-      CharSequence message = entries[0];
-      if (count == 2) {
+      CharSequence message = excludedPerms[0];
+      if (permCount == 2) {
         message += " " + getString(R.string.and_other_count, 1);
-      } else if (count > 2) {
-        message += " " + getString(R.string.and_others_count, count - 1);
+      } else if (permCount > 2) {
+        message += " " + getString(R.string.and_others_count, permCount - 1);
       }
       excludedPermsView.setSummary(message);
     }
-
-    // extra AppOps
-    Utils.runInBg(
-        () -> {
-          Set<String> values = mMySettings.getExtraAppOps();
-
-          // needs to be on background thread
-          CharSequence[] _entries = mMySettings.getAppOpsListSorted();
-
-          Utils.runInFg(() -> updateExtraAppOpsView(_entries, values));
-        });
   }
 
-  private void updateExtraAppOpsView(CharSequence[] entries, Set<String> values) {
-    // handle MySettings.excludeAppOpsPerms() case
-    if (entries.length == 0) {
+  private void updateExtraAppOpsView(CharSequence[] appOpsList, Set<String> extraAppOps) {
+    // Handle MySettings.excludeAppOpsPerms() case.
+    if (appOpsList.length == 0) {
       extraAppOpsView.setEnabled(false);
     } else {
-      extraAppOpsView.setEntries(entries); // item names in list
-      extraAppOpsView.setEntryValues(entries); // corresponding values of shown items
+      extraAppOpsView.setEntries(appOpsList); // Item names in list
+      extraAppOpsView.setEntryValues(appOpsList); // Corresponding values of shown items
 
-      /** do not set this accidentally if {@link MySettings#getExtraAppOps()} returns empty list */
-      extraAppOpsView.setValues(values); // checked entry values
+      /** Do not set this accidentally if {@link MySettings#getExtraAppOps()} returns empty list */
+      extraAppOpsView.setValues(extraAppOps); // Checked entry values
     }
 
     int count = mMySettings.getExtraAppOpsCount();
 
-    // set summary
+    // Set summary
     if (count == 0 || !extraAppOpsView.isEnabled()) {
       String message = getString(R.string.extra_app_ops_summary);
       if (extraAppOpsView.isEnabled()) {
-        message += " " + getString(R.string.extra_app_ops_summary_count, entries.length);
+        message += " " + getString(R.string.extra_app_ops_summary_count, appOpsList.length);
       }
       extraAppOpsView.setSummary(message);
     } else {
-      String message = (String) values.toArray()[0];
+      String message = (String) extraAppOps.toArray()[0];
       if (count == 2) {
         // Without providing context, getString() crashes with: "Fragment ... not attached to a
         // context" on rotation. getActivity() may also return null.

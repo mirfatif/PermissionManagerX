@@ -215,7 +215,7 @@ public class PackageActivity extends AppCompatActivity {
           (dialogInterface, i) ->
               Utils.runInBg(
                   () -> {
-                    mMySettings.removePermFromExcludedPerms(permission.getName());
+                    mMySettings.addPermToExcludedPerms(permission.getName());
                     updatePackage();
 
                     // other packages are also affected

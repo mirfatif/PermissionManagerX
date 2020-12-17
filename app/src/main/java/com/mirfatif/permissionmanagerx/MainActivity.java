@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
           (dialogInterface, i) ->
               Utils.runInBg(
                   () -> {
-                    mMySettings.removePkgFromExcludedApps(pkg.getName());
+                    mMySettings.addPkgToExcludedApps(pkg.getName());
                     mPackageParser.removePackage(pkg);
                   }));
 
