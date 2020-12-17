@@ -379,7 +379,7 @@ public class PackageParser {
 
     // icon loading is costly call
     Drawable icon = mPackageIconsList.get(packageInfo.packageName);
-    if (!mMySettings.isLowMemory() && icon == null) {
+    if (mMySettings.isNotLowMemory() && icon == null) {
       icon = appInfo.loadIcon(mPackageManager);
       mPackageIconsList.put(packageInfo.packageName, icon);
     }

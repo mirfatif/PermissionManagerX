@@ -93,9 +93,11 @@ public class App extends Application {
             }
 
             if (isCritical) {
-              mMySettings.setLowMemory(true);
+              if (mMySettings.isNotLowMemory()) {
+                mMySettings.setLowMemory(true);
+                Toast.makeText(App.this, R.string.device_low_memory, Toast.LENGTH_LONG).show();
+              }
               PackageParser.getInstance().releaseIcons();
-              Toast.makeText(App.this, R.string.device_low_memory, Toast.LENGTH_LONG).show();
             }
             if (mMySettings.DEBUG) {
               Util.debugLog(TAG, "onTrimMemory level: " + memLevel);

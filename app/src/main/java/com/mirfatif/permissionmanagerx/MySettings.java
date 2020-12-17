@@ -105,8 +105,8 @@ public class MySettings {
 
   private boolean mLowMemory = false;
 
-  public boolean isLowMemory() {
-    return mLowMemory;
+  public boolean isNotLowMemory() {
+    return !mLowMemory;
   }
 
   synchronized void setLowMemory(boolean lowMemory) {
