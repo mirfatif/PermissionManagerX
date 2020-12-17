@@ -354,6 +354,12 @@ public class Utils {
     return null;
   }
 
+  // Always use primary user's directory to access dex, scripts and log files.
+  // ADBD (and hence started daemon) cannot access secondary profiles' private shared directories.
+  static String getOwnerFilePath(File file) {
+    return file.toString().replace("/" + getUserId() + "/", "/0/");
+  }
+
   //////////////////////////////////////////////////////////////////
   ///////////////////////////// LOGGING ////////////////////////////
   //////////////////////////////////////////////////////////////////

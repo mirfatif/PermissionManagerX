@@ -49,24 +49,21 @@ public class PrivDaemonHandler {
       }
     }
 
-    // Always use primary user's directory to access dex file.
-    // ADBD cannot access secondary profiles' private shared directories.
-    String ownerDexFile = dexFile.toString().replace("/" + userId + "/", "/0/");
-    String ownerScriptFile = scriptFile.toString().replace("/" + userId + "/", "/0/");
-
     int daemonUid = mySettings.getDaemonUid();
     File binDir = new File(App.getContext().getFilesDir(), "bin");
+
+    File logFile = Utils.createCrashLogDir();
 
     String params =
         mySettings.DEBUG
             + " "
-            + Utils.createCrashLogDir()
+            + (logFile == null ? "null" : Utils.getOwnerFilePath(logFile))
             + " "
             + daemonUid
             + " "
             + userId
             + " "
-            + ownerDexFile
+            + Utils.getOwnerFilePath(dexFile)
             + " "
             + DAEMON_PACKAGE_NAME
             + " "
@@ -117,7 +114,7 @@ public class PrivDaemonHandler {
       return false;
     }
 
-    String command = "exec sh " + ownerScriptFile;
+    String command = "exec sh " + Utils.getOwnerFilePath(scriptFile);
 
     Log.i(TAG, "Sending command to shell: " + command);
     cmdWriter.println(command);

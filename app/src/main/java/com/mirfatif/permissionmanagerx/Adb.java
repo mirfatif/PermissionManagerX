@@ -54,19 +54,14 @@ class Adb {
       adbConnection.connect();
 
       String runScript = "run.sh";
-      int userId = Utils.getUserId();
       File runScriptPath = new File(App.getContext().getExternalFilesDir(null), runScript);
-      if (userId == 0 && Utils.extractionFails(runScript, runScriptPath)) {
+      if (Utils.getUserId() == 0 && Utils.extractionFails(runScript, runScriptPath)) {
         closeQuietly();
         throw new IOException("Extraction of run.sh fails");
       }
 
-      // ADBD cannot access secondary profiles' private shared directories
-      String ownerRunScriptPath = runScriptPath.toString();
-      ownerRunScriptPath = ownerRunScriptPath.replace("/" + userId + "/", "/0/");
-
       // if command is empty, while loop in shell script reads commands from stdIn
-      String cmd = "exec sh " + ownerRunScriptPath + " " + command;
+      String cmd = "exec sh " + Utils.getOwnerFilePath(runScriptPath) + " " + command;
       adbStream = adbConnection.open("shell:" + cmd);
 
     } catch (NoSuchAlgorithmException | IOException | InterruptedException e) {
