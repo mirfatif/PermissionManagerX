@@ -23,8 +23,9 @@ import com.mirfatif.permissionmanagerx.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.permsdb.PermissionEntity;
-import com.mirfatif.privdaemon.MyPackageOps;
-import com.mirfatif.privdaemon.PrivDaemon;
+import com.mirfatif.privtasks.Commands;
+import com.mirfatif.privtasks.MyPackageOps;
+import com.mirfatif.privtasks.Util;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -149,7 +150,7 @@ public class PackageParser {
 
   public void updatePackagesList(boolean doRepeatUpdates) {
     if (mMySettings.DEBUG)
-      Utils.debugLog("updatePackagesList", "doRepeatUpdates: " + doRepeatUpdates);
+      Util.debugLog("updatePackagesList", "doRepeatUpdates: " + doRepeatUpdates);
     long myId = mUpdatePackageListRefId = System.nanoTime(); // to handle concurrent calls
 
     /**
@@ -159,7 +160,7 @@ public class PackageParser {
      * new call comes.
      */
     if (updatePackagesFuture != null && !updatePackagesFuture.isDone()) {
-      if (mMySettings.DEBUG) Utils.debugLog("updatePackagesList", "Cancelling previous call");
+      if (mMySettings.DEBUG) Util.debugLog("updatePackagesList", "Cancelling previous call");
       updatePackagesFuture.cancel(false);
     }
     updatePackagesFuture =
@@ -184,7 +185,7 @@ public class PackageParser {
 
     // Don't trouble Android on every call.
     if (System.currentTimeMillis() - lastPackageManagerCall > 5000) {
-      if (mMySettings.DEBUG) Utils.debugLog("updatePackagesListInBg", "Updating packages list");
+      if (mMySettings.DEBUG) Util.debugLog("updatePackagesListInBg", "Updating packages list");
       setProgress(CREATE_PACKAGES_LIST, true, false);
 
       packageInfoList =
@@ -221,7 +222,7 @@ public class PackageParser {
     }
 
     if (mMySettings.DEBUG)
-      Utils.debugLog("updatePackagesListInBg", "Total packages count: " + packageInfoList.size());
+      Util.debugLog("updatePackagesListInBg", "Total packages count: " + packageInfoList.size());
     // set progress bar scale ASAP
     setProgress(packageInfoList.size(), true, false);
 
@@ -232,14 +233,14 @@ public class PackageParser {
       // handle concurrent calls
       if (myId != mUpdatePackageListRefId) {
         if (mMySettings.DEBUG)
-          Utils.debugLog("updatePackagesListInBg", "Breaking loop, new call received");
+          Util.debugLog("updatePackagesListInBg", "Breaking loop, new call received");
         return;
       }
 
       setProgress(i, false, false);
       PackageInfo packageInfo = packageInfoList.get(i);
       if (mMySettings.DEBUG)
-        Utils.debugLog("updatePackagesListInBg", "Updating package: " + packageInfo.packageName);
+        Util.debugLog("updatePackagesListInBg", "Updating package: " + packageInfo.packageName);
 
       Package pkg = new Package();
       if (isPkgUpdated(packageInfo, pkg)) {
@@ -256,7 +257,7 @@ public class PackageParser {
     setProgress(packageInfoList.size(), false, true);
 
     if (mMySettings.DEBUG)
-      Utils.debugLog(
+      Util.debugLog(
           "updatePackagesListInBg",
           "Total time: " + (System.currentTimeMillis() - startTime) + "ms");
   }
@@ -279,7 +280,7 @@ public class PackageParser {
   private long mLastProgressTimeStamp = 0;
 
   private void setProgress(int value, boolean isMax, boolean isFinal) {
-    if (mMySettings.DEBUG) Utils.debugLog("setProgress", "Value: " + value + ", isMax: " + isMax);
+    if (mMySettings.DEBUG) Util.debugLog("setProgress", "Value: " + value + ", isMax: " + isMax);
 
     if (isMax) {
       Utils.runInFg(() -> mProgressMax.setValue(value));
@@ -353,7 +354,7 @@ public class PackageParser {
     if (isFilteredOutNoIconPkg(appInfo.icon == 0)) return false;
 
     if (mMySettings.DEBUG)
-      Utils.debugLog("PackageParser", "isPkgUpdated(): building permissions list");
+      Util.debugLog("PackageParser", "isPkgUpdated(): building permissions list");
     List<Permission> permissionsList = getPermissionsList(packageInfo, pkg);
 
     // Exclude packages with no manifest permissions and no AppOps (excluding extra)
@@ -396,7 +397,7 @@ public class PackageParser {
         icon,
         appInfo.uid,
         pkgIsReferenced);
-    if (mMySettings.DEBUG) Utils.debugLog("PackageParser", "isPkgUpdated(): Package created");
+    if (mMySettings.DEBUG) Util.debugLog("PackageParser", "isPkgUpdated(): Package created");
 
     // If package has some permissions but currently if we are in deep (permission) search and
     // all permissions are filtered out, package should also be filtered out.
@@ -423,7 +424,7 @@ public class PackageParser {
 
   // when calling from PackageActivity for existing package
   public void updatePackage(Package pkg) {
-    if (mMySettings.DEBUG) Utils.debugLog("PackageParser", "updatePackage(): " + pkg.getLabel());
+    if (mMySettings.DEBUG) Util.debugLog("PackageParser", "updatePackage(): " + pkg.getLabel());
     PackageInfo packageInfo = getPackageInfo(pkg.getName(), true);
 
     // package uninstalled, or disabled from MainActivity, or ref state changed during deep search
@@ -480,7 +481,7 @@ public class PackageParser {
   }
 
   public void buildPermRefList() {
-    if (mMySettings.DEBUG) Utils.debugLog("updatePackagesListInBg", "buildPermRefList() called");
+    if (mMySettings.DEBUG) Util.debugLog("updatePackagesListInBg", "buildPermRefList() called");
     mPermRefList = new HashMap<>();
     for (PermissionEntity entity : mMySettings.getPermDb().getAll()) {
       mPermRefList.put(entity.pkgName + "_" + entity.permName, entity.state);
@@ -498,7 +499,7 @@ public class PackageParser {
 
     if (requestedPermissions != null) {
       if (mMySettings.DEBUG)
-        Utils.debugLog("PackageParser", "getPermissionsList(): Parsing permissions list");
+        Util.debugLog("PackageParser", "getPermissionsList(): Parsing permissions list");
       for (int count = 0; count < requestedPermissions.length; count++) {
         String perm = requestedPermissions[count];
         permission = createPermission(packageInfo, perm, count);
@@ -517,13 +518,13 @@ public class PackageParser {
       }
     }
 
-    if (mMySettings.DEBUG) Utils.debugLog("PackageParser", "getPermissionsList(): Parsing AppOps");
+    if (mMySettings.DEBUG) Util.debugLog("PackageParser", "getPermissionsList(): Parsing AppOps");
 
     int[] appOpsCount2 = new int[] {0, 0};
     int[] appOpsCount3 = new int[] {0, 0};
     if (!mMySettings.excludeAppOpsPerms() && mMySettings.canReadAppOps()) {
       if (mMySettings.DEBUG)
-        Utils.debugLog(
+        Util.debugLog(
             "PackageParser",
             "getPermissionsList(): Parsing AppOps not corresponding to any manifest permission");
       appOpsCount2 = createSetAppOps(packageInfo, permissionsList, processedAppOps);
@@ -536,7 +537,7 @@ public class PackageParser {
           || appOpsCount2[0] != 0) {
 
         if (mMySettings.DEBUG)
-          Utils.debugLog("PackageParser", "getPermissionsList(): Parsing extra AppOps");
+          Util.debugLog("PackageParser", "getPermissionsList(): Parsing extra AppOps");
 
         // irrelevant / extra AppOps, not set and not corresponding to any manifest permission
         List<Integer> ops1 = new ArrayList<>();
@@ -561,7 +562,7 @@ public class PackageParser {
     pkg.setAppOpsCount(appOpsCount1[1] + appOpsCount2[1] + appOpsCount3[1]);
 
     if (mMySettings.DEBUG)
-      Utils.debugLog(
+      Util.debugLog(
           "PackageParser", "getPermissionsList(): Permissions count: " + permissionsList.size());
 
     return permissionsList;
@@ -688,7 +689,7 @@ public class PackageParser {
       return -1;
     } else {
       String command =
-          PrivDaemon.GET_PERMISSION_FLAGS + " " + perm + " " + pkg + " " + Utils.getUserId();
+          Commands.GET_PERMISSION_FLAGS + " " + perm + " " + pkg + " " + Utils.getUserId();
       Object object = mPrivDaemonHandler.sendRequest(command);
       if (object instanceof Integer) {
         return (int) object;
@@ -715,7 +716,7 @@ public class PackageParser {
       Utils.logDaemonDead(TAG + ": getSystemFixedFlag");
       return -1;
     } else {
-      Object object = mPrivDaemonHandler.sendRequest(PrivDaemon.GET_SYSTEM_FIXED_FLAG);
+      Object object = mPrivDaemonHandler.sendRequest(Commands.GET_SYSTEM_FIXED_FLAG);
       if (object instanceof Integer) {
         systemFixedFlag = (int) object;
         return systemFixedFlag;
@@ -931,12 +932,12 @@ public class PackageParser {
     if (mMySettings.isDeepSearchEnabled()) {
       Utils.runInFg(() -> mPackagesListLive.setValue(mPackagesList));
       if (mMySettings.DEBUG)
-        Utils.debugLog(
+        Util.debugLog(
             "submitLiveData",
             "Shallow search disabled, posting " + mPackagesList.size() + " packages");
       return;
     }
-    if (mMySettings.DEBUG) Utils.debugLog("submitLiveData", "Doing shallow search");
+    if (mMySettings.DEBUG) Util.debugLog("submitLiveData", "Doing shallow search");
     handleSearchQuery(false);
   }
 
@@ -947,14 +948,14 @@ public class PackageParser {
     if (!mMySettings.isSearching()) {
       Utils.runInFg(() -> mPackagesListLive.setValue(mPackagesList));
       if (mMySettings.DEBUG)
-        Utils.debugLog(
+        Util.debugLog(
             "handleSearchQuery", "Empty query text, posting " + mPackagesList.size() + " packages");
       return;
     }
 
     long myId = mHandleSearchQueryRefId = System.nanoTime();
     if (searchQueryFuture != null && !searchQueryFuture.isDone()) {
-      if (mMySettings.DEBUG) Utils.debugLog("handleSearchQuery", "Cancelling previous call");
+      if (mMySettings.DEBUG) Util.debugLog("handleSearchQuery", "Cancelling previous call");
       searchQueryFuture.cancel(false);
     }
     searchQueryFuture = Utils.searchQueryExecutor(() -> doSearchInBg(doRepeatUpdates, myId));
@@ -966,7 +967,7 @@ public class PackageParser {
 
     for (Package pkg : new ArrayList<>(mPackagesList)) {
       if (myId != mHandleSearchQueryRefId) {
-        if (mMySettings.DEBUG) Utils.debugLog("doSearchInBg", "Breaking loop, new call received");
+        if (mMySettings.DEBUG) Util.debugLog("doSearchInBg", "Breaking loop, new call received");
         return;
       }
       if (pkg.contains(queryText)) packageList.add(pkg);
@@ -980,7 +981,7 @@ public class PackageParser {
 
   private void postLiveData(List<Package> packageList) {
     if (mMySettings.DEBUG)
-      Utils.debugLog("handleSearchQuery", "Posting " + packageList.size() + " packages");
+      Util.debugLog("handleSearchQuery", "Posting " + packageList.size() + " packages");
     Utils.runInFg(() -> mPackagesListLive.setValue(packageList));
   }
 

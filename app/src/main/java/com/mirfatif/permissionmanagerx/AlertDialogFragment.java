@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import com.mirfatif.privtasks.Util;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,7 +39,7 @@ public class AlertDialogFragment extends AppCompatDialogFragment {
       if (fragment != null) oldDialogs.add(fragment);
     }
 
-    if (MySettings.getInstance().DEBUG) Utils.debugLog(TAG, "Showing " + tag);
+    if (MySettings.getInstance().DEBUG) Util.debugLog(TAG, "Showing " + tag);
 
     // If Activity is in background, commitNow throws:
     //   "Can not perform this action after onSaveInstanceState"
@@ -62,7 +63,7 @@ public class AlertDialogFragment extends AppCompatDialogFragment {
     for (String tag : allTags) {
       fragment = manager.findFragmentByTag(tag);
       if (fragment != null) {
-        if (MySettings.getInstance().DEBUG) Utils.debugLog(TAG, "Old dialog: " + tag);
+        if (MySettings.getInstance().DEBUG) Util.debugLog(TAG, "Old dialog: " + tag);
         oldDialogs.add(fragment);
       }
     }
@@ -71,7 +72,7 @@ public class AlertDialogFragment extends AppCompatDialogFragment {
 
   private static void removeFragments(FragmentManager manager, Set<Fragment> fragments) {
     FragmentTransaction transaction = manager.beginTransaction();
-    if (MySettings.getInstance().DEBUG) Utils.debugLog(TAG, "Removing old dialogs");
+    if (MySettings.getInstance().DEBUG) Util.debugLog(TAG, "Removing old dialogs");
     for (Fragment fragment : fragments) transaction.remove(fragment);
     transaction.commitNowAllowingStateLoss();
   }

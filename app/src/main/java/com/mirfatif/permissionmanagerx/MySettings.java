@@ -10,6 +10,7 @@ import androidx.room.Room;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.permsdb.PermissionDao;
 import com.mirfatif.permissionmanagerx.permsdb.PermissionDatabase;
+import com.mirfatif.privtasks.Util;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -379,7 +380,7 @@ public class MySettings {
   }
 
   synchronized void populateExcludedAppsList(boolean loadDefaults) {
-    if (DEBUG) Utils.debugLog("populateExcludedAppsList", "loadDefaults: " + loadDefaults);
+    if (DEBUG) Util.debugLog("populateExcludedAppsList", "loadDefaults: " + loadDefaults);
 
     // on first run or after "reset to defaults" it returns null, so use default values
     Set<String> savedExcludedApps = mPrefs.getStringSet(mExcludedAppsPrefKey, null);
@@ -475,7 +476,7 @@ public class MySettings {
   }
 
   synchronized void populateExcludedPermsList() {
-    if (DEBUG) Utils.debugLog("populateExcludedPermsList", "Called");
+    if (DEBUG) Util.debugLog("populateExcludedPermsList", "Called");
     Set<String> excludedPerms = mPrefs.getStringSet(mExcludedPermsPrefKey, null);
     if (excludedPerms == null) excludedPerms = new HashSet<>();
 
@@ -516,7 +517,7 @@ public class MySettings {
   }
 
   synchronized void populateExtraAppOpsList(boolean loadDefaults) {
-    if (DEBUG) Utils.debugLog("populateExtraAppOpsList", "loadDefaults: " + loadDefaults);
+    if (DEBUG) Util.debugLog("populateExtraAppOpsList", "loadDefaults: " + loadDefaults);
     // on first run or after "reset to defaults" it returns null, so use default values
     Set<String> savedExtraAppOps = mPrefs.getStringSet(mExtraAppOpsPrefKey, null);
     Set<String> extraAppOps = savedExtraAppOps;
@@ -556,7 +557,7 @@ public class MySettings {
   }
 
   void resetToDefaults() {
-    if (DEBUG) Utils.debugLog("MySettings", "resetToDefaults() called");
+    if (DEBUG) Util.debugLog("MySettings", "resetToDefaults() called");
     // excluded apps Set must be explicitly removed to set default values
     // .clear() does not work correctly
     Editor prefEditor = mPrefs.edit();

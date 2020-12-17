@@ -11,8 +11,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.snackbar.Snackbar;
-import com.mirfatif.privdaemon.PrivDaemon;
-import com.mirfatif.privdaemon.Util;
+import com.mirfatif.privtasks.Commands;
+import com.mirfatif.privtasks.Util;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.OutputStream;
@@ -84,7 +84,7 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     if (mMySettings.mPrivDaemonAlive) {
-      PrivDaemonHandler.getInstance().sendRequest(PrivDaemon.SHUTDOWN);
+      PrivDaemonHandler.getInstance().sendRequest(Commands.SHUTDOWN);
     }
     mMySettings.doLogging = true;
     mMySettings.DEBUG = true;

@@ -20,4 +20,5 @@
 # hide the original source file name.
 -renamesourcefileattribute SourceFile
 
--keep class com.mirfatif.privdaemon.MyPackageOps* { *; }
+# Because of serialzation
+-keep class com.mirfatif.privtasks.MyPackageOps* { *; }

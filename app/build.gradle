@@ -30,6 +30,7 @@ android {
 
 dependencies {
     implementation project(path: ':AdbLib')
+    implementation project(path: ':priv_library')
 
     implementation 'androidx.appcompat:appcompat:1.3.0-alpha02'
     implementation 'androidx.recyclerview:recyclerview:1.2.0-beta01'
@@ -59,9 +60,9 @@ task buildDaemon() {
             break
         }
     }
-    def src = "release/minifyReleaseWithR8"
+    def src = "priv_daemon/build/outputs/apk/release/priv_daemon-release.apk"
     if (isDebug) {
-        src = "debug/mergeProjectDexDebug"
+        src = "priv_daemon/build/outputs/apk/debug/priv_daemon-debug.apk"
         dependsOn(':priv_daemon:assembleDebug')
         mustRunAfter(':priv_daemon:assembleDebug')
     } else {
@@ -75,7 +76,7 @@ task buildDaemon() {
         def dstFile = new File(dstDir, dexFile)
         delete dstFile
         copy {
-            from new File(rootDir, "priv_daemon/build/intermediates/dex/" + src + "/classes.dex")
+            from zipTree(new File(rootDir, src)).matching { include 'classes.dex' }.singleFile
             into dstDir
             rename { fileName -> dexFile }
         }

@@ -14,7 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.preference.PreferenceManager;
 import com.mirfatif.permissionmanagerx.permsdb.PermissionEntity;
-import com.mirfatif.privdaemon.Util;
+import com.mirfatif.privtasks.Util;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

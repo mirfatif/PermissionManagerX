@@ -1,4 +1,4 @@
-package com.mirfatif.privdaemon;
+package com.mirfatif.privtasks;
 
 import java.io.Serializable;
 import java.util.List;

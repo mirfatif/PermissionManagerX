@@ -11,7 +11,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
-import com.mirfatif.privdaemon.Util;
+import com.mirfatif.privtasks.Util;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -98,7 +98,7 @@ public class App extends Application {
               Toast.makeText(App.this, R.string.device_low_memory, Toast.LENGTH_LONG).show();
             }
             if (mMySettings.DEBUG) {
-              Utils.debugLog(TAG, "onTrimMemory level: " + memLevel);
+              Util.debugLog(TAG, "onTrimMemory level: " + memLevel);
             } else if (isRunning) {
               Log.i(TAG, "onTrimMemory level: " + memLevel);
             }
@@ -124,7 +124,7 @@ public class App extends Application {
               am.getMemoryInfo(memInfo);
               mMySettings.setLowMemory(memInfo.lowMemory);
               if (mMySettings.DEBUG) {
-                Utils.debugLog(TAG, "Low on memory: " + memInfo.lowMemory);
+                Util.debugLog(TAG, "Low on memory: " + memInfo.lowMemory);
               } else if (memInfo.lowMemory) {
                 Log.i(TAG, "Low on memory: " + true);
               }

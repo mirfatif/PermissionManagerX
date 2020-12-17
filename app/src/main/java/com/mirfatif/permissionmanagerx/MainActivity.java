@@ -41,8 +41,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
-import com.mirfatif.privdaemon.PrivDaemon;
-import com.mirfatif.privdaemon.Util;
+import com.mirfatif.privtasks.Commands;
+import com.mirfatif.privtasks.Util;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
   private PkgClickListener getPkgClickListener() {
     return pkg -> {
       if (mMySettings.DEBUG)
-        Utils.debugLog(TAG, "PkgClickListener: Package received: " + pkg.getLabel());
+        Util.debugLog(TAG, "PkgClickListener: Package received: " + pkg.getLabel());
       Intent intent = new Intent().setClass(App.getContext(), PackageActivity.class);
       intent.putExtra(EXTRA_PKG_POSITION, mPackageParser.getPackagePosition(pkg));
       startActivity(intent);
@@ -332,7 +332,7 @@ public class MainActivity extends AppCompatActivity {
     // observer removed already
     if (!mMySettings.canUseHiddenAPIs()) {
       if (mMySettings.DEBUG)
-        Utils.debugLog("setWarningLiveObserver", "Not setting because hidden APIs are disabled");
+        Util.debugLog("setWarningLiveObserver", "Not setting because hidden APIs are disabled");
       return;
     }
 
@@ -342,7 +342,7 @@ public class MainActivity extends AppCompatActivity {
             this,
             hiddenAPIsNotWorking -> {
               if (mMySettings.DEBUG)
-                Utils.debugLog("hiddenAPIsNotWorking", String.valueOf(hiddenAPIsNotWorking));
+                Util.debugLog("hiddenAPIsNotWorking", String.valueOf(hiddenAPIsNotWorking));
               if (!hiddenAPIsNotWorking) return;
               // do not show message on next app resume
               mMyViewModel.getHiddenAPIsNotWorking().removeObservers(this);
@@ -428,7 +428,7 @@ public class MainActivity extends AppCompatActivity {
             this,
             packages -> {
               if (mMySettings.DEBUG)
-                Utils.debugLog(
+                Util.debugLog(
                     "getPackagesListLiveObserver", packages.size() + " packages received");
               // update visible list through quick search, if active
               mPackageAdapter.submitList(new ArrayList<>(packages));
@@ -441,7 +441,7 @@ public class MainActivity extends AppCompatActivity {
             this,
             pkg -> {
               if (mMySettings.DEBUG)
-                Utils.debugLog(
+                Util.debugLog(
                     "getChangedPackageLiveObserver", "Package updated: " + pkg.getLabel());
               int position = mPackageAdapter.getCurrentList().indexOf(pkg);
               if (position != -1) mPackageAdapter.notifyItemChanged(position);
@@ -465,19 +465,19 @@ public class MainActivity extends AppCompatActivity {
   // required for navigation drawer tap to work
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    if (mMySettings.DEBUG) Utils.debugLog(TAG, "onOptionsItemSelected(): " + item.getTitle());
+    if (mMySettings.DEBUG) Util.debugLog(TAG, "onOptionsItemSelected(): " + item.getTitle());
     return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
   }
 
   @Override
   public void onBackPressed() {
     if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-      if (mMySettings.DEBUG) Utils.debugLog("onBackPressed", "Closing drawer");
+      if (mMySettings.DEBUG) Util.debugLog("onBackPressed", "Closing drawer");
       mDrawerLayout.closeDrawer(GravityCompat.START, true);
       return;
     }
     if (!TextUtils.isEmpty(mSearchView.getQuery())) {
-      if (mMySettings.DEBUG) Utils.debugLog("onBackPressed", "Collapsing searchView");
+      if (mMySettings.DEBUG) Util.debugLog("onBackPressed", "Collapsing searchView");
       collapseSearchView();
       return;
     }
@@ -486,7 +486,7 @@ public class MainActivity extends AppCompatActivity {
 
   void updatePackagesList(boolean doRepeatUpdates) {
     if (mMySettings.DEBUG)
-      Utils.debugLog(TAG, "updatePackagesList: doRepeatUpdates: " + doRepeatUpdates);
+      Util.debugLog(TAG, "updatePackagesList: doRepeatUpdates: " + doRepeatUpdates);
     mPackageParser.updatePackagesList(doRepeatUpdates);
   }
 
@@ -502,7 +502,7 @@ public class MainActivity extends AppCompatActivity {
           mPackageAdapter.getItemCount() < mLayoutManager.findLastVisibleItemPosition() + 5;
     }
     mMySettings.mDoRepeatUpdates = doRepeatUpdates;
-    if (mMySettings.DEBUG) Utils.debugLog("setRepeatUpdates", String.valueOf(doRepeatUpdates));
+    if (mMySettings.DEBUG) Util.debugLog("setRepeatUpdates", String.valueOf(doRepeatUpdates));
   }
 
   private void setPackageEnabledState(Package pkg) {
@@ -523,13 +523,13 @@ public class MainActivity extends AppCompatActivity {
           boolean enabled = pkg.isEnabled();
           String command = pkg.getName() + " " + Utils.getUserId();
           if (enabled) {
-            command = PrivDaemon.DISABLE_PACKAGE + " " + command;
+            command = Commands.DISABLE_PACKAGE + " " + command;
           } else {
-            command = PrivDaemon.ENABLE_PACKAGE + " " + command;
+            command = Commands.ENABLE_PACKAGE + " " + command;
           }
 
           if (mMySettings.DEBUG)
-            Utils.debugLog("setPackageEnabledState", "Sending command: " + command);
+            Util.debugLog("setPackageEnabledState", "Sending command: " + command);
           Object res = mPrivDaemonHandler.sendRequest(command);
           mPackageParser.updatePackage(pkg);
           if (res != null) {
@@ -648,14 +648,14 @@ public class MainActivity extends AppCompatActivity {
         new OnQueryTextListener() {
           @Override
           public boolean onQueryTextSubmit(String query) {
-            if (mMySettings.DEBUG) Utils.debugLog("searchQueryTextSubmit", query);
+            if (mMySettings.DEBUG) Util.debugLog("searchQueryTextSubmit", query);
             handleSearchQuery(false);
             return true;
           }
 
           @Override
           public boolean onQueryTextChange(String newText) {
-            if (mMySettings.DEBUG) Utils.debugLog("searchQueryTextChange", newText);
+            if (mMySettings.DEBUG) Util.debugLog("searchQueryTextChange", newText);
             handleSearchQuery(false);
             return true;
           }
@@ -664,7 +664,7 @@ public class MainActivity extends AppCompatActivity {
     // Clear search query when no text is entered.
     mSearchView.setOnQueryTextFocusChangeListener(
         (v, hasFocus) -> {
-          if (mMySettings.DEBUG) Utils.debugLog("searchQueryFocussed", String.valueOf(hasFocus));
+          if (mMySettings.DEBUG) Util.debugLog("searchQueryFocussed", String.valueOf(hasFocus));
           showSearchActionSettings();
           mDrawerLayout.closeDrawer(GravityCompat.START, true);
           if (!hasFocus && TextUtils.isEmpty(mSearchView.getQuery())) {
@@ -690,21 +690,21 @@ public class MainActivity extends AppCompatActivity {
         (buttonView, isChecked) -> {
           mMySettings.setDeepSearchEnabled(isChecked);
           handleSearchQuery(true);
-          if (mMySettings.DEBUG) Utils.debugLog("deepSearch", String.valueOf(isChecked));
+          if (mMySettings.DEBUG) Util.debugLog("deepSearch", String.valueOf(isChecked));
         });
 
     caseSensitiveSearchSettings.setOnCheckedChangeListener(
         (buttonView, isChecked) -> {
           mMySettings.setCaseSensitiveSearch(isChecked);
           handleSearchQuery(false);
-          if (mMySettings.DEBUG) Utils.debugLog("caseSensitiveSearch", String.valueOf(isChecked));
+          if (mMySettings.DEBUG) Util.debugLog("caseSensitiveSearch", String.valueOf(isChecked));
         });
 
     findViewById(R.id.search_settings_container).setVisibility(View.VISIBLE);
   }
 
   private void collapseSearchView() {
-    if (mMySettings.DEBUG) Utils.debugLog("searchView", "Collapsing");
+    if (mMySettings.DEBUG) Util.debugLog("searchView", "Collapsing");
     mSearchView.onActionViewCollapsed();
     mSearchView.setQuery(null, false);
     handleSearchQuery(false); // mSearchView.setQuery(null, true) does not work
@@ -720,11 +720,11 @@ public class MainActivity extends AppCompatActivity {
 
     if (TextUtils.isEmpty(queryText) && !isSearching) {
       if (mMySettings.DEBUG)
-        Utils.debugLog("handleSearchQuery", "Already empty text set, returning");
+        Util.debugLog("handleSearchQuery", "Already empty text set, returning");
       return;
     }
 
-    if (mMySettings.DEBUG) Utils.debugLog("handleSearchQuery", "Text set to: " + queryText);
+    if (mMySettings.DEBUG) Util.debugLog("handleSearchQuery", "Text set to: " + queryText);
 
     if (doDeepSearch || mMySettings.isDeepSearchEnabled()) {
       updatePackagesList(true);
@@ -739,7 +739,7 @@ public class MainActivity extends AppCompatActivity {
 
   private synchronized void startPrivDaemon(boolean isFirstRun) {
     if (!mMySettings.mPrivDaemonAlive) {
-      if (mMySettings.DEBUG) Utils.debugLog("startPrivDaemon", "Daemon is dead");
+      if (mMySettings.DEBUG) Util.debugLog("startPrivDaemon", "Daemon is dead");
       if (mMySettings.isRootGranted() || mMySettings.isAdbConnected()) {
         Utils.runInFg(() -> mRoundProgressTextView.setText(R.string.starting_daemon));
 
@@ -812,7 +812,7 @@ public class MainActivity extends AppCompatActivity {
     Utils.runInBg(
         () -> {
           if (mMySettings.mPrivDaemonAlive) {
-            mPrivDaemonHandler.sendRequest(PrivDaemon.SHUTDOWN);
+            mPrivDaemonHandler.sendRequest(Commands.SHUTDOWN);
           }
           startPrivDaemon(false);
         });
@@ -821,7 +821,7 @@ public class MainActivity extends AppCompatActivity {
   private void checkAppOpsPerm() {
     if (!mMySettings.isAppOpsGranted() && mMySettings.mPrivDaemonAlive) {
       String command =
-          PrivDaemon.GRANT_PERMISSION
+          Commands.GRANT_PERMISSION
               + " "
               + getPackageName()
               + " "
@@ -829,7 +829,7 @@ public class MainActivity extends AppCompatActivity {
               + " "
               + Utils.getUserId();
 
-      if (mMySettings.DEBUG) Utils.debugLog("startPrivDaemon", "Sending command: " + command);
+      if (mMySettings.DEBUG) Util.debugLog("startPrivDaemon", "Sending command: " + command);
       mPrivDaemonHandler.sendRequest(command);
 
       if (!mMySettings.isAppOpsGranted()) {
@@ -845,7 +845,7 @@ public class MainActivity extends AppCompatActivity {
   //////////////////////////////////////////////////////////////////
 
   private void setNavigationMenu() {
-    if (mMySettings.DEBUG) Utils.debugLog("setNavigationMenu", "Called");
+    if (mMySettings.DEBUG) Util.debugLog("setNavigationMenu", "Called");
     Menu menu = mNavigationView.getMenu();
 
     // if recreating
@@ -868,7 +868,7 @@ public class MainActivity extends AppCompatActivity {
 
   private boolean handleNavigationItemSelected(MenuItem item) {
     if (mMySettings.DEBUG)
-      Utils.debugLog("handleNavigationItemSelected", item.getTitle().toString());
+      Util.debugLog("handleNavigationItemSelected", item.getTitle().toString());
     View view = item.getActionView();
     if (view instanceof CheckBox) {
       CheckBox checkBox = (CheckBox) view;
@@ -878,8 +878,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private boolean handleNavigationItemChecked(MenuItem item) {
-    if (mMySettings.DEBUG)
-      Utils.debugLog("handleNavigationItemChecked", item.getTitle().toString());
+    if (mMySettings.DEBUG) Util.debugLog("handleNavigationItemChecked", item.getTitle().toString());
     mDrawerLayout.closeDrawer(GravityCompat.START, true);
 
     if (item.getItemId() == R.id.action_settings) {
@@ -1127,7 +1126,7 @@ public class MainActivity extends AppCompatActivity {
 
   private void startLogging() {
     mMySettings.doLogging = null;
-    Utils.debugLog("Logging", "Start logging");
+    Util.debugLog("Logging", "Start logging");
     String command = "logcat --pid " + Process.myPid();
 
     if (Utils.doLoggingFails(new String[] {command})) {

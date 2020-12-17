@@ -28,7 +28,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.permsdb.PermissionEntity;
-import com.mirfatif.privdaemon.PrivDaemon;
+import com.mirfatif.privtasks.Commands;
+import com.mirfatif.privtasks.Util;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -134,7 +135,7 @@ public class PackageActivity extends AppCompatActivity {
             pkgName = mPackage.getName();
           }
           String command =
-              PrivDaemon.SET_APP_OPS_MODE
+              Commands.SET_APP_OPS_MODE
                   + " "
                   + permission.getName()
                   + " "
@@ -143,7 +144,7 @@ public class PackageActivity extends AppCompatActivity {
                   + pkgName
                   + " "
                   + mode;
-          if (mMySettings.DEBUG) Utils.debugLog("setAppOpsMode", "Sending command: " + command);
+          if (mMySettings.DEBUG) Util.debugLog("setAppOpsMode", "Sending command: " + command);
           Object res = mPrivDaemonHandler.sendRequest(command);
 
           // new Permission objects are created, so cannot check previous one for new state
@@ -321,7 +322,7 @@ public class PackageActivity extends AppCompatActivity {
   }
 
   private void updatePackage() {
-    if (mMySettings.DEBUG) Utils.debugLog("PackageActivity", "updatePackage() called");
+    if (mMySettings.DEBUG) Util.debugLog("PackageActivity", "updatePackage() called");
     mPackageParser.updatePackage(mPackage);
     updatePermissionsList(); // the same Package object is updated
   }
@@ -400,7 +401,7 @@ public class PackageActivity extends AppCompatActivity {
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
     if (mMySettings.DEBUG)
-      Utils.debugLog("PackageActivity", "onOptionsItemSelected(): " + item.getTitle());
+      Util.debugLog("PackageActivity", "onOptionsItemSelected(): " + item.getTitle());
     if (item.getItemId() == R.id.action_information) {
       startActivity(
           new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -414,11 +415,7 @@ public class PackageActivity extends AppCompatActivity {
                   R.string.yes,
                   (d, which) -> {
                     String cmd =
-                        PrivDaemon.RESET_APP_OPS
-                            + " "
-                            + Utils.getUserId()
-                            + " "
-                            + mPackage.getName();
+                        Commands.RESET_APP_OPS + " " + Utils.getUserId() + " " + mPackage.getName();
                     Utils.runInBg(
                         () -> {
                           Object res = mPrivDaemonHandler.sendRequest(cmd);
@@ -513,12 +510,12 @@ public class PackageActivity extends AppCompatActivity {
           String command =
               mPackage.getName() + " " + permission.getName() + " " + Utils.getUserId();
           if (permission.isGranted()) {
-            command = PrivDaemon.REVOKE_PERMISSION + " " + command;
+            command = Commands.REVOKE_PERMISSION + " " + command;
           } else {
-            command = PrivDaemon.GRANT_PERMISSION + " " + command;
+            command = Commands.GRANT_PERMISSION + " " + command;
           }
 
-          if (mMySettings.DEBUG) Utils.debugLog("setPermission", "Sending command: " + command);
+          if (mMySettings.DEBUG) Util.debugLog("setPermission", "Sending command: " + command);
           Object res = mPrivDaemonHandler.sendRequest(command);
           updatePackage();
 

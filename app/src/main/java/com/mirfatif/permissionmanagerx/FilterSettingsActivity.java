@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+import com.mirfatif.privtasks.Util;
 
 public class FilterSettingsActivity extends AppCompatActivity {
 
@@ -55,7 +56,7 @@ public class FilterSettingsActivity extends AppCompatActivity {
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
     if (mMySettings.DEBUG)
-      Utils.debugLog("FilterSettingsActivity", "onOptionsItemSelected(): " + item.getTitle());
+      Util.debugLog("FilterSettingsActivity", "onOptionsItemSelected(): " + item.getTitle());
     if (item.getItemId() == R.id.action_reset_defaults) {
       // Build an AlertDialog and set listeners on buttons
       Builder builder = new Builder(this);

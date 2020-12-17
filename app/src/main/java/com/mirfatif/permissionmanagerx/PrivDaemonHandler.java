@@ -2,7 +2,7 @@ package com.mirfatif.permissionmanagerx;
 
 import android.os.SystemClock;
 import android.util.Log;
-import com.mirfatif.privdaemon.PrivDaemon;
+import com.mirfatif.privtasks.Commands;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +17,8 @@ import java.net.Socket;
 public class PrivDaemonHandler {
 
   static final String TAG = "PrivDaemonHandler";
+  static String DAEMON_PACKAGE_NAME = "com.mirfatif.privdaemon";
+  static final String DAEMON_CLASS_NAME = "PrivDaemon";
 
   private PrintWriter cmdWriter;
   private ObjectInputStream responseInStream;
@@ -66,9 +68,9 @@ public class PrivDaemonHandler {
             + " "
             + ownerDexFile
             + " "
-            + PrivDaemon.MY_NAME
+            + DAEMON_PACKAGE_NAME
             + " "
-            + PrivDaemon.CLASS_NAME
+            + DAEMON_CLASS_NAME
             + " "
             + binDir
             + ":"
@@ -86,7 +88,7 @@ public class PrivDaemonHandler {
     if (!Utils.extractBinary()) return false;
 
     if (isRootGranted) {
-      if (useSocket) params += " " + PrivDaemon.CREATE_SOCKET;
+      if (useSocket) params += " " + Commands.CREATE_SOCKET;
 
       Process process = Utils.runCommand("su", TAG, false);
       if (process == null) return false;
@@ -99,7 +101,7 @@ public class PrivDaemonHandler {
       Utils.runInBg(() -> readDaemonMessages(process, null));
 
     } else if (mySettings.isAdbConnected()) {
-      params += " " + PrivDaemon.CREATE_SOCKET;
+      params += " " + Commands.CREATE_SOCKET;
       useSocket = true;
       try {
         adb = new Adb("");
@@ -128,12 +130,12 @@ public class PrivDaemonHandler {
     try {
       String line;
       while ((line = inReader.readLine()) != null) {
-        if (line.startsWith(PrivDaemon.HELLO)) {
+        if (line.startsWith(Commands.HELLO)) {
           pid = Integer.parseInt(line.split(":")[1]);
           port = Integer.parseInt(line.split(":")[2]);
           break;
         }
-        Log.i(PrivDaemon.CLASS_NAME, line);
+        Log.i(DAEMON_CLASS_NAME, line);
       }
 
       if (pid <= 0 || (useSocket && port <= 0)) {
@@ -141,7 +143,7 @@ public class PrivDaemonHandler {
         return false;
       }
 
-      cmdWriter.println(PrivDaemon.GET_READY);
+      cmdWriter.println(Commands.GET_READY);
 
       // we have single input stream to read in case of ADB
       if (!isRootGranted) {
@@ -168,7 +170,7 @@ public class PrivDaemonHandler {
 
       // get response to GET_READY command
       Object obj = responseInStream.readObject();
-      if (!(obj instanceof String) || !obj.equals(PrivDaemon.GET_READY)) {
+      if (!(obj instanceof String) || !obj.equals(Commands.GET_READY)) {
         Log.e(TAG, "Bad response from privileged daemon");
         return false;
       }
@@ -215,7 +217,7 @@ public class PrivDaemonHandler {
     String line;
     try {
       while ((line = reader.readLine()) != null) {
-        Log.e(PrivDaemon.CLASS_NAME, line);
+        Log.e(DAEMON_CLASS_NAME, line);
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -246,11 +248,11 @@ public class PrivDaemonHandler {
       }
 
       // to avoid getting restarted
-      if (request.equals(PrivDaemon.SHUTDOWN)) mySettings.mPrivDaemonAlive = false;
+      if (request.equals(Commands.SHUTDOWN)) mySettings.mPrivDaemonAlive = false;
 
       cmdWriter.println(request);
 
-      if (request.equals(PrivDaemon.SHUTDOWN)) return null;
+      if (request.equals(Commands.SHUTDOWN)) return null;
 
       try {
         return responseInStream.readObject();
@@ -258,7 +260,7 @@ public class PrivDaemonHandler {
         e.printStackTrace();
 
         Log.e(TAG, "Restarting privileged daemon");
-        cmdWriter.println(PrivDaemon.SHUTDOWN);
+        cmdWriter.println(Commands.SHUTDOWN);
 
         return null;
       }

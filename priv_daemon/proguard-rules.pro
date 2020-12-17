@@ -2,7 +2,7 @@
 -renamesourcefileattribute SourceFile
 
 # Because of serialzation
--keep class com.mirfatif.privdaemon.MyPackageOps* { *; }
+-keep class com.mirfatif.privtasks.MyPackageOps* { *; }
 
 # main method must be accessible to VM for start
 -keep class com.mirfatif.privdaemon.PrivDaemon {

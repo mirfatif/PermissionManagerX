@@ -1,3 +1,4 @@
+include ':priv_library'
 include ':priv_daemon'
 include ':AdbLib'
 include ':app'

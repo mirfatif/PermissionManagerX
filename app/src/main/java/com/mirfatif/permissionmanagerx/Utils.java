@@ -23,8 +23,8 @@ import androidx.security.crypto.EncryptedSharedPreferences.PrefKeyEncryptionSche
 import androidx.security.crypto.EncryptedSharedPreferences.PrefValueEncryptionScheme;
 import androidx.security.crypto.MasterKey;
 import androidx.security.crypto.MasterKey.KeyScheme;
-import com.mirfatif.privdaemon.PrivDaemon;
-import com.mirfatif.privdaemon.Util;
+import com.mirfatif.privtasks.Commands;
+import com.mirfatif.privtasks.Util;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -391,7 +391,7 @@ public class Utils {
 
     try {
       String line;
-      while ((line = reader.readLine()) != null && !line.contains(PrivDaemon.STOP_LOGGING)) {
+      while ((line = reader.readLine()) != null && !line.contains(Commands.STOP_LOGGING)) {
         writeToLogFile(line);
       }
     } catch (IOException e) {
@@ -427,13 +427,9 @@ public class Utils {
     } catch (IOException ignored) {
     }
     if (mySettings.mPrivDaemonAlive) {
-      PrivDaemonHandler.getInstance().sendRequest(PrivDaemon.STOP_LOGGING);
+      PrivDaemonHandler.getInstance().sendRequest(Commands.STOP_LOGGING);
     }
-    Log.i("stopLogging()", PrivDaemon.STOP_LOGGING);
-  }
-
-  public static void debugLog(String tag, String message) {
-    Log.d(tag, message + " - " + System.nanoTime());
+    Log.i("stopLogging()", Commands.STOP_LOGGING);
   }
 
   private static long daemonDeadLogTs = 0;
@@ -449,6 +445,7 @@ public class Utils {
   /////////////////////////// PRIVILEGES ///////////////////////////
   //////////////////////////////////////////////////////////////////
 
+  @SuppressWarnings("UnusedReturnValue")
   public static boolean checkRootVerbose() {
     MySettings mySettings = MySettings.getInstance();
     if (mySettings.isRootGranted()) {
@@ -458,11 +455,11 @@ public class Utils {
                 Toast.makeText(App.getContext(), R.string.getting_root_fail, Toast.LENGTH_LONG)
                     .show());
         if (mySettings.DEBUG) {
-          debugLog("checkRoot", "Getting root privileges failed");
+          Util.debugLog("checkRoot", "Getting root privileges failed");
         }
       } else {
         if (mySettings.DEBUG) {
-          debugLog("checkRoot", "Getting root privileges succeeded");
+          Util.debugLog("checkRoot", "Getting root privileges succeeded");
         }
         return true;
       }
@@ -470,6 +467,7 @@ public class Utils {
     return false;
   }
 
+  @SuppressWarnings("UnusedReturnValue")
   public static boolean checkAdbVerbose() {
     MySettings mySettings = MySettings.getInstance();
     if (mySettings.isAdbConnected()) {
@@ -479,11 +477,11 @@ public class Utils {
                 Toast.makeText(App.getContext(), R.string.adb_connect_fail, Toast.LENGTH_LONG)
                     .show());
         if (mySettings.DEBUG) {
-          debugLog("checkAdb", "Connecting to ADB failed");
+          Util.debugLog("checkAdb", "Connecting to ADB failed");
         }
       } else {
         if (mySettings.DEBUG) {
-          debugLog("checkAdb", "Connecting to ADB succeeded");
+          Util.debugLog("checkAdb", "Connecting to ADB succeeded");
         }
         return true;
       }
