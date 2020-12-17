@@ -146,19 +146,6 @@ public class PrivDaemon {
         });
   }
 
-  private ObjectOutputStream mStdOutStream;
-
-  private void sendResponse(Object object) {
-    try {
-      mStdOutStream.writeObject(object);
-      mStdOutStream.flush();
-    } catch (IOException e) {
-      e.printStackTrace();
-      Log.e(TAG, "Write error, shutting down");
-      System.exit(0);
-    }
-  }
-
   private void handleCommand(String[] args) throws IOException {
     switch (args[0]) {
       case Commands.GET_READY:
@@ -218,6 +205,19 @@ public class PrivDaemon {
         break;
       default:
         Log.e(TAG, "Unknown command: " + args[0]);
+    }
+  }
+
+  private ObjectOutputStream mStdOutStream;
+
+  private synchronized void sendResponse(Object object) {
+    try {
+      mStdOutStream.writeObject(object);
+      mStdOutStream.flush();
+    } catch (IOException e) {
+      e.printStackTrace();
+      Log.e(TAG, "Write error, shutting down");
+      System.exit(0);
     }
   }
 
