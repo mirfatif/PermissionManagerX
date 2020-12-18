@@ -471,12 +471,12 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   public void onBackPressed() {
-    if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+    if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
       if (mMySettings.DEBUG) Util.debugLog("onBackPressed", "Closing drawer");
       mDrawerLayout.closeDrawer(GravityCompat.START, true);
       return;
     }
-    if (!TextUtils.isEmpty(mSearchView.getQuery())) {
+    if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
       if (mMySettings.DEBUG) Util.debugLog("onBackPressed", "Collapsing searchView");
       collapseSearchView();
       return;
