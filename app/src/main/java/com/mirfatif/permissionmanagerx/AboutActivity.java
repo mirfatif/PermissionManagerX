@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultCallback;
@@ -40,6 +41,32 @@ public class AboutActivity extends AppCompatActivity {
     findViewById(R.id.contact).setOnClickListener(v -> Utils.sendMail(this, null));
     setLogTitle();
     findViewById(R.id.logging).setOnClickListener(v -> handleLogging());
+
+    if (!MainActivityFlavor.IS_FREE_VERSION) {
+      findViewById(R.id.paid_features_container).setVisibility(View.GONE);
+    } else {
+      TextView paidFeaturesSummaryView = findViewById(R.id.paid_features_summary);
+      View paidFeaturesDetailView = findViewById(R.id.paid_features_detail);
+
+      paidFeaturesSummaryView.setText(
+          getString(R.string.paid_feature1)
+              + ", "
+              + getString(R.string.paid_feature2)
+              + ", "
+              + getString(R.string.paid_feature3));
+
+      findViewById(R.id.paid_features)
+          .setOnClickListener(
+              v -> {
+                if (paidFeaturesDetailView.isVisibleToUser()) {
+                  paidFeaturesDetailView.setVisibility(View.GONE);
+                  paidFeaturesSummaryView.setVisibility(View.VISIBLE);
+                } else {
+                  paidFeaturesDetailView.setVisibility(View.VISIBLE);
+                  paidFeaturesSummaryView.setVisibility(View.GONE);
+                }
+              });
+    }
   }
 
   private void openWebUrl(int viewResId, int linkResId) {

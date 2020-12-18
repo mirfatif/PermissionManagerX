@@ -7,8 +7,7 @@ import androidx.appcompat.app.AlertDialog.Builder;
 
 class MainActivityFlavor {
 
-  static final boolean SHOW_ACTION_DONATE = true;
-  static final boolean SHOW_ACTION_SETTINGS = false;
+  static final boolean IS_FREE_VERSION = true;
 
   private final MainActivity mActivity;
 

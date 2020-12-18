@@ -175,6 +175,10 @@
   <string name="logging_stopped">Logging stopped</string>
   <string name="app_rating">Rate Me</string>
   <string name="app_rating_summary">Rating and review on Play Store</string>
+  <string name="paid_features">Paid Features</string>
+  <string name="paid_feature1">Scheduled check to notify bad reference states</string>
+  <string name="paid_feature2">Auto create backup file on changes</string>
+  <string name="paid_feature3">Search suggestions</string>
 
   <!--Donate-->
   <string name="bitcoin_link"><a href="bitcoin:">Bitcoin</a></string>

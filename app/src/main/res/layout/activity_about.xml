@@ -300,6 +300,89 @@
         android:background="@color/accentColor"
         android:layout_height="1dp"/>
 
+      <LinearLayout
+        android:id="@+id/paid_features_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+
+          <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/paid"
+            tools:ignore="ContentDescription"/>
+
+          <LinearLayout
+            android:id="@+id/paid_features"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:orientation="vertical"
+            android:background="?android:attr/selectableItemBackground">
+
+            <TextView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="@string/paid_features"
+              android:textStyle="bold"
+              android:textSize="16sp"/>
+
+            <TextView
+              android:id="@+id/paid_features_summary"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:maxLines="1"
+              android:ellipsize="end"
+              android:layout_marginTop="2dp"/>
+
+            <LinearLayout
+              android:id="@+id/paid_features_detail"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:visibility="gone"
+              android:orientation="vertical">
+
+              <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/bullet"
+                android:text="@string/paid_feature1"
+                android:drawablePadding="4dp"
+                android:layout_marginTop="2dp"/>
+
+              <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/bullet"
+                android:text="@string/paid_feature2"
+                android:drawablePadding="4dp"
+                android:layout_marginTop="2dp"/>
+
+              <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/bullet"
+                android:text="@string/paid_feature3"
+                android:drawablePadding="4dp"
+                android:layout_marginTop="2dp"/>
+
+            </LinearLayout>
+          </LinearLayout>
+        </LinearLayout>
+
+        <View
+          android:layout_width="match_parent"
+          android:background="@color/accentColor"
+          android:layout_height="1dp"/>
+
+      </LinearLayout>
     </LinearLayout>
   </LinearLayout>
 

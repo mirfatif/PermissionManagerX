@@ -855,8 +855,8 @@ public class MainActivity extends AppCompatActivity {
     setBoxCheckedAndSetListener(menu, R.id.action_adb, mMySettings.isAdbConnected());
     setBoxCheckedAndSetListener(menu, R.id.action_dark_theme, mMySettings.forceDarkMode());
 
-    menu.findItem(R.id.action_donate).setVisible(MainActivityFlavor.SHOW_ACTION_DONATE);
-    menu.findItem(R.id.action_settings).setVisible(MainActivityFlavor.SHOW_ACTION_SETTINGS);
+    menu.findItem(R.id.action_donate).setVisible(MainActivityFlavor.IS_FREE_VERSION);
+    menu.findItem(R.id.action_settings).setVisible(!MainActivityFlavor.IS_FREE_VERSION);
   }
 
   private void setBoxCheckedAndSetListener(Menu menu, int id, boolean checked) {
