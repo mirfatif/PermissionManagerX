@@ -10,6 +10,7 @@ import androidx.preference.MultiSelectListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -176,7 +177,7 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     Utils.runInBg(
         () -> {
           // Need to be on background thread.
-          List<String> appOpsList = mMySettings.getAppOpsList();
+          List<String> appOpsList = new ArrayList<>(mMySettings.getAppOpsList());
           appOpsList.sort(Comparator.comparing(String::toUpperCase));
           Set<String> extraAppOps = mMySettings.getExtraAppOps();
 
