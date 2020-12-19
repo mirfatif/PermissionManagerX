@@ -70,6 +70,9 @@ public class BackupRestore {
   private final String PERMISSIONS = "permissions";
   private final String PERM = "perm";
 
+  // Separator Set elements
+  private final String SEPARATOR = ",";
+
   private final MainActivity mActivity;
   private final SharedPreferences mPreferences;
 
@@ -173,12 +176,15 @@ public class BackupRestore {
       else if (value instanceof Long) type = LONG;
       else if (value instanceof Set) {
         type = SET;
-        StringBuilder stringBuilder = null;
+        StringBuilder stringBuilder = new StringBuilder();
         for (Object object : (Set<?>) value) {
-          if (stringBuilder == null) stringBuilder = new StringBuilder(object.toString());
-          else stringBuilder.append(",").append(object.toString());
+          if (stringBuilder.length() != 0) {
+            // Append String split separator after every package/permission name
+            stringBuilder.append(SEPARATOR);
+          }
+          stringBuilder.append(object.toString());
         }
-        if (stringBuilder != null) value = stringBuilder;
+        value = stringBuilder;
       } else if (value instanceof String) type = STRING;
       else {
         Log.e(TAG, "Unknown preference type: " + value.toString());
@@ -317,7 +323,13 @@ public class BackupRestore {
           prefEdit.putLong(entry.key, Long.parseLong(entry.value));
           break;
         case SET:
-          prefEdit.putStringSet(entry.key, new HashSet<>(Arrays.asList(entry.value.split(","))));
+          if (entry.value.length() == 0) {
+            // Do not save empty string to Set
+            prefEdit.putStringSet(entry.key, new HashSet<>());
+          } else {
+            prefEdit.putStringSet(
+                entry.key, new HashSet<>(Arrays.asList(entry.value.split(SEPARATOR))));
+          }
           break;
         case STRING:
           prefEdit.putString(entry.key, entry.value);
