@@ -62,7 +62,9 @@ public class PackageActivity extends AppCompatActivity {
     mPackage = mPackageParser.getPackage(position);
 
     ActionBar actionBar = getSupportActionBar();
-    if (actionBar != null) actionBar.setTitle(mPackage.getLabel());
+    if (actionBar != null && mPackage != null) {
+      actionBar.setTitle(mPackage.getLabel());
+    }
 
     mMySettings = MySettings.getInstance();
     mPrivDaemonHandler = PrivDaemonHandler.getInstance();
