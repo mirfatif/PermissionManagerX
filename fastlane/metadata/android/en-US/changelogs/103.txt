@@ -1,0 +1,11 @@
+Fixed AppOps mode spinner click area
+Disabled Foreground AppOp mode for RUN_IN_BACKGROUND
+Added option to skip uninstalled apps in backup/restore
+Fixed Exclusin Filter Settings Fragment crash on orientation changes
+Improved Help section
+Added | and & to search queries
+Added Telegram support group link and paid features to About section
+Added "Ask for redeem code" option to Donate dialog
+Ask to send app and daemon's crash log files, delete files older than a month
+Fixed permissions Activity crash on launch due to null ActionBar
+Fixed OutOfMemory crash by releasing Icon Bitmaps on low memory conditions
