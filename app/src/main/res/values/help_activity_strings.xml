@@ -12,9 +12,10 @@
     in <b><i>Advanced Settings</i></b>.
   </string>
   <string name="faq2"><b>How to enable ADB over network?</b></string>
-  <string name="faq2_ans">Please read
-    <a href="https://developer.android.com/studio/command-line/adb#wireless">here</a>
-    and <a href="https://android.stackexchange.com/a/216474">here</a>.
+  <string name="faq2_ans">Some devices have that setting in <i>Developer Options</i>. On others you
+    need to run <i>adb tcpip 5555</i> command from a PC with the device connected through USB.\nFor
+    more details see <a href="https://developer.android.com/studio/command-line/adb#wireless">this</a>
+    and <a href="https://android.stackexchange.com/a/216474">this</a>.
   </string>
   <string name="faq3"><b>Why are GET_APP_OPS_STATS and INTERNET permissions required?</b></string>
   <string name="faq3_ans">GET_APP_OPS_STATS is required to read AppOps provided that hidden APIs
