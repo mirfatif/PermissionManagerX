@@ -52,7 +52,7 @@ public class PackageParser {
   private final MutableLiveData<Integer> mProgressNow = new MutableLiveData<>();
 
   private List<PackageInfo> packageInfoList;
-  private List<Package> mPackagesList = new ArrayList<>();
+  private final List<Package> mPackagesList = new ArrayList<>();
   private List<Signature> systemSignatures;
   private final Map<String, Drawable> mPackageIconsList = new HashMap<>();
   private final Map<String, Integer> mPermIconsResIds = new HashMap<>();
@@ -84,7 +84,9 @@ public class PackageParser {
   @SuppressLint("PackageManagerGetSignatures")
   private PackageInfo getPackageInfo(String pkgName, boolean getPermissions) {
     int flags = PM_GET_SIGNATURES;
-    if (getPermissions) flags = PackageManager.GET_PERMISSIONS | flags;
+    if (getPermissions) {
+      flags = PackageManager.GET_PERMISSIONS | flags;
+    }
     try {
       return mPackageManager.getPackageInfo(pkgName, flags);
     } catch (NameNotFoundException e) {
@@ -116,24 +118,36 @@ public class PackageParser {
   }
 
   public Package getPackage(int position) {
-    if (position < 0 || position >= mPackagesList.size()) {
-      Log.e("PackageParser", "getPackage(): bad position: " + position);
-      return null;
+    synchronized (mPackagesList) {
+      if (position < 0 || position >= mPackagesList.size()) {
+        Log.e("PackageParser", "getPackage(): bad position: " + position);
+        return null;
+      }
+      return mPackagesList.get(position);
     }
-    return mPackagesList.get(position);
   }
 
   public int getPackagePosition(Package pkg) {
-    int position = mPackagesList.indexOf(pkg);
-    if (position == -1) {
-      Log.e("PackageParser", "getPackagePosition(): bad Package provided");
-      return -1;
+    synchronized (mPackagesList) {
+      int position = mPackagesList.indexOf(pkg);
+      if (position == -1) {
+        Log.e("PackageParser", "getPackagePosition(): bad Package provided");
+        return -1;
+      }
+      return position;
     }
-    return position;
   }
 
   public void removePackage(Package pkg) {
-    if (mPackagesList.remove(pkg)) {
+    if (mIsUpdating) {
+      updatePackagesList(true);
+      return;
+    }
+    boolean res;
+    synchronized (mPackagesList) {
+      res = mPackagesList.remove(pkg);
+    }
+    if (res) {
       submitLiveData(mPackagesList);
     } else {
       Log.e("PackageParser", "removePackage(): bad Package provided");
@@ -149,8 +163,9 @@ public class PackageParser {
   private Future<?> updatePackagesFuture;
 
   public void updatePackagesList(boolean doRepeatUpdates) {
-    if (mMySettings.DEBUG)
+    if (mMySettings.DEBUG) {
       Util.debugLog("updatePackagesList", "doRepeatUpdates: " + doRepeatUpdates);
+    }
     long myId = mUpdatePackageListRefId = System.nanoTime(); // to handle concurrent calls
 
     /**
@@ -160,7 +175,9 @@ public class PackageParser {
      * new call comes.
      */
     if (updatePackagesFuture != null && !updatePackagesFuture.isDone()) {
-      if (mMySettings.DEBUG) Util.debugLog("updatePackagesList", "Cancelling previous call");
+      if (mMySettings.DEBUG) {
+        Util.debugLog("updatePackagesList", "Cancelling previous call");
+      }
       updatePackagesFuture.cancel(false);
     }
     updatePackagesFuture =
@@ -180,12 +197,17 @@ public class PackageParser {
     return mPackagesList;
   }
 
+  private boolean mIsUpdating;
+
   private synchronized void updatePackagesListInBg(boolean doRepeatUpdates, long myId) {
     long startTime = System.currentTimeMillis();
+    mIsUpdating = true;
 
     // Don't trouble Android on every call.
     if (System.currentTimeMillis() - lastPackageManagerCall > 5000) {
-      if (mMySettings.DEBUG) Util.debugLog("updatePackagesListInBg", "Updating packages list");
+      if (mMySettings.DEBUG) {
+        Util.debugLog("updatePackagesListInBg", "Updating packages list");
+      }
       setProgress(CREATE_PACKAGES_LIST, true, false);
 
       packageInfoList =
@@ -221,8 +243,9 @@ public class PackageParser {
       }
     }
 
-    if (mMySettings.DEBUG)
+    if (mMySettings.DEBUG) {
       Util.debugLog("updatePackagesListInBg", "Total packages count: " + packageInfoList.size());
+    }
     // set progress bar scale ASAP
     setProgress(packageInfoList.size(), true, false);
 
@@ -232,15 +255,17 @@ public class PackageParser {
     for (int i = 0; i < packageInfoList.size(); i++) {
       // handle concurrent calls
       if (myId != mUpdatePackageListRefId) {
-        if (mMySettings.DEBUG)
+        if (mMySettings.DEBUG) {
           Util.debugLog("updatePackagesListInBg", "Breaking loop, new call received");
+        }
         return;
       }
 
       setProgress(i, false, false);
       PackageInfo packageInfo = packageInfoList.get(i);
-      if (mMySettings.DEBUG)
+      if (mMySettings.DEBUG) {
         Util.debugLog("updatePackagesListInBg", "Updating package: " + packageInfo.packageName);
+      }
 
       Package pkg = new Package();
       if (isPkgUpdated(packageInfo, pkg)) {
@@ -248,7 +273,9 @@ public class PackageParser {
       }
 
       if (mMySettings.mDoRepeatUpdates && doRepeatUpdates) {
-        if (shouldUpdateLiveData()) submitLiveData(packageList);
+        if (shouldUpdateLiveData()) {
+          submitLiveData(packageList);
+        }
       }
     }
 
@@ -256,19 +283,26 @@ public class PackageParser {
     submitLiveData(packageList);
     setProgress(packageInfoList.size(), false, true);
 
-    if (mMySettings.DEBUG)
+    if (mMySettings.DEBUG) {
       Util.debugLog(
           "updatePackagesListInBg",
           "Total time: " + (System.currentTimeMillis() - startTime) + "ms");
+    }
+
+    mIsUpdating = false;
   }
 
   public void releaseIcons() {
     Utils.runInBg(
         () -> {
-          for (Package pkg : mPackagesList) {
-            pkg.releaseIcon();
+          synchronized (mPackagesList) {
+            for (Package pkg : mPackagesList) {
+              pkg.releaseIcon();
+            }
           }
-          mPackageIconsList.clear();
+          synchronized (mPackageIconsList) {
+            mPackageIconsList.clear();
+          }
           System.gc();
         });
   }
@@ -280,7 +314,9 @@ public class PackageParser {
   private long mLastProgressTimeStamp = 0;
 
   private void setProgress(int value, boolean isMax, boolean isFinal) {
-    if (mMySettings.DEBUG) Util.debugLog("setProgress", "Value: " + value + ", isMax: " + isMax);
+    if (mMySettings.DEBUG) {
+      Util.debugLog("setProgress", "Value: " + value + ", isMax: " + isMax);
+    }
 
     if (isMax) {
       Utils.runInFg(() -> mProgressMax.setValue(value));
@@ -337,28 +373,43 @@ public class PackageParser {
   //////////////////////////////////////////////////////////////////
 
   private boolean isPkgUpdated(PackageInfo packageInfo, Package pkg) {
-    if (isFilteredOutPkgName(packageInfo.packageName)) return false;
+    if (isFilteredOutPkgName(packageInfo.packageName)) {
+      return false;
+    }
 
     boolean isSystemApp = isSystemApp(packageInfo);
-    if (isFilteredOutSystemPkg(isSystemApp)) return false;
+    if (isFilteredOutSystemPkg(isSystemApp)) {
+      return false;
+    }
 
     boolean isFrameworkApp = isFrameworkApp(packageInfo);
-    if (isFilteredOutFrameworkPkg(isFrameworkApp)) return false;
-    if (isFilteredOutUserPkg(isFrameworkApp, isSystemApp)) return false;
+    if (isFilteredOutFrameworkPkg(isFrameworkApp)) {
+      return false;
+    }
+    if (isFilteredOutUserPkg(isFrameworkApp, isSystemApp)) {
+      return false;
+    }
 
     ApplicationInfo appInfo = packageInfo.applicationInfo;
 
     boolean isEnabled = appInfo.enabled;
-    if (isFilteredOutDisabledPkg(!isEnabled)) return false;
+    if (isFilteredOutDisabledPkg(!isEnabled)) {
+      return false;
+    }
 
-    if (isFilteredOutNoIconPkg(appInfo.icon == 0)) return false;
+    if (isFilteredOutNoIconPkg(appInfo.icon == 0)) {
+      return false;
+    }
 
-    if (mMySettings.DEBUG)
+    if (mMySettings.DEBUG) {
       Util.debugLog("PackageParser", "isPkgUpdated(): building permissions list");
+    }
     List<Permission> permissionsList = getPermissionsList(packageInfo, pkg);
 
     // Exclude packages with no manifest permissions and no AppOps (excluding extra)
-    if (isFilteredOutNoPermPkg(pkg)) return false;
+    if (isFilteredOutNoPermPkg(pkg)) {
+      return false;
+    }
 
     Boolean pkgIsReferenced = true;
     for (Permission perm : permissionsList) {
@@ -378,10 +429,13 @@ public class PackageParser {
     }
 
     // icon loading is costly call
-    Drawable icon = mPackageIconsList.get(packageInfo.packageName);
-    if (mMySettings.isNotLowMemory() && icon == null) {
-      icon = appInfo.loadIcon(mPackageManager);
-      mPackageIconsList.put(packageInfo.packageName, icon);
+    Drawable icon;
+    synchronized (mPackageIconsList) {
+      icon = mPackageIconsList.get(packageInfo.packageName);
+      if (mMySettings.isNotLowMemory() && icon == null) {
+        icon = appInfo.loadIcon(mPackageManager);
+        mPackageIconsList.put(packageInfo.packageName, icon);
+      }
     }
 
     // Update the package even if it's being filtered out due to permissions. It's because if this
@@ -397,7 +451,9 @@ public class PackageParser {
         icon,
         appInfo.uid,
         pkgIsReferenced);
-    if (mMySettings.DEBUG) Util.debugLog("PackageParser", "isPkgUpdated(): Package created");
+    if (mMySettings.DEBUG) {
+      Util.debugLog("PackageParser", "isPkgUpdated(): Package created");
+    }
 
     // If package has some permissions but currently if we are in deep (permission) search and
     // all permissions are filtered out, package should also be filtered out.
@@ -414,17 +470,23 @@ public class PackageParser {
   private boolean isFrameworkApp(PackageInfo packageInfo) {
     if (systemSignatures == null) {
       PackageInfo pkgInfo = getPackageInfo("android", false);
-      if (pkgInfo != null) systemSignatures = Arrays.asList(getPackageSignatures(pkgInfo));
+      if (pkgInfo != null) {
+        systemSignatures = Arrays.asList(getPackageSignatures(pkgInfo));
+      }
     }
     for (Signature signature : getPackageSignatures(packageInfo)) {
-      if (systemSignatures.contains(signature)) return true;
+      if (systemSignatures.contains(signature)) {
+        return true;
+      }
     }
     return false;
   }
 
   // when calling from PackageActivity for existing package
   public void updatePackage(Package pkg) {
-    if (mMySettings.DEBUG) Util.debugLog("PackageParser", "updatePackage(): " + pkg.getLabel());
+    if (mMySettings.DEBUG) {
+      Util.debugLog("PackageParser", "updatePackage(): " + pkg.getLabel());
+    }
     PackageInfo packageInfo = getPackageInfo(pkg.getName(), true);
 
     // package uninstalled, or disabled from MainActivity, or ref state changed during deep search
@@ -477,11 +539,15 @@ public class PackageParser {
   // Calls to Room database require background execution and are time taking too.
   public void updatePermReferences(String pkgName, String permName, String state) {
     mPermRefList.remove(pkgName + "_" + permName);
-    if (state != null) mPermRefList.put(pkgName + "_" + permName, state);
+    if (state != null) {
+      mPermRefList.put(pkgName + "_" + permName, state);
+    }
   }
 
   public void buildPermRefList() {
-    if (mMySettings.DEBUG) Util.debugLog("updatePackagesListInBg", "buildPermRefList() called");
+    if (mMySettings.DEBUG) {
+      Util.debugLog("updatePackagesListInBg", "buildPermRefList() called");
+    }
     mPermRefList = new HashMap<>();
     for (PermissionEntity entity : mMySettings.getPermDb().getAll()) {
       mPermRefList.put(entity.pkgName + "_" + entity.permName, entity.state);
@@ -498,8 +564,9 @@ public class PackageParser {
     List<Integer> processedAppOps = new ArrayList<>();
 
     if (requestedPermissions != null) {
-      if (mMySettings.DEBUG)
+      if (mMySettings.DEBUG) {
         Util.debugLog("PackageParser", "getPermissionsList(): Parsing permissions list");
+      }
       for (int count = 0; count < requestedPermissions.length; count++) {
         String perm = requestedPermissions[count];
         permission = createPermission(packageInfo, perm, count);
@@ -518,15 +585,18 @@ public class PackageParser {
       }
     }
 
-    if (mMySettings.DEBUG) Util.debugLog("PackageParser", "getPermissionsList(): Parsing AppOps");
+    if (mMySettings.DEBUG) {
+      Util.debugLog("PackageParser", "getPermissionsList(): Parsing AppOps");
+    }
 
     int[] appOpsCount2 = new int[] {0, 0};
     int[] appOpsCount3 = new int[] {0, 0};
     if (!mMySettings.excludeAppOpsPerms() && mMySettings.canReadAppOps()) {
-      if (mMySettings.DEBUG)
+      if (mMySettings.DEBUG) {
         Util.debugLog(
             "PackageParser",
             "getPermissionsList(): Parsing AppOps not corresponding to any manifest permission");
+      }
       appOpsCount2 = createSetAppOps(packageInfo, permissionsList, processedAppOps);
 
       // Do not count extra AppOps if app has no manifest permission and no other AppOp.
@@ -536,14 +606,17 @@ public class PackageParser {
           || requestedPermissions != null
           || appOpsCount2[0] != 0) {
 
-        if (mMySettings.DEBUG)
+        if (mMySettings.DEBUG) {
           Util.debugLog("PackageParser", "getPermissionsList(): Parsing extra AppOps");
+        }
 
         // irrelevant / extra AppOps, not set and not corresponding to any manifest permission
         List<Integer> ops1 = new ArrayList<>();
         for (String opName : mMySettings.getExtraAppOps()) {
           int op = mMySettings.getAppOpsList().indexOf(opName);
-          if (!processedAppOps.contains(op)) ops1.add(op);
+          if (!processedAppOps.contains(op)) {
+            ops1.add(op);
+          }
         }
 
         if (ops1.size() != 0) {
@@ -561,9 +634,10 @@ public class PackageParser {
     pkg.setTotalAppOpsCount(appOpsCount1[0] + appOpsCount2[0] + appOpsCount3[0]);
     pkg.setAppOpsCount(appOpsCount1[1] + appOpsCount2[1] + appOpsCount3[1]);
 
-    if (mMySettings.DEBUG)
+    if (mMySettings.DEBUG) {
       Util.debugLog(
           "PackageParser", "getPermissionsList(): Permissions count: " + permissionsList.size());
+    }
 
     return permissionsList;
   }
@@ -571,26 +645,44 @@ public class PackageParser {
   private boolean isNotFilteredOut(Permission permission) {
     if (mMySettings.isSearching()
         && mMySettings.isDeepSearchEnabled()
-        && !permission.contains(mMySettings.mQueryText)) return false;
+        && !permission.contains(mMySettings.mQueryText)) {
+      return false;
+    }
 
     // always show extra AppOps except in search query
-    if (permission.isExtraAppOp()) return true;
+    if (permission.isExtraAppOp()) {
+      return true;
+    }
 
-    if (mMySettings.isPermExcluded(permission.getName())) return false;
-    if (mMySettings.excludeNotChangeablePerms() && !permission.isChangeable()) return false;
-    if (mMySettings.excludeNotGrantedPerms() && !permission.isGranted()) return false;
+    if (mMySettings.isPermExcluded(permission.getName())) {
+      return false;
+    }
+    if (mMySettings.excludeNotChangeablePerms() && !permission.isChangeable()) {
+      return false;
+    }
+    if (mMySettings.excludeNotGrantedPerms() && !permission.isGranted()) {
+      return false;
+    }
 
     if (permission.isAppOps()) {
       return !mMySettings.excludeNotSetAppOps() || permission.isAppOpsSet();
     }
 
-    if (mMySettings.excludePrivilegedPerms() && permission.isPrivileged()) return false;
+    if (mMySettings.excludePrivilegedPerms() && permission.isPrivileged()) {
+      return false;
+    }
     if (mMySettings.excludeSignaturePerms()
-        && permission.getProtectionLevel().equals(Permission.PROTECTION_SIGNATURE)) return false;
+        && permission.getProtectionLevel().equals(Permission.PROTECTION_SIGNATURE)) {
+      return false;
+    }
     if (mMySettings.excludeDangerousPerms()
-        && permission.getProtectionLevel().equals(Permission.PROTECTION_DANGEROUS)) return false;
+        && permission.getProtectionLevel().equals(Permission.PROTECTION_DANGEROUS)) {
+      return false;
+    }
     if (mMySettings.excludeNormalPerms()
-        && permission.getProtectionLevel().equals(Permission.PROTECTION_NORMAL)) return false;
+        && permission.getProtectionLevel().equals(Permission.PROTECTION_NORMAL)) {
+      return false;
+    }
     return !mMySettings.excludeInvalidPermissions() || !permission.isProviderMissing();
   }
 
@@ -702,7 +794,9 @@ public class PackageParser {
   private int systemFixedFlag = -1;
 
   private int getSystemFixedFlag() {
-    if (systemFixedFlag != -1) return systemFixedFlag;
+    if (systemFixedFlag != -1) {
+      return systemFixedFlag;
+    }
 
     if (mMySettings.canUseHiddenAPIs()) {
       // hidden API
@@ -737,7 +831,9 @@ public class PackageParser {
       List<Integer> processedAppOps) {
 
     Integer mappedOp = mPermToOpCodeMap.get(perm);
-    if (mappedOp == null) return new int[] {0, 0};
+    if (mappedOp == null) {
+      return new int[] {0, 0};
+    }
     int op = mappedOp;
 
     int uid = packageInfo.applicationInfo.uid;
@@ -792,12 +888,16 @@ public class PackageParser {
       }
     } else {
       list = mAppOpsParser.getOpsForPackage(uid, packageInfo.packageName, null);
-      if (list != null) pkgOpsList.addAll(list);
+      if (list != null) {
+        pkgOpsList.addAll(list);
+      }
 
       // UID mode: android-10.0.0_r1: AppOpsService.java#3378
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         list = mAppOpsParser.getUidOps(uid);
-        if (list != null) pkgOpsList.addAll(list);
+        if (list != null) {
+          pkgOpsList.addAll(list);
+        }
       }
     }
 
@@ -870,7 +970,9 @@ public class PackageParser {
             null);
 
     // so that it's not repeated
-    if (!isExtraAppOp) processedAppOps.add(op);
+    if (!isExtraAppOp) {
+      processedAppOps.add(op);
+    }
 
     int appOpsCount = 0;
 
@@ -903,7 +1005,9 @@ public class PackageParser {
 
   private RefPair getReference(String pkgName, String permName, String state) {
     String refState = mPermRefList.get(pkgName + "_" + permName);
-    if (refState == null) return new RefPair(); // both values null
+    if (refState == null) {
+      return new RefPair(); // both values null
+    }
     RefPair refPair = new RefPair();
     refPair.isReferenced = state.equals(refState);
     refPair.reference = refState;
@@ -911,6 +1015,7 @@ public class PackageParser {
   }
 
   private static class RefPair {
+
     Boolean isReferenced;
     String reference;
   }
@@ -928,16 +1033,23 @@ public class PackageParser {
   //////////////////////////////////////////////////////////////////
 
   private void submitLiveData(List<Package> packagesList) {
-    mPackagesList = packagesList;
+    synchronized (mPackagesList) {
+      List<Package> newList = new ArrayList<>(packagesList);
+      mPackagesList.clear();
+      mPackagesList.addAll(newList);
+    }
     if (mMySettings.isDeepSearchEnabled()) {
       Utils.runInFg(() -> mPackagesListLive.setValue(mPackagesList));
-      if (mMySettings.DEBUG)
+      if (mMySettings.DEBUG) {
         Util.debugLog(
             "submitLiveData",
             "Shallow search disabled, posting " + mPackagesList.size() + " packages");
+      }
       return;
     }
-    if (mMySettings.DEBUG) Util.debugLog("submitLiveData", "Doing shallow search");
+    if (mMySettings.DEBUG) {
+      Util.debugLog("submitLiveData", "Doing shallow search");
+    }
     handleSearchQuery(false);
   }
 
@@ -947,15 +1059,18 @@ public class PackageParser {
   public void handleSearchQuery(boolean doRepeatUpdates) {
     if (!mMySettings.isSearching()) {
       Utils.runInFg(() -> mPackagesListLive.setValue(mPackagesList));
-      if (mMySettings.DEBUG)
+      if (mMySettings.DEBUG) {
         Util.debugLog(
             "handleSearchQuery", "Empty query text, posting " + mPackagesList.size() + " packages");
+      }
       return;
     }
 
     long myId = mHandleSearchQueryRefId = System.nanoTime();
     if (searchQueryFuture != null && !searchQueryFuture.isDone()) {
-      if (mMySettings.DEBUG) Util.debugLog("handleSearchQuery", "Cancelling previous call");
+      if (mMySettings.DEBUG) {
+        Util.debugLog("handleSearchQuery", "Cancelling previous call");
+      }
       searchQueryFuture.cancel(false);
     }
     searchQueryFuture = Utils.searchQueryExecutor(() -> doSearchInBg(doRepeatUpdates, myId));
@@ -965,23 +1080,30 @@ public class PackageParser {
     String queryText = mMySettings.mQueryText;
     List<Package> packageList = new ArrayList<>();
 
-    for (Package pkg : new ArrayList<>(mPackagesList)) {
-      if (myId != mHandleSearchQueryRefId) {
-        if (mMySettings.DEBUG) Util.debugLog("doSearchInBg", "Breaking loop, new call received");
-        return;
-      }
-      if (pkg.contains(queryText)) packageList.add(pkg);
-      if (doRepeatUpdates && shouldUpdateLiveData()) {
-        postLiveData(packageList);
-        packagesListUpdateTimeStamp = System.currentTimeMillis();
+    synchronized (mPackagesList) {
+      for (Package pkg : new ArrayList<>(mPackagesList)) {
+        if (myId != mHandleSearchQueryRefId) {
+          if (mMySettings.DEBUG) {
+            Util.debugLog("doSearchInBg", "Breaking loop, new call received");
+          }
+          return;
+        }
+        if (pkg.contains(queryText)) {
+          packageList.add(pkg);
+        }
+        if (doRepeatUpdates && shouldUpdateLiveData()) {
+          postLiveData(packageList);
+          packagesListUpdateTimeStamp = System.currentTimeMillis();
+        }
       }
     }
     postLiveData(packageList);
   }
 
   private void postLiveData(List<Package> packageList) {
-    if (mMySettings.DEBUG)
+    if (mMySettings.DEBUG) {
       Util.debugLog("handleSearchQuery", "Posting " + packageList.size() + " packages");
+    }
     Utils.runInFg(() -> mPackagesListLive.setValue(packageList));
   }
 
