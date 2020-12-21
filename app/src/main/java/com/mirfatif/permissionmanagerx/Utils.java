@@ -9,6 +9,7 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Build.VERSION;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -36,8 +37,10 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.security.GeneralSecurityException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -354,10 +357,45 @@ public class Utils {
     return null;
   }
 
+  static final String LOG_FILE_PREFIX = "PMX_";
+  static final String LOG_FILE_DAEMON_PREFIX = "PMXD_";
+  static final String LOG_FILE_SUFFIX = ".log";
+
+  static File getCrashLogFile(boolean isDaemon) {
+    File logDir = createCrashLogDir();
+    if (logDir == null) {
+      return null;
+    }
+    String prefix = isDaemon ? LOG_FILE_DAEMON_PREFIX : LOG_FILE_PREFIX;
+    return new File(logDir, prefix + getCurrDateTime() + LOG_FILE_SUFFIX);
+  }
+
+  static String getCurrDateTime() {
+    return new SimpleDateFormat("dd-MMM-yy_HH-mm-ss", Locale.ENGLISH)
+        .format(System.currentTimeMillis());
+  }
+
   // Always use primary user's directory to access dex, scripts and log files.
   // ADBD (and hence started daemon) cannot access secondary profiles' private shared directories.
   static String getOwnerFilePath(File file) {
     return file.toString().replace("/" + getUserId() + "/", "/0/");
+  }
+
+  static String getDeviceInfo() {
+    return BuildConfig.VERSION_NAME
+        + (MainActivityFlavor.IS_FREE_VERSION ? "" : " Paid")
+        + "\nAndroid "
+        + VERSION.SDK_INT
+        + "\nBuild type: "
+        + Build.TYPE
+        + "\nDevice: "
+        + Build.DEVICE
+        + "\nManufacturer: "
+        + Build.MANUFACTURER
+        + "\nModel: "
+        + Build.MODEL
+        + "\nProduct: "
+        + Build.PRODUCT;
   }
 
   //////////////////////////////////////////////////////////////////
@@ -366,7 +404,7 @@ public class Utils {
 
   static boolean doLoggingFails(String[] command) {
     try {
-      writeToLogFile(Util.getDeviceInfo());
+      writeToLogFile(getDeviceInfo());
     } catch (IOException e) {
       e.printStackTrace();
     }

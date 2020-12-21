@@ -45,11 +45,11 @@ public class App extends Application {
             }
           }
 
-          File logDir = Utils.createCrashLogDir();
-          if (logDir != null) {
+          File logFile = Utils.getCrashLogFile(false);
+          if (logFile != null) {
             try {
-              PrintWriter writer = new PrintWriter(Util.getCrashLogFile(logDir.toString(), false));
-              writer.println(Util.getDeviceInfo());
+              PrintWriter writer = new PrintWriter(logFile);
+              writer.println(Utils.getDeviceInfo());
               e.printStackTrace(writer);
               writer.close();
             } catch (FileNotFoundException ignored) {

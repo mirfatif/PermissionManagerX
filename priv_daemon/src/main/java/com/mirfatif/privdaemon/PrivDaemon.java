@@ -6,14 +6,12 @@ import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.PrivTasks;
 import com.mirfatif.privtasks.Util;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.Inet4Address;
 import java.net.ServerSocket;
@@ -31,10 +29,7 @@ public class PrivDaemon {
   private boolean DEBUG;
 
   private PrivDaemon(String[] arguments) {
-    String logDir = arguments[1];
-    if (!logDir.equals("null")) {
-      setDefaultExceptionHandler(logDir);
-    }
+    setDefaultExceptionHandler();
 
     try (BufferedReader reader = new BufferedReader(new FileReader("/proc/self/cmdline"))) {
       TAG = reader.readLine().split("\0")[0];
@@ -57,11 +52,15 @@ public class PrivDaemon {
     Socket client = null;
     int port = 0;
     if (Arrays.asList(arguments).contains(Commands.CREATE_SOCKET)) {
-      if (DEBUG) Log.d(TAG, "Creating server socket");
+      if (DEBUG) {
+        Log.d(TAG, "Creating server socket");
+      }
       try {
         server = new ServerSocket(0, 0, Inet4Address.getByAddress(new byte[] {127, 0, 0, 1}));
         port = server.getLocalPort();
-        if (DEBUG) Log.d(TAG, "Listening at port " + port);
+        if (DEBUG) {
+          Log.d(TAG, "Listening at port " + port);
+        }
       } catch (IOException e) {
         e.printStackTrace();
         return;
@@ -115,11 +114,15 @@ public class PrivDaemon {
         }
       }
       if (client != null) {
-        if (DEBUG) Log.d(TAG, "Closing client socket");
+        if (DEBUG) {
+          Log.d(TAG, "Closing client socket");
+        }
         client.close();
       }
       if (server != null) {
-        if (DEBUG) Log.d(TAG, "Closing server socket");
+        if (DEBUG) {
+          Log.d(TAG, "Closing server socket");
+        }
         server.close();
       }
       Log.i(TAG, "Bye bye!");
@@ -131,17 +134,13 @@ public class PrivDaemon {
 
   private UncaughtExceptionHandler defaultExceptionHandler;
 
-  private void setDefaultExceptionHandler(String logDir) {
+  private void setDefaultExceptionHandler() {
     defaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
     Thread.setDefaultUncaughtExceptionHandler(
         (t, e) -> {
-          try {
-            PrintWriter writer = new PrintWriter(Util.getCrashLogFile(logDir, true));
-            writer.println(Util.getDeviceInfo());
-            e.printStackTrace(writer);
-            writer.close();
-          } catch (FileNotFoundException ignored) {
-          }
+          // Write log to file
+          System.err.println(Commands.CRASH_LOG_STARTS);
+          e.printStackTrace();
           defaultExceptionHandler.uncaughtException(t, e);
         });
   }

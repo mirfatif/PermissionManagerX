@@ -13,7 +13,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.privtasks.Commands;
-import com.mirfatif.privtasks.Util;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.OutputStream;
@@ -29,7 +28,9 @@ public class AboutActivity extends AppCompatActivity {
     setContentView(R.layout.activity_about);
 
     ActionBar actionBar = getSupportActionBar();
-    if (actionBar != null) actionBar.setTitle(R.string.about_menu_item);
+    if (actionBar != null) {
+      actionBar.setTitle(R.string.about_menu_item);
+    }
 
     mMySettings = MySettings.getInstance();
 
@@ -48,12 +49,13 @@ public class AboutActivity extends AppCompatActivity {
       TextView paidFeaturesSummaryView = findViewById(R.id.paid_features_summary);
       View paidFeaturesDetailView = findViewById(R.id.paid_features_detail);
 
-      paidFeaturesSummaryView.setText(
+      String features =
           getString(R.string.paid_feature1)
               + ", "
               + getString(R.string.paid_feature2)
               + ", "
-              + getString(R.string.paid_feature3));
+              + getString(R.string.paid_feature3);
+      paidFeaturesSummaryView.setText(features);
 
       findViewById(R.id.paid_features)
           .setOnClickListener(
@@ -98,7 +100,7 @@ public class AboutActivity extends AppCompatActivity {
     Toast.makeText(App.getContext(), R.string.select_log_file, Toast.LENGTH_LONG).show();
     ActivityResultCallback<Uri> callback = uri -> Utils.runInBg(() -> doLoggingInBg(uri));
     registerForActivityResult(new ActivityResultContracts.CreateDocument(), callback)
-        .launch("PermissionManagerX_" + Util.getCurrDateTime() + ".log");
+        .launch("PermissionManagerX_" + Utils.getCurrDateTime() + ".log");
   }
 
   private void doLoggingInBg(Uri uri) {

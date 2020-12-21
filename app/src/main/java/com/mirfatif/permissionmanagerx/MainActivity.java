@@ -556,11 +556,11 @@ public class MainActivity extends AppCompatActivity {
     long deleteThreshold = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(30);
     for (File logFile : logFiles) {
       if (!logFile.isFile()) continue;
-      if (!logFile.getName().startsWith(Util.LOG_FILE_PREFIX)
-          && !logFile.getName().startsWith(Util.LOG_FILE_DAEMON_PREFIX)) {
+      if (!logFile.getName().startsWith(Utils.LOG_FILE_PREFIX)
+          && !logFile.getName().startsWith(Utils.LOG_FILE_DAEMON_PREFIX)) {
         continue;
       }
-      if (!logFile.getName().endsWith(Util.LOG_FILE_SUFFIX)) {
+      if (!logFile.getName().endsWith(Utils.LOG_FILE_SUFFIX)) {
         continue;
       }
       if (logFile.lastModified() > crashReportTs
@@ -587,7 +587,7 @@ public class MainActivity extends AppCompatActivity {
     Uri logFileUri = FileProvider.getUriForFile(this, authority, fileToSend);
 
     String message;
-    if (fileToSend.getName().startsWith(Util.LOG_FILE_PREFIX)) {
+    if (fileToSend.getName().startsWith(Utils.LOG_FILE_PREFIX)) {
       message = getString(R.string.ask_to_report_app_crash, fileToSend.getName());
     } else {
       message = getString(R.string.ask_to_report_daemon_crash, fileToSend.getName());

@@ -52,12 +52,8 @@ public class PrivDaemonHandler {
     int daemonUid = mySettings.getDaemonUid();
     File binDir = new File(App.getContext().getFilesDir(), "bin");
 
-    File logFile = Utils.createCrashLogDir();
-
     String params =
         mySettings.DEBUG
-            + " "
-            + (logFile == null ? "null" : Utils.getOwnerFilePath(logFile))
             + " "
             + daemonUid
             + " "
@@ -211,10 +207,22 @@ public class PrivDaemonHandler {
       return;
     }
 
+    PrintWriter crashLogWriter = null;
     String line;
     try {
       while ((line = reader.readLine()) != null) {
+        if (line.contains(Commands.CRASH_LOG_STARTS)) {
+          crashLogWriter = new PrintWriter(Utils.getCrashLogFile(true));
+          crashLogWriter.println(Utils.getDeviceInfo());
+          continue;
+        }
+        if (crashLogWriter != null) {
+          crashLogWriter.println(line);
+        }
         Log.e(DAEMON_CLASS_NAME, line);
+      }
+      if (crashLogWriter != null) {
+        crashLogWriter.close();
       }
     } catch (IOException e) {
       e.printStackTrace();
