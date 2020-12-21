@@ -35,7 +35,7 @@ In short, <b>AppOps</b> provide a fine-grained control over many of the manifest
 <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.jpg" width="250">
 
 ## How to Build
-* `build.gradle` calls 2 shell scripts to build native binaries and a `.dex` file. So Linux environment is expected with all standard tools.
+* `build.gradle` calls a shell scripts to build native binaries. So a Linux environment is expected with all standard tools.
 * Download code: `git clone --recurse-submodules https://github.com/mirfatif/PermissionManagerX.git && cd PermissionManagerX`
 * Set `sdk.dir` in `local.properties` to the directory containing Android SDK API level (platform) 29 and build-tools 30.0.2 (and obviously the latest SDK `tools` and `platform-tools`).
 * App uses a number of AOSP's hidden/internal APIs which are not available with standard SDK. Replace `android.jar` with the one downloaded from here: https://github.com/anggrayudi/android-hidden-api.
