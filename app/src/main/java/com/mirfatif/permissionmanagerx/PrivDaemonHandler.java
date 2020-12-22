@@ -50,12 +50,15 @@ public class PrivDaemonHandler {
     }
 
     int daemonUid = mySettings.getDaemonUid();
+    String daemonContext = mySettings.getDaemonContext();
     File binDir = new File(App.getContext().getFilesDir(), "bin");
 
     String params =
         mySettings.DEBUG
             + " "
             + daemonUid
+            + " "
+            + daemonContext
             + " "
             + userId
             + " "
@@ -186,7 +189,16 @@ public class PrivDaemonHandler {
       command = "logcat --pid " + pid;
 
       if (isRootGranted) {
-        command = binDir + "/set_priv -u " + daemonUid + " -g " + daemonUid + " -- " + command;
+        command =
+            binDir
+                + "/set_priv -u "
+                + daemonUid
+                + " -g "
+                + daemonUid
+                + " --context "
+                + daemonContext
+                + " -- "
+                + command;
         if (Utils.doLoggingFails(new String[] {"su", "exec " + command})) {
           return null;
         }

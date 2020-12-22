@@ -13,8 +13,12 @@
   <!--MainActivity Preferences-->
   <string name="pref_main_crash_report_ts_enc_key">pref_main_crash_report_ts_enc</string>
   <string name="pref_main_ask_for_rating_ts_enc_key">pref_main_ask_for_rating_ts_enc</string>
+  <string name="pref_main_daemon_context_key">pref_main_daemon_context</string>
 
   <!--MainActivity Preferences corresponding to default values-->
+  <string name="pref_main_adb_port_key">pref_main_adb_port</string>
+  <integer name="pref_main_adb_port_default">5555</integer>
+  <string name="pref_main_adb_port_default">5555</string>
   <string name="pref_main_daemon_uid_key">pref_main_daemon_uid</string>
   <integer name="pref_main_daemon_uid_default">1000</integer>
   <string name="pref_main_app_launch_count_enc_key">pref_main_app_launch_count_enc</string>

@@ -5,9 +5,9 @@ trap 'Error occurred in $0 >&2' EXIT
 
 echo "My UID: $(id -u)"
 
-read -r DEBUG UID USER_ID CLASSPATH PKG_NAME CLASS PATH ARGS
+read -r DEBUG UID CONTEXT USER_ID CLASSPATH PKG_NAME CLASS PATH ARGS
 
-for f in DEBUG UID USER_ID CLASSPATH PKG_NAME CLASS PATH; do
+for f in DEBUG UID CONTEXT USER_ID CLASSPATH PKG_NAME CLASS PATH; do
   var=$(eval echo '$'$f)
   if [ -z "$var" ]; then
     echo "Empty $f"
@@ -26,12 +26,12 @@ if [ "$(id -u)" -eq 0 ]; then
     printf '%s' $$ >"$cgroup/cgroup.procs"
   done
 
-  CMD="set_priv -u $UID -g $UID --groups 1015,3003"
-  if [ -e /proc/$$/attr/current ]; then
+  CMD="set_priv -u $UID -g $UID --groups 1015,1023,1078,3003,9997"
+  if [ -e /proc/$$/attr/current ] && [ "$CONTEXT" != "default" ]; then
     if $DEBUG; then
-      echo "SELinux enabled, switching context to u:r:shell:s0"
+      echo "SELinux enabled, switching context to $CONTEXT"
     fi
-    CMD="$CMD --context u:r:shell:s0"
+    CMD="$CMD --context $CONTEXT"
   fi
   if [ -e /proc/1/ns/mnt ]; then
     if $DEBUG; then

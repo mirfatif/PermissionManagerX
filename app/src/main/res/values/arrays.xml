@@ -147,4 +147,9 @@
     <item>@string/daemon_uid_root</item>
     <item>@string/daemon_uid_adb</item>
   </string-array>
+
+  <string-array name="daemon_contexts">
+    <item>@string/daemon_context_shell</item>
+    <item>@string/daemon_context_default</item>
+  </string-array>
 </resources>

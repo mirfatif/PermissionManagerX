@@ -7,13 +7,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Process;
 import android.os.SystemClock;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.ImageView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -89,7 +91,9 @@ public class MainActivity extends AppCompatActivity {
   protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
 
-    if (intent.getAction() == null) return;
+    if (intent.getAction() == null) {
+      return;
+    }
 
     // called from PackageActivity
     if (intent.getAction().equals(ACTION_SHOW_DRAWER)) {
@@ -97,13 +101,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // called from AboutActivity
-    if (intent.getAction().equals(ACTION_START_LOGGING)) recreate();
+    if (intent.getAction().equals(ACTION_START_LOGGING)) {
+      recreate();
+    }
   }
 
   private void openDrawer() {
     Utils.runInBg(
         () -> {
-          while (getWindow() == null) SystemClock.sleep(100);
+          while (getWindow() == null) {
+            SystemClock.sleep(100);
+          }
           Utils.runInFg(() -> mDrawerLayout.openDrawer(GravityCompat.START));
         });
   }
@@ -136,11 +144,15 @@ public class MainActivity extends AppCompatActivity {
      * Must be after initializing {@link mMySettings}. Activity is recreated on switching to Dark
      * Theme, so return here.
      */
-    if (setNightTheme()) return;
+    if (setNightTheme()) {
+      return;
+    }
 
     // to show drawer icon
     ActionBar actionBar = getSupportActionBar();
-    if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
+    if (actionBar != null) {
+      actionBar.setDisplayHomeAsUpEnabled(true);
+    }
 
     // flavor specific methods
     mMainActivityFlavor = new MainActivityFlavor(this);
@@ -159,7 +171,9 @@ public class MainActivity extends AppCompatActivity {
     mNavigationView = findViewById(R.id.nav_view);
     mNavigationView.setNavigationItemSelectedListener(
         item -> {
-          if (handleNavigationItemSelected(item)) return true;
+          if (handleNavigationItemSelected(item)) {
+            return true;
+          }
           return super.onOptionsItemSelected(item);
         });
 
@@ -246,8 +260,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
     // clear search query on activity refresh
-    if (mSearchView != null) collapseSearchView();
-    else mMySettings.mQueryText = null;
+    if (mSearchView != null) {
+      collapseSearchView();
+    } else {
+      mMySettings.mQueryText = null;
+    }
 
     // increment app launch count
     mMySettings.plusAppLaunchCount();
@@ -262,11 +279,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Dark Mode applied on whole device
-    if (Utils.isNightMode(this)) return false;
+    if (Utils.isNightMode(this)) {
+      return false;
+    }
 
     // Dark Mode already applied in app
     int defMode = AppCompatDelegate.getDefaultNightMode();
-    if (defMode == AppCompatDelegate.MODE_NIGHT_YES) return false;
+    if (defMode == AppCompatDelegate.MODE_NIGHT_YES) {
+      return false;
+    }
 
     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
     return true;
@@ -274,8 +295,9 @@ public class MainActivity extends AppCompatActivity {
 
   private PkgClickListener getPkgClickListener() {
     return pkg -> {
-      if (mMySettings.DEBUG)
+      if (mMySettings.DEBUG) {
         Util.debugLog(TAG, "PkgClickListener: Package received: " + pkg.getLabel());
+      }
       Intent intent = new Intent().setClass(App.getContext(), PackageActivity.class);
       intent.putExtra(EXTRA_PKG_POSITION, mPackageParser.getPackagePosition(pkg));
       startActivity(intent);
@@ -331,8 +353,9 @@ public class MainActivity extends AppCompatActivity {
     // do not show again if user opted not to try hidden APIs already, or on app resume if
     // observer removed already
     if (!mMySettings.canUseHiddenAPIs()) {
-      if (mMySettings.DEBUG)
+      if (mMySettings.DEBUG) {
         Util.debugLog("setWarningLiveObserver", "Not setting because hidden APIs are disabled");
+      }
       return;
     }
 
@@ -341,9 +364,12 @@ public class MainActivity extends AppCompatActivity {
         .observe(
             this,
             hiddenAPIsNotWorking -> {
-              if (mMySettings.DEBUG)
+              if (mMySettings.DEBUG) {
                 Util.debugLog("hiddenAPIsNotWorking", String.valueOf(hiddenAPIsNotWorking));
-              if (!hiddenAPIsNotWorking) return;
+              }
+              if (!hiddenAPIsNotWorking) {
+                return;
+              }
               // do not show message on next app resume
               mMyViewModel.getHiddenAPIsNotWorking().removeObservers(this);
 
@@ -427,9 +453,10 @@ public class MainActivity extends AppCompatActivity {
         .observe(
             this,
             packages -> {
-              if (mMySettings.DEBUG)
+              if (mMySettings.DEBUG) {
                 Util.debugLog(
                     "getPackagesListLiveObserver", packages.size() + " packages received");
+              }
               // update visible list through quick search, if active
               mPackageAdapter.submitList(new ArrayList<>(packages));
               setRepeatUpdates();
@@ -440,11 +467,14 @@ public class MainActivity extends AppCompatActivity {
         .observe(
             this,
             pkg -> {
-              if (mMySettings.DEBUG)
+              if (mMySettings.DEBUG) {
                 Util.debugLog(
                     "getChangedPackageLiveObserver", "Package updated: " + pkg.getLabel());
+              }
               int position = mPackageAdapter.getCurrentList().indexOf(pkg);
-              if (position != -1) mPackageAdapter.notifyItemChanged(position);
+              if (position != -1) {
+                mPackageAdapter.notifyItemChanged(position);
+              }
             });
   }
 
@@ -465,19 +495,25 @@ public class MainActivity extends AppCompatActivity {
   // required for navigation drawer tap to work
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    if (mMySettings.DEBUG) Util.debugLog(TAG, "onOptionsItemSelected(): " + item.getTitle());
+    if (mMySettings.DEBUG) {
+      Util.debugLog(TAG, "onOptionsItemSelected(): " + item.getTitle());
+    }
     return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
   }
 
   @Override
   public void onBackPressed() {
     if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-      if (mMySettings.DEBUG) Util.debugLog("onBackPressed", "Closing drawer");
+      if (mMySettings.DEBUG) {
+        Util.debugLog("onBackPressed", "Closing drawer");
+      }
       mDrawerLayout.closeDrawer(GravityCompat.START, true);
       return;
     }
     if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
-      if (mMySettings.DEBUG) Util.debugLog("onBackPressed", "Collapsing searchView");
+      if (mMySettings.DEBUG) {
+        Util.debugLog("onBackPressed", "Collapsing searchView");
+      }
       collapseSearchView();
       return;
     }
@@ -485,8 +521,9 @@ public class MainActivity extends AppCompatActivity {
   }
 
   void updatePackagesList(boolean doRepeatUpdates) {
-    if (mMySettings.DEBUG)
+    if (mMySettings.DEBUG) {
       Util.debugLog(TAG, "updatePackagesList: doRepeatUpdates: " + doRepeatUpdates);
+    }
     mPackageParser.updatePackagesList(doRepeatUpdates);
   }
 
@@ -502,7 +539,9 @@ public class MainActivity extends AppCompatActivity {
           mPackageAdapter.getItemCount() < mLayoutManager.findLastVisibleItemPosition() + 5;
     }
     mMySettings.mDoRepeatUpdates = doRepeatUpdates;
-    if (mMySettings.DEBUG) Util.debugLog("setRepeatUpdates", String.valueOf(doRepeatUpdates));
+    if (mMySettings.DEBUG) {
+      Util.debugLog("setRepeatUpdates", String.valueOf(doRepeatUpdates));
+    }
   }
 
   private void setPackageEnabledState(Package pkg) {
@@ -528,8 +567,9 @@ public class MainActivity extends AppCompatActivity {
             command = Commands.ENABLE_PACKAGE + " " + command;
           }
 
-          if (mMySettings.DEBUG)
+          if (mMySettings.DEBUG) {
             Util.debugLog("setPackageEnabledState", "Sending command: " + command);
+          }
           Object res = mPrivDaemonHandler.sendRequest(command);
           mPackageParser.updatePackage(pkg);
           if (res != null) {
@@ -541,13 +581,19 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private boolean sendCrashReport() {
-    if (!mMySettings.mAskToSendCrashReport) return false;
+    if (!mMySettings.mAskToSendCrashReport) {
+      return false;
+    }
     mMySettings.mAskToSendCrashReport = false;
 
     File logDir = Utils.createCrashLogDir();
-    if (logDir == null) return false;
+    if (logDir == null) {
+      return false;
+    }
     File[] logFiles = logDir.listFiles();
-    if (logFiles == null || logFiles.length == 0) return false;
+    if (logFiles == null || logFiles.length == 0) {
+      return false;
+    }
 
     long crashReportTs = mMySettings.getCrashReportTs();
     mMySettings.setCrashReportTs();
@@ -555,7 +601,9 @@ public class MainActivity extends AppCompatActivity {
     File fileToDelete, fileToSend = null;
     long deleteThreshold = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(30);
     for (File logFile : logFiles) {
-      if (!logFile.isFile()) continue;
+      if (!logFile.isFile()) {
+        continue;
+      }
       if (!logFile.getName().startsWith(Utils.LOG_FILE_PREFIX)
           && !logFile.getName().startsWith(Utils.LOG_FILE_DAEMON_PREFIX)) {
         continue;
@@ -578,7 +626,9 @@ public class MainActivity extends AppCompatActivity {
       }
     }
 
-    if (fileToSend == null) return false;
+    if (fileToSend == null) {
+      return false;
+    }
 
     // Be ashamed of your performance, don't ask for rating in near future
     mMySettings.setAskForRatingTs(System.currentTimeMillis());
@@ -628,12 +678,16 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    if (mMainActivityFlavor != null) mMainActivityFlavor.onResumed();
+    if (mMainActivityFlavor != null) {
+      mMainActivityFlavor.onResumed();
+    }
   }
 
   @Override
   protected void onDestroy() {
-    if (mMainActivityFlavor != null) mMainActivityFlavor.onDestroyed();
+    if (mMainActivityFlavor != null) {
+      mMainActivityFlavor.onDestroyed();
+    }
     super.onDestroy();
   }
 
@@ -648,14 +702,18 @@ public class MainActivity extends AppCompatActivity {
         new OnQueryTextListener() {
           @Override
           public boolean onQueryTextSubmit(String query) {
-            if (mMySettings.DEBUG) Util.debugLog("searchQueryTextSubmit", query);
+            if (mMySettings.DEBUG) {
+              Util.debugLog("searchQueryTextSubmit", query);
+            }
             handleSearchQuery(false);
             return true;
           }
 
           @Override
           public boolean onQueryTextChange(String newText) {
-            if (mMySettings.DEBUG) Util.debugLog("searchQueryTextChange", newText);
+            if (mMySettings.DEBUG) {
+              Util.debugLog("searchQueryTextChange", newText);
+            }
             handleSearchQuery(false);
             return true;
           }
@@ -664,7 +722,9 @@ public class MainActivity extends AppCompatActivity {
     // Clear search query when no text is entered.
     mSearchView.setOnQueryTextFocusChangeListener(
         (v, hasFocus) -> {
-          if (mMySettings.DEBUG) Util.debugLog("searchQueryFocussed", String.valueOf(hasFocus));
+          if (mMySettings.DEBUG) {
+            Util.debugLog("searchQueryFocussed", String.valueOf(hasFocus));
+          }
           showSearchActionSettings();
           mDrawerLayout.closeDrawer(GravityCompat.START, true);
           if (!hasFocus && TextUtils.isEmpty(mSearchView.getQuery())) {
@@ -690,21 +750,27 @@ public class MainActivity extends AppCompatActivity {
         (buttonView, isChecked) -> {
           mMySettings.setDeepSearchEnabled(isChecked);
           handleSearchQuery(true);
-          if (mMySettings.DEBUG) Util.debugLog("deepSearch", String.valueOf(isChecked));
+          if (mMySettings.DEBUG) {
+            Util.debugLog("deepSearch", String.valueOf(isChecked));
+          }
         });
 
     caseSensitiveSearchSettings.setOnCheckedChangeListener(
         (buttonView, isChecked) -> {
           mMySettings.setCaseSensitiveSearch(isChecked);
           handleSearchQuery(false);
-          if (mMySettings.DEBUG) Util.debugLog("caseSensitiveSearch", String.valueOf(isChecked));
+          if (mMySettings.DEBUG) {
+            Util.debugLog("caseSensitiveSearch", String.valueOf(isChecked));
+          }
         });
 
     findViewById(R.id.search_settings_container).setVisibility(View.VISIBLE);
   }
 
   private void collapseSearchView() {
-    if (mMySettings.DEBUG) Util.debugLog("searchView", "Collapsing");
+    if (mMySettings.DEBUG) {
+      Util.debugLog("searchView", "Collapsing");
+    }
     mSearchView.onActionViewCollapsed();
     mSearchView.setQuery(null, false);
     handleSearchQuery(false); // mSearchView.setQuery(null, true) does not work
@@ -719,12 +785,15 @@ public class MainActivity extends AppCompatActivity {
     mMySettings.mQueryText = queryText.toString();
 
     if (TextUtils.isEmpty(queryText) && !isSearching) {
-      if (mMySettings.DEBUG)
+      if (mMySettings.DEBUG) {
         Util.debugLog("handleSearchQuery", "Already empty text set, returning");
+      }
       return;
     }
 
-    if (mMySettings.DEBUG) Util.debugLog("handleSearchQuery", "Text set to: " + queryText);
+    if (mMySettings.DEBUG) {
+      Util.debugLog("handleSearchQuery", "Text set to: " + queryText);
+    }
 
     if (doDeepSearch || mMySettings.isDeepSearchEnabled()) {
       updatePackagesList(true);
@@ -739,7 +808,9 @@ public class MainActivity extends AppCompatActivity {
 
   private synchronized void startPrivDaemon(boolean isFirstRun) {
     if (!mMySettings.mPrivDaemonAlive) {
-      if (mMySettings.DEBUG) Util.debugLog("startPrivDaemon", "Daemon is dead");
+      if (mMySettings.DEBUG) {
+        Util.debugLog("startPrivDaemon", "Daemon is dead");
+      }
       if (mMySettings.isRootGranted() || mMySettings.isAdbConnected()) {
         Utils.runInFg(() -> mRoundProgressTextView.setText(R.string.starting_daemon));
 
@@ -829,7 +900,9 @@ public class MainActivity extends AppCompatActivity {
               + " "
               + Utils.getUserId();
 
-      if (mMySettings.DEBUG) Util.debugLog("startPrivDaemon", "Sending command: " + command);
+      if (mMySettings.DEBUG) {
+        Util.debugLog("startPrivDaemon", "Sending command: " + command);
+      }
       mPrivDaemonHandler.sendRequest(command);
 
       if (!mMySettings.isAppOpsGranted()) {
@@ -845,7 +918,9 @@ public class MainActivity extends AppCompatActivity {
   //////////////////////////////////////////////////////////////////
 
   private void setNavigationMenu() {
-    if (mMySettings.DEBUG) Util.debugLog("setNavigationMenu", "Called");
+    if (mMySettings.DEBUG) {
+      Util.debugLog("setNavigationMenu", "Called");
+    }
     Menu menu = mNavigationView.getMenu();
 
     // if recreating
@@ -867,8 +942,9 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private boolean handleNavigationItemSelected(MenuItem item) {
-    if (mMySettings.DEBUG)
+    if (mMySettings.DEBUG) {
       Util.debugLog("handleNavigationItemSelected", item.getTitle().toString());
+    }
     View view = item.getActionView();
     if (view instanceof CheckBox) {
       CheckBox checkBox = (CheckBox) view;
@@ -878,7 +954,9 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private boolean handleNavigationItemChecked(MenuItem item) {
-    if (mMySettings.DEBUG) Util.debugLog("handleNavigationItemChecked", item.getTitle().toString());
+    if (mMySettings.DEBUG) {
+      Util.debugLog("handleNavigationItemChecked", item.getTitle().toString());
+    }
     mDrawerLayout.closeDrawer(GravityCompat.START, true);
 
     if (item.getItemId() == R.id.action_settings) {
@@ -996,24 +1074,64 @@ public class MainActivity extends AppCompatActivity {
   private void showAdvancedSettingsDialog() {
     View layout = getLayoutInflater().inflate(R.layout.advanced_settings_alert_dialog, null);
     CheckBox useHiddenAPIsView = layout.findViewById(R.id.use_hidden_apis);
+    EditText adbPortView = layout.findViewById(R.id.adb_port);
     CheckBox useSocketView = layout.findViewById(R.id.use_socket);
     AppCompatSpinner daemonUidSpinner = layout.findViewById(R.id.daemon_uid_list);
+    AppCompatSpinner daemonContextSpinner = layout.findViewById(R.id.daemon_context_list);
 
-    ImageView arrow = layout.findViewById(R.id.daemon_uid_list_arrow);
-    arrow.setOnClickListener(v -> daemonUidSpinner.performClick());
+    layout
+        .findViewById(R.id.daemon_uid_list_arrow)
+        .setOnClickListener(v -> daemonUidSpinner.performClick());
+    layout
+        .findViewById(R.id.daemon_context_list_arrow)
+        .setOnClickListener(v -> daemonContextSpinner.performClick());
 
     boolean useHiddenAPIs = mMySettings.useHiddenAPIs();
     useHiddenAPIsView.setChecked(useHiddenAPIs);
 
+    String adbPort = String.valueOf(mMySettings.getAdbPort());
+    adbPortView.setText(adbPort);
+    adbPortView.addTextChangedListener(
+        new TextWatcher() {
+          @Override
+          public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+          @Override
+          public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (TextUtils.isEmpty(s)) {
+              return;
+            }
+            int port = Integer.parseInt(s.toString().trim());
+            if (port > 65535 || port <= 0) {
+              adbPortView.setError(getString(R.string.bad_port_number));
+            }
+          }
+
+          @Override
+          public void afterTextChanged(Editable s) {}
+        });
+
     boolean useSocket = mMySettings.useSocket();
     useSocketView.setChecked(useSocket);
 
-    List<String> spinnerItems = Arrays.asList(getResources().getStringArray(R.array.daemon_uids));
-    int resId = R.string.daemon_uid_system;
-    if (mMySettings.getDaemonUid() == 0) resId = R.string.daemon_uid_root;
-    else if (mMySettings.getDaemonUid() == 2000) resId = R.string.daemon_uid_adb;
-    int selectedItemPosition = spinnerItems.indexOf(getString(resId));
-    daemonUidSpinner.setSelection(selectedItemPosition);
+    List<String> spinnerUids = Arrays.asList(getResources().getStringArray(R.array.daemon_uids));
+    int uidResId = R.string.daemon_uid_system;
+    if (mMySettings.getDaemonUid() == 0) {
+      uidResId = R.string.daemon_uid_root;
+    } else if (mMySettings.getDaemonUid() == 2000) {
+      uidResId = R.string.daemon_uid_adb;
+    }
+    int uidSelectedPos = spinnerUids.indexOf(getString(uidResId));
+    daemonUidSpinner.setSelection(uidSelectedPos);
+
+    List<String> spinnerContexts =
+        Arrays.asList(getResources().getStringArray(R.array.daemon_contexts));
+    int contextResId = R.string.daemon_context_shell;
+    if (mMySettings.getDaemonContext().equals(MySettings.CONTEXT_DEFAULT)) {
+      contextResId = R.string.daemon_context_default;
+    }
+    int contextSelectedPos = spinnerContexts.indexOf(getString(contextResId));
+    daemonContextSpinner.setSelection(contextSelectedPos);
 
     AlertDialog dialog =
         new Builder(this)
@@ -1022,29 +1140,63 @@ public class MainActivity extends AppCompatActivity {
             .setPositiveButton(
                 R.string.save,
                 (d, which) -> {
-                  boolean startDaemon = false;
+                  boolean restartDaemon = false;
                   if (useHiddenAPIs != useHiddenAPIsView.isChecked()) {
-                    startDaemon = saveHiddenAPIsSettings(useHiddenAPIsView.isChecked());
+                    restartDaemon = saveHiddenAPIsSettings(useHiddenAPIsView.isChecked());
                   }
 
-                  boolean restartDaemon = false;
+                  String adbPortNew = adbPortView.getText().toString().trim();
+                  if (!TextUtils.isEmpty(adbPortNew) && !adbPort.equals(adbPortNew)) {
+                    int port = Integer.parseInt(adbPortNew);
+                    if (port > 65535 || port <= 0) {
+                      Toast.makeText(App.getContext(), R.string.bad_port_number, Toast.LENGTH_LONG)
+                          .show();
+                    } else {
+                      mMySettings.setAdbPort(port);
+                      if (!restartDaemon) {
+                        restartDaemon = true;
+                      }
+                    }
+                  }
+
                   if (useSocket != useSocketView.isChecked()) {
                     mMySettings.setUseSocket(!useSocket);
-                    restartDaemon = true;
+                    if (!restartDaemon) {
+                      restartDaemon = true;
+                    }
                   }
 
-                  int selectedItemNewPosition = daemonUidSpinner.getSelectedItemPosition();
-                  if (selectedItemPosition != selectedItemNewPosition) {
-                    String newSelection = spinnerItems.get(selectedItemNewPosition);
+                  int uidSelectedPosNew = daemonUidSpinner.getSelectedItemPosition();
+                  if (uidSelectedPos != uidSelectedPosNew) {
+                    String newSelection = spinnerUids.get(uidSelectedPosNew);
                     int uid = 1000;
-                    if (newSelection.equals(getString(R.string.daemon_uid_root))) uid = 0;
-                    else if (newSelection.equals(getString(R.string.daemon_uid_adb))) uid = 2000;
+                    if (newSelection.equals(getString(R.string.daemon_uid_root))) {
+                      uid = 0;
+                    } else if (newSelection.equals(getString(R.string.daemon_uid_adb))) {
+                      uid = 2000;
+                    }
                     mMySettings.setDaemonUid(uid);
-                    restartDaemon = true;
+                    if (!restartDaemon) {
+                      restartDaemon = true;
+                    }
                   }
 
-                  if (restartDaemon) restartPrivDaemon();
-                  else if (startDaemon) Utils.runInBg(() -> startPrivDaemon(false));
+                  int contextSelectedPosNew = daemonContextSpinner.getSelectedItemPosition();
+                  if (contextSelectedPos != contextSelectedPosNew) {
+                    String newSelection = spinnerContexts.get(contextSelectedPosNew);
+                    String context = MySettings.CONTEXT_SHELL;
+                    if (newSelection.equals(getString(R.string.daemon_context_default))) {
+                      context = MySettings.CONTEXT_DEFAULT;
+                    }
+                    mMySettings.setDaemonContext(context);
+                    if (!restartDaemon) {
+                      restartDaemon = true;
+                    }
+                  }
+
+                  if (restartDaemon) {
+                    restartPrivDaemon();
+                  }
                 })
             .setNegativeButton(android.R.string.cancel, null)
             .create();

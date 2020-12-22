@@ -30,12 +30,17 @@
   <string name="advanced_settings_menu_item">Advanced Settings</string>
   <string name="hidden_apis">Hidden APIs</string>
   <string name="use_hidden_apis">Use Hidden APIs</string>
+  <string name="adb_only_settings">ADB-Only Settings</string>
   <string name="root_only_settings">Root-Only Settings</string>
+  <string name="adb_listening_port">ADBD Listening Port</string>
   <string name="talk_to_daemon_over_socket">Talk to Daemon over Socket</string>
-  <string name="run_daemon_as">Run Privileged Daemon as</string>
+  <string name="daemon_uid">Privileged Daemon UID</string>
   <string name="daemon_uid_system">System</string>
   <string name="daemon_uid_root">Root</string>
   <string name="daemon_uid_adb">ADB</string>
+  <string name="daemon_context">Daemon SELinux Context</string>
+  <string name="daemon_context_shell">Shell</string>
+  <string name="daemon_context_default">Default</string>
 
   <!--MainActivity strings-->
   <string name="deep_search">Deep Search (Permissions)</string>
@@ -84,6 +89,7 @@
   <string name="hidden_apis_confirmation">Some ROMs allow using system\'s hidden APIs. Daemon mode might
     be slower. Stop using hidden APIs?
   </string>
+  <string name="bad_port_number">Bad port number</string>
   <string name="granting_permission_failed">Granting permission failed</string>
   <string name="purchase_and_rate_the_app">Liking the app?\nPlease consider purchasing and rating on
     Play Store to support the development.

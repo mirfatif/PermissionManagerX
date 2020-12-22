@@ -47,7 +47,7 @@ class Adb {
         adbCrypto.saveAdbKeyPair(pvtKey, pubKey);
       }
 
-      adbSocket = new Socket("127.0.0.1", 5555);
+      adbSocket = new Socket("127.0.0.1", MySettings.getInstance().getAdbPort());
       adbSocket.setTcpNoDelay(true);
 
       adbConnection = AdbConnection.create(adbSocket, adbCrypto);

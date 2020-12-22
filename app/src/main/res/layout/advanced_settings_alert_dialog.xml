@@ -49,6 +49,49 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:textSize="16sp"
+      android:text="@string/adb_only_settings"
+      android:layout_marginBottom="8dp"
+      android:textColor="@color/accentColor"/>
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
+      <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textColor="@color/dialog_text_color"
+        android:textSize="16sp"
+        android:text="@string/adb_listening_port"/>
+
+      <EditText
+        android:id="@+id/adb_port"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="24dp"
+        android:maxLines="1"
+        android:maxWidth="64dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="-2dp"
+        android:hint="@string/pref_main_adb_port_default"
+        android:inputType="number"
+        tools:ignore="Autofill"/>
+
+    </LinearLayout>
+
+    <View
+      android:layout_width="match_parent"
+      android:background="@color/accentColor"
+      android:layout_height="1dp"
+      android:layout_marginTop="8dp"
+      android:layout_marginBottom="8dp"/>
+
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textSize="16sp"
       android:text="@string/root_only_settings"
       android:layout_marginBottom="8dp"
       android:textColor="@color/accentColor"/>
@@ -91,7 +134,7 @@
         android:gravity="center_vertical"
         android:textColor="@color/dialog_text_color"
         android:textSize="16sp"
-        android:text="@string/run_daemon_as"/>
+        android:text="@string/daemon_uid"/>
 
       <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/daemon_uid_list"
@@ -105,6 +148,43 @@
 
       <ImageView
         android:id="@+id/daemon_uid_list_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_gravity="center_vertical|end"
+        android:src="@drawable/arrow_drop_down"
+        tools:ignore="ContentDescription"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:layout_marginBottom="4dp">
+
+      <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textColor="@color/dialog_text_color"
+        android:textSize="16sp"
+        android:text="@string/daemon_context"/>
+
+      <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/daemon_context_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="24dp"
+        android:entries="@array/daemon_contexts"
+        android:gravity="end"
+        android:background="@null"
+        android:layout_marginStart="4dp"/>
+
+      <ImageView
+        android:id="@+id/daemon_context_list_arrow"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:layout_marginStart="4dp"

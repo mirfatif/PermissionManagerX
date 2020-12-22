@@ -113,12 +113,31 @@ public class MySettings {
     mLowMemory = lowMemory;
   }
 
+  int getAdbPort() {
+    return getIntPref(R.string.pref_main_adb_port_key);
+  }
+
+  void setAdbPort(int port) {
+    savePref(R.string.pref_main_adb_port_key, port);
+  }
+
   int getDaemonUid() {
     return getIntPref(R.string.pref_main_daemon_uid_key);
   }
 
   void setDaemonUid(int uid) {
     savePref(R.string.pref_main_daemon_uid_key, uid);
+  }
+
+  static String CONTEXT_DEFAULT = "default";
+  static String CONTEXT_SHELL = "u:r:shell:s0";
+
+  String getDaemonContext() {
+    return mPrefs.getString(getString(R.string.pref_main_daemon_context_key), CONTEXT_SHELL);
+  }
+
+  void setDaemonContext(String context) {
+    mPrefs.edit().putString(getString(R.string.pref_main_daemon_context_key), context).apply();
   }
 
   void plusAppLaunchCount() {
