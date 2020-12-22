@@ -47,6 +47,9 @@ public class AppOpsParser {
       // We can use simple PackageManager
       mUseIPackageManager = false;
       Log.e(TAG, e.toString());
+    } catch (NoSuchMethodException e) {
+      mUseIPackageManager = false;
+      e.printStackTrace();
     }
   }
 
@@ -188,7 +191,9 @@ public class AppOpsParser {
     if (mMySettings.DEBUG) {
       Util.debugLog("PackageParser", "buildAppOpsList() called");
     }
-    if (mMySettings.excludeAppOpsPerms() || !mMySettings.canReadAppOps()) return null;
+    if (mMySettings.excludeAppOpsPerms() || !mMySettings.canReadAppOps()) {
+      return null;
+    }
     List<String> appOpsList = new ArrayList<>();
 
     if (mMySettings.canUseHiddenAPIs()) {
@@ -222,7 +227,9 @@ public class AppOpsParser {
     if (mMySettings.DEBUG) {
       Util.debugLog("PackageParser", "buildAppOpsModes() called");
     }
-    if (mMySettings.excludeAppOpsPerms() || !mMySettings.canReadAppOps()) return null;
+    if (mMySettings.excludeAppOpsPerms() || !mMySettings.canReadAppOps()) {
+      return null;
+    }
     List<String> appOpsModes = new ArrayList<>();
 
     if (mMySettings.canUseHiddenAPIs()) {
@@ -256,7 +263,9 @@ public class AppOpsParser {
       /** {@link AppOpsManager#_NUM_OP} gets hard-coded */
       // hidden API
       int NUM_OP = Utils.getIntField("_NUM_OP", AppOpsManager.class, TAG + " getOpNum()");
-      if (NUM_OP != Utils.INT_FIELD_ERROR) return NUM_OP;
+      if (NUM_OP != Utils.INT_FIELD_ERROR) {
+        return NUM_OP;
+      }
       Utils.hiddenAPIsNotWorking(TAG, "Could not get _NUM_OP field");
       return getOpNum();
     } else if (!mMySettings.mPrivDaemonAlive) {
@@ -264,7 +273,9 @@ public class AppOpsParser {
       return 0;
     } else {
       Object object = mPrivDaemonHandler.sendRequest(Commands.GET_OP_NUM);
-      if (object instanceof Integer) return (int) object;
+      if (object instanceof Integer) {
+        return (int) object;
+      }
     }
     Log.e(TAG, "Error occurred in getOpNum()");
     return 0;

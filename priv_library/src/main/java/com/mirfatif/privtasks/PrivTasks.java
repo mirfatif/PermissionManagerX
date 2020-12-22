@@ -4,15 +4,19 @@ import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.pm.IPackageManager;
 import android.content.pm.PackageManager;
+import android.content.pm.ParceledListSlice;
 import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
 import android.os.Build;
 import android.os.Process;
 import android.os.RemoteException;
 import android.os.ServiceManager;
+import android.permission.IPermissionManager;
 import android.util.Log;
 import com.android.internal.app.IAppOpsService;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,29 +27,59 @@ public class PrivTasks {
 
   private IAppOpsService mIAppOpsService;
   private IPackageManager mIPackageManager;
+  private IPermissionManager mIPermissionManager;
 
   public PrivTasks(boolean isDebug, boolean initializeServices) throws NoSuchMethodError {
     DEBUG = isDebug;
     if (initializeServices) {
       initializeAppOpsService();
-      initializePmService();
+      try {
+        initializePmService();
+      } catch (NoSuchMethodException e) {
+        e.printStackTrace();
+      }
     }
   }
 
+  // asInterface() and getService() hidden APIs
   public void initializeAppOpsService() throws NoSuchMethodError {
-    // asInterface() and getService() hidden APIs
     mIAppOpsService =
         IAppOpsService.Stub.asInterface(ServiceManager.getService(Context.APP_OPS_SERVICE));
   }
 
-  public void initializePmService() throws NoSuchMethodError {
-    // asInterface() and getService() hidden APIs
-    mIPackageManager = IPackageManager.Stub.asInterface(ServiceManager.getService("package"));
+  // asInterface() and getService() hidden APIs
+  public void initializePmService() throws NoSuchMethodError, NoSuchMethodException {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      mIPermissionManager =
+          IPermissionManager.Stub.asInterface(
+              ServiceManager.getService(Context.PERMISSION_SERVICE));
+    } else {
+      mIPackageManager = IPackageManager.Stub.asInterface(ServiceManager.getService("package"));
+      initializePreRMethods();
+    }
+  }
+
+  private Method mGetPermissionFlags, mGetAllPermissionGroups;
+  private Method mQueryPermissionsByGroup, mRevokeRuntimePermission;
+
+  // Some methods are moved from IPackageManager to IPermissionManager in SDK 30.
+  private void initializePreRMethods() throws NoSuchMethodException {
+    mGetPermissionFlags =
+        IPackageManager.class.getMethod(
+            "getPermissionFlags", String.class, String.class, int.class);
+    mGetAllPermissionGroups = IPackageManager.class.getMethod("getAllPermissionGroups", int.class);
+    mQueryPermissionsByGroup =
+        IPackageManager.class.getMethod("queryPermissionsByGroup", String.class, int.class);
+    mRevokeRuntimePermission =
+        IPackageManager.class.getMethod(
+            "revokeRuntimePermission", String.class, String.class, int.class);
   }
 
   public List<String> opToName() {
     Integer opNum = getOpNum();
-    if (opNum == null) return null;
+    if (opNum == null) {
+      return null;
+    }
     List<String> appOpsList = new ArrayList<>();
     for (int i = 0; i < opNum; i++) {
       // hidden API
@@ -92,12 +126,16 @@ public class PrivTasks {
         pkgOpsList = mIAppOpsService.getUidOps(uid, ops);
       } catch (NullPointerException e) {
         // Hey Android! You are buggy.
-        if (DEBUG) e.printStackTrace();
+        if (DEBUG) {
+          e.printStackTrace();
+        }
         return new ArrayList<>();
       }
     }
 
-    if (pkgOpsList == null) return new ArrayList<>();
+    if (pkgOpsList == null) {
+      return new ArrayList<>();
+    }
 
     List<MyPackageOps> myPackageOpsList = new ArrayList<>();
     for (AppOpsManager.PackageOps packageOps : pkgOpsList) {
@@ -112,7 +150,9 @@ public class PrivTasks {
 
         // MIUI returns 10005 op
         Integer opNum = getOpNum();
-        if (opNum == null) return null;
+        if (opNum == null) {
+          return null;
+        }
         if (myOpEntry.op >= opNum) {
           rateLimitLog(
               "getMyPackageOpsList()",
@@ -125,6 +165,7 @@ public class PrivTasks {
           myOpEntry.lastAccessTime = opEntry.getLastAccessTime(AppOpsManager.OP_FLAGS_ALL);
         } else {
           // hidden API
+          // N and O don't have getLastAccessTime()
           myOpEntry.lastAccessTime = opEntry.getTime();
         }
         myOpEntry.opMode = opEntry.getMode();
@@ -142,7 +183,9 @@ public class PrivTasks {
 
   public List<Integer> buildOpToDefaultModeList() {
     Integer opNum = getOpNum();
-    if (opNum == null) return null;
+    if (opNum == null) {
+      return null;
+    }
     List<Integer> opToDefModeList = new ArrayList<>();
     for (int i = 0; i < opNum; i++) {
       // hidden API
@@ -153,7 +196,9 @@ public class PrivTasks {
 
   public List<Integer> buildOpToSwitchList() {
     Integer opNum = getOpNum();
-    if (opNum == null) return null;
+    if (opNum == null) {
+      return null;
+    }
     List<Integer> opToSwitchList = new ArrayList<>();
     for (int i = 0; i < opNum; i++) {
       // hidden API
@@ -196,8 +241,19 @@ public class PrivTasks {
        * requires system permissions: {@link PackageManager#getPermissionFlags(String, String,
        * UserHandle)}
        */
-      return mIPackageManager.getPermissionFlags(args[1], args[2], Integer.parseInt(args[3]));
-    } catch (RemoteException | SecurityException e) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        return mIPermissionManager.getPermissionFlags(args[1], args[2], Integer.parseInt(args[3]));
+      } else if (mGetPermissionFlags == null) {
+        return null;
+      } else {
+        return (Integer)
+            mGetPermissionFlags.invoke(
+                mIPackageManager, args[1], args[2], Integer.parseInt(args[3]));
+      }
+    } catch (SecurityException
+        | IllegalAccessException
+        | InvocationTargetException
+        | RemoteException e) {
       rateLimitThrowable(e);
       return null;
     }
@@ -213,10 +269,21 @@ public class PrivTasks {
     } else {
       try {
         // getAllPermissionGroups() hidden API
-        for (Object pgi : mIPackageManager.getAllPermissionGroups(0).getList()) {
+        List<?> pgiList;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+          pgiList = mIPermissionManager.getAllPermissionGroups(0).getList();
+        } else if (mGetAllPermissionGroups == null) {
+          return permToOpCodeList;
+        } else {
+          pgiList =
+              ((ParceledListSlice<?>) mGetAllPermissionGroups.invoke(mIPackageManager, 0))
+                  .getList();
+        }
+
+        for (Object pgi : pgiList) {
           permGroupsList.add(((PermissionGroupInfo) pgi).name);
         }
-      } catch (RemoteException e) {
+      } catch (RemoteException | InvocationTargetException | IllegalAccessException e) {
         e.printStackTrace();
       }
     }
@@ -233,17 +300,31 @@ public class PrivTasks {
       } else {
         try {
           // queryPermissionsByGroup() hidden API
-          for (Object object : mIPackageManager.queryPermissionsByGroup(permGroup, 0).getList()) {
+          List<?> piList;
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            piList = mIPermissionManager.queryPermissionsByGroup(permGroup, 0).getList();
+          } else if (mQueryPermissionsByGroup == null) {
+            return permToOpCodeList;
+          } else {
+            piList =
+                ((ParceledListSlice<?>)
+                        mQueryPermissionsByGroup.invoke(mIPackageManager, permGroup, 0))
+                    .getList();
+          }
+
+          for (Object object : piList) {
             permInfoList.add((PermissionInfo) object);
           }
-        } catch (RemoteException e) {
+        } catch (RemoteException | IllegalAccessException | InvocationTargetException e) {
           e.printStackTrace();
         }
       }
     }
 
     for (PermissionInfo permInfo : permInfoList) {
-      if (!permInfo.packageName.equals("android")) continue;
+      if (!permInfo.packageName.equals("android")) {
+        continue;
+      }
       // hidden API
       int opCode = AppOpsManager.permissionToOpCode(permInfo.name);
       if (opCode != AppOpsManager.OP_NONE) {
@@ -262,10 +343,21 @@ public class PrivTasks {
       } else {
         // hidden API
         // requires android.permission.REVOKE_RUNTIME_PERMISSIONS
-        mIPackageManager.revokeRuntimePermission(args[1], args[2], Integer.parseInt(args[3]));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+          mIPermissionManager.revokeRuntimePermission(
+              args[1], args[2], Integer.parseInt(args[3]), null);
+        } else if (mRevokeRuntimePermission == null) {
+          return -1;
+        } else {
+          mRevokeRuntimePermission.invoke(
+              mIPackageManager, args[1], args[2], Integer.parseInt(args[3]));
+        }
       }
       return null;
-    } catch (RemoteException | SecurityException e) {
+    } catch (RemoteException
+        | SecurityException
+        | IllegalAccessException
+        | InvocationTargetException e) {
       // SecurityException is thrown if calling UID/PID doesn't have required permissions
       // e.g. ADB lacks these permissions on MIUI
       e.printStackTrace();
@@ -342,11 +434,17 @@ public class PrivTasks {
 
   private void rateLimitLog(String tag, String msg, boolean isError) {
     if (DEBUG) {
-      if (isError) Log.e(tag, msg + " - " + System.nanoTime());
-      else Log.i(tag, msg + " - " + System.nanoTime());
+      if (isError) {
+        Log.e(tag, msg + " - " + System.nanoTime());
+      } else {
+        Log.i(tag, msg + " - " + System.nanoTime());
+      }
     } else if (System.currentTimeMillis() - lastLogTimestamp >= 1000) {
-      if (isError) Log.e(tag, msg);
-      else Log.i(tag, msg);
+      if (isError) {
+        Log.e(tag, msg);
+      } else {
+        Log.i(tag, msg);
+      }
       lastLogTimestamp = System.currentTimeMillis();
     }
   }
