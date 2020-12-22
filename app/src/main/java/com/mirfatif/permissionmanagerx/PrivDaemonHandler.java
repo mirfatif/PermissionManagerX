@@ -78,13 +78,19 @@ public class PrivDaemonHandler {
     BufferedReader inReader;
 
     // required if running as root (ADBD or su)
-    if (!Utils.extractBinary()) return false;
+    if (!Utils.extractBinary()) {
+      return false;
+    }
 
     if (isRootGranted) {
-      if (useSocket) params += " " + Commands.CREATE_SOCKET;
+      if (useSocket) {
+        params += " " + Commands.CREATE_SOCKET;
+      }
 
       Process process = Utils.runCommand("su", TAG, false);
-      if (process == null) return false;
+      if (process == null) {
+        return false;
+      }
 
       stdInStream = process.getInputStream();
       stdOutStream = process.getOutputStream();
@@ -181,7 +187,9 @@ public class PrivDaemonHandler {
 
       if (isRootGranted) {
         command = binDir + "/set_priv -u " + daemonUid + " -g " + daemonUid + " -- " + command;
-        if (Utils.doLoggingFails(new String[] {"su", "exec " + command})) return null;
+        if (Utils.doLoggingFails(new String[] {"su", "exec " + command})) {
+          return null;
+        }
       } else {
         Adb adbLogger;
         try {
@@ -212,8 +220,11 @@ public class PrivDaemonHandler {
     try {
       while ((line = reader.readLine()) != null) {
         if (line.contains(Commands.CRASH_LOG_STARTS)) {
-          crashLogWriter = new PrintWriter(Utils.getCrashLogFile(true));
-          crashLogWriter.println(Utils.getDeviceInfo());
+          File logFile = Utils.getCrashLogFile(true);
+          if (logFile != null) {
+            crashLogWriter = new PrintWriter(logFile);
+            crashLogWriter.println(Utils.getDeviceInfo());
+          }
           continue;
         }
         if (crashLogWriter != null) {
@@ -253,11 +264,15 @@ public class PrivDaemonHandler {
       }
 
       // to avoid getting restarted
-      if (request.equals(Commands.SHUTDOWN)) mySettings.mPrivDaemonAlive = false;
+      if (request.equals(Commands.SHUTDOWN)) {
+        mySettings.mPrivDaemonAlive = false;
+      }
 
       cmdWriter.println(request);
 
-      if (request.equals(Commands.SHUTDOWN)) return null;
+      if (request.equals(Commands.SHUTDOWN)) {
+        return null;
+      }
 
       try {
         return responseInStream.readObject();
