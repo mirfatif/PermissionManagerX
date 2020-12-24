@@ -1,5 +1,6 @@
 package com.mirfatif.privtasks;
 
+import android.annotation.SuppressLint;
 import android.app.AppOpsManager;
 import android.app.AppOpsManager.OpEntry;
 import android.content.Context;
@@ -64,16 +65,17 @@ public class PrivTasks {
   private Method mQueryPermissionsByGroup, mRevokeRuntimePermission;
 
   // Some methods are moved from IPackageManager to IPermissionManager in SDK 30.
-  @SuppressWarnings("unresolvedMethod")
+  @SuppressLint("SoonBlockedPrivateApi")
   private void initializePreRMethods() throws NoSuchMethodException {
     mGetPermissionFlags =
-        IPackageManager.class.getMethod(
+        IPackageManager.class.getDeclaredMethod(
             "getPermissionFlags", String.class, String.class, int.class);
-    mGetAllPermissionGroups = IPackageManager.class.getMethod("getAllPermissionGroups", int.class);
+    mGetAllPermissionGroups =
+        IPackageManager.class.getDeclaredMethod("getAllPermissionGroups", int.class);
     mQueryPermissionsByGroup =
-        IPackageManager.class.getMethod("queryPermissionsByGroup", String.class, int.class);
+        IPackageManager.class.getDeclaredMethod("queryPermissionsByGroup", String.class, int.class);
     mRevokeRuntimePermission =
-        IPackageManager.class.getMethod(
+        IPackageManager.class.getDeclaredMethod(
             "revokeRuntimePermission", String.class, String.class, int.class);
   }
 
