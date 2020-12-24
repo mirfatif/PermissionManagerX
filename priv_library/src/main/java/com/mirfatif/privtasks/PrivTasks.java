@@ -1,6 +1,7 @@
 package com.mirfatif.privtasks;
 
 import android.app.AppOpsManager;
+import android.app.AppOpsManager.OpEntry;
 import android.content.Context;
 import android.content.pm.IPackageManager;
 import android.content.pm.PackageManager;
@@ -49,20 +50,21 @@ public class PrivTasks {
 
   // asInterface() and getService() hidden APIs
   public void initializePmService() throws NoSuchMethodError, NoSuchMethodException {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-      mIPermissionManager =
-          IPermissionManager.Stub.asInterface(
-              ServiceManager.getService(Context.PERMISSION_SERVICE));
-    } else {
-      mIPackageManager = IPackageManager.Stub.asInterface(ServiceManager.getService("package"));
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
       initializePreRMethods();
+    } else {
+      // Context.PERMISSION_SERVICE doesn't work
+      mIPermissionManager =
+          IPermissionManager.Stub.asInterface(ServiceManager.getService("permissionmgr"));
     }
+    mIPackageManager = IPackageManager.Stub.asInterface(ServiceManager.getService("package"));
   }
 
   private Method mGetPermissionFlags, mGetAllPermissionGroups;
   private Method mQueryPermissionsByGroup, mRevokeRuntimePermission;
 
   // Some methods are moved from IPackageManager to IPermissionManager in SDK 30.
+  @SuppressWarnings("unresolvedMethod")
   private void initializePreRMethods() throws NoSuchMethodException {
     mGetPermissionFlags =
         IPackageManager.class.getMethod(
@@ -166,7 +168,7 @@ public class PrivTasks {
         } else {
           // hidden API
           // N and O don't have getLastAccessTime()
-          myOpEntry.lastAccessTime = opEntry.getTime();
+          myOpEntry.lastAccessTime = getTime(opEntry);
         }
         myOpEntry.opMode = opEntry.getMode();
 
@@ -179,6 +181,11 @@ public class PrivTasks {
       myPackageOpsList.add(myPackageOps);
     }
     return myPackageOpsList;
+  }
+
+  @SuppressWarnings("deprecation")
+  private long getTime(OpEntry opEntry) {
+    return opEntry.getTime();
   }
 
   public List<Integer> buildOpToDefaultModeList() {
@@ -269,15 +276,17 @@ public class PrivTasks {
     } else {
       try {
         // getAllPermissionGroups() hidden API
-        List<?> pgiList;
+        List<?> pgiList = new ArrayList<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
           pgiList = mIPermissionManager.getAllPermissionGroups(0).getList();
         } else if (mGetAllPermissionGroups == null) {
           return permToOpCodeList;
         } else {
-          pgiList =
-              ((ParceledListSlice<?>) mGetAllPermissionGroups.invoke(mIPackageManager, 0))
-                  .getList();
+          ParceledListSlice<?> pls =
+              (ParceledListSlice<?>) mGetAllPermissionGroups.invoke(mIPackageManager, 0);
+          if (pls != null) {
+            pgiList = pls.getList();
+          }
         }
 
         for (Object pgi : pgiList) {
@@ -300,16 +309,18 @@ public class PrivTasks {
       } else {
         try {
           // queryPermissionsByGroup() hidden API
-          List<?> piList;
+          List<?> piList = new ArrayList<>();
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             piList = mIPermissionManager.queryPermissionsByGroup(permGroup, 0).getList();
           } else if (mQueryPermissionsByGroup == null) {
             return permToOpCodeList;
           } else {
-            piList =
-                ((ParceledListSlice<?>)
-                        mQueryPermissionsByGroup.invoke(mIPackageManager, permGroup, 0))
-                    .getList();
+            ParceledListSlice<?> pls =
+                (ParceledListSlice<?>)
+                    mQueryPermissionsByGroup.invoke(mIPackageManager, permGroup, 0);
+            if (pls != null) {
+              piList = pls.getList();
+            }
           }
 
           for (Object object : piList) {
