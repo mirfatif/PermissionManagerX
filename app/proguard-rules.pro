@@ -24,5 +24,14 @@
 -keep class com.mirfatif.privtasks.MyPackageOps* { *; }
 
 # Default preferences are accessed through Reflection
--keep class com.mirfatif.permissionmanagerx.R$integer { *; }
--keep class com.mirfatif.permissionmanagerx.R$bool { *; }
+-keep class com.mirfatif.permissionmanagerx.R$integer {
+  int pref_*_default;
+}
+-keep class com.mirfatif.permissionmanagerx.R$bool {
+  int pref_*_default;
+}
+
+# Permission icons are accessed through Reflection
+-keep class com.mirfatif.permissionmanagerx.R$drawable {
+  int g_*;
+}
