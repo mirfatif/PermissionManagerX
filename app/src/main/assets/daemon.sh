@@ -26,7 +26,7 @@ if [ "$(id -u)" -eq 0 ]; then
     printf '%s' $$ >"$cgroup/cgroup.procs"
   done
 
-  CMD="set_priv -u $UID -g $UID --groups 1015,1023,1078,3003,9997"
+  CMD="set_priv -u $UID -g $UID --groups 2000,3003"
   if [ -e /proc/$$/attr/current ] && [ "$CONTEXT" != "default" ]; then
     if $DEBUG; then
       echo "SELinux enabled, switching context to $CONTEXT"
