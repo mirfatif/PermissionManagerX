@@ -100,7 +100,8 @@ public class PackageAdapter extends ListAdapter<Package, ItemViewHolder> {
 
       iconView.setImageDrawable(icon);
       packageLabelView.setText(pkg.getLabel());
-      packageNameView.setText(pkg.getName() + " (" + pkg.getUid() + ")");
+      String pkgName = pkg.getName() + " (" + pkg.getUid() + ")";
+      packageNameView.setText(pkgName);
 
       String packageState = null;
       if (pkg.isCriticalApp()) {

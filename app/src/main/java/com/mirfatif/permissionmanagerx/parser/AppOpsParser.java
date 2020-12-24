@@ -4,6 +4,7 @@ import android.app.AppOpsManager;
 import android.content.pm.PackageManager;
 import android.os.RemoteException;
 import android.util.Log;
+import com.mirfatif.permissionmanagerx.App;
 import com.mirfatif.permissionmanagerx.MySettings;
 import com.mirfatif.permissionmanagerx.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.Utils;
@@ -22,14 +23,12 @@ public class AppOpsParser {
 
   private final MySettings mMySettings;
   private final PrivDaemonHandler mPrivDaemonHandler;
-  private final PackageManager mPackageManager;
   private final PrivTasks mPrivTasks;
 
   // IPackageManager returns bigger permissions list than PackageManager
   private boolean mUseIPackageManager = true;
 
-  AppOpsParser(PackageManager packageManager) {
-    mPackageManager = packageManager;
+  AppOpsParser() {
     mMySettings = MySettings.getInstance();
     mPrivDaemonHandler = PrivDaemonHandler.getInstance();
     mPrivTasks = new PrivTasks(mMySettings.DEBUG, false);
@@ -160,8 +159,8 @@ public class AppOpsParser {
     Map<String, Integer> permToOpCodeMap = new HashMap<>();
     if (mMySettings.canUseHiddenAPIs() && (mUseIPackageManager || !mMySettings.mPrivDaemonAlive)) {
       try {
-        for (String item :
-            mPrivTasks.buildPermToOpCodeList(mUseIPackageManager ? null : mPackageManager)) {
+        PackageManager pm = mUseIPackageManager ? null : App.getContext().getPackageManager();
+        for (String item : mPrivTasks.buildPermToOpCodeList(pm)) {
           String[] keyValue = item.split(":");
           permToOpCodeMap.put(keyValue[0], Integer.parseInt(keyValue[1]));
         }

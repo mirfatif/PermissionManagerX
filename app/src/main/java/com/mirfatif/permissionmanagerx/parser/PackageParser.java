@@ -76,7 +76,7 @@ public class PackageParser {
   private PackageParser() {
     mPackageManager = App.getContext().getPackageManager();
     mMySettings = MySettings.getInstance();
-    mAppOpsParser = new AppOpsParser(mPackageManager);
+    mAppOpsParser = new AppOpsParser();
     mPrivDaemonHandler = PrivDaemonHandler.getInstance();
     mPermGroupsMapping = new PermGroupsMapping();
   }
