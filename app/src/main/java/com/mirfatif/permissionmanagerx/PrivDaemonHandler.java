@@ -52,9 +52,12 @@ public class PrivDaemonHandler {
     String dexFilePath = prefix + daemonDex;
     String daemonScriptPath = prefix + daemonScript;
 
-    OutputStream oStream = null;
-    InputStream iStream = null;
-    Reader reader = null;
+    Process suProcess = null;
+    Adb adb = null;
+    OutputStream outStream = null;
+    InputStream inStream = null;
+    BufferedReader inReader = null;
+
     try {
       for (String file : new String[] {daemonDex, daemonScript}) {
         String cmd;
@@ -71,22 +74,22 @@ public class PrivDaemonHandler {
           }
           cmd = "exec " + set_priv + " -- " + cmd;
 
-          Process process = Utils.runCommand("su -c " + cmd, TAG, true);
-          if (process == null) {
+          suProcess = Utils.runCommand("su -c " + cmd, TAG, true);
+          if (suProcess == null) {
             return false;
           }
-          oStream = process.getOutputStream();
-          reader = new InputStreamReader(process.getInputStream());
+          outStream = suProcess.getOutputStream();
+          inReader = new BufferedReader(new InputStreamReader(suProcess.getInputStream()));
         } else if (mySettings.isAdbConnected()) {
-          Adb adb = new Adb("exec " + cmd);
-          oStream = adb.getOutputStream();
-          reader = adb.getReader();
+          adb = new Adb("exec " + cmd);
+          outStream = adb.getOutputStream();
+          inReader = new BufferedReader(adb.getReader());
         } else {
           Log.e(TAG, "Cannot start privileged daemon without root or ADB shell");
           return false;
         }
 
-        Reader finalReader = reader;
+        Reader finalReader = inReader;
         Utils.runInBg(
             () -> {
               try {
@@ -95,30 +98,31 @@ public class PrivDaemonHandler {
               }
             });
 
-        iStream = App.getContext().getAssets().open(file);
-        if (!Utils.copyStream(iStream, oStream)) {
+        inStream = App.getContext().getAssets().open(file);
+        if (!Utils.copyStream(inStream, outStream)) {
           Log.e(TAG, "Extracting " + file + " failed");
           return false;
         }
-        oStream.flush();
-        oStream.close();
+        outStream.flush();
+        outStream.close();
       }
     } catch (IOException e) {
       e.printStackTrace();
       return false;
     } finally {
       try {
-        if (oStream != null) {
-          oStream.close();
+        if (outStream != null) {
+          outStream.close();
         }
-        if (iStream != null) {
-          iStream.close();
-        }
-        if (reader != null) {
-          reader.close();
+        if (inStream != null) {
+          inStream.close();
         }
       } catch (IOException ignored) {
       }
+      Utils.cleanProcess(inReader, suProcess, adb, "DaemonFilesExtraction");
+      adb = null;
+      outStream = null;
+      inStream = null;
     }
 
     // Let the files be saved
@@ -126,6 +130,7 @@ public class PrivDaemonHandler {
 
     int daemonUid = mySettings.getDaemonUid();
     String daemonContext = mySettings.getDaemonContext();
+    boolean useSocket = mySettings.useSocket();
 
     String params =
         mySettings.DEBUG
@@ -146,13 +151,6 @@ public class PrivDaemonHandler {
             + ":"
             + System.getenv("PATH");
 
-    boolean useSocket = mySettings.useSocket();
-
-    Adb adb = null;
-    InputStream stdInStream = null;
-    OutputStream stdOutStream = null;
-    BufferedReader inReader;
-
     String daemonCommand = "exec sh " + daemonScriptPath;
 
     if (isRootGranted) {
@@ -160,16 +158,17 @@ public class PrivDaemonHandler {
         params += " " + Commands.CREATE_SOCKET;
       }
 
-      Process process = Utils.runCommand("su -c " + daemonCommand, TAG, false);
-      if (process == null) {
+      suProcess = Utils.runCommand("su -c " + daemonCommand, TAG, false);
+      if (suProcess == null) {
         return false;
       }
 
-      stdInStream = process.getInputStream();
-      stdOutStream = process.getOutputStream();
-      inReader = new BufferedReader(new InputStreamReader(stdInStream));
-      cmdWriter = new PrintWriter(stdOutStream, true);
-      Utils.runInBg(() -> readDaemonMessages(process, null));
+      inStream = suProcess.getInputStream();
+      outStream = suProcess.getOutputStream();
+      inReader = new BufferedReader(new InputStreamReader(inStream));
+      cmdWriter = new PrintWriter(outStream, true);
+      Process finalSuProcess = suProcess;
+      Utils.runInBg(() -> readDaemonMessages(finalSuProcess, null));
 
     } else if (mySettings.isAdbConnected()) {
       params += " " + Commands.CREATE_SOCKET;
@@ -209,14 +208,15 @@ public class PrivDaemonHandler {
 
       cmdWriter.println(Commands.GET_READY);
 
-      // we have single input stream to read in case of ADB
+      // We have single input stream to read in case of ADB, so
+      // we couldn't read log messages before receiving PID and port number.
       if (!isRootGranted) {
         Adb finalAdb = adb;
         Utils.runInBg(() -> readDaemonMessages(null, finalAdb));
       }
 
       if (!useSocket) {
-        responseInStream = new ObjectInputStream(stdInStream);
+        responseInStream = new ObjectInputStream(inStream);
       } else {
         // AdbLib redirects stdErr to stdIn. So create direct Socket.
         // Also in case of ADB binary, ADB over Network speed sucks
@@ -226,9 +226,10 @@ public class PrivDaemonHandler {
         cmdWriter = new PrintWriter(socket.getOutputStream(), true);
         responseInStream = new ObjectInputStream(socket.getInputStream());
 
+        // cmdWriter and responseInStream both are using socket, so close su process streams.
         if (isRootGranted) {
-          stdOutStream.close();
-          stdInStream.close();
+          outStream.close();
+          inStream.close();
         }
       }
 
