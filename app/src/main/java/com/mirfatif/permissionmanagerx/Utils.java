@@ -166,30 +166,6 @@ public class Utils {
     return true;
   }
 
-  static boolean extractionFails(String fileName, File filePath) {
-    long lastUpdated = new File(App.getContext().getApplicationInfo().sourceDir).lastModified();
-    InputStream inputStream = null;
-    FileOutputStream outputStream = null;
-    try {
-      if (lastUpdated > filePath.lastModified()) {
-        inputStream = App.getContext().getAssets().open(fileName);
-        outputStream = new FileOutputStream(filePath);
-        if (!(copyStream(inputStream, outputStream))) return true;
-        outputStream.flush();
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-      return true;
-    } finally {
-      try {
-        if (outputStream != null) outputStream.close();
-        if (inputStream != null) inputStream.close();
-      } catch (IOException ignored) {
-      }
-    }
-    return false;
-  }
-
   public static final int INT_FIELD_ERROR = -1;
 
   public static int getIntField(String name, Class<?> cls, String tag) {
@@ -373,12 +349,6 @@ public class Utils {
   static String getCurrDateTime() {
     return new SimpleDateFormat("dd-MMM-yy_HH-mm-ss", Locale.ENGLISH)
         .format(System.currentTimeMillis());
-  }
-
-  // Always use primary user's directory to access dex, scripts and log files.
-  // ADBD (and hence started daemon) cannot access secondary profiles' private shared directories.
-  static String getOwnerFilePath(File file) {
-    return file.toString().replace("/" + getUserId() + "/", "/0/");
   }
 
   static String getDeviceInfo() {

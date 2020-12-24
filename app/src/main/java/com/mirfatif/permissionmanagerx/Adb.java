@@ -9,6 +9,7 @@ import com.cgutman.adblib.AdbStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.Socket;
@@ -16,6 +17,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
 class Adb {
+
+  static final String TAG = "Adb";
 
   private AdbCrypto adbCrypto;
   private Socket adbSocket;
@@ -53,16 +56,9 @@ class Adb {
       adbConnection = AdbConnection.create(adbSocket, adbCrypto);
       adbConnection.connect();
 
-      String runScript = "run.sh";
-      File runScriptPath = new File(App.getContext().getExternalFilesDir(null), runScript);
-      if (Utils.getUserId() == 0 && Utils.extractionFails(runScript, runScriptPath)) {
-        closeQuietly();
-        throw new IOException("Extraction of run.sh fails");
-      }
-
-      // if command is empty, while loop in shell script reads commands from stdIn
-      String cmd = "exec sh " + Utils.getOwnerFilePath(runScriptPath) + " " + command;
-      adbStream = adbConnection.open("shell:" + cmd);
+      // if command is empty, shell is opened
+      Log.i(TAG, "Executing: shell:" + command);
+      adbStream = adbConnection.open("shell:" + command);
 
     } catch (NoSuchAlgorithmException | IOException | InterruptedException e) {
       e.printStackTrace();
@@ -72,21 +68,35 @@ class Adb {
   }
 
   AdbReader getReader() {
-    if (adbReader == null) adbReader = new AdbReader(adbStream);
+    if (adbReader == null) {
+      adbReader = new AdbReader(adbStream);
+    }
     return adbReader;
   }
 
   AdbWriter getWriter() {
-    if (adbWriter == null) adbWriter = new AdbWriter(adbStream);
+    if (adbWriter == null) {
+      adbWriter = new AdbWriter(adbStream);
+    }
     return adbWriter;
   }
 
   void close() throws IOException {
-    if (adbReader != null) adbReader.close();
-    if (adbWriter != null) adbWriter.close();
-    if (adbStream != null) adbStream.close();
-    if (adbConnection != null) adbConnection.close();
-    if (adbSocket != null) adbSocket.close();
+    if (adbReader != null) {
+      adbReader.close();
+    }
+    if (adbWriter != null) {
+      adbWriter.close();
+    }
+    if (adbStream != null) {
+      adbStream.close();
+    }
+    if (adbConnection != null) {
+      adbConnection.close();
+    }
+    if (adbSocket != null) {
+      adbSocket.close();
+    }
     adbReader = null;
     adbWriter = null;
     adbStream = null;
@@ -113,16 +123,11 @@ class Adb {
 
     BufferedReader adbReader = new BufferedReader(adb.getReader());
     String line, res = null;
-    int exitCode = -1;
 
     try {
       while ((line = adbReader.readLine()) != null) {
         Log.i("checkAdbConnected", line);
-        if (res == null) res = line;
-        if (line.startsWith("EXIT_CODE:")) {
-          exitCode = Integer.parseInt(line.split(":")[1]);
-          break;
-        }
+        res = line;
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -134,9 +139,13 @@ class Adb {
       }
     }
 
-    if (exitCode != 0) return false;
+    if (res == null) {
+      return false;
+    }
     for (String match : new String[] {"2000", "0"}) {
-      if (res.trim().equals(match)) return true;
+      if (res.trim().equals(match)) {
+        return true;
+      }
     }
     return false;
   }
@@ -152,32 +161,42 @@ class Adb {
     }
 
     @Override
-    public int read(char[] cbuf, int off, int len) throws IOException {
-      if (adbStream == null) throw new IOException("Stream is null");
+    public synchronized int read(char[] cbuf, int off, int len) throws IOException {
+      if (adbStream == null) {
+        throw new IOException("Stream is null");
+      }
       int availableChars;
       if (chars == null || (availableChars = chars.length - pos) == 0) {
-        if (adbStream.isClosed() && adbStream.isQueueEmpty()) return -1;
+        if (adbStream.isClosed() && adbStream.isQueueEmpty()) {
+          return -1;
+        }
         byte[] payload;
         try {
           payload = adbStream.read();
         } catch (InterruptedException e) {
           throw new IOException(e);
         }
-        if (payload == null) return -1;
+        if (payload == null) {
+          return -1;
+        }
         chars = new String(payload).toCharArray();
         pos = 0;
         availableChars = chars.length;
       }
 
-      if (len > availableChars) len = availableChars;
+      if (len > availableChars) {
+        len = availableChars;
+      }
       System.arraycopy(chars, pos, cbuf, off, len);
       pos += len;
       return len;
     }
 
     @Override
-    public void close() throws IOException {
-      if (adbStream == null) throw new IOException("Stream is null");
+    public synchronized void close() throws IOException {
+      if (adbStream == null) {
+        throw new IOException("Stream is null");
+      }
       adbStream.close();
     }
   }
@@ -191,28 +210,106 @@ class Adb {
     }
 
     @Override
-    public void write(char[] cbuf, int off, int len) throws IOException {
-      if (adbStream == null) throw new IOException("Stream is null");
+    public synchronized void write(char[] cbuf, int off, int len) throws IOException {
+      if (adbStream == null) {
+        throw new IOException("Stream is null");
+      }
       StringBuilder stringBuilder = new StringBuilder();
       for (int i = off; i < off + len; i++) {
         stringBuilder.append(cbuf[i]);
       }
-      if (stringBuilder.length() == 0) return;
+      if (stringBuilder.length() == 0) {
+        return;
+      }
       try {
-        adbStream.write(stringBuilder.toString());
+        /** {@link AdbStream#write(String)} may append unnecessary null byte */
+        // Commands should always be flushed.
+        adbStream.write(stringBuilder.toString().getBytes(), true);
       } catch (InterruptedException e) {
         throw new IOException(e);
       }
     }
 
     @Override
-    public void flush() {
-      // AdbStream always flushes
+    public synchronized void flush() throws IOException {
+      if (adbStream == null) {
+        throw new IOException("Stream is null");
+      }
+      adbStream.flush();
     }
 
     @Override
-    public void close() throws IOException {
-      if (adbStream == null) throw new IOException("Stream is null");
+    public synchronized void close() throws IOException {
+      if (adbStream == null) {
+        throw new IOException("Stream is null");
+      }
+      flush();
+      adbStream.close();
+    }
+  }
+
+  private AdbOutputStream adbOutputStream;
+
+  AdbOutputStream getOutputStream() {
+    if (adbOutputStream == null) {
+      adbOutputStream = new AdbOutputStream(adbStream);
+    }
+    return adbOutputStream;
+  }
+
+  private static class AdbOutputStream extends OutputStream {
+
+    private final AdbStream adbStream;
+    private final byte[] payload = new byte[4096]; // write() hangs with 8192
+    private int count;
+
+    AdbOutputStream(AdbStream adbStream) {
+      this.adbStream = adbStream;
+    }
+
+    @Override
+    public synchronized void write(int b) throws IOException {
+      if (adbStream == null) {
+        throw new IOException("Stream is null");
+      }
+      payload[count] = (byte) b;
+      count++;
+      if (count >= payload.length) {
+        write();
+      }
+    }
+
+    private synchronized void write() throws IOException {
+      if (count == 0) {
+        return;
+      }
+      byte[] bytes = new byte[count];
+      System.arraycopy(payload, 0, bytes, 0, count);
+      try {
+        adbStream.write(bytes, true);
+      } catch (InterruptedException e) {
+        throw new IOException(e);
+      }
+      count = 0;
+    }
+
+    @Override
+    public synchronized void flush() throws IOException {
+      if (adbStream == null) {
+        throw new IOException("Stream is null");
+      }
+      if (count != 0) {
+        write();
+      }
+      adbStream.flush();
+    }
+
+    @Override
+    public synchronized void close() throws IOException {
+      if (adbStream == null) {
+        throw new IOException("Stream is null");
+      }
+      flush();
       adbStream.close();
     }
   }

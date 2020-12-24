@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.net.Inet4Address;
 import java.net.Socket;
 
@@ -35,23 +36,96 @@ public class PrivDaemonHandler {
   private PrivDaemonHandler() {}
 
   public Boolean startDaemon() {
+
+    // Required if running as root (ADBD or su)
+    if (!Utils.extractBinary()) {
+      return false;
+    }
+
     MySettings mySettings = MySettings.getInstance();
+    boolean isRootGranted = mySettings.isRootGranted();
+    File binDir = new File(App.getContext().getFilesDir(), "bin");
 
-    String dex = "daemon.dex";
-    String script = "daemon.sh";
-    File dexFile = new File(App.getContext().getExternalFilesDir(null), dex);
-    File scriptFile = new File(App.getContext().getExternalFilesDir(null), script);
+    String daemonDex = "daemon.dex";
+    String daemonScript = "daemon.sh";
+    String prefix = "/data/local/tmp/com.mirfatif.priv";
+    String dexFilePath = prefix + daemonDex;
+    String daemonScriptPath = prefix + daemonScript;
 
-    int userId = Utils.getUserId();
-    if (userId == 0) {
-      if (Utils.extractionFails(dex, dexFile) || Utils.extractionFails(script, scriptFile)) {
-        return false;
+    OutputStream oStream = null;
+    InputStream iStream = null;
+    Reader reader = null;
+    try {
+      for (String file : new String[] {daemonDex, daemonScript}) {
+        String cmd;
+        if (file.equals(daemonDex)) {
+          cmd = "sh -c 'exec cat - >" + dexFilePath + "'";
+        } else {
+          cmd = "sh -c 'exec cat - >" + daemonScriptPath + "'";
+        }
+
+        if (isRootGranted) {
+          String set_priv = binDir + "/set_priv -u " + 2000 + " -g " + 2000;
+          if (new File("/proc/self/ns/mnt").exists()) {
+            set_priv += " --context u:r:shell:s0";
+          }
+          cmd = "exec " + set_priv + " -- " + cmd;
+
+          Process process = Utils.runCommand("su -c " + cmd, TAG, true);
+          if (process == null) {
+            return false;
+          }
+          oStream = process.getOutputStream();
+          reader = new InputStreamReader(process.getInputStream());
+        } else if (mySettings.isAdbConnected()) {
+          Adb adb = new Adb("exec " + cmd);
+          oStream = adb.getOutputStream();
+          reader = adb.getReader();
+        } else {
+          Log.e(TAG, "Cannot start privileged daemon without root or ADB shell");
+          return false;
+        }
+
+        Reader finalReader = reader;
+        Utils.runInBg(
+            () -> {
+              try {
+                readProcessLog(new BufferedReader(finalReader), "DaemonFilesExtraction");
+              } catch (IOException ignored) {
+              }
+            });
+
+        iStream = App.getContext().getAssets().open(file);
+        if (!Utils.copyStream(iStream, oStream)) {
+          Log.e(TAG, "Extracting " + file + " failed");
+          return false;
+        }
+        oStream.flush();
+        oStream.close();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+      return false;
+    } finally {
+      try {
+        if (oStream != null) {
+          oStream.close();
+        }
+        if (iStream != null) {
+          iStream.close();
+        }
+        if (reader != null) {
+          reader.close();
+        }
+      } catch (IOException ignored) {
       }
     }
 
+    // Let the files be saved
+    SystemClock.sleep(500);
+
     int daemonUid = mySettings.getDaemonUid();
     String daemonContext = mySettings.getDaemonContext();
-    File binDir = new File(App.getContext().getFilesDir(), "bin");
 
     String params =
         mySettings.DEBUG
@@ -60,9 +134,9 @@ public class PrivDaemonHandler {
             + " "
             + daemonContext
             + " "
-            + userId
+            + Utils.getUserId()
             + " "
-            + Utils.getOwnerFilePath(dexFile)
+            + dexFilePath
             + " "
             + DAEMON_PACKAGE_NAME
             + " "
@@ -72,7 +146,6 @@ public class PrivDaemonHandler {
             + ":"
             + System.getenv("PATH");
 
-    boolean isRootGranted = mySettings.isRootGranted();
     boolean useSocket = mySettings.useSocket();
 
     Adb adb = null;
@@ -80,17 +153,14 @@ public class PrivDaemonHandler {
     OutputStream stdOutStream = null;
     BufferedReader inReader;
 
-    // required if running as root (ADBD or su)
-    if (!Utils.extractBinary()) {
-      return false;
-    }
+    String daemonCommand = "exec sh " + daemonScriptPath;
 
     if (isRootGranted) {
       if (useSocket) {
         params += " " + Commands.CREATE_SOCKET;
       }
 
-      Process process = Utils.runCommand("su", TAG, false);
+      Process process = Utils.runCommand("su -c " + daemonCommand, TAG, false);
       if (process == null) {
         return false;
       }
@@ -99,30 +169,22 @@ public class PrivDaemonHandler {
       stdOutStream = process.getOutputStream();
       inReader = new BufferedReader(new InputStreamReader(stdInStream));
       cmdWriter = new PrintWriter(stdOutStream, true);
-
       Utils.runInBg(() -> readDaemonMessages(process, null));
 
     } else if (mySettings.isAdbConnected()) {
       params += " " + Commands.CREATE_SOCKET;
       useSocket = true;
       try {
-        adb = new Adb("");
+        adb = new Adb(daemonCommand);
       } catch (IOException e) {
         e.printStackTrace();
         return false;
       }
       inReader = new BufferedReader(adb.getReader());
       cmdWriter = new PrintWriter(adb.getWriter(), true);
-
     } else {
-      Log.e(TAG, "Cannot start privileged daemon without root or ADB shell");
       return false;
     }
-
-    String command = "exec sh " + Utils.getOwnerFilePath(scriptFile);
-
-    Log.i(TAG, "Sending command to shell: " + command);
-    cmdWriter.println(command);
 
     // shell script reads from STDIN
     cmdWriter.println(params);
@@ -186,10 +248,10 @@ public class PrivDaemonHandler {
 
     if (mySettings.doLogging == null) {
       mySettings.doLogging = false;
-      command = "logcat --pid " + pid;
+      String logCommand = "logcat --pid " + pid;
 
       if (isRootGranted) {
-        command =
+        logCommand =
             binDir
                 + "/set_priv -u "
                 + daemonUid
@@ -198,14 +260,14 @@ public class PrivDaemonHandler {
                 + " --context "
                 + daemonContext
                 + " -- "
-                + command;
-        if (Utils.doLoggingFails(new String[] {"su", "exec " + command})) {
+                + logCommand;
+        if (Utils.doLoggingFails(new String[] {"su", "exec " + logCommand})) {
           return null;
         }
       } else {
         Adb adbLogger;
         try {
-          adbLogger = new Adb("exec " + command);
+          adbLogger = new Adb("exec " + logCommand);
         } catch (IOException e) {
           e.printStackTrace();
           return null;
@@ -227,26 +289,8 @@ public class PrivDaemonHandler {
       return;
     }
 
-    PrintWriter crashLogWriter = null;
-    String line;
     try {
-      while ((line = reader.readLine()) != null) {
-        if (line.contains(Commands.CRASH_LOG_STARTS)) {
-          File logFile = Utils.getCrashLogFile(true);
-          if (logFile != null) {
-            crashLogWriter = new PrintWriter(logFile);
-            crashLogWriter.println(Utils.getDeviceInfo());
-          }
-          continue;
-        }
-        if (crashLogWriter != null) {
-          crashLogWriter.println(line);
-        }
-        Log.e(DAEMON_CLASS_NAME, line);
-      }
-      if (crashLogWriter != null) {
-        crashLogWriter.close();
-      }
+      readProcessLog(reader, DAEMON_CLASS_NAME);
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
@@ -259,6 +303,28 @@ public class PrivDaemonHandler {
         Log.i(TAG, "Restarting privileged daemon");
         startDaemon();
       }
+    }
+  }
+
+  private void readProcessLog(BufferedReader reader, String tag) throws IOException {
+    PrintWriter crashLogWriter = null;
+    String line;
+    while ((line = reader.readLine()) != null) {
+      if (line.contains(Commands.CRASH_LOG_STARTS)) {
+        File logFile = Utils.getCrashLogFile(true);
+        if (logFile != null) {
+          crashLogWriter = new PrintWriter(logFile);
+          crashLogWriter.println(Utils.getDeviceInfo());
+        }
+        continue;
+      }
+      if (crashLogWriter != null) {
+        crashLogWriter.println(line);
+      }
+      Log.e(tag, line);
+    }
+    if (crashLogWriter != null) {
+      crashLogWriter.close();
     }
   }
 

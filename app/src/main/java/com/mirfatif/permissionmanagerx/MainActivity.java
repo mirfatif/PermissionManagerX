@@ -376,13 +376,10 @@ public class MainActivity extends AppCompatActivity {
               if (!mMySettings.mPrivDaemonAlive) {
                 Utils.runInBg(() -> startPrivDaemon(false));
               } else {
-                mMySettings.setUseHiddenAPIs(false);
-
-                setNavigationMenu();
-
                 AlertDialog dialog =
                     new Builder(this)
-                        .setPositiveButton(android.R.string.ok, null)
+                        .setPositiveButton(
+                            android.R.string.ok, (d, which) -> mMySettings.setUseHiddenAPIs(false))
                         .setTitle(R.string.privileges)
                         .setMessage(R.string.hidden_apis_warning)
                         .create();
@@ -884,6 +881,7 @@ public class MainActivity extends AppCompatActivity {
         () -> {
           if (mMySettings.mPrivDaemonAlive) {
             mPrivDaemonHandler.sendRequest(Commands.SHUTDOWN);
+            SystemClock.sleep(1000); // Let the previous processes cleanup
           }
           startPrivDaemon(false);
         });
@@ -1284,10 +1282,7 @@ public class MainActivity extends AppCompatActivity {
     if (Utils.doLoggingFails(new String[] {command})) {
       Utils.stopLogging();
       Utils.runInFg(
-          () -> {
-            Snackbar.make(mProgressBarContainer, R.string.logging_failed, 10000).show();
-            setNavigationMenu();
-          });
+          () -> Snackbar.make(mProgressBarContainer, R.string.logging_failed, 10000).show());
       return;
     }
 
