@@ -3,6 +3,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_height="match_parent"
   android:layout_width="match_parent"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   android:animateLayoutChanges="true">
 
   <LinearLayout
@@ -33,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/faq1"/>
 
@@ -42,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet_trans"
+        app:drawableStartCompat="@drawable/bullet_trans"
         android:drawablePadding="4dp"
         android:text="@string/faq1_ans"/>
 
@@ -50,7 +51,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/faq2"/>
 
@@ -59,7 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet_trans"
+        app:drawableStartCompat="@drawable/bullet_trans"
         android:drawablePadding="4dp"
         android:text="@string/faq2_ans"/>
 
@@ -67,7 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/faq3"/>
 
@@ -75,7 +76,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet_trans"
+        app:drawableStartCompat="@drawable/bullet_trans"
         android:drawablePadding="4dp"
         android:text="@string/faq3_ans"/>
 
@@ -83,7 +84,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/faq4"/>
 
@@ -91,7 +92,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet_trans"
+        app:drawableStartCompat="@drawable/bullet_trans"
         android:drawablePadding="4dp"
         android:text="@string/faq4_ans"/>
 
@@ -99,7 +100,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/faq5"/>
 
@@ -107,7 +108,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet_trans"
+        app:drawableStartCompat="@drawable/bullet_trans"
         android:drawablePadding="4dp"
         android:text="@string/faq5_ans"/>
 
@@ -115,7 +116,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/faq5_2"/>
 
@@ -123,7 +124,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet_trans"
+        app:drawableStartCompat="@drawable/bullet_trans"
         android:drawablePadding="4dp"
         android:text="@string/faq5_2_ans"/>
 
@@ -131,7 +132,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/faq6"/>
 
@@ -139,7 +140,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet_trans"
+        app:drawableStartCompat="@drawable/bullet_trans"
         android:drawablePadding="4dp"
         android:text="@string/faq6_ans"/>
 
@@ -147,7 +148,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/faq7"/>
 
@@ -155,7 +156,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet_trans"
+        app:drawableStartCompat="@drawable/bullet_trans"
         android:drawablePadding="4dp"
         android:text="@string/faq7_ans"/>
 
@@ -163,7 +164,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/faq8"/>
 
@@ -171,7 +172,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet_trans"
+        app:drawableStartCompat="@drawable/bullet_trans"
         android:drawablePadding="4dp"
         android:text="@string/faq8_ans"/>
 
@@ -179,7 +180,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/faq9"/>
 
@@ -187,7 +188,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet_trans"
+        app:drawableStartCompat="@drawable/bullet_trans"
         android:drawablePadding="4dp"
         android:text="@string/faq9_ans"/>
 
@@ -195,7 +196,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/faq10"/>
 
@@ -204,7 +205,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet_trans"
+        app:drawableStartCompat="@drawable/bullet_trans"
         android:drawablePadding="4dp"
         android:text="@string/faq10_ans"/>
 
@@ -233,7 +234,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/perm_reference_help2"/>
 
@@ -241,7 +242,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/perm_reference_help3"/>
 
@@ -249,7 +250,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/perm_reference_help4"/>
 
@@ -282,7 +283,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/package_help1"/>
 
@@ -290,7 +291,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/package_help2"/>
 
@@ -298,7 +299,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/package_help3"/>
 
@@ -306,7 +307,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/package_help5"/>
 
@@ -338,7 +339,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/perm_help1"/>
 
@@ -346,7 +347,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/perm_help2"/>
 
@@ -355,7 +356,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/perm_help3"/>
 
@@ -363,7 +364,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/perm_help4"/>
 
@@ -371,7 +372,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/perm_help5"/>
 
@@ -379,7 +380,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/perm_help6"/>
 
@@ -411,7 +412,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/search_help1"/>
 
@@ -419,7 +420,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/search_help2"/>
 
@@ -427,7 +428,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/search_help3"/>
 
@@ -435,7 +436,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/search_help4"/>
 
@@ -443,7 +444,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/search_help5"/>
 
@@ -451,7 +452,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/search_help6"/>
 
@@ -459,7 +460,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/search_help7"/>
 
@@ -467,7 +468,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/bullet"
+        app:drawableStartCompat="@drawable/bullet"
         android:drawablePadding="4dp"
         android:text="@string/search_help8"/>
 

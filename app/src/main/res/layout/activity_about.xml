@@ -3,6 +3,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   android:animateLayoutChanges="true">
 
   <LinearLayout
@@ -352,7 +353,7 @@
               <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/bullet"
+                app:drawableStartCompat="@drawable/bullet"
                 android:text="@string/paid_feature1"
                 android:drawablePadding="4dp"
                 android:layout_marginTop="2dp"/>
@@ -360,7 +361,7 @@
               <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/bullet"
+                app:drawableStartCompat="@drawable/bullet"
                 android:text="@string/paid_feature2"
                 android:drawablePadding="4dp"
                 android:layout_marginTop="2dp"/>
@@ -368,7 +369,7 @@
               <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/bullet"
+                app:drawableStartCompat="@drawable/bullet"
                 android:text="@string/paid_feature3"
                 android:drawablePadding="4dp"
                 android:layout_marginTop="2dp"/>

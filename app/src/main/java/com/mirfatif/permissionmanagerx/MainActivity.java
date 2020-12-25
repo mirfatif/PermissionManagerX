@@ -7,15 +7,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Process;
 import android.os.SystemClock;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -27,7 +24,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.SearchView.OnQueryTextListener;
 import androidx.core.content.FileProvider;
@@ -47,8 +43,6 @@ import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -876,7 +870,7 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  private void restartPrivDaemon() {
+  void restartPrivDaemon() {
     Utils.runInBg(
         () -> {
           if (mMySettings.mPrivDaemonAlive) {
@@ -1032,7 +1026,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     if (item.getItemId() == R.id.action_advanced_settings) {
-      showAdvancedSettingsDialog();
+      AdvancedSettings.showDialog(this);
       return true;
     }
 
@@ -1062,168 +1056,6 @@ public class MainActivity extends AppCompatActivity {
       return true;
     }
 
-    return false;
-  }
-
-  //////////////////////////////////////////////////////////////////
-  //////////////////////// ADVANCED SETTINGS ///////////////////////
-  //////////////////////////////////////////////////////////////////
-
-  private void showAdvancedSettingsDialog() {
-    View layout = getLayoutInflater().inflate(R.layout.advanced_settings_alert_dialog, null);
-    CheckBox useHiddenAPIsView = layout.findViewById(R.id.use_hidden_apis);
-    EditText adbPortView = layout.findViewById(R.id.adb_port);
-    CheckBox useSocketView = layout.findViewById(R.id.use_socket);
-    AppCompatSpinner daemonUidSpinner = layout.findViewById(R.id.daemon_uid_list);
-    AppCompatSpinner daemonContextSpinner = layout.findViewById(R.id.daemon_context_list);
-
-    layout
-        .findViewById(R.id.daemon_uid_list_arrow)
-        .setOnClickListener(v -> daemonUidSpinner.performClick());
-    layout
-        .findViewById(R.id.daemon_context_list_arrow)
-        .setOnClickListener(v -> daemonContextSpinner.performClick());
-
-    boolean useHiddenAPIs = mMySettings.useHiddenAPIs();
-    useHiddenAPIsView.setChecked(useHiddenAPIs);
-
-    String adbPort = String.valueOf(mMySettings.getAdbPort());
-    adbPortView.setText(adbPort);
-    adbPortView.addTextChangedListener(
-        new TextWatcher() {
-          @Override
-          public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-          @Override
-          public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (TextUtils.isEmpty(s)) {
-              return;
-            }
-            int port = Integer.parseInt(s.toString().trim());
-            if (port > 65535 || port <= 0) {
-              adbPortView.setError(getString(R.string.bad_port_number));
-            }
-          }
-
-          @Override
-          public void afterTextChanged(Editable s) {}
-        });
-
-    boolean useSocket = mMySettings.useSocket();
-    useSocketView.setChecked(useSocket);
-
-    List<String> spinnerUids = Arrays.asList(getResources().getStringArray(R.array.daemon_uids));
-    int uidResId = R.string.daemon_uid_system;
-    if (mMySettings.getDaemonUid() == 0) {
-      uidResId = R.string.daemon_uid_root;
-    } else if (mMySettings.getDaemonUid() == 2000) {
-      uidResId = R.string.daemon_uid_adb;
-    }
-    int uidSelectedPos = spinnerUids.indexOf(getString(uidResId));
-    daemonUidSpinner.setSelection(uidSelectedPos);
-
-    List<String> spinnerContexts =
-        Arrays.asList(getResources().getStringArray(R.array.daemon_contexts));
-    int contextResId = R.string.daemon_context_shell;
-    if (mMySettings.getDaemonContext().equals(MySettings.CONTEXT_DEFAULT)) {
-      contextResId = R.string.daemon_context_default;
-    }
-    int contextSelectedPos = spinnerContexts.indexOf(getString(contextResId));
-    daemonContextSpinner.setSelection(contextSelectedPos);
-
-    AlertDialog dialog =
-        new Builder(this)
-            .setTitle(R.string.advanced_settings_menu_item)
-            .setView(layout)
-            .setPositiveButton(
-                R.string.save,
-                (d, which) -> {
-                  boolean restartDaemon = false;
-                  if (useHiddenAPIs != useHiddenAPIsView.isChecked()) {
-                    restartDaemon = saveHiddenAPIsSettings(useHiddenAPIsView.isChecked());
-                  }
-
-                  String adbPortNew = adbPortView.getText().toString().trim();
-                  if (!TextUtils.isEmpty(adbPortNew) && !adbPort.equals(adbPortNew)) {
-                    int port = Integer.parseInt(adbPortNew);
-                    if (port > 65535 || port <= 0) {
-                      Toast.makeText(App.getContext(), R.string.bad_port_number, Toast.LENGTH_LONG)
-                          .show();
-                    } else {
-                      mMySettings.setAdbPort(port);
-                      if (!restartDaemon) {
-                        restartDaemon = true;
-                      }
-                    }
-                  }
-
-                  if (useSocket != useSocketView.isChecked()) {
-                    mMySettings.setUseSocket(!useSocket);
-                    if (!restartDaemon) {
-                      restartDaemon = true;
-                    }
-                  }
-
-                  int uidSelectedPosNew = daemonUidSpinner.getSelectedItemPosition();
-                  if (uidSelectedPos != uidSelectedPosNew) {
-                    String newSelection = spinnerUids.get(uidSelectedPosNew);
-                    int uid = 1000;
-                    if (newSelection.equals(getString(R.string.daemon_uid_root))) {
-                      uid = 0;
-                    } else if (newSelection.equals(getString(R.string.daemon_uid_adb))) {
-                      uid = 2000;
-                    }
-                    mMySettings.setDaemonUid(uid);
-                    if (!restartDaemon) {
-                      restartDaemon = true;
-                    }
-                  }
-
-                  int contextSelectedPosNew = daemonContextSpinner.getSelectedItemPosition();
-                  if (contextSelectedPos != contextSelectedPosNew) {
-                    String newSelection = spinnerContexts.get(contextSelectedPosNew);
-                    String context = MySettings.CONTEXT_SHELL;
-                    if (newSelection.equals(getString(R.string.daemon_context_default))) {
-                      context = MySettings.CONTEXT_DEFAULT;
-                    }
-                    mMySettings.setDaemonContext(context);
-                    if (!restartDaemon) {
-                      restartDaemon = true;
-                    }
-                  }
-
-                  if (restartDaemon) {
-                    restartPrivDaemon();
-                  }
-                })
-            .setNegativeButton(android.R.string.cancel, null)
-            .create();
-    new AlertDialogFragment(dialog).show(mFM, "ADVANCED_SETTINGS", false);
-  }
-
-  private boolean saveHiddenAPIsSettings(boolean useHiddenAPIs) {
-    if (useHiddenAPIs) {
-      mMySettings.setUseHiddenAPIs(true);
-
-      // make sure read AppOps permission is granted
-      return true;
-    }
-
-    AlertDialog dialog =
-        new Builder(this)
-            .setPositiveButton(
-                R.string.yes,
-                (d, which) -> {
-                  mMySettings.setUseHiddenAPIs(false);
-
-                  // start daemon if not running
-                  Utils.runInBg(() -> startPrivDaemon(false));
-                })
-            .setNegativeButton(R.string.no, null)
-            .setTitle(R.string.hidden_apis)
-            .setMessage(R.string.hidden_apis_confirmation)
-            .create();
-    new AlertDialogFragment(dialog).show(mFM, "HIDDEN_APIS_CONFIRM", false);
     return false;
   }
 
