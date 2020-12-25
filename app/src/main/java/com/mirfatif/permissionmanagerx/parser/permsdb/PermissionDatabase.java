@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx.permsdb;
+package com.mirfatif.permissionmanagerx.parser.permsdb;
 
 import androidx.room.Database;
 import androidx.room.RoomDatabase;

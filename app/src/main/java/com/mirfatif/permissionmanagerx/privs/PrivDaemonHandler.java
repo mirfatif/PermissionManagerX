@@ -1,10 +1,15 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.privs;
 
+import android.os.Build;
 import android.os.SystemClock;
 import android.util.Log;
+import com.mirfatif.permissionmanagerx.Utils;
+import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.privtasks.Commands;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,12 +19,13 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.net.Inet4Address;
 import java.net.Socket;
+import java.util.Arrays;
 
 public class PrivDaemonHandler {
 
-  static final String TAG = "PrivDaemonHandler";
-  static String DAEMON_PACKAGE_NAME = "com.mirfatif.privdaemon";
-  static final String DAEMON_CLASS_NAME = "PrivDaemon";
+  private static final String TAG = "PrivDaemonHandler";
+  private static final String DAEMON_PACKAGE_NAME = "com.mirfatif.privdaemon";
+  private static final String DAEMON_CLASS_NAME = "PrivDaemon";
 
   private PrintWriter cmdWriter;
   private ObjectInputStream responseInStream;
@@ -38,13 +44,47 @@ public class PrivDaemonHandler {
   public Boolean startDaemon() {
 
     // Required if running as root (ADBD or su)
-    if (!Utils.extractBinary()) {
-      return false;
+    File binDir = new File(App.getContext().getFilesDir(), "bin");
+    String binary = "set_priv";
+    File binaryPath = new File(binDir, binary);
+    if (!binaryPath.exists()) {
+      if (!binDir.exists() && !binDir.mkdirs()) {
+        Log.e(TAG, "Could not create directory " + binDir);
+        return false;
+      }
+
+      long lastUpdated = new File(App.getContext().getApplicationInfo().sourceDir).lastModified();
+      if (lastUpdated > binaryPath.lastModified()) {
+        String arch = "_arm";
+        String supportedABIs = Arrays.toString(Build.SUPPORTED_ABIS).toLowerCase();
+        if (supportedABIs.contains("x86")) {
+          arch = "_x86";
+        } else if (!supportedABIs.contains("arm")) {
+          Log.e(TAG, "Arch not supported " + supportedABIs);
+          return false;
+        }
+
+        try (InputStream inputStream = App.getContext().getAssets().open(binary + arch);
+            OutputStream outputStream = new FileOutputStream(binaryPath)) {
+          if (Utils.copyStreamFails(inputStream, outputStream)) {
+            Log.e(TAG, "Extracting " + binary + " failed");
+            return false;
+          }
+          String command = "chmod 0755 " + binaryPath;
+          Process p = Runtime.getRuntime().exec(command);
+          if (p.waitFor() != 0) {
+            Log.e(TAG, command + " failed");
+            return false;
+          }
+        } catch (IOException | InterruptedException e) {
+          e.printStackTrace();
+          return false;
+        }
+      }
     }
 
     MySettings mySettings = MySettings.getInstance();
     boolean isRootGranted = mySettings.isRootGranted();
-    File binDir = new File(App.getContext().getFilesDir(), "bin");
 
     String daemonDex = "daemon.dex";
     String daemonScript = "daemon.sh";
@@ -99,7 +139,7 @@ public class PrivDaemonHandler {
             });
 
         inStream = App.getContext().getAssets().open(file);
-        if (!Utils.copyStream(inStream, outStream)) {
+        if (Utils.copyStreamFails(inStream, outStream)) {
           Log.e(TAG, "Extracting " + file + " failed");
           return false;
         }
@@ -133,7 +173,7 @@ public class PrivDaemonHandler {
     boolean useSocket = mySettings.useSocket();
 
     String params =
-        mySettings.DEBUG
+        mySettings.isDebug()
             + " "
             + daemonUid
             + " "
@@ -245,10 +285,10 @@ public class PrivDaemonHandler {
       return false;
     }
 
-    mySettings.mPrivDaemonAlive = true;
+    mySettings.setPrivDaemonAlive(true);
 
-    if (mySettings.doLogging == null) {
-      mySettings.doLogging = false;
+    if (mySettings.hasLoggingStarted()) {
+      mySettings.setLoggingFullyStarted();
       String logCommand = "logcat --pid " + pid;
 
       if (isRootGranted) {
@@ -297,8 +337,8 @@ public class PrivDaemonHandler {
     } finally {
       Utils.cleanProcess(reader, process, adb, "readDaemonMessages");
 
-      if (MySettings.getInstance().mPrivDaemonAlive) {
-        MySettings.getInstance().mPrivDaemonAlive = false;
+      if (MySettings.getInstance().isPrivDaemonAlive()) {
+        MySettings.getInstance().setPrivDaemonAlive(false);
         Log.e(TAG, "Privileged daemon died");
         SystemClock.sleep(5000);
         Log.i(TAG, "Restarting privileged daemon");
@@ -332,7 +372,7 @@ public class PrivDaemonHandler {
   public Object sendRequest(String request) {
     synchronized (PrivDaemonHandler.class) {
       MySettings mySettings = MySettings.getInstance();
-      if (!mySettings.mPrivDaemonAlive) {
+      if (!mySettings.isPrivDaemonAlive()) {
         Log.e(TAG, request + ": Privileged daemon is dead");
         return null;
       }
@@ -344,7 +384,7 @@ public class PrivDaemonHandler {
 
       // to avoid getting restarted
       if (request.equals(Commands.SHUTDOWN)) {
-        mySettings.mPrivDaemonAlive = false;
+        mySettings.setPrivDaemonAlive(false);
       }
 
       cmdWriter.println(request);

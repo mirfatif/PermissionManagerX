@@ -18,18 +18,23 @@ import android.widget.Toast;
 import androidx.browser.customtabs.CustomTabColorSchemeParams;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.browser.customtabs.CustomTabsService;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.EncryptedSharedPreferences.PrefKeyEncryptionScheme;
 import androidx.security.crypto.EncryptedSharedPreferences.PrefValueEncryptionScheme;
 import androidx.security.crypto.MasterKey;
 import androidx.security.crypto.MasterKey.KeyScheme;
+import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.main.MainActivityFlavor;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.privs.Adb;
+import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -38,7 +43,6 @@ import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.security.GeneralSecurityException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -85,7 +89,7 @@ public class Utils {
     return mSearchQueryExecutor.submit(runnable);
   }
 
-  static boolean runCommand(String command, String tag, String match) {
+  public static boolean runCommand(String command, String tag, String match) {
     Process process = runCommand(command, tag, true);
     if (process == null) return false;
     try (BufferedReader stdIn =
@@ -106,7 +110,7 @@ public class Utils {
     return false;
   }
 
-  static Process runCommand(String cmd, String tag, boolean redirectStdErr) {
+  public static Process runCommand(String cmd, String tag, boolean redirectStdErr) {
     File binDir = new File(App.getContext().getFilesDir(), "bin");
     File cwd = App.getContext().getExternalFilesDir(null);
 
@@ -125,47 +129,6 @@ public class Utils {
     }
   }
 
-  static boolean extractBinary() {
-    File binDir = new File(App.getContext().getFilesDir(), "bin");
-    String binary = "set_priv";
-    File file = new File(binDir, binary);
-    if (file.exists()) return true;
-
-    if (!binDir.exists() && !binDir.mkdirs()) {
-      Log.e("extractBinary", "Could not create directory " + binDir);
-      return false;
-    }
-
-    long lastUpdated = new File(App.getContext().getApplicationInfo().sourceDir).lastModified();
-    if (lastUpdated < file.lastModified()) return true;
-
-    String arch = "_arm";
-    String supportedABIs = Arrays.toString(Build.SUPPORTED_ABIS).toLowerCase();
-    if (supportedABIs.contains("x86")) {
-      arch = "_x86";
-    } else if (!supportedABIs.contains("arm")) {
-      Log.e("extractBinary", "Arch not supported " + supportedABIs);
-      return false;
-    }
-
-    try (InputStream inputStream = App.getContext().getAssets().open(binary + arch);
-        OutputStream outputStream = new FileOutputStream(file)) {
-      if (!(copyStream(inputStream, outputStream))) {
-        return false;
-      }
-      String command = "chmod 0755 " + file;
-      Process p = Runtime.getRuntime().exec(command);
-      if (p.waitFor() != 0) {
-        Log.e("extractBinary", command + " failed");
-        return false;
-      }
-    } catch (IOException | InterruptedException e) {
-      e.printStackTrace();
-      return false;
-    }
-    return true;
-  }
-
   public static final int INT_FIELD_ERROR = -1;
 
   public static int getIntField(String name, Class<?> cls, String tag) {
@@ -179,8 +142,8 @@ public class Utils {
   }
 
   // org.apache.commons.io.IOUtils.copy()
-  static boolean copyStream(InputStream input, OutputStream output) {
-    if (input == null || output == null) return false;
+  public static boolean copyStreamFails(InputStream input, OutputStream output) {
+    if (input == null || output == null) return true;
     byte[] buffer = new byte[8192];
     int len;
     long count = 0;
@@ -191,9 +154,9 @@ public class Utils {
       }
     } catch (IOException e) {
       e.printStackTrace();
-      return false;
+      return true;
     }
-    return count <= Integer.MAX_VALUE;
+    return count > Integer.MAX_VALUE;
   }
 
   // org.apache.commons.lang3.StringUtils.capitalize()
@@ -223,7 +186,7 @@ public class Utils {
     return str.substring(0, len - 3).concat("…");
   }
 
-  static boolean openWebUrl(Activity activity, String url) {
+  public static boolean openWebUrl(Activity activity, String url) {
     List<ResolveInfo> customTabsServices =
         App.getContext()
             .getPackageManager()
@@ -257,7 +220,7 @@ public class Utils {
     return true;
   }
 
-  static boolean sendMail(Activity activity, String body) {
+  public static boolean sendMail(Activity activity, String body) {
     Intent emailIntent = new Intent(Intent.ACTION_SENDTO).setData(Uri.parse("mailto:"));
     emailIntent.putExtra(
         Intent.EXTRA_EMAIL, new String[] {App.getContext().getString(R.string.email_address)});
@@ -271,12 +234,17 @@ public class Utils {
     return true;
   }
 
-  static boolean isNightMode(Activity activity) {
+  public static boolean isNightMode(Activity activity) {
     int uiMode = activity.getResources().getConfiguration().uiMode;
     return (uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
   }
 
-  static final MutableLiveData<Boolean> mHiddenAPIsNotWorking = new MutableLiveData<>(false);
+  private static final MutableLiveData<Boolean> mHiddenAPIsNotWorking =
+      new MutableLiveData<>(false);
+
+  public static LiveData<Boolean> getHiddenAPIsNotWorking() {
+    return mHiddenAPIsNotWorking;
+  }
 
   public static void hiddenAPIsNotWorking(String tag, String error) {
     Log.e(tag, error);
@@ -285,7 +253,7 @@ public class Utils {
     runInFg(() -> mHiddenAPIsNotWorking.setValue(false)); // for using again
   }
 
-  static void cleanProcess(BufferedReader reader, Process process, Adb adb, String tag) {
+  public static void cleanProcess(BufferedReader reader, Process process, Adb adb, String tag) {
     // Try best to kill the process. The on reading daemon's logcat might not
     // be killed because of different UID.
     try {
@@ -309,7 +277,7 @@ public class Utils {
     return android.os.Process.myUid() / 100000;
   }
 
-  static SharedPreferences getEncPrefs() {
+  public static SharedPreferences getEncPrefs() {
     try {
       return EncryptedSharedPreferences.create(
           App.getContext(),
@@ -323,7 +291,7 @@ public class Utils {
     }
   }
 
-  static File createCrashLogDir() {
+  public static File createCrashLogDir() {
     File logDir = new File(App.getContext().getExternalFilesDir(null), "crash_logs");
     if (logDir.exists() || logDir.mkdirs()) {
       return logDir;
@@ -333,11 +301,11 @@ public class Utils {
     return null;
   }
 
-  static final String LOG_FILE_PREFIX = "PMX_";
-  static final String LOG_FILE_DAEMON_PREFIX = "PMXD_";
-  static final String LOG_FILE_SUFFIX = ".log";
+  public static final String LOG_FILE_PREFIX = "PMX_";
+  public static final String LOG_FILE_DAEMON_PREFIX = "PMXD_";
+  public static final String LOG_FILE_SUFFIX = ".log";
 
-  static File getCrashLogFile(boolean isDaemon) {
+  public static File getCrashLogFile(boolean isDaemon) {
     File logDir = createCrashLogDir();
     if (logDir == null) {
       return null;
@@ -346,12 +314,12 @@ public class Utils {
     return new File(logDir, prefix + getCurrDateTime() + LOG_FILE_SUFFIX);
   }
 
-  static String getCurrDateTime() {
+  public static String getCurrDateTime() {
     return new SimpleDateFormat("dd-MMM-yy_HH-mm-ss", Locale.ENGLISH)
         .format(System.currentTimeMillis());
   }
 
-  static String getDeviceInfo() {
+  public static String getDeviceInfo() {
     return BuildConfig.VERSION_NAME
         + (MainActivityFlavor.IS_FREE_VERSION ? "" : " Paid")
         + "\nAndroid "
@@ -372,7 +340,7 @@ public class Utils {
   ///////////////////////////// LOGGING ////////////////////////////
   //////////////////////////////////////////////////////////////////
 
-  static boolean doLoggingFails(String[] command) {
+  public static boolean doLoggingFails(String[] command) {
     try {
       writeToLogFile(getDeviceInfo());
     } catch (IOException e) {
@@ -393,7 +361,7 @@ public class Utils {
     return false;
   }
 
-  static void readLogcatStream(Process process, Adb adb) {
+  public static void readLogcatStream(Process process, Adb adb) {
     BufferedReader reader;
     if (process != null) {
       reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -417,30 +385,29 @@ public class Utils {
     }
   }
 
-  static BufferedWriter mLogcatWriter;
+  public static BufferedWriter mLogcatWriter;
 
   private static void writeToLogFile(String line) throws IOException {
-    if (!MySettings.getInstance().DEBUG) return;
+    if (!MySettings.getInstance().isDebug()) return;
     synchronized (Utils.class) {
       mLogcatWriter.write(line);
       mLogcatWriter.newLine();
     }
   }
 
-  static void startLoggingTimer() {
+  public static void startLoggingTimer() {
     Executors.newSingleThreadScheduledExecutor().schedule(Utils::stopLogging, 5, TimeUnit.MINUTES);
   }
 
-  static synchronized void stopLogging() {
+  public static synchronized void stopLogging() {
     MySettings mySettings = MySettings.getInstance();
-    if (!mySettings.DEBUG) return;
-    mySettings.doLogging = false;
-    mySettings.DEBUG = false;
+    if (!mySettings.isDebug()) return;
+    mySettings.setLogging(false);
     try {
       if (mLogcatWriter != null) mLogcatWriter.close();
     } catch (IOException ignored) {
     }
-    if (mySettings.mPrivDaemonAlive) {
+    if (mySettings.isPrivDaemonAlive()) {
       PrivDaemonHandler.getInstance().sendRequest(Commands.STOP_LOGGING);
     }
     Log.i("stopLogging()", Commands.STOP_LOGGING);
@@ -449,7 +416,7 @@ public class Utils {
   private static long daemonDeadLogTs = 0;
 
   public static void logDaemonDead(String tag) {
-    if (MySettings.getInstance().DEBUG || System.currentTimeMillis() - daemonDeadLogTs > 1000) {
+    if (MySettings.getInstance().isDebug() || System.currentTimeMillis() - daemonDeadLogTs > 1000) {
       Log.e(tag, "Privileged daemon is not running");
       daemonDeadLogTs = System.currentTimeMillis();
     }
@@ -468,11 +435,11 @@ public class Utils {
             () ->
                 Toast.makeText(App.getContext(), R.string.getting_root_fail, Toast.LENGTH_LONG)
                     .show());
-        if (mySettings.DEBUG) {
+        if (mySettings.isDebug()) {
           Util.debugLog("checkRoot", "Getting root privileges failed");
         }
       } else {
-        if (mySettings.DEBUG) {
+        if (mySettings.isDebug()) {
           Util.debugLog("checkRoot", "Getting root privileges succeeded");
         }
         return true;
@@ -490,11 +457,11 @@ public class Utils {
             () ->
                 Toast.makeText(App.getContext(), R.string.adb_connect_fail, Toast.LENGTH_LONG)
                     .show());
-        if (mySettings.DEBUG) {
+        if (mySettings.isDebug()) {
           Util.debugLog("checkAdb", "Connecting to ADB failed");
         }
       } else {
-        if (mySettings.DEBUG) {
+        if (mySettings.isDebug()) {
           Util.debugLog("checkAdb", "Connecting to ADB succeeded");
         }
         return true;
@@ -503,39 +470,15 @@ public class Utils {
     return false;
   }
 
-  static boolean checkRoot() {
+  public static boolean checkRoot() {
     boolean res = runCommand("su -c id  -u", "checkRoot", "0");
     MySettings.getInstance().setRootGranted(res);
     return res;
   }
 
-  static boolean checkAdb() {
+  public static boolean checkAdb() {
     boolean res = Adb.isConnected();
     MySettings.getInstance().setAdbConnected(res);
     return res;
   }
-}
-
-interface PkgClickListener {
-  void onClick(Package pkg);
-}
-
-interface PkgLongClickListener {
-  void onLongClick(Package pkg);
-}
-
-interface PermClickListener {
-  void onClick(Permission permission);
-}
-
-interface PermClickListenerWithLoc {
-  void onClick(Permission permission, int yLocation);
-}
-
-interface PermSpinnerSelectListener {
-  void onSelect(Permission permission, int selectedValue);
-}
-
-interface PermLongClickListener {
-  void onLongClick(Permission permission);
 }

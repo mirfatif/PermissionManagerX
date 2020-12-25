@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.privs;
 
 import android.util.Base64;
 import android.util.Log;
@@ -6,6 +6,8 @@ import com.cgutman.adblib.AdbBase64;
 import com.cgutman.adblib.AdbConnection;
 import com.cgutman.adblib.AdbCrypto;
 import com.cgutman.adblib.AdbStream;
+import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -16,9 +18,9 @@ import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
-class Adb {
+public class Adb {
 
-  static final String TAG = "Adb";
+  private static final String TAG = "Adb";
 
   private AdbCrypto adbCrypto;
   private Socket adbSocket;
@@ -67,7 +69,7 @@ class Adb {
     }
   }
 
-  AdbReader getReader() {
+  public AdbReader getReader() {
     if (adbReader == null) {
       adbReader = new AdbReader(adbStream);
     }
@@ -81,7 +83,7 @@ class Adb {
     return adbWriter;
   }
 
-  void close() throws IOException {
+  public void close() throws IOException {
     if (adbReader != null) {
       adbReader.close();
     }
@@ -112,7 +114,7 @@ class Adb {
     }
   }
 
-  static boolean isConnected() {
+  public static boolean isConnected() {
     Adb adb;
     try {
       adb = new Adb("id -u");

@@ -1,10 +1,11 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.main;
 
 import android.content.Context;
 import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
+import com.mirfatif.permissionmanagerx.Utils;
 
 public class MyFrameLayout extends FrameLayout {
 
@@ -57,11 +58,11 @@ public class MyFrameLayout extends FrameLayout {
   private VisibilityChangeListener mListener;
 
   @SuppressWarnings("UnusedDeclaration")
-  void setOnVisibilityChangeListener(VisibilityChangeListener listener) {
+  public void setOnVisibilityChangeListener(VisibilityChangeListener listener) {
     mListener = listener;
   }
 
-  interface VisibilityChangeListener {
+  public interface VisibilityChangeListener {
     void visibilityChanged(int visibility);
   }
 }

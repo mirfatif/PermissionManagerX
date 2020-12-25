@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.prefs;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -7,9 +7,13 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.text.TextUtils;
 import androidx.preference.PreferenceManager;
 import androidx.room.Room;
+import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.Utils;
+import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.main.MainActivity;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
-import com.mirfatif.permissionmanagerx.permsdb.PermissionDao;
-import com.mirfatif.permissionmanagerx.permsdb.PermissionDatabase;
+import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDao;
+import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDatabase;
 import com.mirfatif.privtasks.Util;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -23,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MySettings {
 
-  static final String TAG = "MySettings";
+  private static final String TAG = "MySettings";
 
   private static MySettings mMySettings;
 
@@ -45,12 +49,63 @@ public class MySettings {
     mExtraAppOpsPrefKey = getString(R.string.pref_filter_extra_appops_key);
   }
 
-  public boolean mPrivDaemonAlive = false;
-  public boolean mDoRepeatUpdates = true;
-  boolean mAskToSendCrashReport = true;
+  private boolean mPrivDaemonAlive = false;
 
-  Boolean doLogging = false;
-  public boolean DEBUG = false;
+  public boolean isPrivDaemonAlive() {
+    return mPrivDaemonAlive;
+  }
+
+  public void setPrivDaemonAlive(boolean alive) {
+    mPrivDaemonAlive = alive;
+  }
+
+  private boolean mDoRepeatUpdates = true;
+
+  public boolean shouldDoRepeatUpdates() {
+    return mDoRepeatUpdates;
+  }
+
+  public void setDoRepeatUpdates(boolean doRepeatUpdates) {
+    mDoRepeatUpdates = doRepeatUpdates;
+  }
+
+  private boolean mAskToSendCrashReport = true;
+
+  public boolean shouldAskToSendCrashReport() {
+    return mAskToSendCrashReport;
+  }
+
+  public void setAskToSendCrashReport(boolean ask) {
+    mAskToSendCrashReport = ask;
+  }
+
+  private Boolean startLogging = false;
+  private boolean DEBUG = false;
+
+  public boolean isDebug() {
+    return DEBUG;
+  }
+
+  public void setLogging(Boolean logging) {
+    if (logging == null) {
+      startLogging = null;
+    } else {
+      startLogging = logging;
+      DEBUG = logging;
+    }
+  }
+
+  public boolean shouldStartLogging() {
+    return startLogging != null && startLogging;
+  }
+
+  public boolean hasLoggingStarted() {
+    return startLogging == null;
+  }
+
+  public void setLoggingFullyStarted() {
+    startLogging = false;
+  }
 
   public boolean getBoolPref(int keyResId) {
     String prefKey = getString(keyResId);
@@ -72,7 +127,7 @@ public class MySettings {
     }
   }
 
-  Set<String> getSetPref(int keyId) {
+  private Set<String> getSetPref(int keyId) {
     return mPrefs.getStringSet(getString(keyId), null);
   }
 
@@ -89,7 +144,7 @@ public class MySettings {
     }
   }
 
-  void savePref(int key, int integer) {
+  private void savePref(int key, int integer) {
     String prefKey = getString(key);
     if (prefKey.endsWith("_enc")) {
       mEncPrefs.edit().putInt(prefKey, integer).apply();
@@ -98,7 +153,7 @@ public class MySettings {
     }
   }
 
-  void savePref(int key, Set<String> stringSet) {
+  private void savePref(int key, Set<String> stringSet) {
     mPrefs.edit().putStringSet(getString(key), stringSet).apply();
     updateList(getString(key));
   }
@@ -109,54 +164,54 @@ public class MySettings {
     return !mLowMemory;
   }
 
-  synchronized void setLowMemory(boolean lowMemory) {
+  public synchronized void setLowMemory(boolean lowMemory) {
     mLowMemory = lowMemory;
   }
 
-  int getAdbPort() {
+  public int getAdbPort() {
     return getIntPref(R.string.pref_main_adb_port_key);
   }
 
-  void setAdbPort(int port) {
+  public void setAdbPort(int port) {
     savePref(R.string.pref_main_adb_port_key, port);
   }
 
-  int getDaemonUid() {
+  public int getDaemonUid() {
     return getIntPref(R.string.pref_main_daemon_uid_key);
   }
 
-  void setDaemonUid(int uid) {
+  public void setDaemonUid(int uid) {
     savePref(R.string.pref_main_daemon_uid_key, uid);
   }
 
-  static String CONTEXT_DEFAULT = "default";
-  static String CONTEXT_SHELL = "u:r:shell:s0";
+  public static String CONTEXT_DEFAULT = "default";
+  public static String CONTEXT_SHELL = "u:r:shell:s0";
 
-  String getDaemonContext() {
+  public String getDaemonContext() {
     return mPrefs.getString(getString(R.string.pref_main_daemon_context_key), CONTEXT_SHELL);
   }
 
-  void setDaemonContext(String context) {
+  public void setDaemonContext(String context) {
     mPrefs.edit().putString(getString(R.string.pref_main_daemon_context_key), context).apply();
   }
 
-  void plusAppLaunchCount() {
+  public void plusAppLaunchCount() {
     int appLaunchCountId = R.string.pref_main_app_launch_count_enc_key;
     savePref(appLaunchCountId, getIntPref(appLaunchCountId) + 1);
   }
 
-  long getCrashReportTs() {
+  public long getCrashReportTs() {
     return mEncPrefs.getLong(getString(R.string.pref_main_crash_report_ts_enc_key), 0);
   }
 
-  void setCrashReportTs() {
+  public void setCrashReportTs() {
     mEncPrefs
         .edit()
         .putLong(getString(R.string.pref_main_crash_report_ts_enc_key), System.currentTimeMillis())
         .apply();
   }
 
-  boolean shouldNotAskForRating() {
+  public boolean shouldNotAskForRating() {
     long lastTS = mEncPrefs.getLong(getString(R.string.pref_main_ask_for_rating_ts_enc_key), 0);
     if (lastTS == 0) {
       setAskForRatingTs(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(5));
@@ -172,7 +227,7 @@ public class MySettings {
     return !ask;
   }
 
-  void setAskForRatingTs(long timeStamp) {
+  public void setAskForRatingTs(long timeStamp) {
     mEncPrefs
         .edit()
         .putLong(getString(R.string.pref_main_ask_for_rating_ts_enc_key), timeStamp)
@@ -190,7 +245,15 @@ public class MySettings {
     return mPermDb;
   }
 
-  public String mQueryText;
+  private String mQueryText;
+
+  public String getQueryText() {
+    return mQueryText;
+  }
+
+  public void setQueryText(String queryText) {
+    mQueryText = queryText;
+  }
 
   public boolean isSearching() {
     return !TextUtils.isEmpty(mQueryText);
@@ -200,37 +263,37 @@ public class MySettings {
     return getBoolPref(R.string.pref_main_deep_search_enc_key);
   }
 
-  void setDeepSearchEnabled(boolean enabled) {
+  public void setDeepSearchEnabled(boolean enabled) {
     savePref(R.string.pref_main_deep_search_enc_key, enabled);
   }
 
-  boolean isCaseSensitiveSearch() {
+  public boolean isCaseSensitiveSearch() {
     return getBoolPref(R.string.pref_main_case_sensitive_search_enc_key);
   }
 
-  void setCaseSensitiveSearch(boolean isSensitive) {
+  public void setCaseSensitiveSearch(boolean isSensitive) {
     savePref(R.string.pref_main_case_sensitive_search_enc_key, isSensitive);
   }
 
-  boolean isRootGranted() {
+  public boolean isRootGranted() {
     return getBoolPref(R.string.pref_main_root_granted_enc_key);
   }
 
-  void setRootGranted(boolean granted) {
+  public void setRootGranted(boolean granted) {
     savePref(R.string.pref_main_root_granted_enc_key, granted);
   }
 
-  boolean isAdbConnected() {
+  public boolean isAdbConnected() {
     return getBoolPref(R.string.pref_main_adb_connected_enc_key);
   }
 
-  void setAdbConnected(boolean connected) {
+  public void setAdbConnected(boolean connected) {
     savePref(R.string.pref_main_adb_connected_enc_key, connected);
   }
 
   private List<String> mCriticalApps;
 
-  boolean isCriticalApp(String packageName) {
+  public boolean isCriticalApp(String packageName) {
     if (mCriticalApps == null) {
       mCriticalApps =
           Arrays.asList(App.getContext().getResources().getStringArray(R.array.critical_apps));
@@ -304,7 +367,7 @@ public class MySettings {
     return canUseHiddenAPIs() || mPrivDaemonAlive;
   }
 
-  boolean isAppOpsGranted() {
+  public boolean isAppOpsGranted() {
     return App.getContext().checkSelfPermission(MainActivity.APP_OPS_PERM)
         == PackageManager.PERMISSION_GRANTED;
   }
@@ -330,33 +393,33 @@ public class MySettings {
     return mAppOpsModes;
   }
 
-  boolean mHiddenAPIsWorking = true;
+  public boolean mHiddenAPIsWorking = true;
 
   public boolean canUseHiddenAPIs() {
     return useHiddenAPIs() && mHiddenAPIsWorking && isAppOpsGranted();
   }
 
-  boolean useHiddenAPIs() {
+  public boolean useHiddenAPIs() {
     return getBoolPref(R.string.pref_main_use_hidden_apis_enc_key);
   }
 
-  void setUseHiddenAPIs(boolean isChecked) {
+  public void setUseHiddenAPIs(boolean isChecked) {
     savePref(R.string.pref_main_use_hidden_apis_enc_key, isChecked);
   }
 
-  boolean forceDarkMode() {
+  public boolean forceDarkMode() {
     return getBoolPref(R.string.pref_main_dark_theme_key);
   }
 
-  void setForceDarkMode(boolean force) {
+  public void setForceDarkMode(boolean force) {
     savePref(R.string.pref_main_dark_theme_key, force);
   }
 
-  boolean useSocket() {
+  public boolean useSocket() {
     return getBoolPref(R.string.pref_main_use_socket_enc_key);
   }
 
-  void setUseSocket(boolean useSocket) {
+  public void setUseSocket(boolean useSocket) {
     savePref(R.string.pref_main_use_socket_enc_key, useSocket);
   }
 
@@ -364,21 +427,21 @@ public class MySettings {
   private Set<String> mExcludedApps;
   private CharSequence[] mExcludedAppsLabels;
 
-  CharSequence[] getExcludedAppsLabels() {
+  public CharSequence[] getExcludedAppsLabels() {
     if (mExcludedAppsLabels == null) {
       populateExcludedAppsList(false);
     }
     return mExcludedAppsLabels;
   }
 
-  Set<String> getExcludedApps() {
+  public Set<String> getExcludedApps() {
     if (mExcludedApps == null) {
       populateExcludedAppsList(false);
     }
     return mExcludedApps;
   }
 
-  int getExcludedAppsCount() {
+  public int getExcludedAppsCount() {
     return getExcludedApps().size();
   }
 
@@ -386,7 +449,7 @@ public class MySettings {
     return getExcludedApps().contains(packageName);
   }
 
-  synchronized void populateExcludedAppsList(boolean loadDefaults) {
+  public synchronized void populateExcludedAppsList(boolean loadDefaults) {
     if (DEBUG) {
       Util.debugLog("populateExcludedAppsList", "loadDefaults: " + loadDefaults);
     }
@@ -444,11 +507,11 @@ public class MySettings {
     }
   }
 
-  void clearExcludedAppsList() {
+  public void clearExcludedAppsList() {
     savePref(R.string.pref_filter_excluded_apps_key, new HashSet<>());
   }
 
-  void addPkgToExcludedApps(String pkgName) {
+  public void addPkgToExcludedApps(String pkgName) {
     Set<String> excludedApps = getSetPref(R.string.pref_filter_excluded_apps_key);
     if (excludedApps == null) {
       excludedApps = new HashSet<>();
@@ -462,14 +525,14 @@ public class MySettings {
   private final String mExcludedPermsPrefKey;
   private Set<String> mExcludedPerms;
 
-  Set<String> getExcludedPerms() {
+  public Set<String> getExcludedPerms() {
     if (mExcludedPerms == null) {
       populateExcludedPermsList();
     }
     return mExcludedPerms;
   }
 
-  int getExcludedPermsCount() {
+  public int getExcludedPermsCount() {
     return getExcludedPerms().size();
   }
 
@@ -477,7 +540,7 @@ public class MySettings {
     return getExcludedPerms().contains(permissionName);
   }
 
-  synchronized void populateExcludedPermsList() {
+  public synchronized void populateExcludedPermsList() {
     if (DEBUG) {
       Util.debugLog("populateExcludedPermsList", "Called");
     }
@@ -492,11 +555,11 @@ public class MySettings {
     mExcludedPerms = new LinkedHashSet<>(excludedPermsList);
   }
 
-  void clearExcludedPermsList() {
+  public void clearExcludedPermsList() {
     savePref(R.string.pref_filter_excluded_perms_key, new HashSet<>());
   }
 
-  void addPermToExcludedPerms(String permName) {
+  public void addPermToExcludedPerms(String permName) {
     Set<String> excludedPerms = getSetPref(R.string.pref_filter_excluded_perms_key);
     if (excludedPerms == null) {
       excludedPerms = new HashSet<>();
@@ -517,7 +580,7 @@ public class MySettings {
     return mExtraAppOps;
   }
 
-  int getExtraAppOpsCount() {
+  public int getExtraAppOpsCount() {
     return getExtraAppOps().size();
   }
 
@@ -525,7 +588,7 @@ public class MySettings {
     return getExtraAppOps().contains(opName);
   }
 
-  synchronized void populateExtraAppOpsList(boolean loadDefaults) {
+  public synchronized void populateExtraAppOpsList(boolean loadDefaults) {
     if (DEBUG) Util.debugLog("populateExtraAppOpsList", "loadDefaults: " + loadDefaults);
     // on first run or after "reset to defaults" it returns null, so use default values
     Set<String> savedExtraAppOps = mPrefs.getStringSet(mExtraAppOpsPrefKey, null);
@@ -555,17 +618,17 @@ public class MySettings {
     }
   }
 
-  void clearExtraAppOpsList() {
+  public void clearExtraAppOpsList() {
     savePref(R.string.pref_filter_extra_appops_key, new HashSet<>());
   }
 
-  synchronized void updateList(String key) {
+  public synchronized void updateList(String key) {
     if (key.equals(mExcludedAppsPrefKey)) populateExcludedAppsList(false);
     else if (key.equals(mExcludedPermsPrefKey)) populateExcludedPermsList();
     else if (key.equals(mExtraAppOpsPrefKey)) populateExtraAppOpsList(false);
   }
 
-  void resetToDefaults() {
+  public void resetToDefaults() {
     if (DEBUG) Util.debugLog("MySettings", "resetToDefaults() called");
     // excluded apps Set must be explicitly removed to set default values
     // .clear() does not work correctly

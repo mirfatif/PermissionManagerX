@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx.permsdb;
+package com.mirfatif.permissionmanagerx.parser.permsdb;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

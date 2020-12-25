@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,6 +9,8 @@ import androidx.preference.CheckBoxPreference;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
+import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -200,7 +202,7 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
       excludedAppsView.setSummary(R.string.excluded_apps_summary);
     } else {
       excludedAppsView.setEnabled(true);
-      CharSequence message = excludedApps[0];
+      String message = excludedApps[0].toString();
       if (appCount == 2) {
         message += " " + getString(R.string.and_other_count, 1);
       } else if (appCount > 2) {
@@ -224,7 +226,7 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
       excludedPermsView.setSummary(R.string.excluded_perms_summary);
     } else {
       excludedPermsView.setEnabled(true);
-      CharSequence message = excludedPerms[0];
+      String message = excludedPerms[0].toString();
       if (permCount == 2) {
         message += " " + getString(R.string.and_other_count, 1);
       } else if (permCount > 2) {

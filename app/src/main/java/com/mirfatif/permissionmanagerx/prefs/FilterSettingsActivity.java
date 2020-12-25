@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.prefs;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +10,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.Utils;
+import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.privtasks.Util;
 
 public class FilterSettingsActivity extends AppCompatActivity {
@@ -55,7 +58,7 @@ public class FilterSettingsActivity extends AppCompatActivity {
    */
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    if (mMySettings.DEBUG)
+    if (mMySettings.isDebug())
       Util.debugLog("FilterSettingsActivity", "onOptionsItemSelected(): " + item.getTitle());
     if (item.getItemId() == R.id.action_reset_defaults) {
       // Build an AlertDialog and set listeners on buttons

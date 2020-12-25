@@ -1,7 +1,8 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.parser;
 
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import java.util.List;
 
 public class Package {
@@ -21,7 +22,7 @@ public class Package {
   private int mTotalAppOpsCount;
   private int mAppOpsCount;
 
-  public void updatePackage(
+  void updatePackage(
       String label,
       String name,
       List<Permission> permissionList,
@@ -50,27 +51,27 @@ public class Package {
     return mPackageName;
   }
 
-  List<Permission> getPermissionsList() {
+  public List<Permission> getPermissionsList() {
     return mPermissionsList;
   }
 
-  boolean isFrameworkApp() {
+  public boolean isFrameworkApp() {
     return mIsFrameworkApp;
   }
 
-  boolean isSystemApp() {
+  public boolean isSystemApp() {
     return mIsSystemApp;
   }
 
-  boolean isEnabled() {
+  public boolean isEnabled() {
     return mIsEnabled;
   }
 
-  boolean isCriticalApp() {
+  public boolean isCriticalApp() {
     return MySettings.getInstance().isCriticalApp(mPackageName);
   }
 
-  boolean isChangeable() {
+  public boolean isChangeable() {
     return !isCriticalApp() && !mIsFrameworkApp;
   }
 
@@ -106,7 +107,7 @@ public class Package {
     return mAppOpsCount;
   }
 
-  Drawable getIcon() {
+  public Drawable getIcon() {
     return mIcon;
   }
 
@@ -114,7 +115,7 @@ public class Package {
     mIcon = null;
   }
 
-  int getUid() {
+  public int getUid() {
     return mUid;
   }
 
@@ -174,7 +175,7 @@ public class Package {
 
   // for ListAdapter/DiffUtil
   // consider which fields can change
-  boolean areContentsTheSame(Package pkg) {
+  public boolean areContentsTheSame(Package pkg) {
 
     if (pkg.isReferenced() != null && this.isReferenced() != null) {
       if (pkg.isReferenced().compareTo(this.isReferenced()) != 0) return false;

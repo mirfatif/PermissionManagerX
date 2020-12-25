@@ -13,7 +13,7 @@
     <FrameLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      app:layout_behavior="com.mirfatif.permissionmanagerx.MoveUpwardBehavior">
+      app:layout_behavior="com.mirfatif.permissionmanagerx.main.MoveUpwardBehavior">
 
       <LinearLayout
         android:layout_width="match_parent"
@@ -106,7 +106,7 @@
 
       </LinearLayout>
 
-      <com.mirfatif.permissionmanagerx.MyFrameLayout
+      <com.mirfatif.permissionmanagerx.main.MyFrameLayout
         android:id="@+id/round_progress_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -135,7 +135,7 @@
           android:gravity="center"
           android:layout_gravity="center"/>
 
-      </com.mirfatif.permissionmanagerx.MyFrameLayout>
+      </com.mirfatif.permissionmanagerx.main.MyFrameLayout>
 
     </FrameLayout>
 

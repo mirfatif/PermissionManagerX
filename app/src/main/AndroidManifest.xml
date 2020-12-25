@@ -11,7 +11,7 @@
     tools:ignore="ProtectedPermissions"/>
 
   <application
-    android:name=".App"
+    android:name=".app.App"
     android:allowBackup="true"
     android:extractNativeLibs="true"
     android:icon="@mipmap/ic_launcher"
@@ -20,7 +20,7 @@
     android:theme="@style/AppTheme"
     tools:ignore="AllowBackup">
 
-    <activity android:name=".MainActivity">
+    <activity android:name=".main.MainActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
@@ -28,17 +28,17 @@
     </activity>
 
     <activity
-      android:name=".PackageActivity"
-      android:parentActivityName=".MainActivity"/>
+      android:name=".ui.PackageActivity"
+      android:parentActivityName=".main.MainActivity"/>
     <activity
-      android:name=".FilterSettingsActivity"
-      android:parentActivityName=".MainActivity"/>
+      android:name=".prefs.FilterSettingsActivity"
+      android:parentActivityName=".main.MainActivity"/>
     <activity
-      android:name=".AboutActivity"
-      android:parentActivityName=".MainActivity"/>
+      android:name=".ui.AboutActivity"
+      android:parentActivityName=".main.MainActivity"/>
     <activity
-      android:name=".HelpActivity"
-      android:parentActivityName=".MainActivity"/>
+      android:name=".ui.HelpActivity"
+      android:parentActivityName=".main.MainActivity"/>
 
     <provider
       android:name="androidx.core.content.FileProvider"

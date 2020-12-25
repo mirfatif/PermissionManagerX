@@ -1,17 +1,21 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.ui;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import com.mirfatif.permissionmanagerx.Utils;
+import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import java.util.List;
 
 public class MyViewModel extends AndroidViewModel {
 
-  final PackageParser mPackageParser;
-  final MySettings mMySettings;
-  final PrivDaemonHandler mDaemonHandler;
+  private final PackageParser mPackageParser;
+  private final MySettings mMySettings;
+  private final PrivDaemonHandler mDaemonHandler;
 
   public MyViewModel(@NonNull Application application) {
     super(application);
@@ -22,23 +26,23 @@ public class MyViewModel extends AndroidViewModel {
     mDaemonHandler = PrivDaemonHandler.getInstance();
   }
 
-  LiveData<List<Package>> getPackagesListLive() {
+  public LiveData<List<Package>> getPackagesListLive() {
     return mPackageParser.getPackagesListLive();
   }
 
-  LiveData<Package> getChangedPackage() {
+  public LiveData<Package> getChangedPackage() {
     return mPackageParser.getChangedPackage();
   }
 
-  LiveData<Integer> getProgressMax() {
+  public LiveData<Integer> getProgressMax() {
     return mPackageParser.getProgressMax();
   }
 
-  LiveData<Integer> getProgressNow() {
+  public LiveData<Integer> getProgressNow() {
     return mPackageParser.getProgressNow();
   }
 
-  LiveData<Boolean> getHiddenAPIsNotWorking() {
-    return Utils.mHiddenAPIsNotWorking;
+  public LiveData<Boolean> getHiddenAPIsNotWorking() {
+    return Utils.getHiddenAPIsNotWorking();
   }
 }

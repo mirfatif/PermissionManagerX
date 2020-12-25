@@ -1,7 +1,8 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.parser;
 
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 
 public class Permission {
 
@@ -35,7 +36,7 @@ public class Permission {
   private final boolean mIsSystemApp;
   private final CharSequence mPermDesc;
 
-  public Permission(
+  Permission(
       int order,
       int iconResId,
       boolean isAppOps,
@@ -82,11 +83,11 @@ public class Permission {
     mPermDesc = permDesc;
   }
 
-  int getOrder() {
+  public int getOrder() {
     return mOrder;
   }
 
-  int getIconResId() {
+  public int getIconResId() {
     return mIconResId;
   }
 
@@ -94,7 +95,7 @@ public class Permission {
     return mIsAppOps;
   }
 
-  boolean isPerUid() {
+  public boolean isPerUid() {
     return mIsPerUid;
   }
 
@@ -102,15 +103,15 @@ public class Permission {
     return mIsAppOpsSet;
   }
 
-  void setAppOpsMode(int mode) {
+  public void setAppOpsMode(int mode) {
     mAppOpsMode = mode;
   }
 
-  int getAppOpsMode() {
+  public int getAppOpsMode() {
     return mAppOpsMode;
   }
 
-  String getAppOpsAccessTime() {
+  public String getAppOpsAccessTime() {
     // do not show time older than a year, including zero epoch time and -1
     if (System.currentTimeMillis() - mAppOpsAccessTime > (365 * 24 * 60 * 60 * 1000L)) {
       return "null";
@@ -124,7 +125,7 @@ public class Permission {
     return mAppOpsAccessTimeFormatted;
   }
 
-  String dependsOn() {
+  public String dependsOn() {
     return mDependsOn;
   }
 
@@ -160,7 +161,7 @@ public class Permission {
     return mIsReferenced;
   }
 
-  String getReference() {
+  public String getReference() {
     return mReference;
   }
 
@@ -176,11 +177,11 @@ public class Permission {
     }
   }
 
-  CharSequence getDescription() {
+  public CharSequence getDescription() {
     return mPermDesc;
   }
 
-  String createPermNameString() {
+  public String createPermNameString() {
     String permName = mPermissionName;
     if (mIsAppOps && mDependsOn != null) {
       permName += " (" + mDependsOn + ")";
@@ -188,7 +189,7 @@ public class Permission {
     return permName;
   }
 
-  String createProtectLevelString() {
+  public String createProtectLevelString() {
     String protectionLevel = mProtectionLevel;
     if (mIsDevelopment) protectionLevel += ", Development"; // implies "Signature"
     if (mIsManifestPermAppOps) protectionLevel += ", AppOps"; // implies "Signature"
@@ -256,7 +257,7 @@ public class Permission {
 
   // required for ListAdapter/DiffUtil
   // consider which fields can change
-  boolean areContentsTheSame(Permission permission) {
+  public boolean areContentsTheSame(Permission permission) {
     if (!permission.getName().equals(this.getName())) return false;
 
     if (permission.isReferenced() != null && this.isReferenced() != null) {

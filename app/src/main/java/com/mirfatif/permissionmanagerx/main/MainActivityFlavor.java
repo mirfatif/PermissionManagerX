@@ -1,22 +1,30 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.main;
 
 import android.content.Intent;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
+import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.Utils;
+import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 
-class MainActivityFlavor {
+public class MainActivityFlavor {
 
-  static final boolean IS_FREE_VERSION = true;
+  public static final boolean IS_FREE_VERSION = true;
 
   private final MainActivity mActivity;
+  private final MySettings mMySettings = MySettings.getInstance();
 
   MainActivityFlavor(MainActivity activity) {
     mActivity = activity;
   }
 
   void askForRating() {
-    if (mActivity.mMySettings.shouldNotAskForRating()) return;
+    if (mMySettings.shouldNotAskForRating()) {
+      return;
+    }
     AlertDialog dialog =
         new Builder(mActivity)
             .setMessage(R.string.purchase_and_rate_the_app)
@@ -30,11 +38,11 @@ class MainActivityFlavor {
             .setNeutralButton(
                 R.string.shut_up,
                 (d, which) -> {
-                  mActivity.mMySettings.setAskForRatingTs(Long.MAX_VALUE);
+                  mMySettings.setAskForRatingTs(Long.MAX_VALUE);
                   Toast.makeText(App.getContext(), "\ud83d\ude1f", Toast.LENGTH_LONG).show();
                 })
             .create();
-    new AlertDialogFragment(dialog).show(mActivity.mFM, "RATING", false);
+    new AlertDialogFragment(dialog).show(mActivity.getSupportFragmentManager(), "RATING", false);
   }
 
   @SuppressWarnings("UnusedDeclaration")

@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.ui;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -8,16 +8,17 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.privtasks.Util;
 import java.util.HashSet;
 import java.util.Set;
 
 public class AlertDialogFragment extends AppCompatDialogFragment {
 
-  static final String TAG = "AlertDialogFragment";
+  private static final String TAG = "AlertDialogFragment";
   private final AlertDialog mAlertDialog;
 
-  AlertDialogFragment(AlertDialog alertDialog) {
+  public AlertDialogFragment(AlertDialog alertDialog) {
     mAlertDialog = alertDialog;
   }
 
@@ -29,7 +30,7 @@ public class AlertDialogFragment extends AppCompatDialogFragment {
 
   private static final Set<String> allTags = new HashSet<>();
 
-  synchronized void show(FragmentManager manager, String tag, boolean removeAll) {
+  public synchronized void show(FragmentManager manager, String tag, boolean removeAll) {
     allTags.add(tag);
 
     Set<Fragment> oldDialogs = new HashSet<>();
@@ -39,7 +40,7 @@ public class AlertDialogFragment extends AppCompatDialogFragment {
       if (fragment != null) oldDialogs.add(fragment);
     }
 
-    if (MySettings.getInstance().DEBUG) Util.debugLog(TAG, "Showing " + tag);
+    if (MySettings.getInstance().isDebug()) Util.debugLog(TAG, "Showing " + tag);
 
     // If Activity is in background, commitNow throws:
     //   "Can not perform this action after onSaveInstanceState"
@@ -53,7 +54,7 @@ public class AlertDialogFragment extends AppCompatDialogFragment {
     removeFragments(manager, oldDialogs);
   }
 
-  static void removeAll(FragmentManager manager) {
+  public static void removeAll(FragmentManager manager) {
     removeFragments(manager, buildListToRemove(manager));
   }
 
@@ -63,7 +64,7 @@ public class AlertDialogFragment extends AppCompatDialogFragment {
     for (String tag : allTags) {
       fragment = manager.findFragmentByTag(tag);
       if (fragment != null) {
-        if (MySettings.getInstance().DEBUG) Util.debugLog(TAG, "Old dialog: " + tag);
+        if (MySettings.getInstance().isDebug()) Util.debugLog(TAG, "Old dialog: " + tag);
         oldDialogs.add(fragment);
       }
     }
@@ -72,7 +73,7 @@ public class AlertDialogFragment extends AppCompatDialogFragment {
 
   private static void removeFragments(FragmentManager manager, Set<Fragment> fragments) {
     FragmentTransaction transaction = manager.beginTransaction();
-    if (MySettings.getInstance().DEBUG) Util.debugLog(TAG, "Removing old dialogs");
+    if (MySettings.getInstance().isDebug()) Util.debugLog(TAG, "Removing old dialogs");
     for (Fragment fragment : fragments) transaction.remove(fragment);
     transaction.commitNowAllowingStateLoss();
   }

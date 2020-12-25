@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -26,8 +26,23 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.Utils;
+import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.main.BackupRestore;
+import com.mirfatif.permissionmanagerx.main.BackupRestore.BackupEntry;
+import com.mirfatif.permissionmanagerx.main.MainActivity;
+import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
-import com.mirfatif.permissionmanagerx.permsdb.PermissionEntity;
+import com.mirfatif.permissionmanagerx.parser.Permission;
+import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionEntity;
+import com.mirfatif.permissionmanagerx.prefs.FilterSettingsActivity;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
+import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.PermClickListener;
+import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.PermClickListenerWithLoc;
+import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.PermLongClickListener;
+import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.PermSpinnerSelectListener;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
 import java.util.ArrayList;
@@ -146,7 +161,7 @@ public class PackageActivity extends AppCompatActivity {
                   + pkgName
                   + " "
                   + mode;
-          if (mMySettings.DEBUG) Util.debugLog("setAppOpsMode", "Sending command: " + command);
+          if (mMySettings.isDebug()) Util.debugLog("setAppOpsMode", "Sending command: " + command);
           Object res = mPrivDaemonHandler.sendRequest(command);
 
           // new Permission objects are created, so cannot check previous one for new state
@@ -324,7 +339,7 @@ public class PackageActivity extends AppCompatActivity {
   }
 
   private void updatePackage() {
-    if (mMySettings.DEBUG) Util.debugLog("PackageActivity", "updatePackage() called");
+    if (mMySettings.isDebug()) Util.debugLog("PackageActivity", "updatePackage() called");
     mPackageParser.updatePackage(mPackage);
     updatePermissionsList(); // the same Package object is updated
   }
@@ -402,7 +417,7 @@ public class PackageActivity extends AppCompatActivity {
 
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    if (mMySettings.DEBUG)
+    if (mMySettings.isDebug())
       Util.debugLog("PackageActivity", "onOptionsItemSelected(): " + item.getTitle());
     if (item.getItemId() == R.id.action_information) {
       startActivity(
@@ -517,7 +532,7 @@ public class PackageActivity extends AppCompatActivity {
             command = Commands.GRANT_PERMISSION + " " + command;
           }
 
-          if (mMySettings.DEBUG) Util.debugLog("setPermission", "Sending command: " + command);
+          if (mMySettings.isDebug()) Util.debugLog("setPermission", "Sending command: " + command);
           Object res = mPrivDaemonHandler.sendRequest(command);
           updatePackage();
 
@@ -534,7 +549,7 @@ public class PackageActivity extends AppCompatActivity {
   }
 
   private boolean checkPrivileges() {
-    if (mMySettings.mPrivDaemonAlive) {
+    if (mMySettings.isPrivDaemonAlive()) {
       return true;
     }
 

@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.main;
 
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -13,7 +13,13 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.preference.PreferenceManager;
-import com.mirfatif.permissionmanagerx.permsdb.PermissionEntity;
+import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.Utils;
+import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.parser.PackageParser;
+import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionEntity;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -42,7 +48,7 @@ import org.xmlpull.v1.XmlSerializer;
 
 public class BackupRestore {
 
-  static final String TAG = "BackupRestore";
+  private static final String TAG = "BackupRestore";
   private static final String TAG_BACKUP_RESTORE = "BACKUP_RESTORE";
 
   private final MySettings mMySettings;
@@ -72,37 +78,37 @@ public class BackupRestore {
   // Separator Set elements
   private final String SEPARATOR = ",";
 
-  private final MainActivity mActivity;
+  private final MainActivity mA;
   private final SharedPreferences mPreferences;
 
   private boolean mSkipUninstalledApps = false;
 
-  BackupRestore() {
-    mActivity = null;
+  public BackupRestore() {
+    mA = null;
     mMySettings = MySettings.getInstance();
     mPreferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
   }
 
   BackupRestore(MainActivity activity) {
-    mActivity = activity;
+    mA = activity;
     mMySettings = MySettings.getInstance();
     mPreferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
   }
 
   void doBackupRestore() {
-    View layout = mActivity.getLayoutInflater().inflate(R.layout.backup_restore_alert_dialog, null);
+    View layout = mA.getLayoutInflater().inflate(R.layout.backup_restore_alert_dialog, null);
     CheckBox checkbox = layout.findViewById(R.id.skip_uninstalled_packages);
     checkbox.setOnClickListener(v -> mSkipUninstalledApps = checkbox.isChecked());
 
     AlertDialog dialog =
-        new Builder(mActivity)
+        new Builder(mA)
             .setPositiveButton(R.string.backup, (d, which) -> doBackupRestore(true))
             .setNegativeButton(R.string.restore, (d, which) -> doBackupRestore(false))
             .setNeutralButton(android.R.string.cancel, null)
             .setTitle(getString(R.string.backup) + " / " + getString(R.string.restore))
             .setView(layout)
             .create();
-    new AlertDialogFragment(dialog).show(mActivity.mFM, TAG_BACKUP_RESTORE, false);
+    new AlertDialogFragment(dialog).show(mA.getSupportFragmentManager(), TAG_BACKUP_RESTORE, false);
   }
 
   private void doBackupRestore(boolean isBackup) {
@@ -110,12 +116,10 @@ public class BackupRestore {
     ActivityResultCallback<Uri> callback =
         uri -> Utils.runInBg(() -> doBackupRestoreInBg(isBackup, uri));
     if (isBackup) {
-      mActivity
-          .registerForActivityResult(new ActivityResultContracts.CreateDocument(), callback)
+      mA.registerForActivityResult(new ActivityResultContracts.CreateDocument(), callback)
           .launch("PermissionManagerX_" + Utils.getCurrDateTime() + ".xml");
     } else {
-      mActivity
-          .registerForActivityResult(new ActivityResultContracts.OpenDocument(), callback)
+      mA.registerForActivityResult(new ActivityResultContracts.OpenDocument(), callback)
           .launch(new String[] {"text/xml"});
     }
   }
@@ -123,7 +127,7 @@ public class BackupRestore {
   private void doBackupRestoreInBg(boolean isBackup, Uri uri) {
     if (isBackup) {
       try (OutputStream outStream =
-          mActivity.getApplication().getContentResolver().openOutputStream(uri, "w")) {
+          mA.getApplication().getContentResolver().openOutputStream(uri, "w")) {
         if (!backup(outStream)) {
           failed(true);
         }
@@ -132,7 +136,7 @@ public class BackupRestore {
       }
     } else {
       try (InputStream inputStream =
-          mActivity.getApplication().getContentResolver().openInputStream(uri)) {
+          mA.getApplication().getContentResolver().openInputStream(uri)) {
         /**
          * So that not saved preferences are restored. Must be in background so that {@link
          * PrivDaemonHandler#sendRequest(String)} in {@link PackageParser#buildAppOpsList()} in ADB
@@ -147,7 +151,7 @@ public class BackupRestore {
     }
   }
 
-  boolean backup(OutputStream outputStream) {
+  public boolean backup(OutputStream outputStream) {
     showProgressBar(true);
     XmlSerializer serializer = Xml.newSerializer();
     StringWriter stringWriter = new StringWriter();
@@ -433,7 +437,7 @@ public class BackupRestore {
     return mInstalledPackages.contains(pkgName);
   }
 
-  static void updatePermissionEntities(List<BackupEntry> permEntries) {
+  public static void updatePermissionEntities(List<BackupEntry> permEntries) {
     MySettings mySettings = MySettings.getInstance();
     Map<String, Integer> map = new HashMap<>();
     for (PermissionEntity entity : mySettings.getPermDb().getAll()) {
@@ -458,67 +462,68 @@ public class BackupRestore {
   }
 
   private void showProgressBar(boolean isBackup) {
-    if (mActivity == null) return;
+    if (mA == null) return;
     Utils.runInFg(
         () -> {
-          mActivity.mRoundProgressTextView.setText(
-              isBackup
-                  ? getString(R.string.backup_in_progress)
-                  : getString(R.string.restore_in_progress));
-          mActivity.mRoundProgressContainer.setVisibility(View.VISIBLE);
+          mA.getRoundProgressTextView()
+              .setText(
+                  isBackup
+                      ? getString(R.string.backup_in_progress)
+                      : getString(R.string.restore_in_progress));
+          mA.getRoundProgressContainer().setVisibility(View.VISIBLE);
         });
   }
 
   private void failed(boolean isBackup) {
-    if (mActivity == null) {
+    if (mA == null) {
       Log.e(TAG, (isBackup ? "Backup" : "Restore") + " failed");
       return;
     }
-    Utils.runInFg(() -> mActivity.mRoundProgressContainer.setVisibility(View.GONE));
+    Utils.runInFg(() -> mA.getRoundProgressContainer().setVisibility(View.GONE));
     showFinalDialog(isBackup, getString(R.string.backup_restore_failed));
   }
 
   private void succeeded(
       boolean isBackup, int prefs, int perms, int invalidPrefs, int skippedApps) {
-    if (mActivity == null) {
+    if (mA == null) {
       Log.i(TAG, (isBackup ? "Backup" : "Restore") + " succeeded");
       return;
     }
-    Utils.runInFg(() -> mActivity.mRoundProgressContainer.setVisibility(View.GONE));
+    Utils.runInFg(() -> mA.getRoundProgressContainer().setVisibility(View.GONE));
     if (!isBackup) {
       mMySettings.populateExcludedAppsList(false);
       mMySettings.populateExcludedPermsList();
       mMySettings.populateExtraAppOpsList(false);
-      mActivity.mPackageParser.buildPermRefList();
-      mActivity.updatePackagesList(false);
-      mActivity.mMainActivityFlavor.onRestoreDone();
+      PackageParser.getInstance().buildPermRefList();
+      mA.updatePackagesList(false);
+      mA.getMainActivityFlavor().onRestoreDone();
     }
 
-    String message = mActivity.getString(R.string.backup_restore_process_entries, prefs, perms);
+    String message = mA.getString(R.string.backup_restore_process_entries, prefs, perms);
     if (invalidPrefs > 0) {
-      message += mActivity.getString(R.string.backup_restore_invalid_prefs, invalidPrefs);
+      message += mA.getString(R.string.backup_restore_invalid_prefs, invalidPrefs);
     }
     if (skippedApps > 0) {
-      message += mActivity.getString(R.string.backup_restore_uninstalled_apps, skippedApps);
+      message += mA.getString(R.string.backup_restore_uninstalled_apps, skippedApps);
     }
 
     showFinalDialog(isBackup, message);
   }
 
   private void showFinalDialog(boolean isBackup, String message) {
-    if (mActivity == null) return;
+    if (mA == null) return;
     Builder builder =
-        new Builder(mActivity)
+        new Builder(mA)
             .setPositiveButton(android.R.string.ok, null)
             .setTitle(isBackup ? R.string.backup : R.string.restore)
             .setMessage(message);
     Utils.runInFg(
         () ->
             new AlertDialogFragment(builder.create())
-                .show(mActivity.mFM, TAG_BACKUP_RESTORE, false));
+                .show(mA.getSupportFragmentManager(), TAG_BACKUP_RESTORE, false));
   }
-}
 
-class BackupEntry {
-  String key, type, value;
+  public static class BackupEntry {
+    public String key, type, value;
+  }
 }

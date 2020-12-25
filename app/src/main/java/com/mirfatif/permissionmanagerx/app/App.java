@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.app;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -10,7 +10,11 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
+import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.Utils;
+import com.mirfatif.permissionmanagerx.main.MainActivity;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.privtasks.Util;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,9 +23,11 @@ import java.io.PrintWriter;
 
 public class App extends Application {
 
-  static final String TAG = "App";
+  private static final String TAG = "App";
 
-  AppFlavor mAppFlavor;
+  @SuppressWarnings("FieldCanBeLocal")
+  private AppFlavor mAppFlavor;
+
   private static Context mAppContext;
   private Thread.UncaughtExceptionHandler defaultExceptionHandler;
 
@@ -99,7 +105,7 @@ public class App extends Application {
               }
               PackageParser.getInstance().releaseIcons();
             }
-            if (mMySettings.DEBUG) {
+            if (mMySettings.isDebug()) {
               Util.debugLog(TAG, "onTrimMemory level: " + memLevel);
             } else if (isRunning) {
               Log.i(TAG, "onTrimMemory level: " + memLevel);
@@ -125,7 +131,7 @@ public class App extends Application {
               ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
               am.getMemoryInfo(memInfo);
               mMySettings.setLowMemory(memInfo.lowMemory);
-              if (mMySettings.DEBUG) {
+              if (mMySettings.isDebug()) {
                 Util.debugLog(TAG, "Low on memory: " + memInfo.lowMemory);
               } else if (memInfo.lowMemory) {
                 Log.i(TAG, "Low on memory: " + true);

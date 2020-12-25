@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.main;
 
 import android.annotation.SuppressLint;
 import android.text.Editable;
@@ -11,6 +11,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.widget.AppCompatSpinner;
+import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import java.util.Arrays;
 import java.util.List;
 
@@ -85,7 +89,8 @@ class AdvancedSettings {
             .setPositiveButton(R.string.save, (d, which) -> saveSettings())
             .setNegativeButton(android.R.string.cancel, null)
             .create();
-    new AlertDialogFragment(dialog).show(mA.mFM, "ADVANCED_SETTINGS", false);
+    new AlertDialogFragment(dialog)
+        .show(mA.getSupportFragmentManager(), "ADVANCED_SETTINGS", false);
   }
 
   private void saveSettings() {
@@ -159,7 +164,8 @@ class AdvancedSettings {
             .setTitle(R.string.hidden_apis)
             .setMessage(R.string.hidden_apis_confirmation)
             .create();
-    new AlertDialogFragment(dialog).show(mA.mFM, "HIDDEN_APIS_CONFIRM", false);
+    new AlertDialogFragment(dialog)
+        .show(mA.getSupportFragmentManager(), "HIDDEN_APIS_CONFIRM", false);
     return false;
   }
 

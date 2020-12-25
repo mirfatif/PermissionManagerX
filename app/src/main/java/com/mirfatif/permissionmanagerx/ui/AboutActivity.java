@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.ui;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -12,6 +12,14 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.snackbar.Snackbar;
+import com.mirfatif.permissionmanagerx.BuildConfig;
+import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.Utils;
+import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.main.MainActivity;
+import com.mirfatif.permissionmanagerx.main.MainActivityFlavor;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.privtasks.Commands;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -78,7 +86,7 @@ public class AboutActivity extends AppCompatActivity {
   private boolean logInProgress = false;
 
   private void setLogTitle() {
-    logInProgress = mMySettings.DEBUG;
+    logInProgress = mMySettings.isDebug();
     ((TextView) findViewById(R.id.logging_title))
         .setText(logInProgress ? R.string.stop_logging : R.string.collect_logs);
   }
@@ -112,11 +120,10 @@ public class AboutActivity extends AppCompatActivity {
       return;
     }
 
-    if (mMySettings.mPrivDaemonAlive) {
+    if (mMySettings.isPrivDaemonAlive()) {
       PrivDaemonHandler.getInstance().sendRequest(Commands.SHUTDOWN);
     }
-    mMySettings.doLogging = true;
-    mMySettings.DEBUG = true;
+    mMySettings.setLogging(true);
     Utils.runCommand("logcat -c", "Logging", null);
     Intent intent = new Intent(App.getContext(), MainActivity.class);
     intent

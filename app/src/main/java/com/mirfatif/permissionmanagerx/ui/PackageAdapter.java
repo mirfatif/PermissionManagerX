@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.ui;
 
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -15,7 +15,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
-import com.mirfatif.permissionmanagerx.PackageAdapter.ItemViewHolder;
+import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.parser.Package;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.ui.PackageAdapter.ItemViewHolder;
 
 public class PackageAdapter extends ListAdapter<Package, ItemViewHolder> {
 
@@ -26,7 +30,8 @@ public class PackageAdapter extends ListAdapter<Package, ItemViewHolder> {
   // orange state color
   static final int ORANGE = 0xFFFFC107;
 
-  PackageAdapter(PkgClickListener pkgClickListener, PkgLongClickListener pkgLongClickListener) {
+  public PackageAdapter(
+      PkgClickListener pkgClickListener, PkgLongClickListener pkgLongClickListener) {
     super(new DiffUtilItemCallBack());
     mPkgClickListener = pkgClickListener;
     mPkgLongClickListener = pkgLongClickListener;
@@ -145,7 +150,7 @@ public class PackageAdapter extends ListAdapter<Package, ItemViewHolder> {
     }
   }
 
-  static class DiffUtilItemCallBack extends DiffUtil.ItemCallback<Package> {
+  private static class DiffUtilItemCallBack extends DiffUtil.ItemCallback<Package> {
     @Override
     public boolean areItemsTheSame(@NonNull Package oldItem, @NonNull Package newItem) {
       return oldItem.getName().equals(newItem.getName());
@@ -155,5 +160,13 @@ public class PackageAdapter extends ListAdapter<Package, ItemViewHolder> {
     public boolean areContentsTheSame(@NonNull Package oldItem, @NonNull Package newItem) {
       return oldItem.areContentsTheSame(newItem);
     }
+  }
+
+  public interface PkgClickListener {
+    void onClick(Package pkg);
+  }
+
+  public interface PkgLongClickListener {
+    void onLongClick(Package pkg);
   }
 }

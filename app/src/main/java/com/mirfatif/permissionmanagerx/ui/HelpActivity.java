@@ -1,9 +1,11 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.ui;
 
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.Utils;
 import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 
 public class HelpActivity extends AppCompatActivity {
@@ -23,7 +25,7 @@ public class HelpActivity extends AppCompatActivity {
     handleUrl(R.id.perm_help3);
   }
 
-  void handleUrl(int resId) {
+  private void handleUrl(int resId) {
     ((TextView) findViewById(resId))
         .setMovementMethod(
             BetterLinkMovementMethod.newInstance()

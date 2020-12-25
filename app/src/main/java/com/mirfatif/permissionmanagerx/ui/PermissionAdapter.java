@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.ui;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -17,7 +17,12 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
-import com.mirfatif.permissionmanagerx.PermissionAdapter.ItemViewHolder;
+import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.Utils;
+import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.parser.Permission;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.ItemViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -249,7 +254,7 @@ public class PermissionAdapter extends ListAdapter<Permission, ItemViewHolder> {
     }
   }
 
-  static class DiffUtilItemCallBack extends DiffUtil.ItemCallback<Permission> {
+  private static class DiffUtilItemCallBack extends DiffUtil.ItemCallback<Permission> {
     @Override
     public boolean areItemsTheSame(@NonNull Permission oldItem, @NonNull Permission newItem) {
       return oldItem.getName().equals(newItem.getName());
@@ -259,5 +264,21 @@ public class PermissionAdapter extends ListAdapter<Permission, ItemViewHolder> {
     public boolean areContentsTheSame(@NonNull Permission oldItem, @NonNull Permission newItem) {
       return oldItem.areContentsTheSame(newItem);
     }
+  }
+
+  interface PermClickListener {
+    void onClick(Permission permission);
+  }
+
+  interface PermClickListenerWithLoc {
+    void onClick(Permission permission, int yLocation);
+  }
+
+  interface PermSpinnerSelectListener {
+    void onSelect(Permission permission, int selectedValue);
+  }
+
+  interface PermLongClickListener {
+    void onLongClick(Permission permission);
   }
 }
