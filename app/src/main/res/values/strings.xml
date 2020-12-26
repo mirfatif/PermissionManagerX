@@ -187,15 +187,15 @@
   <string name="paid_feature3">Search suggestions</string>
 
   <!--Donate-->
-  <string name="bitcoin_link"><a href="bitcoin:">Bitcoin</a></string>
+  <string name="bitcoin_link"><a href="bitcoin:">SEND BITCOINS</a></string>
   <string name="bitcoin_address">18ijfsv5fcDKQ6CTe4wycKxZMmti4oUXjW</string>
   <string name="no_bitcoin_app_installed">"Bitcoin Wallet app not found"</string>
-  <string name="bank_account_link"><a href="mailto:">Ask for Bank Account</a></string>
+  <string name="bank_account_link"><a href="mailto:">ASK FOR BANK ACCOUNT</a></string>
   <string name="bank_account_request">Hello,\n\nI need your IBAN and SWIFT/BIC to make a donation.</string>
-  <string name="play_store_link"><a href="https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx">Paid
-    version on Play Store</a>
+  <string name="play_store_link"><a href="https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx">GET
+    PAID VERSION FROM PLAY STORE</a>
   </string>
-  <string name="redeem_code_link"><a href="mailto:">Ask for Redeem Code</a></string>
+  <string name="redeem_code_link"><a href="mailto:">ASK FOR REDEEM CODE</a></string>
   <string name="redeem_code_request">Hello,\n\nI have made a donation of amount ____ to PMX. Please
     provide a Play Store redeem code if available.
   </string>

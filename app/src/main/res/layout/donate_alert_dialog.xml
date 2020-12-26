@@ -11,92 +11,132 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="16dp"
+    android:gravity="center_horizontal"
     android:layout_gravity="center_horizontal">
 
-    <TextView
-      android:id="@+id/bitcoin_link"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:padding="4dp"
-      app:drawableStartCompat="@drawable/bullet"
-      android:drawablePadding="4dp"
-      android:textStyle="bold"
-      android:textSize="16sp"
-      android:text="@string/bitcoin_link"/>
-
-    <ImageView
-      android:layout_width="250dp"
-      android:layout_height="250dp"
-      android:src="@drawable/bitcoin_qr_code"
-      android:layout_gravity="center_horizontal"
-      android:layout_marginStart="8dp"
-      android:layout_marginEnd="8dp"
-      tools:ignore="ContentDescription"/>
-
-    <TextView
+    <LinearLayout
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
-      android:text="@string/bitcoin_address"
-      android:padding="4dp"
-      android:layout_marginStart="8dp"
-      android:layout_marginEnd="8dp"
-      android:background="@drawable/rectangular_border"
-      android:textIsSelectable="true"/>
+      android:layout_marginBottom="16dp">
 
-    <View
-      android:layout_width="match_parent"
-      android:background="@color/accentColor"
-      android:layout_height="1dp"
-      android:layout_marginTop="12dp"
-      android:layout_marginBottom="12dp"/>
+      <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/bitcoin_button"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_margin="4dp"
+        app:fabCustomSize="56dp"
+        app:maxImageSize="36dp"
+        android:src="@drawable/bitcoin"
+        app:backgroundTint="@color/accentColor"
+        app:borderWidth="4dp"
+        app:elevation="4dp"
+        tools:ignore="ContentDescription" />
+
+      <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/bank_account_button"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_margin="4dp"
+        app:fabCustomSize="56dp"
+        app:maxImageSize="36dp"
+        android:src="@drawable/dollar"
+        app:backgroundTint="@color/accentColor"
+        app:borderWidth="4dp"
+        app:elevation="4dp"
+        tools:ignore="ContentDescription" />
+
+      <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/play_store_button"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_margin="4dp"
+        app:fabCustomSize="56dp"
+        app:maxImageSize="36dp"
+        android:src="@drawable/play_store"
+        app:backgroundTint="@color/accentColor"
+        app:borderWidth="4dp"
+        app:elevation="4dp"
+        tools:ignore="ContentDescription" />
+
+      <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/redeem_code_button"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_margin="4dp"
+        app:fabCustomSize="56dp"
+        app:maxImageSize="36dp"
+        android:src="@drawable/redeem"
+        app:backgroundTint="@color/accentColor"
+        app:borderWidth="4dp"
+        app:elevation="4dp"
+        tools:ignore="ContentDescription" />
+
+    </LinearLayout>
+
+    <LinearLayout
+      android:id="@+id/bitcoin_container"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:visibility="gone">
+
+      <TextView
+        android:id="@+id/bitcoin_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:text="@string/bitcoin_link" />
+
+      <ImageView
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:src="@drawable/bitcoin_qr_code"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        tools:ignore="ContentDescription" />
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bitcoin_address"
+        android:padding="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/rectangular_border"
+        android:textIsSelectable="true" />
+
+    </LinearLayout>
 
     <TextView
       android:id="@+id/bank_account_link"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:padding="4dp"
-      app:drawableStartCompat="@drawable/bullet"
-      android:drawablePadding="4dp"
       android:textStyle="bold"
       android:textSize="16sp"
-      android:text="@string/bank_account_link"/>
-
-    <View
-      android:layout_width="match_parent"
-      android:background="@color/accentColor"
-      android:layout_height="1dp"
-      android:layout_marginTop="12dp"
-      android:layout_marginBottom="12dp"/>
+      android:text="@string/bank_account_link"
+      android:visibility="gone" />
 
     <TextView
       android:id="@+id/play_store_link"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:padding="4dp"
-      app:drawableStartCompat="@drawable/bullet"
-      android:drawablePadding="4dp"
       android:textStyle="bold"
       android:textSize="16sp"
-      android:text="@string/play_store_link"/>
-
-    <View
-      android:layout_width="match_parent"
-      android:background="@color/accentColor"
-      android:layout_height="1dp"
-      android:layout_marginTop="12dp"
-      android:layout_marginBottom="12dp"/>
+      android:text="@string/play_store_link"
+      android:visibility="gone" />
 
     <TextView
       android:id="@+id/redeem_code_link"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:padding="4dp"
-      app:drawableStartCompat="@drawable/bullet"
-      android:drawablePadding="4dp"
       android:textStyle="bold"
       android:textSize="16sp"
-      android:text="@string/redeem_code_link"/>
+      android:text="@string/redeem_code_link"
+      android:visibility="gone" />
 
   </LinearLayout>
 </ScrollView>

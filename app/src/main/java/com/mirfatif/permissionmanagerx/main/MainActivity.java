@@ -2,7 +2,6 @@ package com.mirfatif.permissionmanagerx.main;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Process;
@@ -62,7 +61,6 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -1064,7 +1062,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     if (item.getItemId() == R.id.action_donate) {
-      return showDonateDialog();
+      Donate.showDialog(this);
+      return true;
     }
 
     if (item.getItemId() == R.id.action_about) {
@@ -1073,49 +1072,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     return false;
-  }
-
-  //////////////////////////////////////////////////////////////////
-  ////////////////////////////// DONATE ////////////////////////////
-  //////////////////////////////////////////////////////////////////
-
-  private boolean showDonateDialog() {
-    View layout = getLayoutInflater().inflate(R.layout.donate_alert_dialog, null);
-
-    ((TextView) layout.findViewById(R.id.bitcoin_link))
-        .setMovementMethod(
-            BetterLinkMovementMethod.newInstance()
-                .setOnLinkClickListener((textView, uri) -> handleBitcoinClick()));
-
-    sendMail(layout, R.id.bank_account_link, R.string.bank_account_request);
-
-    ((TextView) layout.findViewById(R.id.play_store_link))
-        .setMovementMethod(
-            BetterLinkMovementMethod.newInstance()
-                .setOnLinkClickListener((tView, url) -> Utils.openWebUrl(this, url)));
-
-    sendMail(layout, R.id.redeem_code_link, R.string.redeem_code_request);
-
-    new AlertDialogFragment(new Builder(this).setView(layout).create()).show(mFM, "DONATION", true);
-    return true;
-  }
-
-  private void sendMail(View layout, int viewResId, int msgResId) {
-    ((TextView) layout.findViewById(viewResId))
-        .setMovementMethod(
-            BetterLinkMovementMethod.newInstance()
-                .setOnLinkClickListener((v, url) -> Utils.sendMail(this, getString(msgResId))));
-  }
-
-  private boolean handleBitcoinClick() {
-    Intent intent = new Intent(Intent.ACTION_VIEW);
-    intent.setData(Uri.parse("bitcoin:" + getString(R.string.bitcoin_address)));
-    if (getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_ALL).isEmpty()) {
-      Toast.makeText(App.getContext(), R.string.no_bitcoin_app_installed, Toast.LENGTH_LONG).show();
-    } else {
-      startActivity(intent);
-    }
-    return true;
   }
 
   //////////////////////////////////////////////////////////////////
@@ -1152,6 +1108,7 @@ public class MainActivity extends AppCompatActivity {
     return mRoundProgressTextView;
   }
 
+  @SuppressWarnings("UnusedDeclaration")
   SearchView getSearchView() {
     return mSearchView;
   }
