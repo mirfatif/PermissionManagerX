@@ -13,6 +13,7 @@
   <!--MainActivity Preferences-->
   <string name="pref_main_crash_report_ts_enc_key">pref_main_crash_report_ts_enc</string>
   <string name="pref_main_ask_for_rating_ts_enc_key">pref_main_ask_for_rating_ts_enc</string>
+  <string name="pref_main_check_for_updates_ts_enc_key">pref_main_check_for_updates_ts_enc</string>
   <string name="pref_main_daemon_context_key">pref_main_daemon_context</string>
 
   <!--MainActivity Preferences corresponding to default values-->
@@ -100,4 +101,14 @@
   <string name="pref_filter_exclude_not_set_appops_title">Exclude AppOps not set (Defaults)</string>
   <string name="pref_filter_extra_appops_key">pref_filter_extra_appops</string>
   <string name="pref_filter_extra_appops_title">Extra AppOps, never excluded</string>
+
+
+  <!--SettingsActivity-->
+  <string name="pref_settings_check_for_updates_cat_title">Updates</string>
+  <string name="pref_settings_check_for_updates_title">Check For Updates</string>
+  <string name="pref_settings_check_for_updates_summary">Show a notification when a new version is
+    available
+  </string>
+  <string name="pref_settings_check_for_updates_key">pref_settings_check_for_updates</string>
+  <bool name="pref_settings_check_for_updates_default">true</bool>
 </resources>

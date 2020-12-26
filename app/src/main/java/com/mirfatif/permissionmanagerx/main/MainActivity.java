@@ -45,6 +45,8 @@ import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.prefs.FilterSettingsActivity;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
+import com.mirfatif.permissionmanagerx.prefs.settings.SettingsActivity;
 import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.ui.AboutActivity;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
@@ -278,6 +280,8 @@ public class MainActivity extends AppCompatActivity {
     mMySettings.plusAppLaunchCount();
 
     mMainActivityFlavor.onCreated(getIntent());
+
+    Utils.runInBg(() -> new AppUpdate().check(true));
   }
 
   private boolean setNightTheme() {
@@ -936,8 +940,7 @@ public class MainActivity extends AppCompatActivity {
     setBoxCheckedAndSetListener(menu, R.id.action_adb, mMySettings.isAdbConnected());
     setBoxCheckedAndSetListener(menu, R.id.action_dark_theme, mMySettings.forceDarkMode());
 
-    menu.findItem(R.id.action_donate).setVisible(MainActivityFlavor.IS_FREE_VERSION);
-    menu.findItem(R.id.action_settings).setVisible(!MainActivityFlavor.IS_FREE_VERSION);
+    menu.findItem(R.id.action_donate).setVisible(BuildConfig.GH_VERSION);
   }
 
   private void setBoxCheckedAndSetListener(Menu menu, int id, boolean checked) {
@@ -966,7 +969,7 @@ public class MainActivity extends AppCompatActivity {
     mDrawerLayout.closeDrawer(GravityCompat.START, true);
 
     if (item.getItemId() == R.id.action_settings) {
-      mMainActivityFlavor.openSettings();
+      startActivity(new Intent(App.getContext(), SettingsActivity.class));
       return true;
     }
 

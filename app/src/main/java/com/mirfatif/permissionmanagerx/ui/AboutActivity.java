@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.permissionmanagerx.BuildConfig;
@@ -17,8 +18,8 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.main.MainActivity;
-import com.mirfatif.permissionmanagerx.main.MainActivityFlavor;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
 import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.privtasks.Commands;
 import java.io.BufferedWriter;
@@ -50,8 +51,9 @@ public class AboutActivity extends AppCompatActivity {
     findViewById(R.id.contact).setOnClickListener(v -> Utils.sendMail(this, null));
     setLogTitle();
     findViewById(R.id.logging).setOnClickListener(v -> handleLogging());
+    findViewById((R.id.check_update)).setOnClickListener(v -> checkForUpdates());
 
-    if (!MainActivityFlavor.IS_FREE_VERSION) {
+    if (!BuildConfig.GH_VERSION) {
       findViewById(R.id.paid_features_container).setVisibility(View.GONE);
     } else {
       TextView paidFeaturesSummaryView = findViewById(R.id.paid_features_summary);
@@ -133,6 +135,62 @@ public class AboutActivity extends AppCompatActivity {
         () -> {
           startActivity(intent);
           finish();
+        });
+  }
+
+  private boolean mCheckForUpdateInProgress = false;
+  private TextView mCheckUpdatesSummary;
+
+  private void checkForUpdates() {
+    if (mCheckForUpdateInProgress) {
+      return;
+    }
+    mCheckForUpdateInProgress = true;
+
+    mCheckUpdatesSummary = findViewById(R.id.check_update_summary);
+    mCheckUpdatesSummary.setText(R.string.check_in_progress);
+    Utils.runInBg(this::checkForUpdatesInBg);
+  }
+
+  private void checkForUpdatesInBg() {
+    AppUpdate appUpdate = new AppUpdate();
+    Boolean res = appUpdate.check(false);
+
+    int messageResId;
+    boolean showDialog = false;
+    if (res == null) {
+      messageResId = R.string.check_for_updates_failed;
+    } else if (!res) {
+      messageResId = R.string.app_is_up_to_date;
+    } else {
+      messageResId = R.string.new_version_available;
+      showDialog = true;
+    }
+
+    boolean finalShowDialog = showDialog && !isFinishing();
+    Utils.runInFg(
+        () -> {
+          if (!isFinishing()) {
+            mCheckUpdatesSummary.setText(R.string.update_summary);
+          }
+
+          if (finalShowDialog) {
+            Builder builder =
+                new Builder(this)
+                    .setTitle(R.string.update)
+                    .setMessage(
+                        App.getContext().getString(messageResId) + ": " + appUpdate.getVersion())
+                    .setPositiveButton(
+                        R.string.download,
+                        (dialog, which) ->
+                            Utils.runInFg(() -> Utils.openWebUrl(this, appUpdate.getUpdateUrl())))
+                    .setNegativeButton(android.R.string.cancel, null);
+            new AlertDialogFragment(builder.create())
+                .show(getSupportFragmentManager(), "APP_UPDATE", false);
+          } else {
+            Toast.makeText(App.getContext(), messageResId, Toast.LENGTH_LONG).show();
+          }
+          mCheckForUpdateInProgress = false;
         });
   }
 

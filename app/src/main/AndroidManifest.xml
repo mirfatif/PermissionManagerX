@@ -31,6 +31,9 @@
       android:name=".ui.PackageActivity"
       android:parentActivityName=".main.MainActivity"/>
     <activity
+      android:name=".prefs.settings.SettingsActivity"
+      android:parentActivityName=".main.MainActivity"/>
+    <activity
       android:name=".prefs.FilterSettingsActivity"
       android:parentActivityName=".main.MainActivity"/>
     <activity

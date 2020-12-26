@@ -10,6 +10,9 @@ android {
         targetSdkVersion 30
         versionCode 103
         versionName "v1.03-beta2"
+
+        def br = "git rev-parse --abbrev-ref HEAD".execute().text.trim()
+        buildConfigField "boolean", "GH_VERSION", (br != "ps" && br != "ps-dev") ? "true" : "false"
     }
 
     buildTypes {

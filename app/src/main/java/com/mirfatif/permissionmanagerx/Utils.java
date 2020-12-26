@@ -26,7 +26,6 @@ import androidx.security.crypto.EncryptedSharedPreferences.PrefValueEncryptionSc
 import androidx.security.crypto.MasterKey;
 import androidx.security.crypto.MasterKey.KeyScheme;
 import com.mirfatif.permissionmanagerx.app.App;
-import com.mirfatif.permissionmanagerx.main.MainActivityFlavor;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.Adb;
 import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
@@ -321,7 +320,7 @@ public class Utils {
 
   public static String getDeviceInfo() {
     return BuildConfig.VERSION_NAME
-        + (MainActivityFlavor.IS_FREE_VERSION ? "" : " Paid")
+        + (BuildConfig.GH_VERSION ? "" : " Paid")
         + "\nAndroid "
         + VERSION.SDK_INT
         + "\nBuild type: "

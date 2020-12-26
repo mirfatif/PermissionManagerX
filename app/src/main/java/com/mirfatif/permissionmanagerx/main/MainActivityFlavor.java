@@ -12,8 +12,6 @@ import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 
 public class MainActivityFlavor {
 
-  public static final boolean IS_FREE_VERSION = true;
-
   private final MainActivity mActivity;
   private final MySettings mMySettings = MySettings.getInstance();
 
@@ -53,8 +51,6 @@ public class MainActivityFlavor {
   void onResumed() {}
 
   void onDestroyed() {}
-
-  void openSettings() {}
 
   void onPackagesUpdated() {}
 

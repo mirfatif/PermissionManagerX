@@ -185,6 +185,14 @@
   <string name="paid_feature1">Scheduled check to notify bad reference states</string>
   <string name="paid_feature2">Auto create backup file on changes</string>
   <string name="paid_feature3">Search suggestions</string>
+  <string name="update">Update</string>
+  <string name="update_summary">Check for app updates</string>
+  <string name="check_in_progress">Check in progress</string>
+  <string name="check_for_updates_failed">Check for updates failed</string>
+  <string name="app_is_up_to_date">App is up-to-date</string>
+  <string name="new_version_available">New app version is available</string>
+  <string name="tap_to_download">Tap to download</string>
+  <string name="download">Download</string>
 
   <!--Donate-->
   <string name="bitcoin_link"><a href="bitcoin:">SEND BITCOINS</a></string>

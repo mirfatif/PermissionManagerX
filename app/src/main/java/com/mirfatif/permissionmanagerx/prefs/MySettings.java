@@ -127,6 +127,15 @@ public class MySettings {
     }
   }
 
+  private long getLongPref(int keyResId) {
+    String prefKey = getString(keyResId);
+    if (prefKey.endsWith("_enc")) {
+      return mEncPrefs.getLong(prefKey, 0);
+    } else {
+      return mPrefs.getLong(prefKey, 0);
+    }
+  }
+
   private Set<String> getSetPref(int keyId) {
     return mPrefs.getStringSet(getString(keyId), null);
   }
@@ -150,6 +159,15 @@ public class MySettings {
       mEncPrefs.edit().putInt(prefKey, integer).apply();
     } else {
       mPrefs.edit().putInt(prefKey, integer).apply();
+    }
+  }
+
+  private void savePref(int key, long _long) {
+    String prefKey = getString(key);
+    if (prefKey.endsWith("_enc")) {
+      mEncPrefs.edit().putLong(prefKey, _long).apply();
+    } else {
+      mPrefs.edit().putLong(prefKey, _long).apply();
     }
   }
 
@@ -195,24 +213,33 @@ public class MySettings {
     mPrefs.edit().putString(getString(R.string.pref_main_daemon_context_key), context).apply();
   }
 
+  public boolean shouldCheckForUpdates() {
+    if (!getBoolPref(R.string.pref_settings_check_for_updates_key)) {
+      return false;
+    }
+    long lastTS = getLongPref(R.string.pref_main_check_for_updates_ts_enc_key);
+    return (System.currentTimeMillis() - lastTS) >= TimeUnit.DAYS.toMillis(1);
+  }
+
+  public void setCheckForUpdatesTs(long timeStamp) {
+    savePref(R.string.pref_main_check_for_updates_ts_enc_key, timeStamp);
+  }
+
   public void plusAppLaunchCount() {
     int appLaunchCountId = R.string.pref_main_app_launch_count_enc_key;
     savePref(appLaunchCountId, getIntPref(appLaunchCountId) + 1);
   }
 
   public long getCrashReportTs() {
-    return mEncPrefs.getLong(getString(R.string.pref_main_crash_report_ts_enc_key), 0);
+    return getLongPref(R.string.pref_main_crash_report_ts_enc_key);
   }
 
   public void setCrashReportTs() {
-    mEncPrefs
-        .edit()
-        .putLong(getString(R.string.pref_main_crash_report_ts_enc_key), System.currentTimeMillis())
-        .apply();
+    savePref(R.string.pref_main_crash_report_ts_enc_key, System.currentTimeMillis());
   }
 
   public boolean shouldNotAskForRating() {
-    long lastTS = mEncPrefs.getLong(getString(R.string.pref_main_ask_for_rating_ts_enc_key), 0);
+    long lastTS = getLongPref(R.string.pref_main_ask_for_rating_ts_enc_key);
     if (lastTS == 0) {
       setAskForRatingTs(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(5));
       return true;
@@ -228,10 +255,7 @@ public class MySettings {
   }
 
   public void setAskForRatingTs(long timeStamp) {
-    mEncPrefs
-        .edit()
-        .putLong(getString(R.string.pref_main_ask_for_rating_ts_enc_key), timeStamp)
-        .apply();
+    savePref(R.string.pref_main_ask_for_rating_ts_enc_key, timeStamp);
   }
 
   private PermissionDao mPermDb;
