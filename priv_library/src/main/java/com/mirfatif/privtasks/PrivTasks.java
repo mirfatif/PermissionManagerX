@@ -1,6 +1,5 @@
 package com.mirfatif.privtasks;
 
-import android.annotation.SuppressLint;
 import android.app.AppOpsManager;
 import android.app.AppOpsManager.OpEntry;
 import android.content.Context;
@@ -17,11 +16,13 @@ import android.permission.IPermissionManager;
 import android.util.Log;
 import com.android.internal.app.IAppOpsService;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+// The following methods are moved from IPackageManager to IPermissionManager in SDK 30.
+// getPermissionFlags, getAllPermissionGroups, queryPermissionsByGroup, revokeRuntimePermission
+// So android.jar needs to be modified to build successfully, or use Reflection.
 
 public class PrivTasks {
 
@@ -35,11 +36,7 @@ public class PrivTasks {
     DEBUG = isDebug;
     if (initializeServices) {
       initializeAppOpsService();
-      try {
-        initializePmService();
-      } catch (NoSuchMethodException e) {
-        e.printStackTrace();
-      }
+      initializePmService();
     }
   }
 
@@ -50,33 +47,13 @@ public class PrivTasks {
   }
 
   // asInterface() and getService() hidden APIs
-  public void initializePmService() throws NoSuchMethodError, NoSuchMethodException {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-      initializePreRMethods();
-    } else {
+  public void initializePmService() throws NoSuchMethodError {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
       // Context.PERMISSION_SERVICE doesn't work
       mIPermissionManager =
           IPermissionManager.Stub.asInterface(ServiceManager.getService("permissionmgr"));
     }
     mIPackageManager = IPackageManager.Stub.asInterface(ServiceManager.getService("package"));
-  }
-
-  private Method mGetPermissionFlags, mGetAllPermissionGroups;
-  private Method mQueryPermissionsByGroup, mRevokeRuntimePermission;
-
-  // Some methods are moved from IPackageManager to IPermissionManager in SDK 30.
-  @SuppressLint("SoonBlockedPrivateApi")
-  private void initializePreRMethods() throws NoSuchMethodException {
-    mGetPermissionFlags =
-        IPackageManager.class.getDeclaredMethod(
-            "getPermissionFlags", String.class, String.class, int.class);
-    mGetAllPermissionGroups =
-        IPackageManager.class.getDeclaredMethod("getAllPermissionGroups", int.class);
-    mQueryPermissionsByGroup =
-        IPackageManager.class.getDeclaredMethod("queryPermissionsByGroup", String.class, int.class);
-    mRevokeRuntimePermission =
-        IPackageManager.class.getDeclaredMethod(
-            "revokeRuntimePermission", String.class, String.class, int.class);
   }
 
   public List<String> opToName() {
@@ -252,17 +229,10 @@ public class PrivTasks {
        */
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         return mIPermissionManager.getPermissionFlags(args[1], args[2], Integer.parseInt(args[3]));
-      } else if (mGetPermissionFlags == null) {
-        return null;
       } else {
-        return (Integer)
-            mGetPermissionFlags.invoke(
-                mIPackageManager, args[1], args[2], Integer.parseInt(args[3]));
+        return mIPackageManager.getPermissionFlags(args[1], args[2], Integer.parseInt(args[3]));
       }
-    } catch (SecurityException
-        | IllegalAccessException
-        | InvocationTargetException
-        | RemoteException e) {
+    } catch (SecurityException | RemoteException e) {
       rateLimitThrowable(e);
       return null;
     }
@@ -281,11 +251,9 @@ public class PrivTasks {
         List<?> pgiList = new ArrayList<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
           pgiList = mIPermissionManager.getAllPermissionGroups(0).getList();
-        } else if (mGetAllPermissionGroups == null) {
-          return permToOpCodeList;
         } else {
           ParceledListSlice<?> pls =
-              (ParceledListSlice<?>) mGetAllPermissionGroups.invoke(mIPackageManager, 0);
+              (ParceledListSlice<?>) mIPackageManager.getAllPermissionGroups(0);
           if (pls != null) {
             pgiList = pls.getList();
           }
@@ -294,7 +262,7 @@ public class PrivTasks {
         for (Object pgi : pgiList) {
           permGroupsList.add(((PermissionGroupInfo) pgi).name);
         }
-      } catch (RemoteException | InvocationTargetException | IllegalAccessException e) {
+      } catch (RemoteException e) {
         e.printStackTrace();
       }
     }
@@ -314,12 +282,9 @@ public class PrivTasks {
           List<?> piList = new ArrayList<>();
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             piList = mIPermissionManager.queryPermissionsByGroup(permGroup, 0).getList();
-          } else if (mQueryPermissionsByGroup == null) {
-            return permToOpCodeList;
           } else {
             ParceledListSlice<?> pls =
-                (ParceledListSlice<?>)
-                    mQueryPermissionsByGroup.invoke(mIPackageManager, permGroup, 0);
+                (ParceledListSlice<?>) mIPackageManager.queryPermissionsByGroup(permGroup, 0);
             if (pls != null) {
               piList = pls.getList();
             }
@@ -328,7 +293,7 @@ public class PrivTasks {
           for (Object object : piList) {
             permInfoList.add((PermissionInfo) object);
           }
-        } catch (RemoteException | IllegalAccessException | InvocationTargetException e) {
+        } catch (RemoteException e) {
           e.printStackTrace();
         }
       }
@@ -359,18 +324,12 @@ public class PrivTasks {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
           mIPermissionManager.revokeRuntimePermission(
               args[1], args[2], Integer.parseInt(args[3]), null);
-        } else if (mRevokeRuntimePermission == null) {
-          return -1;
         } else {
-          mRevokeRuntimePermission.invoke(
-              mIPackageManager, args[1], args[2], Integer.parseInt(args[3]));
+          mIPackageManager.revokeRuntimePermission(args[1], args[2], Integer.parseInt(args[3]));
         }
       }
       return null;
-    } catch (RemoteException
-        | SecurityException
-        | IllegalAccessException
-        | InvocationTargetException e) {
+    } catch (RemoteException | SecurityException e) {
       // SecurityException is thrown if calling UID/PID doesn't have required permissions
       // e.g. ADB lacks these permissions on MIUI
       e.printStackTrace();

@@ -46,9 +46,6 @@ class AppOpsParser {
       // We can use simple PackageManager
       mUseIPackageManager = false;
       Log.e(TAG, e.toString());
-    } catch (NoSuchMethodException e) {
-      mUseIPackageManager = false;
-      e.printStackTrace();
     }
   }
 
