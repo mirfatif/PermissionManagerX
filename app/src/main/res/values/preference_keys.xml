@@ -104,8 +104,8 @@
 
 
   <!--SettingsActivity-->
-  <string name="pref_settings_check_for_updates_cat_title">Updates</string>
-  <string name="pref_settings_check_for_updates_title">Check For Updates</string>
+  <string name="pref_settings_check_for_updates_cat_title">App updates</string>
+  <string name="pref_settings_check_for_updates_title">Check for updates</string>
   <string name="pref_settings_check_for_updates_summary">Show a notification when a new version is
     available
   </string>

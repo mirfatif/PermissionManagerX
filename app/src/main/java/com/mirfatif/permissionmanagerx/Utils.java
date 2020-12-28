@@ -158,6 +158,17 @@ public class Utils {
     return count > Integer.MAX_VALUE;
   }
 
+  public static String capitalizeWords(String str) {
+    StringBuilder stringBuilder = new StringBuilder();
+    for (String word : str.split(" ")) {
+      if (stringBuilder.length() != 0) {
+        stringBuilder.append(" ");
+      }
+      stringBuilder.append(capitalizeString(word));
+    }
+    return stringBuilder.toString();
+  }
+
   // org.apache.commons.lang3.StringUtils.capitalize()
   public static String capitalizeString(String str) {
     final int strLen = str.length();

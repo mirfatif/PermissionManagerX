@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <CheckBoxPreference
-      android:defaultValue="@bool/pref_settings_check_for_updates_default"
-      android:key="@string/pref_settings_check_for_updates_key"
-      android:title="@string/pref_settings_check_for_updates_title"
-      android:summary="@string/pref_settings_check_for_updates_summary"
-      app:iconSpaceReserved="false" />
+  <SwitchPreferenceCompat
+    app:defaultValue="@bool/pref_settings_check_for_updates_default"
+    app:iconSpaceReserved="false"
+    app:key="@string/pref_settings_check_for_updates_key"
+    app:summary="@string/pref_settings_check_for_updates_summary"
+    app:title="@string/pref_settings_check_for_updates_title" />
 
 </PreferenceScreen>

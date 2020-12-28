@@ -143,6 +143,8 @@ public class PrivTasks {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+          // TODO
+          //  NoSuchMethodError: No virtual method getLastAccessTime(I)J on SDK 28 / Realme RMX1851
           myOpEntry.lastAccessTime = opEntry.getLastAccessTime(AppOpsManager.OP_FLAGS_ALL);
         } else {
           // hidden API
@@ -227,6 +229,8 @@ public class PrivTasks {
        * requires system permissions: {@link PackageManager#getPermissionFlags(String, String,
        * UserHandle)}
        */
+      // TODO
+      //  NumberFormatException: For input string: "TASKS" on SDK 29 / Xiaomi Redmi K20 Pro
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         return mIPermissionManager.getPermissionFlags(args[1], args[2], Integer.parseInt(args[3]));
       } else {
