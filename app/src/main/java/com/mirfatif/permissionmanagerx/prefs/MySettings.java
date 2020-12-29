@@ -176,16 +176,6 @@ public class MySettings {
     updateList(getString(key));
   }
 
-  private boolean mLowMemory = false;
-
-  public boolean isNotLowMemory() {
-    return !mLowMemory;
-  }
-
-  public synchronized void setLowMemory(boolean lowMemory) {
-    mLowMemory = lowMemory;
-  }
-
   public int getAdbPort() {
     return getIntPref(R.string.pref_main_adb_port_key);
   }

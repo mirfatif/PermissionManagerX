@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.PermissionInfo;
 import android.content.pm.Signature;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Log;
 import androidx.lifecycle.LiveData;
@@ -51,7 +50,6 @@ public class PackageParser {
   private List<PackageInfo> packageInfoList;
   private final List<Package> mPackagesList = new ArrayList<>();
   private List<Signature> systemSignatures;
-  private final Map<String, Drawable> mPackageIconsList = new HashMap<>();
   private final Map<String, Integer> mPermIconsResIds = new HashMap<>();
   private List<Integer> mOpToSwitchList;
   private List<Integer> mOpToDefModeList;
@@ -289,21 +287,6 @@ public class PackageParser {
     mIsUpdating = false;
   }
 
-  public void releaseIcons() {
-    Utils.runInBg(
-        () -> {
-          synchronized (mPackagesList) {
-            for (Package pkg : mPackagesList) {
-              pkg.releaseIcon();
-            }
-          }
-          synchronized (mPackageIconsList) {
-            mPackageIconsList.clear();
-          }
-          System.gc();
-        });
-  }
-
   //////////////////////////////////////////////////////////////////
   /////////////////////////// PROGRESS /////////////////////////////
   //////////////////////////////////////////////////////////////////
@@ -425,16 +408,6 @@ public class PackageParser {
       }
     }
 
-    // icon loading is costly call
-    Drawable icon;
-    synchronized (mPackageIconsList) {
-      icon = mPackageIconsList.get(packageInfo.packageName);
-      if (mMySettings.isNotLowMemory() && icon == null) {
-        icon = appInfo.loadIcon(mPackageManager);
-        mPackageIconsList.put(packageInfo.packageName, icon);
-      }
-    }
-
     // Update the package even if it's being filtered out due to permissions. It's because if this
     // method is being called from within PackageActivity, permissions list must be updated so that
     // the change is visible to the user in PackageActivity.
@@ -445,7 +418,6 @@ public class PackageParser {
         isFrameworkApp,
         isSystemApp,
         isEnabled,
-        icon,
         appInfo.uid,
         pkgIsReferenced);
     if (mMySettings.isDebug()) {

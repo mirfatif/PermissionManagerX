@@ -1,6 +1,5 @@
 package com.mirfatif.permissionmanagerx.parser;
 
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import java.util.List;
@@ -13,7 +12,6 @@ public class Package {
   private boolean mIsFrameworkApp;
   private boolean mIsSystemApp;
   private boolean mIsEnabled;
-  private Drawable mIcon;
   private int mUid;
   private Boolean mIsReferenced;
 
@@ -29,7 +27,6 @@ public class Package {
       boolean isFrameworkApp,
       boolean isSystemApp,
       boolean isEnabled,
-      Drawable icon,
       int uid,
       Boolean reference) {
     mPackageLabel = label;
@@ -38,7 +35,6 @@ public class Package {
     mIsFrameworkApp = isFrameworkApp;
     mIsSystemApp = isSystemApp;
     mIsEnabled = isEnabled;
-    mIcon = icon;
     mUid = uid;
     mIsReferenced = reference;
   }
@@ -105,14 +101,6 @@ public class Package {
 
   public int getAppOpsCount() {
     return mAppOpsCount;
-  }
-
-  public Drawable getIcon() {
-    return mIcon;
-  }
-
-  public void releaseIcon() {
-    mIcon = null;
   }
 
   public int getUid() {

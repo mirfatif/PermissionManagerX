@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
@@ -94,16 +95,15 @@ public class PackageAdapter extends ListAdapter<Package, ItemViewHolder> {
         referenceView.setBackgroundColor(Color.GREEN);
       }
 
-      Drawable icon = pkg.getIcon();
-      if (icon == null) {
-        try {
-          icon = mPackageManager.getApplicationIcon(pkg.getName());
-        } catch (NameNotFoundException e) {
-          e.printStackTrace();
-        }
-      }
+      Utils.runInBg(
+          () -> {
+            try {
+              Drawable icon = mPackageManager.getApplicationIcon(pkg.getName());
+              Utils.runInFg(() -> iconView.setImageDrawable(icon));
+            } catch (NameNotFoundException ignored) {
+            }
+          });
 
-      iconView.setImageDrawable(icon);
       packageLabelView.setText(pkg.getLabel());
       String pkgName = pkg.getName() + " (" + pkg.getUid() + ")";
       packageNameView.setText(pkgName);
