@@ -5,10 +5,9 @@ import android.content.Context;
 import android.os.SystemClock;
 import android.util.Log;
 import com.mirfatif.permissionmanagerx.Utils;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 
 public class App extends Application {
 
@@ -37,16 +36,11 @@ public class App extends Application {
             }
           }
 
-          File logFile = Utils.getCrashLogFile(false);
-          if (logFile != null) {
-            try {
-              PrintWriter writer = new PrintWriter(logFile);
-              writer.println(Utils.getDeviceInfo());
-              e.printStackTrace(writer);
-              writer.close();
-            } catch (FileNotFoundException ignored) {
-            }
-          }
+          StringWriter stringWriter = new StringWriter();
+          PrintWriter writer = new PrintWriter(stringWriter, true);
+          e.printStackTrace(writer);
+          writer.close();
+          Utils.writeCrashLog(stringWriter.toString(), false);
 
           defaultExceptionHandler.uncaughtException(t, e);
         });

@@ -117,7 +117,7 @@ public class BackupRestore {
         uri -> Utils.runInBg(() -> doBackupRestoreInBg(isBackup, uri));
     if (isBackup) {
       mA.registerForActivityResult(new ActivityResultContracts.CreateDocument(), callback)
-          .launch("PermissionManagerX_" + Utils.getCurrDateTime() + ".xml");
+          .launch("PermissionManagerX_" + Utils.getCurrDateTime(false) + ".xml");
     } else {
       mA.registerForActivityResult(new ActivityResultContracts.OpenDocument(), callback)
           .launch(new String[] {"text/xml"});

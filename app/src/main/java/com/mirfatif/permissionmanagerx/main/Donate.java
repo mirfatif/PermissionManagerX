@@ -84,13 +84,12 @@ class Donate {
   }
 
   private void sendMail(TextView view, int msgResId) {
-    setMovementMethod(
-        view, (textView, url) -> Utils.sendMail(mA, App.getContext().getString(msgResId)));
+    setMovementMethod(view, (textView, url) -> Utils.sendMail(mA, Utils.getString(msgResId)));
   }
 
   private boolean handleBitcoinClick() {
     Intent intent = new Intent(Intent.ACTION_VIEW);
-    intent.setData(Uri.parse("bitcoin:" + App.getContext().getString(R.string.bitcoin_address)));
+    intent.setData(Uri.parse("bitcoin:" + Utils.getString(R.string.bitcoin_address)));
     if (App.getContext()
         .getPackageManager()
         .queryIntentActivities(intent, PackageManager.MATCH_ALL)

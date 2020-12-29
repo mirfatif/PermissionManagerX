@@ -19,7 +19,7 @@ public class MainActivityFlavor {
     mActivity = activity;
   }
 
-  void askForRating() {
+  private void askForRating() {
     if (mMySettings.shouldNotAskForRating()) {
       return;
     }
@@ -52,7 +52,9 @@ public class MainActivityFlavor {
 
   void onDestroyed() {}
 
-  void onPackagesUpdated() {}
+  void onPackagesUpdated() {
+    askForRating();
+  }
 
   void onRestoreDone() {}
 }

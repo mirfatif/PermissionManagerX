@@ -69,16 +69,6 @@ public class MySettings {
     mDoRepeatUpdates = doRepeatUpdates;
   }
 
-  private boolean mAskToSendCrashReport = true;
-
-  public boolean shouldAskToSendCrashReport() {
-    return mAskToSendCrashReport;
-  }
-
-  public void setAskToSendCrashReport(boolean ask) {
-    mAskToSendCrashReport = ask;
-  }
-
   private Boolean startLogging = false;
   private boolean DEBUG = false;
 
@@ -220,12 +210,13 @@ public class MySettings {
     savePref(appLaunchCountId, getIntPref(appLaunchCountId) + 1);
   }
 
-  public long getCrashReportTs() {
-    return getLongPref(R.string.pref_main_crash_report_ts_enc_key);
-  }
-
-  public void setCrashReportTs() {
-    savePref(R.string.pref_main_crash_report_ts_enc_key, System.currentTimeMillis());
+  public boolean shouldAskToSendCrashReport() {
+    long lastTS = getLongPref(R.string.pref_main_crash_report_ts_enc_key);
+    if ((System.currentTimeMillis() - lastTS) >= TimeUnit.DAYS.toMillis(1)) {
+      savePref(R.string.pref_main_crash_report_ts_enc_key, System.currentTimeMillis());
+      return true;
+    }
+    return false;
   }
 
   public boolean shouldNotAskForRating() {

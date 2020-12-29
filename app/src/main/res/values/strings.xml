@@ -97,11 +97,9 @@
   <string name="thank_you">Thank you</string>
   <string name="play_store_url">https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx</string>
   <string name="crash_report">Crash Report</string>
-  <string name="ask_to_report_app_crash">We are sorry. The app had a problem and crashed.\n\nWould you
-    like to email the \"%1$s\" file to the developer so that the bug can be fixed?
-  </string>
-  <string name="ask_to_report_daemon_crash">We are sorry. A component of the app had a problem and
-    crashed.\n\nWould you like to email the \"%1$s\" file to the developer so that the bug can be fixed?
+  <string name="ask_to_report_crash_small">Send crash report to the developer</string>
+  <string name="ask_to_report_crash">Sorry, a component of the app had a problem and crashed.
+    Tap to send the log file to the developer through email or Telegram so that the bug can be fixed.
   </string>
   <string name="packages">Packages</string>
   <string name="permissions">Permissions</string>
@@ -207,4 +205,10 @@
   <string name="redeem_code_request">Hello,\n\nI have made a donation of amount ____ to PMX. Please
     provide a Play Store redeem code if available.
   </string>
+
+  <!--Notification Channels-->
+  <string name="channel_app_update">App Updates</string>
+  <integer name="channel_app_update">100</integer>
+  <string name="channel_crash_report">Crash Report</string>
+  <integer name="channel_crash_report">200</integer>
 </resources>

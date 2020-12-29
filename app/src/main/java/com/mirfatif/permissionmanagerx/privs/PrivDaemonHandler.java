@@ -17,6 +17,7 @@ import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.net.Inet4Address;
 import java.net.Socket;
 import java.util.Arrays;
@@ -348,24 +349,20 @@ public class PrivDaemonHandler {
   }
 
   private void readProcessLog(BufferedReader reader, String tag) throws IOException {
-    PrintWriter crashLogWriter = null;
+    StringWriter crashLogWriter = null;
     String line;
     while ((line = reader.readLine()) != null) {
       if (line.contains(Commands.CRASH_LOG_STARTS)) {
-        File logFile = Utils.getCrashLogFile(true);
-        if (logFile != null) {
-          crashLogWriter = new PrintWriter(logFile);
-          crashLogWriter.println(Utils.getDeviceInfo());
-        }
+        crashLogWriter = new StringWriter();
         continue;
       }
       if (crashLogWriter != null) {
-        crashLogWriter.println(line);
+        crashLogWriter.append(line).append("\n");
       }
       Log.e(tag, line);
     }
     if (crashLogWriter != null) {
-      crashLogWriter.close();
+      Utils.writeCrashLog(crashLogWriter.toString(), true);
     }
   }
 

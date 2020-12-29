@@ -4,7 +4,6 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
@@ -43,6 +42,6 @@ public class MyViewModel extends AndroidViewModel {
   }
 
   public LiveData<Boolean> getHiddenAPIsNotWorking() {
-    return Utils.getHiddenAPIsNotWorking();
+    return mPackageParser.getHiddenAPIsNotWorking();
   }
 }

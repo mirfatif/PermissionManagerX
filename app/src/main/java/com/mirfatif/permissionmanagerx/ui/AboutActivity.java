@@ -70,7 +70,7 @@ public class AboutActivity extends AppCompatActivity {
       findViewById(R.id.paid_features)
           .setOnClickListener(
               v -> {
-                if (paidFeaturesDetailView.isVisibleToUser()) {
+                if (paidFeaturesDetailView.getVisibility() != View.GONE) {
                   paidFeaturesDetailView.setVisibility(View.GONE);
                   paidFeaturesSummaryView.setVisibility(View.VISIBLE);
                 } else {
@@ -110,7 +110,7 @@ public class AboutActivity extends AppCompatActivity {
     Toast.makeText(App.getContext(), R.string.select_log_file, Toast.LENGTH_LONG).show();
     ActivityResultCallback<Uri> callback = uri -> Utils.runInBg(() -> doLoggingInBg(uri));
     registerForActivityResult(new ActivityResultContracts.CreateDocument(), callback)
-        .launch("PermissionManagerX_" + Utils.getCurrDateTime() + ".log");
+        .launch("PermissionManagerX_" + Utils.getCurrDateTime(false) + ".log");
   }
 
   private void doLoggingInBg(Uri uri) {
@@ -178,8 +178,7 @@ public class AboutActivity extends AppCompatActivity {
             Builder builder =
                 new Builder(this)
                     .setTitle(R.string.update)
-                    .setMessage(
-                        App.getContext().getString(messageResId) + ": " + appUpdate.getVersion())
+                    .setMessage(Utils.getString(messageResId) + ": " + appUpdate.getVersion())
                     .setPositiveButton(
                         R.string.download,
                         (dialog, which) ->

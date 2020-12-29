@@ -774,7 +774,7 @@ public class PackageParser {
         systemFixedFlag = flag;
         return systemFixedFlag;
       }
-      Utils.hiddenAPIsNotWorking(TAG, "Could not get FLAG_PERMISSION_SYSTEM_FIXED field");
+      hiddenAPIsNotWorking(TAG, "Could not get FLAG_PERMISSION_SYSTEM_FIXED field");
     } else if (!mMySettings.isPrivDaemonAlive()) {
       Utils.logDaemonDead(TAG + ": getSystemFixedFlag");
       return -1;
@@ -995,6 +995,19 @@ public class PackageParser {
 
   public List<String> buildAppOpsModes() {
     return mAppOpsParser.buildAppOpsModes();
+  }
+
+  private final MutableLiveData<Boolean> mHiddenAPIsNotWorking = new MutableLiveData<>(false);
+
+  public LiveData<Boolean> getHiddenAPIsNotWorking() {
+    return mHiddenAPIsNotWorking;
+  }
+
+  void hiddenAPIsNotWorking(String tag, String error) {
+    Log.e(tag, error);
+    MySettings.getInstance().mHiddenAPIsWorking = false;
+    Utils.runInFg(() -> mHiddenAPIsNotWorking.setValue(true));
+    Utils.runInFg(() -> mHiddenAPIsNotWorking.setValue(false)); // for using again
   }
 
   //////////////////////////////////////////////////////////////////

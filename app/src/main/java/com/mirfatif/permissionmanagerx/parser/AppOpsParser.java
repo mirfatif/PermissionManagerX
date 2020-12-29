@@ -38,7 +38,7 @@ class AppOpsParser {
       mPrivTasks.initializeAppOpsService();
     } catch (NoSuchMethodError e) {
       // Simple AppOpsManager doesn't have getUidOps()
-      Utils.hiddenAPIsNotWorking(TAG, e.toString());
+      hiddenAPIsNotWorking(e.toString());
     }
     try {
       mPrivTasks.initializePmService();
@@ -57,7 +57,7 @@ class AppOpsParser {
       } catch (RemoteException e) {
         Log.e(TAG, e.toString());
       } catch (NoSuchMethodError e) {
-        Utils.hiddenAPIsNotWorking(TAG, e.toString());
+        hiddenAPIsNotWorking(e.toString());
         return getOpsForPackage(uid, packageName, op);
       }
     } else if (!mMySettings.isPrivDaemonAlive()) {
@@ -87,7 +87,7 @@ class AppOpsParser {
 
   List<Integer> buildOpToDefaultModeList() {
     if (mMySettings.isDebug()) {
-      Util.debugLog("PackageParser", "buildOpToDefaultModeList() called");
+      Util.debugLog(TAG, "buildOpToDefaultModeList() called");
     }
     List<Integer> opToDefModeList = new ArrayList<>();
     if (mMySettings.canUseHiddenAPIs()) {
@@ -98,7 +98,7 @@ class AppOpsParser {
         }
         return opToDefModeList;
       } catch (NoSuchMethodError e) {
-        Utils.hiddenAPIsNotWorking(TAG, e.toString());
+        hiddenAPIsNotWorking(e.toString());
         return buildOpToDefaultModeList();
       }
     } else if (!mMySettings.isPrivDaemonAlive()) {
@@ -119,7 +119,7 @@ class AppOpsParser {
 
   List<Integer> buildOpToSwitchList() {
     if (mMySettings.isDebug()) {
-      Util.debugLog("PackageParser", "buildOpToSwitchList() called");
+      Util.debugLog(TAG, "buildOpToSwitchList() called");
     }
     List<Integer> opToSwitchList = new ArrayList<>();
     if (mMySettings.canUseHiddenAPIs()) {
@@ -130,7 +130,7 @@ class AppOpsParser {
         }
         return opToSwitchList;
       } catch (NoSuchMethodError e) {
-        Utils.hiddenAPIsNotWorking(TAG, e.toString());
+        hiddenAPIsNotWorking(e.toString());
         return buildOpToSwitchList();
       }
     } else if (!mMySettings.isPrivDaemonAlive()) {
@@ -151,7 +151,7 @@ class AppOpsParser {
 
   Map<String, Integer> buildPermissionToOpCodeMap() {
     if (mMySettings.isDebug()) {
-      Util.debugLog("PackageParser", "buildPermissionToOpCodeMap() called");
+      Util.debugLog(TAG, "buildPermissionToOpCodeMap() called");
     }
     Map<String, Integer> permToOpCodeMap = new HashMap<>();
     if (mMySettings.canUseHiddenAPIs()
@@ -164,7 +164,7 @@ class AppOpsParser {
         }
         return permToOpCodeMap;
       } catch (NoSuchMethodError e) {
-        Utils.hiddenAPIsNotWorking(TAG, e.toString());
+        hiddenAPIsNotWorking(e.toString());
         return buildPermissionToOpCodeMap();
       }
     } else if (!mMySettings.isPrivDaemonAlive()) {
@@ -186,7 +186,7 @@ class AppOpsParser {
 
   List<String> buildAppOpsList() {
     if (mMySettings.isDebug()) {
-      Util.debugLog("PackageParser", "buildAppOpsList() called");
+      Util.debugLog(TAG, "buildAppOpsList() called");
     }
     if (mMySettings.excludeAppOpsPerms() || !mMySettings.canReadAppOps()) {
       return null;
@@ -201,7 +201,7 @@ class AppOpsParser {
         }
         return appOpsList;
       } catch (NoSuchMethodError e) {
-        Utils.hiddenAPIsNotWorking(TAG, e.toString());
+        hiddenAPIsNotWorking(e.toString());
         return buildAppOpsList();
       }
     } else if (!mMySettings.isPrivDaemonAlive()) {
@@ -222,7 +222,7 @@ class AppOpsParser {
 
   List<String> buildAppOpsModes() {
     if (mMySettings.isDebug()) {
-      Util.debugLog("PackageParser", "buildAppOpsModes() called");
+      Util.debugLog(TAG, "buildAppOpsModes() called");
     }
     if (mMySettings.excludeAppOpsPerms() || !mMySettings.canReadAppOps()) {
       return null;
@@ -231,12 +231,12 @@ class AppOpsParser {
 
     if (mMySettings.canUseHiddenAPIs()) {
       try {
-        for (Object item : mPrivTasks.modeToName()) {
+        for (Object item : mPrivTasks.buildModeToNameList()) {
           appOpsModes.add(Utils.capitalizeString((String) item));
         }
         return appOpsModes;
       } catch (NoSuchMethodError e) {
-        Utils.hiddenAPIsNotWorking(TAG, e.toString());
+        hiddenAPIsNotWorking(e.toString());
         return buildAppOpsModes();
       }
     } else if (!mMySettings.isPrivDaemonAlive()) {
@@ -263,7 +263,7 @@ class AppOpsParser {
       if (NUM_OP != Utils.INT_FIELD_ERROR) {
         return NUM_OP;
       }
-      Utils.hiddenAPIsNotWorking(TAG, "Could not get _NUM_OP field");
+      hiddenAPIsNotWorking("Could not get _NUM_OP field");
       return getOpNum();
     } else if (!mMySettings.isPrivDaemonAlive()) {
       Utils.logDaemonDead(TAG + ": getOpNum");
@@ -276,5 +276,9 @@ class AppOpsParser {
     }
     Log.e(TAG, "Error occurred in getOpNum()");
     return 0;
+  }
+
+  private void hiddenAPIsNotWorking(String error) {
+    PackageParser.getInstance().hiddenAPIsNotWorking(TAG, error);
   }
 }

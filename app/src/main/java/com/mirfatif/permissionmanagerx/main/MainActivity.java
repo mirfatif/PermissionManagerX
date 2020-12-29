@@ -1,8 +1,6 @@
 package com.mirfatif.permissionmanagerx.main;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Process;
 import android.os.SystemClock;
@@ -25,7 +23,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.SearchView.OnQueryTextListener;
-import androidx.core.content.FileProvider;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -58,11 +55,9 @@ import com.mirfatif.permissionmanagerx.ui.PackageAdapter.PkgClickListener;
 import com.mirfatif.permissionmanagerx.ui.PackageAdapter.PkgLongClickListener;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -447,12 +442,6 @@ public class MainActivity extends AppCompatActivity {
                           5000)
                       .show();
                 }
-                Utils.runInBg(
-                    () -> {
-                      if (!sendCrashReport()) {
-                        mMainActivityFlavor.askForRating();
-                      }
-                    });
                 mMainActivityFlavor.onPackagesUpdated();
               }
             });
@@ -587,101 +576,6 @@ public class MainActivity extends AppCompatActivity {
             Log.e("setPackageEnabledState", "Response is " + res);
           }
         });
-  }
-
-  private boolean sendCrashReport() {
-    if (!mMySettings.shouldAskToSendCrashReport()) {
-      return false;
-    }
-    mMySettings.setAskToSendCrashReport(false);
-
-    File logDir = Utils.createCrashLogDir();
-    if (logDir == null) {
-      return false;
-    }
-    File[] logFiles = logDir.listFiles();
-    if (logFiles == null || logFiles.length == 0) {
-      return false;
-    }
-
-    long crashReportTs = mMySettings.getCrashReportTs();
-    mMySettings.setCrashReportTs();
-
-    File fileToDelete, fileToSend = null;
-    long deleteThreshold = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(30);
-    for (File logFile : logFiles) {
-      if (!logFile.isFile()) {
-        continue;
-      }
-      if (!logFile.getName().startsWith(Utils.LOG_FILE_PREFIX)
-          && !logFile.getName().startsWith(Utils.LOG_FILE_DAEMON_PREFIX)) {
-        continue;
-      }
-      if (!logFile.getName().endsWith(Utils.LOG_FILE_SUFFIX)) {
-        continue;
-      }
-      if (logFile.lastModified() > crashReportTs
-          && (fileToSend == null || logFile.lastModified() > fileToSend.lastModified())) {
-        fileToDelete = fileToSend;
-        fileToSend = logFile;
-      } else {
-        fileToDelete = logFile;
-      }
-      // Delete log files older than a month
-      if (fileToDelete != null
-          && deleteThreshold > fileToDelete.lastModified()
-          && !fileToDelete.delete()) {
-        Log.e("sendCrashReport", "Failed to delete " + logFile);
-      }
-    }
-
-    if (fileToSend == null) {
-      return false;
-    }
-
-    // Be ashamed of your performance, don't ask for rating in near future
-    mMySettings.setAskForRatingTs(System.currentTimeMillis());
-
-    String authority = "com.mirfatif.permissionmanagerx.fileprovider";
-    Uri logFileUri = FileProvider.getUriForFile(this, authority, fileToSend);
-
-    String message;
-    if (fileToSend.getName().startsWith(Utils.LOG_FILE_PREFIX)) {
-      message = getString(R.string.ask_to_report_app_crash, fileToSend.getName());
-    } else {
-      message = getString(R.string.ask_to_report_daemon_crash, fileToSend.getName());
-    }
-
-    Builder builder =
-        new Builder(this)
-            .setTitle(R.string.crash_report)
-            .setMessage(message)
-            .setPositiveButton(
-                android.R.string.ok,
-                (dialog, which) -> {
-                  Intent intent = new Intent(Intent.ACTION_SEND);
-                  intent
-                      .setData(logFileUri)
-                      .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                      .setType("*/*")
-                      .putExtra(
-                          Intent.EXTRA_EMAIL, new String[] {getString(R.string.email_address)})
-                      .putExtra(
-                          Intent.EXTRA_SUBJECT, getString(R.string.app_name) + " - Crash Report")
-                      .putExtra(Intent.EXTRA_TEXT, "Find attachment.")
-                      .putExtra(Intent.EXTRA_STREAM, logFileUri);
-
-                  try {
-                    startActivity(intent);
-                  } catch (ActivityNotFoundException e) {
-                    Toast.makeText(
-                            App.getContext(), R.string.no_email_app_installed, Toast.LENGTH_LONG)
-                        .show();
-                  }
-                })
-            .setNegativeButton(android.R.string.cancel, null);
-    Utils.runInFg(() -> new AlertDialogFragment(builder.create()).show(mFM, "CRASH_REPORT", true));
-    return true;
   }
 
   @Override

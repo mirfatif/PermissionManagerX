@@ -1,6 +1,9 @@
 package com.mirfatif.permissionmanagerx;
 
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +13,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -18,8 +22,9 @@ import android.widget.Toast;
 import androidx.browser.customtabs.CustomTabColorSchemeParams;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.browser.customtabs.CustomTabsService;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.FileProvider;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.EncryptedSharedPreferences.PrefKeyEncryptionScheme;
 import androidx.security.crypto.EncryptedSharedPreferences.PrefValueEncryptionScheme;
@@ -34,6 +39,7 @@ import com.mirfatif.privtasks.Util;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -45,6 +51,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -232,9 +239,8 @@ public class Utils {
 
   public static boolean sendMail(Activity activity, String body) {
     Intent emailIntent = new Intent(Intent.ACTION_SENDTO).setData(Uri.parse("mailto:"));
-    emailIntent.putExtra(
-        Intent.EXTRA_EMAIL, new String[] {App.getContext().getString(R.string.email_address)});
-    emailIntent.putExtra(Intent.EXTRA_SUBJECT, App.getContext().getString(R.string.app_name));
+    emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {getString(R.string.email_address)});
+    emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
     if (body != null) emailIntent.putExtra(Intent.EXTRA_TEXT, body);
     try {
       activity.startActivity(emailIntent);
@@ -247,20 +253,6 @@ public class Utils {
   public static boolean isNightMode(Activity activity) {
     int uiMode = activity.getResources().getConfiguration().uiMode;
     return (uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
-  }
-
-  private static final MutableLiveData<Boolean> mHiddenAPIsNotWorking =
-      new MutableLiveData<>(false);
-
-  public static LiveData<Boolean> getHiddenAPIsNotWorking() {
-    return mHiddenAPIsNotWorking;
-  }
-
-  public static void hiddenAPIsNotWorking(String tag, String error) {
-    Log.e(tag, error);
-    MySettings.getInstance().mHiddenAPIsWorking = false;
-    runInFg(() -> mHiddenAPIsNotWorking.setValue(true));
-    runInFg(() -> mHiddenAPIsNotWorking.setValue(false)); // for using again
   }
 
   public static void cleanProcess(BufferedReader reader, Process process, Adb adb, String tag) {
@@ -301,40 +293,24 @@ public class Utils {
     }
   }
 
-  public static File createCrashLogDir() {
-    File logDir = new File(App.getContext().getExternalFilesDir(null), "crash_logs");
-    if (logDir.exists() || logDir.mkdirs()) {
-      return logDir;
+  public static String getCurrDateTime(boolean spaced) {
+    if (spaced) {
+      return new SimpleDateFormat("dd-MMM-yy HH:mm:ss", Locale.ENGLISH)
+          .format(System.currentTimeMillis());
     } else {
-      Log.e("getCrashLogDir", "Failed to create " + logDir);
+      return new SimpleDateFormat("dd-MMM-yy_HH-mm-ss", Locale.ENGLISH)
+          .format(System.currentTimeMillis());
     }
-    return null;
-  }
-
-  public static final String LOG_FILE_PREFIX = "PMX_";
-  public static final String LOG_FILE_DAEMON_PREFIX = "PMXD_";
-  public static final String LOG_FILE_SUFFIX = ".log";
-
-  public static File getCrashLogFile(boolean isDaemon) {
-    File logDir = createCrashLogDir();
-    if (logDir == null) {
-      return null;
-    }
-    String prefix = isDaemon ? LOG_FILE_DAEMON_PREFIX : LOG_FILE_PREFIX;
-    return new File(logDir, prefix + getCurrDateTime() + LOG_FILE_SUFFIX);
-  }
-
-  public static String getCurrDateTime() {
-    return new SimpleDateFormat("dd-MMM-yy_HH-mm-ss", Locale.ENGLISH)
-        .format(System.currentTimeMillis());
   }
 
   public static String getDeviceInfo() {
-    return BuildConfig.VERSION_NAME
-        + (BuildConfig.GH_VERSION ? "" : " Paid")
-        + "\nAndroid "
+    MySettings mySettings = MySettings.getInstance();
+    return "Version: "
+        + BuildConfig.VERSION_NAME
+        + (BuildConfig.GH_VERSION ? "" : " PlayStore")
+        + "\nSDK: "
         + VERSION.SDK_INT
-        + "\nBuild type: "
+        + "\nBuild: "
         + Build.TYPE
         + "\nDevice: "
         + Build.DEVICE
@@ -343,7 +319,19 @@ public class Utils {
         + "\nModel: "
         + Build.MODEL
         + "\nProduct: "
-        + Build.PRODUCT;
+        + Build.PRODUCT
+        + "Root: "
+        + mySettings.isRootGranted()
+        + "ADB: "
+        + mySettings.isAdbConnected();
+  }
+
+  public static String getString(int resId) {
+    return App.getContext().getString(resId);
+  }
+
+  public static int getInteger(int resId) {
+    return App.getContext().getResources().getInteger(resId);
   }
 
   //////////////////////////////////////////////////////////////////
@@ -430,6 +418,82 @@ public class Utils {
       Log.e(tag, "Privileged daemon is not running");
       daemonDeadLogTs = System.currentTimeMillis();
     }
+  }
+
+  public static synchronized void writeCrashLog(String stackTrace, boolean isDaemon) {
+    // Be ashamed of your performance, don't ask for rating in near future
+    MySettings.getInstance().setAskForRatingTs(System.currentTimeMillis());
+
+    File logFile = new File(App.getContext().getExternalFilesDir(null), "PMX_crash.log");
+    boolean append = true;
+    if (!logFile.exists() || logFile.length() > 512 * 1024) {
+      append = false;
+    }
+    try {
+      PrintWriter writer = new PrintWriter(new FileWriter(logFile, append));
+      writer.println("=================================");
+      writer.println(Utils.getDeviceInfo());
+      writer.println("Time: " + getCurrDateTime(true));
+      writer.println("Component: " + (isDaemon ? "Daemon" : "App"));
+      writer.println("Log ID: " + UUID.randomUUID().toString());
+      writer.println("=================================");
+      writer.println(stackTrace);
+      writer.close();
+      showCrashNotification(logFile);
+    } catch (IOException ignored) {
+    }
+  }
+
+  private static void showCrashNotification(File logFile) {
+    if (!MySettings.getInstance().shouldAskToSendCrashReport()) {
+      return;
+    }
+
+    String authority = BuildConfig.APPLICATION_ID + ".FileProvider";
+    Uri logFileUri = FileProvider.getUriForFile(App.getContext(), authority, logFile);
+
+    Intent intent = new Intent(Intent.ACTION_SEND);
+    intent
+        .setData(logFileUri)
+        .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        .setType("text/plain")
+        .putExtra(Intent.EXTRA_EMAIL, new String[] {getString(R.string.email_address)})
+        .putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name) + " - Crash Report")
+        .putExtra(Intent.EXTRA_TEXT, "Find attachment.")
+        .putExtra(Intent.EXTRA_STREAM, logFileUri);
+
+    final String CHANNEL_ID = "channel_crash_report";
+    final String CHANNEL_NAME = getString(R.string.channel_crash_report);
+    final int UNIQUE_ID = getInteger(R.integer.channel_crash_report);
+
+    PendingIntent pendingIntent =
+        PendingIntent.getActivity(
+            App.getContext(), UNIQUE_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+    NotificationManagerCompat mNotificationManager =
+        NotificationManagerCompat.from(App.getContext());
+
+    NotificationChannel channel = mNotificationManager.getNotificationChannel(CHANNEL_ID);
+    if (channel == null && VERSION.SDK_INT >= VERSION_CODES.O) {
+      channel =
+          new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
+      mNotificationManager.createNotificationChannel(channel);
+    }
+
+    NotificationCompat.Builder notificationBuilder =
+        new NotificationCompat.Builder(App.getContext(), CHANNEL_ID);
+    notificationBuilder
+        .setSmallIcon(R.drawable.notification_icon)
+        .setContentTitle(getString(R.string.crash_report))
+        .setContentText(getString(R.string.ask_to_report_crash_small))
+        .setStyle(
+            new NotificationCompat.BigTextStyle().bigText(getString(R.string.ask_to_report_crash)))
+        .setContentIntent(pendingIntent)
+        .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
+        .setPriority(NotificationCompat.PRIORITY_HIGH)
+        .setAutoCancel(true);
+
+    mNotificationManager.notify(UNIQUE_ID, notificationBuilder.build());
   }
 
   //////////////////////////////////////////////////////////////////

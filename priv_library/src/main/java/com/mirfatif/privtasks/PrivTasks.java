@@ -56,7 +56,7 @@ public class PrivTasks {
     mIPackageManager = IPackageManager.Stub.asInterface(ServiceManager.getService("package"));
   }
 
-  public List<String> opToName() {
+  public List<String> buildOpToNameList() {
     Integer opNum = getOpNum();
     if (opNum == null) {
       return null;
@@ -69,7 +69,7 @@ public class PrivTasks {
     return appOpsList;
   }
 
-  public List<String> modeToName() {
+  public List<String> buildModeToNameList() {
     List<String> appOpsModes = new ArrayList<>();
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
       // MODE_NAMES hidden API
@@ -143,7 +143,7 @@ public class PrivTasks {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-          // TODO
+          // TODO crash
           //  NoSuchMethodError: No virtual method getLastAccessTime(I)J on SDK 28 / Realme RMX1851
           myOpEntry.lastAccessTime = opEntry.getLastAccessTime(AppOpsManager.OP_FLAGS_ALL);
         } else {
@@ -229,7 +229,7 @@ public class PrivTasks {
        * requires system permissions: {@link PackageManager#getPermissionFlags(String, String,
        * UserHandle)}
        */
-      // TODO
+      // TODO crash
       //  NumberFormatException: For input string: "TASKS" on SDK 29 / Xiaomi Redmi K20 Pro
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         return mIPermissionManager.getPermissionFlags(args[1], args[2], Integer.parseInt(args[3]));

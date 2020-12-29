@@ -11,7 +11,7 @@ public class Commands {
   public static final String CREATE_SOCKET = "CREATE_SOCKET";
 
   // Indicates the start of a crash log which the app handles
-  public static final String CRASH_LOG_STARTS = "CRASH_LOG_STARTS";
+  public static final String CRASH_LOG_STARTS = "PRIVILEGED_DAEMON_CRASH_LOG_STARTS";
 
   public static final String GET_READY = "GET_READY";
   public static final String STOP_LOGGING = "STOP_LOGGING";

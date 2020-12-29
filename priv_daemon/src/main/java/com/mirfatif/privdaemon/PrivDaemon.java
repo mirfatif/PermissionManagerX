@@ -158,10 +158,10 @@ public class PrivDaemon {
         sendResponse(null);
         break;
       case Commands.OP_TO_NAME:
-        sendResponse(mPrivTasks.opToName());
+        sendResponse(mPrivTasks.buildOpToNameList());
         break;
       case Commands.MODE_TO_NAME:
-        sendResponse(mPrivTasks.modeToName());
+        sendResponse(mPrivTasks.buildModeToNameList());
         break;
       case Commands.GET_OPS_FOR_PKG_OR_UID:
         sendResponse(mPrivTasks.getOpsForPackage(args));

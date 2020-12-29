@@ -13,6 +13,7 @@ import androidx.core.app.NotificationCompat.Builder;
 import androidx.core.app.NotificationManagerCompat;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import java.io.BufferedReader;
@@ -72,7 +73,7 @@ public class AppUpdate {
       } else {
         Log.i(TAG, "New update is available: " + mVersion);
         if (!BuildConfig.GH_VERSION) {
-          mUpdateUrl = getString(R.string.play_store_url);
+          mUpdateUrl = Utils.getString(R.string.play_store_url);
         } else {
           mUpdateUrl = DOWNLOAD_URL;
         }
@@ -98,15 +99,15 @@ public class AppUpdate {
     }
   }
 
-  private static final int REQ_CODE = 2000;
-  private static final int NOTIFICATION_ID = 2000;
-  private static final String CHANNEL_ID = "App Updates";
-
   private void showNotification() {
+    final String CHANNEL_ID = "channel_app_update";
+    final String CHANNEL_NAME = Utils.getString(R.string.channel_app_update);
+    final int UNIQUE_ID = Utils.getInteger(R.integer.channel_app_update);
+
     PendingIntent pendingIntent =
         PendingIntent.getActivity(
             App.getContext(),
-            REQ_CODE,
+            UNIQUE_ID,
             new Intent(Intent.ACTION_VIEW, Uri.parse(mUpdateUrl)),
             PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -116,21 +117,21 @@ public class AppUpdate {
     NotificationChannel channel = mNotificationManager.getNotificationChannel(CHANNEL_ID);
     if (channel == null && VERSION.SDK_INT >= VERSION_CODES.O) {
       channel =
-          new NotificationChannel(CHANNEL_ID, CHANNEL_ID, NotificationManager.IMPORTANCE_HIGH);
+          new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
       mNotificationManager.createNotificationChannel(channel);
     }
 
-    Builder mNotificationBuilder = new Builder(App.getContext(), CHANNEL_ID);
-    mNotificationBuilder
+    Builder notificationBuilder = new Builder(App.getContext(), CHANNEL_ID);
+    notificationBuilder
         .setSmallIcon(R.drawable.notification_icon)
-        .setContentTitle(getString(R.string.new_version_available))
-        .setContentText(getString(R.string.tap_to_download) + " " + mVersion)
+        .setContentTitle(Utils.getString(R.string.new_version_available))
+        .setContentText(Utils.getString(R.string.tap_to_download) + " " + mVersion)
         .setContentIntent(pendingIntent)
         .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setAutoCancel(true);
 
-    mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
+    mNotificationManager.notify(UNIQUE_ID, notificationBuilder.build());
   }
 
   public String getVersion() {
@@ -139,9 +140,5 @@ public class AppUpdate {
 
   public String getUpdateUrl() {
     return mUpdateUrl;
-  }
-
-  private String getString(int resId) {
-    return App.getContext().getString(resId);
   }
 }

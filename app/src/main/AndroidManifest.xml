@@ -45,7 +45,7 @@
 
     <provider
       android:name="androidx.core.content.FileProvider"
-      android:authorities="com.mirfatif.permissionmanagerx.fileprovider"
+      android:authorities="com.mirfatif.permissionmanagerx.FileProvider"
       android:exported="false"
       android:grantUriPermissions="true">
       <meta-data
