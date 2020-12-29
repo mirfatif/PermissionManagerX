@@ -85,14 +85,14 @@
   <string name="backup_restore_failed">Failed. Some error occurred.</string>
   <string name="skip_uninstalled_packages">Skip uninstalled packages</string>
   <string name="privileges">"Privileges"</string>
-  <string name="hidden_apis_warning">Hidden APIs are blacklisted on your device, switching to daemon mode.</string>
+  <string name="hidden_apis_warning">Hidden APIs are blacklisted, switching to daemon</string>
   <string name="hidden_apis_confirmation">Some ROMs allow using system\'s hidden APIs. Daemon mode might
     be slower. Stop using hidden APIs?
   </string>
   <string name="bad_port_number">Bad port number</string>
   <string name="granting_permission_failed">Granting permission failed</string>
-  <string name="purchase_and_rate_the_app">Liking the app?\nPlease consider purchasing and rating on
-    Play Store to support the development.
+  <string name="purchase_and_rate_the_app">Liking the app?\nWould you like to purchase and rate the
+    app on Play Store to support the development?
   </string>
   <string name="thank_you">Thank you</string>
   <string name="play_store_url">https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx</string>

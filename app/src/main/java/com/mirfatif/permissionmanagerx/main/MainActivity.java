@@ -382,16 +382,10 @@ public class MainActivity extends AppCompatActivity {
 
               if (!mMySettings.isPrivDaemonAlive()) {
                 Utils.runInBg(() -> startPrivDaemon(false));
-              } else {
-                AlertDialog dialog =
-                    new Builder(this)
-                        .setPositiveButton(
-                            android.R.string.ok, (d, which) -> mMySettings.setUseHiddenAPIs(false))
-                        .setTitle(R.string.privileges)
-                        .setMessage(R.string.hidden_apis_warning)
-                        .create();
-                new AlertDialogFragment(dialog).show(mFM, "HIDDEN_APIS_WARNING", false);
               }
+              mMySettings.setUseHiddenAPIs(false);
+              Toast.makeText(App.getContext(), R.string.hidden_apis_warning, Toast.LENGTH_LONG)
+                  .show();
             });
   }
 
