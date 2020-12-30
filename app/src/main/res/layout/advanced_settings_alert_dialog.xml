@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:textColor="@color/dialog_text_color"
+        android:textColor="@color/dynamic_text_color"
         android:textSize="16sp"
         android:text="@string/use_hidden_apis"/>
 
@@ -62,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:textColor="@color/dialog_text_color"
+        android:textColor="@color/dynamic_text_color"
         android:textSize="16sp"
         android:text="@string/adb_listening_port"/>
 
@@ -107,7 +107,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:textColor="@color/dialog_text_color"
+        android:textColor="@color/dynamic_text_color"
         android:textSize="16sp"
         android:text="@string/talk_to_daemon_over_socket"/>
 
@@ -132,7 +132,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:textColor="@color/dialog_text_color"
+        android:textColor="@color/dynamic_text_color"
         android:textSize="16sp"
         android:text="@string/daemon_uid"/>
 
@@ -169,7 +169,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:textColor="@color/dialog_text_color"
+        android:textColor="@color/dynamic_text_color"
         android:textSize="16sp"
         android:text="@string/daemon_context"/>
 

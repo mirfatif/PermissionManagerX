@@ -430,11 +430,9 @@ public class MainActivity extends AppCompatActivity {
                 mProgressBarContainer.setVisibility(View.GONE);
                 if (mRefreshLayout.isRefreshing()) {
                   mRefreshLayout.setRefreshing(false);
-                  Snackbar.make(
-                          mProgressBarContainer,
-                          mPackageParser.getPackagesListSize() + " " + getString(R.string.packages),
-                          5000)
-                      .show();
+                  showSnackBar(
+                      mPackageParser.getPackagesListSize() + " " + getString(R.string.packages),
+                      5000);
                 }
                 mMainActivityFlavor.onPackagesUpdated();
               }
@@ -570,6 +568,15 @@ public class MainActivity extends AppCompatActivity {
             Log.e("setPackageEnabledState", "Response is " + res);
           }
         });
+  }
+
+  private void showSnackBar(String text, int duration) {
+    Utils.runInFg(() -> {
+      Snackbar snackBar = Snackbar.make(mProgressBarContainer, text, duration);
+      snackBar.setTextColor(getColor(R.color.dynamic_text_color));
+      snackBar.getView().setBackgroundColor(getColor(R.color.dynamicBackground));
+      snackBar.show();
+    });
   }
 
   @Override
@@ -726,8 +733,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (message != null) {
           if (!showDialog) {
-            String finalMessage = message;
-            Utils.runInFg(() -> Snackbar.make(mProgressBarContainer, finalMessage, 10000).show());
+            showSnackBar(message, 10000);
           } else {
             Builder builder =
                 new Builder(this)
@@ -805,8 +811,7 @@ public class MainActivity extends AppCompatActivity {
 
       if (!mMySettings.isAppOpsGranted()) {
         Log.e("startPrivDaemon", "Granting " + APP_OPS_PERM + " failed");
-        String message = getString(R.string.granting_permission_failed) + ": " + APP_OPS_PERM;
-        Utils.runInFg(() -> Snackbar.make(mProgressBarContainer, message, 10000).show());
+        showSnackBar(getString(R.string.granting_permission_failed) + ": " + APP_OPS_PERM, 10000);
       }
     }
   }
@@ -878,16 +883,13 @@ public class MainActivity extends AppCompatActivity {
       Utils.runInBg(
           () -> {
             if (Utils.checkRoot()) {
-              Utils.runInFg(
-                  () -> {
-                    Snackbar.make(mProgressBarContainer, R.string.root_granted, 5000).show();
-                    rootCheckBox.setChecked(true);
-                  });
+              showSnackBar(getString(R.string.root_granted), 5000);
+              Utils.runInFg(() -> rootCheckBox.setChecked(true));
               restartPrivDaemon();
             } else {
-              String message =
-                  getString(R.string.getting_root_fail) + getString(R.string.are_you_rooted);
-              Utils.runInFg(() -> Snackbar.make(mProgressBarContainer, message, 10000).show());
+              showSnackBar(
+                  getString(R.string.getting_root_fail) + getString(R.string.are_you_rooted),
+                  10000);
             }
           });
       return true;
@@ -905,11 +907,8 @@ public class MainActivity extends AppCompatActivity {
       Utils.runInBg(
           () -> {
             if (Utils.checkAdb()) {
-              Utils.runInFg(
-                  () -> {
-                    Snackbar.make(mProgressBarContainer, R.string.connected_to_adb, 5000).show();
-                    adbCheckBox.setChecked(true);
-                  });
+              showSnackBar(getString(R.string.connected_to_adb), 5000);
+              Utils.runInFg(() -> adbCheckBox.setChecked(true));
               restartPrivDaemon();
             } else {
               String message = getString(R.string.adb_connect_fail_long);
@@ -974,10 +973,9 @@ public class MainActivity extends AppCompatActivity {
     Util.debugLog("Logging", "Start logging");
     String command = "logcat --pid " + Process.myPid();
 
-    if (Utils.doLoggingFails(new String[] {command})) {
+    if (Utils.doLoggingFails(new String[]{command})) {
       Utils.stopLogging();
-      Utils.runInFg(
-          () -> Snackbar.make(mProgressBarContainer, R.string.logging_failed, 10000).show());
+      showSnackBar(getString(R.string.logging_failed), 10000);
       return;
     }
 

@@ -71,7 +71,7 @@
           android:id="@+id/progress_bar_container"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:background="@color/snackBarBackground"
+          android:background="@color/dynamicBackground"
           android:orientation="horizontal"
           android:visibility="gone">
 
@@ -82,7 +82,7 @@
             android:layout_margin="8dp"
             android:maxLines="1"
             android:ellipsize="end"
-            android:textColor="@android:color/white"/>
+            android:textColor="@color/dynamic_text_color"/>
 
           <ProgressBar
             android:id="@+id/progress_bar"
@@ -100,7 +100,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:textColor="@android:color/white"/>
+            android:textColor="@color/dynamic_text_color"/>
 
         </LinearLayout>
 
@@ -130,7 +130,7 @@
           android:ellipsize="end"
           android:fontFamily="sans-serif-smallcaps"
           android:textStyle="bold"
-          android:textColor="@android:color/white"
+          android:textColor="@color/dynamic_text_color"
           android:textAlignment="center"
           android:gravity="center"
           android:layout_gravity="center"/>

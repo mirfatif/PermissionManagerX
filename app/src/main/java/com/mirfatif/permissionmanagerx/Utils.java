@@ -222,8 +222,7 @@ public class Utils {
 
     CustomTabColorSchemeParams colorSchemeParams =
         new CustomTabColorSchemeParams.Builder()
-            .setToolbarColor(
-                App.getContext().getResources().getColor(R.color.accentTransparent, null))
+            .setToolbarColor(App.getContext().getColor(R.color.accentTransparent))
             .build();
 
     CustomTabsIntent customTabsIntent =

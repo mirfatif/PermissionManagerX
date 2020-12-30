@@ -16,13 +16,13 @@
     android:maxLines="1"
     app:autoSizeTextType="uniform"
     android:textSize="16sp"
-    android:textColor="@color/dialog_text_color"/>
+    android:textColor="@color/dynamic_text_color"/>
 
   <TextView
     android:id="@+id/message_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:textSize="16sp"
-    android:textColor="@color/dialog_text_color"/>
+    android:textColor="@color/dynamic_text_color"/>
 
 </LinearLayout>
