@@ -5,8 +5,10 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.MultiSelectListPreference;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import com.mirfatif.permissionmanagerx.R;
@@ -111,7 +113,9 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
   }
 
   private void updateViews() {
-    if (excludeUserAppsView == null) return;
+    if (excludeUserAppsView == null) {
+      return;
+    }
 
     // required on Reset to Defaults
     excludeNoIconAppsView.setChecked(mMySettings.excludeNoIconApps());
@@ -132,16 +136,22 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
 
     // required on manually changed by tapping
     if (excludeUserAppsView.isChecked()) {
-      if (excludeSystemAppsView.isChecked()) excludeSystemAppsView.setChecked(false);
+      if (excludeSystemAppsView.isChecked()) {
+        excludeSystemAppsView.setChecked(false);
+      }
       excludeSystemAppsView.setEnabled(false);
     } else {
       excludeSystemAppsView.setEnabled(true);
     }
 
     if (excludeSystemAppsView.isChecked()) {
-      if (!excludeFrameworkAppsView.isChecked()) excludeFrameworkAppsView.setChecked(true);
+      if (!excludeFrameworkAppsView.isChecked()) {
+        excludeFrameworkAppsView.setChecked(true);
+      }
       excludeFrameworkAppsView.setEnabled(false);
-      if (excludeUserAppsView.isChecked()) excludeUserAppsView.setChecked(false);
+      if (excludeUserAppsView.isChecked()) {
+        excludeUserAppsView.setChecked(false);
+      }
       excludeUserAppsView.setEnabled(false);
     } else {
       excludeFrameworkAppsView.setEnabled(true);
@@ -149,7 +159,9 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     }
 
     if (excludeAppOpsPermsView.isChecked()) {
-      if (!excludeNotSetAppOpsView.isChecked()) excludeNotSetAppOpsView.setChecked(true);
+      if (!excludeNotSetAppOpsView.isChecked()) {
+        excludeNotSetAppOpsView.setChecked(true);
+      }
       excludeNotSetAppOpsView.setEnabled(false);
       extraAppOpsView.setEnabled(false);
     } else {
@@ -268,6 +280,30 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
       }
       extraAppOpsView.setSummary(message);
     }
+  }
+
+  @Override
+  public void onDisplayPreferenceDialog(Preference preference) {
+    // We need to override MultiSelectListPreference with a custom-built
+    // DialogFragment in order to customize AlertDialog.
+    if (preference instanceof MultiSelectListPreference) {
+      final String TAG_MULTI_SELECT_LIST_DIALOG = "MULTI_SELECT_LIST_DIALOG";
+
+      if (getParentFragmentManager().findFragmentByTag(TAG_MULTI_SELECT_LIST_DIALOG) == null) {
+        MultiSelectListPrefDialogFrag fragment =
+            MultiSelectListPrefDialogFrag.newInstance(preference.getKey());
+        setTargetFragment(fragment);
+        fragment.show(getParentFragmentManager(), TAG_MULTI_SELECT_LIST_DIALOG);
+      }
+      return;
+    }
+    super.onDisplayPreferenceDialog(preference);
+  }
+
+  // Without this onCreate() crashes because getTargetFragment() returns null
+  @SuppressWarnings("deprecation")
+  private void setTargetFragment(Fragment fragment) {
+    fragment.setTargetFragment(this, 0);
   }
 
   @Override

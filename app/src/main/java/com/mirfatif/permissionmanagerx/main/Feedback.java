@@ -118,12 +118,7 @@ abstract class FeedbackDialogFrag extends BottomSheetDialogFragment {
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
 
-    // Not possible
-    if (getArguments() == null) {
-      return null;
-    }
-
-    boolean isYes = getArguments().getBoolean(YES);
+    boolean isYes = requireArguments().getBoolean(YES);
 
     View view = inflater.inflate(R.layout.feedback_dialog, container);
     TextView msgView = view.findViewById(R.id.message_view);

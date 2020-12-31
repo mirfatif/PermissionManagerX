@@ -4,8 +4,8 @@
   <color name="accentTransparent">#1A007F7F</color>
   <color name="disabledStateColor">#7F7F7F</color>
 
-  <color name="dynamicBackground">#ECECEC</color>
+  <color name="dynamicBackground">@android:color/white</color>
   <color name="dynamicTransparent">#B3FFFFFF</color>
-  <color name="dynamicForeground">@android:color/white</color>
+  <color name="dynamicForeground">#ECECEC</color>
   <color name="dynamic_text_color">@android:color/black</color>
 </resources>
