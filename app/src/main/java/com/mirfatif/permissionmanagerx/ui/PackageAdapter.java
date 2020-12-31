@@ -87,6 +87,11 @@ public class PackageAdapter extends ListAdapter<Package, ItemViewHolder> {
     public void bind(int position) {
       Package pkg = getItem(position);
 
+      // Rarely pkg comes null, don't know ATM why
+      if (pkg == null) {
+        return;
+      }
+
       if (pkg.isReferenced() == null) {
         referenceView.setBackgroundColor(ORANGE);
       } else if (!pkg.isReferenced()) {

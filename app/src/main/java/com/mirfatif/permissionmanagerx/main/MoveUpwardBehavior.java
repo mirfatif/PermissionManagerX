@@ -39,20 +39,20 @@ public class MoveUpwardBehavior extends CoordinatorLayout.Behavior<View> {
      * Cancel if animation from {@link #onDependentViewRemoved(CoordinatorLayout, View, View)} is in
      * progress
      */
-    child.findViewById(R.id.progress_bar_container).animate().cancel();
+    child.findViewById(R.id.moving_container).animate().cancel();
 
-    // move the container up
-    child.findViewById(R.id.progress_bar_container).setTranslationY(translationY);
+    // Move the container up.
+    child.findViewById(R.id.moving_container).setTranslationY(translationY);
     return true;
   }
 
-  // swipe the Snackbar
+  // Swipe the Snackbar.
   @Override
   public void onDependentViewRemoved(
       @NonNull CoordinatorLayout parent, @NonNull View child, @NonNull View dependency) {
     super.onDependentViewRemoved(parent, child, dependency);
 
-    // slowly move container down
-    child.findViewById(R.id.progress_bar_container).animate().translationY(0).start();
+    // Slowly move container down.
+    child.findViewById(R.id.moving_container).animate().translationY(0).start();
   }
 }

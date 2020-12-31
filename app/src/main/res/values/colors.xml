@@ -2,8 +2,10 @@
 <resources>
   <color name="accentColor">#007F7F</color>
   <color name="accentTransparent">#1A007F7F</color>
+  <color name="disabledStateColor">#7F7F7F</color>
+
   <color name="dynamicBackground">#ECECEC</color>
   <color name="dynamicTransparent">#B3FFFFFF</color>
-  <color name="disabledStateColor">#7F7F7F</color>
+  <color name="dynamicForeground">@android:color/white</color>
   <color name="dynamic_text_color">@android:color/black</color>
 </resources>

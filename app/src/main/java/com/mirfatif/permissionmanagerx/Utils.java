@@ -420,8 +420,8 @@ public class Utils {
   }
 
   public static synchronized void writeCrashLog(String stackTrace, boolean isDaemon) {
-    // Be ashamed of your performance, don't ask for rating in near future
-    MySettings.getInstance().setAskForRatingTs(System.currentTimeMillis());
+    // Be ashamed of your performance, don't ask for feedback in near future
+    MySettings.getInstance().setAskForFeedbackTs(System.currentTimeMillis());
 
     File logFile = new File(App.getContext().getExternalFilesDir(null), "PMX_crash.log");
     boolean append = true;

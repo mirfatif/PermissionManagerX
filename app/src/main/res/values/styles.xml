@@ -16,6 +16,9 @@
 
     <item name="android:spinnerItemStyle">@style/mySpinnerItemStyle</item>
     <!--<item name="alertDialogTheme">@style/myAlertDialogTheme</item>-->
+
+    <!--Overriding the dialog's parent's background resource in onViewCreated() is more simple-->
+    <!--<item name="bottomSheetDialogTheme">@style/myBottomSheetDialogTheme</item>-->
   </style>
 
   <style name="mySpinnerItemStyle">
@@ -37,6 +40,14 @@
   <style name="myAlertDialogTitleStyle" parent="@style/TextAppearance.AppCompat.Title">
     <item name="maxLines">1</item>
     <item name="autoSizeTextType">uniform</item>
+  </style>
+
+  <style name="myBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+    <item name="bottomSheetStyle">@style/myBottomSheetStyle</item>
+  </style>
+
+  <style name="myBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+    <item name="android:background">@drawable/bottom_sheet_background</item>
   </style>
 
 </resources>

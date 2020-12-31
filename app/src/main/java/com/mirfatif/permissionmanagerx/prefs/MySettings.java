@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import androidx.preference.PreferenceManager;
 import androidx.room.Room;
@@ -219,24 +220,38 @@ public class MySettings {
     return false;
   }
 
-  public boolean shouldNotAskForRating() {
-    long lastTS = getLongPref(R.string.pref_main_ask_for_rating_ts_enc_key);
+  // Do not ask for feedback before the first package loading is completed
+  private boolean mMayAskForFeedback = false;
+
+  public void setMayAskForFeedback() {
+    Utils.runInBg(
+        () -> {
+          SystemClock.sleep(5000);
+          mMayAskForFeedback = true;
+        });
+  }
+
+  public boolean shouldAskForFeedback() {
+    if (!mMayAskForFeedback) {
+      return false;
+    }
+    long lastTS = getLongPref(R.string.pref_main_ask_for_feedback_ts_enc_key);
     if (lastTS == 0) {
-      setAskForRatingTs(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(5));
-      return true;
+      setAskForFeedbackTs(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(5));
+      return false;
     }
     int appLaunchCountId = R.string.pref_main_app_launch_count_enc_key;
     boolean ask = getIntPref(appLaunchCountId) >= 5;
     ask = ask && (System.currentTimeMillis() - lastTS) >= TimeUnit.DAYS.toMillis(5);
     if (ask) {
       savePref(appLaunchCountId, 0);
-      setAskForRatingTs(System.currentTimeMillis());
+      setAskForFeedbackTs(System.currentTimeMillis());
     }
-    return !ask;
+    return ask;
   }
 
-  public void setAskForRatingTs(long timeStamp) {
-    savePref(R.string.pref_main_ask_for_rating_ts_enc_key, timeStamp);
+  public void setAskForFeedbackTs(long timeStamp) {
+    savePref(R.string.pref_main_ask_for_feedback_ts_enc_key, timeStamp);
   }
 
   private PermissionDao mPermDb;

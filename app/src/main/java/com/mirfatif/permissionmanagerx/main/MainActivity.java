@@ -571,12 +571,13 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void showSnackBar(String text, int duration) {
-    Utils.runInFg(() -> {
-      Snackbar snackBar = Snackbar.make(mProgressBarContainer, text, duration);
-      snackBar.setTextColor(getColor(R.color.dynamic_text_color));
-      snackBar.getView().setBackgroundColor(getColor(R.color.dynamicBackground));
-      snackBar.show();
-    });
+    Utils.runInFg(
+        () -> {
+          Snackbar snackBar = Snackbar.make(mProgressBarContainer, text, duration);
+          snackBar.setTextColor(getColor(R.color.dynamic_text_color));
+          snackBar.getView().setBackgroundColor(getColor(R.color.dynamicBackground));
+          snackBar.show();
+        });
   }
 
   @Override
@@ -973,7 +974,7 @@ public class MainActivity extends AppCompatActivity {
     Util.debugLog("Logging", "Start logging");
     String command = "logcat --pid " + Process.myPid();
 
-    if (Utils.doLoggingFails(new String[]{command})) {
+    if (Utils.doLoggingFails(new String[] {command})) {
       Utils.stopLogging();
       showSnackBar(getString(R.string.logging_failed), 10000);
       return;
