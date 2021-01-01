@@ -60,6 +60,14 @@ public class MySettings {
     mPrivDaemonAlive = alive;
   }
 
+  public boolean shouldRemindMissingPrivileges() {
+    return getBoolPref(R.string.pref_settings_privileges_reminder_key);
+  }
+
+  public void setPrivReminderOff() {
+    savePref(R.string.pref_settings_privileges_reminder_key, false);
+  }
+
   private boolean mDoRepeatUpdates = true;
 
   public boolean shouldDoRepeatUpdates() {
@@ -198,12 +206,12 @@ public class MySettings {
     if (!getBoolPref(R.string.pref_settings_check_for_updates_key)) {
       return false;
     }
-    long lastTS = getLongPref(R.string.pref_main_check_for_updates_ts_enc_key);
+    long lastTS = getLongPref(R.string.pref_settings_check_for_updates_ts_enc_key);
     return (System.currentTimeMillis() - lastTS) >= TimeUnit.DAYS.toMillis(1);
   }
 
   public void setCheckForUpdatesTs(long timeStamp) {
-    savePref(R.string.pref_main_check_for_updates_ts_enc_key, timeStamp);
+    savePref(R.string.pref_settings_check_for_updates_ts_enc_key, timeStamp);
   }
 
   public void plusAppLaunchCount() {

@@ -56,6 +56,7 @@ import com.mirfatif.permissionmanagerx.ui.PackageAdapter.PkgLongClickListener;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -91,45 +92,6 @@ public class MainActivity extends AppCompatActivity {
   private NavigationView mNavigationView;
 
   private final FragmentManager mFM = getSupportFragmentManager();
-
-  @Override
-  protected void onNewIntent(Intent intent) {
-    super.onNewIntent(intent);
-
-    if (intent.getAction() == null) {
-      return;
-    }
-
-    // called from PackageActivity
-    if (intent.getAction().equals(ACTION_SHOW_DRAWER)) {
-      openDrawer();
-    }
-
-    // called from AboutActivity
-    if (intent.getAction().equals(ACTION_START_LOGGING)) {
-      recreate();
-    }
-  }
-
-  private void openDrawer() {
-    Utils.runInBg(
-        () -> {
-          while (getWindow() == null) {
-            SystemClock.sleep(100);
-          }
-          Utils.runInFg(() -> mDrawerLayout.openDrawer(GravityCompat.START));
-        });
-  }
-
-  @Override
-  protected void onSaveInstanceState(@NonNull Bundle outState) {
-
-    // We can't save state of AlertDialogFragment since AlertDialog is passed as a constructor
-    // argument. Otherwise separate AlertDialogFragment class needs to be created for every dialog.
-    AlertDialogFragment.removeAll(mFM);
-
-    super.onSaveInstanceState(outState);
-  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
     mDrawerToggle.syncState();
 
     if (getIntent().getAction().equals(ACTION_SHOW_DRAWER)) {
-      openDrawer();
+      openDrawerForPrivileges();
     }
 
     // drawer items
@@ -278,6 +240,97 @@ public class MainActivity extends AppCompatActivity {
 
     Utils.runInBg(() -> new AppUpdate().check(true));
   }
+
+  @Override
+  protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+
+    if (intent.getAction() == null) {
+      return;
+    }
+
+    // called from PackageActivity
+    if (intent.getAction().equals(ACTION_SHOW_DRAWER)) {
+      openDrawerForPrivileges();
+    }
+
+    // called from AboutActivity
+    if (intent.getAction().equals(ACTION_START_LOGGING)) {
+      recreate();
+    }
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.main_search, menu);
+    MenuCompat.setGroupDividerEnabled(menu, true);
+
+    MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+    mSearchView = searchMenuItem.getActionView().findViewById(R.id.action_search);
+    setUpSearchView();
+
+    mMainActivityFlavor.onCreateOptionsMenu();
+
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  // required for navigation drawer tap to work
+  @Override
+  public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    if (mMySettings.isDebug()) {
+      Util.debugLog(TAG, "onOptionsItemSelected(): " + item.getTitle());
+    }
+    return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  public void onBackPressed() {
+    if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+      if (mMySettings.isDebug()) {
+        Util.debugLog("onBackPressed", "Closing drawer");
+      }
+      mDrawerLayout.closeDrawer(GravityCompat.START, true);
+      return;
+    }
+    if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
+      if (mMySettings.isDebug()) {
+        Util.debugLog("onBackPressed", "Collapsing searchView");
+      }
+      collapseSearchView();
+      return;
+    }
+    super.onBackPressed();
+  }
+
+  @Override
+  protected void onSaveInstanceState(@NonNull Bundle outState) {
+
+    // We can't save state of AlertDialogFragment since AlertDialog is passed as a constructor
+    // argument. Otherwise separate AlertDialogFragment class needs to be created for every dialog.
+    AlertDialogFragment.removeAll(mFM);
+
+    super.onSaveInstanceState(outState);
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    if (mMainActivityFlavor != null) {
+      mMainActivityFlavor.onResumed();
+    }
+  }
+
+  @Override
+  protected void onDestroy() {
+    if (mMainActivityFlavor != null) {
+      mMainActivityFlavor.onDestroyed();
+    }
+    super.onDestroy();
+  }
+
+  //////////////////////////////////////////////////////////////////
+  ///////////////////////////// GENERAL ////////////////////////////
+  //////////////////////////////////////////////////////////////////
 
   private boolean setNightTheme() {
     if (!mMySettings.forceDarkMode()) {
@@ -468,48 +521,6 @@ public class MainActivity extends AppCompatActivity {
             });
   }
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.main_search, menu);
-    MenuCompat.setGroupDividerEnabled(menu, true);
-
-    MenuItem searchMenuItem = menu.findItem(R.id.action_search);
-    mSearchView = searchMenuItem.getActionView().findViewById(R.id.action_search);
-    setUpSearchView();
-
-    mMainActivityFlavor.onCreateOptionsMenu();
-
-    return super.onCreateOptionsMenu(menu);
-  }
-
-  // required for navigation drawer tap to work
-  @Override
-  public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    if (mMySettings.isDebug()) {
-      Util.debugLog(TAG, "onOptionsItemSelected(): " + item.getTitle());
-    }
-    return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
-  }
-
-  @Override
-  public void onBackPressed() {
-    if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-      if (mMySettings.isDebug()) {
-        Util.debugLog("onBackPressed", "Closing drawer");
-      }
-      mDrawerLayout.closeDrawer(GravityCompat.START, true);
-      return;
-    }
-    if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
-      if (mMySettings.isDebug()) {
-        Util.debugLog("onBackPressed", "Collapsing searchView");
-      }
-      collapseSearchView();
-      return;
-    }
-    super.onBackPressed();
-  }
-
   void updatePackagesList(boolean doRepeatUpdates) {
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "updatePackagesList: doRepeatUpdates: " + doRepeatUpdates);
@@ -538,8 +549,8 @@ public class MainActivity extends AppCompatActivity {
     if (!mMySettings.isPrivDaemonAlive()) {
       AlertDialog dialog =
           new Builder(this)
-              .setPositiveButton(
-                  android.R.string.ok, (d, which) -> mDrawerLayout.openDrawer(GravityCompat.START))
+              .setPositiveButton(android.R.string.ok, (d, which) -> openDrawerForPrivileges())
+              .setNegativeButton(android.R.string.cancel, null)
               .setTitle(R.string.privileges)
               .setMessage(R.string.grant_root_or_adb)
               .create();
@@ -578,22 +589,6 @@ public class MainActivity extends AppCompatActivity {
           snackBar.getView().setBackgroundColor(getColor(R.color.dynamicBackground));
           snackBar.show();
         });
-  }
-
-  @Override
-  protected void onResume() {
-    super.onResume();
-    if (mMainActivityFlavor != null) {
-      mMainActivityFlavor.onResumed();
-    }
-  }
-
-  @Override
-  protected void onDestroy() {
-    if (mMainActivityFlavor != null) {
-      mMainActivityFlavor.onDestroyed();
-    }
-    super.onDestroy();
   }
 
   //////////////////////////////////////////////////////////////////
@@ -750,16 +745,20 @@ public class MainActivity extends AppCompatActivity {
       } else {
         Log.e("startPrivDaemon", "Root access: unavailable, ADB shell: unavailable");
 
-        Builder builder =
-            new Builder(this)
-                .setPositiveButton(
-                    android.R.string.ok,
-                    (dialog, which) -> mDrawerLayout.openDrawer(GravityCompat.START))
-                .setTitle(R.string.privileges)
-                .setMessage(getString(R.string.grant_root_or_adb));
-        Utils.runInFg(
-            () ->
-                new AlertDialogFragment(builder.create()).show(mFM, TAG_GRANT_ROOT_OR_ADB, false));
+        if (mMySettings.shouldRemindMissingPrivileges()) {
+          Builder builder =
+              new Builder(this)
+                  .setPositiveButton(
+                      android.R.string.ok, (dialog, which) -> openDrawerForPrivileges())
+                  .setNeutralButton(
+                      R.string.do_not_remind, (d, which) -> mMySettings.setPrivReminderOff())
+                  .setTitle(R.string.privileges)
+                  .setMessage(getString(R.string.grant_root_or_adb));
+          Utils.runInFg(
+              () ->
+                  new AlertDialogFragment(builder.create())
+                      .show(mFM, TAG_GRANT_ROOT_OR_ADB, false));
+        }
       }
     }
 
@@ -963,6 +962,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     return false;
+  }
+
+  private void openDrawerForPrivileges() {
+    Utils.runInBg(
+        () -> {
+          while (getWindow() == null) {
+            SystemClock.sleep(100);
+          }
+          if (mDrawerLayout != null) {
+            Utils.runInFg(() -> mDrawerLayout.openDrawer(GravityCompat.START));
+          }
+          float f = new Random().nextBoolean() ? 360 : -360;
+          Utils.runInBg(() -> rotateMenuItemCheckbox(R.id.action_root, f));
+          Utils.runInBg(() -> rotateMenuItemCheckbox(R.id.action_adb, -1 * f));
+        });
+  }
+
+  private void rotateMenuItemCheckbox(int resId, float angle) {
+    SystemClock.sleep(1000);
+    if (mNavigationView != null) {
+      Utils.runInFg(
+          () ->
+              mNavigationView
+                  .getMenu()
+                  .findItem(resId)
+                  .getActionView()
+                  .animate()
+                  .rotationBy(angle)
+                  .setDuration(1000)
+                  .start());
+    }
   }
 
   //////////////////////////////////////////////////////////////////

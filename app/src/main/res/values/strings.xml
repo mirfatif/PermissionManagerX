@@ -14,6 +14,7 @@
   <string name="days">%1$d Days</string>
   <string name="contact">Write Now</string>
   <string name="i_will">I Will</string>
+  <string name="do_not_remind">Don\'t Remind</string>
 
   <!--App-->
   <string name="device_low_memory">Device is getting critically low on memory</string>
