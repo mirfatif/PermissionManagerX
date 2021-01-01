@@ -28,7 +28,7 @@
         app:fabCustomSize="56dp"
         app:maxImageSize="36dp"
         android:src="@drawable/bitcoin"
-        app:backgroundTint="@color/accentColor"
+        app:backgroundTint="?attr/accentColor"
         app:borderWidth="4dp"
         app:elevation="4dp"
         tools:ignore="ContentDescription" />
@@ -41,7 +41,7 @@
         app:fabCustomSize="56dp"
         app:maxImageSize="36dp"
         android:src="@drawable/dollar"
-        app:backgroundTint="@color/accentColor"
+        app:backgroundTint="?attr/accentColor"
         app:borderWidth="4dp"
         app:elevation="4dp"
         tools:ignore="ContentDescription" />
@@ -54,7 +54,7 @@
         app:fabCustomSize="56dp"
         app:maxImageSize="36dp"
         android:src="@drawable/play_store"
-        app:backgroundTint="@color/accentColor"
+        app:backgroundTint="?attr/accentColor"
         app:borderWidth="4dp"
         app:elevation="4dp"
         tools:ignore="ContentDescription" />
@@ -67,7 +67,7 @@
         app:fabCustomSize="56dp"
         app:maxImageSize="36dp"
         android:src="@drawable/redeem"
-        app:backgroundTint="@color/accentColor"
+        app:backgroundTint="?attr/accentColor"
         app:borderWidth="4dp"
         app:elevation="4dp"
         tools:ignore="ContentDescription" />

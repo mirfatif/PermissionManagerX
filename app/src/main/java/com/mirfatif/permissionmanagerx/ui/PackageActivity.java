@@ -32,6 +32,7 @@ import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.main.BackupRestore;
 import com.mirfatif.permissionmanagerx.main.BackupRestore.BackupEntry;
 import com.mirfatif.permissionmanagerx.main.MainActivity;
+import com.mirfatif.permissionmanagerx.main.MainActivityFlavor;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.parser.Permission;
@@ -63,6 +64,7 @@ public class PackageActivity extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    MainActivityFlavor.onCreateStart(this);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_package);
 

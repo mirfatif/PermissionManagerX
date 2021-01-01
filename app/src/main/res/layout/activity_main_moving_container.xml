@@ -9,7 +9,7 @@
   <View
     android:layout_width="match_parent"
     android:layout_height="1dp"
-    android:background="@color/accentTransparent" />
+    android:background="?attr/accentTransColor" />
 
   <LinearLayout
     android:id="@+id/progress_bar_container"
@@ -41,8 +41,8 @@
         android:layout_weight="1"
         android:layout_margin="8dp"
         android:indeterminateBehavior="cycle"
-        android:indeterminateTint="@color/accentColor"
-        android:progressTint="@color/accentColor" />
+        android:indeterminateTint="?attr/accentColor"
+        android:progressTint="?attr/accentColor" />
 
       <TextView
         android:id="@+id/progress_max"
@@ -99,7 +99,7 @@
           android:layout_height="wrap_content"
           android:minWidth="72dp"
           android:text="@string/no"
-          android:textColor="@color/accentColor" />
+          android:textColor="?attr/accentColor" />
 
         <Button
           android:id="@+id/liking_app_yes_button"
@@ -108,7 +108,7 @@
           android:layout_height="wrap_content"
           android:minWidth="72dp"
           android:text="@string/yes"
-          android:textColor="@color/accentColor" />
+          android:textColor="?attr/accentColor" />
 
       </LinearLayout>
 

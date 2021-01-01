@@ -5,6 +5,6 @@
   android:thickness="5dp"
   android:useLevel="true">
   <gradient
-    android:startColor="@color/accentColor"
+    android:startColor="?attr/accentColor"
     android:endColor="@android:color/transparent"/>
 </shape>

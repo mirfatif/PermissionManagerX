@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION;
@@ -30,6 +31,7 @@ import androidx.security.crypto.EncryptedSharedPreferences.PrefKeyEncryptionSche
 import androidx.security.crypto.EncryptedSharedPreferences.PrefValueEncryptionScheme;
 import androidx.security.crypto.MasterKey;
 import androidx.security.crypto.MasterKey.KeyScheme;
+import com.google.android.material.color.MaterialColors;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.Adb;
@@ -220,10 +222,10 @@ public class Utils {
       return true;
     }
 
+    // Doesn't work with app context
+    int accentColor = MaterialColors.getColor(activity, R.attr.accentTransColor, Color.TRANSPARENT);
     CustomTabColorSchemeParams colorSchemeParams =
-        new CustomTabColorSchemeParams.Builder()
-            .setToolbarColor(App.getContext().getColor(R.color.accentTransparent))
-            .build();
+        new CustomTabColorSchemeParams.Builder().setToolbarColor(accentColor).build();
 
     CustomTabsIntent customTabsIntent =
         new CustomTabsIntent.Builder()

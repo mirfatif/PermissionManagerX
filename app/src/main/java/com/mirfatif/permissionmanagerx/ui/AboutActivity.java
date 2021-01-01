@@ -18,6 +18,7 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.main.MainActivity;
+import com.mirfatif.permissionmanagerx.main.MainActivityFlavor;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
 import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
@@ -33,6 +34,7 @@ public class AboutActivity extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    MainActivityFlavor.onCreateStart(this);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_about);
 
@@ -64,7 +66,9 @@ public class AboutActivity extends AppCompatActivity {
               + ", "
               + getString(R.string.paid_feature2)
               + ", "
-              + getString(R.string.paid_feature3);
+              + getString(R.string.paid_feature3)
+              + ", "
+              + getString(R.string.paid_feature4);
       paidFeaturesSummaryView.setText(features);
 
       findViewById(R.id.paid_features)
@@ -128,14 +132,8 @@ public class AboutActivity extends AppCompatActivity {
     mMySettings.setLogging(true);
     Utils.runCommand("logcat -c", "Logging", null);
     Intent intent = new Intent(App.getContext(), MainActivity.class);
-    intent
-        .setAction(MainActivity.ACTION_START_LOGGING)
-        .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-    Utils.runInFg(
-        () -> {
-          startActivity(intent);
-          finish();
-        });
+    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+    Utils.runInFg(() -> startActivity(intent));
   }
 
   private boolean mCheckForUpdateInProgress = false;

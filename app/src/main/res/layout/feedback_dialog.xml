@@ -38,7 +38,7 @@
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/accentColor" />
+        android:textColor="?attr/accentColor" />
 
       <!--Expander-->
       <View
@@ -52,7 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@android:string/cancel"
-        android:textColor="@color/accentColor"
+        android:textColor="?attr/accentColor"
         tools:ignore="ButtonOrder" />
 
       <Button
@@ -60,7 +60,7 @@
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/accentColor" />
+        android:textColor="?attr/accentColor" />
 
     </LinearLayout>
   </LinearLayout>

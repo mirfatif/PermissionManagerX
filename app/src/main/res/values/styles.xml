@@ -2,17 +2,21 @@
   <!-- Base application theme. -->
   <style name="AppTheme" parent="Theme.AppCompat.DayNight">
 
+    <!--Define custom attributes unique to the theme-->
+    <item name="accentColor">@color/green</item>
+    <item name="accentTransColor">@color/greenTrans</item>
+
     <!--Preference Group Titles, Dialog Button Text-->
-    <item name="colorAccent">@color/accentColor</item>
+    <item name="colorAccent">?attr/accentColor</item>
 
     <!--Check Boxes, Switch Active State, Indeterminate Progress Bar. If not set, uses colorAccent-->
-    <!--<item name="colorControlActivated">@color/accentColor</item>-->
+    <!--<item name="colorControlActivated">?attr/accentColor</item>-->
 
     <!--Status Bar-->
-    <item name="colorPrimaryDark">@color/accentColor</item>
+    <item name="colorPrimaryDark">?attr/accentColor</item>
 
     <!--Action Bar-->
-    <item name="colorPrimary">@color/accentTransparent</item>
+    <item name="colorPrimary">?attr/accentTransColor</item>
 
     <item name="android:spinnerItemStyle">@style/mySpinnerItemStyle</item>
     <!--<item name="alertDialogTheme">@style/myAlertDialogTheme</item>-->
@@ -33,7 +37,7 @@
 
   <!--Overrides disabled button color too-->
   <style name="myAlertDialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
-    <item name="android:textColor">@color/accentColor</item>
+    <item name="android:textColor">?attr/accentColor</item>
   </style>
 
   <!--Does not work-->

@@ -191,6 +191,7 @@
   <string name="paid_feature1">Scheduled check to notify bad reference states</string>
   <string name="paid_feature2">Auto create backup file on changes</string>
   <string name="paid_feature3">Search suggestions</string>
+  <string name="paid_feature4">Theming options</string>
   <string name="update">Update</string>
   <string name="update_summary">Check for app updates</string>
   <string name="check_in_progress">Check in progress</string>

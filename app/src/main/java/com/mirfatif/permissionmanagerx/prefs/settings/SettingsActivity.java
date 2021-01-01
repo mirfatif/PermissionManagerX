@@ -12,6 +12,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceFragmentCompat.OnPreferenceStartFragmentCallback;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.Utils;
+import com.mirfatif.permissionmanagerx.main.MainActivityFlavor;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.privtasks.Util;
 
@@ -20,6 +21,7 @@ public class SettingsActivity extends AppCompatActivity
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
+    MainActivityFlavor.onCreateStart(this);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_fragment_container);
 

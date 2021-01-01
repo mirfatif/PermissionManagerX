@@ -6,12 +6,14 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.Utils;
+import com.mirfatif.permissionmanagerx.main.MainActivityFlavor;
 import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 
 public class HelpActivity extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    MainActivityFlavor.onCreateStart(this);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_help);
 

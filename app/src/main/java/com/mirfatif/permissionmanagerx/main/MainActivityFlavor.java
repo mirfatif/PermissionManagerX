@@ -1,5 +1,6 @@
 package com.mirfatif.permissionmanagerx.main;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
@@ -37,4 +38,7 @@ public class MainActivityFlavor {
 
   @SuppressWarnings("UnusedDeclaration")
   public static void onCreateDialog(Dialog dialog) {}
+
+  @SuppressWarnings("UnusedDeclaration")
+  public static void onCreateStart(Activity activity) {}
 }

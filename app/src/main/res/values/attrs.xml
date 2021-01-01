@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--Theme unique attributes-->
+  <attr format="color" name="accentColor" />
+  <attr format="color" name="accentTransColor" />
+</resources>

@@ -15,7 +15,7 @@
       android:id="@+id/search_settings_container"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:background="@color/accentTransparent"
+      android:background="?attr/accentTransColor"
       android:visibility="gone">
 
       <CheckBox
@@ -42,7 +42,7 @@
     <View
       android:layout_width="match_parent"
       android:layout_height="1dp"
-      android:background="@color/accentColor" />
+      android:background="?attr/accentColor" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
       android:layout_width="match_parent"

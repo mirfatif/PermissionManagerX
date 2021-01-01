@@ -40,7 +40,7 @@
 
     <View
       android:layout_width="match_parent"
-      android:background="@color/accentColor"
+      android:background="?attr/accentColor"
       android:layout_height="1dp"
       android:layout_marginTop="8dp"
       android:layout_marginBottom="8dp"/>
@@ -51,7 +51,7 @@
       android:textSize="16sp"
       android:text="@string/adb_only_settings"
       android:layout_marginBottom="8dp"
-      android:textColor="@color/accentColor"/>
+      android:textColor="?attr/accentColor"/>
 
     <LinearLayout
       android:layout_width="match_parent"
@@ -83,7 +83,7 @@
 
     <View
       android:layout_width="match_parent"
-      android:background="@color/accentColor"
+      android:background="?attr/accentColor"
       android:layout_height="1dp"
       android:layout_marginTop="8dp"
       android:layout_marginBottom="8dp"/>
@@ -94,7 +94,7 @@
       android:textSize="16sp"
       android:text="@string/root_only_settings"
       android:layout_marginBottom="8dp"
-      android:textColor="@color/accentColor"/>
+      android:textColor="?attr/accentColor"/>
 
     <LinearLayout
       android:layout_width="match_parent"

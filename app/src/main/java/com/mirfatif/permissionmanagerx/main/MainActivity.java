@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = "MainActivity";
 
   public static final String ACTION_SHOW_DRAWER = BuildConfig.APPLICATION_ID + ".SHOW_DRAWER";
-  public static final String ACTION_START_LOGGING = BuildConfig.APPLICATION_ID + ".START_LOGGING";
   public static final String EXTRA_PKG_POSITION = BuildConfig.APPLICATION_ID + ".PKG_POSITION";
   public static final String APP_OPS_PERM = "android.permission.GET_APP_OPS_STATS";
   public static final String TAG_GRANT_ROOT_OR_ADB = "GRANT_ROOT_OR_ADB";
@@ -95,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    MainActivityFlavor.onCreateStart(this);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
     mDrawerLayout.addDrawerListener(mDrawerToggle);
     mDrawerToggle.syncState();
 
-    if (getIntent().getAction().equals(ACTION_SHOW_DRAWER)) {
+    if (getIntent().getAction() != null && getIntent().getAction().equals(ACTION_SHOW_DRAWER)) {
       openDrawerForPrivileges();
     }
 
@@ -244,19 +244,9 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
-
-    if (intent.getAction() == null) {
-      return;
-    }
-
-    // called from PackageActivity
-    if (intent.getAction().equals(ACTION_SHOW_DRAWER)) {
+    // Called from PackageActivity
+    if (intent.getAction() != null && intent.getAction().equals(ACTION_SHOW_DRAWER)) {
       openDrawerForPrivileges();
-    }
-
-    // called from AboutActivity
-    if (intent.getAction().equals(ACTION_START_LOGGING)) {
-      recreate();
     }
   }
 

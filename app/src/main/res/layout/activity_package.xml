@@ -12,7 +12,7 @@
 
     <View
       android:layout_width="match_parent"
-      android:background="@color/accentColor"
+      android:background="?attr/accentColor"
       android:layout_height="1dp"/>
 
 
