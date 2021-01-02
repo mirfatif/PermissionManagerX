@@ -1,105 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <PreferenceCategory android:title="@string/pref_filter_packages_cat_title">
+  <PreferenceCategory
+    android:title="@string/pref_filter_packages_cat_title"
+    app:iconSpaceReserved="false" />
 
-    <CheckBoxPreference
-      android:defaultValue="@bool/pref_filter_exclude_no_icon_apps_default"
-      android:key="@string/pref_filter_exclude_no_icon_apps_key"
-      android:title="@string/pref_filter_exclude_no_icon_apps_title"/>
+  <CheckBoxPreference
+    android:defaultValue="@bool/pref_filter_exclude_no_icon_apps_default"
+    android:key="@string/pref_filter_exclude_no_icon_apps_key"
+    android:title="@string/pref_filter_exclude_no_icon_apps_title"
+    app:iconSpaceReserved="false" />
 
-    <CheckBoxPreference
-      android:defaultValue="@bool/pref_filter_exclude_user_apps_default"
-      android:key="@string/pref_filter_exclude_user_apps_key"
-      android:title="@string/pref_filter_exclude_user_apps_title"/>
+  <CheckBoxPreference
+    android:defaultValue="@bool/pref_filter_exclude_user_apps_default"
+    android:key="@string/pref_filter_exclude_user_apps_key"
+    android:title="@string/pref_filter_exclude_user_apps_title"
+    app:iconSpaceReserved="false" />
 
-    <CheckBoxPreference
-      android:defaultValue="@bool/pref_filter_exclude_system_apps_default"
-      android:key="@string/pref_filter_exclude_system_apps_key"
-      android:title="@string/pref_filter_exclude_system_apps_title"/>
+  <CheckBoxPreference
+    android:defaultValue="@bool/pref_filter_exclude_system_apps_default"
+    android:key="@string/pref_filter_exclude_system_apps_key"
+    android:title="@string/pref_filter_exclude_system_apps_title"
+    app:iconSpaceReserved="false" />
 
-    <CheckBoxPreference
-      android:defaultValue="@bool/pref_filter_exclude_framework_apps_default"
-      android:key="@string/pref_filter_exclude_framework_apps_key"
-      android:title="@string/pref_filter_exclude_framework_apps_title"/>
+  <CheckBoxPreference
+    android:defaultValue="@bool/pref_filter_exclude_framework_apps_default"
+    android:key="@string/pref_filter_exclude_framework_apps_key"
+    android:title="@string/pref_filter_exclude_framework_apps_title"
+    app:iconSpaceReserved="false" />
 
-    <CheckBoxPreference
-      android:defaultValue="@bool/pref_filter_exclude_disabled_apps_default"
-      android:key="@string/pref_filter_exclude_disabled_apps_key"
-      android:title="@string/pref_filter_exclude_disabled_apps_title"/>
+  <CheckBoxPreference
+    android:defaultValue="@bool/pref_filter_exclude_disabled_apps_default"
+    android:key="@string/pref_filter_exclude_disabled_apps_key"
+    android:title="@string/pref_filter_exclude_disabled_apps_title"
+    app:iconSpaceReserved="false" />
 
-    <CheckBoxPreference
-      android:defaultValue="@bool/pref_filter_exclude_no_perms_apps_default"
-      android:key="@string/pref_filter_exclude_no_perms_apps_key"
-      android:title="@string/pref_filter_exclude_no_perms_apps_title"/>
+  <CheckBoxPreference
+    android:defaultValue="@bool/pref_filter_exclude_no_perms_apps_default"
+    android:key="@string/pref_filter_exclude_no_perms_apps_key"
+    android:title="@string/pref_filter_exclude_no_perms_apps_title"
+    app:iconSpaceReserved="false" />
 
-    <MultiSelectListPreference
-      android:key="@string/pref_filter_excluded_apps_key"
-      android:title="@string/pref_filter_excluded_apps_title"/>
+  <MultiSelectListPreference
+    android:key="@string/pref_filter_excluded_apps_key"
+    android:title="@string/pref_filter_excluded_apps_title"
+    app:iconSpaceReserved="false" />
 
-  </PreferenceCategory>
+  <PreferenceCategory
+    android:title="@string/pref_filter_permissions_cat_title"
+    app:iconSpaceReserved="false" />
 
-  <PreferenceCategory android:title="@string/pref_filter_permissions_cat_title">
-    <CheckBoxPreference
-      android:defaultValue="@bool/pref_filter_exclude_not_changeable_perms_default"
-      android:key="@string/pref_filter_exclude_not_changeable_perms_key"
-      android:title="@string/pref_filter_exclude_not_changeable_perms_title"/>
+  <CheckBoxPreference
+    android:defaultValue="@bool/pref_filter_exclude_not_changeable_perms_default"
+    android:key="@string/pref_filter_exclude_not_changeable_perms_key"
+    android:title="@string/pref_filter_exclude_not_changeable_perms_title"
+    app:iconSpaceReserved="false" />
 
-    <CheckBoxPreference
-      android:defaultValue="@bool/pref_filter_exclude_not_granted_perms_default"
-      android:key="@string/pref_filter_exclude_not_granted_perms_key"
-      android:title="@string/pref_filter_exclude_not_granted_perms_title"/>
+  <CheckBoxPreference
+    android:defaultValue="@bool/pref_filter_exclude_not_granted_perms_default"
+    android:key="@string/pref_filter_exclude_not_granted_perms_key"
+    android:title="@string/pref_filter_exclude_not_granted_perms_title"
+    app:iconSpaceReserved="false" />
 
-    <MultiSelectListPreference
-      android:key="@string/pref_filter_excluded_perms_key"
-      android:title="@string/pref_filter_excluded_perms_title"/>
+  <MultiSelectListPreference
+    android:key="@string/pref_filter_excluded_perms_key"
+    android:title="@string/pref_filter_excluded_perms_title"
+    app:iconSpaceReserved="false" />
 
-  </PreferenceCategory>
+  <PreferenceCategory
+    android:title="@string/pref_filter_man_permissions_cat_title"
+    app:iconSpaceReserved="false" />
 
-  <PreferenceCategory android:title="@string/pref_filter_man_permissions_cat_title">
-    <CheckBoxPreference
-      android:defaultValue="@bool/pref_filter_exclude_invalid_perms_default"
-      android:key="@string/pref_filter_exclude_invalid_perms_key"
-      android:title="@string/pref_filter_exclude_invalid_perms_title"/>
+  <CheckBoxPreference
+    android:defaultValue="@bool/pref_filter_exclude_invalid_perms_default"
+    android:key="@string/pref_filter_exclude_invalid_perms_key"
+    android:title="@string/pref_filter_exclude_invalid_perms_title"
+    app:iconSpaceReserved="false" />
 
-    <CheckBoxPreference
-      android:defaultValue="@bool/pref_filter_exclude_normal_perms_default"
-      android:key="@string/pref_filter_exclude_normal_perms_key"
-      android:title="@string/pref_filter_exclude_normal_perms_title"/>
+  <CheckBoxPreference
+    android:defaultValue="@bool/pref_filter_exclude_normal_perms_default"
+    android:key="@string/pref_filter_exclude_normal_perms_key"
+    android:title="@string/pref_filter_exclude_normal_perms_title"
+    app:iconSpaceReserved="false" />
 
-    <CheckBoxPreference
-      android:defaultValue="@bool/pref_filter_exclude_dangerous_perms_default"
-      android:key="@string/pref_filter_exclude_dangerous_perms_key"
-      android:title="@string/pref_filter_exclude_dangerous_perms_title"/>
+  <CheckBoxPreference
+    android:defaultValue="@bool/pref_filter_exclude_dangerous_perms_default"
+    android:key="@string/pref_filter_exclude_dangerous_perms_key"
+    android:title="@string/pref_filter_exclude_dangerous_perms_title"
+    app:iconSpaceReserved="false" />
 
-    <CheckBoxPreference
-      android:defaultValue="@bool/pref_filter_exclude_signature_perms_default"
-      android:key="@string/pref_filter_exclude_signature_perms_key"
-      android:title="@string/pref_filter_exclude_signature_perms_title"/>
+  <CheckBoxPreference
+    android:defaultValue="@bool/pref_filter_exclude_signature_perms_default"
+    android:key="@string/pref_filter_exclude_signature_perms_key"
+    android:title="@string/pref_filter_exclude_signature_perms_title"
+    app:iconSpaceReserved="false" />
 
-    <CheckBoxPreference
-      android:defaultValue="@bool/pref_filter_exclude_privileged_perms_default"
-      android:key="@string/pref_filter_exclude_privileged_perms_key"
-      android:title="@string/pref_filter_exclude_privileged_perms_title"/>
+  <CheckBoxPreference
+    android:defaultValue="@bool/pref_filter_exclude_privileged_perms_default"
+    android:key="@string/pref_filter_exclude_privileged_perms_key"
+    android:title="@string/pref_filter_exclude_privileged_perms_title"
+    app:iconSpaceReserved="false" />
 
-  </PreferenceCategory>
+  <PreferenceCategory
+    android:title="@string/pref_filter_app_ops_permissions_cat_title"
+    app:iconSpaceReserved="false" />
 
-  <PreferenceCategory android:title="@string/pref_filter_app_ops_permissions_cat_title">
+  <CheckBoxPreference
+    android:defaultValue="@bool/pref_filter_exclude_appops_perms_default"
+    android:key="@string/pref_filter_exclude_appops_perms_key"
+    android:title="@string/pref_filter_exclude_appops_perms_title"
+    app:iconSpaceReserved="false" />
 
-    <CheckBoxPreference
-      android:defaultValue="@bool/pref_filter_exclude_appops_perms_default"
-      android:key="@string/pref_filter_exclude_appops_perms_key"
-      android:title="@string/pref_filter_exclude_appops_perms_title"/>
+  <CheckBoxPreference
+    android:defaultValue="@bool/pref_filter_exclude_not_set_appops_default"
+    android:key="@string/pref_filter_exclude_not_set_appops_key"
+    android:title="@string/pref_filter_exclude_not_set_appops_title"
+    app:iconSpaceReserved="false" />
 
-    <CheckBoxPreference
-      android:defaultValue="@bool/pref_filter_exclude_not_set_appops_default"
-      android:key="@string/pref_filter_exclude_not_set_appops_key"
-      android:title="@string/pref_filter_exclude_not_set_appops_title"/>
-
-    <MultiSelectListPreference
-      android:key="@string/pref_filter_extra_appops_key"
-      android:title="@string/pref_filter_extra_appops_title"/>
-
-  </PreferenceCategory>
+  <MultiSelectListPreference
+    android:key="@string/pref_filter_extra_appops_key"
+    android:title="@string/pref_filter_extra_appops_title"
+    app:iconSpaceReserved="false" />
 
 </PreferenceScreen>
