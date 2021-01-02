@@ -45,8 +45,12 @@ public class App extends Application {
           defaultExceptionHandler.uncaughtException(t, e);
         });
 
-    mAppFlavor = new AppFlavor(this);
-    mAppFlavor.onCreated();
+    // User is waiting for the first glance. Free the main thread.
+    Utils.runInBg(
+        () -> {
+          mAppFlavor = new AppFlavor(App.this);
+          mAppFlavor.onCreated();
+        });
   }
 
   public static Context getContext() {

@@ -8,27 +8,27 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.Utils;
-import com.mirfatif.permissionmanagerx.main.MainActivityFlavor;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
+import com.mirfatif.permissionmanagerx.ui.BaseActivity;
 import com.mirfatif.privtasks.Util;
 
-public class FilterSettingsActivity extends AppCompatActivity {
+public class FilterSettingsActivity extends BaseActivity {
 
   private MySettings mMySettings;
   private final FragmentManager mFM = getSupportFragmentManager();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    MainActivityFlavor.onCreateStart(this);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_fragment_container);
 
     ActionBar actionBar = getSupportActionBar();
-    if (actionBar != null) actionBar.setTitle(R.string.filter_menu_item);
+    if (actionBar != null) {
+      actionBar.setTitle(R.string.filter_menu_item);
+    }
 
     mMySettings = MySettings.getInstance();
 
@@ -60,8 +60,9 @@ public class FilterSettingsActivity extends AppCompatActivity {
    */
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    if (mMySettings.isDebug())
+    if (mMySettings.isDebug()) {
       Util.debugLog("FilterSettingsActivity", "onOptionsItemSelected(): " + item.getTitle());
+    }
     if (item.getItemId() == R.id.action_reset_defaults) {
       // Build an AlertDialog and set listeners on buttons
       Builder builder = new Builder(this);
@@ -118,12 +119,6 @@ public class FilterSettingsActivity extends AppCompatActivity {
               .setMessage(R.string.filter_settings_clear_app_ops_confirmation)
               .create();
       new AlertDialogFragment(dialog).show(mFM, "CLEAR_EXTRA_APP_OPS", false);
-      return true;
-    }
-
-    // do not recreate parent (Main) activity
-    if (item.getItemId() == android.R.id.home) {
-      onBackPressed();
       return true;
     }
 

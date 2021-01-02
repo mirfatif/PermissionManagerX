@@ -19,7 +19,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.SearchView.OnQueryTextListener;
@@ -47,6 +46,7 @@ import com.mirfatif.permissionmanagerx.prefs.settings.SettingsActivity;
 import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.ui.AboutActivity;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
+import com.mirfatif.permissionmanagerx.ui.BaseActivity;
 import com.mirfatif.permissionmanagerx.ui.HelpActivity;
 import com.mirfatif.permissionmanagerx.ui.MyViewModel;
 import com.mirfatif.permissionmanagerx.ui.PackageActivity;
@@ -60,7 +60,7 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
   private static final String TAG = "MainActivity";
 
@@ -69,9 +69,14 @@ public class MainActivity extends AppCompatActivity {
   public static final String APP_OPS_PERM = "android.permission.GET_APP_OPS_STATS";
   public static final String TAG_GRANT_ROOT_OR_ADB = "GRANT_ROOT_OR_ADB";
 
-  private MySettings mMySettings;
-  private PackageParser mPackageParser;
-  private PrivDaemonHandler mPrivDaemonHandler;
+  private final MySettings mMySettings = MySettings.getInstance();
+  private final PackageParser mPackageParser = PackageParser.getInstance();
+  private final PrivDaemonHandler mPrivDaemonHandler = PrivDaemonHandler.getInstance();
+
+  private MyViewModel mMyViewModel;
+  private MainActivityFlavor mMainActivityFlavor;
+  private final FragmentManager mFM = getSupportFragmentManager();
+
   private SwipeRefreshLayout mRefreshLayout;
   private LinearLayoutManager mLayoutManager;
   private ProgressBar mProgressBar;
@@ -79,41 +84,28 @@ public class MainActivity extends AppCompatActivity {
   private TextView mRoundProgressTextView;
   private LinearLayout mProgressBarContainer;
   private SearchView mSearchView;
-  private MyViewModel mMyViewModel;
   private Integer mProgressMax;
   private TextView mProgressNowView;
   private TextView mProgressMaxView;
   private PackageAdapter mPackageAdapter;
-  private MainActivityFlavor mMainActivityFlavor;
 
   private DrawerLayout mDrawerLayout;
   private ActionBarDrawerToggle mDrawerToggle;
   private NavigationView mNavigationView;
 
-  private final FragmentManager mFM = getSupportFragmentManager();
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    MainActivityFlavor.onCreateStart(this);
     super.onCreate(savedInstanceState);
+
+    if (setNightTheme()) {
+      return; // Activity is recreated on switching to Dark Theme, so return here
+    }
+
     setContentView(R.layout.activity_main);
 
-    // Create ViewModel instance and associate with current Activity. ViewModel initialize and holds
+    // Create ViewModel instance and associate with current Activity. ViewModel holds
     // instances of other classes which must be retained irrespective of lifecycle of Activities
     mMyViewModel = new ViewModelProvider(this).get(MyViewModel.class);
-
-    // singleton instances has been created by now in ViewModel
-    mMySettings = MySettings.getInstance();
-    mPackageParser = PackageParser.getInstance();
-    mPrivDaemonHandler = PrivDaemonHandler.getInstance();
-
-    /**
-     * Must be after initializing {@link mMySettings}. Activity is recreated on switching to Dark
-     * Theme, so return here.
-     */
-    if (setNightTheme()) {
-      return;
-    }
 
     // to show drawer icon
     ActionBar actionBar = getSupportActionBar();

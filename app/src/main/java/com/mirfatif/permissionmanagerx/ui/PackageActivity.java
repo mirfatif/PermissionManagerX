@@ -19,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -32,7 +31,6 @@ import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.main.BackupRestore;
 import com.mirfatif.permissionmanagerx.main.BackupRestore.BackupEntry;
 import com.mirfatif.permissionmanagerx.main.MainActivity;
-import com.mirfatif.permissionmanagerx.main.MainActivityFlavor;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.parser.Permission;
@@ -50,7 +48,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class PackageActivity extends AppCompatActivity {
+public class PackageActivity extends BaseActivity {
 
   private List<Permission> mPermissionsList = new ArrayList<>();
   private MySettings mMySettings;
@@ -64,7 +62,6 @@ public class PackageActivity extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    MainActivityFlavor.onCreateStart(this);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_package);
 
@@ -510,12 +507,6 @@ public class PackageActivity extends AppCompatActivity {
               .setMessage(R.string.clear_references_confirmation)
               .create();
       new AlertDialogFragment(dialog).show(mFM, "CLEAR_REF_CONFIRM", false);
-    }
-
-    // do not recreate parent (Main) activity
-    if (item.getItemId() == android.R.id.home) {
-      onBackPressed();
-      return true;
     }
 
     return super.onOptionsItemSelected(item);

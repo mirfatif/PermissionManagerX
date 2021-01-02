@@ -1,19 +1,15 @@
 package com.mirfatif.permissionmanagerx.ui;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.Utils;
-import com.mirfatif.permissionmanagerx.main.MainActivityFlavor;
 import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 
-public class HelpActivity extends AppCompatActivity {
+public class HelpActivity extends BaseActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    MainActivityFlavor.onCreateStart(this);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_help);
 
@@ -32,15 +28,5 @@ public class HelpActivity extends AppCompatActivity {
         .setMovementMethod(
             BetterLinkMovementMethod.newInstance()
                 .setOnLinkClickListener((tView, url) -> Utils.openWebUrl(this, url)));
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    // do not recreate parent (Main) activity
-    if (item.getItemId() == android.R.id.home) {
-      onBackPressed();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
   }
 }

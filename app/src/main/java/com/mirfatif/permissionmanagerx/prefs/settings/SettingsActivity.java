@@ -1,27 +1,20 @@
 package com.mirfatif.permissionmanagerx.prefs.settings;
 
 import android.os.Bundle;
-import android.view.MenuItem;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceFragmentCompat.OnPreferenceStartFragmentCallback;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.Utils;
-import com.mirfatif.permissionmanagerx.main.MainActivityFlavor;
-import com.mirfatif.permissionmanagerx.prefs.MySettings;
-import com.mirfatif.privtasks.Util;
+import com.mirfatif.permissionmanagerx.ui.BaseActivity;
 
-public class SettingsActivity extends AppCompatActivity
-    implements OnPreferenceStartFragmentCallback {
+public class SettingsActivity extends BaseActivity implements OnPreferenceStartFragmentCallback {
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
-    MainActivityFlavor.onCreateStart(this);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_fragment_container);
 
@@ -35,21 +28,6 @@ public class SettingsActivity extends AppCompatActivity
           .replace(R.id.fragment_container, new SettingsFragment())
           .commit();
     }
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    if (MySettings.getInstance().isDebug()) {
-      Util.debugLog("SettingsActivity", "onOptionsItemSelected(): " + item.getTitle());
-    }
-
-    // do not recreate parent (Main) activity
-    if (item.getItemId() == android.R.id.home) {
-      onBackPressed();
-      return true;
-    }
-
-    return super.onOptionsItemSelected(item);
   }
 
   @Override

@@ -210,6 +210,9 @@ public class PrivDaemon {
   private ObjectOutputStream mStdOutStream;
 
   private synchronized void sendResponse(Object object) {
+    if (mStdOutStream == null) {
+      return;
+    }
     try {
       mStdOutStream.writeObject(object);
       mStdOutStream.flush();
