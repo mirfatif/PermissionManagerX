@@ -13,6 +13,7 @@ android {
 
         def br = "git rev-parse --abbrev-ref HEAD".execute().text.trim()
         buildConfigField "boolean", "GH_VERSION", (br != "ps" && br != "ps-dev") ? "true" : "false"
+        buildConfigField "boolean", "AMAZ_VERSION", (br == "amaz") ? "true" : "false"
     }
 
     buildTypes {

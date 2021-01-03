@@ -832,7 +832,12 @@ public class MainActivity extends BaseActivity {
     setBoxCheckedAndSetListener(menu, R.id.action_adb, mMySettings.isAdbConnected());
     setBoxCheckedAndSetListener(menu, R.id.action_dark_theme, mMySettings.forceDarkMode());
 
-    menu.findItem(R.id.action_donate).setVisible(BuildConfig.GH_VERSION);
+    setDonateVisibility(menu.findItem(R.id.action_donate));
+  }
+
+  @SuppressWarnings("ConstantConditions")
+  private void setDonateVisibility(MenuItem item) {
+    item.setVisible(BuildConfig.GH_VERSION && !BuildConfig.AMAZ_VERSION);
   }
 
   private void setBoxCheckedAndSetListener(Menu menu, int id, boolean checked) {

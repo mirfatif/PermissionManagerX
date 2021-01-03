@@ -14,6 +14,7 @@
   <string name="days">%1$d Days</string>
   <string name="contact">Write Now</string>
   <string name="i_will">I Will</string>
+  <string name="rate">Rate now</string>
   <string name="do_not_remind">Don\'t Remind</string>
   <string name="get_help">Get Help</string>
 
@@ -100,6 +101,9 @@
   <string name="purchase_and_rate_the_app">You can help us improve the app by making a small donation
     or leaving a good app review so that we are able to better serve your needs.
   </string>
+  <string name="rate_the_app">Good ratings and reviews help us improve the app and we are able to
+    better serve your needs.
+  </string>
   <string name="ask_to_provide_feedback">Sorry to hear that. You can help improve the app by
     contacting us via email or Telegram so that we are able to better serve your needs.
   </string>
@@ -119,7 +123,7 @@
   <string name="exclude">Exclude</string>
   <string name="clear_reference">Clear Ref</string>
   <string name="set_reference">Set Ref</string>
-  <string name="shut_up">Shut up</string>
+  <string name="do_not_ask">Don\'t ask again</string>
 
   <!--PackageActivity menu items-->
   <string name="package_information_menu_item">App Info</string>
