@@ -23,11 +23,11 @@ In short, <b>AppOps</b> provide a fine-grained control over many of the manifest
 ## Required Privileges / Permissions
 
 * In order to let Permission Manager X serve you at its best, either the device must be <b>rooted</b> or you need to enable <b>ADB over network</b>.
-* <b>android.permission.INTERNET</b> is required to use ADB over network. No connections are made outside the device.
+* <b>android.permission.INTERNET</b> is required to use ADB over network. The only connection made outside the device is to check for app updates.
 
 ## Note:
 
-* The app is tested on stock Android 7-10. Some highly customized ROMs may behave unexpectedly.
+* The app is tested on stock Android 7-11. Some highly customized ROMs may behave unexpectedly.
 
 ## Screenshots
 
@@ -35,10 +35,10 @@ In short, <b>AppOps</b> provide a fine-grained control over many of the manifest
 <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.jpg" width="250">
 
 ## How to Build
-* `build.gradle` calls a shell scripts to build native binaries. So a Linux environment is expected with all standard tools.
+* `build.gradle` calls a shell script to build native binaries. So a Linux environment is expected with all standard tools.
 * Download code: `git clone --recurse-submodules https://github.com/mirfatif/PermissionManagerX.git && cd PermissionManagerX`
-* Set `sdk.dir` in `local.properties` to the directory containing Android SDK API level (platform) 29 and build-tools 30.0.2 (and obviously the latest SDK `tools` and `platform-tools`).
-* App uses a number of AOSP's hidden/internal APIs which are not available with standard SDK. Replace `android.jar` with the one downloaded from here: https://github.com/anggrayudi/android-hidden-api.
+* Set `sdk.dir` in `local.properties` to the directory containing Android SDK API level (platform) 30 and build-tools 30.0.3 (and obviously the latest SDK `tools` and `platform-tools`).
+* App uses a number of AOSP's hidden/internal APIs which are not available in official SDK. Replace `android.jar` with a custom built which includes all of the [non-SDK interfaces](https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces) (see details [here](https://github.com/anggrayudi/android-hidden-api)). Plus in Android 11 some of the hidden APIs have been entirely removed which are required for the app to work. So they need to be added to the SDK (I just edited the respective `.class` files and added stub methods). A working `android.jar` is available [here](https://github.com/mirfatif/PermissionManagerX/tree/master/hidden-apis).
 * Set `ndk.dir` in `local.properties` to the directory containing Android NDK (I used r21d (21.3)).
 * Set `JAVA_HOME` environment variable to JDK 11 (`verifyGoogleJavaFormat` task won't work with JDK 1.8). Or `java` and `javac` must be on `PATH`.
 * Run `./gradlew` with appropriate task name appended. Or use IntelliJ IDEA / Android Studio.
