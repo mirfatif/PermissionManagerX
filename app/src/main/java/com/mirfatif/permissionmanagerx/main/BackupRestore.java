@@ -12,7 +12,6 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
-import androidx.preference.PreferenceManager;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
@@ -79,20 +78,17 @@ public class BackupRestore {
   private final String SEPARATOR = ",";
 
   private final MainActivity mA;
-  private final SharedPreferences mPreferences;
 
   private boolean mSkipUninstalledApps = false;
 
   public BackupRestore() {
     mA = null;
     mMySettings = MySettings.getInstance();
-    mPreferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
   }
 
   BackupRestore(MainActivity activity) {
     mA = activity;
     mMySettings = MySettings.getInstance();
-    mPreferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
   }
 
   void doBackupRestore() {
@@ -104,7 +100,6 @@ public class BackupRestore {
         new Builder(mA)
             .setPositiveButton(R.string.backup, (d, which) -> doBackupRestore(true))
             .setNegativeButton(R.string.restore, (d, which) -> doBackupRestore(false))
-            .setNeutralButton(android.R.string.cancel, null)
             .setTitle(getString(R.string.backup) + " / " + getString(R.string.restore))
             .setView(layout)
             .create();
@@ -168,7 +163,7 @@ public class BackupRestore {
     int invalidPrefs = 0;
 
     // preferences
-    Map<String, ?> prefEntries = mPreferences.getAll();
+    Map<String, ?> prefEntries = Utils.getDefPrefs().getAll();
     for (Map.Entry<String, ?> entry : prefEntries.entrySet()) {
       Object value = entry.getValue();
       String type;
@@ -303,7 +298,7 @@ public class BackupRestore {
       return false;
     }
 
-    SharedPreferences.Editor prefEdit = mPreferences.edit();
+    SharedPreferences.Editor prefEdit = Utils.getDefPrefs().edit();
     for (BackupEntry entry : prefEntries) {
 
       if (!isValidPrefKey(entry.key)) {

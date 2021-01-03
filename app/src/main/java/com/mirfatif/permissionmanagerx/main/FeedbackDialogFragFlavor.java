@@ -25,7 +25,9 @@ public class FeedbackDialogFragFlavor extends FeedbackDialogFrag {
   @Override
   void posButtonYesClicked(Activity activity) {
     // We are sure this is the MainActivity
-    Donate.showDialog((MainActivity) activity);
+    if (activity instanceof MainActivity) {
+      Donate.showDialog((MainActivity) activity);
+    }
   }
 
   @Override

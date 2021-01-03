@@ -10,7 +10,6 @@ import androidx.preference.CheckBoxPreference;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
@@ -25,7 +24,6 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
 
   private FilterSettingsActivity mParentActivity;
   private MySettings mMySettings;
-  private SharedPreferences mPrefs;
 
   private CheckBoxPreference excludeNoIconAppsView;
   private CheckBoxPreference excludeUserAppsView;
@@ -51,22 +49,21 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
   public void onAttach(@NonNull Context context) {
     super.onAttach(context);
     mParentActivity = (FilterSettingsActivity) getActivity();
-    mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-    mPrefs.unregisterOnSharedPreferenceChangeListener(this);
+    Utils.getDefPrefs().unregisterOnSharedPreferenceChangeListener(this);
     mMySettings = MySettings.getInstance();
   }
 
   // unregister so that changes in other activities don't trigger this
   @Override
   public void onPause() {
-    mPrefs.unregisterOnSharedPreferenceChangeListener(this);
+    Utils.getDefPrefs().unregisterOnSharedPreferenceChangeListener(this);
     super.onPause();
   }
 
   @Override
   public void onResume() {
     super.onResume();
-    mPrefs.registerOnSharedPreferenceChangeListener(this);
+    Utils.getDefPrefs().registerOnSharedPreferenceChangeListener(this);
   }
 
   @Override

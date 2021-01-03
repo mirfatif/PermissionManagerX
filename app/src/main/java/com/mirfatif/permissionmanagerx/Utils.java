@@ -26,6 +26,7 @@ import androidx.browser.customtabs.CustomTabsService;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.FileProvider;
+import androidx.preference.PreferenceManager;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.EncryptedSharedPreferences.PrefKeyEncryptionScheme;
 import androidx.security.crypto.EncryptedSharedPreferences.PrefValueEncryptionScheme;
@@ -292,6 +293,10 @@ public class Utils {
       e.printStackTrace();
       throw new RuntimeException(e);
     }
+  }
+
+  public static SharedPreferences getDefPrefs() {
+    return PreferenceManager.getDefaultSharedPreferences(App.getContext());
   }
 
   public static String getCurrDateTime(boolean spaced) {

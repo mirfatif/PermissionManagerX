@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  android:animateLayoutChanges="true">
+  android:animateLayoutChanges="true"
+  android:orientation="vertical">
 
-  <LinearLayout
-    android:orientation="vertical"
+  <View
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="1dp"
+    android:background="?attr/accentColor" />
 
-    <View
-      android:layout_width="match_parent"
-      android:background="?attr/accentColor"
-      android:layout_height="1dp"/>
+  <androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
       android:layout_width="match_parent"
-      android:layout_margin="8dp"
       android:layout_height="wrap_content"
+      android:layout_margin="8dp"
       android:orientation="vertical">
 
       <ImageView
@@ -27,279 +27,206 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:src="@drawable/icon"
-        tools:ignore="ContentDescription"/>
+        tools:ignore="ContentDescription" />
 
       <TextView
-        android:layout_gravity="center_horizontal"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:text="@string/app_name"/>
+        android:layout_gravity="center_horizontal"
+        android:text="@string/app_name"
+        android:textSize="16sp" />
 
       <TextView
         android:id="@+id/version"
-        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:layout_marginBottom="8dp"
-        tools:text="Version: "/>
+        android:layout_gravity="center_horizontal"
+        tools:text="Version: " />
 
       <View
         android:layout_width="match_parent"
-        android:background="?attr/accentColor"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp"
+        android:background="?attr/accentColor" />
 
       <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
-          android:layout_width="24dp"
-          android:layout_height="24dp"
-          android:layout_gravity="center"
-          android:layout_marginEnd="8dp"
+          style="@style/aboutActivityIconImg"
           android:src="@drawable/email"
-          tools:ignore="ContentDescription"/>
+          tools:ignore="ContentDescription" />
 
         <LinearLayout
           android:id="@+id/contact"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:paddingTop="8dp"
-          android:paddingBottom="8dp"
-          android:orientation="vertical"
-          android:background="?android:attr/selectableItemBackground">
+          style="@style/aboutActivityItemContainer">
 
           <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/email"
-            android:textStyle="bold"
-            android:textSize="16sp"/>
+            style="@style/aboutActivityItemTitle"
+            android:text="@string/email" />
 
           <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/email_address"
-            android:layout_marginTop="2dp"/>
+            style="@style/aboutActivityItemSummary"
+            android:text="@string/email_address" />
+
         </LinearLayout>
 
       </LinearLayout>
 
       <View
         android:layout_width="match_parent"
-        android:background="?attr/accentColor"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp"
+        android:background="?attr/accentColor" />
 
       <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
-          android:layout_width="24dp"
-          android:layout_height="24dp"
-          android:layout_gravity="center"
-          android:layout_marginEnd="8dp"
+          style="@style/aboutActivityIconImg"
           android:src="@drawable/telegram"
-          tools:ignore="ContentDescription"/>
+          tools:ignore="ContentDescription" />
 
         <LinearLayout
           android:id="@+id/telegram"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:paddingTop="8dp"
-          android:paddingBottom="8dp"
-          android:orientation="vertical"
-          android:background="?android:attr/selectableItemBackground">
+          style="@style/aboutActivityItemContainer">
 
           <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/telegram_group"
-            android:textStyle="bold"
-            android:textSize="16sp"/>
+            style="@style/aboutActivityItemTitle"
+            android:text="@string/telegram_group" />
 
           <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/telegram_link"
-            android:layout_marginTop="2dp"/>
+            style="@style/aboutActivityItemSummary"
+            android:text="@string/telegram_link" />
+
         </LinearLayout>
-
       </LinearLayout>
 
       <View
         android:layout_width="match_parent"
-        android:background="?attr/accentColor"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp"
+        android:background="?attr/accentColor" />
 
       <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
-          android:layout_width="24dp"
-          android:layout_height="24dp"
-          android:layout_gravity="center"
-          android:layout_marginEnd="8dp"
+          style="@style/aboutActivityIconImg"
           android:src="@drawable/github_mark"
-          tools:ignore="ContentDescription"/>
+          tools:ignore="ContentDescription" />
 
         <LinearLayout
           android:id="@+id/source_code"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:paddingTop="8dp"
-          android:paddingBottom="8dp"
-          android:orientation="vertical"
-          android:background="?android:attr/selectableItemBackground">
+          style="@style/aboutActivityItemContainer">
 
           <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/source"
-            android:textStyle="bold"
-            android:textSize="16sp"/>
+            style="@style/aboutActivityItemTitle"
+            android:text="@string/source" />
 
           <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/source_url"
-            android:layout_marginTop="2dp"/>
+            style="@style/aboutActivityItemSummary"
+            android:text="@string/source_url" />
+
         </LinearLayout>
       </LinearLayout>
 
       <View
         android:layout_width="match_parent"
-        android:background="?attr/accentColor"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp"
+        android:background="?attr/accentColor" />
 
       <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
-          android:layout_width="24dp"
-          android:layout_height="24dp"
-          android:layout_gravity="center"
-          android:layout_marginEnd="8dp"
+          style="@style/aboutActivityIconImg"
           android:src="@drawable/issues"
-          tools:ignore="ContentDescription"/>
+          tools:ignore="ContentDescription" />
 
         <LinearLayout
           android:id="@+id/issues"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:paddingTop="8dp"
-          android:paddingBottom="8dp"
-          android:orientation="vertical"
-          android:background="?android:attr/selectableItemBackground">
+          style="@style/aboutActivityItemContainer">
 
           <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/report_issues"
-            android:textStyle="bold"
-            android:textSize="16sp"/>
+            style="@style/aboutActivityItemTitle"
+            android:text="@string/report_issues" />
 
           <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/report_issues_summary"
-            android:layout_marginTop="2dp"/>
+            style="@style/aboutActivityItemSummary"
+            android:text="@string/report_issues_summary" />
+
         </LinearLayout>
       </LinearLayout>
 
       <View
         android:layout_width="match_parent"
-        android:background="?attr/accentColor"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp"
+        android:background="?attr/accentColor" />
 
       <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
-          android:layout_width="24dp"
-          android:layout_height="24dp"
-          android:layout_gravity="center"
-          android:layout_marginEnd="8dp"
+          style="@style/aboutActivityIconImg"
           android:src="@drawable/log"
-          tools:ignore="ContentDescription"/>
+          tools:ignore="ContentDescription" />
 
         <LinearLayout
           android:id="@+id/logging"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:paddingTop="8dp"
-          android:paddingBottom="8dp"
-          android:orientation="vertical"
-          android:background="?android:attr/selectableItemBackground">
+          style="@style/aboutActivityItemContainer">
 
           <TextView
             android:id="@+id/logging_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/collect_logs"
-            android:textStyle="bold"
-            android:textSize="16sp"/>
+            style="@style/aboutActivityItemTitle"
+            android:text="@string/collect_logs" />
 
           <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/collect_logs_summary"
-            android:layout_marginTop="2dp"/>
+            style="@style/aboutActivityItemSummary"
+            android:text="@string/collect_logs_summary" />
+
         </LinearLayout>
       </LinearLayout>
 
       <View
         android:layout_width="match_parent"
-        android:background="?attr/accentColor"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp"
+        android:background="?attr/accentColor" />
 
       <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
-          android:layout_width="24dp"
-          android:layout_height="24dp"
-          android:layout_gravity="center"
-          android:layout_marginEnd="8dp"
+          style="@style/aboutActivityIconImg"
           android:src="@drawable/star"
-          tools:ignore="ContentDescription"/>
+          tools:ignore="ContentDescription" />
 
         <LinearLayout
           android:id="@+id/rating"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:paddingTop="8dp"
-          android:paddingBottom="8dp"
-          android:orientation="vertical"
-          android:background="?android:attr/selectableItemBackground">
+          style="@style/aboutActivityItemContainer">
 
           <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/app_rating"
-            android:textStyle="bold"
-            android:textSize="16sp"/>
+            style="@style/aboutActivityItemTitle"
+            android:text="@string/app_rating" />
 
           <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/app_rating_summary"
-            android:layout_marginTop="2dp"/>
+            style="@style/aboutActivityItemSummary"
+            android:text="@string/app_rating_summary" />
+
         </LinearLayout>
       </LinearLayout>
 
       <View
         android:layout_width="match_parent"
-        android:background="?attr/accentColor"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp"
+        android:background="?attr/accentColor" />
 
       <LinearLayout
         android:id="@+id/paid_features_container"
@@ -312,75 +239,50 @@
           android:layout_height="wrap_content">
 
           <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:layout_marginEnd="8dp"
+            style="@style/aboutActivityIconImg"
             android:src="@drawable/paid"
-            tools:ignore="ContentDescription"/>
+            tools:ignore="ContentDescription" />
 
           <LinearLayout
             android:id="@+id/paid_features"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:orientation="vertical"
-            android:background="?android:attr/selectableItemBackground">
+            style="@style/aboutActivityItemContainer">
 
             <TextView
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:text="@string/paid_features"
-              android:textStyle="bold"
-              android:textSize="16sp"/>
+              style="@style/aboutActivityItemTitle"
+              android:text="@string/paid_features" />
 
             <TextView
               android:id="@+id/paid_features_summary"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:maxLines="1"
+              style="@style/aboutActivityItemSummary"
               android:ellipsize="end"
-              android:layout_marginTop="2dp"/>
+              android:maxLines="1" />
 
             <LinearLayout
               android:id="@+id/paid_features_detail"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:visibility="gone"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:visibility="gone">
 
               <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:drawableStartCompat="@drawable/bullet"
+                style="@style/aboutActivityPaidFeatureItem"
                 android:text="@string/paid_feature1"
-                android:drawablePadding="4dp"
-                android:layout_marginTop="2dp"/>
+                app:drawableStartCompat="@drawable/bullet" />
 
               <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:drawableStartCompat="@drawable/bullet"
+                style="@style/aboutActivityPaidFeatureItem"
                 android:text="@string/paid_feature2"
-                android:drawablePadding="4dp"
-                android:layout_marginTop="2dp"/>
+                app:drawableStartCompat="@drawable/bullet" />
 
               <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:drawableStartCompat="@drawable/bullet"
+                style="@style/aboutActivityPaidFeatureItem"
                 android:text="@string/paid_feature3"
-                android:drawablePadding="4dp"
-                android:layout_marginTop="2dp"/>
+                app:drawableStartCompat="@drawable/bullet" />
 
               <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:drawableStartCompat="@drawable/bullet"
+                style="@style/aboutActivityPaidFeatureItem"
                 android:text="@string/paid_feature4"
-                android:drawablePadding="4dp"
-                android:layout_marginTop="2dp"/>
+                app:drawableStartCompat="@drawable/bullet" />
 
             </LinearLayout>
           </LinearLayout>
@@ -388,8 +290,8 @@
 
         <View
           android:layout_width="match_parent"
-          android:background="?attr/accentColor"
-          android:layout_height="1dp"/>
+          android:layout_height="1dp"
+          android:background="?attr/accentColor" />
 
       </LinearLayout>
 
@@ -398,44 +300,31 @@
         android:layout_height="wrap_content">
 
         <ImageView
-          android:layout_width="24dp"
-          android:layout_height="24dp"
-          android:layout_gravity="center"
-          android:layout_marginEnd="8dp"
+          style="@style/aboutActivityIconImg"
           android:src="@drawable/update"
-          tools:ignore="ContentDescription"/>
+          tools:ignore="ContentDescription" />
 
         <LinearLayout
           android:id="@+id/check_update"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:paddingTop="8dp"
-          android:paddingBottom="8dp"
-          android:orientation="vertical"
-          android:background="?android:attr/selectableItemBackground">
+          style="@style/aboutActivityItemContainer">
 
           <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/update"
-            android:textStyle="bold"
-            android:textSize="16sp"/>
+            style="@style/aboutActivityItemTitle"
+            android:text="@string/update" />
 
           <TextView
             android:id="@+id/check_update_summary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/update_summary"
-            android:layout_marginTop="2dp"/>
+            style="@style/aboutActivityItemSummary"
+            android:text="@string/update_summary" />
+
         </LinearLayout>
       </LinearLayout>
 
       <View
         android:layout_width="match_parent"
-        android:background="?attr/accentColor"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp"
+        android:background="?attr/accentColor" />
 
     </LinearLayout>
-  </LinearLayout>
-
-</ScrollView>
+  </androidx.core.widget.NestedScrollView>
+</LinearLayout>

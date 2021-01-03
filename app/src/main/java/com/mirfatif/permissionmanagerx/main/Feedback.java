@@ -143,7 +143,7 @@ abstract class FeedbackDialogFrag extends BottomSheetDialogFragment {
           if (isYes) {
             posButtonYesClicked(mActivity);
           } else {
-            startActivity(new Intent(mActivity, AboutActivity.class));
+            startActivity(new Intent(App.getContext(), AboutActivity.class));
           }
           Toast.makeText(App.getContext(), R.string.thank_you, Toast.LENGTH_LONG).show();
         });

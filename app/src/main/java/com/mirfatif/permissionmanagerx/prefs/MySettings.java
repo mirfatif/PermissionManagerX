@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.SystemClock;
 import android.text.TextUtils;
-import androidx.preference.PreferenceManager;
 import androidx.room.Room;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.Utils;
@@ -43,7 +42,7 @@ public class MySettings {
   private final SharedPreferences mEncPrefs;
 
   private MySettings() {
-    mPrefs = PreferenceManager.getDefaultSharedPreferences(App.getContext());
+    mPrefs = Utils.getDefPrefs();
     mEncPrefs = Utils.getEncPrefs();
     mExcludedAppsPrefKey = getString(R.string.pref_filter_excluded_apps_key);
     mExcludedPermsPrefKey = getString(R.string.pref_filter_excluded_perms_key);
@@ -152,7 +151,7 @@ public class MySettings {
     }
   }
 
-  private void savePref(int key, int integer) {
+  public void savePref(int key, int integer) {
     String prefKey = getString(key);
     if (prefKey.endsWith("_enc")) {
       mEncPrefs.edit().putInt(prefKey, integer).apply();

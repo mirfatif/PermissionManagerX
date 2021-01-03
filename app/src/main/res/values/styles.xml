@@ -54,4 +54,41 @@
     <item name="android:background">@drawable/bottom_sheet_background</item>
   </style>
 
+  <!--Common styles-->
+  <style name="aboutActivityIconImg">
+    <item name="android:layout_width">24dp</item>
+    <item name="android:layout_height">24dp</item>
+    <item name="android:layout_gravity">center</item>
+    <item name="android:layout_marginEnd">8dp</item>
+  </style>
+
+  <style name="aboutActivityItemContainer">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:paddingTop">8dp</item>
+    <item name="android:paddingBottom">8dp</item>
+    <item name="android:orientation">vertical</item>
+    <item name="android:background">?android:attr/selectableItemBackground</item>
+  </style>
+
+  <style name="aboutActivityItemTitle">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textStyle">bold</item>
+    <item name="android:textSize">16sp</item>
+  </style>
+
+  <style name="aboutActivityItemSummary">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:titleMarginTop">2dp</item>
+  </style>
+
+  <style name="aboutActivityPaidFeatureItem">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:titleMarginTop">2dp</item>
+    <item name="android:drawablePadding">4dp</item>
+  </style>
+
 </resources>

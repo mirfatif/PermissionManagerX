@@ -340,7 +340,7 @@ public class MainActivity extends BaseActivity {
       if (mMySettings.isDebug()) {
         Util.debugLog(TAG, "PkgClickListener: Package received: " + pkg.getLabel());
       }
-      Intent intent = new Intent().setClass(App.getContext(), PackageActivity.class);
+      Intent intent = new Intent(App.getContext(), PackageActivity.class);
       intent.putExtra(EXTRA_PKG_POSITION, mPackageParser.getPackagePosition(pkg));
       startActivity(intent);
     };
@@ -734,6 +734,10 @@ public class MainActivity extends BaseActivity {
                       android.R.string.ok, (dialog, which) -> openDrawerForPrivileges())
                   .setNeutralButton(
                       R.string.do_not_remind, (d, which) -> mMySettings.setPrivReminderOff())
+                  .setNegativeButton(
+                      R.string.get_help,
+                      (dialog, which) ->
+                          startActivity(new Intent(App.getContext(), HelpActivity.class)))
                   .setTitle(R.string.privileges)
                   .setMessage(getString(R.string.grant_root_or_adb));
           Utils.runInFg(

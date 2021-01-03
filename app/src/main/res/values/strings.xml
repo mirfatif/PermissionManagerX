@@ -15,6 +15,7 @@
   <string name="contact">Write Now</string>
   <string name="i_will">I Will</string>
   <string name="do_not_remind">Don\'t Remind</string>
+  <string name="get_help">Get Help</string>
 
   <!--App-->
   <string name="device_low_memory">Device is getting critically low on memory</string>
@@ -48,7 +49,7 @@
   <!--MainActivity strings-->
   <string name="deep_search">Deep Search (Permissions)</string>
   <string name="case_sensitive_search">Case Sensitive Search</string>
-  <string name="grant_root_or_adb">Grant root access or connect to ADB to start Privileged Daemon.</string>
+  <string name="grant_root_or_adb">Grant root access or connect to ADB to start privileged process.</string>
   <string name="logging">Logging</string>
   <string name="start_logging">Start logging</string>
   <string name="logging_warning">App may respond slow due to logging, and log file may grow up to very
@@ -220,4 +221,8 @@
   <integer name="channel_app_update">100</integer>
   <string name="channel_crash_report">Crash Report</string>
   <integer name="channel_crash_report">200</integer>
+
+  <!--HelpActivity-->
+  <string name="zoom_in_menu_item">Zoom In</string>
+  <string name="zoom_out_menu_item">Zoom Out</string>
 </resources>

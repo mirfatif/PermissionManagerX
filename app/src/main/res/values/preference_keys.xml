@@ -119,4 +119,8 @@
   </string>
   <string name="pref_settings_privileges_reminder_key">pref_settings_privileges_reminder</string>
   <bool name="pref_settings_privileges_reminder_default">true</bool>
+
+  <!--HelpActivity-->
+  <string name="pref_help_font_size_key">pref_help_font_size</string>
+  <integer name="pref_help_font_size_default">14</integer>
 </resources>

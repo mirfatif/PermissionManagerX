@@ -48,7 +48,7 @@ public class App extends Application {
     // User is waiting for the first glance. Free the main thread.
     Utils.runInBg(
         () -> {
-          mAppFlavor = new AppFlavor(App.this);
+          mAppFlavor = new AppFlavor();
           mAppFlavor.onCreated();
         });
   }

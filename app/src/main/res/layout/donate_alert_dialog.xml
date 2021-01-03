@@ -1,36 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_height="wrap_content"
-  android:layout_width="match_parent"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
-  android:animateLayoutChanges="true">
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:animateLayoutChanges="true"
+  android:scrollbars="vertical">
 
   <LinearLayout
-    android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
     android:padding="16dp"
     android:gravity="center_horizontal"
-    android:layout_gravity="center_horizontal">
+    android:orientation="vertical">
 
     <LinearLayout
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="center_horizontal"
-      android:layout_marginBottom="16dp">
+      android:layout_marginBottom="16dp"
+      android:layout_gravity="center_horizontal">
 
       <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/bitcoin_button"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_margin="4dp"
-        app:fabCustomSize="56dp"
-        app:maxImageSize="36dp"
         android:src="@drawable/bitcoin"
         app:backgroundTint="?attr/accentColor"
         app:borderWidth="4dp"
         app:elevation="4dp"
+        app:fabCustomSize="56dp"
+        app:maxImageSize="36dp"
         tools:ignore="ContentDescription" />
 
       <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -38,12 +39,12 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_margin="4dp"
-        app:fabCustomSize="56dp"
-        app:maxImageSize="36dp"
         android:src="@drawable/dollar"
         app:backgroundTint="?attr/accentColor"
         app:borderWidth="4dp"
         app:elevation="4dp"
+        app:fabCustomSize="56dp"
+        app:maxImageSize="36dp"
         tools:ignore="ContentDescription" />
 
       <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -51,12 +52,12 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_margin="4dp"
-        app:fabCustomSize="56dp"
-        app:maxImageSize="36dp"
         android:src="@drawable/play_store"
         app:backgroundTint="?attr/accentColor"
         app:borderWidth="4dp"
         app:elevation="4dp"
+        app:fabCustomSize="56dp"
+        app:maxImageSize="36dp"
         tools:ignore="ContentDescription" />
 
       <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -64,12 +65,12 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_margin="4dp"
-        app:fabCustomSize="56dp"
-        app:maxImageSize="36dp"
         android:src="@drawable/redeem"
         app:backgroundTint="?attr/accentColor"
         app:borderWidth="4dp"
         app:elevation="4dp"
+        app:fabCustomSize="56dp"
+        app:maxImageSize="36dp"
         tools:ignore="ContentDescription" />
 
     </LinearLayout>
@@ -84,59 +85,59 @@
 
       <TextView
         android:id="@+id/bitcoin_link"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="4dp"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:text="@string/bitcoin_link" />
+        android:text="@string/bitcoin_link"
+        android:textSize="16sp" />
 
       <ImageView
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:src="@drawable/bitcoin_qr_code"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        android:src="@drawable/bitcoin_qr_code"
         tools:ignore="ContentDescription" />
 
       <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/bitcoin_address"
-        android:padding="4dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        android:padding="4dp"
         android:background="@drawable/rectangular_border"
+        android:text="@string/bitcoin_address"
         android:textIsSelectable="true" />
 
     </LinearLayout>
 
     <TextView
       android:id="@+id/bank_account_link"
+      android:textStyle="bold"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:textStyle="bold"
-      android:textSize="16sp"
       android:text="@string/bank_account_link"
+      android:textSize="16sp"
       android:visibility="gone" />
 
     <TextView
       android:id="@+id/play_store_link"
+      android:textStyle="bold"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:textStyle="bold"
-      android:textSize="16sp"
       android:text="@string/play_store_link"
+      android:textSize="16sp"
       android:visibility="gone" />
 
     <TextView
       android:id="@+id/redeem_code_link"
+      android:textStyle="bold"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:textStyle="bold"
-      android:textSize="16sp"
       android:text="@string/redeem_code_link"
+      android:textSize="16sp"
       android:visibility="gone" />
 
   </LinearLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

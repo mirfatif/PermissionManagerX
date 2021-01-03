@@ -319,9 +319,7 @@ public class PackageActivity extends BaseActivity {
         }
         findViewById(R.id.open_filter_settings)
             .setOnClickListener(
-                v ->
-                    startActivity(
-                        new Intent().setClass(App.getContext(), FilterSettingsActivity.class)));
+                v -> startActivity(new Intent(App.getContext(), FilterSettingsActivity.class)));
         findViewById(R.id.no_permissions_view).setVisibility(View.VISIBLE);
         findViewById(R.id.open_filter_settings).setVisibility(View.VISIBLE);
       } else {
