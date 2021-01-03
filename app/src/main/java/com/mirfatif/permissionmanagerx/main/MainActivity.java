@@ -1,5 +1,6 @@
 package com.mirfatif.permissionmanagerx.main;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Process;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -741,9 +743,20 @@ public class MainActivity extends BaseActivity {
                   .setTitle(R.string.privileges)
                   .setMessage(getString(R.string.grant_root_or_adb));
           Utils.runInFg(
-              () ->
-                  new AlertDialogFragment(builder.create())
-                      .show(mFM, TAG_GRANT_ROOT_OR_ADB, false));
+              () -> {
+                AlertDialog dialog = builder.create();
+                dialog.setOnShowListener(
+                    d -> {
+                      // With longer button text, unnecessary bottom padding is added to dialog.
+                      Button b = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
+                      b.setPadding(
+                          b.getPaddingLeft(),
+                          b.getPaddingTop(),
+                          b.getPaddingRight() / 2,
+                          b.getPaddingBottom());
+                    });
+                new AlertDialogFragment(dialog).show(mFM, TAG_GRANT_ROOT_OR_ADB, false);
+              });
         }
       }
     }
