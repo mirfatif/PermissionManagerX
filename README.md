@@ -5,7 +5,7 @@ eXtended Permission Manager for Android - view and set Manifest Permissions and 
 <a href="https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="100"></a>
 <a href="https://apt.izzysoft.de/fdroid/index/apk/com.mirfatif.permissionmanagerx"><img alt="Get it on F-Droid" src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="100"></a>
 <a href="https://amzn.to/2Ij50j4"><img alt="Available at Amazon AppStore" src="https://user-images.githubusercontent.com/33040459/98554253-56c9d600-22c2-11eb-83ba-bd24fb1263ae.png" height="100"></a>
-<a href="https://labs.xda-developers.com/store/app/com.mirfatif.permissionmanagerx"><img alt="Get it on XDALabs" src="https://user-images.githubusercontent.com/33040459/98555696-110e0d00-22c4-11eb-8dd2-35903886cfce.png" height="100"></a>
+<a href="https://forum.xda-developers.com/t/app-7-0-permission-manager-x-manage-appops-and-manifest-permissions.4187657"><img alt="Get it on XDALabs" src="https://user-images.githubusercontent.com/33040459/98555696-110e0d00-22c4-11eb-8dd2-35903886cfce.png" height="100"></a>
 
 ## Features
 Using e<b>X</b>tended <b>Permission Manager</b>, for each installed app, on single screen, you can:
