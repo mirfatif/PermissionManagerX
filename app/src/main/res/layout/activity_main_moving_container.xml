@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:id="@+id/moving_container"
   android:layout_width="match_parent"
@@ -11,7 +11,7 @@
     android:layout_height="1dp"
     android:background="?attr/accentTransColor" />
 
-  <LinearLayout
+  <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
     android:id="@+id/progress_bar_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -58,20 +58,20 @@
       android:layout_height="1dp"
       android:background="@color/dynamicForeground" />
 
-  </LinearLayout>
+  </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
-  <androidx.coordinatorlayout.widget.CoordinatorLayout
+  <com.mirfatif.permissionmanagerx.ui.base.MyCoordinatorLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
+    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
       android:id="@+id/feedback_container"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"
       android:visibility="gone">
 
-      <LinearLayout
+      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="8dp"
@@ -110,13 +110,13 @@
           android:text="@string/yes"
           android:textColor="?attr/accentColor" />
 
-      </LinearLayout>
+      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
       <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/dynamicForeground" />
 
-    </LinearLayout>
-  </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</LinearLayout>
+    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+  </com.mirfatif.permissionmanagerx.ui.base.MyCoordinatorLayout>
+</com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>

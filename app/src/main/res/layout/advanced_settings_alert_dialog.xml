@@ -3,10 +3,9 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:animateLayoutChanges="true"
   android:scrollbars="vertical">
 
-  <LinearLayout
+  <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="8dp"
@@ -15,7 +14,7 @@
     android:paddingEnd="24dp"
     android:orientation="vertical">
 
-    <LinearLayout
+    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginBottom="4dp">
@@ -37,7 +36,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginEnd="-2dp"/>
 
-    </LinearLayout>
+    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
     <View
       android:layout_width="match_parent"
@@ -54,7 +53,7 @@
       android:layout_marginBottom="8dp"
       android:textColor="?attr/accentColor"/>
 
-    <LinearLayout
+    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
 
@@ -80,7 +79,7 @@
         android:inputType="number"
         tools:ignore="Autofill"/>
 
-    </LinearLayout>
+    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
     <View
       android:layout_width="match_parent"
@@ -97,7 +96,7 @@
       android:layout_marginBottom="8dp"
       android:textColor="?attr/accentColor"/>
 
-    <LinearLayout
+    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="4dp"
@@ -120,9 +119,9 @@
         android:layout_marginStart="4dp"
         android:layout_marginEnd="-2dp"/>
 
-    </LinearLayout>
+    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
-    <LinearLayout
+    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="4dp"
@@ -157,9 +156,9 @@
         android:src="@drawable/arrow_drop_down"
         tools:ignore="ContentDescription"/>
 
-    </LinearLayout>
+    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
-    <LinearLayout
+    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
@@ -194,7 +193,6 @@
         android:src="@drawable/arrow_drop_down"
         tools:ignore="ContentDescription"/>
 
-    </LinearLayout>
-
-  </LinearLayout>
+    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+  </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 </androidx.core.widget.NestedScrollView>

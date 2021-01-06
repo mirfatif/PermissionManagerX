@@ -35,24 +35,20 @@ public class MoveUpwardBehavior extends CoordinatorLayout.Behavior<View> {
 
     float translationY = Math.min(0, dependency.getTranslationY() - dependency.getHeight());
 
-    /**
-     * Cancel if animation from {@link #onDependentViewRemoved(CoordinatorLayout, View, View)} is in
-     * progress
-     */
-    child.findViewById(R.id.moving_container).animate().cancel();
+    MainActivityFlavor.onSnackBarMoved(child.findViewById(R.id.moving_container));
 
-    // Move the container up.
+    // Move the container up and down with SnackBar.
     child.findViewById(R.id.moving_container).setTranslationY(translationY);
     return true;
   }
 
-  // Swipe the Snackbar.
+  // Swipe the SnackBar.
   @Override
   public void onDependentViewRemoved(
       @NonNull CoordinatorLayout parent, @NonNull View child, @NonNull View dependency) {
     super.onDependentViewRemoved(parent, child, dependency);
 
-    // Slowly move container down.
-    child.findViewById(R.id.moving_container).animate().translationY(0).start();
+    // Move the container down.
+    MainActivityFlavor.onSnackBarSwiped(child.findViewById(R.id.moving_container));
   }
 }

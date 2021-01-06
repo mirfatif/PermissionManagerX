@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -42,6 +43,7 @@ import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.PermClickListener;
 import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.PermClickListenerWithLoc;
 import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.PermLongClickListener;
 import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.PermSpinnerSelectListener;
+import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
 import java.util.ArrayList;
@@ -307,8 +309,10 @@ public class PackageActivity extends BaseActivity {
   }
 
   private void checkEmptyPermissionsList() {
+    TextView noPermissionsView = findViewById(R.id.no_permissions_view);
+    Button filterSettingsButton = findViewById(R.id.open_filter_settings);
+
     if (mPermissionsList.size() == 0) {
-      TextView noPermissionsView = findViewById(R.id.no_permissions_view);
       String message;
       if (mPackage.getTotalPermCount() != 0) {
         if (mPackage.getTotalPermCount() == 1) {
@@ -317,22 +321,22 @@ public class PackageActivity extends BaseActivity {
           message =
               getString(R.string.count_permissions_filtered_out, mPackage.getTotalPermCount());
         }
-        findViewById(R.id.open_filter_settings)
-            .setOnClickListener(
-                v -> startActivity(new Intent(App.getContext(), FilterSettingsActivity.class)));
-        findViewById(R.id.no_permissions_view).setVisibility(View.VISIBLE);
-        findViewById(R.id.open_filter_settings).setVisibility(View.VISIBLE);
+        filterSettingsButton.setOnClickListener(
+            v -> startActivity(new Intent(App.getContext(), FilterSettingsActivity.class)));
+        noPermissionsView.setVisibility(View.VISIBLE);
+        filterSettingsButton.setVisibility(View.VISIBLE);
       } else {
         message = getString(R.string.requested_no_permissions);
-        findViewById(R.id.open_filter_settings).setVisibility(View.GONE);
+        filterSettingsButton.setVisibility(View.GONE);
       }
       noPermissionsView.setText(message);
-      findViewById(R.id.package_recycler_view).setVisibility(View.GONE);
+      mRefreshLayout.setVisibility(View.GONE);
     } else {
-      findViewById(R.id.package_recycler_view).setVisibility(View.VISIBLE);
-      findViewById(R.id.no_permissions_view).setVisibility(View.GONE);
-      findViewById(R.id.open_filter_settings).setVisibility(View.GONE);
+      mRefreshLayout.setVisibility(View.VISIBLE);
+      noPermissionsView.setVisibility(View.GONE);
+      filterSettingsButton.setVisibility(View.GONE);
     }
+    invalidateOptionsMenu();
   }
 
   private void updatePackage() {
@@ -392,6 +396,15 @@ public class PackageActivity extends BaseActivity {
     return super.onCreateOptionsMenu(menu);
   }
 
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    menu.findItem(R.id.action_search).setVisible(mPermissionsList.size() > 0);
+    menu.findItem(R.id.action_reset_app_ops).setVisible(mPermissionsList.size() > 0);
+    menu.findItem(R.id.action_set_all_references).setVisible(mPermissionsList.size() > 0);
+    menu.findItem(R.id.action_clear_references).setVisible(mPermissionsList.size() > 0);
+    return super.onPrepareOptionsMenu(menu);
+  }
+
   private void handleSearchQuery() {
     CharSequence queryText = mSearchView == null ? null : mSearchView.getQuery();
     if (queryText == null || TextUtils.isEmpty(queryText)) {
@@ -414,12 +427,15 @@ public class PackageActivity extends BaseActivity {
 
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    if (mMySettings.isDebug())
+    if (mMySettings.isDebug()) {
       Util.debugLog("PackageActivity", "onOptionsItemSelected(): " + item.getTitle());
+    }
+
     if (item.getItemId() == R.id.action_information) {
       startActivity(
           new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
               .setData(Uri.parse("package:" + mPackage.getName())));
+      return true;
     }
 
     if (item.getItemId() == R.id.action_reset_app_ops && checkPrivileges()) {
@@ -451,6 +467,8 @@ public class PackageActivity extends BaseActivity {
               .setMessage(R.string.reset_app_ops_confirmation)
               .create();
       new AlertDialogFragment(dialog).show(mFM, "RESET_APP_OPS_CONFIRM", false);
+
+      return true;
     }
 
     if (item.getItemId() == R.id.action_set_all_references) {
@@ -484,7 +502,10 @@ public class PackageActivity extends BaseActivity {
               .setMessage(R.string.set_references_confirmation)
               .create();
       new AlertDialogFragment(dialog).show(mFM, "SET_REF_CONFIRM", false);
+
+      return true;
     }
+
     if (item.getItemId() == R.id.action_clear_references) {
       AlertDialog dialog =
           new Builder(this)
@@ -505,6 +526,8 @@ public class PackageActivity extends BaseActivity {
               .setMessage(R.string.clear_references_confirmation)
               .create();
       new AlertDialogFragment(dialog).show(mFM, "CLEAR_REF_CONFIRM", false);
+
+      return true;
     }
 
     return super.onOptionsItemSelected(item);

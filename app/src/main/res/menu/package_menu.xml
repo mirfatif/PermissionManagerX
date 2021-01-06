@@ -6,7 +6,7 @@
     android:id="@+id/action_search"
     android:icon="@android:drawable/ic_menu_search"
     android:title="@string/search_menu_item"
-    app:actionViewClass="androidx.appcompat.widget.SearchView"
+    app:actionViewClass="com.mirfatif.permissionmanagerx.ui.base.MySearchView"
     app:showAsAction="ifRoom"/>
 
   <item

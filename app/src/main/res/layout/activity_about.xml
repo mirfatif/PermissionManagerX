@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:animateLayoutChanges="true"
   android:orientation="vertical">
 
   <View
@@ -16,7 +15,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_margin="8dp"
@@ -52,7 +51,7 @@
         android:layout_height="1dp"
         android:background="?attr/accentColor" />
 
-      <LinearLayout
+      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -61,7 +60,7 @@
           android:src="@drawable/email"
           tools:ignore="ContentDescription" />
 
-        <LinearLayout
+        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
           android:id="@+id/contact"
           style="@style/aboutActivityItemContainer">
 
@@ -73,16 +72,16 @@
             style="@style/aboutActivityItemSummary"
             android:text="@string/email_address" />
 
-        </LinearLayout>
+        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
-      </LinearLayout>
+      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
       <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?attr/accentColor" />
 
-      <LinearLayout
+      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -91,7 +90,7 @@
           android:src="@drawable/telegram"
           tools:ignore="ContentDescription" />
 
-        <LinearLayout
+        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
           android:id="@+id/telegram"
           style="@style/aboutActivityItemContainer">
 
@@ -103,15 +102,15 @@
             style="@style/aboutActivityItemSummary"
             android:text="@string/telegram_link" />
 
-        </LinearLayout>
-      </LinearLayout>
+        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
       <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?attr/accentColor" />
 
-      <LinearLayout
+      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -120,7 +119,7 @@
           android:src="@drawable/github_mark"
           tools:ignore="ContentDescription" />
 
-        <LinearLayout
+        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
           android:id="@+id/source_code"
           style="@style/aboutActivityItemContainer">
 
@@ -132,15 +131,15 @@
             style="@style/aboutActivityItemSummary"
             android:text="@string/source_url" />
 
-        </LinearLayout>
-      </LinearLayout>
+        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
       <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?attr/accentColor" />
 
-      <LinearLayout
+      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -149,7 +148,7 @@
           android:src="@drawable/issues"
           tools:ignore="ContentDescription" />
 
-        <LinearLayout
+        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
           android:id="@+id/issues"
           style="@style/aboutActivityItemContainer">
 
@@ -161,15 +160,15 @@
             style="@style/aboutActivityItemSummary"
             android:text="@string/report_issues_summary" />
 
-        </LinearLayout>
-      </LinearLayout>
+        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
       <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?attr/accentColor" />
 
-      <LinearLayout
+      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -178,7 +177,7 @@
           android:src="@drawable/log"
           tools:ignore="ContentDescription" />
 
-        <LinearLayout
+        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
           android:id="@+id/logging"
           style="@style/aboutActivityItemContainer">
 
@@ -191,15 +190,15 @@
             style="@style/aboutActivityItemSummary"
             android:text="@string/collect_logs_summary" />
 
-        </LinearLayout>
-      </LinearLayout>
+        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
       <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?attr/accentColor" />
 
-      <LinearLayout
+      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -208,7 +207,7 @@
           android:src="@drawable/star"
           tools:ignore="ContentDescription" />
 
-        <LinearLayout
+        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
           android:id="@+id/rating"
           style="@style/aboutActivityItemContainer">
 
@@ -220,21 +219,21 @@
             style="@style/aboutActivityItemSummary"
             android:text="@string/app_rating_summary" />
 
-        </LinearLayout>
-      </LinearLayout>
+        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
       <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?attr/accentColor" />
 
-      <LinearLayout
+      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
         android:id="@+id/paid_features_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content">
 
@@ -243,7 +242,7 @@
             android:src="@drawable/paid"
             tools:ignore="ContentDescription" />
 
-          <LinearLayout
+          <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
             android:id="@+id/paid_features"
             style="@style/aboutActivityItemContainer">
 
@@ -257,7 +256,7 @@
               android:ellipsize="end"
               android:maxLines="1" />
 
-            <LinearLayout
+            <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
               android:id="@+id/paid_features_detail"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -284,18 +283,18 @@
                 android:text="@string/paid_feature4"
                 app:drawableStartCompat="@drawable/bullet" />
 
-            </LinearLayout>
-          </LinearLayout>
-        </LinearLayout>
+            </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+          </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
         <View
           android:layout_width="match_parent"
           android:layout_height="1dp"
           android:background="?attr/accentColor" />
 
-      </LinearLayout>
+      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
-      <LinearLayout
+      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -304,7 +303,7 @@
           android:src="@drawable/update"
           tools:ignore="ContentDescription" />
 
-        <LinearLayout
+        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
           android:id="@+id/check_update"
           style="@style/aboutActivityItemContainer">
 
@@ -317,14 +316,14 @@
             style="@style/aboutActivityItemSummary"
             android:text="@string/update_summary" />
 
-        </LinearLayout>
-      </LinearLayout>
+        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
       <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?attr/accentColor" />
 
-    </LinearLayout>
+    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
   </androidx.core.widget.NestedScrollView>
-</LinearLayout>
+</com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>

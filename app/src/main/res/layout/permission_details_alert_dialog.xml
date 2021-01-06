@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:padding="20dp"
-  android:orientation="vertical"
-  android:animateLayoutChanges="true">
+  android:orientation="vertical">
 
   <TextView
     android:id="@+id/permission_name_view"
@@ -49,4 +48,4 @@
     android:layout_height="wrap_content"
     android:textColor="@color/dynamic_text_color"/>
 
-</LinearLayout>
+</com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>

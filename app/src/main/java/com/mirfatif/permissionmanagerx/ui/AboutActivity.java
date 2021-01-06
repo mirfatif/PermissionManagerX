@@ -19,6 +19,7 @@ import com.mirfatif.permissionmanagerx.main.MainActivity;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
 import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
+import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.privtasks.Commands;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;

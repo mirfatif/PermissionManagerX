@@ -7,22 +7,23 @@ import android.view.View;
 import android.widget.FrameLayout;
 import com.mirfatif.permissionmanagerx.Utils;
 
-public class MyFrameLayout extends FrameLayout {
+public class ProgressFrameLayout extends FrameLayout {
 
-  public MyFrameLayout(Context context) {
+  public ProgressFrameLayout(Context context) {
     super(context);
   }
 
-  public MyFrameLayout(Context context, AttributeSet attrs) {
+  public ProgressFrameLayout(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
-  public MyFrameLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+  public ProgressFrameLayout(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  public MyFrameLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+  public ProgressFrameLayout(
+      Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
   }
 

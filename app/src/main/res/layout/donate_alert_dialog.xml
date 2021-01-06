@@ -4,10 +4,9 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:animateLayoutChanges="true"
   android:scrollbars="vertical">
 
-  <LinearLayout
+  <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
@@ -15,7 +14,7 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <LinearLayout
+    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginBottom="16dp"
@@ -73,9 +72,9 @@
         app:maxImageSize="36dp"
         tools:ignore="ContentDescription" />
 
-    </LinearLayout>
+    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
-    <LinearLayout
+    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
       android:id="@+id/bitcoin_container"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -110,7 +109,7 @@
         android:text="@string/bitcoin_address"
         android:textIsSelectable="true" />
 
-    </LinearLayout>
+    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
     <TextView
       android:id="@+id/bank_account_link"
@@ -139,5 +138,5 @@
       android:textSize="16sp"
       android:visibility="gone" />
 
-  </LinearLayout>
+  </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -3,8 +3,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:orientation="horizontal"
-  android:animateLayoutChanges="true">
+  android:orientation="horizontal">
 
   <View
     android:id="@+id/reference_indication_view"
@@ -57,5 +56,4 @@
       android:layout_margin="1dp"/>
 
   </LinearLayout>
-
 </LinearLayout>

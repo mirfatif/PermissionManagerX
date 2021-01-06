@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentManager;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
-import com.mirfatif.permissionmanagerx.ui.BaseActivity;
+import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.privtasks.Util;
 
 public class FilterSettingsActivity extends BaseActivity {

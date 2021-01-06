@@ -48,13 +48,13 @@ import com.mirfatif.permissionmanagerx.prefs.settings.SettingsActivity;
 import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.ui.AboutActivity;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
-import com.mirfatif.permissionmanagerx.ui.BaseActivity;
 import com.mirfatif.permissionmanagerx.ui.HelpActivity;
 import com.mirfatif.permissionmanagerx.ui.MyViewModel;
 import com.mirfatif.permissionmanagerx.ui.PackageActivity;
 import com.mirfatif.permissionmanagerx.ui.PackageAdapter;
 import com.mirfatif.permissionmanagerx.ui.PackageAdapter.PkgClickListener;
 import com.mirfatif.permissionmanagerx.ui.PackageAdapter.PkgLongClickListener;
+import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
 import java.util.ArrayList;
@@ -82,7 +82,7 @@ public class MainActivity extends BaseActivity {
   private SwipeRefreshLayout mRefreshLayout;
   private LinearLayoutManager mLayoutManager;
   private ProgressBar mProgressBar;
-  private MyFrameLayout mRoundProgressContainer;
+  private ProgressFrameLayout mRoundProgressContainer;
   private TextView mRoundProgressTextView;
   private LinearLayout mProgressBarContainer;
   private SearchView mSearchView;
@@ -1024,7 +1024,7 @@ public class MainActivity extends BaseActivity {
         () -> new AlertDialogFragment(builder.create()).show(mFM, "LOGGING_WARNING", false));
   }
 
-  MyFrameLayout getRoundProgressContainer() {
+  ProgressFrameLayout getRoundProgressContainer() {
     return mRoundProgressContainer;
   }
 

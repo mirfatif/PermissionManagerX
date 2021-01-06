@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:layout_marginBottom="8dp"
-  android:animateLayoutChanges="true"
   android:orientation="vertical">
 
   <View
@@ -11,9 +10,9 @@
     android:layout_height="1dp"
     android:background="?attr/accentColor" />
 
-  <WebView
+  <com.mirfatif.permissionmanagerx.ui.base.MyWebView
     android:id="@+id/help_web_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" />
 
-</LinearLayout>
+</com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>

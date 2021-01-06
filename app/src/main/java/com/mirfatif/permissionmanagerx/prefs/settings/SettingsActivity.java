@@ -9,7 +9,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceFragmentCompat.OnPreferenceStartFragmentCallback;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.Utils;
-import com.mirfatif.permissionmanagerx.ui.BaseActivity;
+import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 
 public class SettingsActivity extends BaseActivity implements OnPreferenceStartFragmentCallback {
 
