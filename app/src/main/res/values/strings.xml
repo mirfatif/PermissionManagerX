@@ -17,6 +17,7 @@
   <string name="rate">Rate now</string>
   <string name="do_not_remind">Don\'t Remind</string>
   <string name="get_help">Get Help</string>
+  <string name="switch_to_adb">Switch to ADB</string>
 
   <!--App-->
   <string name="device_low_memory">Device is getting critically low on memory</string>
@@ -78,6 +79,7 @@
   <string name="run_main_app">Make sure that you run the app from primary user profile and grant
     privileges at least once.
   </string>
+  <string name="adb_switch_fail">Switching to ADB failed</string>
   <string name="backup">Backup</string>
   <string name="restore">Restore</string>
   <string name="choose_backup_restore">You can backup or restore preferences and permission references.</string>

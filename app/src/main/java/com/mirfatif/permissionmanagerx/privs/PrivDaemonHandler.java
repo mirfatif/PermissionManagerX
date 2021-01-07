@@ -17,7 +17,6 @@ import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.net.Inet4Address;
 import java.net.Socket;
 import java.util.Arrays;
@@ -42,7 +41,7 @@ public class PrivDaemonHandler {
 
   private PrivDaemonHandler() {}
 
-  public Boolean startDaemon() {
+  public Boolean startDaemon(boolean preferRoot) {
 
     // Required if running as root (ADBD or su)
     File binDir = new File(App.getContext().getFilesDir(), "bin");
@@ -85,7 +84,8 @@ public class PrivDaemonHandler {
     }
 
     MySettings mySettings = MySettings.getInstance();
-    boolean isRootGranted = mySettings.isRootGranted();
+    boolean isAdbConnected = mySettings.isAdbConnected();
+    mPreferRoot = mySettings.isRootGranted() && (preferRoot || !isAdbConnected);
 
     String daemonDex = "daemon.dex";
     String daemonScript = "daemon.sh";
@@ -108,7 +108,7 @@ public class PrivDaemonHandler {
           cmd = "sh -c 'exec cat - >" + daemonScriptPath + "'";
         }
 
-        if (isRootGranted) {
+        if (mPreferRoot) {
           String set_priv = binDir + "/set_priv -u " + 2000 + " -g " + 2000;
           if (new File("/proc/self/ns/mnt").exists()) {
             set_priv += " --context u:r:shell:s0";
@@ -121,7 +121,7 @@ public class PrivDaemonHandler {
           }
           outStream = suProcess.getOutputStream();
           inReader = new BufferedReader(new InputStreamReader(suProcess.getInputStream()));
-        } else if (mySettings.isAdbConnected()) {
+        } else if (isAdbConnected) {
           adb = new Adb("exec " + cmd);
           outStream = adb.getOutputStream();
           inReader = new BufferedReader(adb.getReader());
@@ -134,7 +134,7 @@ public class PrivDaemonHandler {
         Utils.runInBg(
             () -> {
               try {
-                readProcessLog(new BufferedReader(finalReader), "DaemonFilesExtraction");
+                Utils.readProcessLog(new BufferedReader(finalReader), "DaemonFilesExtraction");
               } catch (IOException ignored) {
               }
             });
@@ -194,7 +194,7 @@ public class PrivDaemonHandler {
 
     String daemonCommand = "exec sh " + daemonScriptPath;
 
-    if (isRootGranted) {
+    if (mPreferRoot) {
       if (useSocket) {
         params += " " + Commands.CREATE_SOCKET;
       }
@@ -211,7 +211,7 @@ public class PrivDaemonHandler {
       Process finalSuProcess = suProcess;
       Utils.runInBg(() -> readDaemonMessages(finalSuProcess, null));
 
-    } else if (mySettings.isAdbConnected()) {
+    } else if (isAdbConnected) {
       params += " " + Commands.CREATE_SOCKET;
       useSocket = true;
       try {
@@ -251,7 +251,7 @@ public class PrivDaemonHandler {
 
       // We have single input stream to read in case of ADB, so
       // we couldn't read log messages before receiving PID and port number.
-      if (!isRootGranted) {
+      if (!mPreferRoot) {
         Adb finalAdb = adb;
         Utils.runInBg(() -> readDaemonMessages(null, finalAdb));
       }
@@ -268,9 +268,13 @@ public class PrivDaemonHandler {
         responseInStream = new ObjectInputStream(socket.getInputStream());
 
         // cmdWriter and responseInStream both are using socket, so close su process streams.
-        if (isRootGranted) {
-          outStream.close();
-          inStream.close();
+        if (mPreferRoot) {
+          if (outStream != null) {
+            outStream.close();
+          }
+          if (inStream != null) {
+            inStream.close();
+          }
         }
       }
 
@@ -292,7 +296,7 @@ public class PrivDaemonHandler {
       mySettings.setLoggingFullyStarted();
       String logCommand = "logcat --pid " + pid;
 
-      if (isRootGranted) {
+      if (mPreferRoot) {
         logCommand =
             binDir
                 + "/set_priv -u "
@@ -321,6 +325,8 @@ public class PrivDaemonHandler {
     return true;
   }
 
+  private boolean mPreferRoot;
+
   private void readDaemonMessages(Process process, Adb adb) {
     BufferedReader reader;
     if (process != null) {
@@ -332,7 +338,7 @@ public class PrivDaemonHandler {
     }
 
     try {
-      readProcessLog(reader, DAEMON_CLASS_NAME);
+      Utils.readProcessLog(reader, DAEMON_CLASS_NAME);
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
@@ -343,26 +349,8 @@ public class PrivDaemonHandler {
         Log.e(TAG, "Privileged daemon died");
         SystemClock.sleep(5000);
         Log.i(TAG, "Restarting privileged daemon");
-        startDaemon();
+        startDaemon(mPreferRoot);
       }
-    }
-  }
-
-  private void readProcessLog(BufferedReader reader, String tag) throws IOException {
-    StringWriter crashLogWriter = null;
-    String line;
-    while ((line = reader.readLine()) != null) {
-      if (line.contains(Commands.CRASH_LOG_STARTS)) {
-        crashLogWriter = new StringWriter();
-        continue;
-      }
-      if (crashLogWriter != null) {
-        crashLogWriter.append(line).append("\n");
-      }
-      Log.e(tag, line);
-    }
-    if (crashLogWriter != null) {
-      Utils.writeCrashLog(crashLogWriter.toString(), true);
     }
   }
 

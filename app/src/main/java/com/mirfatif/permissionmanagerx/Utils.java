@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -19,7 +20,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.browser.customtabs.CustomTabColorSchemeParams;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.browser.customtabs.CustomTabsService;
@@ -48,6 +51,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.security.GeneralSecurityException;
 import java.text.SimpleDateFormat;
@@ -135,6 +139,24 @@ public class Utils {
     } catch (IOException e) {
       e.printStackTrace();
       return null;
+    }
+  }
+
+  public static void readProcessLog(BufferedReader reader, String tag) throws IOException {
+    StringWriter crashLogWriter = null;
+    String line;
+    while ((line = reader.readLine()) != null) {
+      if (line.contains(Commands.CRASH_LOG_STARTS)) {
+        crashLogWriter = new StringWriter();
+        continue;
+      }
+      if (crashLogWriter != null) {
+        crashLogWriter.append(line).append("\n");
+      }
+      Log.e(tag, line);
+    }
+    if (crashLogWriter != null) {
+      writeCrashLog(crashLogWriter.toString(), true);
     }
   }
 
@@ -338,6 +360,15 @@ public class Utils {
 
   public static int getInteger(int resId) {
     return App.getContext().getResources().getInteger(resId);
+  }
+
+  // With longer button text, unnecessary bottom padding is added to dialog.
+  public static void removeButtonPadding(AlertDialog dialog) {
+    dialog.setOnShowListener(
+        d -> {
+          Button b = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
+          b.setPadding(b.getPaddingLeft(), 4, 4, 4);
+        });
   }
 
   //////////////////////////////////////////////////////////////////

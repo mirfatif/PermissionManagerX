@@ -1,6 +1,5 @@
 package com.mirfatif.permissionmanagerx.main;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Process;
@@ -10,7 +9,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -185,7 +183,7 @@ public class MainActivity extends BaseActivity {
                 }
               }
               // Check if we can read AppOps
-              startPrivDaemon(true);
+              startPrivDaemon(true, true);
             });
 
     RecyclerView recyclerView = findViewById(R.id.recycler_view);
@@ -418,7 +416,7 @@ public class MainActivity extends BaseActivity {
               mMyViewModel.getHiddenAPIsNotWorking().removeObservers(this);
 
               if (!mMySettings.isPrivDaemonAlive()) {
-                Utils.runInBg(() -> startPrivDaemon(false));
+                Utils.runInBg(() -> startPrivDaemon(false, true));
               }
               mMySettings.setUseHiddenAPIs(false);
               Toast.makeText(App.getContext(), R.string.hidden_apis_warning, Toast.LENGTH_LONG)
@@ -565,7 +563,7 @@ public class MainActivity extends BaseActivity {
         });
   }
 
-  private void showSnackBar(String text, int duration) {
+  void showSnackBar(String text, int duration) {
     Utils.runInFg(
         () -> {
           Snackbar snackBar = Snackbar.make(mProgressBarContainer, text, duration);
@@ -690,7 +688,7 @@ public class MainActivity extends BaseActivity {
   //////////////////////////// PRIVILEGES //////////////////////////
   //////////////////////////////////////////////////////////////////
 
-  private synchronized void startPrivDaemon(boolean isFirstRun) {
+  private synchronized void startPrivDaemon(boolean isFirstRun, boolean preferRoot) {
     if (!mMySettings.isPrivDaemonAlive()) {
       if (mMySettings.isDebug()) {
         Util.debugLog("startPrivDaemon", "Daemon is dead");
@@ -698,7 +696,7 @@ public class MainActivity extends BaseActivity {
       if (mMySettings.isRootGranted() || mMySettings.isAdbConnected()) {
         Utils.runInFg(() -> mRoundProgressTextView.setText(R.string.starting_daemon));
 
-        Boolean res = mPrivDaemonHandler.startDaemon();
+        Boolean res = mPrivDaemonHandler.startDaemon(preferRoot);
         String message = null;
         boolean showDialog = false;
         if (res == null) {
@@ -745,16 +743,7 @@ public class MainActivity extends BaseActivity {
           Utils.runInFg(
               () -> {
                 AlertDialog dialog = builder.create();
-                dialog.setOnShowListener(
-                    d -> {
-                      // With longer button text, unnecessary bottom padding is added to dialog.
-                      Button b = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
-                      b.setPadding(
-                          b.getPaddingLeft(),
-                          b.getPaddingTop(),
-                          b.getPaddingRight() / 2,
-                          b.getPaddingBottom());
-                    });
+                Utils.removeButtonPadding(dialog);
                 new AlertDialogFragment(dialog).show(mFM, TAG_GRANT_ROOT_OR_ADB, false);
               });
         }
@@ -781,14 +770,14 @@ public class MainActivity extends BaseActivity {
     }
   }
 
-  void restartPrivDaemon() {
+  void restartPrivDaemon(boolean preferRoot) {
     Utils.runInBg(
         () -> {
           if (mMySettings.isPrivDaemonAlive()) {
             mPrivDaemonHandler.sendRequest(Commands.SHUTDOWN);
             SystemClock.sleep(1000); // Let the previous processes cleanup
           }
-          startPrivDaemon(false);
+          startPrivDaemon(false, preferRoot);
         });
   }
 
@@ -819,7 +808,7 @@ public class MainActivity extends BaseActivity {
   //////////////////////// NAVIGATION DRAWER ///////////////////////
   //////////////////////////////////////////////////////////////////
 
-  private void setNavigationMenu() {
+  void setNavigationMenu() {
     if (mMySettings.isDebug()) {
       Util.debugLog("setNavigationMenu", "Called");
     }
@@ -889,7 +878,7 @@ public class MainActivity extends BaseActivity {
             if (Utils.checkRoot()) {
               showSnackBar(getString(R.string.root_granted), 5000);
               Utils.runInFg(() -> rootCheckBox.setChecked(true));
-              restartPrivDaemon();
+              restartPrivDaemon(true);
             } else {
               showSnackBar(
                   getString(R.string.getting_root_fail) + getString(R.string.are_you_rooted),
@@ -913,7 +902,7 @@ public class MainActivity extends BaseActivity {
             if (Utils.checkAdb()) {
               showSnackBar(getString(R.string.connected_to_adb), 5000);
               Utils.runInFg(() -> adbCheckBox.setChecked(true));
-              restartPrivDaemon();
+              restartPrivDaemon(false);
             } else {
               String message = getString(R.string.adb_connect_fail_long);
               if (Utils.getUserId() != 0) {

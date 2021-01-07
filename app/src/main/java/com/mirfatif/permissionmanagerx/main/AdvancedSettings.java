@@ -1,9 +1,11 @@
 package com.mirfatif.permissionmanagerx.main;
 
 import android.annotation.SuppressLint;
+import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -12,13 +14,20 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.widget.AppCompatSpinner;
 import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
 
 class AdvancedSettings {
+
+  private static final String TAG = "AdvancedSettings";
 
   private final MainActivity mA;
   private final MySettings mMySettings = MySettings.getInstance();
@@ -82,19 +91,28 @@ class AdvancedSettings {
     daemonUidSpinner.setSelection(uidSelectedPos);
     daemonContextSpinner.setSelection(contextSelectedPos);
 
-    AlertDialog dialog =
+    Builder builder =
         new Builder(mA)
             .setTitle(R.string.advanced_settings_menu_item)
             .setView(dialogLayout)
             .setPositiveButton(R.string.save, (d, which) -> saveSettings())
-            .setNegativeButton(android.R.string.cancel, null)
-            .create();
+            .setNegativeButton(android.R.string.cancel, null);
+
+    AlertDialog dialog;
+    if (mMySettings.isRootGranted() && !mMySettings.isAdbConnected()) {
+      builder.setNeutralButton(R.string.switch_to_adb, (d, w) -> Utils.runInBg(this::switchToAdb));
+      dialog = builder.create();
+      Utils.removeButtonPadding(dialog);
+    } else {
+      dialog = builder.create();
+    }
+
     new AlertDialogFragment(dialog)
         .show(mA.getSupportFragmentManager(), "ADVANCED_SETTINGS", false);
   }
 
   private void saveSettings() {
-    boolean restartDaemon = false;
+    boolean restartDaemon = false, switchToAdb = false;
     if (useHiddenAPIs != useHiddenAPIsView.isChecked()) {
       restartDaemon = saveHiddenAPIsSettings(useHiddenAPIsView.isChecked());
     }
@@ -107,6 +125,7 @@ class AdvancedSettings {
       } else {
         mMySettings.setAdbPort(port);
         restartDaemon = true;
+        switchToAdb = true;
       }
     }
 
@@ -139,8 +158,10 @@ class AdvancedSettings {
       restartDaemon = true;
     }
 
-    if (restartDaemon) {
-      mA.restartPrivDaemon();
+    if (mMySettings.isRootGranted() && switchToAdb) {
+      Utils.runInBg(this::switchToAdb);
+    } else if (restartDaemon) {
+      mA.restartPrivDaemon(!switchToAdb);
     }
   }
 
@@ -158,7 +179,7 @@ class AdvancedSettings {
                 R.string.yes,
                 (d, which) -> {
                   mMySettings.setUseHiddenAPIs(false);
-                  mA.restartPrivDaemon(); // Start daemon if not running
+                  mA.restartPrivDaemon(true); // Start daemon if not running
                 })
             .setNegativeButton(R.string.no, null)
             .setTitle(R.string.hidden_apis)
@@ -167,6 +188,60 @@ class AdvancedSettings {
     new AlertDialogFragment(dialog)
         .show(mA.getSupportFragmentManager(), "HIDDEN_APIS_CONFIRM", false);
     return false;
+  }
+
+  private void switchToAdb() {
+    if (Utils.checkAdb()) {
+      restartDaemon();
+      return;
+    }
+
+    Process process = Utils.runCommand("su", TAG, true);
+    if (process == null) {
+      showAdbFailed(R.string.adb_switch_fail);
+      return;
+    }
+
+    Utils.runInBg(
+        () -> {
+          try (InputStreamReader reader = new InputStreamReader(process.getInputStream())) {
+            Utils.readProcessLog(new BufferedReader(reader), TAG);
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        });
+
+    Log.i(TAG, "Sending ADB switch commands");
+
+    PrintWriter writer = new PrintWriter(process.getOutputStream(), true);
+    writer.println("settings put global adb_enabled 0");
+    writer.println("stop adbd");
+    writer.println("setprop service.adb.tcp.port " + mMySettings.getAdbPort());
+    SystemClock.sleep(2000);
+    writer.println("settings put global adb_enabled 1");
+    writer.println("exec start adbd");
+    writer.close();
+
+    SystemClock.sleep(5000);
+    if (Utils.checkAdb()) {
+      restartDaemon();
+    } else {
+      showAdbFailed(R.string.adb_connect_fail);
+    }
+  }
+
+  private void restartDaemon() {
+    Log.i(TAG, "Restarting daemon");
+    mA.restartPrivDaemon(false);
+    Utils.runInFg(
+        () -> {
+          mA.showSnackBar(getString(R.string.connected_to_adb), 5000);
+          mA.setNavigationMenu(); // To check Adb CheckBox
+        });
+  }
+
+  private void showAdbFailed(int resId) {
+    Utils.runInFg(() -> Toast.makeText(App.getContext(), resId, Toast.LENGTH_LONG).show());
   }
 
   private String getString(int resId) {
