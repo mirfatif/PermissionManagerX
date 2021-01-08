@@ -55,6 +55,7 @@ import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.security.GeneralSecurityException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -102,7 +103,7 @@ public class Utils {
     return mSearchQueryExecutor.submit(runnable);
   }
 
-  public static boolean runCommand(String command, String tag, String match) {
+  public static boolean runCommand(String[] command, String tag, String match) {
     Process process = runCommand(command, tag, true);
     if (process == null) return false;
     try (BufferedReader stdIn =
@@ -123,17 +124,17 @@ public class Utils {
     return false;
   }
 
-  public static Process runCommand(String cmd, String tag, boolean redirectStdErr) {
+  public static Process runCommand(String[] cmd, String tag, boolean redirectStdErr) {
     File binDir = new File(App.getContext().getFilesDir(), "bin");
     File cwd = App.getContext().getExternalFilesDir(null);
 
-    ProcessBuilder processBuilder = new ProcessBuilder(cmd.split(" "));
+    ProcessBuilder processBuilder = new ProcessBuilder(cmd);
     processBuilder.directory(cwd);
     Map<String, String> env = processBuilder.environment();
     env.put("PATH", binDir + ":" + env.get("PATH"));
     processBuilder.redirectErrorStream(redirectStdErr);
 
-    Log.i(tag, "Executing: " + cmd);
+    Log.i(tag, "Executing: " + Arrays.toString(cmd));
     try {
       return processBuilder.start();
     } catch (IOException e) {
@@ -376,23 +377,29 @@ public class Utils {
   //////////////////////////////////////////////////////////////////
 
   public static boolean doLoggingFails(String[] command) {
+    if (command.length != 2) {
+      Log.e("Logging", "Command array length must be 2");
+      return true;
+    }
+
     try {
       writeToLogFile(getDeviceInfo());
     } catch (IOException e) {
       e.printStackTrace();
     }
 
-    Process process = runCommand(command[0], "Logging", true);
-    if (process == null) return true;
+    Process process = runCommand(new String[] {command[0]}, "Logging", true);
+    if (process == null) {
+      return true;
+    }
 
     runInBg(() -> readLogcatStream(process, null));
 
-    if (command.length > 1) {
-      PrintWriter writer = new PrintWriter(process.getOutputStream());
-      Log.i("Logging", "Sending command to shell: " + command[1]);
-      writer.println(command[1]);
-      writer.flush();
-    }
+    PrintWriter writer = new PrintWriter(process.getOutputStream());
+    Log.i("Logging", "Sending command to shell: " + command[1]);
+    writer.println(command[1]);
+    writer.flush();
+
     return false;
   }
 
@@ -469,7 +476,7 @@ public class Utils {
     try {
       PrintWriter writer = new PrintWriter(new FileWriter(logFile, append));
       writer.println("=================================");
-      writer.println(Utils.getDeviceInfo());
+      writer.println(getDeviceInfo());
       writer.println("Time: " + getCurrDateTime(true));
       writer.println("Component: " + (isDaemon ? "Daemon" : "App"));
       writer.println("Log ID: " + UUID.randomUUID().toString());
@@ -582,7 +589,7 @@ public class Utils {
   }
 
   public static boolean checkRoot() {
-    boolean res = runCommand("su -c id  -u", "checkRoot", "0");
+    boolean res = runCommand(new String[] {"su", "-c", "id  -u"}, "checkRoot", "0");
     MySettings.getInstance().setRootGranted(res);
     return res;
   }

@@ -127,7 +127,7 @@ public class AboutActivity extends BaseActivity {
       PrivDaemonHandler.getInstance().sendRequest(Commands.SHUTDOWN);
     }
     mMySettings.setLogging(true);
-    Utils.runCommand("logcat -c", "Logging", null);
+    Utils.runCommand(new String[] {"logcat", "-c"}, "Logging", null);
     Intent intent = new Intent(App.getContext(), MainActivity.class);
     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
     Utils.runInFg(() -> startActivity(intent));

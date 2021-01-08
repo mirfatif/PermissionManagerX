@@ -58,7 +58,11 @@ public class Adb {
       adbConnection = AdbConnection.create(adbSocket, adbCrypto);
       adbConnection.connect();
 
-      // if command is empty, shell is opened
+      // If command is empty, shell is opened. But default shell writes its STDIN to STDERR. So we
+      // execute another shell.
+      if (command.isEmpty()) {
+        command = "exec sh";
+      }
       Log.i(TAG, "Executing: shell:" + command);
       adbStream = adbConnection.open("shell:" + command);
 

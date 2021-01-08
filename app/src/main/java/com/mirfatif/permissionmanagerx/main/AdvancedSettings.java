@@ -196,7 +196,7 @@ class AdvancedSettings {
       return;
     }
 
-    Process process = Utils.runCommand("su", TAG, true);
+    Process process = Utils.runCommand(new String[] {"su"}, TAG, true);
     if (process == null) {
       showAdbFailed(R.string.adb_switch_fail);
       return;

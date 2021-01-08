@@ -115,7 +115,7 @@ public class PrivDaemonHandler {
           }
           cmd = "exec " + set_priv + " -- " + cmd;
 
-          suProcess = Utils.runCommand("su -c " + cmd, TAG, true);
+          suProcess = Utils.runCommand(new String[] {"su", "-c", cmd}, TAG, true);
           if (suProcess == null) {
             return false;
           }
@@ -192,14 +192,12 @@ public class PrivDaemonHandler {
             + ":"
             + System.getenv("PATH");
 
-    String daemonCommand = "exec sh " + daemonScriptPath;
-
     if (mPreferRoot) {
       if (useSocket) {
         params += " " + Commands.CREATE_SOCKET;
       }
 
-      suProcess = Utils.runCommand("su -c " + daemonCommand, TAG, false);
+      suProcess = Utils.runCommand(new String[] {"su"}, TAG, false);
       if (suProcess == null) {
         return false;
       }
@@ -215,7 +213,7 @@ public class PrivDaemonHandler {
       params += " " + Commands.CREATE_SOCKET;
       useSocket = true;
       try {
-        adb = new Adb(daemonCommand);
+        adb = new Adb("");
       } catch (IOException e) {
         e.printStackTrace();
         return false;
@@ -226,7 +224,10 @@ public class PrivDaemonHandler {
       return false;
     }
 
-    // shell script reads from STDIN
+    // Run daemon script
+    cmdWriter.println("exec sh " + daemonScriptPath);
+
+    // Daemon script waits and reads parameters from STDIN
     cmdWriter.println(params);
 
     int pid = 0;
