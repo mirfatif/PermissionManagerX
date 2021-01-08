@@ -61,7 +61,7 @@ class Donate {
 
     new AlertDialogFragment(
             new Builder(mA).setTitle(R.string.donate_menu_item).setView(layout).create())
-        .show(mA.getSupportFragmentManager(), "DONATION", true);
+        .show(mA, "DONATION", true);
   }
 
   private void hideAll() {

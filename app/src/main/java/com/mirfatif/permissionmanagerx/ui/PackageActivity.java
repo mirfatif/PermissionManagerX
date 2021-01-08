@@ -21,7 +21,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.widget.SearchView;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -59,8 +58,6 @@ public class PackageActivity extends BaseActivity {
   private Package mPackage;
   private SwipeRefreshLayout mRefreshLayout;
   private PermissionAdapter mPermissionAdapter;
-
-  private final FragmentManager mFM = getSupportFragmentManager();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +130,7 @@ public class PackageActivity extends BaseActivity {
                   .setMessage(
                       getString(R.string.uid_mode_app_ops_warning, affectedPackagesCount - 1))
                   .create();
-          new AlertDialogFragment(dialog).show(mFM, "CHANGE_UID_MODE", false);
+          new AlertDialogFragment(dialog).show(this, "CHANGE_UID_MODE", false);
         } else {
           setAppOpsMode(permission, selectedValue, true);
         }
@@ -220,7 +217,7 @@ public class PackageActivity extends BaseActivity {
         layoutParams.y = yLocation;
       }
 
-      new AlertDialogFragment(dialog).show(mFM, "PERM_DETAILS", false);
+      new AlertDialogFragment(dialog).show(this, "PERM_DETAILS", false);
     };
   }
 
@@ -298,7 +295,7 @@ public class PackageActivity extends BaseActivity {
             dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(permission.isChangeable());
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(!permission.isExtraAppOp());
           });
-      new AlertDialogFragment(dialog).show(mFM, "PERM_OPTIONS", false);
+      new AlertDialogFragment(dialog).show(this, "PERM_OPTIONS", false);
     };
   }
 
@@ -466,7 +463,7 @@ public class PackageActivity extends BaseActivity {
               .setTitle(mPackage.getLabel())
               .setMessage(R.string.reset_app_ops_confirmation)
               .create();
-      new AlertDialogFragment(dialog).show(mFM, "RESET_APP_OPS_CONFIRM", false);
+      new AlertDialogFragment(dialog).show(this, "RESET_APP_OPS_CONFIRM", false);
 
       return true;
     }
@@ -501,7 +498,7 @@ public class PackageActivity extends BaseActivity {
               .setTitle(mPackage.getLabel())
               .setMessage(R.string.set_references_confirmation)
               .create();
-      new AlertDialogFragment(dialog).show(mFM, "SET_REF_CONFIRM", false);
+      new AlertDialogFragment(dialog).show(this, "SET_REF_CONFIRM", false);
 
       return true;
     }
@@ -525,7 +522,7 @@ public class PackageActivity extends BaseActivity {
               .setTitle(mPackage.getLabel())
               .setMessage(R.string.clear_references_confirmation)
               .create();
-      new AlertDialogFragment(dialog).show(mFM, "CLEAR_REF_CONFIRM", false);
+      new AlertDialogFragment(dialog).show(this, "CLEAR_REF_CONFIRM", false);
 
       return true;
     }
@@ -582,8 +579,14 @@ public class PackageActivity extends BaseActivity {
             .setTitle(R.string.privileges)
             .setMessage(R.string.grant_root_or_adb)
             .create();
-    new AlertDialogFragment(dialog).show(mFM, MainActivity.TAG_GRANT_ROOT_OR_ADB, false);
+    new AlertDialogFragment(dialog).show(this, MainActivity.TAG_GRANT_ROOT_OR_ADB, false);
     return false;
+  }
+
+  @Override
+  protected void onSaveInstanceState(@NonNull Bundle outState) {
+    AlertDialogFragment.removeAll(this);
+    super.onSaveInstanceState(outState);
   }
 
   // update package when coming back after changing FilterSettings

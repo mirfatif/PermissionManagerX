@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
-import androidx.fragment.app.FragmentManager;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
@@ -18,7 +17,6 @@ import com.mirfatif.privtasks.Util;
 public class FilterSettingsActivity extends BaseActivity {
 
   private MySettings mMySettings;
-  private final FragmentManager mFM = getSupportFragmentManager();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +76,7 @@ public class FilterSettingsActivity extends BaseActivity {
       // Set message, create and show the AlertDialog
       builder.setTitle(R.string.filter_settings);
       builder.setMessage(R.string.filter_settings_reset_confirmation);
-      new AlertDialogFragment(builder.create()).show(mFM, "RESET_FILTER_SETTINGS", false);
+      new AlertDialogFragment(builder.create()).show(this, "RESET_FILTER_SETTINGS", false);
       return true;
     }
 
@@ -93,7 +91,7 @@ public class FilterSettingsActivity extends BaseActivity {
       // Set message, create and show the AlertDialog
       builder.setTitle(R.string.filter_settings);
       builder.setMessage(R.string.filter_settings_clear_apps_confirmation);
-      new AlertDialogFragment(builder.create()).show(mFM, "CLEAR_EXCLUDED_APPS", false);
+      new AlertDialogFragment(builder.create()).show(this, "CLEAR_EXCLUDED_APPS", false);
       return true;
     }
 
@@ -105,7 +103,7 @@ public class FilterSettingsActivity extends BaseActivity {
       builder.setNegativeButton(R.string.no, null);
       builder.setTitle(R.string.filter_settings);
       builder.setMessage(R.string.filter_settings_clear_perms_confirmation);
-      new AlertDialogFragment(builder.create()).show(mFM, "CLEAR_EXCLUDED_PERMS", false);
+      new AlertDialogFragment(builder.create()).show(this, "CLEAR_EXCLUDED_PERMS", false);
       return true;
     }
 
@@ -118,10 +116,16 @@ public class FilterSettingsActivity extends BaseActivity {
               .setTitle(R.string.filter_settings)
               .setMessage(R.string.filter_settings_clear_app_ops_confirmation)
               .create();
-      new AlertDialogFragment(dialog).show(mFM, "CLEAR_EXTRA_APP_OPS", false);
+      new AlertDialogFragment(dialog).show(this, "CLEAR_EXTRA_APP_OPS", false);
       return true;
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  protected void onSaveInstanceState(@NonNull Bundle outState) {
+    AlertDialogFragment.removeAll(this);
+    super.onSaveInstanceState(outState);
   }
 }

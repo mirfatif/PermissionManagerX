@@ -2,10 +2,12 @@ package com.mirfatif.permissionmanagerx.ui;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import com.mirfatif.permissionmanagerx.main.MainActivityFlavor;
@@ -30,45 +32,65 @@ public class AlertDialogFragment extends AppCompatDialogFragment {
     return mAlertDialog;
   }
 
-  private static final Set<String> allTags = new HashSet<>();
+  private static final Set<String> ALL_TAGS = new HashSet<>();
 
-  public void show(FragmentManager manager, String tag, boolean removeAll) {
+  public void show(FragmentActivity activity, String tag, boolean removeAll) {
     synchronized (AlertDialogFragment.class) {
-      allTags.add(tag);
+      FragmentManager manager = activity.getSupportFragmentManager();
+      ALL_TAGS.add(tag);
 
       Set<Fragment> oldDialogs = new HashSet<>();
-      if (removeAll) oldDialogs = buildListToRemove(manager);
-      else {
+      if (removeAll) {
+        oldDialogs = buildListToRemove(manager);
+      } else {
         Fragment fragment = manager.findFragmentByTag(tag);
-        if (fragment != null) oldDialogs.add(fragment);
+        if (fragment != null) {
+          oldDialogs.add(fragment);
+        }
       }
 
-      if (MySettings.getInstance().isDebug()) Util.debugLog(TAG, "Showing " + tag);
+      if (MySettings.getInstance().isDebug()) {
+        Util.debugLog(TAG, "Showing " + tag);
+      }
 
       // If Activity is in background, commitNow throws:
       //   "Can not perform this action after onSaveInstanceState"
       // We don't have showNowAllowingStateLoss()
       try {
-        super.showNow(manager, tag);
+        if (!activity.isFinishing()
+            && !activity.isDestroyed()
+            && !activity.isChangingConfigurations()) {
+          super.showNow(manager, tag);
+        }
       } catch (IllegalStateException e) {
-        e.printStackTrace();
+        Log.w(TAG, e.toString());
       }
 
       removeFragments(manager, oldDialogs);
     }
   }
 
-  public static void removeAll(FragmentManager manager) {
+  public static void removeAll(FragmentActivity activity) {
+    FragmentManager manager = activity.getSupportFragmentManager();
     removeFragments(manager, buildListToRemove(manager));
+  }
+
+  @Override
+  public void onSaveInstanceState(@NonNull Bundle outState) {
+    // Do not call super because:
+    //  1. We cannot recreate DialogFragment after configuration change.
+    //  2. We don't have showNowAllowingStateLoss()
   }
 
   private static Set<Fragment> buildListToRemove(FragmentManager manager) {
     Set<Fragment> oldDialogs = new HashSet<>();
     Fragment fragment;
-    for (String tag : allTags) {
+    for (String tag : ALL_TAGS) {
       fragment = manager.findFragmentByTag(tag);
       if (fragment != null) {
-        if (MySettings.getInstance().isDebug()) Util.debugLog(TAG, "Old dialog: " + tag);
+        if (MySettings.getInstance().isDebug()) {
+          Util.debugLog(TAG, "Old dialog: " + tag);
+        }
         oldDialogs.add(fragment);
       }
     }
@@ -77,7 +99,9 @@ public class AlertDialogFragment extends AppCompatDialogFragment {
 
   private static void removeFragments(FragmentManager manager, Set<Fragment> fragments) {
     FragmentTransaction transaction = manager.beginTransaction();
-    if (MySettings.getInstance().isDebug()) Util.debugLog(TAG, "Removing old dialogs");
+    if (MySettings.getInstance().isDebug()) {
+      Util.debugLog(TAG, "Removing old dialogs");
+    }
     for (Fragment fragment : fragments) transaction.remove(fragment);
     transaction.commitNowAllowingStateLoss();
   }

@@ -103,7 +103,7 @@ public class BackupRestore {
             .setTitle(getString(R.string.backup) + " / " + getString(R.string.restore))
             .setView(layout)
             .create();
-    new AlertDialogFragment(dialog).show(mA.getSupportFragmentManager(), TAG_BACKUP_RESTORE, false);
+    new AlertDialogFragment(dialog).show(mA, TAG_BACKUP_RESTORE, false);
   }
 
   private void doBackupRestore(boolean isBackup) {
@@ -513,9 +513,7 @@ public class BackupRestore {
             .setTitle(isBackup ? R.string.backup : R.string.restore)
             .setMessage(message);
     Utils.runInFg(
-        () ->
-            new AlertDialogFragment(builder.create())
-                .show(mA.getSupportFragmentManager(), TAG_BACKUP_RESTORE, false));
+        () -> new AlertDialogFragment(builder.create()).show(mA, TAG_BACKUP_RESTORE, false));
   }
 
   public static class BackupEntry {

@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog.Builder;
 import com.google.android.material.snackbar.Snackbar;
@@ -179,12 +180,17 @@ public class AboutActivity extends BaseActivity {
                         (dialog, which) ->
                             Utils.runInFg(() -> Utils.openWebUrl(this, appUpdate.getUpdateUrl())))
                     .setNegativeButton(android.R.string.cancel, null);
-            new AlertDialogFragment(builder.create())
-                .show(getSupportFragmentManager(), "APP_UPDATE", false);
+            new AlertDialogFragment(builder.create()).show(this, "APP_UPDATE", false);
           } else {
             Toast.makeText(App.getContext(), messageResId, Toast.LENGTH_LONG).show();
           }
           mCheckForUpdateInProgress = false;
         });
+  }
+
+  @Override
+  protected void onSaveInstanceState(@NonNull Bundle outState) {
+    AlertDialogFragment.removeAll(this);
+    super.onSaveInstanceState(outState);
   }
 }

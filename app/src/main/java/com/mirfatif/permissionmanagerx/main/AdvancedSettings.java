@@ -107,8 +107,7 @@ class AdvancedSettings {
       dialog = builder.create();
     }
 
-    new AlertDialogFragment(dialog)
-        .show(mA.getSupportFragmentManager(), "ADVANCED_SETTINGS", false);
+    new AlertDialogFragment(dialog).show(mA, "ADVANCED_SETTINGS", false);
   }
 
   private void saveSettings() {
@@ -185,8 +184,7 @@ class AdvancedSettings {
             .setTitle(R.string.hidden_apis)
             .setMessage(R.string.hidden_apis_confirmation)
             .create();
-    new AlertDialogFragment(dialog)
-        .show(mA.getSupportFragmentManager(), "HIDDEN_APIS_CONFIRM", false);
+    new AlertDialogFragment(dialog).show(mA, "HIDDEN_APIS_CONFIRM", false);
     return false;
   }
 

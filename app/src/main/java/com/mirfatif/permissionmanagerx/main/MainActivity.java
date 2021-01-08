@@ -25,7 +25,6 @@ import androidx.appcompat.widget.SearchView.OnQueryTextListener;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -75,7 +74,6 @@ public class MainActivity extends BaseActivity {
 
   private MyViewModel mMyViewModel;
   private MainActivityFlavor mMainActivityFlavor;
-  private final FragmentManager mFM = getSupportFragmentManager();
 
   private SwipeRefreshLayout mRefreshLayout;
   private LinearLayoutManager mLayoutManager;
@@ -289,7 +287,7 @@ public class MainActivity extends BaseActivity {
 
     // We can't save state of AlertDialogFragment since AlertDialog is passed as a constructor
     // argument. Otherwise separate AlertDialogFragment class needs to be created for every dialog.
-    AlertDialogFragment.removeAll(mFM);
+    AlertDialogFragment.removeAll(this);
 
     super.onSaveInstanceState(outState);
   }
@@ -384,7 +382,7 @@ public class MainActivity extends BaseActivity {
       boolean finalEnabled = enabled;
       dialog.setOnShowListener(
           d -> dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(finalEnabled));
-      new AlertDialogFragment(dialog).show(mFM, "PKG_OPTIONS", false);
+      new AlertDialogFragment(dialog).show(this, "PKG_OPTIONS", false);
     };
   }
 
@@ -536,7 +534,7 @@ public class MainActivity extends BaseActivity {
               .setTitle(R.string.privileges)
               .setMessage(R.string.grant_root_or_adb)
               .create();
-      new AlertDialogFragment(dialog).show(mFM, TAG_GRANT_ROOT_OR_ADB, false);
+      new AlertDialogFragment(dialog).show(this, TAG_GRANT_ROOT_OR_ADB, false);
       return;
     }
 
@@ -721,7 +719,7 @@ public class MainActivity extends BaseActivity {
             Utils.runInFg(
                 () ->
                     new AlertDialogFragment(builder.create())
-                        .show(mFM, TAG_GRANT_ROOT_OR_ADB, false));
+                        .show(this, TAG_GRANT_ROOT_OR_ADB, false));
           }
         }
       } else {
@@ -744,7 +742,7 @@ public class MainActivity extends BaseActivity {
               () -> {
                 AlertDialog dialog = builder.create();
                 Utils.removeButtonPadding(dialog);
-                new AlertDialogFragment(dialog).show(mFM, TAG_GRANT_ROOT_OR_ADB, false);
+                new AlertDialogFragment(dialog).show(this, TAG_GRANT_ROOT_OR_ADB, false);
               });
         }
       }
@@ -916,7 +914,7 @@ public class MainActivity extends BaseActivity {
               Utils.runInFg(
                   () ->
                       new AlertDialogFragment(builder.create())
-                          .show(mFM, "ADB_CONNECT_FAILED", false));
+                          .show(this, "ADB_CONNECT_FAILED", false));
             }
           });
       return true;
@@ -1009,7 +1007,7 @@ public class MainActivity extends BaseActivity {
             .setMessage(R.string.logging_warning)
             .setPositiveButton(android.R.string.ok, null);
     Utils.runInFg(
-        () -> new AlertDialogFragment(builder.create()).show(mFM, "LOGGING_WARNING", false));
+        () -> new AlertDialogFragment(builder.create()).show(this, "LOGGING_WARNING", false));
   }
 
   ProgressFrameLayout getRoundProgressContainer() {
