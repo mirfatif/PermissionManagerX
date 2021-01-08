@@ -355,8 +355,10 @@ public class PrivDaemonHandler {
     }
   }
 
+  private final Object SEND_REQ_LOCK = new Object();
+
   public Object sendRequest(String request) {
-    synchronized (PrivDaemonHandler.class) {
+    synchronized (SEND_REQ_LOCK) {
       MySettings mySettings = MySettings.getInstance();
       if (!mySettings.isPrivDaemonAlive()) {
         Log.e(TAG, request + ": Privileged daemon is dead");

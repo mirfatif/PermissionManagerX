@@ -1,11 +1,13 @@
 package com.mirfatif.permissionmanagerx.main;
 
 import android.content.Context;
-import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 import com.mirfatif.permissionmanagerx.Utils;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class ProgressFrameLayout extends FrameLayout {
 
@@ -27,22 +29,32 @@ public class ProgressFrameLayout extends FrameLayout {
     super(context, attrs, defStyleAttr, defStyleRes);
   }
 
+  private final ExecutorService mVisibilityExecutor = Executors.newSingleThreadExecutor();
+  private Future<?> mVisibilityFuture;
+
   // setVisibility() on RoundProgressBarContainer is called from multiple places.
   // Too quick calls cause progress bar to hang. Here we rate limit it.
   @Override
-  public void setVisibility(int visibility) {
-    long myId = mRefId = System.nanoTime();
-    Utils.runInBg(() -> setVisibilityInBg(visibility, myId));
+  public synchronized void setVisibility(int visibility) {
+    if (mVisibilityFuture != null && !mVisibilityFuture.isDone()) {
+      mVisibilityFuture.cancel(true);
+    }
+    mVisibilityFuture = mVisibilityExecutor.submit(() -> setVisibilityInBg(visibility));
   }
 
-  private long mRefId, lastCall;
+  private long lastCall;
 
-  private synchronized void setVisibilityInBg(int visibility, long myId) {
+  private void setVisibilityInBg(int visibility) {
     long sleepTime = 1000 + lastCall - System.currentTimeMillis();
-    if (sleepTime > 0) SystemClock.sleep(sleepTime);
-
-    // we have new call waiting
-    if (myId != mRefId) return;
+    if (sleepTime > 0) {
+      try {
+        synchronized (mVisibilityExecutor) {
+          mVisibilityExecutor.wait(sleepTime);
+        }
+      } catch (InterruptedException e) {
+        return; // We've got a new call
+      }
+    }
 
     lastCall = System.currentTimeMillis();
     Utils.runInFg(() -> super.setVisibility(visibility));

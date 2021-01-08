@@ -32,28 +32,30 @@ public class AlertDialogFragment extends AppCompatDialogFragment {
 
   private static final Set<String> allTags = new HashSet<>();
 
-  public synchronized void show(FragmentManager manager, String tag, boolean removeAll) {
-    allTags.add(tag);
+  public void show(FragmentManager manager, String tag, boolean removeAll) {
+    synchronized (AlertDialogFragment.class) {
+      allTags.add(tag);
 
-    Set<Fragment> oldDialogs = new HashSet<>();
-    if (removeAll) oldDialogs = buildListToRemove(manager);
-    else {
-      Fragment fragment = manager.findFragmentByTag(tag);
-      if (fragment != null) oldDialogs.add(fragment);
+      Set<Fragment> oldDialogs = new HashSet<>();
+      if (removeAll) oldDialogs = buildListToRemove(manager);
+      else {
+        Fragment fragment = manager.findFragmentByTag(tag);
+        if (fragment != null) oldDialogs.add(fragment);
+      }
+
+      if (MySettings.getInstance().isDebug()) Util.debugLog(TAG, "Showing " + tag);
+
+      // If Activity is in background, commitNow throws:
+      //   "Can not perform this action after onSaveInstanceState"
+      // We don't have showNowAllowingStateLoss()
+      try {
+        super.showNow(manager, tag);
+      } catch (IllegalStateException e) {
+        e.printStackTrace();
+      }
+
+      removeFragments(manager, oldDialogs);
     }
-
-    if (MySettings.getInstance().isDebug()) Util.debugLog(TAG, "Showing " + tag);
-
-    // If Activity is in background, commitNow throws:
-    //   "Can not perform this action after onSaveInstanceState"
-    // We don't have showNowAllowingStateLoss()
-    try {
-      super.showNow(manager, tag);
-    } catch (IllegalStateException e) {
-      e.printStackTrace();
-    }
-
-    removeFragments(manager, oldDialogs);
   }
 
   public static void removeAll(FragmentManager manager) {

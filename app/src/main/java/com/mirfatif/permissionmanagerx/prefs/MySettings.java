@@ -451,7 +451,7 @@ public class MySettings {
   }
 
   private final String mExcludedAppsPrefKey;
-  private Set<String> mExcludedApps;
+  private final Set<String> mExcludedApps = new HashSet<>();
   private CharSequence[] mExcludedAppsLabels;
 
   public CharSequence[] getExcludedAppsLabels() {
@@ -462,7 +462,7 @@ public class MySettings {
   }
 
   public Set<String> getExcludedApps() {
-    if (mExcludedApps == null) {
+    if (mExcludedApps.isEmpty()) {
       populateExcludedAppsList(false);
     }
     return mExcludedApps;
@@ -476,61 +476,66 @@ public class MySettings {
     return getExcludedApps().contains(packageName);
   }
 
-  public synchronized void populateExcludedAppsList(boolean loadDefaults) {
-    if (DEBUG) {
-      Util.debugLog("populateExcludedAppsList", "loadDefaults: " + loadDefaults);
-    }
-
-    // on first run or after "reset to defaults" it returns null, so use default values
-    Set<String> savedExcludedApps = mPrefs.getStringSet(mExcludedAppsPrefKey, null);
-    Set<String> excludedApps = savedExcludedApps;
-    if (savedExcludedApps == null || loadDefaults) {
-      String[] defaultExcludedApps =
-          App.getContext().getResources().getStringArray(R.array.excluded_apps);
-      excludedApps = new HashSet<>(Arrays.asList(defaultExcludedApps));
-    }
-
-    // Let's remove uninstalled packages from excluded apps list.
-    // Also get sorted lists of labels (to show) vs. names (to save).
-    // Set (is not ordered and thus) cannot be sorted.
-    List<Pair> excludedAppsPairList = new ArrayList<>();
-    PackageManager packageManager = App.getContext().getPackageManager();
-
-    for (String packageName : excludedApps) {
-      String packageLabel;
-      try {
-        packageLabel =
-            packageManager.getApplicationInfo(packageName, 0).loadLabel(packageManager).toString();
-      } catch (NameNotFoundException e) {
-        // package is not installed
-        continue;
+  public void populateExcludedAppsList(boolean loadDefaults) {
+    synchronized (mExcludedApps) {
+      if (DEBUG) {
+        Util.debugLog("populateExcludedAppsList", "loadDefaults: " + loadDefaults);
       }
-      if (packageLabel.equals(packageName)) {
-        excludedAppsPairList.add(new Pair(packageLabel, packageName));
-      } else {
-        excludedAppsPairList.add(new Pair(packageLabel + "\n(" + packageName + ")", packageName));
+
+      // on first run or after "reset to defaults" it returns null, so use default values
+      Set<String> savedExcludedApps = mPrefs.getStringSet(mExcludedAppsPrefKey, null);
+      Set<String> excludedApps = savedExcludedApps;
+      if (savedExcludedApps == null || loadDefaults) {
+        String[] defaultExcludedApps =
+            App.getContext().getResources().getStringArray(R.array.excluded_apps);
+        excludedApps = new HashSet<>(Arrays.asList(defaultExcludedApps));
       }
-    }
 
-    // List can be sorted now
-    excludedAppsPairList.sort(Comparator.comparing(o -> o.packageLabel.toUpperCase()));
+      // Let's remove uninstalled packages from excluded apps list.
+      // Also get sorted lists of labels (to show) vs. names (to save).
+      // Set (is not ordered and thus) cannot be sorted.
+      List<Pair> excludedAppsPairList = new ArrayList<>();
+      PackageManager packageManager = App.getContext().getPackageManager();
 
-    // Separate the pair elements to sorted ordered lists.
-    CharSequence[] excludedAppsLabels = new CharSequence[excludedAppsPairList.size()];
-    mExcludedApps = new LinkedHashSet<>();
+      for (String packageName : excludedApps) {
+        String packageLabel;
+        try {
+          packageLabel =
+              packageManager
+                  .getApplicationInfo(packageName, 0)
+                  .loadLabel(packageManager)
+                  .toString();
+        } catch (NameNotFoundException e) {
+          // package is not installed
+          continue;
+        }
+        if (packageLabel.equals(packageName)) {
+          excludedAppsPairList.add(new Pair(packageLabel, packageName));
+        } else {
+          excludedAppsPairList.add(new Pair(packageLabel + "\n(" + packageName + ")", packageName));
+        }
+      }
 
-    for (int i = 0; i < excludedAppsPairList.size(); i++) {
-      excludedAppsLabels[i] = excludedAppsPairList.get(i).packageLabel;
-      mExcludedApps.add(excludedAppsPairList.get(i).packageName);
-    }
+      // List can be sorted now
+      excludedAppsPairList.sort(Comparator.comparing(o -> o.packageLabel.toUpperCase()));
 
-    mExcludedAppsLabels = excludedAppsLabels;
+      // Separate the pair elements to sorted ordered lists.
+      CharSequence[] excludedAppsLabels = new CharSequence[excludedAppsPairList.size()];
+      mExcludedApps.clear();
 
-    // Remove uninstalled excluded apps from saved list.
-    // Save preferences only on app's first run or if changed, otherwise
-    // OnSharedPreferenceChangeListener will cause infinite loop.
-    if (savedExcludedApps == null || !savedExcludedApps.equals(mExcludedApps)) {
-      mPrefs.edit().putStringSet(mExcludedAppsPrefKey, new HashSet<>(mExcludedApps)).apply();
+      for (int i = 0; i < excludedAppsPairList.size(); i++) {
+        excludedAppsLabels[i] = excludedAppsPairList.get(i).packageLabel;
+        mExcludedApps.add(excludedAppsPairList.get(i).packageName);
+      }
+
+      mExcludedAppsLabels = excludedAppsLabels;
+
+      // Remove uninstalled excluded apps from saved list.
+      // Save preferences only on app's first run or if changed, otherwise
+      // OnSharedPreferenceChangeListener will cause infinite loop.
+      if (savedExcludedApps == null || !savedExcludedApps.equals(mExcludedApps)) {
+        mPrefs.edit().putStringSet(mExcludedAppsPrefKey, new HashSet<>(mExcludedApps)).apply();
+      }
     }
   }
 
@@ -550,10 +555,10 @@ public class MySettings {
   }
 
   private final String mExcludedPermsPrefKey;
-  private Set<String> mExcludedPerms;
+  private final Set<String> mExcludedPerms = new LinkedHashSet<>();
 
   public Set<String> getExcludedPerms() {
-    if (mExcludedPerms == null) {
+    if (mExcludedPerms.isEmpty()) {
       populateExcludedPermsList();
     }
     return mExcludedPerms;
@@ -567,19 +572,22 @@ public class MySettings {
     return getExcludedPerms().contains(permissionName);
   }
 
-  public synchronized void populateExcludedPermsList() {
-    if (DEBUG) {
-      Util.debugLog("populateExcludedPermsList", "Called");
-    }
-    Set<String> excludedPerms = mPrefs.getStringSet(mExcludedPermsPrefKey, null);
-    if (excludedPerms == null) {
-      excludedPerms = new HashSet<>();
-    }
+  public void populateExcludedPermsList() {
+    synchronized (mExcludedPerms) {
+      if (DEBUG) {
+        Util.debugLog("populateExcludedPermsList", "Called");
+      }
+      Set<String> excludedPerms = mPrefs.getStringSet(mExcludedPermsPrefKey, null);
+      if (excludedPerms == null) {
+        excludedPerms = new HashSet<>();
+      }
 
-    List<String> excludedPermsList = new ArrayList<>(excludedPerms);
-    excludedPermsList.sort(Comparator.comparing(String::toUpperCase));
+      List<String> excludedPermsList = new ArrayList<>(excludedPerms);
+      excludedPermsList.sort(Comparator.comparing(String::toUpperCase));
 
-    mExcludedPerms = new LinkedHashSet<>(excludedPermsList);
+      mExcludedPerms.clear();
+      mExcludedPerms.addAll(excludedPermsList);
+    }
   }
 
   public void clearExcludedPermsList() {
@@ -598,10 +606,10 @@ public class MySettings {
   }
 
   private final String mExtraAppOpsPrefKey;
-  private Set<String> mExtraAppOps;
+  private final Set<String> mExtraAppOps = new HashSet<>();
 
   public Set<String> getExtraAppOps() {
-    if (mExtraAppOps == null) {
+    if (mExtraAppOps.isEmpty()) {
       populateExtraAppOpsList(false);
     }
     return mExtraAppOps;
@@ -615,33 +623,36 @@ public class MySettings {
     return getExtraAppOps().contains(opName);
   }
 
-  public synchronized void populateExtraAppOpsList(boolean loadDefaults) {
-    if (DEBUG) Util.debugLog("populateExtraAppOpsList", "loadDefaults: " + loadDefaults);
-    // on first run or after "reset to defaults" it returns null, so use default values
-    Set<String> savedExtraAppOps = mPrefs.getStringSet(mExtraAppOpsPrefKey, null);
-    Set<String> extraAppOps = savedExtraAppOps;
-    if (savedExtraAppOps == null || loadDefaults) {
-      String[] defaultExtraAppOps =
-          App.getContext().getResources().getStringArray(R.array.extra_app_ops);
-      extraAppOps = new HashSet<>(Arrays.asList(defaultExtraAppOps));
-    }
-
-    // let's remove AppOps not on this Android version
-    mExtraAppOps = new HashSet<>();
-    for (String extraAppOp : extraAppOps) {
-      // Necessarily build mExtraAppOps here even with excludeAppOpsPerms(). Otherwise on unchecking
-      // "Exclude AppOps" the immediate call to getExtraAppOps() from FilterSettingsFragment
-      // receives an empty value which clears previous saved values.
-      if (getAppOpsList().size() == 0 || getAppOpsList().contains(extraAppOp)) {
-        mExtraAppOps.add(extraAppOp);
+  public void populateExtraAppOpsList(boolean loadDefaults) {
+    synchronized (mExtraAppOps) {
+      if (DEBUG) Util.debugLog("populateExtraAppOpsList", "loadDefaults: " + loadDefaults);
+      // on first run or after "reset to defaults" it returns null, so use default values
+      Set<String> savedExtraAppOps = mPrefs.getStringSet(mExtraAppOpsPrefKey, null);
+      Set<String> extraAppOps = savedExtraAppOps;
+      if (savedExtraAppOps == null || loadDefaults) {
+        String[] defaultExtraAppOps =
+            App.getContext().getResources().getStringArray(R.array.extra_app_ops);
+        extraAppOps = new HashSet<>(Arrays.asList(defaultExtraAppOps));
       }
-    }
 
-    // Remove invalid AppOps from saved list.
-    // Save preferences only on app's first run or if changed, otherwise
-    // OnSharedPreferenceChangeListener will cause infinite loop.
-    if (savedExtraAppOps == null || !savedExtraAppOps.equals(mExtraAppOps)) {
-      mPrefs.edit().putStringSet(mExtraAppOpsPrefKey, new HashSet<>(mExtraAppOps)).apply();
+      // let's remove AppOps not on this Android version
+      mExtraAppOps.clear();
+      for (String extraAppOp : extraAppOps) {
+        // Necessarily build mExtraAppOps here even with excludeAppOpsPerms(). Otherwise on
+        // unchecking
+        // "Exclude AppOps" the immediate call to getExtraAppOps() from FilterSettingsFragment
+        // receives an empty value which clears previous saved values.
+        if (getAppOpsList().size() == 0 || getAppOpsList().contains(extraAppOp)) {
+          mExtraAppOps.add(extraAppOp);
+        }
+      }
+
+      // Remove invalid AppOps from saved list.
+      // Save preferences only on app's first run or if changed, otherwise
+      // OnSharedPreferenceChangeListener will cause infinite loop.
+      if (savedExtraAppOps == null || !savedExtraAppOps.equals(mExtraAppOps)) {
+        mPrefs.edit().putStringSet(mExtraAppOpsPrefKey, new HashSet<>(mExtraAppOps)).apply();
+      }
     }
   }
 
@@ -649,10 +660,14 @@ public class MySettings {
     savePref(R.string.pref_filter_extra_appops_key, new HashSet<>());
   }
 
-  public synchronized void updateList(String key) {
-    if (key.equals(mExcludedAppsPrefKey)) populateExcludedAppsList(false);
-    else if (key.equals(mExcludedPermsPrefKey)) populateExcludedPermsList();
-    else if (key.equals(mExtraAppOpsPrefKey)) populateExtraAppOpsList(false);
+  public void updateList(String key) {
+    if (key.equals(mExcludedAppsPrefKey)) {
+      populateExcludedAppsList(false);
+    } else if (key.equals(mExcludedPermsPrefKey)) {
+      populateExcludedPermsList();
+    } else if (key.equals(mExtraAppOpsPrefKey)) {
+      populateExtraAppOpsList(false);
+    }
   }
 
   public void resetToDefaults() {

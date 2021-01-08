@@ -69,38 +69,16 @@ public class Utils {
 
   private Utils() {}
 
-  private static Handler mMainThreadHandler;
+  private static final Handler mMainThreadHandler = new Handler(Looper.getMainLooper());
 
   public static void runInFg(Runnable runnable) {
-    if (mMainThreadHandler == null) mMainThreadHandler = new Handler(Looper.getMainLooper());
     mMainThreadHandler.post(runnable);
   }
 
-  private static ExecutorService mExecutor;
+  private static final ExecutorService mExecutor = Executors.newCachedThreadPool();
 
   public static Future<?> runInBg(Runnable runnable) {
-    if (mExecutor == null) {
-      mExecutor = Executors.newCachedThreadPool();
-    }
     return mExecutor.submit(runnable);
-  }
-
-  private static ExecutorService mUpdatePackagesExecutor;
-
-  public static Future<?> updatePackagesExecutor(Runnable runnable) {
-    if (mUpdatePackagesExecutor == null) {
-      mUpdatePackagesExecutor = Executors.newSingleThreadExecutor();
-    }
-    return mUpdatePackagesExecutor.submit(runnable);
-  }
-
-  private static ExecutorService mSearchQueryExecutor;
-
-  public static Future<?> searchQueryExecutor(Runnable runnable) {
-    if (mSearchQueryExecutor == null) {
-      mSearchQueryExecutor = Executors.newSingleThreadExecutor();
-    }
-    return mSearchQueryExecutor.submit(runnable);
   }
 
   public static boolean runCommand(String[] command, String tag, String match) {
@@ -428,10 +406,13 @@ public class Utils {
   }
 
   public static BufferedWriter mLogcatWriter;
+  private static final Object LOG_WRITER_LOCK = new Object();
 
   private static void writeToLogFile(String line) throws IOException {
-    if (!MySettings.getInstance().isDebug()) return;
-    synchronized (Utils.class) {
+    synchronized (LOG_WRITER_LOCK) {
+      if (!MySettings.getInstance().isDebug()) {
+        return;
+      }
       mLogcatWriter.write(line);
       mLogcatWriter.newLine();
     }
@@ -441,18 +422,20 @@ public class Utils {
     Executors.newSingleThreadScheduledExecutor().schedule(Utils::stopLogging, 5, TimeUnit.MINUTES);
   }
 
-  public static synchronized void stopLogging() {
-    MySettings mySettings = MySettings.getInstance();
-    if (!mySettings.isDebug()) return;
-    mySettings.setLogging(false);
-    try {
-      if (mLogcatWriter != null) mLogcatWriter.close();
-    } catch (IOException ignored) {
+  public static void stopLogging() {
+    synchronized (LOG_WRITER_LOCK) {
+      MySettings mySettings = MySettings.getInstance();
+      if (!mySettings.isDebug()) return;
+      mySettings.setLogging(false);
+      try {
+        if (mLogcatWriter != null) mLogcatWriter.close();
+      } catch (IOException ignored) {
+      }
+      if (mySettings.isPrivDaemonAlive()) {
+        PrivDaemonHandler.getInstance().sendRequest(Commands.STOP_LOGGING);
+      }
+      Log.i("stopLogging()", Commands.STOP_LOGGING);
     }
-    if (mySettings.isPrivDaemonAlive()) {
-      PrivDaemonHandler.getInstance().sendRequest(Commands.STOP_LOGGING);
-    }
-    Log.i("stopLogging()", Commands.STOP_LOGGING);
   }
 
   private static long daemonDeadLogTs = 0;
@@ -464,27 +447,31 @@ public class Utils {
     }
   }
 
-  public static synchronized void writeCrashLog(String stackTrace, boolean isDaemon) {
-    // Be ashamed of your performance, don't ask for feedback in near future
-    MySettings.getInstance().setAskForFeedbackTs(System.currentTimeMillis());
+  private static final Object CRASH_LOG_LOCK = new Object();
 
-    File logFile = new File(App.getContext().getExternalFilesDir(null), "PMX_crash.log");
-    boolean append = true;
-    if (!logFile.exists() || logFile.length() > 512 * 1024) {
-      append = false;
-    }
-    try {
-      PrintWriter writer = new PrintWriter(new FileWriter(logFile, append));
-      writer.println("=================================");
-      writer.println(getDeviceInfo());
-      writer.println("Time: " + getCurrDateTime(true));
-      writer.println("Component: " + (isDaemon ? "Daemon" : "App"));
-      writer.println("Log ID: " + UUID.randomUUID().toString());
-      writer.println("=================================");
-      writer.println(stackTrace);
-      writer.close();
-      showCrashNotification(logFile);
-    } catch (IOException ignored) {
+  public static void writeCrashLog(String stackTrace, boolean isDaemon) {
+    synchronized (CRASH_LOG_LOCK) {
+      // Be ashamed of your performance, don't ask for feedback in near future
+      MySettings.getInstance().setAskForFeedbackTs(System.currentTimeMillis());
+
+      File logFile = new File(App.getContext().getExternalFilesDir(null), "PMX_crash.log");
+      boolean append = true;
+      if (!logFile.exists() || logFile.length() > 512 * 1024) {
+        append = false;
+      }
+      try {
+        PrintWriter writer = new PrintWriter(new FileWriter(logFile, append));
+        writer.println("=================================");
+        writer.println(getDeviceInfo());
+        writer.println("Time: " + getCurrDateTime(true));
+        writer.println("Component: " + (isDaemon ? "Daemon" : "App"));
+        writer.println("Log ID: " + UUID.randomUUID().toString());
+        writer.println("=================================");
+        writer.println(stackTrace);
+        writer.close();
+        showCrashNotification(logFile);
+      } catch (IOException ignored) {
+      }
     }
   }
 

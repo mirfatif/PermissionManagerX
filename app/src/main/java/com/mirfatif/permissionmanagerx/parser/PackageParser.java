@@ -29,6 +29,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class PackageParser {
@@ -154,38 +156,36 @@ public class PackageParser {
   }
 
   private long lastPackageManagerCall = 0;
-  private long mUpdatePackageListRefId;
+  private final ExecutorService mUpdatePackagesExecutor = Executors.newSingleThreadExecutor();
   private Future<?> updatePackagesFuture;
 
   public void updatePackagesList(boolean doRepeatUpdates) {
-    if (mMySettings.isDebug()) {
-      Util.debugLog("updatePackagesList", "doRepeatUpdates: " + doRepeatUpdates);
-    }
-    long myId = mUpdatePackageListRefId = System.nanoTime(); // to handle concurrent calls
-
-    /**
-     * In case of multiple calls, cancel the previous call if waiting for execution. Concurrent
-     * calls to {@link packageInfoList} (in getInstalledPackages() or Collections.sort) cause
-     * errors. Use {@link myId} and {@link mUpdatePackageListRefId} to break the previous loop if
-     * new call comes.
-     */
-    if (updatePackagesFuture != null && !updatePackagesFuture.isDone()) {
+    synchronized (mUpdatePackagesExecutor) {
       if (mMySettings.isDebug()) {
-        Util.debugLog("updatePackagesList", "Cancelling previous call");
+        Util.debugLog("updatePackagesList", "doRepeatUpdates: " + doRepeatUpdates);
       }
-      updatePackagesFuture.cancel(false);
+
+      /**
+       * In case of multiple calls, cancel the previous call if waiting for execution. Concurrent
+       * calls to {@link packageInfoList} (in getInstalledPackages() or Collections.sort) cause
+       * errors.
+       */
+      if (updatePackagesFuture != null && !updatePackagesFuture.isDone()) {
+        if (mMySettings.isDebug()) {
+          Util.debugLog("updatePackagesList", "Cancelling previous call");
+        }
+        updatePackagesFuture.cancel(true);
+      }
+      updatePackagesFuture =
+          mUpdatePackagesExecutor.submit(() -> updatePackagesListInBg(doRepeatUpdates));
     }
-    updatePackagesFuture =
-        Utils.updatePackagesExecutor(() -> updatePackagesListInBg(doRepeatUpdates, myId));
   }
 
   // For RefCheckWorker
   @SuppressWarnings("UnusedDeclaration")
   public List<Package> getPackagesList(boolean update) {
     if (update) {
-      long myId = mUpdatePackageListRefId = System.nanoTime();
-      updatePackagesListInBg(false, myId);
-      if (myId != mUpdatePackageListRefId) {
+      if (!updatePackagesListInBg(false)) {
         return null; // Interrupted in between
       }
     }
@@ -193,98 +193,103 @@ public class PackageParser {
   }
 
   private boolean mIsUpdating;
+  private final Object UPDATE_PKG_BG_LOCK = new Object();
 
-  private synchronized void updatePackagesListInBg(boolean doRepeatUpdates, long myId) {
-    long startTime = System.currentTimeMillis();
-    mIsUpdating = true;
+  private boolean updatePackagesListInBg(boolean doRepeatUpdates) {
+    synchronized (UPDATE_PKG_BG_LOCK) {
+      long startTime = System.currentTimeMillis();
+      mIsUpdating = true;
 
-    // Don't trouble Android on every call.
-    if (System.currentTimeMillis() - lastPackageManagerCall > 5000) {
-      if (mMySettings.isDebug()) {
-        Util.debugLog("updatePackagesListInBg", "Updating packages list");
-      }
-      setProgress(CREATE_PACKAGES_LIST, true, false);
-
-      packageInfoList =
-          mPackageManager.getInstalledPackages(PackageManager.GET_PERMISSIONS | PM_GET_SIGNATURES);
-      lastPackageManagerCall = System.currentTimeMillis();
-
-      packageInfoList.sort(
-          (o1, o2) -> {
-            String p1 = o1.applicationInfo.loadLabel(mPackageManager).toString().toUpperCase();
-            String p2 = o2.applicationInfo.loadLabel(mPackageManager).toString().toUpperCase();
-            return p1.compareTo(p2);
-          });
-    }
-
-    /** if permissions database changes, manually call {@link #updatePermReferences()} */
-    if (mPermRefList == null) {
-      setProgress(REF_PERMS_LIST, true, false);
-      buildPermRefList();
-    }
-
-    if (!mMySettings.excludeAppOpsPerms() && mMySettings.canReadAppOps()) {
-      if (mOpToSwitchList == null) {
-        setProgress(OP_TO_SWITCH_LIST, true, false);
-        mOpToSwitchList = mAppOpsParser.buildOpToSwitchList();
-      }
-      if (mOpToDefModeList == null) {
-        setProgress(OP_TO_DEF_MODE_LIST, true, false);
-        mOpToDefModeList = mAppOpsParser.buildOpToDefaultModeList();
-      }
-      if (mPermToOpCodeMap == null) {
-        setProgress(PERM_TO_OP_CODE_MAP, true, false);
-        mPermToOpCodeMap = mAppOpsParser.buildPermissionToOpCodeMap();
-      }
-    }
-
-    if (mMySettings.isDebug()) {
-      Util.debugLog("updatePackagesListInBg", "Total packages count: " + packageInfoList.size());
-    }
-    // set progress bar scale ASAP
-    setProgress(packageInfoList.size(), true, false);
-
-    // using global mPackagesList here might give wrong results in case of concurrent calls
-    List<Package> packageList = new ArrayList<>();
-
-    for (int i = 0; i < packageInfoList.size(); i++) {
-      // handle concurrent calls
-      if (myId != mUpdatePackageListRefId) {
+      // Don't trouble Android on every call.
+      if (System.currentTimeMillis() - lastPackageManagerCall > 5000) {
         if (mMySettings.isDebug()) {
-          Util.debugLog("updatePackagesListInBg", "Breaking loop, new call received");
+          Util.debugLog("updatePackagesListInBg", "Updating packages list");
         }
-        return;
+        setProgress(CREATE_PACKAGES_LIST, true, false);
+
+        packageInfoList =
+            mPackageManager.getInstalledPackages(
+                PackageManager.GET_PERMISSIONS | PM_GET_SIGNATURES);
+        lastPackageManagerCall = System.currentTimeMillis();
+
+        packageInfoList.sort(
+            (o1, o2) -> {
+              String p1 = o1.applicationInfo.loadLabel(mPackageManager).toString().toUpperCase();
+              String p2 = o2.applicationInfo.loadLabel(mPackageManager).toString().toUpperCase();
+              return p1.compareTo(p2);
+            });
       }
 
-      setProgress(i, false, false);
-      PackageInfo packageInfo = packageInfoList.get(i);
+      /** if permissions database changes, manually call {@link #updatePermReferences()} */
+      if (mPermRefList == null) {
+        setProgress(REF_PERMS_LIST, true, false);
+        buildPermRefList();
+      }
+
+      if (!mMySettings.excludeAppOpsPerms() && mMySettings.canReadAppOps()) {
+        if (mOpToSwitchList == null) {
+          setProgress(OP_TO_SWITCH_LIST, true, false);
+          mOpToSwitchList = mAppOpsParser.buildOpToSwitchList();
+        }
+        if (mOpToDefModeList == null) {
+          setProgress(OP_TO_DEF_MODE_LIST, true, false);
+          mOpToDefModeList = mAppOpsParser.buildOpToDefaultModeList();
+        }
+        if (mPermToOpCodeMap == null) {
+          setProgress(PERM_TO_OP_CODE_MAP, true, false);
+          mPermToOpCodeMap = mAppOpsParser.buildPermissionToOpCodeMap();
+        }
+      }
+
       if (mMySettings.isDebug()) {
-        Util.debugLog("updatePackagesListInBg", "Updating package: " + packageInfo.packageName);
+        Util.debugLog("updatePackagesListInBg", "Total packages count: " + packageInfoList.size());
       }
+      // set progress bar scale ASAP
+      setProgress(packageInfoList.size(), true, false);
 
-      Package pkg = new Package();
-      if (isPkgUpdated(packageInfo, pkg)) {
-        packageList.add(pkg);
-      }
+      // using global mPackagesList here might give wrong results in case of concurrent calls
+      List<Package> packageList = new ArrayList<>();
 
-      if (mMySettings.shouldDoRepeatUpdates() && doRepeatUpdates) {
-        if (shouldUpdateLiveData()) {
-          submitLiveData(packageList);
+      for (int i = 0; i < packageInfoList.size(); i++) {
+        // handle concurrent calls
+        if (Thread.interrupted()) {
+          if (mMySettings.isDebug()) {
+            Util.debugLog("updatePackagesListInBg", "Breaking loop, new call received");
+          }
+          return false;
+        }
+
+        setProgress(i, false, false);
+        PackageInfo packageInfo = packageInfoList.get(i);
+        if (mMySettings.isDebug()) {
+          Util.debugLog("updatePackagesListInBg", "Updating package: " + packageInfo.packageName);
+        }
+
+        Package pkg = new Package();
+        if (isPkgUpdated(packageInfo, pkg)) {
+          packageList.add(pkg);
+        }
+
+        if (mMySettings.shouldDoRepeatUpdates() && doRepeatUpdates) {
+          if (shouldUpdateLiveData()) {
+            submitLiveData(packageList);
+          }
         }
       }
+
+      // finally update complete list and complete progress
+      submitLiveData(packageList);
+      setProgress(packageInfoList.size(), false, true);
+
+      if (mMySettings.isDebug()) {
+        Util.debugLog(
+            "updatePackagesListInBg",
+            "Total time: " + (System.currentTimeMillis() - startTime) + "ms");
+      }
+
+      mIsUpdating = false;
+      return true;
     }
-
-    // finally update complete list and complete progress
-    submitLiveData(packageList);
-    setProgress(packageInfoList.size(), false, true);
-
-    if (mMySettings.isDebug()) {
-      Util.debugLog(
-          "updatePackagesListInBg",
-          "Total time: " + (System.currentTimeMillis() - startTime) + "ms");
-    }
-
-    mIsUpdating = false;
   }
 
   //////////////////////////////////////////////////////////////////
@@ -1035,51 +1040,57 @@ public class PackageParser {
     handleSearchQuery(false);
   }
 
-  private long mHandleSearchQueryRefId;
+  private final ExecutorService mSearchQueryExecutor = Executors.newSingleThreadExecutor();
   private Future<?> searchQueryFuture;
 
   public void handleSearchQuery(boolean doRepeatUpdates) {
-    if (!mMySettings.isSearching()) {
-      Utils.runInFg(() -> mPackagesListLive.setValue(mPackagesList));
-      if (mMySettings.isDebug()) {
-        Util.debugLog(
-            "handleSearchQuery", "Empty query text, posting " + mPackagesList.size() + " packages");
+    synchronized (mSearchQueryExecutor) {
+      if (!mMySettings.isSearching()) {
+        Utils.runInFg(() -> mPackagesListLive.setValue(mPackagesList));
+        if (mMySettings.isDebug()) {
+          Util.debugLog(
+              "handleSearchQuery",
+              "Empty query text, posting " + mPackagesList.size() + " packages");
+        }
+        return;
       }
-      return;
-    }
 
-    long myId = mHandleSearchQueryRefId = System.nanoTime();
-    if (searchQueryFuture != null && !searchQueryFuture.isDone()) {
-      if (mMySettings.isDebug()) {
-        Util.debugLog("handleSearchQuery", "Cancelling previous call");
+      if (searchQueryFuture != null && !searchQueryFuture.isDone()) {
+        if (mMySettings.isDebug()) {
+          Util.debugLog("handleSearchQuery", "Cancelling previous call");
+        }
+        searchQueryFuture.cancel(true);
       }
-      searchQueryFuture.cancel(false);
+      searchQueryFuture = mSearchQueryExecutor.submit(() -> doSearchInBg(doRepeatUpdates));
     }
-    searchQueryFuture = Utils.searchQueryExecutor(() -> doSearchInBg(doRepeatUpdates, myId));
   }
 
-  private void doSearchInBg(boolean doRepeatUpdates, long myId) {
-    String queryText = mMySettings.getQueryText();
-    List<Package> packageList = new ArrayList<>();
+  private final Object SEARCH_BG_LOCK = new Object();
 
-    synchronized (mPackagesList) {
-      for (Package pkg : new ArrayList<>(mPackagesList)) {
-        if (myId != mHandleSearchQueryRefId) {
-          if (mMySettings.isDebug()) {
-            Util.debugLog("doSearchInBg", "Breaking loop, new call received");
+  private void doSearchInBg(boolean doRepeatUpdates) {
+    synchronized (SEARCH_BG_LOCK) {
+      String queryText = mMySettings.getQueryText();
+      List<Package> packageList = new ArrayList<>();
+
+      synchronized (mPackagesList) {
+        for (Package pkg : new ArrayList<>(mPackagesList)) {
+          if (Thread.interrupted()) {
+            if (mMySettings.isDebug()) {
+              Util.debugLog("doSearchInBg", "Breaking loop, new call received");
+            }
+            return;
           }
-          return;
-        }
-        if (pkg.contains(queryText)) {
-          packageList.add(pkg);
-        }
-        if (doRepeatUpdates && shouldUpdateLiveData()) {
-          postLiveData(packageList);
-          packagesListUpdateTimeStamp = System.currentTimeMillis();
+          if (pkg.contains(queryText)) {
+            packageList.add(pkg);
+          }
+          if (doRepeatUpdates && shouldUpdateLiveData()) {
+            postLiveData(packageList);
+            packagesListUpdateTimeStamp = System.currentTimeMillis();
+          }
         }
       }
+      postLiveData(packageList);
     }
-    postLiveData(packageList);
   }
 
   private void postLiveData(List<Package> packageList) {
