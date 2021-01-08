@@ -34,12 +34,21 @@ public class HelpActivity extends BaseActivity {
     WebView webView = findViewById(R.id.help_web_view);
     mWebSettings = webView.getSettings();
 
+    boolean isNightMode = MySettings.getInstance().forceDarkMode() || Utils.isNightMode(this);
+    String url = "file:///android_asset/help.html";
+
     if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
-      int mode = WebSettingsCompat.FORCE_DARK_AUTO;
-      if (MySettings.getInstance().forceDarkMode() || Utils.isNightMode(this)) {
-        mode = WebSettingsCompat.FORCE_DARK_ON;
+      int forceDarkMode = WebSettingsCompat.FORCE_DARK_OFF;
+      if (isNightMode) {
+        forceDarkMode = WebSettingsCompat.FORCE_DARK_ON;
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK_STRATEGY)) {
+          WebSettingsCompat.setForceDarkStrategy(
+              mWebSettings, WebSettingsCompat.DARK_STRATEGY_USER_AGENT_DARKENING_ONLY);
+        }
       }
-      WebSettingsCompat.setForceDark(mWebSettings, mode);
+      WebSettingsCompat.setForceDark(mWebSettings, forceDarkMode);
+    } else if (isNightMode) {
+      url = "file:///android_asset/help_dark.html";
     }
 
     mFontSize = mMySettings.getIntPref(R.string.pref_help_font_size_key);
@@ -48,7 +57,7 @@ public class HelpActivity extends BaseActivity {
     mWebSettings.setSupportZoom(false);
 
     webView.setWebViewClient(new MyWebViewClient());
-    webView.loadUrl("file:///android_asset/help.html");
+    webView.loadUrl(url);
   }
 
   private int mFontSize;
