@@ -142,13 +142,11 @@ public class PrivTasks {
           continue;
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-          // TODO crash
-          //  NoSuchMethodError: No virtual method getLastAccessTime(I)J on SDK 28 / Realme RMX1851
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
           myOpEntry.lastAccessTime = opEntry.getLastAccessTime(AppOpsManager.OP_FLAGS_ALL);
         } else {
           // hidden API
-          // N and O don't have getLastAccessTime()
+          // N and O (P too?) don't have getLastAccessTime()
           myOpEntry.lastAccessTime = getTime(opEntry);
         }
         myOpEntry.opMode = opEntry.getMode();
