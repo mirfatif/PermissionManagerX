@@ -35,3 +35,8 @@
 -keep class com.mirfatif.permissionmanagerx.R$drawable {
   int g_*;
 }
+
+# PreferenceFragments are instantiated from XML files
+-keep class com.mirfatif.permissionmanagerx.prefs.settings.SettingsFrag* {
+   void onCreatePreferences(android.os.Bundle, java.lang.String);
+}
