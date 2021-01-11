@@ -3,7 +3,6 @@ package com.mirfatif.permissionmanagerx.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultCallback;
@@ -53,34 +52,18 @@ public class AboutActivity extends BaseActivity {
     findViewById(R.id.logging).setOnClickListener(v -> handleLogging());
     findViewById((R.id.check_update)).setOnClickListener(v -> checkForUpdates());
 
-    if (!BuildConfig.GH_VERSION) {
-      findViewById(R.id.paid_features_container).setVisibility(View.GONE);
-    } else {
-      TextView paidFeaturesSummaryView = findViewById(R.id.paid_features_summary);
-      View paidFeaturesDetailView = findViewById(R.id.paid_features_detail);
+    TextView paidFeaturesView = findViewById(R.id.paid_features_summary);
+    paidFeaturesView.setText(Utils.htmlToString(R.string.paid_features_summary));
 
-      String features =
-          getString(R.string.paid_feature1)
-              + ", "
-              + getString(R.string.paid_feature2)
-              + ", "
-              + getString(R.string.paid_feature3)
-              + ", "
-              + getString(R.string.paid_feature4);
-      paidFeaturesSummaryView.setText(features);
-
-      findViewById(R.id.paid_features)
-          .setOnClickListener(
-              v -> {
-                if (paidFeaturesDetailView.getVisibility() != View.GONE) {
-                  paidFeaturesDetailView.setVisibility(View.GONE);
-                  paidFeaturesSummaryView.setVisibility(View.VISIBLE);
-                } else {
-                  paidFeaturesDetailView.setVisibility(View.VISIBLE);
-                  paidFeaturesSummaryView.setVisibility(View.GONE);
-                }
-              });
-    }
+    findViewById(R.id.paid_features)
+        .setOnClickListener(
+            v -> {
+              if (paidFeaturesView.getMaxLines() == 1) {
+                paidFeaturesView.setMaxLines(1000);
+              } else {
+                paidFeaturesView.setMaxLines(1);
+              }
+            });
   }
 
   private void openWebUrl(int viewResId, int linkResId) {

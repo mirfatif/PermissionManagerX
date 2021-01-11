@@ -72,23 +72,26 @@
   <string name="are_you_rooted">. Are you rooted?</string>
   <string name="connected_to_adb">Connected to ADB</string>
   <string name="adb_connect_fail">Connecting to ADB failed</string>
-  <string name="adb_connect_fail_long">Connecting to ADB failed.\n- Enable <b><i>ADB Over Network</i></b>
-    and come back to connect.\n- Allow ADB authentication if prompted.
+  <string name="adb_connect_fail_long">
+    <![CDATA[
+      Connecting to ADB failed.
+      <ul>
+        <li>Enable <b><i>ADB Over Network</i></b> and come back to connect.</li>
+        <li>Allow ADB authentication if prompted.</li>
+      </ul>
+    ]]>
   </string>
   <string name="daemon_failed">Starting privileged daemon failed</string>
-  <string name="run_main_app">Make sure that you run the app from primary user profile and grant
-    privileges at least once.
-  </string>
   <string name="adb_switch_fail">Switching to ADB failed</string>
   <string name="backup">Backup</string>
   <string name="restore">Restore</string>
-  <string name="choose_backup_restore">You can backup or restore preferences and permission references.</string>
+  <string name="choose_backup_restore">Backup or restore preferences and permission references.</string>
   <string name="select_backup_file">Select backup file</string>
   <string name="backup_in_progress">Backup in progress</string>
   <string name="restore_in_progress">Restore in progress</string>
-  <string name="backup_restore_process_entries">Processed %1$d preferences and %2$d permission references.</string>
-  <string name="backup_restore_invalid_prefs">\nSkipped %1$d invalid preferences.</string>
-  <string name="backup_restore_uninstalled_apps">\nSkipped %1$d uninstalled apps.</string>
+  <string name="backup_restore_process_entries">Processed %1$d preference(s) and %2$d permission reference(s).</string>
+  <string name="backup_restore_invalid_prefs">\nSkipped %1$d invalid preference(s).</string>
+  <string name="backup_restore_uninstalled_apps">\nSkipped %1$d uninstalled app(s).</string>
   <string name="backup_restore_failed">Failed. Some error occurred.</string>
   <string name="skip_uninstalled_packages">Skip uninstalled packages</string>
   <string name="privileges">"Privileges"</string>
@@ -143,16 +146,16 @@
 
   <!--PackageActivity-->
   <string name="something_bad_happened">Something bad happened</string>
-  <string name="uid_mode_app_ops_warning">This is a UID mode AppOps.
-    Changing it also affects %1$d other packages.\nContinue?
+  <string name="uid_mode_app_ops_warning">This is a UID mode AppOp.
+    Changing it also affects %1$d other package(s).\nContinue?
   </string>
   <string name="extra_ops_cant_be_excluded">Extra AppOps cannot be excluded from visible list.</string>
   <string name="exclude_perm_from_list">Exclude permission from visible list.</string>
   <string name="set_perm_state_reference">Set %1$s state as reference.</string>
   <string name="clear_perm_state_reference">Clear %1$s state as reference.</string>
-  <string name="permission_filtered_out">permission filtered out</string>
+  <string name="permission_filtered_out">1 permission filtered out</string>
   <string name="count_permissions_filtered_out">%1$d permissions filtered out</string>
-  <string name="requested_no_permissions">Requested no permissions</string>
+  <string name="requested_no_permissions">No permissions requested</string>
   <string name="protection_level">Protection level: %1$s</string>
   <string name="should_be">Should be %1$s</string>
 
@@ -195,10 +198,16 @@
   <string name="app_rating">Rate Me</string>
   <string name="app_rating_summary">Rating / review on Play Store</string>
   <string name="paid_features">Paid Features</string>
-  <string name="paid_feature1">Scheduled check to notify bad reference states</string>
-  <string name="paid_feature2">Auto create backup file on changes</string>
-  <string name="paid_feature3">Search suggestions</string>
-  <string name="paid_feature4">Theming options</string>
+  <string name="paid_features_summary">
+    <![CDATA[
+      <ul>
+        <li>Scheduled check to notify bad reference states</li>
+        <li>Auto create backup file on changes</li>
+        <li>Search suggestions</li>
+        <li>Theming options</li>
+      </ul>
+    ]]>
+  </string>
   <string name="update">Update</string>
   <string name="update_summary">Check for app updates</string>
   <string name="check_in_progress">Check in progress</string>

@@ -3,6 +3,7 @@ package com.mirfatif.permissionmanagerx.main;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.net.Uri;
+import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.util.Xml;
 import android.view.View;
@@ -475,7 +476,8 @@ public class BackupRestore {
       return;
     }
     Utils.runInFg(() -> mA.getRoundProgressContainer().setVisibility(View.GONE));
-    showFinalDialog(isBackup, getString(R.string.backup_restore_failed));
+    showFinalDialog(
+        isBackup, new SpannableStringBuilder(getString(R.string.backup_restore_failed)));
   }
 
   private void succeeded(
@@ -502,10 +504,10 @@ public class BackupRestore {
       message += mA.getString(R.string.backup_restore_uninstalled_apps, skippedApps);
     }
 
-    showFinalDialog(isBackup, message);
+    showFinalDialog(isBackup, Utils.breakParas(message));
   }
 
-  private void showFinalDialog(boolean isBackup, String message) {
+  private void showFinalDialog(boolean isBackup, SpannableStringBuilder message) {
     if (mA == null) return;
     Builder builder =
         new Builder(mA)

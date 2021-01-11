@@ -128,7 +128,8 @@ public class PackageActivity extends BaseActivity {
                       R.string.yes, (d, which) -> setAppOpsMode(permission, selectedValue, true))
                   .setNegativeButton(R.string.no, (dialog1, which) -> updateSpinnerSelection(false))
                   .setMessage(
-                      getString(R.string.uid_mode_app_ops_warning, affectedPackagesCount - 1))
+                      Utils.breakParas(
+                          getString(R.string.uid_mode_app_ops_warning, affectedPackagesCount - 1)))
                   .create();
           new AlertDialogFragment(dialog).show(this, "CHANGE_UID_MODE", false);
         } else {
@@ -313,20 +314,20 @@ public class PackageActivity extends BaseActivity {
       String message;
       if (mPackage.getTotalPermCount() != 0) {
         if (mPackage.getTotalPermCount() == 1) {
-          message = "1 " + getString(R.string.permission_filtered_out);
+          message = getString(R.string.permission_filtered_out);
         } else {
           message =
               getString(R.string.count_permissions_filtered_out, mPackage.getTotalPermCount());
         }
         filterSettingsButton.setOnClickListener(
             v -> startActivity(new Intent(App.getContext(), FilterSettingsActivity.class)));
-        noPermissionsView.setVisibility(View.VISIBLE);
         filterSettingsButton.setVisibility(View.VISIBLE);
       } else {
         message = getString(R.string.requested_no_permissions);
         filterSettingsButton.setVisibility(View.GONE);
       }
       noPermissionsView.setText(message);
+      noPermissionsView.setVisibility(View.VISIBLE);
       mRefreshLayout.setVisibility(View.GONE);
     } else {
       mRefreshLayout.setVisibility(View.VISIBLE);

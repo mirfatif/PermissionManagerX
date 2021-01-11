@@ -695,32 +695,10 @@ public class MainActivity extends BaseActivity {
         Utils.runInFg(() -> mRoundProgressTextView.setText(R.string.starting_daemon));
 
         Boolean res = mPrivDaemonHandler.startDaemon(preferRoot);
-        String message = null;
-        boolean showDialog = false;
         if (res == null) {
-          message = getString(R.string.daemon_logging_failed);
+          showSnackBar(getString(R.string.daemon_logging_failed), 10000);
         } else if (!res) {
-          message = getString(R.string.daemon_failed);
-          if (Utils.getUserId() != 0) {
-            message += ". " + getString(R.string.run_main_app);
-            showDialog = true;
-          }
-        }
-
-        if (message != null) {
-          if (!showDialog) {
-            showSnackBar(message, 10000);
-          } else {
-            Builder builder =
-                new Builder(this)
-                    .setPositiveButton(android.R.string.ok, null)
-                    .setTitle(R.string.privileges)
-                    .setMessage(message);
-            Utils.runInFg(
-                () ->
-                    new AlertDialogFragment(builder.create())
-                        .show(this, TAG_GRANT_ROOT_OR_ADB, false));
-          }
+          showSnackBar(getString(R.string.daemon_failed), 10000);
         }
       } else {
         Log.e("startPrivDaemon", "Root access: unavailable, ADB shell: unavailable");
@@ -902,15 +880,11 @@ public class MainActivity extends BaseActivity {
               Utils.runInFg(() -> adbCheckBox.setChecked(true));
               restartPrivDaemon(false);
             } else {
-              String message = getString(R.string.adb_connect_fail_long);
-              if (Utils.getUserId() != 0) {
-                message += "\n- " + getString(R.string.run_main_app);
-              }
               Builder builder =
                   new Builder(this)
                       .setPositiveButton(android.R.string.ok, null)
                       .setTitle(R.string.privileges)
-                      .setMessage(message);
+                      .setMessage(Utils.htmlToString(R.string.adb_connect_fail_long));
               Utils.runInFg(
                   () ->
                       new AlertDialogFragment(builder.create())

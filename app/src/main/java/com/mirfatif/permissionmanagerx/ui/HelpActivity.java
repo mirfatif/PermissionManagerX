@@ -55,6 +55,7 @@ public class HelpActivity extends BaseActivity {
     setFontSize();
 
     mWebSettings.setSupportZoom(false);
+    mWebSettings.setBlockNetworkLoads(true);
 
     webView.setWebViewClient(new MyWebViewClient());
     webView.loadUrl(url);

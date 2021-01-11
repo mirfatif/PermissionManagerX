@@ -81,14 +81,7 @@
   <style name="aboutActivityItemSummary">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
-    <item name="android:titleMarginTop">2dp</item>
-  </style>
-
-  <style name="aboutActivityPaidFeatureItem">
-    <item name="android:layout_width">match_parent</item>
-    <item name="android:layout_height">wrap_content</item>
-    <item name="android:titleMarginTop">2dp</item>
-    <item name="android:drawablePadding">4dp</item>
+    <item name="android:layout_marginTop">2dp</item>
   </style>
 
 </resources>

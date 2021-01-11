@@ -54,8 +54,9 @@
 
     <item
       android:id="@+id/action_donate"
+      android:icon="@drawable/donate"
       android:title="@string/donate_menu_item"
-      android:icon="@drawable/donate"/>
+      android:visible="false"/>
 
     <item
       android:id="@+id/action_about"

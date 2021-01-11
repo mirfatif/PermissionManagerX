@@ -1,5 +1,6 @@
 package com.mirfatif.permissionmanagerx;
 
+import android.annotation.ColorInt;
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -11,6 +12,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -18,10 +20,19 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Parcel;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.BulletSpan;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.Button;
 import android.widget.Toast;
+import androidx.annotation.AttrRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.browser.customtabs.CustomTabColorSchemeParams;
 import androidx.browser.customtabs.CustomTabsIntent;
@@ -64,6 +75,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utils {
 
@@ -224,10 +237,10 @@ public class Utils {
       return true;
     }
 
-    // Doesn't work with app context
-    int accentColor = MaterialColors.getColor(activity, R.attr.accentTransColor, Color.TRANSPARENT);
     CustomTabColorSchemeParams colorSchemeParams =
-        new CustomTabColorSchemeParams.Builder().setToolbarColor(accentColor).build();
+        new CustomTabColorSchemeParams.Builder()
+            .setToolbarColor(getColor(activity, R.attr.accentTransColor))
+            .build();
 
     CustomTabsIntent customTabsIntent =
         new CustomTabsIntent.Builder()
@@ -238,6 +251,11 @@ public class Utils {
     customTabsIntent.launchUrl(activity, Uri.parse(url));
 
     return true;
+  }
+
+  // Doesn't work with app context
+  public static @ColorInt int getColor(Activity activity, @AttrRes int colorAttrResId) {
+    return MaterialColors.getColor(activity, colorAttrResId, Color.TRANSPARENT);
   }
 
   public static boolean sendMail(Activity activity, String body) {
@@ -348,6 +366,69 @@ public class Utils {
           Button b = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
           b.setPadding(b.getPaddingLeft(), 4, 4, 4);
         });
+  }
+
+  public static Spanned htmlToString(int resId) {
+    Spanned spanned = Html.fromHtml(getString(resId), Html.FROM_HTML_MODE_COMPACT);
+
+    // Let's customize BulletSpans
+    SpannableStringBuilder string = new SpannableStringBuilder(spanned);
+
+    Parcel parcel = Parcel.obtain();
+    parcel.writeInt(dpToPx(4)); // gapWidth
+    parcel.writeInt(0); // wantColor
+    parcel.writeInt(0); // color
+    parcel.writeInt(dpToPx(2)); // bulletRadius
+
+    for (BulletSpan span : string.getSpans(0, string.length(), BulletSpan.class)) {
+      int start = string.getSpanStart(span);
+      int end = string.getSpanEnd(span);
+      string.removeSpan(span);
+      parcel.setDataPosition(0); // For read
+      string.setSpan(new BulletSpan(parcel), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    breakParas(string);
+    parcel.recycle();
+    return string;
+  }
+
+  public static SpannableStringBuilder breakParas(String string) {
+    return breakParas(new SpannableStringBuilder(string));
+  }
+
+  public static SpannableStringBuilder breakParas(SpannableStringBuilder string) {
+    // Remove newLine chars at end
+    while (true) {
+      int len = string.length();
+      if (string.charAt(len - 1) != '\n') {
+        break;
+      }
+      string.delete(len - 1, len);
+    }
+
+    Matcher matcher = Pattern.compile("\n").matcher(string);
+    int from = 0;
+    while (matcher.find(from)) {
+      // Replace the existing newLine char with 2 newLine chars
+      string.replace(matcher.start(), matcher.end(), "\n\n");
+      // On next iteration skip the newly added newLine char
+      from = matcher.start() + 2;
+      // Add span to the newly added newLine char
+      string.setSpan(
+          new RelativeSizeSpan(0.25f),
+          matcher.start() + 1,
+          matcher.end() + 1,
+          Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    return string;
+  }
+
+  public static int dpToPx(float dp) {
+    return (int)
+        TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, dp, Resources.getSystem().getDisplayMetrics());
   }
 
   //////////////////////////////////////////////////////////////////
