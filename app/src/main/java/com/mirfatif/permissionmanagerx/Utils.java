@@ -96,19 +96,29 @@ public class Utils {
 
   public static boolean runCommand(String[] command, String tag, String match) {
     Process process = runCommand(command, tag, true);
-    if (process == null) return false;
+    if (process == null) {
+      return false;
+    }
     try (BufferedReader stdIn =
         new BufferedReader(new InputStreamReader(process.getInputStream()))) {
       String line;
       String res = "";
       if (match != null) {
         res = stdIn.readLine();
-        if (!TextUtils.isEmpty(res)) Log.i(tag, res);
+        if (!TextUtils.isEmpty(res)) {
+          Log.i(tag, res);
+        }
       }
-      while ((line = stdIn.readLine()) != null) Log.i(tag, line);
+      while ((line = stdIn.readLine()) != null) {
+        Log.i(tag, line);
+      }
 
-      if (process.waitFor() != 0) return false;
-      if (match == null || res.trim().equals(match)) return true;
+      if (process.waitFor() != 0) {
+        return false;
+      }
+      if (match == null || res.trim().equals(match)) {
+        return true;
+      }
     } catch (IOException | InterruptedException e) {
       Log.e(tag, e.toString());
     }
@@ -166,7 +176,9 @@ public class Utils {
 
   // org.apache.commons.io.IOUtils.copy()
   public static boolean copyStreamFails(InputStream input, OutputStream output) {
-    if (input == null || output == null) return true;
+    if (input == null || output == null) {
+      return true;
+    }
     byte[] buffer = new byte[8192];
     int len;
     long count = 0;
@@ -196,13 +208,17 @@ public class Utils {
   // org.apache.commons.lang3.StringUtils.capitalize()
   public static String capitalizeString(String str) {
     final int strLen = str.length();
-    if (strLen == 0) return str;
+    if (strLen == 0) {
+      return str;
+    }
 
     str = str.toLowerCase();
 
     final int firstCodepoint = str.codePointAt(0);
     final int newCodePoint = Character.toTitleCase(firstCodepoint);
-    if (firstCodepoint == newCodePoint) return str;
+    if (firstCodepoint == newCodePoint) {
+      return str;
+    }
 
     final int[] newCodePoints = new int[strLen];
     int outOffset = 0;
@@ -216,7 +232,9 @@ public class Utils {
   }
 
   public static String ellipsize(String str, int len) {
-    if (str == null || str.length() <= len) return str;
+    if (str == null || str.length() <= len) {
+      return str;
+    }
     return str.substring(0, len - 3).concat("…");
   }
 
@@ -262,7 +280,9 @@ public class Utils {
     Intent emailIntent = new Intent(Intent.ACTION_SENDTO).setData(Uri.parse("mailto:"));
     emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {getString(R.string.email_address)});
     emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
-    if (body != null) emailIntent.putExtra(Intent.EXTRA_TEXT, body);
+    if (body != null) {
+      emailIntent.putExtra(Intent.EXTRA_TEXT, body);
+    }
     try {
       activity.startActivity(emailIntent);
     } catch (ActivityNotFoundException e) {
@@ -280,8 +300,12 @@ public class Utils {
     // Try best to kill the process. The on reading daemon's logcat might not
     // be killed because of different UID.
     try {
-      if (reader != null) reader.close();
-      if (adb != null) adb.close();
+      if (reader != null) {
+        reader.close();
+      }
+      if (adb != null) {
+        adb.close();
+      }
       if (process != null) {
         process.getInputStream().close();
         process.getErrorStream().close();
@@ -364,7 +388,8 @@ public class Utils {
     dialog.setOnShowListener(
         d -> {
           Button b = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
-          b.setPadding(b.getPaddingLeft(), 4, 4, 4);
+          int padding = dpToPx(4);
+          b.setPadding(b.getPaddingLeft(), padding, padding, padding);
         });
   }
 
@@ -413,13 +438,17 @@ public class Utils {
       // Replace the existing newLine char with 2 newLine chars
       string.replace(matcher.start(), matcher.end(), "\n\n");
       // On next iteration skip the newly added newLine char
-      from = matcher.start() + 2;
+      from = matcher.end() + 1;
+
       // Add span to the newly added newLine char
       string.setSpan(
           new RelativeSizeSpan(0.25f),
           matcher.start() + 1,
           matcher.end() + 1,
           Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+      // On Android 7 Matcher is not refreshed if the string is changed
+      matcher = Pattern.compile("\n").matcher(string);
     }
 
     return string;
@@ -429,6 +458,14 @@ public class Utils {
     return (int)
         TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, dp, Resources.getSystem().getDisplayMetrics());
+  }
+
+  public static String colorIntToRGB(@ColorInt int color, boolean retainAlpha) {
+    if (retainAlpha) {
+      return String.format("#%08X", color);
+    } else {
+      return String.format("#%06X", 0xFFFFFF & color);
+    }
   }
 
   //////////////////////////////////////////////////////////////////
@@ -506,10 +543,14 @@ public class Utils {
   public static void stopLogging() {
     synchronized (LOG_WRITER_LOCK) {
       MySettings mySettings = MySettings.getInstance();
-      if (!mySettings.isDebug()) return;
+      if (!mySettings.isDebug()) {
+        return;
+      }
       mySettings.setLogging(false);
       try {
-        if (mLogcatWriter != null) mLogcatWriter.close();
+        if (mLogcatWriter != null) {
+          mLogcatWriter.close();
+        }
       } catch (IOException ignored) {
       }
       if (mySettings.isPrivDaemonAlive()) {

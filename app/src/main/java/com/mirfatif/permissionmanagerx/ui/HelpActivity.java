@@ -1,5 +1,6 @@
 package com.mirfatif.permissionmanagerx.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,9 +9,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import androidx.annotation.NonNull;
-import androidx.webkit.WebSettingsCompat;
 import androidx.webkit.WebViewClientCompat;
-import androidx.webkit.WebViewFeature;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
@@ -34,38 +33,29 @@ public class HelpActivity extends BaseActivity {
     WebView webView = findViewById(R.id.help_web_view);
     mWebSettings = webView.getSettings();
 
-    boolean isNightMode = MySettings.getInstance().forceDarkMode() || Utils.isNightMode(this);
-    String url = "file:///android_asset/help.html";
-
-    if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
-      int forceDarkMode = WebSettingsCompat.FORCE_DARK_OFF;
-      if (isNightMode) {
-        forceDarkMode = WebSettingsCompat.FORCE_DARK_ON;
-        if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK_STRATEGY)) {
-          WebSettingsCompat.setForceDarkStrategy(
-              mWebSettings, WebSettingsCompat.DARK_STRATEGY_USER_AGENT_DARKENING_ONLY);
-        }
-      }
-      WebSettingsCompat.setForceDark(mWebSettings, forceDarkMode);
-    } else if (isNightMode) {
-      url = "file:///android_asset/help_dark.html";
-    }
-
     mFontSize = mMySettings.getIntPref(R.string.pref_help_font_size_key);
     setFontSize();
 
     mWebSettings.setSupportZoom(false);
     mWebSettings.setBlockNetworkLoads(true);
-
     webView.setWebViewClient(new MyWebViewClient());
-    webView.loadUrl(url);
+
+    enableJs();
+    webView.addJavascriptInterface(new HelpJsInterface(this), "Android");
+
+    webView.loadUrl("file:///android_asset/help.html");
+  }
+
+  @SuppressLint("SetJavaScriptEnabled")
+  private void enableJs() {
+    mWebSettings.setJavaScriptEnabled(true);
   }
 
   private int mFontSize;
 
   private void setFontSize() {
     mWebSettings.setDefaultFontSize(mFontSize);
-    if (mFontSize >= 23 || mFontSize <= 11) {
+    if (mFontSize > 22 || mFontSize < 12) {
       invalidateOptionsMenu();
     }
     mMySettings.savePref(R.string.pref_help_font_size_key, mFontSize);

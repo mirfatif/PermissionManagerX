@@ -166,6 +166,13 @@ public class BackupRestore {
     // preferences
     Map<String, ?> prefEntries = Utils.getDefPrefs().getAll();
     for (Map.Entry<String, ?> entry : prefEntries.entrySet()) {
+
+      String key = entry.getKey();
+      if (isInvalidPrefKey(key)) {
+        Log.i(TAG, "Backup: Skipping " + key);
+        continue;
+      }
+
       Object value = entry.getValue();
       String type;
 
@@ -193,7 +200,7 @@ public class BackupRestore {
 
       try {
         serializer.startTag(null, PREF);
-        serializer.attribute(null, KEY, entry.getKey());
+        serializer.attribute(null, KEY, key);
         serializer.attribute(null, VALUE, value.toString());
         serializer.attribute(null, TYPE, type);
         serializer.endTag(null, PREF);
@@ -302,7 +309,7 @@ public class BackupRestore {
     SharedPreferences.Editor prefEdit = Utils.getDefPrefs().edit();
     for (BackupEntry entry : prefEntries) {
 
-      if (!isValidPrefKey(entry.key)) {
+      if (isInvalidPrefKey(entry.key)) {
         Log.e(TAG, "Invalid preference: " + entry.key);
         invalidPrefs++;
         continue;
@@ -406,7 +413,7 @@ public class BackupRestore {
 
   private final List<String> mPrefKeys = new ArrayList<>();
 
-  private boolean isValidPrefKey(String prefKey) {
+  private boolean isInvalidPrefKey(String prefKey) {
     if (mPrefKeys.isEmpty()) {
       for (Field field : R.string.class.getDeclaredFields()) {
         String strName = field.getName();
@@ -419,7 +426,7 @@ public class BackupRestore {
         mPrefKeys.add(_prefKey);
       }
     }
-    return mPrefKeys.contains(prefKey);
+    return !mPrefKeys.contains(prefKey);
   }
 
   private final List<String> mInstalledPackages = new ArrayList<>();
