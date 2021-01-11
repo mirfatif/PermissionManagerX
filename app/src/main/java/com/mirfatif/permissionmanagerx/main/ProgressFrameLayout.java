@@ -36,6 +36,12 @@ public class ProgressFrameLayout extends FrameLayout {
   // Too quick calls cause progress bar to hang. Here we rate limit it.
   @Override
   public synchronized void setVisibility(int visibility) {
+    if (mKeepVisible && visibility != VISIBLE) {
+      if (mListener != null) {
+        mListener.visibilityChanged(visibility);
+      }
+      return;
+    }
     if (mVisibilityFuture != null && !mVisibilityFuture.isDone()) {
       mVisibilityFuture.cancel(true);
     }
@@ -60,8 +66,18 @@ public class ProgressFrameLayout extends FrameLayout {
     Utils.runInFg(() -> super.setVisibility(visibility));
   }
 
+  private boolean mKeepVisible = false;
+
+  @SuppressWarnings("UnusedDeclaration")
+  public void setKeepVisible(boolean keepVisible) {
+    mKeepVisible = keepVisible;
+    if (keepVisible) {
+      setVisibility(VISIBLE);
+    }
+  }
+
   @Override
-  protected void onVisibilityChanged(View changedView, int visibility) {
+  protected synchronized void onVisibilityChanged(View changedView, int visibility) {
     super.onVisibilityChanged(changedView, visibility);
     if (mListener != null && changedView == this) {
       mListener.visibilityChanged(visibility);
@@ -71,7 +87,7 @@ public class ProgressFrameLayout extends FrameLayout {
   private VisibilityChangeListener mListener;
 
   @SuppressWarnings("UnusedDeclaration")
-  public void setOnVisibilityChangeListener(VisibilityChangeListener listener) {
+  public synchronized void setOnVisibilityChangeListener(VisibilityChangeListener listener) {
     mListener = listener;
   }
 
