@@ -196,7 +196,9 @@ class AdvancedSettings {
 
     Process process = Utils.runCommand(new String[] {"su"}, TAG, true);
     if (process == null) {
-      showAdbFailed(R.string.adb_switch_fail);
+      Utils.runInFg(
+          () ->
+              Toast.makeText(App.getContext(), R.string.adb_switch_fail, Toast.LENGTH_LONG).show());
       return;
     }
 
@@ -223,8 +225,6 @@ class AdvancedSettings {
     SystemClock.sleep(5000);
     if (Utils.checkAdb()) {
       restartDaemon();
-    } else {
-      showAdbFailed(R.string.adb_connect_fail);
     }
   }
 
@@ -236,10 +236,6 @@ class AdvancedSettings {
           mA.showSnackBar(getString(R.string.connected_to_adb), 5000);
           mA.setNavigationMenu(); // To check Adb CheckBox
         });
-  }
-
-  private void showAdbFailed(int resId) {
-    Utils.runInFg(() -> Toast.makeText(App.getContext(), resId, Toast.LENGTH_LONG).show());
   }
 
   private String getString(int resId) {

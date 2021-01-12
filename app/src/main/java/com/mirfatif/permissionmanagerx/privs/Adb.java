@@ -2,10 +2,14 @@ package com.mirfatif.permissionmanagerx.privs;
 
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
+import com.cgutman.adblib.AdbAuthenticationFailedException;
 import com.cgutman.adblib.AdbBase64;
 import com.cgutman.adblib.AdbConnection;
 import com.cgutman.adblib.AdbCrypto;
 import com.cgutman.adblib.AdbStream;
+import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import java.io.BufferedReader;
@@ -17,6 +21,8 @@ import java.io.Writer;
 import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class Adb {
 
@@ -29,10 +35,14 @@ public class Adb {
   private AdbReader adbReader;
   private AdbWriter adbWriter;
 
-  Adb(String command) throws IOException {
+  Adb(String command) throws AdbException {
+    createConnection(command, true);
+  }
+
+  private void createConnection(String command, boolean showPrompt) throws AdbException {
     File adbDir = new File(App.getContext().getFilesDir(), "adb");
     if (!adbDir.exists() && !adbDir.mkdirs()) {
-      throw new IOException("Could not create directory: " + adbDir);
+      throw new AdbException("Could not create directory: " + adbDir);
     }
     File pvtKey = new File(adbDir, "pvt.key");
     File pubKey = new File(adbDir, "pub.key");
@@ -56,7 +66,15 @@ public class Adb {
       adbSocket.setTcpNoDelay(true);
 
       adbConnection = AdbConnection.create(adbSocket, adbCrypto);
-      adbConnection.connect();
+      if (!adbConnection.connect(15, TimeUnit.SECONDS, !showPrompt)) {
+        if (showPrompt) {
+          closeQuietly();
+          // Let's do one more quick try
+          createConnection(command, false);
+          return;
+        }
+        throw new TimeoutException("ADB connection timed out");
+      }
 
       // If command is empty, shell is opened. But default shell writes its STDIN to STDERR. So we
       // execute another shell.
@@ -66,11 +84,24 @@ public class Adb {
       Log.i(TAG, "Executing: shell:" + command);
       adbStream = adbConnection.open("shell:" + command);
 
-    } catch (NoSuchAlgorithmException | IOException | InterruptedException e) {
-      e.printStackTrace();
-      closeQuietly();
-      throw new IOException(e);
+    } catch (NoSuchAlgorithmException e) {
+      throwAdbException(R.string.adb_key_pair_failed, e, "Creating ADB key pair failed");
+    } catch (IOException e) {
+      throwAdbException(R.string.adb_connect_failed, e, "ADB connection failed");
+    } catch (InterruptedException e) {
+      throwAdbException(R.string.adb_connect_interrupted, e, "ADB connection interrupted");
+    } catch (AdbAuthenticationFailedException e) {
+      throwAdbException(R.string.adb_authentication_failed, e, "ADB authentication failed");
+    } catch (TimeoutException e) {
+      throwAdbException(R.string.adb_connect_timed_out, e, e.getMessage());
     }
+  }
+
+  private void throwAdbException(int resId, Exception e, String msg) throws AdbException {
+    e.printStackTrace();
+    closeQuietly();
+    Utils.runInFg(() -> Toast.makeText(App.getContext(), resId, Toast.LENGTH_LONG).show());
+    throw new AdbException(msg);
   }
 
   public AdbReader getReader() {
@@ -122,8 +153,8 @@ public class Adb {
     Adb adb;
     try {
       adb = new Adb("id -u");
-    } catch (IOException e) {
-      e.printStackTrace();
+    } catch (AdbException e) {
+      Log.e(TAG, e.toString());
       return false;
     }
 
@@ -145,14 +176,16 @@ public class Adb {
       }
     }
 
-    if (res == null) {
-      return false;
-    }
-    for (String match : new String[] {"2000", "0"}) {
-      if (res.trim().equals(match)) {
-        return true;
+    if (res != null) {
+      for (String match : new String[] {"2000", "0"}) {
+        if (res.trim().equals(match)) {
+          return true;
+        }
       }
     }
+    Utils.runInFg(
+        () ->
+            Toast.makeText(App.getContext(), R.string.adb_command_fail, Toast.LENGTH_LONG).show());
     return false;
   }
 
@@ -317,6 +350,13 @@ public class Adb {
       }
       flush();
       adbStream.close();
+    }
+  }
+
+  static class AdbException extends Exception {
+
+    public AdbException(String message) {
+      super(message);
     }
   }
 }

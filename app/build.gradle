@@ -54,7 +54,7 @@ dependencies {
     implementation 'me.saket:better-link-movement-method:2.2.0'
 
     // Let's behave responsibly
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.5'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.6'
 }
 
 task buildDaemon() {

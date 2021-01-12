@@ -654,58 +654,45 @@ public class Utils {
   //////////////////////////////////////////////////////////////////
 
   @SuppressWarnings("UnusedReturnValue")
-  public static boolean checkRootVerbose() {
-    MySettings mySettings = MySettings.getInstance();
-    if (mySettings.isRootGranted()) {
-      if (!checkRoot()) {
-        runInFg(
-            () ->
-                Toast.makeText(App.getContext(), R.string.getting_root_fail, Toast.LENGTH_LONG)
-                    .show());
-        if (mySettings.isDebug()) {
-          Util.debugLog("checkRoot", "Getting root privileges failed");
-        }
-      } else {
-        if (mySettings.isDebug()) {
-          Util.debugLog("checkRoot", "Getting root privileges succeeded");
-        }
-        return true;
-      }
+  public static boolean checkRootIfEnabled() {
+    if (!MySettings.getInstance().isRootGranted()) {
+      return false;
     }
-    return false;
-  }
-
-  @SuppressWarnings("UnusedReturnValue")
-  public static boolean checkAdbVerbose() {
-    MySettings mySettings = MySettings.getInstance();
-    if (mySettings.isAdbConnected()) {
-      if (!checkAdb()) {
-        runInFg(
-            () ->
-                Toast.makeText(App.getContext(), R.string.adb_connect_fail, Toast.LENGTH_LONG)
-                    .show());
-        if (mySettings.isDebug()) {
-          Util.debugLog("checkAdb", "Connecting to ADB failed");
-        }
-      } else {
-        if (mySettings.isDebug()) {
-          Util.debugLog("checkAdb", "Connecting to ADB succeeded");
-        }
-        return true;
-      }
+    boolean res = checkRoot();
+    if (!res) {
+      runInFg(
+          () ->
+              Toast.makeText(App.getContext(), R.string.getting_root_fail, Toast.LENGTH_LONG)
+                  .show());
     }
-    return false;
-  }
-
-  public static boolean checkRoot() {
-    boolean res = runCommand(new String[] {"su", "-c", "id  -u"}, "checkRoot", "0");
-    MySettings.getInstance().setRootGranted(res);
     return res;
   }
 
+  public static boolean checkRoot() {
+    MySettings mySettings = MySettings.getInstance();
+    boolean res = runCommand(new String[] {"su", "-c", "id  -u"}, "checkRoot", "0");
+    mySettings.setRootGranted(res);
+    if (mySettings.isDebug()) {
+      Util.debugLog("checkRoot", "Getting root privileges " + (res ? "succeeded" : "failed"));
+    }
+    return res;
+  }
+
+  @SuppressWarnings("UnusedReturnValue")
+  public static boolean checkAdbIfEnabled() {
+    if (MySettings.getInstance().isAdbConnected()) {
+      return checkAdb();
+    }
+    return false;
+  }
+
   public static boolean checkAdb() {
+    MySettings mySettings = MySettings.getInstance();
     boolean res = Adb.isConnected();
-    MySettings.getInstance().setAdbConnected(res);
+    mySettings.setAdbConnected(res);
+    if (mySettings.isDebug()) {
+      Util.debugLog("checkAdb", "Connecting to ADB " + (res ? "succeeded" : "failed"));
+    }
     return res;
   }
 }

@@ -6,6 +6,7 @@ import android.util.Log;
 import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.privs.Adb.AdbException;
 import com.mirfatif.privtasks.Commands;
 import java.io.BufferedReader;
 import java.io.File;
@@ -150,6 +151,9 @@ public class PrivDaemonHandler {
     } catch (IOException e) {
       e.printStackTrace();
       return false;
+    } catch (AdbException e) {
+      Log.e(TAG, e.toString());
+      return false;
     } finally {
       try {
         if (outStream != null) {
@@ -214,8 +218,8 @@ public class PrivDaemonHandler {
       useSocket = true;
       try {
         adb = new Adb("");
-      } catch (IOException e) {
-        e.printStackTrace();
+      } catch (AdbException e) {
+        Log.e(TAG, e.toString());
         return false;
       }
       inReader = new BufferedReader(adb.getReader());
@@ -315,8 +319,8 @@ public class PrivDaemonHandler {
         Adb adbLogger;
         try {
           adbLogger = new Adb("exec " + logCommand);
-        } catch (IOException e) {
-          e.printStackTrace();
+        } catch (AdbException e) {
+          Log.e(TAG, e.toString());
           return null;
         }
         Utils.runInBg(() -> Utils.readLogcatStream(null, adbLogger));

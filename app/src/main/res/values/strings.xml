@@ -71,7 +71,12 @@
   <string name="getting_root_fail">Getting root privileges failed</string>
   <string name="are_you_rooted">. Are you rooted?</string>
   <string name="connected_to_adb">Connected to ADB</string>
-  <string name="adb_connect_fail">Connecting to ADB failed</string>
+  <string name="adb_connect_timed_out">ADB connection timed out</string>
+  <string name="adb_connect_failed">ADB connection failed</string>
+  <string name="adb_connect_interrupted">ADB connection interrupted</string>
+  <string name="adb_key_pair_failed">Creating ADB key pair failed</string>
+  <string name="adb_authentication_failed">ADB authentication failed</string>
+  <string name="adb_command_fail">ADB command execution failed</string>
   <string name="adb_connect_fail_long">
     <![CDATA[
       Connecting to ADB failed.

@@ -1,6 +1,7 @@
 package com.mirfatif.permissionmanagerx.main;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
 import android.os.SystemClock;
@@ -152,9 +153,9 @@ public class MainActivity extends BaseActivity {
         Utils.runInBg(
             () -> {
               Utils.runInFg(() -> mRoundProgressTextView.setText(R.string.checking_root_access));
-              Utils.checkRootVerbose();
+              Utils.checkRootIfEnabled();
               Utils.runInFg(() -> mRoundProgressTextView.setText(R.string.checking_adb_access));
-              Utils.checkAdbVerbose();
+              Utils.checkAdbIfEnabled();
             });
 
     Utils.runInBg(
@@ -279,7 +280,12 @@ public class MainActivity extends BaseActivity {
       collapseSearchView();
       return;
     }
-    super.onBackPressed();
+    // TODO https://issuetracker.google.com/issues/139738913
+    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+      finishAfterTransition();
+    } else {
+      super.onBackPressed();
+    }
   }
 
   @Override
@@ -872,6 +878,7 @@ public class MainActivity extends BaseActivity {
       }
 
       adbCheckBox.setChecked(false);
+      adbCheckBox.setEnabled(false);
 
       Utils.runInBg(
           () -> {
@@ -890,6 +897,7 @@ public class MainActivity extends BaseActivity {
                       new AlertDialogFragment(builder.create())
                           .show(this, "ADB_CONNECT_FAILED", false));
             }
+            Utils.runInFg(() -> adbCheckBox.setEnabled(true));
           });
       return true;
     }
