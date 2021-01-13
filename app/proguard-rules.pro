@@ -30,6 +30,9 @@
 -keep class com.mirfatif.permissionmanagerx.R$bool {
   int pref_*_default;
 }
+-keep class com.mirfatif.permissionmanagerx.R$string {
+  int pref_*_key;
+}
 
 # Permission icons are accessed through Reflection
 -keep class com.mirfatif.permissionmanagerx.R$drawable {

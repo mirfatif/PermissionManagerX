@@ -161,7 +161,7 @@ public class BackupRestore {
       return false;
     }
 
-    int invalidPrefs = 0;
+    int processedPrefs = 0, invalidPrefs = 0;
 
     // preferences
     Map<String, ?> prefEntries = Utils.getDefPrefs().getAll();
@@ -172,6 +172,8 @@ public class BackupRestore {
         Log.i(TAG, "Backup: Skipping " + key);
         continue;
       }
+
+      processedPrefs++;
 
       Object value = entry.getValue();
       String type;
@@ -277,7 +279,7 @@ public class BackupRestore {
     } catch (IOException ignored) {
     }
 
-    succeeded(true, prefEntries.size(), permEntities.size(), invalidPrefs, skippedApps);
+    succeeded(true, processedPrefs, permEntities.size(), invalidPrefs, skippedApps);
     return true;
   }
 

@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.Log;
 import androidx.room.Room;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.Utils;
@@ -671,19 +672,21 @@ public class MySettings {
   }
 
   public void resetToDefaults() {
-    if (DEBUG) Util.debugLog("MySettings", "resetToDefaults() called");
     // excluded apps Set must be explicitly removed to set default values
     // .clear() does not work correctly
     Editor prefEditor = mPrefs.edit();
+    int count = 0;
     for (Field field : R.string.class.getDeclaredFields()) {
       String strName = field.getName();
       if (strName.startsWith("pref_filter_") && strName.endsWith("_key")) {
         int strKeyResId = Utils.getIntField(strName, R.string.class, TAG);
         String prefKey = getString(strKeyResId);
         prefEditor.remove(prefKey);
+        count++;
       }
     }
     prefEditor.apply();
+    Log.i(TAG, "resetToDefaults: " + count + " preferences removed");
 
     // StringSet is not cleared (null) by remove() or clear() sometimes.
     populateExcludedAppsList(true);
