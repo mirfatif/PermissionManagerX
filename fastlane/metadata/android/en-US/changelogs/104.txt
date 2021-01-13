@@ -1,0 +1,10 @@
+Added Android 11 support
+Improved crash reporting
+Added SELinux context, ADB port and Switch to ADB in Advanced Settings
+Improved performance and app size
+Added app update check
+Reduced dialog interventions
+Improved Snackbar and ProgressBar theming
+Made Help more friendly and accessible
+Fixed AppOp's getLastAccessTime() crash on Pie
+Fixed memory leaks
