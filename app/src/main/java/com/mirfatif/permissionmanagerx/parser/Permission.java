@@ -13,7 +13,7 @@ public class Permission {
   public static final String REVOKED = "Revoked";
 
   private final int mOrder;
-  private final int mIconResId;
+  private final Integer mIconResId;
   private final boolean mIsAppOps;
   private final boolean mIsPerUid;
   private final boolean mIsAppOpsSet;
@@ -38,7 +38,7 @@ public class Permission {
 
   Permission(
       int order,
-      int iconResId,
+      Integer iconResId,
       boolean isAppOps,
       boolean isPerUid,
       boolean isAppOpsSet,
@@ -87,7 +87,7 @@ public class Permission {
     return mOrder;
   }
 
-  public int getIconResId() {
+  public Integer getIconResId() {
     return mIconResId;
   }
 

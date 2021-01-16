@@ -10,6 +10,7 @@ import android.content.pm.PermissionInfo;
 import android.content.pm.Signature;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.mirfatif.permissionmanagerx.R;
@@ -40,7 +41,7 @@ public class PackageParser {
   private static PackageParser mPackageParser;
   private final PackageManager mPackageManager;
   private final MySettings mMySettings;
-  private final AppOpsParser mAppOpsParser;
+  private final AppOpsParser mAppOpsParser = AppOpsParser.getInstance();
   private final PrivDaemonHandler mPrivDaemonHandler;
   private final PermGroupsMapping mPermGroupsMapping;
 
@@ -73,7 +74,6 @@ public class PackageParser {
   private PackageParser() {
     mPackageManager = App.getContext().getPackageManager();
     mMySettings = MySettings.getInstance();
-    mAppOpsParser = new AppOpsParser();
     mPrivDaemonHandler = PrivDaemonHandler.getInstance();
     mPermGroupsMapping = new PermGroupsMapping();
   }
@@ -774,8 +774,9 @@ public class PackageParser {
 
     if (mMySettings.canUseHiddenAPIs()) {
       // hidden API
-      int flag = Utils.getIntField("FLAG_PERMISSION_SYSTEM_FIXED", PackageManager.class, TAG);
-      if (flag != Utils.INT_FIELD_ERROR) {
+      Integer flag =
+          Utils.getStaticIntField("FLAG_PERMISSION_SYSTEM_FIXED", PackageManager.class, TAG);
+      if (flag != null) {
         systemFixedFlag = flag;
         return systemFixedFlag;
       }
@@ -968,10 +969,13 @@ public class PackageParser {
   ///////////////////////// HELPER METHODS /////////////////////////
   //////////////////////////////////////////////////////////////////
 
-  private int getIconResId(String perm, String group) {
+  private Integer getIconResId(String perm, String group) {
     Integer iconResId = mPermIconsResIds.get(perm);
     if (iconResId == null) {
-      iconResId = Utils.getIntField("g_" + group.toLowerCase(), R.drawable.class, TAG);
+      iconResId = Utils.getStaticIntField("g_" + group.toLowerCase(), R.drawable.class, TAG);
+      if (iconResId == null) {
+        return null;
+      }
       mPermIconsResIds.put(perm, iconResId);
     }
     return iconResId;
@@ -994,25 +998,15 @@ public class PackageParser {
     String reference;
   }
 
-  public List<String> buildAppOpsList() {
-    return mAppOpsParser.buildAppOpsList();
-  }
-
-  public List<String> buildAppOpsModes() {
-    return mAppOpsParser.buildAppOpsModes();
-  }
-
-  private final MutableLiveData<Boolean> mHiddenAPIsNotWorking = new MutableLiveData<>(false);
-
-  public LiveData<Boolean> getHiddenAPIsNotWorking() {
-    return mHiddenAPIsNotWorking;
-  }
-
   void hiddenAPIsNotWorking(String tag, String error) {
+    if (mMySettings.useHiddenAPIs()) {
+      Utils.runInFg(
+          () ->
+              Toast.makeText(App.getContext(), R.string.hidden_apis_warning, Toast.LENGTH_LONG)
+                  .show());
+      mMySettings.setUseHiddenAPIs(false);
+    }
     Log.e(tag, error);
-    MySettings.getInstance().mHiddenAPIsWorking = false;
-    Utils.runInFg(() -> mHiddenAPIsNotWorking.setValue(true));
-    Utils.runInFg(() -> mHiddenAPIsNotWorking.setValue(false)); // for using again
   }
 
   //////////////////////////////////////////////////////////////////

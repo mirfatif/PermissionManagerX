@@ -117,7 +117,7 @@ public class PermissionAdapter extends ListAdapter<Permission, ItemViewHolder> {
         referenceView.setBackgroundColor(Color.GREEN);
       }
 
-      if (permission.getIconResId() != Utils.INT_FIELD_ERROR) {
+      if (permission.getIconResId() != null) {
         groupIconView.setImageResource(permission.getIconResId());
       }
 

@@ -12,7 +12,7 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.main.MainActivity;
-import com.mirfatif.permissionmanagerx.parser.PackageParser;
+import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDao;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDatabase;
 import com.mirfatif.privtasks.Util;
@@ -48,6 +48,7 @@ public class MySettings {
     mExcludedAppsPrefKey = getString(R.string.pref_filter_excluded_apps_key);
     mExcludedPermsPrefKey = getString(R.string.pref_filter_excluded_perms_key);
     mExtraAppOpsPrefKey = getString(R.string.pref_filter_extra_appops_key);
+    mUseHiddenAPIs = useHiddenAPIs();
   }
 
   private boolean mPrivDaemonAlive = false;
@@ -108,7 +109,11 @@ public class MySettings {
 
   public boolean getBoolPref(int keyResId) {
     String prefKey = getString(keyResId);
-    int boolKeyId = Utils.getIntField(prefKey + "_default", R.bool.class, TAG);
+    Integer boolKeyId =
+        Utils.getStaticIntField(prefKey + "_default", R.bool.class, TAG + " getBoolPref()");
+    if (boolKeyId == null) {
+      return false;
+    }
     if (prefKey.endsWith("_enc")) {
       return mEncPrefs.getBoolean(prefKey, App.getContext().getResources().getBoolean(boolKeyId));
     } else {
@@ -118,7 +123,11 @@ public class MySettings {
 
   public int getIntPref(int keyResId) {
     String prefKey = getString(keyResId);
-    int intKeyId = Utils.getIntField(prefKey + "_default", R.integer.class, TAG);
+    Integer intKeyId =
+        Utils.getStaticIntField(prefKey + "_default", R.integer.class, TAG + " getIntPref()");
+    if (intKeyId == null) {
+      return -1;
+    }
     if (prefKey.endsWith("_enc")) {
       return mEncPrefs.getInt(prefKey, App.getContext().getResources().getInteger(intKeyId));
     } else {
@@ -404,7 +413,7 @@ public class MySettings {
 
   public List<String> getAppOpsList() {
     if (mAppOpsList == null) {
-      mAppOpsList = PackageParser.getInstance().buildAppOpsList();
+      mAppOpsList = AppOpsParser.getInstance().buildAppOpsList();
     }
     if (mAppOpsList == null) {
       return new ArrayList<>();
@@ -416,23 +425,25 @@ public class MySettings {
 
   public List<String> getAppOpsModes() {
     if (mAppOpsModes == null) {
-      mAppOpsModes = PackageParser.getInstance().buildAppOpsModes();
+      mAppOpsModes = AppOpsParser.getInstance().buildAppOpsModes();
     }
     return mAppOpsModes;
   }
 
-  public boolean mHiddenAPIsWorking = true;
+  // Accessing Preference every time may slow down
+  private boolean mUseHiddenAPIs;
 
   public boolean canUseHiddenAPIs() {
-    return useHiddenAPIs() && mHiddenAPIsWorking && isAppOpsGranted();
+    return mUseHiddenAPIs && isAppOpsGranted();
   }
 
   public boolean useHiddenAPIs() {
     return getBoolPref(R.string.pref_main_use_hidden_apis_enc_key);
   }
 
-  public void setUseHiddenAPIs(boolean isChecked) {
-    savePref(R.string.pref_main_use_hidden_apis_enc_key, isChecked);
+  public void setUseHiddenAPIs(boolean useHiddenAPIs) {
+    mUseHiddenAPIs = useHiddenAPIs;
+    savePref(R.string.pref_main_use_hidden_apis_enc_key, useHiddenAPIs);
   }
 
   public boolean forceDarkMode() {
@@ -679,14 +690,18 @@ public class MySettings {
     for (Field field : R.string.class.getDeclaredFields()) {
       String strName = field.getName();
       if (strName.startsWith("pref_filter_") && strName.endsWith("_key")) {
-        int strKeyResId = Utils.getIntField(strName, R.string.class, TAG);
+        Integer strKeyResId =
+            Utils.getStaticIntField(strName, R.string.class, TAG + " resetToDefaults()");
+        if (strKeyResId == null) {
+          continue;
+        }
         String prefKey = getString(strKeyResId);
         prefEditor.remove(prefKey);
         count++;
       }
     }
     prefEditor.apply();
-    Log.i(TAG, "resetToDefaults: " + count + " preferences removed");
+    Log.i(TAG, "resetToDefaults(): " + count + " preferences removed");
 
     // StringSet is not cleared (null) by remove() or clear() sometimes.
     populateExcludedAppsList(true);

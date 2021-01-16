@@ -1,6 +1,5 @@
 package com.mirfatif.permissionmanagerx;
 
-import android.annotation.ColorInt;
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -33,6 +32,7 @@ import android.util.TypedValue;
 import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.AttrRes;
+import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AlertDialog;
 import androidx.browser.customtabs.CustomTabColorSchemeParams;
 import androidx.browser.customtabs.CustomTabsIntent;
@@ -63,7 +63,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.reflect.Field;
 import java.security.GeneralSecurityException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -162,15 +161,12 @@ public class Utils {
     }
   }
 
-  public static final int INT_FIELD_ERROR = -1;
-
-  public static int getIntField(String name, Class<?> cls, String tag) {
+  public static Integer getStaticIntField(String name, Class<?> cls, String tag) {
     try {
-      Field idField = cls.getDeclaredField(name);
-      return idField.getInt(idField);
+      return cls.getDeclaredField(name).getInt(null);
     } catch (NoSuchFieldException | IllegalAccessException e) {
       Log.e(tag, e.toString());
-      return INT_FIELD_ERROR;
+      return null;
     }
   }
 
@@ -369,9 +365,9 @@ public class Utils {
         + Build.MODEL
         + "\nProduct: "
         + Build.PRODUCT
-        + "Root: "
+        + "\nRoot: "
         + mySettings.isRootGranted()
-        + "ADB: "
+        + "\nADB: "
         + mySettings.isAdbConnected();
   }
 

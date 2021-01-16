@@ -160,12 +160,7 @@ public class MainActivity extends BaseActivity {
 
     Utils.runInBg(
         () -> {
-          try {
-            checkRootAndAdbFuture.get();
-          } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            return;
-          }
+          waitForFuture(checkRootAndAdbFuture);
           Utils.runInFg(this::setNavigationMenu);
         });
 
@@ -173,16 +168,10 @@ public class MainActivity extends BaseActivity {
         Utils.runInBg(
             () -> {
               // We need root or ADB to start daemon
-              if (!mMySettings.isPrivDaemonAlive()) {
-                try {
-                  checkRootAndAdbFuture.get();
-                } catch (ExecutionException | InterruptedException e) {
-                  e.printStackTrace();
-                  return;
-                }
+              if (waitForFuture(checkRootAndAdbFuture)) {
+                // Check if we can read AppOps, even if daemon is alive
+                startPrivDaemon(true, true);
               }
-              // Check if we can read AppOps
-              startPrivDaemon(true, true);
             });
 
     RecyclerView recyclerView = findViewById(R.id.recycler_view);
@@ -204,17 +193,10 @@ public class MainActivity extends BaseActivity {
 
     Utils.runInBg(
         () -> {
-          /**
-           * Do not run through {@link PackageParser} unless privileged daemon is up and {@link
-           * PackageParser#buildAppOpsList()} is called from {@link MySettings#getAppOpsList()}
-           */
-          try {
-            privDaemonFuture.get();
-          } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            return;
+          // Do not run through PackageParser unless privileged daemon is up
+          if (waitForFuture(privDaemonFuture)) {
+            Utils.runInFg(this::setLiveDataObservers);
           }
-          Utils.runInFg(this::setLiveDataObservers);
         });
 
     // clear search query on activity refresh
@@ -392,42 +374,6 @@ public class MainActivity extends BaseActivity {
     };
   }
 
-  private void setWarningLiveObserver() {
-    // to avoid duplicate observers
-    mMyViewModel.getHiddenAPIsNotWorking().removeObservers(this);
-
-    // do not show again if user opted not to try hidden APIs already, or on app resume if
-    // observer removed already
-    if (!mMySettings.canUseHiddenAPIs()) {
-      if (mMySettings.isDebug()) {
-        Util.debugLog("setWarningLiveObserver", "Not setting because hidden APIs are disabled");
-      }
-      return;
-    }
-
-    mMyViewModel
-        .getHiddenAPIsNotWorking()
-        .observe(
-            this,
-            hiddenAPIsNotWorking -> {
-              if (mMySettings.isDebug()) {
-                Util.debugLog("hiddenAPIsNotWorking", String.valueOf(hiddenAPIsNotWorking));
-              }
-              if (!hiddenAPIsNotWorking) {
-                return;
-              }
-              // do not show message on next app resume
-              mMyViewModel.getHiddenAPIsNotWorking().removeObservers(this);
-
-              if (!mMySettings.isPrivDaemonAlive()) {
-                Utils.runInBg(() -> startPrivDaemon(false, true));
-              }
-              mMySettings.setUseHiddenAPIs(false);
-              Toast.makeText(App.getContext(), R.string.hidden_apis_warning, Toast.LENGTH_LONG)
-                  .show();
-            });
-  }
-
   private void setLiveDataObservers() {
     mMyViewModel
         .getProgressMax()
@@ -575,6 +521,16 @@ public class MainActivity extends BaseActivity {
           snackBar.getView().setBackgroundColor(getColor(R.color.dynamicBackground));
           snackBar.show();
         });
+  }
+
+  boolean waitForFuture(Future<?> future) {
+    try {
+      future.get();
+      return true;
+    } catch (ExecutionException | InterruptedException e) {
+      e.printStackTrace();
+      return false;
+    }
   }
 
   //////////////////////////////////////////////////////////////////
@@ -734,14 +690,6 @@ public class MainActivity extends BaseActivity {
 
     // get AppOps permission if daemon is up
     checkAppOpsPerm();
-
-    /**
-     * On first run, set warning observer before possibly triggering {@link
-     * AppOpsParser#hiddenAPIsNotWorking(String)}. On later runs set/remove observer as the {@link
-     * MySettings#canUseHiddenAPIs()} settings are changed. Must be after granting {@link
-     * APP_OPS_PERM} so that {@link MySettings#canUseHiddenAPIs()} returns true.
-     */
-    Utils.runInFg(this::setWarningLiveObserver);
 
     // if have gained privileges
     if (mMySettings.isPrivDaemonAlive() || mMySettings.isAppOpsGranted()) {

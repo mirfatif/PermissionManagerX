@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.webkit.WebView;
 import com.mirfatif.permissionmanagerx.main.MainActivityFlavor;
-import java.util.Map;
 
 public class MyWebView extends WebView {
 
@@ -25,29 +24,6 @@ public class MyWebView extends WebView {
   @SuppressWarnings("UnusedDeclaration")
   public MyWebView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
-    MainActivityFlavor.onCreateLayout(this);
-  }
-
-  @SuppressWarnings("UnusedDeclaration")
-  protected MyWebView(
-      Context context,
-      AttributeSet attrs,
-      int defStyleAttr,
-      Map<String, Object> javaScriptInterfaces,
-      boolean privateBrowsing) {
-    super(context, attrs, defStyleAttr, javaScriptInterfaces, privateBrowsing);
-    MainActivityFlavor.onCreateLayout(this);
-  }
-
-  @SuppressWarnings("UnusedDeclaration")
-  protected MyWebView(
-      Context context,
-      AttributeSet attrs,
-      int defStyleAttr,
-      int defStyleRes,
-      Map<String, Object> javaScriptInterfaces,
-      boolean privateBrowsing) {
-    super(context, attrs, defStyleAttr, defStyleRes, javaScriptInterfaces, privateBrowsing);
     MainActivityFlavor.onCreateLayout(this);
   }
 }

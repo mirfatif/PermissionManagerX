@@ -17,9 +17,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class AppOpsParser {
+public class AppOpsParser {
 
   private static final String TAG = "AppOpsParser";
+
+  private static AppOpsParser mAppOpsParser;
+
+  public static AppOpsParser getInstance() {
+    if (mAppOpsParser == null) {
+      mAppOpsParser = new AppOpsParser();
+    }
+    return mAppOpsParser;
+  }
 
   private final MySettings mMySettings;
   private final PrivDaemonHandler mPrivDaemonHandler;
@@ -28,7 +37,7 @@ class AppOpsParser {
   // IPackageManager returns bigger permissions list than PackageManager
   private boolean mUseIPackageManager = true;
 
-  AppOpsParser() {
+  private AppOpsParser() {
     mMySettings = MySettings.getInstance();
     mPrivDaemonHandler = PrivDaemonHandler.getInstance();
     mPrivTasks = new PrivTasks(mMySettings.isDebug(), false);
@@ -184,7 +193,7 @@ class AppOpsParser {
     return null;
   }
 
-  List<String> buildAppOpsList() {
+  public List<String> buildAppOpsList() {
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "buildAppOpsList() called");
     }
@@ -220,7 +229,7 @@ class AppOpsParser {
     return null;
   }
 
-  List<String> buildAppOpsModes() {
+  public List<String> buildAppOpsModes() {
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "buildAppOpsModes() called");
     }
@@ -259,8 +268,8 @@ class AppOpsParser {
     if (mMySettings.canUseHiddenAPIs()) {
       /** {@link AppOpsManager#_NUM_OP} gets hard-coded */
       // hidden API
-      int NUM_OP = Utils.getIntField("_NUM_OP", AppOpsManager.class, TAG + " getOpNum()");
-      if (NUM_OP != Utils.INT_FIELD_ERROR) {
+      Integer NUM_OP = Utils.getStaticIntField("_NUM_OP", AppOpsManager.class, TAG + " getOpNum()");
+      if (NUM_OP != null) {
         return NUM_OP;
       }
       hiddenAPIsNotWorking("Could not get _NUM_OP field");

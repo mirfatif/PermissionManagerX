@@ -135,7 +135,7 @@ public class BackupRestore {
           mA.getApplication().getContentResolver().openInputStream(uri)) {
         /**
          * So that not saved preferences are restored. Must be in background so that {@link
-         * PrivDaemonHandler#sendRequest(String)} in {@link PackageParser#buildAppOpsList()} in ADB
+         * PrivDaemonHandler#sendRequest(String)} in {@link AppOpsParser#buildAppOpsList()} in ADB
          * daemon mode is not called on main thread
          */
         mMySettings.resetToDefaults();
@@ -423,9 +423,11 @@ public class BackupRestore {
         if (!strName.endsWith("_key")) continue;
         if (strName.endsWith("_enc_key")) continue;
 
-        int strKeyResId = Utils.getIntField(strName, R.string.class, TAG);
-        String _prefKey = getString(strKeyResId);
-        mPrefKeys.add(_prefKey);
+        Integer strKeyResId =
+            Utils.getStaticIntField(strName, R.string.class, TAG + " isInvalidPrefKey()");
+        if (strKeyResId != null) {
+          mPrefKeys.add(getString(strKeyResId));
+        }
       }
     }
     return !mPrefKeys.contains(prefKey);

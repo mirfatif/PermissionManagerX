@@ -13,8 +13,8 @@ import java.util.List;
 public class MyViewModel extends AndroidViewModel {
 
   private final PackageParser mPackageParser;
-  private final MySettings mMySettings;
-  private final PrivDaemonHandler mDaemonHandler;
+  final MySettings mMySettings;
+  final PrivDaemonHandler mDaemonHandler;
 
   public MyViewModel(@NonNull Application application) {
     super(application);
@@ -39,9 +39,5 @@ public class MyViewModel extends AndroidViewModel {
 
   public LiveData<Integer> getProgressNow() {
     return mPackageParser.getProgressNow();
-  }
-
-  public LiveData<Boolean> getHiddenAPIsNotWorking() {
-    return mPackageParser.getHiddenAPIsNotWorking();
   }
 }
