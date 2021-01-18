@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,6 +21,7 @@ import android.os.Build.VERSION_CODES;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcel;
+import android.os.SystemClock;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -47,6 +49,7 @@ import androidx.security.crypto.EncryptedSharedPreferences.PrefValueEncryptionSc
 import androidx.security.crypto.MasterKey;
 import androidx.security.crypto.MasterKey.KeyScheme;
 import com.google.android.material.color.MaterialColors;
+import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.Adb;
@@ -63,7 +66,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.security.GeneralSecurityException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -78,6 +80,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Utils {
+
+  private static final String TAG = "Utils";
 
   private Utils() {}
 
@@ -320,17 +324,43 @@ public class Utils {
     return android.os.Process.myUid() / 100000;
   }
 
+  private static SharedPreferences mEncPrefs;
+  private static final Object ENC_PREFS_LOCK = new Object();
+
+  @SecurityLibBug
   public static SharedPreferences getEncPrefs() {
-    try {
-      return EncryptedSharedPreferences.create(
-          App.getContext(),
-          BuildConfig.APPLICATION_ID + "_enc_prefs",
-          new MasterKey.Builder(App.getContext()).setKeyScheme(KeyScheme.AES256_GCM).build(),
-          PrefKeyEncryptionScheme.AES256_SIV,
-          PrefValueEncryptionScheme.AES256_GCM);
-    } catch (GeneralSecurityException | IOException e) {
-      e.printStackTrace();
-      throw new RuntimeException(e);
+    synchronized (ENC_PREFS_LOCK) {
+      if (mEncPrefs != null) {
+        return mEncPrefs;
+      }
+
+      for (int i = 0; i < 10; i++) {
+        try {
+          mEncPrefs =
+              EncryptedSharedPreferences.create(
+                  App.getContext(),
+                  BuildConfig.APPLICATION_ID + "_enc_prefs",
+                  new MasterKey.Builder(App.getContext())
+                      .setKeyScheme(KeyScheme.AES256_GCM)
+                      .build(),
+                  PrefKeyEncryptionScheme.AES256_SIV,
+                  PrefValueEncryptionScheme.AES256_GCM);
+          return mEncPrefs;
+        } catch (Exception e) {
+          if (i == 9) {
+            e.printStackTrace();
+          } else {
+            Log.e(TAG + ": getEncPrefs()", e.toString());
+          }
+          SystemClock.sleep(100);
+        }
+      }
+
+      runInFg(() -> Toast.makeText(App.getContext(), "No Encryption", Toast.LENGTH_LONG).show());
+
+      // TODO temp fix for https://github.com/google/tink/issues/413
+      mEncPrefs = App.getContext().getSharedPreferences("_enc_prefs2", Context.MODE_PRIVATE);
+      return mEncPrefs;
     }
   }
 

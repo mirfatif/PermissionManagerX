@@ -10,6 +10,7 @@ import android.util.Log;
 import androidx.room.Room;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.Utils;
+import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.main.MainActivity;
 import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
@@ -40,15 +41,14 @@ public class MySettings {
   }
 
   private final SharedPreferences mPrefs;
-  private final SharedPreferences mEncPrefs;
 
+  // Removed mEncPrefs and mUseHiddenAPIs initialization due to bug
+  @SecurityLibBug
   private MySettings() {
     mPrefs = Utils.getDefPrefs();
-    mEncPrefs = Utils.getEncPrefs();
     mExcludedAppsPrefKey = getString(R.string.pref_filter_excluded_apps_key);
     mExcludedPermsPrefKey = getString(R.string.pref_filter_excluded_perms_key);
     mExtraAppOpsPrefKey = getString(R.string.pref_filter_extra_appops_key);
-    mUseHiddenAPIs = useHiddenAPIs();
   }
 
   private boolean mPrivDaemonAlive = false;
@@ -115,7 +115,8 @@ public class MySettings {
       return false;
     }
     if (prefKey.endsWith("_enc")) {
-      return mEncPrefs.getBoolean(prefKey, App.getContext().getResources().getBoolean(boolKeyId));
+      return Utils.getEncPrefs()
+          .getBoolean(prefKey, App.getContext().getResources().getBoolean(boolKeyId));
     } else {
       return mPrefs.getBoolean(prefKey, App.getContext().getResources().getBoolean(boolKeyId));
     }
@@ -129,7 +130,8 @@ public class MySettings {
       return -1;
     }
     if (prefKey.endsWith("_enc")) {
-      return mEncPrefs.getInt(prefKey, App.getContext().getResources().getInteger(intKeyId));
+      return Utils.getEncPrefs()
+          .getInt(prefKey, App.getContext().getResources().getInteger(intKeyId));
     } else {
       return mPrefs.getInt(prefKey, App.getContext().getResources().getInteger(intKeyId));
     }
@@ -138,7 +140,7 @@ public class MySettings {
   private long getLongPref(int keyResId) {
     String prefKey = getString(keyResId);
     if (prefKey.endsWith("_enc")) {
-      return mEncPrefs.getLong(prefKey, 0);
+      return Utils.getEncPrefs().getLong(prefKey, 0);
     } else {
       return mPrefs.getLong(prefKey, 0);
     }
@@ -155,7 +157,7 @@ public class MySettings {
   public void savePref(int key, boolean bool) {
     String prefKey = getString(key);
     if (prefKey.endsWith("_enc")) {
-      mEncPrefs.edit().putBoolean(prefKey, bool).apply();
+      Utils.getEncPrefs().edit().putBoolean(prefKey, bool).apply();
     } else {
       mPrefs.edit().putBoolean(prefKey, bool).apply();
     }
@@ -164,7 +166,7 @@ public class MySettings {
   public void savePref(int key, int integer) {
     String prefKey = getString(key);
     if (prefKey.endsWith("_enc")) {
-      mEncPrefs.edit().putInt(prefKey, integer).apply();
+      Utils.getEncPrefs().edit().putInt(prefKey, integer).apply();
     } else {
       mPrefs.edit().putInt(prefKey, integer).apply();
     }
@@ -173,7 +175,7 @@ public class MySettings {
   private void savePref(int key, long _long) {
     String prefKey = getString(key);
     if (prefKey.endsWith("_enc")) {
-      mEncPrefs.edit().putLong(prefKey, _long).apply();
+      Utils.getEncPrefs().edit().putLong(prefKey, _long).apply();
     } else {
       mPrefs.edit().putLong(prefKey, _long).apply();
     }
@@ -223,9 +225,10 @@ public class MySettings {
     savePref(R.string.pref_settings_check_for_updates_ts_enc_key, timeStamp);
   }
 
+  @SecurityLibBug
   public void plusAppLaunchCount() {
     int appLaunchCountId = R.string.pref_main_app_launch_count_enc_key;
-    savePref(appLaunchCountId, getIntPref(appLaunchCountId) + 1);
+    Utils.runInBg(() -> savePref(appLaunchCountId, getIntPref(appLaunchCountId) + 1));
   }
 
   public boolean shouldAskToSendCrashReport() {
@@ -430,15 +433,18 @@ public class MySettings {
     return mAppOpsModes;
   }
 
-  // Accessing Preference every time may slow down
-  private boolean mUseHiddenAPIs;
-
   public boolean canUseHiddenAPIs() {
-    return mUseHiddenAPIs && isAppOpsGranted();
+    return useHiddenAPIs() && isAppOpsGranted();
   }
 
+  // Accessing Preference every time may slow down
+  private Boolean mUseHiddenAPIs = null;
+
   public boolean useHiddenAPIs() {
-    return getBoolPref(R.string.pref_main_use_hidden_apis_enc_key);
+    if (mUseHiddenAPIs == null) {
+      mUseHiddenAPIs = getBoolPref(R.string.pref_main_use_hidden_apis_enc_key);
+    }
+    return mUseHiddenAPIs;
   }
 
   public void setUseHiddenAPIs(boolean useHiddenAPIs) {
@@ -463,7 +469,7 @@ public class MySettings {
   }
 
   private final String mExcludedAppsPrefKey;
-  private final Set<String> mExcludedApps = new HashSet<>();
+  private Set<String> mExcludedApps;
   private CharSequence[] mExcludedAppsLabels;
 
   public CharSequence[] getExcludedAppsLabels() {
@@ -474,7 +480,7 @@ public class MySettings {
   }
 
   public Set<String> getExcludedApps() {
-    if (mExcludedApps.isEmpty()) {
+    if (mExcludedApps == null) {
       populateExcludedAppsList(false);
     }
     return mExcludedApps;
@@ -488,8 +494,10 @@ public class MySettings {
     return getExcludedApps().contains(packageName);
   }
 
+  private final Object EXCLUDED_APPS_LOCK = new Object();
+
   public void populateExcludedAppsList(boolean loadDefaults) {
-    synchronized (mExcludedApps) {
+    synchronized (EXCLUDED_APPS_LOCK) {
       if (DEBUG) {
         Util.debugLog("populateExcludedAppsList", "loadDefaults: " + loadDefaults);
       }
@@ -533,7 +541,7 @@ public class MySettings {
 
       // Separate the pair elements to sorted ordered lists.
       CharSequence[] excludedAppsLabels = new CharSequence[excludedAppsPairList.size()];
-      mExcludedApps.clear();
+      mExcludedApps = new HashSet<>();
 
       for (int i = 0; i < excludedAppsPairList.size(); i++) {
         excludedAppsLabels[i] = excludedAppsPairList.get(i).packageLabel;
@@ -567,10 +575,10 @@ public class MySettings {
   }
 
   private final String mExcludedPermsPrefKey;
-  private final Set<String> mExcludedPerms = new LinkedHashSet<>();
+  private Set<String> mExcludedPerms;
 
   public Set<String> getExcludedPerms() {
-    if (mExcludedPerms.isEmpty()) {
+    if (mExcludedPerms == null) {
       populateExcludedPermsList();
     }
     return mExcludedPerms;
@@ -584,8 +592,10 @@ public class MySettings {
     return getExcludedPerms().contains(permissionName);
   }
 
+  private final Object EXCLUDED_PERMS_LOCK = new Object();
+
   public void populateExcludedPermsList() {
-    synchronized (mExcludedPerms) {
+    synchronized (EXCLUDED_PERMS_LOCK) {
       if (DEBUG) {
         Util.debugLog("populateExcludedPermsList", "Called");
       }
@@ -597,7 +607,7 @@ public class MySettings {
       List<String> excludedPermsList = new ArrayList<>(excludedPerms);
       excludedPermsList.sort(Comparator.comparing(String::toUpperCase));
 
-      mExcludedPerms.clear();
+      mExcludedPerms = new LinkedHashSet<>();
       mExcludedPerms.addAll(excludedPermsList);
     }
   }
@@ -618,10 +628,10 @@ public class MySettings {
   }
 
   private final String mExtraAppOpsPrefKey;
-  private final Set<String> mExtraAppOps = new HashSet<>();
+  private Set<String> mExtraAppOps;
 
   public Set<String> getExtraAppOps() {
-    if (mExtraAppOps.isEmpty()) {
+    if (mExtraAppOps == null) {
       populateExtraAppOpsList(false);
     }
     return mExtraAppOps;
@@ -635,8 +645,10 @@ public class MySettings {
     return getExtraAppOps().contains(opName);
   }
 
+  private final Object EXCLUDED_APP_OPS_LOCK = new Object();
+
   public void populateExtraAppOpsList(boolean loadDefaults) {
-    synchronized (mExtraAppOps) {
+    synchronized (EXCLUDED_APP_OPS_LOCK) {
       if (DEBUG) Util.debugLog("populateExtraAppOpsList", "loadDefaults: " + loadDefaults);
       // on first run or after "reset to defaults" it returns null, so use default values
       Set<String> savedExtraAppOps = mPrefs.getStringSet(mExtraAppOpsPrefKey, null);
@@ -648,7 +660,7 @@ public class MySettings {
       }
 
       // let's remove AppOps not on this Android version
-      mExtraAppOps.clear();
+      mExtraAppOps = new HashSet<>();
       for (String extraAppOp : extraAppOps) {
         // Necessarily build mExtraAppOps here even with excludeAppOpsPerms(). Otherwise on
         // unchecking

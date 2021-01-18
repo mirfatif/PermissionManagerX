@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.SystemClock;
 import android.util.Log;
 import com.mirfatif.permissionmanagerx.Utils;
+import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -51,9 +52,17 @@ public class App extends Application {
           mAppFlavor = new AppFlavor();
           mAppFlavor.onCreated();
         });
+
+    Utils.runInBg(this::getEncPrefs);
   }
 
   public static Context getContext() {
     return mAppContext;
+  }
+
+  // To avoid delays later
+  @SecurityLibBug
+  private void getEncPrefs() {
+    Utils.getEncPrefs();
   }
 }
