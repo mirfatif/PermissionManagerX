@@ -106,7 +106,7 @@ public class PrivDaemon {
          * com.cgutman.adblib.AdbProtocol#generateMessage(int, int, int, byte[])}, adds some garbage
          * with write().
          */
-        String[] args = line.trim().split(" ");
+        String[] args = line.trim().replaceAll("  +", " ").split(" ");
         if (args[0].equals(Commands.SHUTDOWN)) {
           break;
         } else {

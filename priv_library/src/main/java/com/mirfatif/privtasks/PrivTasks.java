@@ -26,6 +26,7 @@ import java.util.List;
 
 public class PrivTasks {
 
+  private static final String TAG = "PrivTaks";
   private final boolean DEBUG; // Verbose logging
 
   private IAppOpsService mIAppOpsService;
@@ -84,6 +85,9 @@ public class PrivTasks {
   }
 
   public List<MyPackageOps> getOpsForPackage(String[] args) {
+    if (haveWrongArgs(args, 3)) {
+      return null;
+    }
     int uid = Integer.parseInt(args[1]);
     try {
       return getMyPackageOpsList(uid, args[2], args[3]);
@@ -221,14 +225,15 @@ public class PrivTasks {
   }
 
   public Integer getPermissionFlags(String[] args) {
+    if (haveWrongArgs(args, 3)) {
+      return null;
+    }
     try {
       // hidden API
       /**
        * requires system permissions: {@link PackageManager#getPermissionFlags(String, String,
        * UserHandle)}
        */
-      // TODO crash
-      //  NumberFormatException: For input string: "TASKS" on SDK 29 / Xiaomi Redmi K20 Pro
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         return mIPermissionManager.getPermissionFlags(args[1], args[2], Integer.parseInt(args[3]));
       } else {
@@ -315,6 +320,9 @@ public class PrivTasks {
   }
 
   public Integer grantRevokePermission(boolean grant, String[] args) {
+    if (haveWrongArgs(args, 3)) {
+      return null;
+    }
     try {
       if (grant) {
         // hidden API
@@ -340,6 +348,9 @@ public class PrivTasks {
   }
 
   public Integer setAppOpsMode(String[] args) {
+    if (haveWrongArgs(args, 4)) {
+      return null;
+    }
     // hidden API
     int op = AppOpsManager.strDebugOpToOp(args[1]);
     int uid = Integer.parseInt(args[2]);
@@ -361,6 +372,9 @@ public class PrivTasks {
   }
 
   public Integer resetAppOps(String[] args) {
+    if (haveWrongArgs(args, 2)) {
+      return null;
+    }
     try {
       // hidden API
       // requires android.permission.UPDATE_APP_OPS_STATS
@@ -373,8 +387,11 @@ public class PrivTasks {
   }
 
   public Integer setEnabledState(boolean enabled, String[] args) {
+    if (haveWrongArgs(args, 2)) {
+      return null;
+    }
     String pkg = args[1];
-    int userid = Integer.parseInt(args[2]);
+    int userId = Integer.parseInt(args[2]);
     String callingPkg = "shell:" + Process.myUid();
 
     int state;
@@ -386,12 +403,20 @@ public class PrivTasks {
 
     try {
       // hidden API
-      mIPackageManager.setApplicationEnabledSetting(pkg, state, 0, userid, callingPkg);
+      mIPackageManager.setApplicationEnabledSetting(pkg, state, 0, userId, callingPkg);
       return null;
     } catch (RemoteException e) {
       e.printStackTrace();
       return -1;
     }
+  }
+
+  private boolean haveWrongArgs(String[] cmd, int count) {
+    if (cmd.length == count + 1) {
+      return false;
+    }
+    Log.e(TAG, "Bad command: " + Arrays.toString(cmd));
+    return true;
   }
 
   private long lastThrowableTimestamp = 0;

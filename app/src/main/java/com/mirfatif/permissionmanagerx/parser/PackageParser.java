@@ -542,7 +542,7 @@ public class PackageParser {
         Util.debugLog("PackageParser", "getPermissionsList(): Parsing permissions list");
       }
       for (int count = 0; count < requestedPermissions.length; count++) {
-        String perm = requestedPermissions[count];
+        String perm = requestedPermissions[count].replaceAll("\\s", "");
         permission = createPermission(packageInfo, perm, count);
         if (isNotFilteredOut(permission)) {
           permissionsList.add(permission);
