@@ -189,7 +189,7 @@ class AdvancedSettings {
   }
 
   private void switchToAdb() {
-    if (Utils.checkAdb()) {
+    if (Utils.checkAdb(false)) {
       restartDaemon();
       return;
     }
@@ -223,7 +223,7 @@ class AdvancedSettings {
     writer.close();
 
     SystemClock.sleep(5000);
-    if (Utils.checkAdb()) {
+    if (Utils.checkAdb(true)) {
       restartDaemon();
     }
   }

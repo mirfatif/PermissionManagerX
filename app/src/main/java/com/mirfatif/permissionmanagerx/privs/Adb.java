@@ -35,7 +35,10 @@ public class Adb {
   private AdbReader adbReader;
   private AdbWriter adbWriter;
 
-  Adb(String command) throws AdbException {
+  private final boolean showToastOnFailure;
+
+  Adb(String command, boolean showToastOnFailure) throws AdbException {
+    this.showToastOnFailure = showToastOnFailure;
     createConnection(command, true);
   }
 
@@ -100,7 +103,9 @@ public class Adb {
   private void throwAdbException(int resId, Exception e, String msg) throws AdbException {
     e.printStackTrace();
     closeQuietly();
-    Utils.runInFg(() -> Toast.makeText(App.getContext(), resId, Toast.LENGTH_LONG).show());
+    if (showToastOnFailure) {
+      Utils.runInFg(() -> Toast.makeText(App.getContext(), resId, Toast.LENGTH_LONG).show());
+    }
     throw new AdbException(msg);
   }
 
@@ -149,10 +154,10 @@ public class Adb {
     }
   }
 
-  public static boolean isConnected() {
+  public static boolean isConnected(boolean showToastOnFailure) {
     Adb adb;
     try {
-      adb = new Adb("id -u");
+      adb = new Adb("id -u", showToastOnFailure);
     } catch (AdbException e) {
       Log.e(TAG, e.toString());
       return false;

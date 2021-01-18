@@ -67,7 +67,7 @@ public class AppUpdate {
       mVersion = new JSONObject(builder.toString()).getString(VERSION_TAG);
       // Convert tag name to version code (v1.01-beta to 101)
       int version = Integer.parseInt(mVersion.substring(1, 5).replace(".", ""));
-      if (version == BuildConfig.VERSION_CODE) {
+      if (version <= BuildConfig.VERSION_CODE) {
         Log.i(TAG, "App is up-to-date");
         return false;
       } else {

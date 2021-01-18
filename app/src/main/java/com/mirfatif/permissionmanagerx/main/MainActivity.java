@@ -830,7 +830,7 @@ public class MainActivity extends BaseActivity {
 
       Utils.runInBg(
           () -> {
-            if (Utils.checkAdb()) {
+            if (Utils.checkAdb(true)) {
               showSnackBar(getString(R.string.connected_to_adb), 5000);
               Utils.runInFg(() -> adbCheckBox.setChecked(true));
               restartPrivDaemon(false);

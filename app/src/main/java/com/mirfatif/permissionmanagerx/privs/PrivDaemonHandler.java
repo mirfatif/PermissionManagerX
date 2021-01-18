@@ -123,7 +123,7 @@ public class PrivDaemonHandler {
           outStream = suProcess.getOutputStream();
           inReader = new BufferedReader(new InputStreamReader(suProcess.getInputStream()));
         } else if (isAdbConnected) {
-          adb = new Adb("exec " + cmd);
+          adb = new Adb("exec " + cmd, true);
           outStream = adb.getOutputStream();
           inReader = new BufferedReader(adb.getReader());
         } else {
@@ -217,7 +217,7 @@ public class PrivDaemonHandler {
       params += " " + Commands.CREATE_SOCKET;
       useSocket = true;
       try {
-        adb = new Adb("");
+        adb = new Adb("", true);
       } catch (AdbException e) {
         Log.e(TAG, e.toString());
         return false;
@@ -318,7 +318,7 @@ public class PrivDaemonHandler {
       } else {
         Adb adbLogger;
         try {
-          adbLogger = new Adb("exec " + logCommand);
+          adbLogger = new Adb("exec " + logCommand, true);
         } catch (AdbException e) {
           Log.e(TAG, e.toString());
           return null;

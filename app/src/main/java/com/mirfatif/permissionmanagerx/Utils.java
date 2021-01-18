@@ -677,14 +677,14 @@ public class Utils {
   @SuppressWarnings("UnusedReturnValue")
   public static boolean checkAdbIfEnabled() {
     if (MySettings.getInstance().isAdbConnected()) {
-      return checkAdb();
+      return checkAdb(true);
     }
     return false;
   }
 
-  public static boolean checkAdb() {
+  public static boolean checkAdb(boolean showToastOnFailure) {
     MySettings mySettings = MySettings.getInstance();
-    boolean res = Adb.isConnected();
+    boolean res = Adb.isConnected(showToastOnFailure);
     mySettings.setAdbConnected(res);
     if (mySettings.isDebug()) {
       Util.debugLog("checkAdb", "Connecting to ADB " + (res ? "succeeded" : "failed"));
