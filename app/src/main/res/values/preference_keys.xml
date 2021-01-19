@@ -21,6 +21,8 @@
   <string name="pref_main_adb_port_default">5555</string>
   <string name="pref_main_daemon_uid_key">pref_main_daemon_uid</string>
   <integer name="pref_main_daemon_uid_default">1000</integer>
+  <string name="pref_main_daemon_tmp_dir_key">pref_main_daemon_tmp_dir</string>
+  <bool name="pref_main_daemon_tmp_dir_default">true</bool>
   <string name="pref_main_app_launch_count_enc_key">pref_main_app_launch_count_enc</string>
   <integer name="pref_main_app_launch_count_enc_default">0</integer>
   <string name="pref_main_deep_search_enc_key">pref_main_deep_search_enc</string>

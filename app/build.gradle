@@ -76,7 +76,7 @@ task buildDaemon() {
     }
 
     doLast {
-        def dexFile = 'daemon.dex'
+        def dexFile = 'com.mirfatif.privdaemon.dex'
         def dstDir = new File(rootDir, "app/src/main/assets/")
         def dstFile = new File(dstDir, dexFile)
         delete dstFile

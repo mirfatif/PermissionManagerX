@@ -34,6 +34,7 @@ class AdvancedSettings {
 
   private final View dialogLayout;
   private final CheckBox useHiddenAPIsView;
+  private final CheckBox dexInTmpDirView;
   private final EditText adbPortView;
   private final CheckBox useSocketView;
   private final AppCompatSpinner daemonUidSpinner;
@@ -45,6 +46,7 @@ class AdvancedSettings {
   private final int uidSelectedPos, contextSelectedPos;
 
   private final boolean useHiddenAPIs = mMySettings.useHiddenAPIs();
+  private final boolean dexInTmpDir = mMySettings.dexInTmpDir();
   private final String adbPort = String.valueOf(mMySettings.getAdbPort());
   private final boolean useSocket = mMySettings.useSocket();
 
@@ -55,6 +57,7 @@ class AdvancedSettings {
     dialogLayout = mA.getLayoutInflater().inflate(R.layout.advanced_settings_alert_dialog, null);
 
     useHiddenAPIsView = dialogLayout.findViewById(R.id.use_hidden_apis);
+    dexInTmpDirView = dialogLayout.findViewById(R.id.dex_tmp_dir);
     adbPortView = dialogLayout.findViewById(R.id.adb_port);
     useSocketView = dialogLayout.findViewById(R.id.use_socket);
     daemonUidSpinner = dialogLayout.findViewById(R.id.daemon_uid_list);
@@ -85,6 +88,7 @@ class AdvancedSettings {
     daemonUidListArrow.setOnClickListener(v -> daemonUidSpinner.performClick());
     daemonContextListArrow.setOnClickListener(v -> daemonContextSpinner.performClick());
     useHiddenAPIsView.setChecked(useHiddenAPIs);
+    dexInTmpDirView.setChecked(dexInTmpDir);
     adbPortView.setText(adbPort);
     adbPortView.addTextChangedListener(new PortNumberWatcher());
     useSocketView.setChecked(useSocket);
@@ -114,6 +118,11 @@ class AdvancedSettings {
     boolean restartDaemon = false, switchToAdb = false;
     if (useHiddenAPIs != useHiddenAPIsView.isChecked()) {
       restartDaemon = saveHiddenAPIsSettings(useHiddenAPIsView.isChecked());
+    }
+
+    if (dexInTmpDir != dexInTmpDirView.isChecked()) {
+      mMySettings.setDexInTmpDir(dexInTmpDirView.isChecked());
+      restartDaemon = true;
     }
 
     String adbPortNew = adbPortView.getText().toString().trim();
@@ -194,7 +203,7 @@ class AdvancedSettings {
       return;
     }
 
-    Process process = Utils.runCommand(new String[] {"su"}, TAG, true);
+    Process process = Utils.runCommand(TAG, true, "su");
     if (process == null) {
       Utils.runInFg(
           () ->

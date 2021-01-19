@@ -213,6 +213,14 @@ public class MySettings {
     mPrefs.edit().putString(getString(R.string.pref_main_daemon_context_key), context).apply();
   }
 
+  public boolean dexInTmpDir() {
+    return getBoolPref(R.string.pref_main_daemon_tmp_dir_key);
+  }
+
+  public void setDexInTmpDir(boolean dexInTmpDir) {
+    savePref(R.string.pref_main_daemon_tmp_dir_key, dexInTmpDir);
+  }
+
   public boolean shouldCheckForUpdates() {
     if (!getBoolPref(R.string.pref_settings_check_for_updates_key)) {
       return false;

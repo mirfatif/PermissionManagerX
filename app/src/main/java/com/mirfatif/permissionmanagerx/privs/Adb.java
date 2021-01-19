@@ -81,6 +81,7 @@ public class Adb {
 
       // If command is empty, shell is opened. But default shell writes its STDIN to STDERR. So we
       // execute another shell.
+      // Even with new shell, commands written to STDIN are printed back to STDERR.
       if (command.isEmpty()) {
         command = "exec sh";
       }
@@ -157,7 +158,7 @@ public class Adb {
   public static boolean isConnected(boolean showToastOnFailure) {
     Adb adb;
     try {
-      adb = new Adb("id -u", showToastOnFailure);
+      adb = new Adb("exec id -u", showToastOnFailure);
     } catch (AdbException e) {
       Log.e(TAG, e.toString());
       return false;

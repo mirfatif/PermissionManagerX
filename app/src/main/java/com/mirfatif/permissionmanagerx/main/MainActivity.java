@@ -924,7 +924,7 @@ public class MainActivity extends BaseActivity {
     mMySettings.setLogging(null);
     Util.debugLog("Logging", "Start logging");
 
-    if (Utils.doLoggingFails(new String[] {"sh", "exec logcat --pid " + Process.myPid()})) {
+    if (Utils.doLoggingFails("sh", "exec logcat --pid " + Process.myPid())) {
       Utils.stopLogging();
       showSnackBar(getString(R.string.logging_failed), 10000);
       return;

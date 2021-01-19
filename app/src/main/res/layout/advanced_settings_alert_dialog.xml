@@ -38,6 +38,31 @@
 
     </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
+    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="4dp"
+      android:layout_marginBottom="4dp">
+
+      <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textColor="@color/dynamic_text_color"
+        android:textSize="16sp"
+        android:text="@string/dex_tmp_dir"/>
+
+      <CheckBox
+        android:id="@+id/dex_tmp_dir"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="24dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="-2dp"/>
+
+    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+
     <View
       android:layout_width="match_parent"
       android:background="?attr/accentColor"
@@ -124,7 +149,7 @@
     <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginTop="4dp"
+      android:layout_marginTop="8dp"
       android:layout_marginBottom="4dp">
 
       <TextView
@@ -161,7 +186,7 @@
     <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
+      android:layout_marginTop="12dp"
       android:layout_marginBottom="4dp">
 
       <TextView

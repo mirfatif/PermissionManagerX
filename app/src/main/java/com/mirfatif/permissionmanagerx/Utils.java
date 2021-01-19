@@ -64,6 +64,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -97,11 +98,16 @@ public class Utils {
     return mExecutor.submit(runnable);
   }
 
-  public static boolean runCommand(String[] command, String tag, String match) {
-    Process process = runCommand(command, tag, true);
+  public static boolean runCommand(String tag, String match, String cmd2, String... cmd1) {
+    Process process = runCommand(tag, true, cmd1);
     if (process == null) {
       return false;
     }
+
+    if (cmd2 != null) {
+      new PrintWriter(new OutputStreamWriter(process.getOutputStream()), true).println(cmd2);
+    }
+
     try (BufferedReader stdIn =
         new BufferedReader(new InputStreamReader(process.getInputStream()))) {
       String line;
@@ -128,7 +134,7 @@ public class Utils {
     return false;
   }
 
-  public static Process runCommand(String[] cmd, String tag, boolean redirectStdErr) {
+  public static Process runCommand(String tag, boolean redirectStdErr, String... cmd) {
     File binDir = new File(App.getContext().getFilesDir(), "bin");
     File cwd = App.getContext().getExternalFilesDir(null);
 
@@ -498,8 +504,8 @@ public class Utils {
   ///////////////////////////// LOGGING ////////////////////////////
   //////////////////////////////////////////////////////////////////
 
-  public static boolean doLoggingFails(String[] command) {
-    if (command.length != 2) {
+  public static boolean doLoggingFails(String... cmd) {
+    if (cmd.length != 2) {
       Log.e("Logging", "Command array length must be 2");
       return true;
     }
@@ -510,17 +516,15 @@ public class Utils {
       e.printStackTrace();
     }
 
-    Process process = runCommand(new String[] {command[0]}, "Logging", true);
+    Process process = runCommand("Logging", true, cmd[0]);
     if (process == null) {
       return true;
     }
 
     runInBg(() -> readLogcatStream(process, null));
 
-    PrintWriter writer = new PrintWriter(process.getOutputStream());
-    Log.i("Logging", "Sending command to shell: " + command[1]);
-    writer.println(command[1]);
-    writer.flush();
+    Log.i("Logging", "Sending command to shell: " + cmd[1]);
+    new PrintWriter(process.getOutputStream(), true).println(cmd[1]);
 
     return false;
   }
@@ -696,7 +700,7 @@ public class Utils {
 
   public static boolean checkRoot() {
     MySettings mySettings = MySettings.getInstance();
-    boolean res = runCommand(new String[] {"su", "-c", "id  -u"}, "checkRoot", "0");
+    boolean res = runCommand("checkRoot", "0", "exec id -u", "su");
     mySettings.setRootGranted(res);
     if (mySettings.isDebug()) {
       Util.debugLog("checkRoot", "Getting root privileges " + (res ? "succeeded" : "failed"));

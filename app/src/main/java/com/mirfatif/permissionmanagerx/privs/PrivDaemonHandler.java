@@ -3,6 +3,8 @@ package com.mirfatif.permissionmanagerx.privs;
 import android.os.Build;
 import android.os.SystemClock;
 import android.util.Log;
+import android.widget.Toast;
+import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
@@ -25,11 +27,6 @@ import java.util.Arrays;
 public class PrivDaemonHandler {
 
   private static final String TAG = "PrivDaemonHandler";
-  private static final String DAEMON_PACKAGE_NAME = "com.mirfatif.privdaemon";
-  private static final String DAEMON_CLASS_NAME = "PrivDaemon";
-
-  private PrintWriter cmdWriter;
-  private ObjectInputStream responseInStream;
 
   private static PrivDaemonHandler mPrivDaemonHandler;
 
@@ -42,10 +39,234 @@ public class PrivDaemonHandler {
 
   private PrivDaemonHandler() {}
 
-  public Boolean startDaemon(boolean preferRoot) {
+  private final MySettings mMySettings = MySettings.getInstance();
 
+  private static final String DAEMON_PACKAGE_NAME = "com.mirfatif.privdaemon";
+  private static final String DAEMON_CLASS_NAME = "PrivDaemon";
+  private static final String DAEMON_DEX = "com.mirfatif.privdaemon.dex";
+  private static final String DAEMON_SCRIPT = "com.mirfatif.privdaemon.sh";
+
+  private Process suProcess;
+  private Adb adb;
+  private OutputStream outStream;
+  private InputStream inStream;
+  private BufferedReader inReader;
+
+  private final File binDir = new File(App.getContext().getFilesDir(), "bin");
+
+  private PrintWriter cmdWriter;
+  private ObjectInputStream responseInStream;
+
+  public synchronized Boolean startDaemon(boolean preferRoot) {
+    boolean dexInTmpDir = mMySettings.dexInTmpDir();
+    Boolean res = startDaemon(preferRoot, dexInTmpDir);
+    if (res == null || res) {
+      return true;
+    }
+    res = startDaemon(preferRoot, !dexInTmpDir);
+    if (res == null || res) {
+      Utils.runInFg(
+          () ->
+              Toast.makeText(App.getContext(), R.string.dex_location_changed, Toast.LENGTH_LONG)
+                  .show());
+      mMySettings.setDexInTmpDir(!dexInTmpDir);
+    }
+    return res;
+  }
+
+  private Boolean startDaemon(boolean preferRoot, boolean dexInTmpDir) {
     // Required if running as root (ADBD or su)
-    File binDir = new File(App.getContext().getFilesDir(), "bin");
+    if (!extractBin()) {
+      return false;
+    }
+
+    boolean isAdbConnected = mMySettings.isAdbConnected();
+    mPreferRoot = mMySettings.isRootGranted() && (preferRoot || !isAdbConnected);
+
+    String dexFilePath;
+    String daemonScriptPath;
+
+    if (dexInTmpDir) {
+      String prefix = "/data/local/tmp/";
+      dexFilePath = prefix + DAEMON_DEX;
+      daemonScriptPath = prefix + DAEMON_SCRIPT;
+      if (!extractToTmpDir(dexFilePath, daemonScriptPath, isAdbConnected)) {
+        return false;
+      }
+
+    } else {
+      File prefix = App.getContext().getExternalFilesDir(null);
+      dexFilePath = new File(prefix, DAEMON_DEX).getAbsolutePath();
+      daemonScriptPath = new File(prefix, DAEMON_SCRIPT).getAbsolutePath();
+      if (!extractToSharedStorage(dexFilePath, daemonScriptPath)) {
+        return false;
+      }
+    }
+
+    // Let the files be saved
+    SystemClock.sleep(500);
+
+    int daemonUid = mMySettings.getDaemonUid();
+    String daemonContext = mMySettings.getDaemonContext();
+    boolean useSocket = mMySettings.useSocket();
+
+    String params =
+        mMySettings.isDebug()
+            + " "
+            + daemonUid
+            + " "
+            + daemonContext
+            + " "
+            + Utils.getUserId()
+            + " "
+            + dexFilePath
+            + " "
+            + DAEMON_PACKAGE_NAME
+            + " "
+            + DAEMON_CLASS_NAME
+            + " "
+            + binDir
+            + ":"
+            + System.getenv("PATH");
+
+    if (mPreferRoot) {
+      if (useSocket) {
+        params += " " + Commands.CREATE_SOCKET;
+      }
+
+      suProcess = Utils.runCommand(TAG, false, "su");
+      if (suProcess == null) {
+        return false;
+      }
+
+      inStream = suProcess.getInputStream();
+      outStream = suProcess.getOutputStream();
+      inReader = new BufferedReader(new InputStreamReader(inStream));
+      cmdWriter = new PrintWriter(outStream, true);
+
+      Log.i(TAG, "Sending command: exec sh " + daemonScriptPath);
+      cmdWriter.println("exec sh " + daemonScriptPath);
+
+      Process finalSuProcess = suProcess;
+      Utils.runInBg(() -> readDaemonMessages(finalSuProcess, null));
+
+    } else if (isAdbConnected) {
+      params += " " + Commands.CREATE_SOCKET;
+      useSocket = true;
+      try {
+        adb = new Adb("exec sh " + daemonScriptPath, true);
+      } catch (AdbException e) {
+        Log.e(TAG, e.toString());
+        return false;
+      }
+      inReader = new BufferedReader(adb.getReader());
+      cmdWriter = new PrintWriter(adb.getWriter(), true);
+    } else {
+      return false;
+    }
+
+    // Daemon script waits and reads parameters from STDIN
+    Log.i(TAG, "Sending params");
+    cmdWriter.println(params);
+
+    int pid = 0;
+    int port = 0;
+    try {
+      String line;
+      while ((line = inReader.readLine()) != null) {
+        if (line.startsWith(Commands.HELLO)) {
+          pid = Integer.parseInt(line.split(":")[1]);
+          port = Integer.parseInt(line.split(":")[2]);
+          break;
+        }
+        Log.i(DAEMON_CLASS_NAME, line);
+      }
+
+      if (pid <= 0 || (useSocket && port <= 0)) {
+        Log.e(TAG, "Bad or no response from privileged daemon");
+        return false;
+      }
+
+      Log.i(TAG, "Sending command: " + Commands.GET_READY);
+      cmdWriter.println(Commands.GET_READY);
+
+      // We have single input stream to read in case of ADB, so
+      // we couldn't read log messages before receiving PID and port number.
+      if (!mPreferRoot) {
+        Adb finalAdb = adb;
+        Utils.runInBg(() -> readDaemonMessages(null, finalAdb));
+      }
+
+      if (!useSocket) {
+        responseInStream = new ObjectInputStream(inStream);
+      } else {
+        // AdbLib redirects stdErr to stdIn. So create direct Socket.
+        // Also in case of ADB binary, ADB over Network speed sucks
+        Socket socket = new Socket(Inet4Address.getByAddress(new byte[] {127, 0, 0, 1}), port);
+        socket.setTcpNoDelay(true);
+
+        cmdWriter = new PrintWriter(socket.getOutputStream(), true);
+        responseInStream = new ObjectInputStream(socket.getInputStream());
+
+        // cmdWriter and responseInStream both are using socket, so close su process streams.
+        if (mPreferRoot) {
+          if (outStream != null) {
+            outStream.close();
+          }
+          if (inStream != null) {
+            inStream.close();
+          }
+        }
+      }
+
+      // Get response to GET_READY command
+      Object obj = responseInStream.readObject();
+      if (!(obj instanceof String) || !obj.equals(Commands.GET_READY)) {
+        Log.e(TAG, "Bad response from privileged daemon");
+        return false;
+      }
+    } catch (IOException | ClassNotFoundException e) {
+      e.printStackTrace();
+      Log.e(TAG, "Error starting privileged daemon");
+      return false;
+    }
+
+    mMySettings.setPrivDaemonAlive(true);
+
+    if (mMySettings.hasLoggingStarted()) {
+      mMySettings.setLoggingFullyStarted();
+      String logCommand = "logcat --pid " + pid;
+
+      if (mPreferRoot) {
+        logCommand =
+            binDir
+                + "/set_priv -u "
+                + daemonUid
+                + " -g "
+                + daemonUid
+                + " --context "
+                + daemonContext
+                + " -- "
+                + logCommand;
+        if (Utils.doLoggingFails("su", "exec " + logCommand)) {
+          return null;
+        }
+      } else {
+        Adb adbLogger;
+        try {
+          adbLogger = new Adb("exec " + logCommand, true);
+        } catch (AdbException e) {
+          Log.e(TAG, e.toString());
+          return null;
+        }
+        Utils.runInBg(() -> Utils.readLogcatStream(null, adbLogger));
+      }
+    }
+
+    return true;
+  }
+
+  private boolean extractBin() {
     String binary = "set_priv";
     File binaryPath = new File(binDir, binary);
     if (!binaryPath.exists()) {
@@ -83,49 +304,40 @@ public class PrivDaemonHandler {
         }
       }
     }
+    return true;
+  }
 
-    MySettings mySettings = MySettings.getInstance();
-    boolean isAdbConnected = mySettings.isAdbConnected();
-    mPreferRoot = mySettings.isRootGranted() && (preferRoot || !isAdbConnected);
-
-    String daemonDex = "daemon.dex";
-    String daemonScript = "daemon.sh";
-    String prefix = "/data/local/tmp/com.mirfatif.priv";
-    String dexFilePath = prefix + daemonDex;
-    String daemonScriptPath = prefix + daemonScript;
-
-    Process suProcess = null;
-    Adb adb = null;
-    OutputStream outStream = null;
-    InputStream inStream = null;
-    BufferedReader inReader = null;
-
+  private boolean extractToTmpDir(String dex, String script, boolean isAdb) {
     try {
-      for (String file : new String[] {daemonDex, daemonScript}) {
-        String cmd;
-        if (file.equals(daemonDex)) {
-          cmd = "sh -c 'exec cat - >" + dexFilePath + "'";
-        } else {
-          cmd = "sh -c 'exec cat - >" + daemonScriptPath + "'";
-        }
+      for (String file : new String[] {DAEMON_DEX, DAEMON_SCRIPT}) {
+
+        String cmd = "exec cat - >" + (file.equals(DAEMON_DEX) ? dex : script);
 
         if (mPreferRoot) {
           String set_priv = binDir + "/set_priv -u " + 2000 + " -g " + 2000;
           if (new File("/proc/self/ns/mnt").exists()) {
             set_priv += " --context u:r:shell:s0";
           }
-          cmd = "exec " + set_priv + " -- " + cmd;
+          set_priv = "exec " + set_priv + " -- sh";
 
-          suProcess = Utils.runCommand(new String[] {"su", "-c", cmd}, TAG, true);
+          suProcess = Utils.runCommand(TAG, true, "su");
           if (suProcess == null) {
             return false;
           }
           outStream = suProcess.getOutputStream();
+          cmdWriter = new PrintWriter(outStream, true);
+          Log.i(TAG, "Sending command: " + set_priv);
+          cmdWriter.println(set_priv);
+          Log.i(TAG, "Sending command: " + cmd);
+          cmdWriter.println(cmd);
           inReader = new BufferedReader(new InputStreamReader(suProcess.getInputStream()));
-        } else if (isAdbConnected) {
-          adb = new Adb("exec " + cmd, true);
+
+        } else if (isAdb) {
+          adb = new Adb("exec sh -c '" + cmd + "'", true);
           outStream = adb.getOutputStream();
+          cmdWriter = new PrintWriter(outStream, true);
           inReader = new BufferedReader(adb.getReader());
+
         } else {
           Log.e(TAG, "Cannot start privileged daemon without root or ADB shell");
           return false;
@@ -135,7 +347,7 @@ public class PrivDaemonHandler {
         Utils.runInBg(
             () -> {
               try {
-                Utils.readProcessLog(new BufferedReader(finalReader), "DaemonFilesExtraction");
+                Utils.readProcessLog(new BufferedReader(finalReader), "extractToTmpDir()");
               } catch (IOException ignored) {
               }
             });
@@ -156,177 +368,53 @@ public class PrivDaemonHandler {
       return false;
     } finally {
       try {
-        if (outStream != null) {
-          outStream.close();
-        }
         if (inStream != null) {
           inStream.close();
         }
+        if (outStream != null) {
+          outStream.close();
+        }
       } catch (IOException ignored) {
       }
-      Utils.cleanProcess(inReader, suProcess, adb, "DaemonFilesExtraction");
+      Utils.cleanProcess(inReader, suProcess, adb, ": extractToTmpDir()");
+      suProcess = null;
       adb = null;
-      outStream = null;
       inStream = null;
+      outStream = null;
+      inReader = null;
+      cmdWriter = null;
     }
+    return true;
+  }
 
-    // Let the files be saved
-    SystemClock.sleep(500);
-
-    int daemonUid = mySettings.getDaemonUid();
-    String daemonContext = mySettings.getDaemonContext();
-    boolean useSocket = mySettings.useSocket();
-
-    String params =
-        mySettings.isDebug()
-            + " "
-            + daemonUid
-            + " "
-            + daemonContext
-            + " "
-            + Utils.getUserId()
-            + " "
-            + dexFilePath
-            + " "
-            + DAEMON_PACKAGE_NAME
-            + " "
-            + DAEMON_CLASS_NAME
-            + " "
-            + binDir
-            + ":"
-            + System.getenv("PATH");
-
-    if (mPreferRoot) {
-      if (useSocket) {
-        params += " " + Commands.CREATE_SOCKET;
-      }
-
-      suProcess = Utils.runCommand(new String[] {"su"}, TAG, false);
-      if (suProcess == null) {
-        return false;
-      }
-
-      inStream = suProcess.getInputStream();
-      outStream = suProcess.getOutputStream();
-      inReader = new BufferedReader(new InputStreamReader(inStream));
-      cmdWriter = new PrintWriter(outStream, true);
-      Process finalSuProcess = suProcess;
-      Utils.runInBg(() -> readDaemonMessages(finalSuProcess, null));
-
-    } else if (isAdbConnected) {
-      params += " " + Commands.CREATE_SOCKET;
-      useSocket = true;
+  private boolean extractToSharedStorage(String dex, String script) {
+    for (String file : new String[] {DAEMON_DEX, DAEMON_SCRIPT}) {
       try {
-        adb = new Adb("", true);
-      } catch (AdbException e) {
-        Log.e(TAG, e.toString());
-        return false;
-      }
-      inReader = new BufferedReader(adb.getReader());
-      cmdWriter = new PrintWriter(adb.getWriter(), true);
-    } else {
-      return false;
-    }
-
-    // Run daemon script
-    cmdWriter.println("exec sh " + daemonScriptPath);
-
-    // Daemon script waits and reads parameters from STDIN
-    cmdWriter.println(params);
-
-    int pid = 0;
-    int port = 0;
-    try {
-      String line;
-      while ((line = inReader.readLine()) != null) {
-        if (line.startsWith(Commands.HELLO)) {
-          pid = Integer.parseInt(line.split(":")[1]);
-          port = Integer.parseInt(line.split(":")[2]);
-          break;
+        inStream = App.getContext().getAssets().open(file);
+        outStream = new FileOutputStream(file.equals(DAEMON_DEX) ? dex : script);
+        if (Utils.copyStreamFails(inStream, outStream)) {
+          Log.e(TAG, "Extracting " + file + " failed");
+          return false;
         }
-        Log.i(DAEMON_CLASS_NAME, line);
-      }
-
-      if (pid <= 0 || (useSocket && port <= 0)) {
-        Log.e(TAG, "Bad or no response from privileged daemon");
+        outStream.flush();
+        outStream.close();
+      } catch (IOException e) {
+        e.printStackTrace();
         return false;
-      }
-
-      cmdWriter.println(Commands.GET_READY);
-
-      // We have single input stream to read in case of ADB, so
-      // we couldn't read log messages before receiving PID and port number.
-      if (!mPreferRoot) {
-        Adb finalAdb = adb;
-        Utils.runInBg(() -> readDaemonMessages(null, finalAdb));
-      }
-
-      if (!useSocket) {
-        responseInStream = new ObjectInputStream(inStream);
-      } else {
-        // AdbLib redirects stdErr to stdIn. So create direct Socket.
-        // Also in case of ADB binary, ADB over Network speed sucks
-        Socket socket = new Socket(Inet4Address.getByAddress(new byte[] {127, 0, 0, 1}), port);
-        socket.setTcpNoDelay(true);
-
-        cmdWriter = new PrintWriter(socket.getOutputStream(), true);
-        responseInStream = new ObjectInputStream(socket.getInputStream());
-
-        // cmdWriter and responseInStream both are using socket, so close su process streams.
-        if (mPreferRoot) {
-          if (outStream != null) {
-            outStream.close();
-          }
+      } finally {
+        try {
           if (inStream != null) {
             inStream.close();
           }
+          if (outStream != null) {
+            outStream.close();
+          }
+        } catch (IOException ignored) {
         }
-      }
-
-      // get response to GET_READY command
-      Object obj = responseInStream.readObject();
-      if (!(obj instanceof String) || !obj.equals(Commands.GET_READY)) {
-        Log.e(TAG, "Bad response from privileged daemon");
-        return false;
-      }
-    } catch (IOException | ClassNotFoundException e) {
-      e.printStackTrace();
-      Log.e(TAG, "Error starting privileged daemon");
-      return false;
-    }
-
-    mySettings.setPrivDaemonAlive(true);
-
-    if (mySettings.hasLoggingStarted()) {
-      mySettings.setLoggingFullyStarted();
-      String logCommand = "logcat --pid " + pid;
-
-      if (mPreferRoot) {
-        logCommand =
-            binDir
-                + "/set_priv -u "
-                + daemonUid
-                + " -g "
-                + daemonUid
-                + " --context "
-                + daemonContext
-                + " -- "
-                + logCommand;
-        if (Utils.doLoggingFails(new String[] {"su", "exec " + logCommand})) {
-          return null;
-        }
-      } else {
-        Adb adbLogger;
-        try {
-          adbLogger = new Adb("exec " + logCommand, true);
-        } catch (AdbException e) {
-          Log.e(TAG, e.toString());
-          return null;
-        }
-        Utils.runInBg(() -> Utils.readLogcatStream(null, adbLogger));
+        inStream = null;
+        outStream = null;
       }
     }
-
     return true;
   }
 
@@ -374,7 +462,7 @@ public class PrivDaemonHandler {
         return null;
       }
 
-      // to avoid getting restarted
+      // To avoid getting restarted
       if (request.equals(Commands.SHUTDOWN)) {
         mySettings.setPrivDaemonAlive(false);
       }
