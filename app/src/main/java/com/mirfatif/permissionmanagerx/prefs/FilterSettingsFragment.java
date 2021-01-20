@@ -250,8 +250,10 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     if (appOpsList.length == 0) {
       extraAppOpsView.setEnabled(false);
     } else {
-      extraAppOpsView.setEntries(appOpsList); // Item names in list
-      extraAppOpsView.setEntryValues(appOpsList); // Corresponding values of shown items
+      // Item names in list
+      extraAppOpsView.setEntries(appOpsList);
+      // Corresponding values of shown items. EntryValues must exactly correspond to Entries.
+      extraAppOpsView.setEntryValues(appOpsList);
 
       /** Do not set this accidentally if {@link MySettings#getExtraAppOps()} returns empty list */
       extraAppOpsView.setValues(extraAppOps); // Checked entry values

@@ -417,6 +417,7 @@ public class MySettings {
         == PackageManager.PERMISSION_GRANTED;
   }
 
+  // Do not sort this list since the position is the AppOps code
   private List<String> mAppOpsList;
 
   public List<String> getAppOpsList() {
@@ -546,7 +547,7 @@ public class MySettings {
 
       // Separate the pair elements to sorted ordered lists.
       CharSequence[] excludedAppsLabels = new CharSequence[excludedAppsPairList.size()];
-      mExcludedApps = new HashSet<>();
+      mExcludedApps = new LinkedHashSet<>(); // Must be ordered to correspond with Labels
 
       for (int i = 0; i < excludedAppsPairList.size(); i++) {
         excludedAppsLabels[i] = excludedAppsPairList.get(i).packageLabel;
@@ -612,7 +613,7 @@ public class MySettings {
       List<String> excludedPermsList = new ArrayList<>(excludedPerms);
       excludedPermsList.sort(Comparator.comparing(String::toUpperCase));
 
-      mExcludedPerms = new LinkedHashSet<>();
+      mExcludedPerms = new LinkedHashSet<>(); // Maintain the sort order
       mExcludedPerms.addAll(excludedPermsList);
     }
   }
@@ -650,10 +651,10 @@ public class MySettings {
     return getExtraAppOps().contains(opName);
   }
 
-  private final Object EXCLUDED_APP_OPS_LOCK = new Object();
+  private final Object EXTRA_APP_OPS_LOCK = new Object();
 
   public void populateExtraAppOpsList(boolean loadDefaults) {
-    synchronized (EXCLUDED_APP_OPS_LOCK) {
+    synchronized (EXTRA_APP_OPS_LOCK) {
       if (DEBUG) Util.debugLog("populateExtraAppOpsList", "loadDefaults: " + loadDefaults);
       // on first run or after "reset to defaults" it returns null, so use default values
       Set<String> savedExtraAppOps = mPrefs.getStringSet(mExtraAppOpsPrefKey, null);
