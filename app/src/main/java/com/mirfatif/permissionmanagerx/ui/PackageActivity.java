@@ -48,6 +48,7 @@ import com.mirfatif.privtasks.Util;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class PackageActivity extends BaseActivity {
 
@@ -85,8 +86,8 @@ public class PackageActivity extends BaseActivity {
     RecyclerView recyclerView = findViewById(R.id.package_recycler_view);
     mPermissionAdapter =
         new PermissionAdapter(
-            getSwitchToggleListener(),
-            getSpinnerSelectListener(),
+            new SwitchToggleListener(),
+            new SpinnerSelectListener(),
             getPermClickListener(),
             getPermLongClickListener());
 
@@ -107,91 +108,74 @@ public class PackageActivity extends BaseActivity {
     mRefreshLayout.setOnRefreshListener(() -> Utils.runInBg(this::updatePackage));
   }
 
-  private PermClickListener getSwitchToggleListener() {
-    return this::setPermission;
-  }
-
-  private PermSpinnerSelectListener getSpinnerSelectListener() {
-    return (permission, selectedValue) -> {
-      if (!checkPrivileges()) {
-        updateSpinnerSelection(false);
-        return;
-      }
-
-      if (permission.isPerUid()) {
-        int affectedPackagesCount = getPackageManager().getPackagesForUid(mPackage.getUid()).length;
-
-        if (affectedPackagesCount > 1) {
-          AlertDialog dialog =
-              new Builder(this)
-                  .setPositiveButton(
-                      R.string.yes, (d, which) -> setAppOpsMode(permission, selectedValue, true))
-                  .setNegativeButton(R.string.no, (dialog1, which) -> updateSpinnerSelection(false))
-                  .setMessage(
-                      Utils.breakParas(
-                          getString(R.string.uid_mode_app_ops_warning, affectedPackagesCount - 1)))
-                  .create();
-          new AlertDialogFragment(dialog).show(this, "CHANGE_UID_MODE", false);
-        } else {
-          setAppOpsMode(permission, selectedValue, true);
-        }
-      } else {
-        setAppOpsMode(permission, selectedValue, false);
-      }
-    };
-  }
-
   private void setAppOpsMode(Permission permission, int mode, boolean uidMode) {
-    Utils.runInBg(
-        () -> {
-          String pkgName;
-          if (uidMode) {
-            pkgName = "null";
-          } else {
-            pkgName = mPackage.getName();
-          }
-          String command =
-              Commands.SET_APP_OPS_MODE
-                  + " "
-                  + permission.getName()
-                  + " "
-                  + mPackage.getUid()
-                  + " "
-                  + pkgName
-                  + " "
-                  + mode;
-          if (mMySettings.isDebug()) Util.debugLog("setAppOpsMode", "Sending command: " + command);
-          Object res = mPrivDaemonHandler.sendRequest(command);
+    STOP_REFRESH_LOCK.lock();
+    Utils.runInFg(() -> mRefreshLayout.setRefreshing(true));
+    String pkgName;
+    if (uidMode) {
+      pkgName = "null";
+    } else {
+      pkgName = mPackage.getName();
+    }
+    String command =
+        Commands.SET_APP_OPS_MODE
+            + " "
+            + permission.getName()
+            + " "
+            + mPackage.getUid()
+            + " "
+            + pkgName
+            + " "
+            + mode;
+    if (mMySettings.isDebug()) {
+      Util.debugLog("setAppOpsMode", "Sending command: " + command);
+    }
+    Object res = mPrivDaemonHandler.sendRequest(command);
 
-          // new Permission objects are created, so cannot check previous one for new state
-          if (res != null) {
-            Utils.runInFg(
-                () ->
-                    Toast.makeText(
-                            App.getContext(), R.string.something_bad_happened, Toast.LENGTH_LONG)
-                        .show());
-            Log.e("setAppOpsMode", "Response is " + res);
-          }
+    // new Permission objects are created, so cannot check previous one for new state
+    if (res != null) {
+      Utils.runInFg(
+          () ->
+              Toast.makeText(App.getContext(), R.string.something_bad_happened, Toast.LENGTH_LONG)
+                  .show());
+      Log.e("setAppOpsMode", "Response is " + res);
+    }
 
-          updateSpinnerSelection(true);
-        });
+    updateSpinnerSelection(true);
   }
 
-  // to force revert spinner selection in case of no privileges, user denial, or failure
-  private void updateSpinnerSelection(boolean delay) {
-    Utils.runInBg(
-        () -> {
-          updatePackage();
-          if (delay) SystemClock.sleep(500); // To avoid Spinner value flash
-          Utils.runInFg(() -> mPermissionAdapter.notifyDataSetChanged());
+  private void updateSpinnerSelectionInBg() {
+    Utils.runInBg(() -> updateSpinnerSelection(false));
+  }
 
-          // Some AppOps may take a little while to update e.g.
-          // LEGACY_STORAGE always reverts back to Allow.
-          if (!delay) return;
-          SystemClock.sleep(500);
-          updatePackage();
-          Utils.runInFg(() -> mPermissionAdapter.notifyDataSetChanged());
-        });
+  // To force revert spinner selection in case of no privileges, user denial, or failure
+  private void updateSpinnerSelection(boolean delay) {
+    updatePackage();
+    if (delay) {
+      SystemClock.sleep(500); // To avoid Spinner value flash
+    }
+    Utils.runInFg(() -> mPermissionAdapter.notifyDataSetChanged());
+
+    // Some AppOps may take a little while to update e.g.
+    // LEGACY_STORAGE always reverts back to Allow.
+    if (delay) {
+      SystemClock.sleep(500);
+      updatePackage();
+      Utils.runInFg(() -> mPermissionAdapter.notifyDataSetChanged());
+      if (STOP_REFRESH_LOCK.isHeldByCurrentThread()) {
+        STOP_REFRESH_LOCK.unlock();
+      }
+      stopRefreshing();
+    }
+  }
+
+  private final ReentrantLock STOP_REFRESH_LOCK = new ReentrantLock();
+
+  private void stopRefreshing() {
+    if (STOP_REFRESH_LOCK.isLocked()) {
+      return;
+    }
+    Utils.runInFg(() -> mRefreshLayout.setRefreshing(false));
   }
 
   private PermClickListenerWithLoc getPermClickListener() {
@@ -263,7 +247,9 @@ public class PackageActivity extends BaseActivity {
             Utils.runInBg(
                 () -> {
                   int id = mMySettings.getPermDb().getId(entity.pkgName, entity.permName);
-                  if (id > 0) entity.id = id;
+                  if (id > 0) {
+                    entity.id = id;
+                  }
                   mMySettings.getPermDb().insertAll(entity);
                   mPackageParser.updatePermReferences(
                       mPackage.getName(), permission.getName(), permState);
@@ -279,8 +265,11 @@ public class PackageActivity extends BaseActivity {
       builder.setCustomTitle(titleView);
 
       String message;
-      if (permission.isExtraAppOp()) message = getString(R.string.extra_ops_cant_be_excluded);
-      else message = getString(R.string.exclude_perm_from_list);
+      if (permission.isExtraAppOp()) {
+        message = getString(R.string.extra_ops_cant_be_excluded);
+      } else {
+        message = getString(R.string.exclude_perm_from_list);
+      }
       if (permission.isChangeable()) {
         if (isReferenced) {
           message += " " + getString(R.string.clear_perm_state_reference, permState);
@@ -338,7 +327,9 @@ public class PackageActivity extends BaseActivity {
   }
 
   private void updatePackage() {
-    if (mMySettings.isDebug()) Util.debugLog("PackageActivity", "updatePackage() called");
+    if (mMySettings.isDebug()) {
+      Util.debugLog("PackageActivity", "updatePackage() called");
+    }
     mPackageParser.updatePackage(mPackage);
     updatePermissionsList(); // the same Package object is updated
   }
@@ -347,11 +338,8 @@ public class PackageActivity extends BaseActivity {
     mPermissionsList = mPackage.getPermissionsList();
     mPermissionsList.sort(Comparator.comparingInt(Permission::getOrder));
     handleSearchQuery();
-    Utils.runInFg(
-        () -> {
-          checkEmptyPermissionsList();
-          mRefreshLayout.setRefreshing(false);
-        });
+    Utils.runInFg(this::checkEmptyPermissionsList);
+    stopRefreshing();
   }
 
   private SearchView mSearchView;
@@ -412,7 +400,9 @@ public class PackageActivity extends BaseActivity {
 
     List<Permission> permList = new ArrayList<>();
     for (Permission permission : mPermissionsList) {
-      if (permission.contains(queryText.toString())) permList.add(permission);
+      if (permission.contains(queryText.toString())) {
+        permList.add(permission);
+      }
       Utils.runInFg(() -> mPermissionAdapter.submitList(new ArrayList<>(permList)));
     }
   }
@@ -479,7 +469,9 @@ public class PackageActivity extends BaseActivity {
                           () -> {
                             List<BackupEntry> permEntries = new ArrayList<>();
                             for (Permission permission : mPermissionsList) {
-                              if (!permission.isChangeable()) continue;
+                              if (!permission.isChangeable()) {
+                                continue;
+                              }
 
                               String permState = getPermState(permission);
 
@@ -532,32 +524,27 @@ public class PackageActivity extends BaseActivity {
   }
 
   private void setPermission(Permission permission) {
-    if (!checkPrivileges()) return;
+    String command = mPackage.getName() + " " + permission.getName() + " " + Utils.getUserId();
+    if (permission.isGranted()) {
+      command = Commands.REVOKE_PERMISSION + " " + command;
+    } else {
+      command = Commands.GRANT_PERMISSION + " " + command;
+    }
 
-    Utils.runInBg(
-        () -> {
-          String command =
-              mPackage.getName() + " " + permission.getName() + " " + Utils.getUserId();
-          if (permission.isGranted()) {
-            command = Commands.REVOKE_PERMISSION + " " + command;
-          } else {
-            command = Commands.GRANT_PERMISSION + " " + command;
-          }
+    if (mMySettings.isDebug()) {
+      Util.debugLog("setPermission", "Sending command: " + command);
+    }
+    Object res = mPrivDaemonHandler.sendRequest(command);
+    updatePackage();
 
-          if (mMySettings.isDebug()) Util.debugLog("setPermission", "Sending command: " + command);
-          Object res = mPrivDaemonHandler.sendRequest(command);
-          updatePackage();
-
-          // new Permission objects are created, so cannot check previous one for new state
-          if (res != null) {
-            Utils.runInFg(
-                () ->
-                    Toast.makeText(
-                            App.getContext(), R.string.something_bad_happened, Toast.LENGTH_LONG)
-                        .show());
-            Log.e("setPermission", "Response is " + res);
-          }
-        });
+    // new Permission objects are created, so cannot check previous one for new state
+    if (res != null) {
+      Utils.runInFg(
+          () ->
+              Toast.makeText(App.getContext(), R.string.something_bad_happened, Toast.LENGTH_LONG)
+                  .show());
+      Log.e("setPermission", "Response is " + res);
+    }
   }
 
   private boolean checkPrivileges() {
@@ -584,6 +571,10 @@ public class PackageActivity extends BaseActivity {
     return false;
   }
 
+  private void doNotRemindDangAction() {
+    mMySettings.savePref(R.string.pref_package_warn_dang_change_enc_key, false);
+  }
+
   @Override
   protected void onSaveInstanceState(@NonNull Bundle outState) {
     AlertDialogFragment.removeAll(this);
@@ -606,5 +597,109 @@ public class PackageActivity extends BaseActivity {
       return;
     }
     super.onBackPressed();
+  }
+
+  private class SwitchToggleListener implements PermClickListener {
+
+    @Override
+    public void onClick(Permission permission) {
+      if (!checkPrivileges()) {
+        return;
+      }
+
+      int warnResId = 0;
+      if (mMySettings.getBoolPref(R.string.pref_package_warn_dang_change_enc_key)) {
+        if (mPackage.isSystemApp()) {
+          warnResId = R.string.change_system_perms_warning;
+        } else if (mPackage.isFrameworkApp()) {
+          warnResId = R.string.change_framework_perms_warning;
+        }
+      }
+
+      if (warnResId == 0) {
+        Utils.runInBg(() -> setPermission(permission));
+        return;
+      }
+
+      AlertDialog dialog =
+          new Builder(PackageActivity.this)
+              .setPositiveButton(
+                  R.string.yes, (d, which) -> Utils.runInBg(() -> setPermission(permission)))
+              .setNegativeButton(R.string.no, null)
+              .setNeutralButton(R.string.do_not_remind, (d, which) -> doNotRemindDangAction())
+              .setTitle(R.string.warning)
+              .setMessage(Utils.breakParas(getString(warnResId)))
+              .create();
+      new AlertDialogFragment(dialog).show(PackageActivity.this, "PERM_CHANGE_WARNING", false);
+    }
+  }
+
+  private class SpinnerSelectListener implements PermSpinnerSelectListener {
+
+    @Override
+    public void onSelect(Permission permission, int selectedValue) {
+      if (!checkPrivileges()) {
+        updateSpinnerSelectionInBg();
+        return;
+      }
+
+      int warnResId = 0;
+      if (mMySettings.getBoolPref(R.string.pref_package_warn_dang_change_enc_key)) {
+        if (mPackage.isSystemApp()) {
+          warnResId = R.string.change_system_perms_warning;
+        } else if (mPackage.isFrameworkApp()) {
+          warnResId = R.string.change_framework_perms_warning;
+        }
+      }
+
+      boolean uidMode = permission.isPerUid();
+
+      int affectedPkgCount = 0;
+      if (uidMode) {
+        affectedPkgCount = getPackageManager().getPackagesForUid(mPackage.getUid()).length;
+      }
+
+      if (warnResId == 0 && (!uidMode || affectedPkgCount <= 1)) {
+        Utils.runInBg(() -> setAppOpsMode(permission, selectedValue, uidMode));
+        return;
+      }
+
+      String msg = "";
+      if (affectedPkgCount > 1) {
+        msg = getString(R.string.uid_mode_app_ops_warning, affectedPkgCount - 1);
+        if (warnResId == 0) {
+          msg += "\n" + getString(R.string._continue);
+        }
+      }
+
+      if (warnResId != 0) {
+        if (!msg.isEmpty()) {
+          msg += "\n";
+        }
+        msg += getString(warnResId);
+      }
+
+      Builder builder =
+          new Builder(PackageActivity.this)
+              .setPositiveButton(
+                  R.string.yes,
+                  (d, which) ->
+                      Utils.runInBg(() -> setAppOpsMode(permission, selectedValue, uidMode)))
+              .setNegativeButton(R.string.no, (d, which) -> updateSpinnerSelectionInBg())
+              .setTitle(R.string.warning)
+              .setMessage(Utils.breakParas(msg));
+
+      if (affectedPkgCount <= 1) {
+        builder.setNeutralButton(
+            R.string.do_not_remind,
+            (dialog, which) -> {
+              doNotRemindDangAction();
+              updateSpinnerSelectionInBg();
+            });
+      }
+      new AlertDialogFragment(builder.create())
+          .setOnDismissListener(d -> updateSpinnerSelectionInBg())
+          .show(PackageActivity.this, "PERM_CHANGE_WARNING", false);
+    }
   }
 }

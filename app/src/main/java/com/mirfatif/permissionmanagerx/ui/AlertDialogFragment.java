@@ -1,6 +1,8 @@
 package com.mirfatif.permissionmanagerx.ui;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.annotation.NonNull;
@@ -104,5 +106,21 @@ public class AlertDialogFragment extends AppCompatDialogFragment {
     }
     for (Fragment fragment : fragments) transaction.remove(fragment);
     transaction.commitNowAllowingStateLoss();
+  }
+
+  // We cannot use Dialog's OnDismiss and OnCancel Listeners, DialogFragment owns them.
+  private OnDismissListener mDismissListener;
+
+  public AlertDialogFragment setOnDismissListener(OnDismissListener dismissListener) {
+    mDismissListener = dismissListener;
+    return this;
+  }
+
+  @Override
+  public void onDismiss(@NonNull DialogInterface dialog) {
+    super.onDismiss(dialog);
+    if (mDismissListener != null) {
+      mDismissListener.onDismiss(dialog);
+    }
   }
 }

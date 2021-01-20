@@ -127,4 +127,9 @@
   <!--HelpActivity-->
   <string name="pref_help_font_size_key">pref_help_font_size</string>
   <integer name="pref_help_font_size_default">14</integer>
+
+  <!--PackageActivity-->
+  <string name="pref_package_warn_dang_change_enc_key">pref_package_warn_dang_change_enc</string>
+  <bool name="pref_package_warn_dang_change_enc_default">true</bool>
+
 </resources>

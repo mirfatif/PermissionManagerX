@@ -18,6 +18,8 @@
   <string name="do_not_remind">Don\'t Remind</string>
   <string name="get_help">Get Help</string>
   <string name="switch_to_adb">Switch to ADB</string>
+  <string name="_continue">Continue?</string>
+  <string name="warning">Warning</string>
 
   <!--App-->
   <string name="device_low_memory">Device is getting critically low on memory</string>
@@ -155,8 +157,14 @@
 
   <!--PackageActivity-->
   <string name="something_bad_happened">Something bad happened</string>
+  <string name="change_framework_perms_warning">Changing permissions of framework apps is a dangerous
+    action. In worst-case scenario Android system may crash.\nAre you sure you want to continue?
+  </string>
+  <string name="change_system_perms_warning">Changing permissions of system apps is a dangerous
+    action. In worst-case scenario Android system may crash.\nAre you sure you want to continue?
+  </string>
   <string name="uid_mode_app_ops_warning">This is a UID mode AppOp.
-    Changing it also affects %1$d other package(s).\nContinue?
+    Changing it also affects %1$d other package(s).
   </string>
   <string name="extra_ops_cant_be_excluded">Extra AppOps cannot be excluded from visible list.</string>
   <string name="exclude_perm_from_list">Exclude permission from visible list.</string>
