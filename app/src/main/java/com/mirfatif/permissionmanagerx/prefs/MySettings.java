@@ -79,32 +79,23 @@ public class MySettings {
     mDoRepeatUpdates = doRepeatUpdates;
   }
 
-  private Boolean startLogging = false;
   private boolean DEBUG = false;
+  private boolean daemonLogging = false;
 
   public boolean isDebug() {
     return DEBUG;
   }
 
-  public void setLogging(Boolean logging) {
-    if (logging == null) {
-      startLogging = null;
-    } else {
-      startLogging = logging;
-      DEBUG = logging;
+  public void setDebugLog(boolean debugLog) {
+    DEBUG = daemonLogging = debugLog;
+  }
+
+  public boolean shouldStartDaemonLog() {
+    if (daemonLogging) {
+      daemonLogging = false;
+      return true;
     }
-  }
-
-  public boolean shouldStartLogging() {
-    return startLogging != null && startLogging;
-  }
-
-  public boolean hasLoggingStarted() {
-    return startLogging == null;
-  }
-
-  public void setLoggingFullyStarted() {
-    startLogging = false;
+    return false;
   }
 
   public boolean getBoolPref(int keyResId) {
@@ -240,11 +231,17 @@ public class MySettings {
   }
 
   public boolean shouldAskToSendCrashReport() {
+    int crashCount = getIntPref(R.string.pref_main_crash_report_count_enc_key);
     long lastTS = getLongPref(R.string.pref_main_crash_report_ts_enc_key);
-    if ((System.currentTimeMillis() - lastTS) >= TimeUnit.DAYS.toMillis(1)) {
-      savePref(R.string.pref_main_crash_report_ts_enc_key, System.currentTimeMillis());
+    long currTime = System.currentTimeMillis();
+
+    if (crashCount >= 5 || (currTime - lastTS) >= TimeUnit.DAYS.toMillis(1)) {
+      savePref(R.string.pref_main_crash_report_ts_enc_key, currTime);
+      savePref(R.string.pref_main_crash_report_count_enc_key, 1);
       return true;
     }
+
+    savePref(R.string.pref_main_crash_report_count_enc_key, crashCount + 1);
     return false;
   }
 

@@ -39,6 +39,8 @@
   <bool name="pref_main_root_granted_enc_default">false</bool>
   <string name="pref_main_adb_connected_enc_key">pref_main_adb_connected_enc</string>
   <bool name="pref_main_adb_connected_enc_default">false</bool>
+  <string name="pref_main_crash_report_count_enc_key">pref_main_crash_report_count_enc</string>
+  <integer name="pref_main_crash_report_count_enc_default">1</integer>
 
   <!--PreferencesActivity packages titles, keys and defaults-->
   <string name="pref_filter_packages_cat_title">Packages</string>

@@ -3,7 +3,6 @@ package com.mirfatif.permissionmanagerx.main;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Process;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
@@ -143,11 +142,6 @@ public class MainActivity extends BaseActivity {
     mProgressMaxView = findViewById(R.id.progress_max);
     mRoundProgressContainer = findViewById(R.id.round_progress_container);
     mRoundProgressTextView = findViewById(R.id.round_progress_text);
-
-    if (mMySettings.shouldStartLogging()) {
-      mRoundProgressTextView.setText(R.string.start_logging);
-      Utils.runInBg(this::startLogging);
-    }
 
     Future<?> checkRootAndAdbFuture =
         Utils.runInBg(
@@ -917,28 +911,8 @@ public class MainActivity extends BaseActivity {
   }
 
   //////////////////////////////////////////////////////////////////
-  ///////////////////////////// LOGGING ////////////////////////////
+  ////////////////////////// FOR SUBCLASSES ////////////////////////
   //////////////////////////////////////////////////////////////////
-
-  private void startLogging() {
-    mMySettings.setLogging(null);
-    Util.debugLog("Logging", "Start logging");
-
-    if (Utils.doLoggingFails("sh", "exec logcat --pid " + Process.myPid())) {
-      Utils.stopLogging();
-      showSnackBar(getString(R.string.logging_failed), 10000);
-      return;
-    }
-
-    Utils.startLoggingTimer();
-    Builder builder =
-        new Builder(this)
-            .setTitle(R.string.logging)
-            .setMessage(R.string.logging_warning)
-            .setPositiveButton(android.R.string.ok, null);
-    Utils.runInFg(
-        () -> new AlertDialogFragment(builder.create()).show(this, "LOGGING_WARNING", false));
-  }
 
   ProgressFrameLayout getRoundProgressContainer() {
     return mRoundProgressContainer;

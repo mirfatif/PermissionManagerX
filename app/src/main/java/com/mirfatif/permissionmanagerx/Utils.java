@@ -53,11 +53,10 @@ import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.Adb;
-import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
+import com.mirfatif.permissionmanagerx.svc.NotifDismissSvc;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -76,7 +75,6 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -277,9 +275,20 @@ public class Utils {
     return true;
   }
 
-  // Doesn't work with app context
+  // Doesn't work with Application or Service context
   public static @ColorInt int getColor(Activity activity, @AttrRes int colorAttrResId) {
     return MaterialColors.getColor(activity, colorAttrResId, Color.TRANSPARENT);
+  }
+
+  // We cannot get Attr colors belonging to Activity themes from App or Service Contexts
+  private static @ColorInt int mAccentColor = App.getContext().getColor(R.color.green);
+
+  public static void setAccentColor(@ColorInt int color) {
+    mAccentColor = color;
+  }
+
+  public static @ColorInt int getAccentColor() {
+    return mAccentColor;
   }
 
   public static boolean sendMail(Activity activity, String body) {
@@ -504,92 +513,6 @@ public class Utils {
   ///////////////////////////// LOGGING ////////////////////////////
   //////////////////////////////////////////////////////////////////
 
-  public static boolean doLoggingFails(String... cmd) {
-    if (cmd.length != 2) {
-      Log.e("Logging", "Command array length must be 2");
-      return true;
-    }
-
-    try {
-      writeToLogFile(getDeviceInfo());
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    Process process = runCommand("Logging", true, cmd[0]);
-    if (process == null) {
-      return true;
-    }
-
-    runInBg(() -> readLogcatStream(process, null));
-
-    Log.i("Logging", "Sending command to shell: " + cmd[1]);
-    new PrintWriter(process.getOutputStream(), true).println(cmd[1]);
-
-    return false;
-  }
-
-  public static void readLogcatStream(Process process, Adb adb) {
-    BufferedReader reader;
-    if (process != null) {
-      reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-    } else if (adb != null) {
-      reader = new BufferedReader(adb.getReader());
-    } else {
-      return;
-    }
-
-    try {
-      String line;
-      while ((line = reader.readLine()) != null && !line.contains(Commands.STOP_LOGGING)) {
-        writeToLogFile(line);
-      }
-    } catch (IOException e) {
-      Log.e("readLogcatStream", e.toString());
-    } finally {
-      // if process exited itself
-      stopLogging();
-      cleanProcess(reader, process, adb, "readLogcatStream");
-    }
-  }
-
-  public static BufferedWriter mLogcatWriter;
-  private static final Object LOG_WRITER_LOCK = new Object();
-
-  private static void writeToLogFile(String line) throws IOException {
-    synchronized (LOG_WRITER_LOCK) {
-      if (!MySettings.getInstance().isDebug()) {
-        return;
-      }
-      mLogcatWriter.write(line);
-      mLogcatWriter.newLine();
-    }
-  }
-
-  public static void startLoggingTimer() {
-    Executors.newSingleThreadScheduledExecutor().schedule(Utils::stopLogging, 5, TimeUnit.MINUTES);
-  }
-
-  public static void stopLogging() {
-    synchronized (LOG_WRITER_LOCK) {
-      MySettings mySettings = MySettings.getInstance();
-      if (!mySettings.isDebug()) {
-        return;
-      }
-      mySettings.setLogging(false);
-      try {
-        if (mLogcatWriter != null) {
-          mLogcatWriter.close();
-        }
-      } catch (IOException ignored) {
-      }
-      if (mySettings.isPrivDaemonAlive()) {
-        PrivDaemonHandler.getInstance().sendRequest(Commands.STOP_LOGGING);
-      }
-      Log.i("stopLogging()", Commands.STOP_LOGGING);
-    }
-  }
-
   private static long daemonDeadLogTs = 0;
 
   public static void logDaemonDead(String tag) {
@@ -635,6 +558,10 @@ public class Utils {
     String authority = BuildConfig.APPLICATION_ID + ".FileProvider";
     Uri logFileUri = FileProvider.getUriForFile(App.getContext(), authority, logFile);
 
+    final String CHANNEL_ID = "channel_crash_report";
+    final String CHANNEL_NAME = getString(R.string.channel_crash_report);
+    final int UNIQUE_ID = getInteger(R.integer.channel_crash_report);
+
     Intent intent = new Intent(Intent.ACTION_SEND);
     intent
         .setData(logFileUri)
@@ -645,22 +572,24 @@ public class Utils {
         .putExtra(Intent.EXTRA_TEXT, "Find attachment.")
         .putExtra(Intent.EXTRA_STREAM, logFileUri);
 
-    final String CHANNEL_ID = "channel_crash_report";
-    final String CHANNEL_NAME = getString(R.string.channel_crash_report);
-    final int UNIQUE_ID = getInteger(R.integer.channel_crash_report);
+    // Adding extra information to dismiss notification after the action is tapped
+    intent
+        .setClass(App.getContext(), NotifDismissSvc.class)
+        .putExtra(NotifDismissSvc.EXTRA_INTENT_TYPE, NotifDismissSvc.INTENT_TYPE_ACTIVITY)
+        .putExtra(NotifDismissSvc.EXTRA_NOTIF_ID, UNIQUE_ID);
 
     PendingIntent pendingIntent =
-        PendingIntent.getActivity(
+        PendingIntent.getService(
             App.getContext(), UNIQUE_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-    NotificationManagerCompat mNotificationManager =
+    NotificationManagerCompat notificationManager =
         NotificationManagerCompat.from(App.getContext());
 
-    NotificationChannel channel = mNotificationManager.getNotificationChannel(CHANNEL_ID);
+    NotificationChannel channel = notificationManager.getNotificationChannel(CHANNEL_ID);
     if (channel == null && VERSION.SDK_INT >= VERSION_CODES.O) {
       channel =
           new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
-      mNotificationManager.createNotificationChannel(channel);
+      notificationManager.createNotificationChannel(channel);
     }
 
     NotificationCompat.Builder notificationBuilder =
@@ -672,11 +601,13 @@ public class Utils {
         .setStyle(
             new NotificationCompat.BigTextStyle().bigText(getString(R.string.ask_to_report_crash)))
         .setContentIntent(pendingIntent)
+        .addAction(0, getString(R.string.send_report), pendingIntent)
+        .setColor(Utils.getAccentColor())
         .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setAutoCancel(true);
 
-    mNotificationManager.notify(UNIQUE_ID, notificationBuilder.build());
+    notificationManager.notify(UNIQUE_ID, notificationBuilder.build());
   }
 
   //////////////////////////////////////////////////////////////////

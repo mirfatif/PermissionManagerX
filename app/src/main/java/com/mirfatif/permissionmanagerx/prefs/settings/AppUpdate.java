@@ -124,6 +124,7 @@ public class AppUpdate {
     Builder notificationBuilder = new Builder(App.getContext(), CHANNEL_ID);
     notificationBuilder
         .setSmallIcon(R.drawable.notification_icon)
+        .setColor(Utils.getAccentColor())
         .setContentTitle(Utils.getString(R.string.new_version_available))
         .setContentText(Utils.getString(R.string.tap_to_download) + " " + mVersion)
         .setContentIntent(pendingIntent)

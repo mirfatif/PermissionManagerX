@@ -2,11 +2,10 @@ package com.mirfatif.permissionmanagerx.app;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.SystemClock;
 import android.util.Log;
 import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
-import java.io.IOException;
+import com.mirfatif.permissionmanagerx.svc.LogcatService;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -28,14 +27,8 @@ public class App extends Application {
 
     Thread.setDefaultUncaughtExceptionHandler(
         (t, e) -> {
-          if (Utils.mLogcatWriter != null) {
-            Log.e(TAG, e.toString());
-            SystemClock.sleep(500);
-            try {
-              Utils.mLogcatWriter.flush();
-            } catch (IOException ignored) {
-            }
-          }
+          Log.e(TAG, e.toString());
+          LogcatService.appCrashed();
 
           StringWriter stringWriter = new StringWriter();
           PrintWriter writer = new PrintWriter(stringWriter, true);

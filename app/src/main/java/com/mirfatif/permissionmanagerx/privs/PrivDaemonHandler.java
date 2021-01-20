@@ -9,6 +9,7 @@ import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.Adb.AdbException;
+import com.mirfatif.permissionmanagerx.svc.LogcatService;
 import com.mirfatif.privtasks.Commands;
 import java.io.BufferedReader;
 import java.io.File;
@@ -233,8 +234,7 @@ public class PrivDaemonHandler {
 
     mMySettings.setPrivDaemonAlive(true);
 
-    if (mMySettings.hasLoggingStarted()) {
-      mMySettings.setLoggingFullyStarted();
+    if (mMySettings.shouldStartDaemonLog()) {
       String logCommand = "logcat --pid " + pid;
 
       if (mPreferRoot) {
@@ -248,7 +248,7 @@ public class PrivDaemonHandler {
                 + daemonContext
                 + " -- "
                 + logCommand;
-        if (Utils.doLoggingFails("su", "exec " + logCommand)) {
+        if (LogcatService.doLoggingFails("su", "exec " + logCommand)) {
           return null;
         }
       } else {
@@ -259,7 +259,7 @@ public class PrivDaemonHandler {
           Log.e(TAG, e.toString());
           return null;
         }
-        Utils.runInBg(() -> Utils.readLogcatStream(null, adbLogger));
+        Utils.runInBg(() -> LogcatService.readLogcatStream(null, adbLogger));
       }
     }
 

@@ -15,16 +15,10 @@ import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
-import com.mirfatif.permissionmanagerx.main.MainActivity;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
-import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
+import com.mirfatif.permissionmanagerx.svc.LogcatService;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
-import com.mirfatif.privtasks.Commands;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 
 public class AboutActivity extends BaseActivity {
 
@@ -48,7 +42,7 @@ public class AboutActivity extends BaseActivity {
     openWebUrl(R.id.issues, R.string.issues_url);
     openWebUrl(R.id.rating, R.string.play_store_url);
     findViewById(R.id.contact).setOnClickListener(v -> Utils.sendMail(this, null));
-    setLogTitle();
+    setLogTitle(mMySettings.isDebug() ? R.string.stop_logging : R.string.collect_logs);
     findViewById(R.id.logging).setOnClickListener(v -> handleLogging());
     findViewById((R.id.check_update)).setOnClickListener(v -> checkForUpdates());
 
@@ -70,51 +64,32 @@ public class AboutActivity extends BaseActivity {
     findViewById(viewResId).setOnClickListener(v -> Utils.openWebUrl(this, getString(linkResId)));
   }
 
-  private boolean logInProgress = false;
-
-  private void setLogTitle() {
-    logInProgress = mMySettings.isDebug();
-    ((TextView) findViewById(R.id.logging_title))
-        .setText(logInProgress ? R.string.stop_logging : R.string.collect_logs);
+  private void setLogTitle(int resId) {
+    ((TextView) findViewById(R.id.logging_title)).setText(resId);
   }
 
   private void handleLogging() {
-    if (logInProgress) {
-      Utils.runInBg(
-          () -> {
-            Utils.stopLogging();
-            Utils.runInFg(
-                () -> {
-                  setLogTitle();
-                  Snackbar.make(findViewById(R.id.logging), R.string.logging_stopped, 5000).show();
-                });
-          });
+    if (mMySettings.isDebug()) {
+      LogcatService.sendStopLogIntent();
+      setLogTitle(R.string.collect_logs);
+      Snackbar.make(findViewById(R.id.logging), R.string.logging_stopped, 5000).show();
       return;
     }
 
     Toast.makeText(App.getContext(), R.string.select_log_file, Toast.LENGTH_LONG).show();
-    ActivityResultCallback<Uri> callback = uri -> Utils.runInBg(() -> doLoggingInBg(uri));
+    ActivityResultCallback<Uri> callback =
+        logFile -> {
+          if (logFile != null) {
+            startService(
+                new Intent(
+                    LogcatService.ACTION_START_LOG,
+                    logFile,
+                    App.getContext(),
+                    LogcatService.class));
+          }
+        };
     registerForActivityResult(new ActivityResultContracts.CreateDocument(), callback)
         .launch("PermissionManagerX_" + Utils.getCurrDateTime(false) + ".log");
-  }
-
-  private void doLoggingInBg(Uri uri) {
-    try {
-      OutputStream outStream = getApplication().getContentResolver().openOutputStream(uri, "rw");
-      Utils.mLogcatWriter = new BufferedWriter(new OutputStreamWriter(outStream));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-      return;
-    }
-
-    if (mMySettings.isPrivDaemonAlive()) {
-      PrivDaemonHandler.getInstance().sendRequest(Commands.SHUTDOWN);
-    }
-    mMySettings.setLogging(true);
-    Utils.runCommand("Logging", null, null, "logcat", "-c");
-    Intent intent = new Intent(App.getContext(), MainActivity.class);
-    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-    Utils.runInFg(() -> startActivity(intent));
   }
 
   private boolean mCheckForUpdateInProgress = false;

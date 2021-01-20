@@ -54,11 +54,6 @@
   <string name="deep_search">Deep Search (Permissions)</string>
   <string name="case_sensitive_search">Case Sensitive Search</string>
   <string name="grant_root_or_adb">Grant root access or connect to ADB to start privileged process.</string>
-  <string name="logging">Logging</string>
-  <string name="start_logging">Start logging</string>
-  <string name="logging_warning">App may respond slow due to logging, and log file may grow up to very
-    large size. After 5 minutes logging is auto-stopped.
-  </string>
   <string name="logging_failed">Logging failed</string>
   <string name="daemon_logging_failed">Logging for privileged daemon failed</string>
   <string name="creating_packages_list">Creating packages list</string>
@@ -124,10 +119,17 @@
   <string name="crash_report">Crash Report</string>
   <string name="ask_to_report_crash_small">Send crash report to the developer</string>
   <string name="ask_to_report_crash">Sorry, a component of the app had a problem and crashed.
-    Tap to send the log file to the developer through email or Telegram so that the bug can be fixed.
+    Send the log file to the developer through email or Telegram so that the bug can be fixed.
   </string>
+  <string name="send_report">Send Report</string>
   <string name="packages">Packages</string>
   <string name="permissions">Permissions</string>
+
+  <!--LogcatService-->
+  <string name="logging">Logging</string>
+  <string name="logging_warning">App may respond slow due to log collection and log file may grow
+    up to very large size. Logging is auto-stopped after 5 minutes.
+  </string>
 
   <!-- Buttons-->
   <string name="disable">Disable</string>
@@ -243,6 +245,8 @@
   <integer name="channel_app_update">100</integer>
   <string name="channel_crash_report">Crash Report</string>
   <integer name="channel_crash_report">200</integer>
+  <string name="channel_logcat_collection">Log Collection</string>
+  <integer name="channel_logcat_collection">300</integer>
 
   <!--HelpActivity-->
   <string name="zoom_in_menu_item">Zoom In</string>
