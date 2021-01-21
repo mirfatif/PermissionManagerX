@@ -173,20 +173,25 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     // Apps
     Utils.runInBg(
         () -> {
+          mMySettings.getExcludedAppsLock();
           Set<String> excludedApps = mMySettings.getExcludedApps();
           Utils.runInFg(() -> updateExcludedAppsView(excludedApps));
+          mMySettings.releaseExcludedAppsLock();
         });
 
     // Permissions
     Utils.runInBg(
         () -> {
+          mMySettings.getExcludedPermsLock();
           Set<String> excludedPerms = mMySettings.getExcludedPerms();
           Utils.runInFg(() -> updateExcludedPermsView(excludedPerms));
+          mMySettings.releaseExcludedPermsLock();
         });
 
     // Extra AppOps
     Utils.runInBg(
         () -> {
+          mMySettings.getExtraAppOpsLock();
           // Need to be on background thread.
           List<String> appOpsList = new ArrayList<>(mMySettings.getAppOpsList());
           appOpsList.sort(Comparator.comparing(String::toUpperCase));
@@ -194,6 +199,7 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
 
           Utils.runInFg(
               () -> updateExtraAppOpsView(appOpsList.toArray(new String[0]), extraAppOps));
+          mMySettings.releaseExtraAppOpsLock();
         });
   }
 
