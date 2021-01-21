@@ -10,7 +10,6 @@ import android.content.pm.PermissionInfo;
 import android.content.pm.Signature;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.mirfatif.permissionmanagerx.R;
@@ -23,6 +22,8 @@ import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.MyPackageOps;
 import com.mirfatif.privtasks.Util;
+import com.mirfatif.privtasks.hiddenapis.HiddenAPIs;
+import com.mirfatif.privtasks.hiddenapis.HiddenAPIsError;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -59,7 +60,6 @@ public class PackageParser {
   private Map<String, String> mPermRefList;
   private Map<String, Integer> mPermToOpCodeMap;
 
-  @SuppressWarnings("deprecation")
   private static final int PM_GET_SIGNATURES = PackageManager.GET_SIGNATURES;
 
   // create singleton instance of PackageParser so that all activities can update mPackagesListLive
@@ -92,7 +92,6 @@ public class PackageParser {
     }
   }
 
-  @SuppressWarnings("deprecation")
   private Signature[] getPackageSignatures(PackageInfo packageInfo) {
     return packageInfo.signatures;
   }
@@ -680,9 +679,7 @@ public class PackageParser {
     try {
       PermissionInfo permissionInfo = mPackageManager.getPermissionInfo(perm, 0);
 
-      @SuppressWarnings("deprecation")
       int protectionLevel = permissionInfo.protectionLevel & PermissionInfo.PROTECTION_MASK_BASE;
-      @SuppressWarnings("deprecation")
       int protectionFlags = permissionInfo.protectionLevel & ~PermissionInfo.PROTECTION_MASK_BASE;
       @SuppressWarnings("deprecation")
       int PROTECTION_SIGNATURE_OR_SYSTEM = PermissionInfo.PROTECTION_SIGNATURE_OR_SYSTEM;
@@ -765,34 +762,33 @@ public class PackageParser {
     return -1;
   }
 
-  private int systemFixedFlag = -1;
+  private int SYSTEM_FIXED_FLAG = -1;
 
   private int getSystemFixedFlag() {
-    if (systemFixedFlag != -1) {
-      return systemFixedFlag;
+    if (SYSTEM_FIXED_FLAG != -1) {
+      return SYSTEM_FIXED_FLAG;
     }
 
-    if (mMySettings.canUseHiddenAPIs()) {
-      // hidden API
-      Integer flag =
-          Utils.getStaticIntField("FLAG_PERMISSION_SYSTEM_FIXED", PackageManager.class, TAG);
-      if (flag != null) {
-        systemFixedFlag = flag;
-        return systemFixedFlag;
-      }
-      hiddenAPIsNotWorking(TAG, "Could not get FLAG_PERMISSION_SYSTEM_FIXED field");
-    } else if (!mMySettings.isPrivDaemonAlive()) {
-      Utils.logDaemonDead(TAG + ": getSystemFixedFlag");
-      return -1;
-    } else {
-      Object object = mPrivDaemonHandler.sendRequest(Commands.GET_SYSTEM_FIXED_FLAG);
-      if (object instanceof Integer) {
-        systemFixedFlag = (int) object;
-        return systemFixedFlag;
-      }
+    try {
+      SYSTEM_FIXED_FLAG = HiddenAPIs.getSystemFixedFlag();
+      return SYSTEM_FIXED_FLAG;
+    } catch (HiddenAPIsError e) {
+      Log.e(TAG, e.toString());
     }
+
+    if (!mMySettings.isPrivDaemonAlive()) {
+      Utils.logDaemonDead(TAG + ": getSystemFixedFlag");
+      return SYSTEM_FIXED_FLAG;
+    }
+
+    Object object = mPrivDaemonHandler.sendRequest(Commands.GET_SYSTEM_FIXED_FLAG);
+    if (object instanceof Integer) {
+      SYSTEM_FIXED_FLAG = (int) object;
+      return SYSTEM_FIXED_FLAG;
+    }
+
     Log.e(TAG, "Error occurred in getSystemFixedFlag()");
-    return -1;
+    return SYSTEM_FIXED_FLAG;
   }
 
   //////////////////////////////////////////////////////////////////
@@ -998,17 +994,6 @@ public class PackageParser {
     String reference;
   }
 
-  void hiddenAPIsNotWorking(String tag, String error) {
-    if (mMySettings.useHiddenAPIs()) {
-      Utils.runInFg(
-          () ->
-              Toast.makeText(App.getContext(), R.string.hidden_apis_warning, Toast.LENGTH_LONG)
-                  .show());
-      mMySettings.setUseHiddenAPIs(false);
-    }
-    Log.e(tag, error);
-  }
-
   //////////////////////////////////////////////////////////////////
   ///////////////////////////// SEARCH /////////////////////////////
   //////////////////////////////////////////////////////////////////
@@ -1097,6 +1082,7 @@ public class PackageParser {
   //////////////////////////////////////////////////////////////////
   /////////////////////////// OBSERVABLE ///////////////////////////
   //////////////////////////////////////////////////////////////////
+
   private final PropertyChangeSupport propertyChange = new PropertyChangeSupport(this);
   public static final String PROP_MAX_PROGRESS = "PROP_MAX_PROGRESS";
   public static final String PROP_NOW_PROGRESS = "PROP_NOW_PROGRESS";

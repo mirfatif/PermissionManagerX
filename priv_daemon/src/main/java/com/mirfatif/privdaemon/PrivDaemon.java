@@ -5,6 +5,7 @@ import android.util.Log;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.PrivTasks;
 import com.mirfatif.privtasks.Util;
+import com.mirfatif.privtasks.hiddenapis.HiddenAPIs;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -39,9 +40,9 @@ public class PrivDaemon {
     }
 
     DEBUG = Boolean.parseBoolean(arguments[0]);
+    mPrivTasks = new PrivTasks(DEBUG);
 
-    // hidden API
-    for (int pid : Process.getPidsForCommands(new String[] {TAG})) {
+    for (int pid : mPrivTasks.getPidsForCommands(new String[] {TAG})) {
       if (pid != Process.myPid()) {
         Log.i(TAG, "Killing pid " + pid);
         Process.killProcess(pid);
@@ -91,7 +92,6 @@ public class PrivDaemon {
       }
     }
 
-    mPrivTasks = new PrivTasks(DEBUG, true);
     mCmdReader = new BufferedReader(new InputStreamReader(System.in));
     Log.i(TAG, "I'm up! Send commands");
     String line;
@@ -182,10 +182,10 @@ public class PrivDaemon {
         sendResponse(mPrivTasks.grantRevokePermission(false, args));
         break;
       case Commands.ENABLE_PACKAGE:
-        sendResponse(mPrivTasks.setEnabledState(true, args));
+        sendResponse(mPrivTasks.setAppEnabledState(true, args));
         break;
       case Commands.DISABLE_PACKAGE:
-        sendResponse(mPrivTasks.setEnabledState(false, args));
+        sendResponse(mPrivTasks.setAppEnabledState(false, args));
         break;
       case Commands.SET_APP_OPS_MODE:
         sendResponse(mPrivTasks.setAppOpsMode(args));
@@ -194,10 +194,10 @@ public class PrivDaemon {
         sendResponse(mPrivTasks.resetAppOps(args));
         break;
       case Commands.GET_OP_NUM:
-        sendResponse(mPrivTasks.getOpNum());
+        sendResponse(mPrivTasks.getNumOps());
         break;
       case Commands.GET_SYSTEM_FIXED_FLAG:
-        sendResponse(mPrivTasks.getSystemFixedFlag());
+        sendResponse(HiddenAPIs.getSystemFixedFlag());
         break;
       case Commands.GET_PERMISSION_FLAGS:
         sendResponse(mPrivTasks.getPermissionFlags(args));

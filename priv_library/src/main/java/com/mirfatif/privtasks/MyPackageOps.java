@@ -7,8 +7,8 @@ public class MyPackageOps implements Serializable {
 
   private static final long serialVersionUID = 1234567890L;
 
-  String packageName;
-  List<MyOpEntry> myOpEntryList;
+  public String packageName;
+  public List<MyOpEntry> myOpEntryList;
 
   public String getPackageName() {
     return packageName;
@@ -22,9 +22,9 @@ public class MyPackageOps implements Serializable {
 
     private static final long serialVersionUID = MyPackageOps.serialVersionUID;
 
-    int op;
-    long lastAccessTime;
-    int opMode;
+    public int op;
+    public long lastAccessTime;
+    public int opMode;
 
     public int getOp() {
       return op;

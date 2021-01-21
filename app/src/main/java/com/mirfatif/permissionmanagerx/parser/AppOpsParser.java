@@ -1,9 +1,9 @@
 package com.mirfatif.permissionmanagerx.parser;
 
-import android.app.AppOpsManager;
 import android.content.pm.PackageManager;
-import android.os.RemoteException;
 import android.util.Log;
+import android.widget.Toast;
+import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
@@ -12,6 +12,7 @@ import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.MyPackageOps;
 import com.mirfatif.privtasks.PrivTasks;
 import com.mirfatif.privtasks.Util;
+import com.mirfatif.privtasks.hiddenapis.HiddenAPIsError;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,31 +31,15 @@ public class AppOpsParser {
     return mAppOpsParser;
   }
 
-  private final MySettings mMySettings;
-  private final PrivDaemonHandler mPrivDaemonHandler;
+  private final MySettings mMySettings = MySettings.getInstance();
+  private final PrivDaemonHandler mPrivDaemonHandler = PrivDaemonHandler.getInstance();
   private final PrivTasks mPrivTasks;
 
-  // IPackageManager returns bigger permissions list than PackageManager
-  private boolean mUseIPackageManager = true;
-
   private AppOpsParser() {
-    mMySettings = MySettings.getInstance();
-    mPrivDaemonHandler = PrivDaemonHandler.getInstance();
-    mPrivTasks = new PrivTasks(mMySettings.isDebug(), false);
+    mPrivTasks = new PrivTasks(mMySettings.isDebug());
 
-    // asInterface() and getService() hidden APIs
-    try {
-      mPrivTasks.initializeAppOpsService();
-    } catch (NoSuchMethodError e) {
-      // Simple AppOpsManager doesn't have getUidOps()
-      hiddenAPIsNotWorking(e.toString());
-    }
-    try {
-      mPrivTasks.initializePmService();
-    } catch (NoSuchMethodError e) {
-      // We can use simple PackageManager
-      mUseIPackageManager = false;
-      Log.e(TAG, e.toString());
+    if (!mPrivTasks.canUseIAppOpsService()) {
+      hiddenAPIsNotWorking("Could not initialize IAppOpsService");
     }
   }
 
@@ -63,9 +48,7 @@ public class AppOpsParser {
     if (mMySettings.canUseHiddenAPIs()) {
       try {
         return mPrivTasks.getMyPackageOpsList(uid, packageName, _op);
-      } catch (RemoteException e) {
-        Log.e(TAG, e.toString());
-      } catch (NoSuchMethodError e) {
+      } catch (HiddenAPIsError e) {
         hiddenAPIsNotWorking(e.toString());
         return getOpsForPackage(uid, packageName, op);
       }
@@ -101,12 +84,8 @@ public class AppOpsParser {
     List<Integer> opToDefModeList = new ArrayList<>();
     if (mMySettings.canUseHiddenAPIs()) {
       try {
-        for (int i = 0; i < getOpNum(); i++) {
-          // hidden API
-          opToDefModeList.add(AppOpsManager.opToDefaultMode(i));
-        }
-        return opToDefModeList;
-      } catch (NoSuchMethodError e) {
+        return mPrivTasks.buildOpToDefaultModeList();
+      } catch (HiddenAPIsError e) {
         hiddenAPIsNotWorking(e.toString());
         return buildOpToDefaultModeList();
       }
@@ -133,12 +112,8 @@ public class AppOpsParser {
     List<Integer> opToSwitchList = new ArrayList<>();
     if (mMySettings.canUseHiddenAPIs()) {
       try {
-        for (int i = 0; i < getOpNum(); i++) {
-          // hidden API
-          opToSwitchList.add(AppOpsManager.opToSwitch(i));
-        }
-        return opToSwitchList;
-      } catch (NoSuchMethodError e) {
+        return mPrivTasks.buildOpToSwitchList();
+      } catch (HiddenAPIsError e) {
         hiddenAPIsNotWorking(e.toString());
         return buildOpToSwitchList();
       }
@@ -163,16 +138,17 @@ public class AppOpsParser {
       Util.debugLog(TAG, "buildPermissionToOpCodeMap() called");
     }
     Map<String, Integer> permToOpCodeMap = new HashMap<>();
+    // IPackageManager returns bigger permissions list than PackageManager
     if (mMySettings.canUseHiddenAPIs()
-        && (mUseIPackageManager || !mMySettings.isPrivDaemonAlive())) {
+        && (mPrivTasks.canUseIPm() || !mMySettings.isPrivDaemonAlive())) {
       try {
-        PackageManager pm = mUseIPackageManager ? null : App.getContext().getPackageManager();
+        PackageManager pm = mPrivTasks.canUseIPm() ? null : App.getContext().getPackageManager();
         for (String item : mPrivTasks.buildPermToOpCodeList(pm)) {
           String[] keyValue = item.split(":");
           permToOpCodeMap.put(keyValue[0], Integer.parseInt(keyValue[1]));
         }
         return permToOpCodeMap;
-      } catch (NoSuchMethodError e) {
+      } catch (HiddenAPIsError e) {
         hiddenAPIsNotWorking(e.toString());
         return buildPermissionToOpCodeMap();
       }
@@ -200,16 +176,11 @@ public class AppOpsParser {
     if (mMySettings.excludeAppOpsPerms() || !mMySettings.canReadAppOps()) {
       return null;
     }
-    List<String> appOpsList = new ArrayList<>();
 
     if (mMySettings.canUseHiddenAPIs()) {
       try {
-        for (int i = 0; i < getOpNum(); i++) {
-          // hidden API
-          appOpsList.add(AppOpsManager.opToName(i));
-        }
-        return appOpsList;
-      } catch (NoSuchMethodError e) {
+        return mPrivTasks.buildOpToNameList();
+      } catch (HiddenAPIsError e) {
         hiddenAPIsNotWorking(e.toString());
         return buildAppOpsList();
       }
@@ -219,6 +190,7 @@ public class AppOpsParser {
     } else {
       Object object = mPrivDaemonHandler.sendRequest(Commands.OP_TO_NAME);
       if (object instanceof List<?>) {
+        List<String> appOpsList = new ArrayList<>();
         for (Object item : (List<?>) object) {
           appOpsList.add((String) item);
         }
@@ -244,7 +216,7 @@ public class AppOpsParser {
           appOpsModes.add(Utils.capitalizeString((String) item));
         }
         return appOpsModes;
-      } catch (NoSuchMethodError e) {
+      } catch (HiddenAPIsError e) {
         hiddenAPIsNotWorking(e.toString());
         return buildAppOpsModes();
       }
@@ -264,30 +236,14 @@ public class AppOpsParser {
     return null;
   }
 
-  private int getOpNum() {
-    if (mMySettings.canUseHiddenAPIs()) {
-      /** {@link AppOpsManager#_NUM_OP} gets hard-coded */
-      // hidden API
-      Integer NUM_OP = Utils.getStaticIntField("_NUM_OP", AppOpsManager.class, TAG + " getOpNum()");
-      if (NUM_OP != null) {
-        return NUM_OP;
-      }
-      hiddenAPIsNotWorking("Could not get _NUM_OP field");
-      return getOpNum();
-    } else if (!mMySettings.isPrivDaemonAlive()) {
-      Utils.logDaemonDead(TAG + ": getOpNum");
-      return 0;
-    } else {
-      Object object = mPrivDaemonHandler.sendRequest(Commands.GET_OP_NUM);
-      if (object instanceof Integer) {
-        return (int) object;
-      }
-    }
-    Log.e(TAG, "Error occurred in getOpNum()");
-    return 0;
-  }
-
   private void hiddenAPIsNotWorking(String error) {
-    PackageParser.getInstance().hiddenAPIsNotWorking(TAG, error);
+    if (mMySettings.useHiddenAPIs()) {
+      Utils.runInFg(
+          () ->
+              Toast.makeText(App.getContext(), R.string.hidden_apis_warning, Toast.LENGTH_LONG)
+                  .show());
+      mMySettings.setUseHiddenAPIs(false);
+    }
+    Log.e(TAG, error);
   }
 }

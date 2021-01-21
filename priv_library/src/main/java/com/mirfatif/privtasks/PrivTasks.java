@@ -1,82 +1,86 @@
 package com.mirfatif.privtasks;
 
-import android.app.AppOpsManager;
-import android.app.AppOpsManager.OpEntry;
-import android.content.Context;
-import android.content.pm.IPackageManager;
 import android.content.pm.PackageManager;
-import android.content.pm.ParceledListSlice;
 import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
 import android.os.Build;
 import android.os.Process;
-import android.os.RemoteException;
-import android.os.ServiceManager;
-import android.permission.IPermissionManager;
 import android.util.Log;
-import com.android.internal.app.IAppOpsService;
-import java.lang.reflect.Field;
+import com.mirfatif.privtasks.hiddenapis.HiddenAPIs;
+import com.mirfatif.privtasks.hiddenapis.HiddenAPIs.Callback;
+import com.mirfatif.privtasks.hiddenapis.HiddenAPIsError;
+import com.mirfatif.privtasks.hiddenapis.HiddenAPIsException;
+import com.mirfatif.privtasks.hiddenapis.HiddenAPIsImpl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-// The following methods are moved from IPackageManager to IPermissionManager in SDK 30.
-// getPermissionFlags, getAllPermissionGroups, queryPermissionsByGroup, revokeRuntimePermission
-// So android.jar needs to be modified to build successfully, or use Reflection.
 
 public class PrivTasks {
 
   private static final String TAG = "PrivTaks";
   private final boolean DEBUG; // Verbose logging
 
-  private IAppOpsService mIAppOpsService;
-  private IPackageManager mIPackageManager;
-  private IPermissionManager mIPermissionManager;
+  private final HiddenAPIs mHiddenAPIs;
 
-  public PrivTasks(boolean isDebug, boolean initializeServices) throws NoSuchMethodError {
+  public PrivTasks(boolean isDebug) {
     DEBUG = isDebug;
-    if (initializeServices) {
-      initializeAppOpsService();
-      initializePmService();
+    mHiddenAPIs = new HiddenAPIsImpl();
+  }
+
+  //////////////////////////////////////////////////////////////////
+  //////////////////////////// APP OPS /////////////////////////////
+  //////////////////////////////////////////////////////////////////
+
+  private int NUM_OP = -1;
+
+  public Integer getNumOps() throws HiddenAPIsError {
+    if (NUM_OP == -1) {
+      NUM_OP = mHiddenAPIs.getNumOps();
     }
+    return NUM_OP;
   }
 
-  // asInterface() and getService() hidden APIs
-  public void initializeAppOpsService() throws NoSuchMethodError {
-    mIAppOpsService =
-        IAppOpsService.Stub.asInterface(ServiceManager.getService(Context.APP_OPS_SERVICE));
-  }
-
-  // asInterface() and getService() hidden APIs
-  public void initializePmService() throws NoSuchMethodError {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-      // Context.PERMISSION_SERVICE doesn't work
-      mIPermissionManager =
-          IPermissionManager.Stub.asInterface(ServiceManager.getService("permissionmgr"));
+  public List<Integer> buildOpToDefaultModeList() throws HiddenAPIsError {
+    Integer opNum = getNumOps();
+    if (opNum == null) {
+      return null;
     }
-    mIPackageManager = IPackageManager.Stub.asInterface(ServiceManager.getService("package"));
+    List<Integer> opToDefModeList = new ArrayList<>();
+    for (int i = 0; i < opNum; i++) {
+      opToDefModeList.add(mHiddenAPIs.opToDefaultMode(i));
+    }
+    return opToDefModeList;
   }
 
-  public List<String> buildOpToNameList() {
-    Integer opNum = getOpNum();
+  public List<Integer> buildOpToSwitchList() throws HiddenAPIsError {
+    Integer opNum = getNumOps();
+    if (opNum == null) {
+      return null;
+    }
+    List<Integer> opToSwitchList = new ArrayList<>();
+    for (int i = 0; i < opNum; i++) {
+      opToSwitchList.add(mHiddenAPIs.opToSwitch(i));
+    }
+    return opToSwitchList;
+  }
+
+  public List<String> buildOpToNameList() throws HiddenAPIsError {
+    Integer opNum = getNumOps();
     if (opNum == null) {
       return null;
     }
     List<String> appOpsList = new ArrayList<>();
     for (int i = 0; i < opNum; i++) {
-      // hidden API
-      appOpsList.add(AppOpsManager.opToName(i));
+      appOpsList.add(mHiddenAPIs.opToName(i));
     }
     return appOpsList;
   }
 
-  public List<String> buildModeToNameList() {
+  public List<String> buildModeToNameList() throws HiddenAPIsError {
     List<String> appOpsModes = new ArrayList<>();
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-      // MODE_NAMES hidden API
-      for (int i = 0; i < AppOpsManager.MODE_NAMES.length; i++) {
-        // hidden API
-        appOpsModes.add(AppOpsManager.modeToName(i));
+      for (int i = 0; i < mHiddenAPIs.getOpModeNamesSize(); i++) {
+        appOpsModes.add(mHiddenAPIs.modeToName(i));
       }
     } else {
       appOpsModes = Arrays.asList("allow", "ignore", "deny", "default");
@@ -84,168 +88,7 @@ public class PrivTasks {
     return appOpsModes;
   }
 
-  public List<MyPackageOps> getOpsForPackage(String[] args) {
-    if (haveWrongArgs(args, 3)) {
-      return null;
-    }
-    int uid = Integer.parseInt(args[1]);
-    try {
-      return getMyPackageOpsList(uid, args[2], args[3]);
-    } catch (RemoteException e) {
-      rateLimitThrowable(e);
-      return null;
-    }
-  }
-
-  public List<MyPackageOps> getMyPackageOpsList(int uid, String packageName, String op)
-      throws RemoteException, NoSuchMethodError {
-    int[] ops = op.equals("null") ? null : new int[] {Integer.parseInt(op)};
-    List<AppOpsManager.PackageOps> pkgOpsList = null;
-
-    if (!packageName.equals("null")) {
-      // hidden API
-      pkgOpsList = mIAppOpsService.getOpsForPackage(uid, packageName, ops);
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      try {
-        // hidden API
-        pkgOpsList = mIAppOpsService.getUidOps(uid, ops);
-      } catch (NullPointerException e) {
-        // Hey Android! You are buggy.
-        if (DEBUG) {
-          e.printStackTrace();
-        }
-        return new ArrayList<>();
-      }
-    }
-
-    if (pkgOpsList == null) {
-      return new ArrayList<>();
-    }
-
-    List<MyPackageOps> myPackageOpsList = new ArrayList<>();
-    for (AppOpsManager.PackageOps packageOps : pkgOpsList) {
-      MyPackageOps myPackageOps = new MyPackageOps();
-      List<MyPackageOps.MyOpEntry> myOpEntryList = new ArrayList<>();
-
-      for (AppOpsManager.OpEntry opEntry : packageOps.getOps()) {
-        MyPackageOps.MyOpEntry myOpEntry = new MyPackageOps.MyOpEntry();
-
-        // hidden API
-        myOpEntry.op = opEntry.getOp();
-
-        // MIUI returns 10005 op
-        Integer opNum = getOpNum();
-        if (opNum == null) {
-          return null;
-        }
-        if (myOpEntry.op >= opNum) {
-          rateLimitLog(
-              "getMyPackageOpsList()",
-              "Bad op: " + myOpEntry.op + " for package: " + packageOps.getPackageName(),
-              true);
-          continue;
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-          myOpEntry.lastAccessTime = opEntry.getLastAccessTime(AppOpsManager.OP_FLAGS_ALL);
-        } else {
-          // hidden API
-          // N and O (P too?) don't have getLastAccessTime()
-          myOpEntry.lastAccessTime = getTime(opEntry);
-        }
-        myOpEntry.opMode = opEntry.getMode();
-
-        myOpEntryList.add(myOpEntry);
-      }
-
-      myPackageOps.packageName = packageOps.getPackageName();
-      myPackageOps.myOpEntryList = myOpEntryList;
-
-      myPackageOpsList.add(myPackageOps);
-    }
-    return myPackageOpsList;
-  }
-
-  @SuppressWarnings("deprecation")
-  private long getTime(OpEntry opEntry) {
-    return opEntry.getTime();
-  }
-
-  public List<Integer> buildOpToDefaultModeList() {
-    Integer opNum = getOpNum();
-    if (opNum == null) {
-      return null;
-    }
-    List<Integer> opToDefModeList = new ArrayList<>();
-    for (int i = 0; i < opNum; i++) {
-      // hidden API
-      opToDefModeList.add(AppOpsManager.opToDefaultMode(i));
-    }
-    return opToDefModeList;
-  }
-
-  public List<Integer> buildOpToSwitchList() {
-    Integer opNum = getOpNum();
-    if (opNum == null) {
-      return null;
-    }
-    List<Integer> opToSwitchList = new ArrayList<>();
-    for (int i = 0; i < opNum; i++) {
-      // hidden API
-      opToSwitchList.add(AppOpsManager.opToSwitch(i));
-    }
-    return opToSwitchList;
-  }
-
-  private Integer NUM_OP = null;
-
-  public Integer getOpNum() {
-    if (NUM_OP == null) {
-      try {
-        // hidden API
-        Field idField = AppOpsManager.class.getDeclaredField("_NUM_OP");
-        NUM_OP = idField.getInt(idField);
-      } catch (NoSuchFieldException | IllegalAccessException e) {
-        rateLimitThrowable(e);
-        return null;
-      }
-    }
-    return NUM_OP;
-  }
-
-  public Integer getSystemFixedFlag() {
-    try {
-      // hidden API
-      Field idField = PackageManager.class.getDeclaredField("FLAG_PERMISSION_SYSTEM_FIXED");
-      return idField.getInt(idField);
-    } catch (NoSuchFieldException | IllegalAccessException e) {
-      rateLimitThrowable(e);
-      return null;
-    }
-  }
-
-  public Integer getPermissionFlags(String[] args) {
-    if (haveWrongArgs(args, 3)) {
-      return null;
-    }
-    try {
-      // hidden API
-      /**
-       * requires system permissions: {@link PackageManager#getPermissionFlags(String, String,
-       * UserHandle)}
-       */
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        return mIPermissionManager.getPermissionFlags(args[1], args[2], Integer.parseInt(args[3]));
-      } else {
-        return mIPackageManager.getPermissionFlags(args[1], args[2], Integer.parseInt(args[3]));
-      }
-    } catch (SecurityException | RemoteException e) {
-      rateLimitThrowable(e);
-      return null;
-    }
-  }
-
-  public List<String> buildPermToOpCodeList(PackageManager pm) {
+  public List<String> buildPermToOpCodeList(PackageManager pm) throws HiddenAPIsError {
     List<String> permToOpCodeList = new ArrayList<>();
     List<String> permGroupsList = new ArrayList<>();
     if (pm != null) {
@@ -254,22 +97,10 @@ public class PrivTasks {
       }
     } else {
       try {
-        // getAllPermissionGroups() hidden API
-        List<?> pgiList = new ArrayList<>();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-          pgiList = mIPermissionManager.getAllPermissionGroups(0).getList();
-        } else {
-          ParceledListSlice<?> pls =
-              (ParceledListSlice<?>) mIPackageManager.getAllPermissionGroups(0);
-          if (pls != null) {
-            pgiList = pls.getList();
-          }
-        }
-
-        for (Object pgi : pgiList) {
+        for (Object pgi : mHiddenAPIs.getPermGroupInfoList()) {
           permGroupsList.add(((PermissionGroupInfo) pgi).name);
         }
-      } catch (RemoteException e) {
+      } catch (HiddenAPIsException e) {
         e.printStackTrace();
       }
     }
@@ -285,22 +116,10 @@ public class PrivTasks {
         }
       } else {
         try {
-          // queryPermissionsByGroup() hidden API
-          List<?> piList = new ArrayList<>();
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            piList = mIPermissionManager.queryPermissionsByGroup(permGroup, 0).getList();
-          } else {
-            ParceledListSlice<?> pls =
-                (ParceledListSlice<?>) mIPackageManager.queryPermissionsByGroup(permGroup, 0);
-            if (pls != null) {
-              piList = pls.getList();
-            }
-          }
-
-          for (Object object : piList) {
+          for (Object object : mHiddenAPIs.getPermInfoList(permGroup)) {
             permInfoList.add((PermissionInfo) object);
           }
-        } catch (RemoteException e) {
+        } catch (HiddenAPIsException e) {
           e.printStackTrace();
         }
       }
@@ -310,62 +129,31 @@ public class PrivTasks {
       if (!permInfo.packageName.equals("android")) {
         continue;
       }
-      // hidden API
-      int opCode = AppOpsManager.permissionToOpCode(permInfo.name);
-      if (opCode != AppOpsManager.OP_NONE) {
+      int opCode = mHiddenAPIs.permissionToOpCode(permInfo.name);
+      if (opCode != mHiddenAPIs.getOpNone()) {
         permToOpCodeList.add(permInfo.name + ":" + opCode);
       }
     }
     return permToOpCodeList;
   }
 
-  public Integer grantRevokePermission(boolean grant, String[] args) {
-    if (haveWrongArgs(args, 3)) {
-      return null;
-    }
-    try {
-      if (grant) {
-        // hidden API
-        // requires android.permission.GRANT_RUNTIME_PERMISSIONS
-        mIPackageManager.grantRuntimePermission(args[1], args[2], Integer.parseInt(args[3]));
-      } else {
-        // hidden API
-        // requires android.permission.REVOKE_RUNTIME_PERMISSIONS
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-          mIPermissionManager.revokeRuntimePermission(
-              args[1], args[2], Integer.parseInt(args[3]), null);
-        } else {
-          mIPackageManager.revokeRuntimePermission(args[1], args[2], Integer.parseInt(args[3]));
-        }
-      }
-      return null;
-    } catch (RemoteException | SecurityException e) {
-      // SecurityException is thrown if calling UID/PID doesn't have required permissions
-      // e.g. ADB lacks these permissions on MIUI
-      e.printStackTrace();
-      return -1;
-    }
-  }
-
-  public Integer setAppOpsMode(String[] args) {
+  public Integer setAppOpsMode(String[] args) throws HiddenAPIsError {
     if (haveWrongArgs(args, 4)) {
       return null;
     }
-    // hidden API
-    int op = AppOpsManager.strDebugOpToOp(args[1]);
+    int op = mHiddenAPIs.strDebugOpToOp(args[1]);
     int uid = Integer.parseInt(args[2]);
     String pkgName = args[3];
     int mode = Integer.parseInt(args[4]);
 
     try {
       if (pkgName.equals("null")) {
-        mIAppOpsService.setUidMode(op, uid, mode);
+        mHiddenAPIs.setUidMode(op, uid, mode);
       } else {
-        // requires android.permission.UPDATE_APP_OPS_STATS
-        mIAppOpsService.setMode(op, uid, pkgName, mode);
+        mHiddenAPIs.setMode(op, uid, pkgName, mode);
       }
       return null;
-    } catch (RemoteException | SecurityException e) {
+    } catch (HiddenAPIsException e) {
       e.printStackTrace();
       return -1;
     }
@@ -376,17 +164,70 @@ public class PrivTasks {
       return null;
     }
     try {
-      // hidden API
-      // requires android.permission.UPDATE_APP_OPS_STATS
-      mIAppOpsService.resetAllModes(Integer.parseInt(args[1]), args[2]);
+      mHiddenAPIs.resetAllModes(Integer.parseInt(args[1]), args[2]);
       return null;
-    } catch (RemoteException | SecurityException e) {
+    } catch (HiddenAPIsException e) {
       e.printStackTrace();
       return -1;
     }
   }
 
-  public Integer setEnabledState(boolean enabled, String[] args) {
+  public List<MyPackageOps> getOpsForPackage(String[] args) {
+    if (haveWrongArgs(args, 3)) {
+      return null;
+    }
+    return getMyPackageOpsList(Integer.parseInt(args[1]), args[2], args[3]);
+  }
+
+  public List<MyPackageOps> getMyPackageOpsList(int uid, String packageName, String op)
+      throws HiddenAPIsError {
+    try {
+      return mHiddenAPIs.getMyPackageOpsList(
+          uid, packageName, op, getNumOps(), new PkgOpsListCallback());
+    } catch (HiddenAPIsException e) {
+      rateLimitThrowable(e);
+      return null;
+    }
+  }
+
+  //////////////////////////////////////////////////////////////////
+  ////////////////////// MANIFEST PERMISSIONS //////////////////////
+  //////////////////////////////////////////////////////////////////
+
+  public Integer getPermissionFlags(String[] args) {
+    if (haveWrongArgs(args, 3)) {
+      return null;
+    }
+    try {
+      return mHiddenAPIs.getPermissionFlags(args[1], args[2], Integer.parseInt(args[3]));
+    } catch (HiddenAPIsException e) {
+      rateLimitThrowable(e);
+      return null;
+    }
+  }
+
+  public Integer grantRevokePermission(boolean grant, String[] args) {
+    if (haveWrongArgs(args, 3)) {
+      return null;
+    }
+    try {
+      if (grant) {
+        mHiddenAPIs.grantRuntimePermission(args[1], args[2], Integer.parseInt(args[3]));
+      } else {
+        mHiddenAPIs.revokeRuntimePermission(args[1], args[2], Integer.parseInt(args[3]));
+      }
+      return null;
+    } catch (HiddenAPIsException e) {
+      e.printStackTrace();
+      return -1;
+    }
+  }
+
+  //////////////////////////////////////////////////////////////////
+  //////////////////////////// PACKAGES ////////////////////////////
+  //////////////////////////////////////////////////////////////////
+
+  public Integer setAppEnabledState(boolean enabled, String[] args) {
     if (haveWrongArgs(args, 2)) {
       return null;
     }
@@ -402,13 +243,32 @@ public class PrivTasks {
     }
 
     try {
-      // hidden API
-      mIPackageManager.setApplicationEnabledSetting(pkg, state, 0, userId, callingPkg);
+      mHiddenAPIs.setApplicationEnabledSetting(pkg, state, 0, userId, callingPkg);
       return null;
-    } catch (RemoteException e) {
+    } catch (HiddenAPIsException e) {
       e.printStackTrace();
       return -1;
     }
+  }
+
+  //////////////////////////////////////////////////////////////////
+  //////////////////////////// PROCESSES ///////////////////////////
+  //////////////////////////////////////////////////////////////////
+
+  public int[] getPidsForCommands(String[] commands) {
+    return mHiddenAPIs.getPidsForCommands(commands);
+  }
+
+  //////////////////////////////////////////////////////////////////
+  ///////////////////////// COMMON METHODS /////////////////////////
+  //////////////////////////////////////////////////////////////////
+
+  public boolean canUseIAppOpsService() {
+    return mHiddenAPIs.canUseIAppOpsService();
+  }
+
+  public boolean canUseIPm() {
+    return mHiddenAPIs.canUseIPm();
   }
 
   private boolean haveWrongArgs(String[] cmd, int count) {
@@ -445,6 +305,22 @@ public class PrivTasks {
         Log.i(tag, msg);
       }
       lastLogTimestamp = System.currentTimeMillis();
+    }
+  }
+
+  private class PkgOpsListCallback implements Callback {
+
+    @Override
+    public void onGetUidOpsNpException(Exception e) {
+      // Hey Android! You are buggy.
+      if (DEBUG) {
+        e.printStackTrace();
+      }
+    }
+
+    @Override
+    public void onInvalidOpCode(int opCode, String pkgName) {
+      rateLimitLog("getMyPackageOpsList()", "Bad op: " + opCode + " for package: " + pkgName, true);
     }
   }
 }
