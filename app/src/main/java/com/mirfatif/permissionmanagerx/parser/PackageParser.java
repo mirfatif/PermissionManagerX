@@ -87,7 +87,7 @@ public class PackageParser {
     try {
       return mPackageManager.getPackageInfo(pkgName, flags);
     } catch (NameNotFoundException e) {
-      Log.e(TAG, e.toString());
+      Log.e(TAG, "getPackageInfo(): " + e.toString());
       return null;
     }
   }
@@ -116,7 +116,7 @@ public class PackageParser {
   public Package getPackage(int position) {
     synchronized (mPackagesList) {
       if (position < 0 || position >= mPackagesList.size()) {
-        Log.e("PackageParser", "getPackage(): bad position: " + position);
+        Log.e(TAG, "getPackage(): bad position: " + position);
         return null;
       }
       return mPackagesList.get(position);
@@ -127,7 +127,7 @@ public class PackageParser {
     synchronized (mPackagesList) {
       int position = mPackagesList.indexOf(pkg);
       if (position == -1) {
-        Log.e("PackageParser", "getPackagePosition(): bad Package provided");
+        Log.e(TAG, "getPackagePosition(): bad Package provided");
         return -1;
       }
       return position;
@@ -146,7 +146,7 @@ public class PackageParser {
     if (res) {
       submitLiveData(mPackagesList);
     } else {
-      Log.e("PackageParser", "removePackage(): bad Package provided");
+      Log.e(TAG, "removePackage(): bad Package provided");
     }
   }
 
@@ -161,7 +161,7 @@ public class PackageParser {
   public void updatePackagesList(boolean doRepeatUpdates) {
     synchronized (mUpdatePackagesExecutor) {
       if (mMySettings.isDebug()) {
-        Util.debugLog("updatePackagesList", "doRepeatUpdates: " + doRepeatUpdates);
+        Util.debugLog(TAG, "updatePackagesList(): doRepeatUpdates: " + doRepeatUpdates);
       }
 
       /**
@@ -171,7 +171,7 @@ public class PackageParser {
        */
       if (updatePackagesFuture != null && !updatePackagesFuture.isDone()) {
         if (mMySettings.isDebug()) {
-          Util.debugLog("updatePackagesList", "Cancelling previous call");
+          Util.debugLog(TAG, "updatePackagesList(): cancelling previous call");
         }
         updatePackagesFuture.cancel(true);
       }
@@ -202,7 +202,7 @@ public class PackageParser {
       // Don't trouble Android on every call.
       if (System.currentTimeMillis() - lastPackageManagerCall > 5000) {
         if (mMySettings.isDebug()) {
-          Util.debugLog("updatePackagesListInBg", "Updating packages list");
+          Util.debugLog(TAG, "updatePackagesListInBg(): updating packages list");
         }
         setProgress(CREATE_PACKAGES_LIST, true, false);
 
@@ -241,7 +241,8 @@ public class PackageParser {
       }
 
       if (mMySettings.isDebug()) {
-        Util.debugLog("updatePackagesListInBg", "Total packages count: " + packageInfoList.size());
+        Util.debugLog(
+            TAG, "updatePackagesListInBg(): total packages count: " + packageInfoList.size());
       }
       // set progress bar scale ASAP
       setProgress(packageInfoList.size(), true, false);
@@ -253,7 +254,7 @@ public class PackageParser {
         // handle concurrent calls
         if (Thread.interrupted()) {
           if (mMySettings.isDebug()) {
-            Util.debugLog("updatePackagesListInBg", "Breaking loop, new call received");
+            Util.debugLog(TAG, "updatePackagesListInBg(): breaking loop, new call received");
           }
           return false;
         }
@@ -261,7 +262,8 @@ public class PackageParser {
         setProgress(i, false, false);
         PackageInfo packageInfo = packageInfoList.get(i);
         if (mMySettings.isDebug()) {
-          Util.debugLog("updatePackagesListInBg", "Updating package: " + packageInfo.packageName);
+          Util.debugLog(
+              TAG, "updatePackagesListInBg(): updating package: " + packageInfo.packageName);
         }
 
         Package pkg = new Package();
@@ -282,8 +284,10 @@ public class PackageParser {
 
       if (mMySettings.isDebug()) {
         Util.debugLog(
-            "updatePackagesListInBg",
-            "Total time: " + (System.currentTimeMillis() - startTime) + "ms");
+            TAG,
+            "updatePackagesListInBg(): total time: "
+                + (System.currentTimeMillis() - startTime)
+                + "ms");
       }
 
       mIsUpdating = false;
@@ -299,7 +303,7 @@ public class PackageParser {
 
   private void setProgress(int value, boolean isMax, boolean isFinal) {
     if (mMySettings.isDebug()) {
-      Util.debugLog("setProgress", "Value: " + value + ", isMax: " + isMax);
+      Util.debugLog(TAG, "setProgress(): value: " + value + ", isMax: " + isMax);
     }
 
     if (isMax) {
@@ -386,7 +390,7 @@ public class PackageParser {
     }
 
     if (mMySettings.isDebug()) {
-      Util.debugLog("PackageParser", "isPkgUpdated(): building permissions list");
+      Util.debugLog(TAG, "isPkgUpdated(): building permissions list");
     }
     List<Permission> permissionsList = getPermissionsList(packageInfo, pkg);
 
@@ -425,7 +429,7 @@ public class PackageParser {
         appInfo.uid,
         pkgIsReferenced);
     if (mMySettings.isDebug()) {
-      Util.debugLog("PackageParser", "isPkgUpdated(): Package created");
+      Util.debugLog(TAG, "isPkgUpdated(): Package created");
     }
 
     // If package has some permissions but currently if we are in deep (permission) search and
@@ -458,7 +462,7 @@ public class PackageParser {
   // when calling from PackageActivity for existing package
   public void updatePackage(Package pkg) {
     if (mMySettings.isDebug()) {
-      Util.debugLog("PackageParser", "updatePackage(): " + pkg.getLabel());
+      Util.debugLog(TAG, "updatePackage(): " + pkg.getLabel());
     }
     PackageInfo packageInfo = getPackageInfo(pkg.getName(), true);
 
@@ -519,7 +523,7 @@ public class PackageParser {
 
   public void buildPermRefList() {
     if (mMySettings.isDebug()) {
-      Util.debugLog("updatePackagesListInBg", "buildPermRefList() called");
+      Util.debugLog(TAG, "buildPermRefList() called");
     }
     mPermRefList = new HashMap<>();
     for (PermissionEntity entity : mMySettings.getPermDb().getAll()) {
@@ -538,7 +542,7 @@ public class PackageParser {
 
     if (requestedPermissions != null) {
       if (mMySettings.isDebug()) {
-        Util.debugLog("PackageParser", "getPermissionsList(): Parsing permissions list");
+        Util.debugLog(TAG, "getPermissionsList(): parsing permissions list");
       }
       for (int count = 0; count < requestedPermissions.length; count++) {
         String perm = requestedPermissions[count].replaceAll("\\s", "");
@@ -559,7 +563,7 @@ public class PackageParser {
     }
 
     if (mMySettings.isDebug()) {
-      Util.debugLog("PackageParser", "getPermissionsList(): Parsing AppOps");
+      Util.debugLog(TAG, "getPermissionsList(): parsing AppOps");
     }
 
     int[] appOpsCount2 = new int[] {0, 0};
@@ -567,8 +571,8 @@ public class PackageParser {
     if (!mMySettings.excludeAppOpsPerms() && mMySettings.canReadAppOps()) {
       if (mMySettings.isDebug()) {
         Util.debugLog(
-            "PackageParser",
-            "getPermissionsList(): Parsing AppOps not corresponding to any manifest permission");
+            TAG,
+            "getPermissionsList(): parsing AppOps not corresponding to any manifest permission");
       }
       appOpsCount2 = createSetAppOps(packageInfo, permissionsList, processedAppOps);
 
@@ -580,7 +584,7 @@ public class PackageParser {
           || appOpsCount2[0] != 0) {
 
         if (mMySettings.isDebug()) {
-          Util.debugLog("PackageParser", "getPermissionsList(): Parsing extra AppOps");
+          Util.debugLog(TAG, "getPermissionsList(): parsing extra AppOps");
         }
 
         // irrelevant / extra AppOps, not set and not corresponding to any manifest permission
@@ -608,8 +612,7 @@ public class PackageParser {
     pkg.setAppOpsCount(appOpsCount1[1] + appOpsCount2[1] + appOpsCount3[1]);
 
     if (mMySettings.isDebug()) {
-      Util.debugLog(
-          "PackageParser", "getPermissionsList(): Permissions count: " + permissionsList.size());
+      Util.debugLog(TAG, "getPermissionsList(): permissions count: " + permissionsList.size());
     }
 
     return permissionsList;
@@ -693,7 +696,12 @@ public class PackageParser {
       } else if (protectionLevel == PROTECTION_SIGNATURE_OR_SYSTEM) {
         protection = Permission.PROTECTION_SIGNATURE;
       } else {
-        Log.e(TAG, "Protection level for " + permissionInfo.name + ": " + protectionLevel);
+        Log.e(
+            TAG,
+            "createPermission(): protection level for "
+                + permissionInfo.name
+                + ": "
+                + protectionLevel);
       }
 
       isPrivileged = (protectionFlags & PermissionInfo.PROTECTION_FLAG_PRIVILEGED) != 0;
@@ -748,7 +756,7 @@ public class PackageParser {
 
   private int getPermissionFlags(String perm, String pkg) {
     if (!mMySettings.isPrivDaemonAlive()) {
-      Utils.logDaemonDead(TAG + ": getPermissionFlags");
+      Utils.logDaemonDead(TAG + ": getPermissionFlags()");
       return -1;
     } else {
       String command =
@@ -773,11 +781,11 @@ public class PackageParser {
       SYSTEM_FIXED_FLAG = HiddenAPIs.getSystemFixedFlag();
       return SYSTEM_FIXED_FLAG;
     } catch (HiddenAPIsError e) {
-      Log.e(TAG, e.toString());
+      Log.e(TAG, "getSystemFixedFlag(): " + e.toString());
     }
 
     if (!mMySettings.isPrivDaemonAlive()) {
-      Utils.logDaemonDead(TAG + ": getSystemFixedFlag");
+      Utils.logDaemonDead(TAG + ": getSystemFixedFlag()");
       return SYSTEM_FIXED_FLAG;
     }
 
@@ -968,7 +976,9 @@ public class PackageParser {
   private Integer getIconResId(String perm, String group) {
     Integer iconResId = mPermIconsResIds.get(perm);
     if (iconResId == null) {
-      iconResId = Utils.getStaticIntField("g_" + group.toLowerCase(), R.drawable.class, TAG);
+      iconResId =
+          Utils.getStaticIntField(
+              "g_" + group.toLowerCase(), R.drawable.class, TAG + ": getIconResId()");
       if (iconResId == null) {
         return null;
       }
@@ -1008,13 +1018,15 @@ public class PackageParser {
       Utils.runInFg(() -> mPackagesListLive.setValue(mPackagesList));
       if (mMySettings.isDebug()) {
         Util.debugLog(
-            "submitLiveData",
-            "Shallow search disabled, posting " + mPackagesList.size() + " packages");
+            TAG,
+            "submitLiveData(): shallow search disabled, posting "
+                + mPackagesList.size()
+                + " packages");
       }
       return;
     }
     if (mMySettings.isDebug()) {
-      Util.debugLog("submitLiveData", "Doing shallow search");
+      Util.debugLog(TAG, "submitLiveData(): doing shallow search");
     }
     handleSearchQuery(false);
   }
@@ -1028,15 +1040,17 @@ public class PackageParser {
         Utils.runInFg(() -> mPackagesListLive.setValue(mPackagesList));
         if (mMySettings.isDebug()) {
           Util.debugLog(
-              "handleSearchQuery",
-              "Empty query text, posting " + mPackagesList.size() + " packages");
+              TAG,
+              "handleSearchQuery(): empty query text, posting "
+                  + mPackagesList.size()
+                  + " packages");
         }
         return;
       }
 
       if (searchQueryFuture != null && !searchQueryFuture.isDone()) {
         if (mMySettings.isDebug()) {
-          Util.debugLog("handleSearchQuery", "Cancelling previous call");
+          Util.debugLog(TAG, "handleSearchQuery(): cancelling previous call");
         }
         searchQueryFuture.cancel(true);
       }
@@ -1055,7 +1069,7 @@ public class PackageParser {
         for (Package pkg : new ArrayList<>(mPackagesList)) {
           if (Thread.interrupted()) {
             if (mMySettings.isDebug()) {
-              Util.debugLog("doSearchInBg", "Breaking loop, new call received");
+              Util.debugLog(TAG, "doSearchInBg(): breaking loop, new call received");
             }
             return;
           }
@@ -1074,7 +1088,7 @@ public class PackageParser {
 
   private void postLiveData(List<Package> packageList) {
     if (mMySettings.isDebug()) {
-      Util.debugLog("handleSearchQuery", "Posting " + packageList.size() + " packages");
+      Util.debugLog(TAG, "postLiveData(): posting " + packageList.size() + " packages");
     }
     Utils.runInFg(() -> mPackagesListLive.setValue(packageList));
   }

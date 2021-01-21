@@ -52,6 +52,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class PackageActivity extends BaseActivity {
 
+  private static final String TAG = "PackageActivity";
+
   private List<Permission> mPermissionsList = new ArrayList<>();
   private MySettings mMySettings;
   private PrivDaemonHandler mPrivDaemonHandler;
@@ -128,7 +130,7 @@ public class PackageActivity extends BaseActivity {
             + " "
             + mode;
     if (mMySettings.isDebug()) {
-      Util.debugLog("setAppOpsMode", "Sending command: " + command);
+      Util.debugLog(TAG, "setAppOpsMode(): sending command: " + command);
     }
     Object res = mPrivDaemonHandler.sendRequest(command);
 
@@ -138,7 +140,7 @@ public class PackageActivity extends BaseActivity {
           () ->
               Toast.makeText(App.getContext(), R.string.something_bad_happened, Toast.LENGTH_LONG)
                   .show());
-      Log.e("setAppOpsMode", "Response is " + res);
+      Log.e(TAG, "setAppOpsMode(): response is " + res);
     }
 
     updateSpinnerSelection(true);
@@ -328,7 +330,7 @@ public class PackageActivity extends BaseActivity {
 
   private void updatePackage() {
     if (mMySettings.isDebug()) {
-      Util.debugLog("PackageActivity", "updatePackage() called");
+      Util.debugLog(TAG, "updatePackage() called");
     }
     mPackageParser.updatePackage(mPackage);
     updatePermissionsList(); // the same Package object is updated
@@ -416,7 +418,7 @@ public class PackageActivity extends BaseActivity {
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
     if (mMySettings.isDebug()) {
-      Util.debugLog("PackageActivity", "onOptionsItemSelected(): " + item.getTitle());
+      Util.debugLog(TAG, "onOptionsItemSelected(): " + item.getTitle());
     }
 
     if (item.getItemId() == R.id.action_information) {
@@ -429,27 +431,7 @@ public class PackageActivity extends BaseActivity {
     if (item.getItemId() == R.id.action_reset_app_ops && checkPrivileges()) {
       AlertDialog dialog =
           new Builder(this)
-              .setPositiveButton(
-                  R.string.yes,
-                  (d, which) -> {
-                    String cmd =
-                        Commands.RESET_APP_OPS + " " + Utils.getUserId() + " " + mPackage.getName();
-                    Utils.runInBg(
-                        () -> {
-                          Object res = mPrivDaemonHandler.sendRequest(cmd);
-                          updatePackage();
-                          if (res != null) {
-                            Utils.runInFg(
-                                () ->
-                                    Toast.makeText(
-                                            App.getContext(),
-                                            R.string.something_bad_happened,
-                                            Toast.LENGTH_LONG)
-                                        .show());
-                            Log.e("resetAppOps", "Response is " + res);
-                          }
-                        });
-                  })
+              .setPositiveButton(R.string.yes, (d, which) -> resetAppOps())
               .setNegativeButton(R.string.no, null)
               .setTitle(mPackage.getLabel())
               .setMessage(R.string.reset_app_ops_confirmation)
@@ -462,31 +444,7 @@ public class PackageActivity extends BaseActivity {
     if (item.getItemId() == R.id.action_set_all_references) {
       AlertDialog dialog =
           new Builder(this)
-              .setPositiveButton(
-                  R.string.yes,
-                  (d, which) ->
-                      Utils.runInBg(
-                          () -> {
-                            List<BackupEntry> permEntries = new ArrayList<>();
-                            for (Permission permission : mPermissionsList) {
-                              if (!permission.isChangeable()) {
-                                continue;
-                              }
-
-                              String permState = getPermState(permission);
-
-                              BackupEntry backupEntry = new BackupEntry();
-                              backupEntry.key = mPackage.getName();
-                              backupEntry.value = permState;
-                              backupEntry.type = permission.getName();
-                              permEntries.add(backupEntry);
-
-                              mPackageParser.updatePermReferences(
-                                  mPackage.getName(), permission.getName(), permState);
-                            }
-                            BackupRestore.updatePermissionEntities(permEntries);
-                            updatePackage();
-                          }))
+              .setPositiveButton(R.string.yes, (d, which) -> Utils.runInBg(this::setAllReferences))
               .setNegativeButton(R.string.no, null)
               .setTitle(mPackage.getLabel())
               .setMessage(R.string.set_references_confirmation)
@@ -499,18 +457,7 @@ public class PackageActivity extends BaseActivity {
     if (item.getItemId() == R.id.action_clear_references) {
       AlertDialog dialog =
           new Builder(this)
-              .setPositiveButton(
-                  R.string.yes,
-                  (d, which) ->
-                      Utils.runInBg(
-                          () -> {
-                            mMySettings.getPermDb().deletePackage(mPackage.getName());
-                            for (Permission permission : mPermissionsList) {
-                              mPackageParser.updatePermReferences(
-                                  mPackage.getName(), permission.getName(), null);
-                            }
-                            updatePackage();
-                          }))
+              .setPositiveButton(R.string.yes, (d, which) -> Utils.runInBg(this::clearReferences))
               .setNegativeButton(R.string.no, null)
               .setTitle(mPackage.getLabel())
               .setMessage(R.string.clear_references_confirmation)
@@ -523,6 +470,55 @@ public class PackageActivity extends BaseActivity {
     return super.onOptionsItemSelected(item);
   }
 
+  private void resetAppOps() {
+    String cmd = Commands.RESET_APP_OPS + " " + Utils.getUserId() + " " + mPackage.getName();
+    Utils.runInBg(
+        () -> {
+          if (mMySettings.isDebug()) {
+            Util.debugLog(TAG, "resetAppOps(): sending command: " + cmd);
+          }
+          Object res = mPrivDaemonHandler.sendRequest(cmd);
+          updatePackage();
+          if (res != null) {
+            Utils.runInFg(
+                () ->
+                    Toast.makeText(
+                            App.getContext(), R.string.something_bad_happened, Toast.LENGTH_LONG)
+                        .show());
+            Log.e(TAG, "resetAppOps(): response is " + res);
+          }
+        });
+  }
+
+  private void setAllReferences() {
+    List<BackupEntry> permEntries = new ArrayList<>();
+    for (Permission permission : mPermissionsList) {
+      if (!permission.isChangeable()) {
+        continue;
+      }
+
+      String permState = getPermState(permission);
+
+      BackupEntry backupEntry = new BackupEntry();
+      backupEntry.key = mPackage.getName();
+      backupEntry.value = permState;
+      backupEntry.type = permission.getName();
+      permEntries.add(backupEntry);
+
+      mPackageParser.updatePermReferences(mPackage.getName(), permission.getName(), permState);
+    }
+    BackupRestore.updatePermissionEntities(permEntries);
+    updatePackage();
+  }
+
+  private void clearReferences() {
+    mMySettings.getPermDb().deletePackage(mPackage.getName());
+    for (Permission permission : mPermissionsList) {
+      mPackageParser.updatePermReferences(mPackage.getName(), permission.getName(), null);
+    }
+    updatePackage();
+  }
+
   private void setPermission(Permission permission) {
     String command = mPackage.getName() + " " + permission.getName() + " " + Utils.getUserId();
     if (permission.isGranted()) {
@@ -532,7 +528,7 @@ public class PackageActivity extends BaseActivity {
     }
 
     if (mMySettings.isDebug()) {
-      Util.debugLog("setPermission", "Sending command: " + command);
+      Util.debugLog(TAG, "setPermission(): sending command: " + command);
     }
     Object res = mPrivDaemonHandler.sendRequest(command);
     updatePackage();
@@ -543,7 +539,7 @@ public class PackageActivity extends BaseActivity {
           () ->
               Toast.makeText(App.getContext(), R.string.something_bad_happened, Toast.LENGTH_LONG)
                   .show());
-      Log.e("setPermission", "Response is " + res);
+      Log.e(TAG, "setPermission(): response is " + res);
     }
   }
 

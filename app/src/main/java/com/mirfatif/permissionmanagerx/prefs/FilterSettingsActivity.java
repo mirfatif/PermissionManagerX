@@ -16,6 +16,8 @@ import com.mirfatif.privtasks.Util;
 
 public class FilterSettingsActivity extends BaseActivity {
 
+  private static final String TAG = "FilterSettingsActivity";
+
   private MySettings mMySettings;
 
   @Override
@@ -59,7 +61,7 @@ public class FilterSettingsActivity extends BaseActivity {
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
     if (mMySettings.isDebug()) {
-      Util.debugLog("FilterSettingsActivity", "onOptionsItemSelected(): " + item.getTitle());
+      Util.debugLog(TAG, "onOptionsItemSelected(): " + item.getTitle());
     }
     if (item.getItemId() == R.id.action_reset_defaults) {
       // Build an AlertDialog and set listeners on buttons

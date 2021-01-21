@@ -52,7 +52,12 @@ public class AppUpdate {
 
       int status = connection.getResponseCode();
       if (status != HttpURLConnection.HTTP_OK) {
-        Log.e(TAG, connection.getResponseCode() + ": " + connection.getResponseMessage());
+        Log.e(
+            TAG,
+            "Response code:"
+                + connection.getResponseCode()
+                + ", msg: "
+                + connection.getResponseMessage());
         return null;
       }
 

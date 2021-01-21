@@ -160,7 +160,7 @@ public class Adb {
     try {
       adb = new Adb("exec id -u", showToastOnFailure);
     } catch (AdbException e) {
-      Log.e(TAG, e.toString());
+      Log.e(TAG, "isConnected(): " + e.toString());
       return false;
     }
 
@@ -169,7 +169,7 @@ public class Adb {
 
     try {
       while ((line = adbReader.readLine()) != null) {
-        Log.i("checkAdbConnected", line);
+        Log.i(TAG, "isConnected(): " + line);
         res = line;
       }
     } catch (IOException e) {

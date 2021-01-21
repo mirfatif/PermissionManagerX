@@ -112,7 +112,7 @@ public class PrivTasks {
         try {
           permInfoList = pm.queryPermissionsByGroup(permGroup, 0);
         } catch (PackageManager.NameNotFoundException e) {
-          rateLimitLog("buildPermToOpCodeList", e.toString(), false);
+          rateLimitLog("buildPermToOpCodeList(): " + e.toString(), false);
         }
       } else {
         try {
@@ -291,18 +291,18 @@ public class PrivTasks {
 
   private long lastLogTimestamp = 0;
 
-  private void rateLimitLog(String tag, String msg, boolean isError) {
+  private void rateLimitLog(String msg, boolean isError) {
     if (DEBUG) {
       if (isError) {
-        Log.e(tag, msg + " - " + System.nanoTime());
+        Log.e(TAG, msg + " - " + System.nanoTime());
       } else {
-        Log.i(tag, msg + " - " + System.nanoTime());
+        Log.i(TAG, msg + " - " + System.nanoTime());
       }
     } else if (System.currentTimeMillis() - lastLogTimestamp >= 1000) {
       if (isError) {
-        Log.e(tag, msg);
+        Log.e(TAG, msg);
       } else {
-        Log.i(tag, msg);
+        Log.i(TAG, msg);
       }
       lastLogTimestamp = System.currentTimeMillis();
     }
@@ -320,7 +320,7 @@ public class PrivTasks {
 
     @Override
     public void onInvalidOpCode(int opCode, String pkgName) {
-      rateLimitLog("getMyPackageOpsList()", "Bad op: " + opCode + " for package: " + pkgName, true);
+      rateLimitLog("getMyPackageOpsList(): bad op: " + opCode + " for package: " + pkgName, true);
     }
   }
 }

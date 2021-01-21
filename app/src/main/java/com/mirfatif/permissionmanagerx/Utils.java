@@ -365,7 +365,7 @@ public class Utils {
           if (i == 9) {
             e.printStackTrace();
           } else {
-            Log.e(TAG + ": getEncPrefs()", e.toString());
+            Log.e(TAG, "getEncPrefs(): " + e.toString());
           }
           SystemClock.sleep(100);
         }
@@ -631,10 +631,10 @@ public class Utils {
 
   public static boolean checkRoot() {
     MySettings mySettings = MySettings.getInstance();
-    boolean res = runCommand("checkRoot", "0", "exec id -u", "su");
+    boolean res = runCommand(TAG + ": checkRoot()", "0", "exec id -u", "su");
     mySettings.setRootGranted(res);
     if (mySettings.isDebug()) {
-      Util.debugLog("checkRoot", "Getting root privileges " + (res ? "succeeded" : "failed"));
+      Util.debugLog(TAG, "checkRoot(): getting root privileges " + (res ? "succeeded" : "failed"));
     }
     return res;
   }
@@ -652,7 +652,7 @@ public class Utils {
     boolean res = Adb.isConnected(showToastOnFailure);
     mySettings.setAdbConnected(res);
     if (mySettings.isDebug()) {
-      Util.debugLog("checkAdb", "Connecting to ADB " + (res ? "succeeded" : "failed"));
+      Util.debugLog(TAG, "checkAdb(): connecting to ADB " + (res ? "succeeded" : "failed"));
     }
     return res;
   }

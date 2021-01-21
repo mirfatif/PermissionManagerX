@@ -65,7 +65,7 @@ public class AlertDialogFragment extends AppCompatDialogFragment {
           super.showNow(manager, tag);
         }
       } catch (IllegalStateException e) {
-        Log.w(TAG, e.toString());
+        Log.w(TAG, "show(): " + e.toString());
       }
 
       removeFragments(manager, oldDialogs);

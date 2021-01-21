@@ -154,7 +154,7 @@ public class PrivDaemon {
         break;
       case Commands.STOP_LOGGING:
         DEBUG = false;
-        Log.i(TAG, Commands.STOP_LOGGING);
+        Log.i(TAG, "Please " + Commands.STOP_LOGGING);
         sendResponse(null);
         break;
       case Commands.OP_TO_NAME:

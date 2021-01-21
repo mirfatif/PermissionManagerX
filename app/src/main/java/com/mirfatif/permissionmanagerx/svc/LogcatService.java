@@ -25,7 +25,6 @@ import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.Adb;
 import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.privtasks.Commands;
-import com.mirfatif.privtasks.Util;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -36,6 +35,8 @@ import java.io.PrintWriter;
 import java.util.Locale;
 
 public class LogcatService extends Service {
+
+  private static final String TAG = "LogcatService";
 
   public static final String ACTION_START_LOG = BuildConfig.APPLICATION_ID + ".START_LOGCAT";
 
@@ -156,7 +157,7 @@ public class LogcatService extends Service {
         mDaemonHandler.sendRequest(Commands.STOP_LOGGING);
       }
       // Stop app logging
-      Log.i("stopLogging()", Commands.STOP_LOGGING);
+      Log.i(TAG, "stopLogging(): please " + Commands.STOP_LOGGING);
     }
   }
 
@@ -199,8 +200,8 @@ public class LogcatService extends Service {
       mDaemonHandler.sendRequest(Commands.SHUTDOWN);
     }
 
-    Utils.runCommand("Logging", null, null, "logcat", "-c");
-    Util.debugLog("Logging", "Start logging");
+    Utils.runCommand(TAG + ": doLogging()", null, null, "logcat", "-c");
+    Log.d(TAG, "doLogging(): starting");
 
     if (doLoggingFails("sh", "exec logcat --pid " + android.os.Process.myPid())) {
       stopSvcAndShowFailed();
@@ -217,18 +218,18 @@ public class LogcatService extends Service {
 
   public static boolean doLoggingFails(String... cmd) {
     if (cmd.length != 2) {
-      Log.e("Logging", "Command length must be 2");
+      Log.e(TAG, "doLogging(): command length must be 2");
       return true;
     }
 
-    Process process = Utils.runCommand("Logging", true, cmd[0]);
+    Process process = Utils.runCommand(TAG + ": doLogging()", true, cmd[0]);
     if (process == null) {
       return true;
     }
 
     Utils.runInBg(() -> readLogcatStream(process, null));
 
-    Log.i("Logging", "Sending command to shell: " + cmd[1]);
+    Log.i(TAG, "doLogging(): sending command to shell: " + cmd[1]);
     new PrintWriter(process.getOutputStream(), true).println(cmd[1]);
 
     return false;
@@ -250,11 +251,11 @@ public class LogcatService extends Service {
         writeToLogFile(line);
       }
     } catch (IOException e) {
-      Log.e("readLogcatStream", e.toString());
+      Log.e(TAG, "readLogcatStream(): " + e.toString());
     } finally {
       // If process exited itself
       sendStopLogIntent();
-      Utils.cleanProcess(reader, process, adb, "readLogcatStream");
+      Utils.cleanProcess(reader, process, adb, TAG + ": readLogcatStream()");
     }
   }
 
