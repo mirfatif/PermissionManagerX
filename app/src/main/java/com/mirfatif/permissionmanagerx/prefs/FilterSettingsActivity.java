@@ -9,9 +9,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
+import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Util;
 
 public class FilterSettingsActivity extends BaseActivity {

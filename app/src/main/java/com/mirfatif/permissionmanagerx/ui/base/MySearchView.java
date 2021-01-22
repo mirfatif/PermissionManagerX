@@ -5,22 +5,22 @@ import android.util.AttributeSet;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
-import com.mirfatif.permissionmanagerx.main.MainActivityFlavor;
+import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
 
 public class MySearchView extends SearchView {
 
   public MySearchView(@NonNull Context context) {
     super(context);
-    MainActivityFlavor.onCreateLayout(this);
+    UtilsFlavor.onCreateLayout(this);
   }
 
   public MySearchView(@NonNull Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
-    MainActivityFlavor.onCreateLayout(this);
+    UtilsFlavor.onCreateLayout(this);
   }
 
   public MySearchView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    MainActivityFlavor.onCreateLayout(this);
+    UtilsFlavor.onCreateLayout(this);
   }
 }

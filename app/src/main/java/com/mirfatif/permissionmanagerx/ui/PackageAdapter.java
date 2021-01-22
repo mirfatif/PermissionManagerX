@@ -16,11 +16,11 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.PackageAdapter.ItemViewHolder;
+import com.mirfatif.permissionmanagerx.util.Utils;
 
 public class PackageAdapter extends ListAdapter<Package, ItemViewHolder> {
 

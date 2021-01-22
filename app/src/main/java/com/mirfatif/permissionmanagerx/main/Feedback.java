@@ -7,8 +7,8 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams;
 import com.google.android.material.behavior.SwipeDismissBehavior;
 import com.google.android.material.behavior.SwipeDismissBehavior.OnDismissListener;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.util.Utils;
 
 class Feedback {
 

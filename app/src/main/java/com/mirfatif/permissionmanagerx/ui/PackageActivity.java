@@ -26,7 +26,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.main.BackupRestore;
 import com.mirfatif.permissionmanagerx.main.BackupRestore.BackupEntry;
@@ -43,6 +42,7 @@ import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.PermClickListenerWit
 import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.PermLongClickListener;
 import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.PermSpinnerSelectListener;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
+import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
 import java.util.ArrayList;

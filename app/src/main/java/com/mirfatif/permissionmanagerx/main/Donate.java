@@ -9,9 +9,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog.Builder;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
+import com.mirfatif.permissionmanagerx.util.Utils;
 import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 import me.saket.bettermovementmethod.BetterLinkMovementMethod.OnLinkClickListener;
 

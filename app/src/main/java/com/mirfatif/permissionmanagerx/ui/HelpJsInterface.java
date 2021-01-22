@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.webkit.JavascriptInterface;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.util.Utils;
 
 public class HelpJsInterface {
 

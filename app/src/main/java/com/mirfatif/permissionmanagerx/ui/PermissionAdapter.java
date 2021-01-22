@@ -19,11 +19,11 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.parser.Permission;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.ItemViewHolder;
+import com.mirfatif.permissionmanagerx.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 

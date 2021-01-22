@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx;
+package com.mirfatif.permissionmanagerx.util;
 
 import android.app.Activity;
 import android.app.NotificationChannel;
@@ -49,6 +49,8 @@ import androidx.security.crypto.EncryptedSharedPreferences.PrefValueEncryptionSc
 import androidx.security.crypto.MasterKey;
 import androidx.security.crypto.MasterKey.KeyScheme;
 import com.google.android.material.color.MaterialColors;
+import com.mirfatif.permissionmanagerx.BuildConfig;
+import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;

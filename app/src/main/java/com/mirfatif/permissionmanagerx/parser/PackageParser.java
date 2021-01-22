@@ -13,12 +13,12 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.parser.PermGroupsMapping.GroupOrderPair;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionEntity;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
+import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.MyPackageOps;
 import com.mirfatif.privtasks.Util;
@@ -43,6 +43,7 @@ public class PackageParser {
   private final PackageManager mPackageManager;
   private final MySettings mMySettings;
   private final AppOpsParser mAppOpsParser = AppOpsParser.getInstance();
+  private final PkgParserFlavor mPkgParserFlavor = PkgParserFlavor.getInstance();
   private final PrivDaemonHandler mPrivDaemonHandler;
   private final PermGroupsMapping mPermGroupsMapping;
 
@@ -269,6 +270,7 @@ public class PackageParser {
         Package pkg = new Package();
         if (isPkgUpdated(packageInfo, pkg)) {
           packageList.add(pkg);
+          mPkgParserFlavor.onPkgCreated(pkg);
         }
 
         if (mMySettings.shouldDoRepeatUpdates() && doRepeatUpdates) {
@@ -290,6 +292,7 @@ public class PackageParser {
                 + "ms");
       }
 
+      mPkgParserFlavor.onPkgListCompleted();
       mIsUpdating = false;
       return true;
     }

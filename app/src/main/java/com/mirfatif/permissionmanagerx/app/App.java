@@ -3,9 +3,9 @@ package com.mirfatif.permissionmanagerx.app;
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
-import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
 import com.mirfatif.permissionmanagerx.svc.LogcatService;
+import com.mirfatif.permissionmanagerx.util.Utils;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 

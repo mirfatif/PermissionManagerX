@@ -34,7 +34,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
@@ -52,6 +51,7 @@ import com.mirfatif.permissionmanagerx.ui.PackageAdapter;
 import com.mirfatif.permissionmanagerx.ui.PackageAdapter.PkgClickListener;
 import com.mirfatif.permissionmanagerx.ui.PackageAdapter.PkgLongClickListener;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
+import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
 import java.util.ArrayList;
@@ -111,7 +111,7 @@ public class MainActivity extends BaseActivity {
       actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
-    // flavor specific methods
+    // Flavor specific methods
     mMainActivityFlavor = new MainActivityFlavor(this);
 
     mDrawerLayout = findViewById(R.id.activity_main);
@@ -124,7 +124,7 @@ public class MainActivity extends BaseActivity {
       openDrawerForPrivileges();
     }
 
-    // drawer items
+    // Drawer items
     mNavigationView = findViewById(R.id.nav_view);
     mNavigationView.setNavigationItemSelectedListener(
         item -> {
@@ -193,17 +193,17 @@ public class MainActivity extends BaseActivity {
           }
         });
 
-    // clear search query on activity refresh
+    // Clear search query on activity refresh
     if (mSearchView != null) {
       collapseSearchView();
     } else {
       mMySettings.setQueryText(null);
     }
 
-    // increment app launch count
+    // Increment app launch count
     mMySettings.plusAppLaunchCount();
 
-    mMainActivityFlavor.onCreated(getIntent());
+    mMainActivityFlavor.onCreated();
 
     Utils.runInBg(() -> new AppUpdate().check(true));
   }

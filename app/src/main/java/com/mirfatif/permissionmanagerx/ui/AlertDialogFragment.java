@@ -12,8 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import com.mirfatif.permissionmanagerx.main.MainActivityFlavor;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
 import com.mirfatif.privtasks.Util;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +25,7 @@ public class AlertDialogFragment extends AppCompatDialogFragment {
 
   public AlertDialogFragment(AlertDialog alertDialog) {
     mAlertDialog = alertDialog;
-    MainActivityFlavor.onCreateDialog(alertDialog);
+    UtilsFlavor.onCreateDialog(alertDialog);
   }
 
   @NonNull

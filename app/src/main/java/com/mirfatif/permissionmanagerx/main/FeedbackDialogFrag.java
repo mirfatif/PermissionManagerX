@@ -17,10 +17,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.AboutActivity;
+import com.mirfatif.permissionmanagerx.util.Utils;
 
 public class FeedbackDialogFrag extends BottomSheetDialogFragment {
 

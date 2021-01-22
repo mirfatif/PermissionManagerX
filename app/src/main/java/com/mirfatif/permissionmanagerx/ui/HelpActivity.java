@@ -11,10 +11,10 @@ import android.webkit.WebView;
 import androidx.annotation.NonNull;
 import androidx.webkit.WebViewClientCompat;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
+import com.mirfatif.permissionmanagerx.util.Utils;
 
 public class HelpActivity extends BaseActivity {
 

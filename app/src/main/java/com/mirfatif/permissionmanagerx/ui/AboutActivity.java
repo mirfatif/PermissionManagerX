@@ -13,12 +13,12 @@ import androidx.appcompat.app.AlertDialog.Builder;
 import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.Utils;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
 import com.mirfatif.permissionmanagerx.svc.LogcatService;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
+import com.mirfatif.permissionmanagerx.util.Utils;
 
 public class AboutActivity extends BaseActivity {
 
