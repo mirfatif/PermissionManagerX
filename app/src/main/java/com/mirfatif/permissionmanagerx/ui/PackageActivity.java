@@ -88,6 +88,7 @@ public class PackageActivity extends BaseActivity {
     RecyclerView recyclerView = findViewById(R.id.package_recycler_view);
     mPermissionAdapter =
         new PermissionAdapter(
+            this,
             new SwitchToggleListener(),
             new SpinnerSelectListener(),
             getPermClickListener(),
