@@ -502,8 +502,9 @@ public class BackupRestore {
       mMySettings.populateExcludedAppsList(false);
       mMySettings.populateExcludedPermsList();
       mMySettings.populateExtraAppOpsList(false);
-      PackageParser.getInstance().buildPermRefList();
-      mA.updatePackagesList(false);
+      PackageParser packageParser = PackageParser.getInstance();
+      packageParser.buildPermRefList();
+      packageParser.updatePackagesList();
       mA.getMainActivityFlavor().onRestoreDone();
     }
 

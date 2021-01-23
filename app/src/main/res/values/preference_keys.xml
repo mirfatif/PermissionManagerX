@@ -123,6 +123,13 @@
   </string>
   <string name="pref_settings_privileges_reminder_key">pref_settings_privileges_reminder</string>
   <bool name="pref_settings_privileges_reminder_default">true</bool>
+  <string name="pref_settings_quick_scan_cat_title">Quick scan</string>
+  <string name="pref_settings_quick_scan_title">Perform quick scan</string>
+  <string name="pref_settings_quick_scan_summary">Don\'t scan permissions, and don\'t show app\'s
+    reference state and permission count
+  </string>
+  <string name="pref_settings_quick_scan_key">pref_settings_quick_scan</string>
+  <bool name="pref_settings_quick_scan_default">false</bool>
 
   <!--HelpActivity-->
   <string name="pref_help_font_size_key">pref_help_font_size</string>

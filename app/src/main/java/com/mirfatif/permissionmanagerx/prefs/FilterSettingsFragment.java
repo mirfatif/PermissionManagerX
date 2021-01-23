@@ -121,6 +121,7 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     excludeFrameworkAppsView.setChecked(mMySettings.excludeFrameworkApps());
     excludeDisabledAppsView.setChecked(mMySettings.excludeDisabledApps());
     excludeNoPermsAppsView.setChecked(mMySettings.excludeNoPermissionsApps());
+    excludeNoPermsAppsView.setVisible(!mMySettings.isQuickScan());
     excludeInvalidPermsView.setChecked(mMySettings.excludeInvalidPermissions());
     excludeNotChangeablePermsView.setChecked(mMySettings.excludeNotChangeablePerms());
     excludeNotGrantedPermsView.setChecked(mMySettings.excludeNotGrantedPerms());
@@ -323,6 +324,6 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
 
     // update packages list when a Preference is changed so that RecyclerView is updated on
     // return to MainActivity
-    PackageParser.getInstance().updatePackagesList(true);
+    PackageParser.getInstance().updatePackagesList();
   }
 }

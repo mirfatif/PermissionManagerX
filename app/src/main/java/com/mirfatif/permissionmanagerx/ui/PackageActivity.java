@@ -222,7 +222,7 @@ public class PackageActivity extends BaseActivity {
                     updatePackage();
 
                     // other packages are also affected
-                    mPackageParser.updatePackagesList(false);
+                    mPackageParser.updatePackagesList();
                   }));
       builder.setNegativeButton(android.R.string.cancel, null);
 

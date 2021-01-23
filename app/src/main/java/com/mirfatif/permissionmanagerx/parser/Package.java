@@ -14,6 +14,7 @@ public class Package {
   private boolean mIsEnabled;
   private int mUid;
   private Boolean mIsReferenced;
+  private Boolean mQuickScan;
 
   private int mTotalPermCount;
   private int mPermCount;
@@ -28,7 +29,8 @@ public class Package {
       boolean isSystemApp,
       boolean isEnabled,
       int uid,
-      Boolean reference) {
+      Boolean reference,
+      boolean quickScan) {
     mPackageLabel = label;
     mPackageName = name;
     mPermissionsList = permissionList;
@@ -37,6 +39,7 @@ public class Package {
     mIsEnabled = isEnabled;
     mUid = uid;
     mIsReferenced = reference;
+    mQuickScan = quickScan;
   }
 
   public String getLabel() {
@@ -111,6 +114,10 @@ public class Package {
     return mIsReferenced;
   }
 
+  public boolean isNotQuicklyScanned() {
+    return !MySettings.getInstance().isQuickScan() && !mQuickScan;
+  }
+
   public static final String SEARCH_CRITICAL = ":Critical";
   public static final String SEARCH_FRAMEWORK = ":Framework";
   public static final String SEARCH_SYSTEM = ":System";
@@ -153,7 +160,11 @@ public class Package {
                   ? SEARCH_FRAMEWORK
                   : (mIsSystemApp ? SEARCH_SYSTEM : SEARCH_USER))),
           (mIsEnabled ? "" : SEARCH_DISABLED),
-          (mIsReferenced == null ? SEARCH_ORANGE : (mIsReferenced ? SEARCH_GREEN : SEARCH_RED))
+          (isNotQuicklyScanned()
+              ? (mIsReferenced == null
+                  ? SEARCH_ORANGE
+                  : (mIsReferenced ? SEARCH_GREEN : SEARCH_RED))
+              : "")
         }) {
       if (!isCaseSensitive) field = field.toUpperCase();
       if (field.contains(queryText)) return true;
@@ -165,12 +176,14 @@ public class Package {
   // consider which fields can change
   public boolean areContentsTheSame(Package pkg) {
 
-    if (pkg.isReferenced() != null && this.isReferenced() != null) {
-      if (pkg.isReferenced().compareTo(this.isReferenced()) != 0) return false;
-    } else if (pkg.isReferenced() == null && this.isReferenced() != null) {
-      return false;
-    } else if (pkg.isReferenced() != null && this.isReferenced() == null) {
-      return false;
+    if (isNotQuicklyScanned()) {
+      if (pkg.isReferenced() != null && this.isReferenced() != null) {
+        if (pkg.isReferenced().compareTo(this.isReferenced()) != 0) return false;
+      } else if (pkg.isReferenced() == null && this.isReferenced() != null) {
+        return false;
+      } else if (pkg.isReferenced() != null && this.isReferenced() == null) {
+        return false;
+      }
     }
 
     if (!pkg.getName().equals(this.getName())) return false;

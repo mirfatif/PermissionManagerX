@@ -70,16 +70,6 @@ public class MySettings {
     savePref(R.string.pref_settings_privileges_reminder_key, false);
   }
 
-  private boolean mDoRepeatUpdates = true;
-
-  public boolean shouldDoRepeatUpdates() {
-    return mDoRepeatUpdates;
-  }
-
-  public void setDoRepeatUpdates(boolean doRepeatUpdates) {
-    mDoRepeatUpdates = doRepeatUpdates;
-  }
-
   private boolean DEBUG = false;
   private boolean daemonLogging = false;
 
@@ -319,6 +309,11 @@ public class MySettings {
 
   public void setCaseSensitiveSearch(boolean isSensitive) {
     savePref(R.string.pref_main_case_sensitive_search_enc_key, isSensitive);
+  }
+
+  public boolean isQuickScan() {
+    return getBoolPref(R.string.pref_settings_quick_scan_key)
+        && (!isSearching() || !isDeepSearchEnabled());
   }
 
   public boolean isRootGranted() {

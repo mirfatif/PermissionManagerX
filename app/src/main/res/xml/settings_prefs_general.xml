@@ -24,4 +24,15 @@
     app:summary="@string/pref_settings_privileges_reminder_summary"
     app:title="@string/pref_settings_privileges_reminder_title" />
 
+  <PreferenceCategory
+    app:iconSpaceReserved="false"
+    app:title="@string/pref_settings_quick_scan_cat_title" />
+
+  <SwitchPreferenceCompat
+    app:defaultValue="@bool/pref_settings_quick_scan_default"
+    app:iconSpaceReserved="false"
+    app:key="@string/pref_settings_quick_scan_key"
+    app:summary="@string/pref_settings_quick_scan_summary"
+    app:title="@string/pref_settings_quick_scan_title" />
+
 </PreferenceScreen>

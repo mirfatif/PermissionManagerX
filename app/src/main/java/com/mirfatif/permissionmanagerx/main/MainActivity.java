@@ -135,7 +135,7 @@ public class MainActivity extends BaseActivity {
         });
 
     mRefreshLayout = findViewById(R.id.refresh_layout);
-    mRefreshLayout.setOnRefreshListener(() -> updatePackagesList(true));
+    mRefreshLayout.setOnRefreshListener(mPackageParser::updatePackagesList);
     mProgressBar = findViewById(R.id.progress_bar);
     mProgressBarContainer = findViewById(R.id.progress_bar_container);
     mProgressNowView = findViewById(R.id.progress_now);
@@ -414,6 +414,7 @@ public class MainActivity extends BaseActivity {
                       5000);
                 }
                 mMainActivityFlavor.onPackagesUpdated();
+                repeatUpdatesLock = false;
               }
             });
 
@@ -446,25 +447,21 @@ public class MainActivity extends BaseActivity {
             });
   }
 
-  void updatePackagesList(boolean doRepeatUpdates) {
-    if (mMySettings.isDebug()) {
-      Util.debugLog(TAG, "updatePackagesList(): doRepeatUpdates: " + doRepeatUpdates);
-    }
-    mPackageParser.updatePackagesList(doRepeatUpdates);
-  }
+  // Always get repeat updates when returning from search
+  private boolean repeatUpdatesLock = false;
 
-  // Keep on receiving new items from PackageParser unless there are at least 5 invisible items at
-  // the bottom.
-  // While making search, always do repeat updates.
+  /*
+  Keep on receiving new items from PackageParser unless there are at least 5 invisible items at
+   the bottom.
+  While making search, always do repeat updates.
+  */
   private void setRepeatUpdates() {
-    boolean doRepeatUpdates;
-    if (mMySettings.isSearching()) {
-      doRepeatUpdates = true;
-    } else {
+    boolean doRepeatUpdates = true;
+    if (!repeatUpdatesLock && !mMySettings.isSearching()) {
       doRepeatUpdates =
           mPackageAdapter.getItemCount() < mLayoutManager.findLastVisibleItemPosition() + 5;
     }
-    mMySettings.setDoRepeatUpdates(doRepeatUpdates);
+    mPackageParser.setDoRepeatUpdates(doRepeatUpdates);
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "setRepeatUpdates(): " + doRepeatUpdates);
     }
@@ -631,7 +628,8 @@ public class MainActivity extends BaseActivity {
     }
 
     if (doDeepSearch || mMySettings.isDeepSearchEnabled()) {
-      updatePackagesList(true);
+      repeatUpdatesLock = true;
+      mPackageParser.updatePackagesList();
     } else {
       mPackageParser.handleSearchQuery(true);
     }
@@ -688,7 +686,7 @@ public class MainActivity extends BaseActivity {
     if (mMySettings.isPrivDaemonAlive() || mMySettings.isAppOpsGranted()) {
       // If observers are set, update packages list.
       if (!isFirstRun) {
-        Utils.runInFg(() -> updatePackagesList(false));
+        mPackageParser.updatePackagesList();
       }
     }
   }

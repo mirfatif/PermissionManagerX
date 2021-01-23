@@ -58,11 +58,9 @@
   <string name="grant_root_or_adb">Grant root access or connect to ADB to start privileged process.</string>
   <string name="logging_failed">Logging failed</string>
   <string name="daemon_logging_failed">Logging for privileged daemon failed</string>
-  <string name="creating_packages_list">Creating packages list</string>
-  <string name="reading_reference_perms">Reading reference perms</string>
-  <string name="mapping_op_to_switch">Mapping op to switch</string>
-  <string name="listing_op_default_modes">Listing op default modes</string>
-  <string name="mapping_perms_to_ops">Mapping perms to ops</string>
+  <string name="creating_packages_list">Creating apps list</string>
+  <string name="reading_reference_perms">Reading references</string>
+  <string name="creating_app_ops_lists">Preparing AppOps data</string>
   <string name="starting_daemon">Starting daemon</string>
   <string name="checking_root_access">Checking root access</string>
   <string name="checking_adb_access">Checking ADB access</string>

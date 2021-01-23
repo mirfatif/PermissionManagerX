@@ -92,12 +92,17 @@ public class PackageAdapter extends ListAdapter<Package, ItemViewHolder> {
         return;
       }
 
-      if (pkg.isReferenced() == null) {
-        referenceView.setBackgroundColor(ORANGE);
-      } else if (!pkg.isReferenced()) {
-        referenceView.setBackgroundColor(Color.RED);
+      if (pkg.isNotQuicklyScanned()) {
+        if (pkg.isReferenced() == null) {
+          referenceView.setBackgroundColor(ORANGE);
+        } else if (!pkg.isReferenced()) {
+          referenceView.setBackgroundColor(Color.RED);
+        } else {
+          referenceView.setBackgroundColor(Color.GREEN);
+        }
+        referenceView.setVisibility(View.VISIBLE);
       } else {
-        referenceView.setBackgroundColor(Color.GREEN);
+        referenceView.setVisibility(View.GONE);
       }
 
       Utils.runInBg(
@@ -133,14 +138,19 @@ public class PackageAdapter extends ListAdapter<Package, ItemViewHolder> {
         packageStateView.setVisibility(View.VISIBLE);
       }
 
-      String count =
-          pkg.getPermCount()
-              + "/"
-              + pkg.getTotalPermCount()
-              + (MySettings.getInstance().excludeAppOpsPerms()
-                  ? ""
-                  : " | " + pkg.getAppOpsCount() + "/" + pkg.getTotalAppOpsCount());
-      permCountView.setText(count);
+      if (pkg.isNotQuicklyScanned()) {
+        String count =
+            pkg.getPermCount()
+                + "/"
+                + pkg.getTotalPermCount()
+                + (MySettings.getInstance().excludeAppOpsPerms()
+                    ? ""
+                    : " | " + pkg.getAppOpsCount() + "/" + pkg.getTotalAppOpsCount());
+        permCountView.setText(count);
+        permCountView.setVisibility(View.VISIBLE);
+      } else {
+        permCountView.setVisibility(View.GONE);
+      }
     }
 
     @Override

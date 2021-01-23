@@ -98,7 +98,7 @@ public class PackageParser {
   }
 
   public LiveData<List<Package>> getPackagesListLive() {
-    updatePackagesList(true); // update list on app (re)launch
+    updatePackagesList(); // update list on app (re)launch
     return mPackagesListLive;
   }
 
@@ -137,7 +137,7 @@ public class PackageParser {
 
   public void removePackage(Package pkg) {
     if (mIsUpdating) {
-      updatePackagesList(true);
+      updatePackagesList();
       return;
     }
     boolean res;
@@ -159,10 +159,10 @@ public class PackageParser {
   private final ExecutorService mUpdatePackagesExecutor = Executors.newSingleThreadExecutor();
   private Future<?> updatePackagesFuture;
 
-  public void updatePackagesList(boolean doRepeatUpdates) {
+  public void updatePackagesList() {
     synchronized (mUpdatePackagesExecutor) {
       if (mMySettings.isDebug()) {
-        Util.debugLog(TAG, "updatePackagesList(): doRepeatUpdates: " + doRepeatUpdates);
+        Util.debugLog(TAG, "updatePackagesList() called");
       }
 
       /**
@@ -177,7 +177,8 @@ public class PackageParser {
         updatePackagesFuture.cancel(true);
       }
       updatePackagesFuture =
-          mUpdatePackagesExecutor.submit(() -> updatePackagesListInBg(doRepeatUpdates));
+          mUpdatePackagesExecutor.submit(
+              () -> updatePackagesListInBg(true, mMySettings.isQuickScan()));
     }
   }
 
@@ -185,7 +186,7 @@ public class PackageParser {
   @SuppressWarnings("UnusedDeclaration")
   public List<Package> getPackagesList(boolean update) {
     if (update) {
-      if (!updatePackagesListInBg(false)) {
+      if (!updatePackagesListInBg(true, false)) {
         return null; // Interrupted in between
       }
     }
@@ -195,7 +196,7 @@ public class PackageParser {
   private boolean mIsUpdating;
   private final Object UPDATE_PKG_BG_LOCK = new Object();
 
-  private boolean updatePackagesListInBg(boolean doRepeatUpdates) {
+  private boolean updatePackagesListInBg(boolean showProgress, boolean quickScan) {
     synchronized (UPDATE_PKG_BG_LOCK) {
       long startTime = System.currentTimeMillis();
       mIsUpdating = true;
@@ -205,7 +206,7 @@ public class PackageParser {
         if (mMySettings.isDebug()) {
           Util.debugLog(TAG, "updatePackagesListInBg(): updating packages list");
         }
-        setProgress(CREATE_PACKAGES_LIST, true, false);
+        setProgress(CREATE_PACKAGES_LIST, true, false, showProgress);
 
         packageInfoList =
             mPackageManager.getInstalledPackages(
@@ -222,21 +223,19 @@ public class PackageParser {
 
       /** if permissions database changes, manually call {@link #updatePermReferences()} */
       if (mPermRefList == null) {
-        setProgress(REF_PERMS_LIST, true, false);
+        setProgress(REF_PERMS_LIST, true, false, showProgress);
         buildPermRefList();
       }
 
       if (!mMySettings.excludeAppOpsPerms() && mMySettings.canReadAppOps()) {
+        setProgress(APP_OPS_LISTS, true, false, showProgress);
         if (mOpToSwitchList == null) {
-          setProgress(OP_TO_SWITCH_LIST, true, false);
           mOpToSwitchList = mAppOpsParser.buildOpToSwitchList();
         }
         if (mOpToDefModeList == null) {
-          setProgress(OP_TO_DEF_MODE_LIST, true, false);
           mOpToDefModeList = mAppOpsParser.buildOpToDefaultModeList();
         }
         if (mPermToOpCodeMap == null) {
-          setProgress(PERM_TO_OP_CODE_MAP, true, false);
           mPermToOpCodeMap = mAppOpsParser.buildPermissionToOpCodeMap();
         }
       }
@@ -246,7 +245,7 @@ public class PackageParser {
             TAG, "updatePackagesListInBg(): total packages count: " + packageInfoList.size());
       }
       // set progress bar scale ASAP
-      setProgress(packageInfoList.size(), true, false);
+      setProgress(packageInfoList.size(), true, false, showProgress);
 
       // using global mPackagesList here might give wrong results in case of concurrent calls
       List<Package> packageList = new ArrayList<>();
@@ -260,7 +259,7 @@ public class PackageParser {
           return false;
         }
 
-        setProgress(i, false, false);
+        setProgress(i, false, false, showProgress);
         PackageInfo packageInfo = packageInfoList.get(i);
         if (mMySettings.isDebug()) {
           Util.debugLog(
@@ -268,13 +267,13 @@ public class PackageParser {
         }
 
         Package pkg = new Package();
-        if (isPkgUpdated(packageInfo, pkg)) {
+        if (isPkgUpdated(packageInfo, pkg, quickScan)) {
           packageList.add(pkg);
           mPkgParserFlavor.onPkgCreated(pkg);
         }
 
-        if (mMySettings.shouldDoRepeatUpdates() && doRepeatUpdates) {
-          if (shouldUpdateLiveData()) {
+        if (mDoRepeatUpdates) {
+          if (showProgress && shouldUpdateLiveData()) {
             submitLiveData(packageList);
           }
         }
@@ -282,7 +281,7 @@ public class PackageParser {
 
       // finally update complete list and complete progress
       submitLiveData(packageList);
-      setProgress(packageInfoList.size(), false, true);
+      setProgress(packageInfoList.size(), false, true, showProgress);
 
       if (mMySettings.isDebug()) {
         Util.debugLog(
@@ -290,6 +289,11 @@ public class PackageParser {
             "updatePackagesListInBg(): total time: "
                 + (System.currentTimeMillis() - startTime)
                 + "ms");
+      }
+
+      // Build search keys db
+      if (quickScan) {
+        return updatePackagesListInBg(false, false);
       }
 
       mPkgParserFlavor.onPkgListCompleted();
@@ -302,9 +306,18 @@ public class PackageParser {
   /////////////////////////// PROGRESS /////////////////////////////
   //////////////////////////////////////////////////////////////////
 
+  private boolean mDoRepeatUpdates = true;
+
+  public void setDoRepeatUpdates(boolean repeatUpdates) {
+    mDoRepeatUpdates = repeatUpdates;
+  }
+
   private long mLastProgressTimeStamp = 0;
 
-  private void setProgress(int value, boolean isMax, boolean isFinal) {
+  private void setProgress(int value, boolean isMax, boolean isFinal, boolean showProgress) {
+    if (!showProgress) {
+      return;
+    }
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "setProgress(): value: " + value + ", isMax: " + isMax);
     }
@@ -322,7 +335,7 @@ public class PackageParser {
     }
 
     // set progress updates, but not too frequent
-    if ((System.currentTimeMillis() - mLastProgressTimeStamp) > 50) {
+    if ((System.currentTimeMillis() - mLastProgressTimeStamp) > 100) {
       Utils.runInFg(() -> mProgressNow.setValue(value));
       propertyChange.firePropertyChange(PROP_NOW_PROGRESS, 0, value);
       mLastProgressTimeStamp = System.currentTimeMillis();
@@ -339,9 +352,7 @@ public class PackageParser {
   // to show progress
   private static final int CREATE_PACKAGES_LIST = -1;
   private static final int REF_PERMS_LIST = -2;
-  private static final int OP_TO_SWITCH_LIST = -3;
-  private static final int OP_TO_DEF_MODE_LIST = -4;
-  private static final int PERM_TO_OP_CODE_MAP = -5;
+  private static final int APP_OPS_LISTS = -3;
 
   public int getProgressTextResId(int progressMax) {
     switch (progressMax) {
@@ -349,12 +360,8 @@ public class PackageParser {
         return R.string.creating_packages_list;
       case PackageParser.REF_PERMS_LIST:
         return R.string.reading_reference_perms;
-      case PackageParser.OP_TO_SWITCH_LIST:
-        return R.string.mapping_op_to_switch;
-      case PackageParser.OP_TO_DEF_MODE_LIST:
-        return R.string.listing_op_default_modes;
-      case PackageParser.PERM_TO_OP_CODE_MAP:
-        return R.string.mapping_perms_to_ops;
+      case PackageParser.APP_OPS_LISTS:
+        return R.string.creating_app_ops_lists;
     }
     return 0;
   }
@@ -363,7 +370,7 @@ public class PackageParser {
   /////////////////////////// PACKAGES /////////////////////////////
   //////////////////////////////////////////////////////////////////
 
-  private boolean isPkgUpdated(PackageInfo packageInfo, Package pkg) {
+  private boolean isPkgUpdated(PackageInfo packageInfo, Package pkg, boolean quickScan) {
     if (isFilteredOutPkgName(packageInfo.packageName)) {
       return false;
     }
@@ -392,29 +399,33 @@ public class PackageParser {
       return false;
     }
 
-    if (mMySettings.isDebug()) {
-      Util.debugLog(TAG, "isPkgUpdated(): building permissions list");
-    }
-    List<Permission> permissionsList = getPermissionsList(packageInfo, pkg);
-
-    // Exclude packages with no manifest permissions and no AppOps (excluding extra)
-    if (isFilteredOutNoPermPkg(pkg)) {
-      return false;
-    }
-
+    List<Permission> permissionsList = new ArrayList<>();
     Boolean pkgIsReferenced = true;
-    for (Permission perm : permissionsList) {
-      if (perm.isReferenced() != null && !perm.isReferenced()) {
-        pkgIsReferenced = false;
-        break;
-      }
-    }
 
-    if (pkgIsReferenced) {
+    if (!quickScan) {
+      if (mMySettings.isDebug()) {
+        Util.debugLog(TAG, "isPkgUpdated(): building permissions list");
+      }
+      permissionsList = getPermissionsList(packageInfo, pkg);
+
+      // Exclude packages with no manifest permissions and no AppOps (excluding extra)
+      if (isFilteredOutNoPermPkg(pkg)) {
+        return false;
+      }
+
       for (Permission perm : permissionsList) {
-        if (perm.isReferenced() == null && perm.isChangeable()) {
-          pkgIsReferenced = null;
+        if (perm.isReferenced() != null && !perm.isReferenced()) {
+          pkgIsReferenced = false;
           break;
+        }
+      }
+
+      if (pkgIsReferenced) {
+        for (Permission perm : permissionsList) {
+          if (perm.isReferenced() == null && perm.isChangeable()) {
+            pkgIsReferenced = null;
+            break;
+          }
         }
       }
     }
@@ -430,7 +441,8 @@ public class PackageParser {
         isSystemApp,
         isEnabled,
         appInfo.uid,
-        pkgIsReferenced);
+        pkgIsReferenced,
+        quickScan);
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "isPkgUpdated(): Package created");
     }
@@ -470,7 +482,7 @@ public class PackageParser {
     PackageInfo packageInfo = getPackageInfo(pkg.getName(), true);
 
     // package uninstalled, or disabled from MainActivity, or ref state changed during deep search
-    if (packageInfo == null || !isPkgUpdated(packageInfo, pkg)) {
+    if (packageInfo == null || !isPkgUpdated(packageInfo, pkg, false)) {
       removePackage(pkg);
       return;
     }
@@ -506,6 +518,9 @@ public class PackageParser {
   }
 
   private boolean isFilteredOutNoPermPkg(Package pkg) {
+    if (mMySettings.isQuickScan()) {
+      return false;
+    }
     return mMySettings.excludeNoPermissionsApps()
         && pkg.getTotalPermCount() == 0
         && pkg.getTotalAppOpsCount() == 0;
