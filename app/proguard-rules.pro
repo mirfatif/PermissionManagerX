@@ -37,9 +37,17 @@
 # Permission icons are accessed through Reflection
 -keep class com.mirfatif.permissionmanagerx.R$drawable {
   int g_*;
+  int alert_dialog_bg_*;
 }
 
 # PreferenceFragments are instantiated from XML files
 -keep class com.mirfatif.permissionmanagerx.prefs.settings.SettingsFrag* {
    void onCreatePreferences(android.os.Bundle, java.lang.String);
 }
+
+# AOSP Non-SKD interfaces
+-keep class android.app** { *; }
+-keep class android.content** { *; }
+-keep class android.os** { *; }
+-keep class android.permission** { *; }
+-keep class com.android** { *; }
