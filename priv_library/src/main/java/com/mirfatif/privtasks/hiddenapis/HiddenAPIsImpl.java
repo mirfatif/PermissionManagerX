@@ -52,7 +52,11 @@ public class HiddenAPIsImpl extends HiddenAPIs {
 
   @Override
   int _getNumOps() throws HiddenAPIsError {
-    return AppOpsManager.getNumOps();
+    try {
+      return AppOpsManager.getNumOps();
+    } catch (NoSuchMethodError e) {
+      throw new HiddenAPIsError(e);
+    }
   }
 
   public int getOpModeNamesSize() throws HiddenAPIsError {
