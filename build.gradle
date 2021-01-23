@@ -24,6 +24,13 @@ allprojects {
     tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
+
+    project.ext {
+        compileSdkVer = 30
+        buildToolsVer = "30.0.3"
+        minSdkVer = 24
+        targetSdkVer = 30
+    }
 }
 
 task clean(type: Delete) {

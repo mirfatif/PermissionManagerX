@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    compileSdkVersion compileSdkVer
+    buildToolsVersion buildToolsVer
 
     defaultConfig {
         applicationId "com.mirfatif.permissionmanagerx"
-        minSdkVersion 24
-        targetSdkVersion 30
+        minSdkVersion minSdkVer
+        targetSdkVersion targetSdkVer
         versionCode 104
         versionName "v1.04"
 
@@ -36,7 +36,7 @@ dependencies {
     implementation project(path: ':AdbLib')
     implementation project(path: ':priv_library')
 
-    implementation 'androidx.appcompat:appcompat:1.3.0-alpha02'
+    implementation 'androidx.appcompat:appcompat:1.3.0-beta01'
     implementation 'androidx.recyclerview:recyclerview:1.2.0-beta01'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01'
@@ -48,7 +48,7 @@ dependencies {
     annotationProcessor 'androidx.room:room-compiler:2.3.0-alpha04'
 
     // For SnackBar and NavigationView. Also includes CoordinatorLayout
-    implementation 'com.google.android.material:material:1.3.0-beta01'
+    implementation 'com.google.android.material:material:1.3.0-rc01'
 
     // To handle hyperlink onClick in TextView
     implementation 'me.saket:better-link-movement-method:2.2.0'
