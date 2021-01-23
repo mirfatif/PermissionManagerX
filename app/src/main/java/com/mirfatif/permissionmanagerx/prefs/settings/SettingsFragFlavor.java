@@ -34,7 +34,7 @@ public class SettingsFragFlavor extends PreferenceFragmentCompat
 
   @Override
   public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-    setPreferencesFromResource(R.xml.settings_prefs_general, rootKey);
+    setPreferencesFromResource(R.xml.settings_prefs_flavor, rootKey);
   }
 
   @Override

@@ -107,8 +107,6 @@
 
 
   <!--SettingsActivity-->
-  <string name="pref_settings_general_cat_title">General settings</string>
-  <string name="pref_settings_check_for_updates_cat_title">App updates</string>
   <string name="pref_settings_check_for_updates_title">Check for updates</string>
   <string name="pref_settings_check_for_updates_summary">Show a notification when a new version is
     available
@@ -116,14 +114,12 @@
   <string name="pref_settings_check_for_updates_key">pref_settings_check_for_updates</string>
   <bool name="pref_settings_check_for_updates_default">true</bool>
   <string name="pref_settings_check_for_updates_ts_enc_key">pref_settings_check_for_updates_ts_enc</string>
-  <string name="pref_settings_privileges_reminder_cat_title">Privileges</string>
   <string name="pref_settings_privileges_reminder_title">Remind missing privileges</string>
   <string name="pref_settings_privileges_reminder_summary">Show a dialog on app start if root and ADB
     privileges are not granted
   </string>
   <string name="pref_settings_privileges_reminder_key">pref_settings_privileges_reminder</string>
   <bool name="pref_settings_privileges_reminder_default">true</bool>
-  <string name="pref_settings_quick_scan_cat_title">Quick scan</string>
   <string name="pref_settings_quick_scan_title">Perform quick scan</string>
   <string name="pref_settings_quick_scan_summary">Don\'t scan permissions, and don\'t show app\'s
     reference state and permission count
