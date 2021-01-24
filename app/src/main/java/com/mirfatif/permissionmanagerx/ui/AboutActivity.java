@@ -6,7 +6,8 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts.CreateDocument;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog.Builder;
@@ -23,6 +24,7 @@ import com.mirfatif.permissionmanagerx.util.Utils;
 public class AboutActivity extends BaseActivity {
 
   private MySettings mMySettings;
+  private ActivityResultLauncher<String> mLoggingLauncher;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,20 @@ public class AboutActivity extends BaseActivity {
                 paidFeaturesView.setMaxLines(1);
               }
             });
+
+    ActivityResultCallback<Uri> callback =
+        logFile -> {
+          if (logFile != null) {
+            startService(
+                new Intent(
+                    LogcatService.ACTION_START_LOG,
+                    logFile,
+                    App.getContext(),
+                    LogcatService.class));
+          }
+        };
+    // registerForActivityResult() must be called before onStart() is called
+    mLoggingLauncher = registerForActivityResult(new CreateDocument(), callback);
   }
 
   private void openWebUrl(int viewResId, int linkResId) {
@@ -77,19 +93,7 @@ public class AboutActivity extends BaseActivity {
     }
 
     Toast.makeText(App.getContext(), R.string.select_log_file, Toast.LENGTH_LONG).show();
-    ActivityResultCallback<Uri> callback =
-        logFile -> {
-          if (logFile != null) {
-            startService(
-                new Intent(
-                    LogcatService.ACTION_START_LOG,
-                    logFile,
-                    App.getContext(),
-                    LogcatService.class));
-          }
-        };
-    registerForActivityResult(new ActivityResultContracts.CreateDocument(), callback)
-        .launch("PermissionManagerX_" + Utils.getCurrDateTime(false) + ".log");
+    mLoggingLauncher.launch("PermissionManagerX_" + Utils.getCurrDateTime(false) + ".log");
   }
 
   private boolean mCheckForUpdateInProgress = false;

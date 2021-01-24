@@ -91,9 +91,9 @@
   <string name="select_backup_file">Select backup file</string>
   <string name="backup_in_progress">Backup in progress</string>
   <string name="restore_in_progress">Restore in progress</string>
-  <string name="backup_restore_process_entries">Processed %1$d preference(s) and %2$d permission reference(s).</string>
-  <string name="backup_restore_invalid_prefs">\nSkipped %1$d invalid preference(s).</string>
-  <string name="backup_restore_uninstalled_apps">\nSkipped %1$d uninstalled app(s).</string>
+  <string name="backup_restore_process_entries">Processed %1$d preferences and %2$d permission references.</string>
+  <string name="backup_restore_invalid_prefs">\nSkipped %1$d invalid preferences.</string>
+  <string name="backup_restore_uninstalled_apps">\nSkipped %1$d uninstalled apps.</string>
   <string name="backup_restore_failed">Failed. Some error occurred.</string>
   <string name="skip_uninstalled_packages">Skip uninstalled packages</string>
   <string name="privileges">"Privileges"</string>
@@ -162,7 +162,7 @@
     action. In worst-case scenario Android system may crash.\nAre you sure you want to continue?
   </string>
   <string name="uid_mode_app_ops_warning">This is a UID mode AppOp.
-    Changing it also affects %1$d other package(s).
+    Changing it also affects %1$d other packages.
   </string>
   <string name="extra_ops_cant_be_excluded">Extra AppOps cannot be excluded from visible list.</string>
   <string name="exclude_perm_from_list">Exclude permission from visible list.</string>

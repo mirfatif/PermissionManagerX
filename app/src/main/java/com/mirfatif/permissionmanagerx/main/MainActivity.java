@@ -74,6 +74,7 @@ public class MainActivity extends BaseActivity {
 
   private MyViewModel mMyViewModel;
   private MainActivityFlavor mMainActivityFlavor;
+  private BackupRestore mBackupRestore;
 
   private SwipeRefreshLayout mRefreshLayout;
   private LinearLayoutManager mLayoutManager;
@@ -110,9 +111,6 @@ public class MainActivity extends BaseActivity {
     if (actionBar != null) {
       actionBar.setDisplayHomeAsUpEnabled(true);
     }
-
-    // Flavor specific methods
-    mMainActivityFlavor = new MainActivityFlavor(this);
 
     mDrawerLayout = findViewById(R.id.activity_main);
     mDrawerToggle =
@@ -203,7 +201,10 @@ public class MainActivity extends BaseActivity {
     // Increment app launch count
     mMySettings.plusAppLaunchCount();
 
+    mMainActivityFlavor = new MainActivityFlavor(this);
+    mBackupRestore = new BackupRestore(this);
     mMainActivityFlavor.onCreated();
+    mBackupRestore.onCreated();
 
     Utils.runInBg(() -> new AppUpdate().check(true));
   }
@@ -854,7 +855,7 @@ public class MainActivity extends BaseActivity {
     }
 
     if (item.getItemId() == R.id.action_backup_restore) {
-      new BackupRestore(this).doBackupRestore();
+      mBackupRestore.doBackupRestore();
       return true;
     }
 

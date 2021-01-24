@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
@@ -92,6 +93,22 @@ public class BackupRestore {
     mMySettings = MySettings.getInstance();
   }
 
+  private ActivityResultLauncher<String> mBackupLauncher;
+  private ActivityResultLauncher<String[]> mRestoreLauncher;
+
+  void onCreated() {
+    // registerForActivityResult() must be called before onStart() is called
+    ActivityResultCallback<Uri> backupCallback =
+        uri -> Utils.runInBg(() -> doBackupRestoreInBg(true, uri));
+    mBackupLauncher =
+        mA.registerForActivityResult(new ActivityResultContracts.CreateDocument(), backupCallback);
+
+    ActivityResultCallback<Uri> restoreCallback =
+        uri -> Utils.runInBg(() -> doBackupRestoreInBg(false, uri));
+    mRestoreLauncher =
+        mA.registerForActivityResult(new ActivityResultContracts.OpenDocument(), restoreCallback);
+  }
+
   void doBackupRestore() {
     View layout = mA.getLayoutInflater().inflate(R.layout.backup_restore_alert_dialog, null);
     CheckBox checkbox = layout.findViewById(R.id.skip_uninstalled_packages);
@@ -109,14 +126,10 @@ public class BackupRestore {
 
   private void doBackupRestore(boolean isBackup) {
     Toast.makeText(App.getContext(), R.string.select_backup_file, Toast.LENGTH_LONG).show();
-    ActivityResultCallback<Uri> callback =
-        uri -> Utils.runInBg(() -> doBackupRestoreInBg(isBackup, uri));
     if (isBackup) {
-      mA.registerForActivityResult(new ActivityResultContracts.CreateDocument(), callback)
-          .launch("PermissionManagerX_" + Utils.getCurrDateTime(false) + ".xml");
+      mBackupLauncher.launch("PermissionManagerX_" + Utils.getCurrDateTime(false) + ".xml");
     } else {
-      mA.registerForActivityResult(new ActivityResultContracts.OpenDocument(), callback)
-          .launch(new String[] {"text/xml"});
+      mRestoreLauncher.launch(new String[] {"text/xml"});
     }
   }
 
