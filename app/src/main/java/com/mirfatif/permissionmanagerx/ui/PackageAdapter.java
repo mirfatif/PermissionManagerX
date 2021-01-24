@@ -92,7 +92,9 @@ public class PackageAdapter extends ListAdapter<Package, ItemViewHolder> {
         return;
       }
 
-      if (pkg.isNotQuicklyScanned()) {
+      boolean isQuickScan = pkg.isQuicklyScanned();
+
+      if (!isQuickScan) {
         if (pkg.isReferenced() == null) {
           referenceView.setBackgroundColor(ORANGE);
         } else if (!pkg.isReferenced()) {
@@ -115,7 +117,18 @@ public class PackageAdapter extends ListAdapter<Package, ItemViewHolder> {
           });
 
       packageLabelView.setText(pkg.getLabel());
-      String pkgName = pkg.getName() + " (" + pkg.getUid() + ")";
+
+      String pkgName = pkg.getName();
+      if (isQuickScan) {
+        permCountView.setText(String.valueOf(pkg.getUid()));
+      } else {
+        pkgName += " (" + pkg.getUid() + ")";
+        String count = pkg.getPermCount() + "/" + pkg.getTotalPermCount();
+        if (!MySettings.getInstance().excludeAppOpsPerms()) {
+          count += " | " + pkg.getAppOpsCount() + "/" + pkg.getTotalAppOpsCount();
+        }
+        permCountView.setText(count);
+      }
       packageNameView.setText(pkgName);
 
       String packageState = null;
@@ -136,20 +149,6 @@ public class PackageAdapter extends ListAdapter<Package, ItemViewHolder> {
       } else {
         packageStateView.setText(packageState);
         packageStateView.setVisibility(View.VISIBLE);
-      }
-
-      if (pkg.isNotQuicklyScanned()) {
-        String count =
-            pkg.getPermCount()
-                + "/"
-                + pkg.getTotalPermCount()
-                + (MySettings.getInstance().excludeAppOpsPerms()
-                    ? ""
-                    : " | " + pkg.getAppOpsCount() + "/" + pkg.getTotalAppOpsCount());
-        permCountView.setText(count);
-        permCountView.setVisibility(View.VISIBLE);
-      } else {
-        permCountView.setVisibility(View.GONE);
       }
     }
 
