@@ -1,5 +1,7 @@
 package com.mirfatif.permissionmanagerx.main;
 
+import android.view.Menu;
+import android.view.MenuItem;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 
 public class MainActivityFlavor {
@@ -18,7 +20,8 @@ public class MainActivityFlavor {
   @SuppressWarnings("UnusedDeclaration")
   void onCreated() {}
 
-  void onCreateOptionsMenu() {}
+  @SuppressWarnings("UnusedDeclaration")
+  void onCreateOptionsMenu(Menu menu) {}
 
   void onResumed() {
     mFeedback.askForFeedback();
@@ -32,4 +35,9 @@ public class MainActivityFlavor {
   }
 
   void onRestoreDone() {}
+
+  @SuppressWarnings("UnusedDeclaration")
+  public boolean onOptionsItemSelected(MenuItem item) {
+    return false;
+  }
 }

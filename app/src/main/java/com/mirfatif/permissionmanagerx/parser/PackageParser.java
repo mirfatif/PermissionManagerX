@@ -26,9 +26,9 @@ import com.mirfatif.privtasks.hiddenapis.HiddenAPIs;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIsError;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,10 +125,7 @@ public class PackageParser {
             mPackageManager.getInstalledPackages(
                 PackageManager.GET_PERMISSIONS | PM_GET_SIGNATURES);
         mLastPackageManagerCall = System.currentTimeMillis();
-        mPackageInfoList.sort(
-            Comparator.comparing(
-                pkgInfo ->
-                    pkgInfo.applicationInfo.loadLabel(mPackageManager).toString().toUpperCase()));
+        mPkgParserFlavor.sortPkgList(mPackageInfoList);
       }
 
       /** if permissions database changes, manually call {@link #updatePermReferences()} */
@@ -502,7 +499,9 @@ public class PackageParser {
         isSystemApp,
         isEnabled,
         appInfo.uid,
-        pkgIsReferenced);
+        pkgIsReferenced,
+        packageInfo.firstInstallTime,
+        new File(appInfo.sourceDir).lastModified());
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "isPkgUpdated(): Package created");
     }

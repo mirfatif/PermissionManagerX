@@ -17,11 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.parser.Package;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.PackageAdapter.ItemViewHolder;
 import com.mirfatif.permissionmanagerx.ui.base.MyListAdapter;
 import com.mirfatif.permissionmanagerx.util.Utils;
 
 public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
+
+  private final MySettings mMySettings = MySettings.getInstance();
 
   private final PkgClickListener mPkgClickListener;
   private final PkgLongClickListener mPkgLongClickListener;
@@ -66,6 +69,7 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
     TextView packageNameView;
     TextView packageStateView;
     TextView permCountView;
+    TextView dateView;
 
     public ItemViewHolder(@NonNull View itemView) {
       super(itemView);
@@ -77,6 +81,7 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
       packageNameView = itemView.findViewById(R.id.package_name_view);
       packageStateView = itemView.findViewById(R.id.package_state_view);
       permCountView = itemView.findViewById(R.id.package_perm_count_view);
+      dateView = itemView.findViewById(R.id.date_view);
 
       // Set click listener on whole item
       itemView.setOnClickListener(this);
@@ -136,6 +141,8 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
         packageStateView.setText(packageState);
         packageStateView.setVisibility(View.VISIBLE);
       }
+
+      dateView.setText(pkg.getDate());
     }
 
     @Override

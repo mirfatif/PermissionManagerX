@@ -4,7 +4,8 @@
   <item
     android:id="@+id/action_search"
     android:icon="@android:drawable/ic_menu_search"
+    android:orderInCategory="1"
     android:title="@string/search_menu_item"
     app:actionViewClass="com.mirfatif.permissionmanagerx.ui.base.MySearchView"
-    app:showAsAction="ifRoom"/>
+    app:showAsAction="ifRoom" />
 </menu>

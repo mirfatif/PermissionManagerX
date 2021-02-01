@@ -49,7 +49,6 @@ import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -64,11 +63,14 @@ public class PackageActivity extends BaseActivity {
   private Package mPackage;
   private SwipeRefreshLayout mRefreshLayout;
   private PermissionAdapter mPermissionAdapter;
+  private PkgActivityFlavor mPkgActivityFlavor;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_package);
+
+    mPkgActivityFlavor = new PkgActivityFlavor(this);
 
     int position = getIntent().getIntExtra(MainActivity.EXTRA_PKG_POSITION, -1);
     if (position == -1) {
@@ -356,7 +358,7 @@ public class PackageActivity extends BaseActivity {
 
   private void updatePermissionsList() {
     mPermissionsList = mPackage.getPermissionsList();
-    mPermissionsList.sort(Comparator.comparingInt(Permission::getOrder));
+    mPkgActivityFlavor.sortPermsList(mPermissionsList);
     handleSearchQuery();
     Utils.runInFg(this::checkEmptyPermissionsList);
     stopRefreshing();
@@ -403,6 +405,7 @@ public class PackageActivity extends BaseActivity {
     // Show a search hint
     mSearchView.setQueryHint(getString(R.string.search_menu_item));
 
+    mPkgActivityFlavor.onCreateOptionsMenu(menu);
     return super.onCreateOptionsMenu(menu);
   }
 
@@ -413,6 +416,7 @@ public class PackageActivity extends BaseActivity {
     menu.findItem(R.id.action_reset_app_ops).setVisible(havePerms);
     menu.findItem(R.id.action_set_all_references).setVisible(havePerms);
     menu.findItem(R.id.action_clear_references).setVisible(havePerms);
+    mPkgActivityFlavor.onPrepareOptionsMenu(menu, havePerms);
     return super.onPrepareOptionsMenu(menu);
   }
 
@@ -490,7 +494,7 @@ public class PackageActivity extends BaseActivity {
       return true;
     }
 
-    return super.onOptionsItemSelected(item);
+    return mPkgActivityFlavor.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
   }
 
   private void resetAppOps() {

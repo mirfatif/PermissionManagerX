@@ -234,8 +234,7 @@ public class MainActivity extends BaseActivity {
     mSearchView = searchMenuItem.getActionView().findViewById(R.id.action_search);
     setUpSearchView();
 
-    mMainActivityFlavor.onCreateOptionsMenu();
-
+    mMainActivityFlavor.onCreateOptionsMenu(menu);
     return super.onCreateOptionsMenu(menu);
   }
 
@@ -245,7 +244,9 @@ public class MainActivity extends BaseActivity {
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "onOptionsItemSelected(): " + item.getTitle());
     }
-    return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    return mMainActivityFlavor.onOptionsItemSelected(item)
+        || mDrawerToggle.onOptionsItemSelected(item)
+        || super.onOptionsItemSelected(item);
   }
 
   @Override

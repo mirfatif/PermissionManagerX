@@ -217,6 +217,7 @@
   <string name="paid_features_summary">
     <![CDATA[
       <ul>
+        <li>Sort apps and permissions by different parameters</li>
         <li>Scheduled check to notify bad reference states</li>
         <li>Auto create backup file on changes</li>
         <li>Search suggestions</li>

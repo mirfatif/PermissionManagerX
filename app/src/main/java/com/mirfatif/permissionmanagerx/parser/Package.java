@@ -1,14 +1,21 @@
 package com.mirfatif.permissionmanagerx.parser;
 
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
+import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.prefs.MySettingsFlavor;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Package {
 
   private final MySettings mMySettings = MySettings.getInstance();
+  private final MySettingsFlavor mMySettingsFlavor = MySettingsFlavor.getInstance();
 
   private String mPackageLabel;
   private String mPackageName;
@@ -18,6 +25,8 @@ public class Package {
   private boolean mIsEnabled;
   private int mUid;
   private Boolean mIsReferenced;
+  private long mInstallDate;
+  private long mUpdateDate;
 
   private int mTotalPermCount;
   private int mPermCount, mSearchPermCount;
@@ -32,7 +41,9 @@ public class Package {
       boolean isSystemApp,
       boolean isEnabled,
       int uid,
-      Boolean reference) {
+      Boolean reference,
+      long installDate,
+      long updateDate) {
     mPackageLabel = label;
     mPackageName = name;
     mPermissionsList = permissionList;
@@ -41,6 +52,19 @@ public class Package {
     mIsEnabled = isEnabled;
     mUid = uid;
     mIsReferenced = reference;
+    mInstallDate = installDate;
+    mUpdateDate = updateDate;
+  }
+
+  private static long BUILD_DATE;
+
+  static {
+    try {
+      PackageManager pm = App.getContext().getPackageManager();
+      BUILD_DATE = pm.getPackageInfo("android", 0).firstInstallTime;
+    } catch (NameNotFoundException ignored) {
+      BUILD_DATE = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(365);
+    }
   }
 
   public String getLabel() {
@@ -171,6 +195,24 @@ public class Package {
     return mLastShowingRef;
   }
 
+  private String mLastDate;
+
+  public String getDate() {
+    Boolean isPkgInstalledDate = mMySettingsFlavor.isPkgInstallDate();
+    if (isPkgInstalledDate == null) {
+      mLastDate = null;
+    } else {
+      long date = isPkgInstalledDate ? mInstallDate : mUpdateDate;
+      mLastDate =
+          date > BUILD_DATE
+              ? DateUtils.getRelativeTimeSpanString(
+                      date, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS)
+                  .toString()
+              : null;
+    }
+    return mLastDate;
+  }
+
   public static final String SEARCH_CRITICAL = ":Critical";
   public static final String SEARCH_FRAMEWORK = ":Framework";
   public static final String SEARCH_SYSTEM = ":System";
@@ -269,6 +311,14 @@ public class Package {
 
     // This necessarily changes when we change QuickScan settings
     if (!mLastFormattedName.equals(pkg.getFormattedName())) {
+      return false;
+    }
+
+    if (mLastDate != null) {
+      if (!mLastDate.equals(pkg.getDate())) {
+        return false;
+      }
+    } else if (pkg.getDate() != null) {
       return false;
     }
 
