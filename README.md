@@ -38,9 +38,8 @@ In short, <b>AppOps</b> provide a fine-grained control over many of the manifest
 * `build.gradle` calls a shell script to build native binaries. So a Linux environment is expected with all standard tools.
 * Download code: `git clone --recurse-submodules https://github.com/mirfatif/PermissionManagerX.git && cd PermissionManagerX`
 * Set `sdk.dir` in `local.properties` to the directory containing Android SDK API level (platform) 30 and build-tools 30.0.3 (and obviously the latest SDK `tools` and `platform-tools`).
-* App uses a number of AOSP's hidden/internal APIs which are not available in official SDK. Replace `android.jar` with a custom built which includes all of the [non-SDK interfaces](https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces) (see details [here](https://github.com/anggrayudi/android-hidden-api)). Plus in Android 11 some of the hidden APIs have been entirely removed which are required for the app to work. So they need to be added to the SDK (I just edited the respective `.class` files and added stub methods). A working `android.jar` is available [here](https://github.com/mirfatif/PermissionManagerX/tree/master/hidden-apis).
 * Set `ndk.dir` in `local.properties` to the directory containing Android NDK (I used r21d (21.3)).
-* Set `JAVA_HOME` environment variable to JDK 11 (`verifyGoogleJavaFormat` task won't work with JDK 1.8). Or `java` and `javac` must be on `PATH`.
+* Set `JAVA_HOME` environment variable to JDK 11 (`verifyGoogleJavaFormat` and some Annotations don't work with JDK 1.8). Or `java` and `javac` must be on `PATH`.
 * Run `./gradlew` with appropriate task name appended. Or use IntelliJ IDEA / Android Studio.
 
 ## Third-Party Libraries

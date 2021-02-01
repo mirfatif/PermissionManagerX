@@ -311,9 +311,4 @@ public abstract class HiddenAPIs {
 
     String[] requires() default "";
   }
-
-  // https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces#results-of-keeping-non-sdk
-  @Retention(RetentionPolicy.SOURCE)
-  @Target(ElementType.TYPE)
-  public @interface NonSDK {}
 }

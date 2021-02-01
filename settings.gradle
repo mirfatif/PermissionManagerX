@@ -1,3 +1,4 @@
+include ':hidden_apis'
 include ':priv_library'
 include ':priv_daemon'
 include ':AdbLib'

@@ -21,5 +21,56 @@ android {
     }
 }
 
+dependencies {
+    // Just to resolve APIs in editor
+    compileOnly project(path: ':hidden_apis')
+}
+
+tasks.withType(JavaCompile) {
+    doFirst {
+        def bootClassPath = project.objects.fileCollection()
+        bootClassPath.from(new File(projectDir, "libs/hidden_apis.jar"))
+        bootClassPath.from(options.getBootstrapClasspath())
+        options.setBootstrapClasspath(bootClassPath)
+    }
+}
+
+task buildHiddenApis() {
+    def isDebug = false
+    for (String taskName : gradle.startParameter.taskNames) {
+        if (taskName.contains("Debug")) {
+            isDebug = true
+            break
+        }
+    }
+
+    def src = "hidden_apis/build/outputs/aar/hidden_apis-release.aar"
+    if (isDebug) {
+        src = "hidden_apis/build/outputs/aar/hidden_apis-debug.aar"
+        dependsOn(':hidden_apis:assembleDebug')
+        mustRunAfter(':hidden_apis:assembleDebug')
+    } else {
+        dependsOn(':hidden_apis:assembleRelease')
+        mustRunAfter(':hidden_apis:assembleRelease')
+    }
+
+    doLast {
+        def libFile = 'hidden_apis.jar'
+        def dstDir = new File(projectDir, "libs")
+        dstDir.mkdirs()
+        def dstFile = new File(dstDir, libFile)
+        delete dstFile
+        copy {
+            from zipTree(new File(rootDir, src)).matching { include 'classes.jar' }.singleFile
+            into dstDir
+            rename { fileName -> libFile }
+        }
+        if (!dstFile.exists()) {
+            throw new GradleException("buildHiddenApis failed!\n" + dstFile.getPath() + " does not exist")
+        }
+    }
+}
+preBuild.dependsOn(buildHiddenApis)
+
 apply plugin: 'com.github.sherter.google-java-format'
 preBuild.dependsOn(verifyGoogleJavaFormat)

@@ -44,10 +44,3 @@
 -keep class com.mirfatif.permissionmanagerx.prefs.settings.SettingsFrag* {
    void onCreatePreferences(android.os.Bundle, java.lang.String);
 }
-
-# AOSP Non-SKD interfaces
--keep class android.app** { *; }
--keep class android.content** { *; }
--keep class android.os** { *; }
--keep class android.permission** { *; }
--keep class com.android** { *; }
