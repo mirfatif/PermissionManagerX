@@ -3,8 +3,11 @@ package com.mirfatif.permissionmanagerx.ui;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -111,9 +114,8 @@ public class PackageActivity extends BaseActivity {
     mRefreshLayout.setOnRefreshListener(() -> Utils.runInBg(this::updatePackage));
   }
 
-  private void setAppOpsMode(Permission permission, int mode, boolean uidMode) {
-    STOP_REFRESH_LOCK.lock();
-    Utils.runInFg(() -> mRefreshLayout.setRefreshing(true));
+  private void setAppOpsMode(Permission permission, int pos, int mode, boolean uidMode) {
+    holdRefreshLock();
     String pkgName;
     if (uidMode) {
       pkgName = "null";
@@ -144,31 +146,39 @@ public class PackageActivity extends BaseActivity {
       Log.e(TAG, "setAppOpsMode(): response is " + res);
     }
 
-    updateSpinnerSelection(true);
+    updateSpinnerSelection(true, pos);
   }
 
-  private void updateSpinnerSelectionInBg() {
-    Utils.runInBg(() -> updateSpinnerSelection(false));
+  private void updateSpinnerSelectionInBg(int position) {
+    Utils.runInBg(() -> updateSpinnerSelection(false, position));
   }
 
   // To force revert spinner selection in case of no privileges, user denial, or failure
-  private void updateSpinnerSelection(boolean delay) {
+  private void updateSpinnerSelection(boolean delay, Integer position) {
     updatePackage();
     if (delay) {
       SystemClock.sleep(500); // To avoid Spinner value flash
     }
-    Utils.runInFg(() -> mPermissionAdapter.notifyDataSetChanged());
+    updateSpinnerSelection(position);
 
     // Some AppOps may take a little while to update e.g.
     // LEGACY_STORAGE always reverts back to Allow.
     if (delay) {
       SystemClock.sleep(500);
       updatePackage();
-      Utils.runInFg(() -> mPermissionAdapter.notifyDataSetChanged());
+      updateSpinnerSelection(position);
       if (STOP_REFRESH_LOCK.isHeldByCurrentThread()) {
         STOP_REFRESH_LOCK.unlock();
       }
       stopRefreshing();
+    }
+  }
+
+  private void updateSpinnerSelection(Integer position) {
+    if (position != null) {
+      Utils.runInFg(() -> mPermissionAdapter.notifyItemChanged(position));
+    } else {
+      Utils.runInFg(() -> mPermissionAdapter.notifyDataSetChanged());
     }
   }
 
@@ -181,11 +191,17 @@ public class PackageActivity extends BaseActivity {
     Utils.runInFg(() -> mRefreshLayout.setRefreshing(false));
   }
 
+  private void holdRefreshLock() {
+    STOP_REFRESH_LOCK.lock();
+    Utils.runInFg(() -> mRefreshLayout.setRefreshing(true));
+  }
+
   private PermClickListenerWithLoc getPermClickListener() {
     return (permission, yLocation) -> {
       String permName = permission.createPermNameString();
-      String protectionLevel =
-          getString(R.string.protection_level, permission.createProtectLevelString());
+      Spanned protectionLevel =
+          Utils.htmlToString(
+              getString(R.string.protection_level, permission.createProtectLevelString()));
 
       View layout = getLayoutInflater().inflate(R.layout.permission_details_alert_dialog, null);
       ((TextView) layout.findViewById(R.id.permission_name_view)).setText(permName);
@@ -275,12 +291,12 @@ public class PackageActivity extends BaseActivity {
       }
       if (permission.isChangeable()) {
         if (isReferenced) {
-          message += " " + getString(R.string.clear_perm_state_reference, permState);
+          message += getString(R.string.clear_perm_state_reference, permState);
         } else {
-          message += " " + getString(R.string.set_perm_state_reference, permState);
+          message += getString(R.string.set_perm_state_reference, permState);
         }
       }
-      builder.setMessage(message);
+      builder.setMessage(Utils.htmlToString(message));
 
       AlertDialog dialog = builder.create();
       dialog.setOnShowListener(
@@ -329,12 +345,13 @@ public class PackageActivity extends BaseActivity {
     invalidateOptionsMenu();
   }
 
-  private void updatePackage() {
+  void updatePackage() {
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "updatePackage() called");
     }
     mPackageParser.updatePackage(mPackage);
-    updatePermissionsList(); // the same Package object is updated
+    // The same Package Object is updated, but with new Permission Objects
+    updatePermissionsList();
   }
 
   private void updatePermissionsList() {
@@ -350,6 +367,10 @@ public class PackageActivity extends BaseActivity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.package_menu, menu);
+    if (VERSION.SDK_INT >= VERSION_CODES.P) {
+      menu.setGroupDividerEnabled(true);
+    }
+
     menu.findItem(R.id.action_reset_app_ops).setVisible(!mMySettings.excludeAppOpsPerms());
 
     MenuItem searchMenuItem = menu.findItem(R.id.action_search);
@@ -387,10 +408,11 @@ public class PackageActivity extends BaseActivity {
 
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
-    menu.findItem(R.id.action_search).setVisible(mPermissionsList.size() > 0);
-    menu.findItem(R.id.action_reset_app_ops).setVisible(mPermissionsList.size() > 0);
-    menu.findItem(R.id.action_set_all_references).setVisible(mPermissionsList.size() > 0);
-    menu.findItem(R.id.action_clear_references).setVisible(mPermissionsList.size() > 0);
+    boolean havePerms = mPermissionsList.size() > 0;
+    menu.findItem(R.id.action_search).setVisible(havePerms);
+    menu.findItem(R.id.action_reset_app_ops).setVisible(havePerms);
+    menu.findItem(R.id.action_set_all_references).setVisible(havePerms);
+    menu.findItem(R.id.action_clear_references).setVisible(havePerms);
     return super.onPrepareOptionsMenu(menu);
   }
 
@@ -432,7 +454,7 @@ public class PackageActivity extends BaseActivity {
     if (item.getItemId() == R.id.action_reset_app_ops && checkPrivileges()) {
       AlertDialog dialog =
           new Builder(this)
-              .setPositiveButton(R.string.yes, (d, which) -> resetAppOps())
+              .setPositiveButton(R.string.yes, (d, which) -> Utils.runInBg(this::resetAppOps))
               .setNegativeButton(R.string.no, null)
               .setTitle(mPackage.getLabel())
               .setMessage(R.string.reset_app_ops_confirmation)
@@ -472,23 +494,21 @@ public class PackageActivity extends BaseActivity {
   }
 
   private void resetAppOps() {
+    holdRefreshLock();
     String cmd = Commands.RESET_APP_OPS + " " + Utils.getUserId() + " " + mPackage.getName();
-    Utils.runInBg(
-        () -> {
-          if (mMySettings.isDebug()) {
-            Util.debugLog(TAG, "resetAppOps(): sending command: " + cmd);
-          }
-          Object res = mPrivDaemonHandler.sendRequest(cmd);
-          updatePackage();
-          if (res != null) {
-            Utils.runInFg(
-                () ->
-                    Toast.makeText(
-                            App.getContext(), R.string.something_bad_happened, Toast.LENGTH_LONG)
-                        .show());
-            Log.e(TAG, "resetAppOps(): response is " + res);
-          }
-        });
+    if (mMySettings.isDebug()) {
+      Util.debugLog(TAG, "resetAppOps(): sending command: " + cmd);
+    }
+    Object res = mPrivDaemonHandler.sendRequest(cmd);
+    updatePackage();
+    if (res != null) {
+      Utils.runInFg(
+          () ->
+              Toast.makeText(App.getContext(), R.string.something_bad_happened, Toast.LENGTH_LONG)
+                  .show());
+      Log.e(TAG, "resetAppOps(): response is " + res);
+    }
+    updateSpinnerSelection(true, null);
   }
 
   private void setAllReferences() {
@@ -635,8 +655,9 @@ public class PackageActivity extends BaseActivity {
 
     @Override
     public void onSelect(Permission permission, int selectedValue) {
+      int pos = mPermissionAdapter.getCurrentList().indexOf(permission);
       if (!checkPrivileges()) {
-        updateSpinnerSelectionInBg();
+        updateSpinnerSelectionInBg(pos);
         return;
       }
 
@@ -657,7 +678,7 @@ public class PackageActivity extends BaseActivity {
       }
 
       if (warnResId == 0 && (!uidMode || affectedPkgCount <= 1)) {
-        Utils.runInBg(() -> setAppOpsMode(permission, selectedValue, uidMode));
+        Utils.runInBg(() -> setAppOpsMode(permission, pos, selectedValue, uidMode));
         return;
       }
 
@@ -681,21 +702,19 @@ public class PackageActivity extends BaseActivity {
               .setPositiveButton(
                   R.string.yes,
                   (d, which) ->
-                      Utils.runInBg(() -> setAppOpsMode(permission, selectedValue, uidMode)))
-              .setNegativeButton(R.string.no, (d, which) -> updateSpinnerSelectionInBg())
+                      Utils.runInBg(() -> setAppOpsMode(permission, pos, selectedValue, uidMode)))
+              .setNegativeButton(R.string.no, null)
               .setTitle(R.string.warning)
               .setMessage(Utils.breakParas(msg));
 
       if (affectedPkgCount <= 1) {
         builder.setNeutralButton(
-            R.string.do_not_remind,
-            (dialog, which) -> {
-              doNotRemindDangAction();
-              updateSpinnerSelectionInBg();
-            });
+            R.string.do_not_remind, (dialog, which) -> doNotRemindDangAction());
       }
+
+      // UpdateSpinner on Dialog dismiss also suffices for Negative and Neutral buttons
       new AlertDialogFragment(builder.create())
-          .setOnDismissListener(d -> updateSpinnerSelectionInBg())
+          .setOnDismissListener(d -> updateSpinnerSelectionInBg(pos))
           .show(PackageActivity.this, "PERM_CHANGE_WARNING", false);
     }
   }

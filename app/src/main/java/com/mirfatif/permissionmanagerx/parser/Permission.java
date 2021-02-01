@@ -3,6 +3,7 @@ package com.mirfatif.permissionmanagerx.parser;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import java.util.concurrent.TimeUnit;
 
 public class Permission {
 
@@ -112,16 +113,14 @@ public class Permission {
   }
 
   public String getAppOpsAccessTime() {
-    // do not show time older than a year, including zero epoch time and -1
-    if (System.currentTimeMillis() - mAppOpsAccessTime > (365 * 24 * 60 * 60 * 1000L)) {
-      return "null";
+    // Do not show time older than a year, including zero epoch time and -1
+    if (System.currentTimeMillis() - mAppOpsAccessTime > TimeUnit.DAYS.toMillis(365)) {
+      return null;
     }
-    if (mAppOpsAccessTimeFormatted == null) {
-      mAppOpsAccessTimeFormatted =
-          DateUtils.getRelativeTimeSpanString(
-                  mAppOpsAccessTime, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS)
-              .toString();
-    }
+    mAppOpsAccessTimeFormatted =
+        DateUtils.getRelativeTimeSpanString(
+                mAppOpsAccessTime, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS)
+            .toString();
     return mAppOpsAccessTimeFormatted;
   }
 
@@ -166,7 +165,9 @@ public class Permission {
   }
 
   public boolean isChangeable() {
-    if (MySettings.getInstance().isCriticalApp(mPackageName)) return false;
+    if (MySettings.getInstance().isCriticalApp(mPackageName)) {
+      return false;
+    }
     if (mIsAppOps) {
       return mDependsOn == null;
     } else {
@@ -191,15 +192,27 @@ public class Permission {
 
   public String createProtectLevelString() {
     String protectionLevel = mProtectionLevel;
-    if (mIsDevelopment) protectionLevel += ", Development"; // implies "Signature"
-    if (mIsManifestPermAppOps) protectionLevel += ", AppOps"; // implies "Signature"
-    if (mIsSystemFixed) protectionLevel += ", Fixed";
+    if (mIsDevelopment) {
+      protectionLevel += ", Development"; // implies "Signature"
+    }
+    if (mIsManifestPermAppOps) {
+      protectionLevel += ", AppOps"; // implies "Signature"
+    }
+    if (mIsSystemFixed) {
+      protectionLevel += ", Fixed";
+    }
 
     if (mIsAppOps) {
-      if (mIsPerUid) protectionLevel += ", UID mode";
-      if (mIsExtraAppOp) protectionLevel += ", Extra";
+      if (mIsPerUid) {
+        protectionLevel += ", UID mode";
+      }
+      if (mIsExtraAppOp) {
+        protectionLevel += ", Extra";
+      }
     } else {
-      if (mIsPrivileged) protectionLevel += ", Privileged";
+      if (mIsPrivileged) {
+        protectionLevel += ", Privileged";
+      }
     }
     return protectionLevel;
   }
@@ -207,17 +220,25 @@ public class Permission {
   public boolean contains(String queryText) {
     boolean isEmpty = true;
     for (String str : queryText.split("\\|")) {
-      if (TextUtils.isEmpty(str)) continue;
+      if (TextUtils.isEmpty(str)) {
+        continue;
+      }
       isEmpty = false;
-      if (contains_(str)) return true;
+      if (contains_(str)) {
+        return true;
+      }
     }
     return isEmpty;
   }
 
   private boolean contains_(String queryText) {
     for (String str : queryText.split("&")) {
-      if (TextUtils.isEmpty(str)) continue;
-      if (!_contains(str)) return false;
+      if (TextUtils.isEmpty(str)) {
+        continue;
+      }
+      if (!_contains(str)) {
+        return false;
+      }
     }
     return true;
   }
@@ -232,7 +253,9 @@ public class Permission {
 
   private boolean _contains(String queryText) {
     boolean isCaseSensitive = MySettings.getInstance().isCaseSensitiveSearch();
-    if (!isCaseSensitive) queryText = queryText.toUpperCase();
+    if (!isCaseSensitive) {
+      queryText = queryText.toUpperCase();
+    }
 
     for (String field :
         new String[] {
@@ -246,35 +269,52 @@ public class Permission {
           (mIsReferenced == null
               ? Package.SEARCH_ORANGE
               : (mIsReferenced ? Package.SEARCH_GREEN : Package.SEARCH_RED)),
-          (!getAppOpsAccessTime().equals("null") ? SEARCH_TIME : ""),
+          getAppOpsAccessTime() != null ? SEARCH_TIME : "",
           (mIsExtraAppOp ? SEARCH_EXTRA : "")
         }) {
-      if (!isCaseSensitive) field = field.toUpperCase();
-      if (field.contains(queryText)) return true;
+      if (!isCaseSensitive) {
+        field = field.toUpperCase();
+      }
+      if (field.contains(queryText)) {
+        return true;
+      }
     }
     return false;
   }
 
-  // required for ListAdapter/DiffUtil
-  // consider which fields can change
-  public boolean areContentsTheSame(Permission permission) {
-    if (!permission.getName().equals(this.getName())) return false;
-
-    if (permission.isReferenced() != null && this.isReferenced() != null) {
-      if (permission.isReferenced().compareTo(this.isReferenced()) != 0) return false;
-    } else if (permission.isReferenced() == null && this.isReferenced() != null) {
-      return false;
-    } else if (permission.isReferenced() != null && this.isReferenced() == null) {
+  // Required for ListAdapter/DiffUtil. Consider which fields can change in a Permission.
+  public boolean areContentsTheSame(Permission newPerm) {
+    if (isReferenced() != null) {
+      if (!isReferenced().equals(newPerm.isReferenced())) {
+        return false;
+      }
+    } else if (newPerm.isReferenced() != null) {
       return false;
     }
 
-    if (isAppOps()) {
-      if (permission.getAppOpsMode() != this.getAppOpsMode()) return false;
-      if (Boolean.compare(permission.isAppOpsSet(), this.isAppOpsSet()) != 0) return false;
-      if (!permission.getAppOpsAccessTime().equals(this.getAppOpsAccessTime())) return false;
-      return Boolean.compare(permission.isExtraAppOp(), this.isExtraAppOp()) == 0;
-    } else {
-      return Boolean.compare(permission.isGranted(), this.isGranted()) == 0;
+    if (!isAppOps()) {
+      return isGranted() == newPerm.isGranted();
     }
+
+    if (getAppOpsMode() != newPerm.getAppOpsMode()) {
+      return false;
+    }
+
+    if (isAppOpsSet() != newPerm.isAppOpsSet()) {
+      return false;
+    }
+
+    // Compare the new Permission Object's calculated value with previously one's saved value,
+    // even if both Objects are the same.
+    // If calculated on both, the values are always the same, so UI changes cannot be compared.
+    if (mAppOpsAccessTimeFormatted != null) {
+      if (!mAppOpsAccessTimeFormatted.equals(newPerm.getAppOpsAccessTime())) {
+        return false;
+      }
+    } else if (newPerm.getAppOpsAccessTime() != null) {
+      return false;
+    }
+
+    return isExtraAppOp() == newPerm.isExtraAppOp();
   }
 }

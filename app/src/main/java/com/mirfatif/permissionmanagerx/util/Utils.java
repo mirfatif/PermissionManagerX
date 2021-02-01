@@ -437,7 +437,11 @@ public class Utils {
   }
 
   public static Spanned htmlToString(int resId) {
-    Spanned spanned = Html.fromHtml(getString(resId), Html.FROM_HTML_MODE_COMPACT);
+    return htmlToString(getString(resId));
+  }
+
+  public static Spanned htmlToString(String str) {
+    Spanned spanned = Html.fromHtml(str, Html.FROM_HTML_MODE_COMPACT);
 
     // Let's customize BulletSpans
     SpannableStringBuilder string = new SpannableStringBuilder(spanned);

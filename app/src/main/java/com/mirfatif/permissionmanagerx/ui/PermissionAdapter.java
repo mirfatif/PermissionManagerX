@@ -16,18 +16,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.parser.Permission;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.ItemViewHolder;
+import com.mirfatif.permissionmanagerx.ui.base.MyListAdapter;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PermissionAdapter extends ListAdapter<Permission, ItemViewHolder> {
+public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder> {
 
   private final PermClickListener mSwitchToggleListener;
   private final PermSpinnerSelectListener mSpinnerSelectListener;
@@ -130,11 +130,9 @@ public class PermissionAdapter extends ListAdapter<Permission, ItemViewHolder> {
       } else if (!permission.isReferenced()) {
         referenceView.setBackgroundColor(Color.RED);
         if (permission.isAppOps()) {
-          String refState =
-              App.getContext()
-                  .getResources()
-                  .getString(R.string.should_be, permission.getReference());
-          appOpsRefStateView.setText(refState);
+          appOpsRefStateView.setText(
+              Utils.htmlToString(
+                  App.getContext().getString(R.string.should_be, permission.getReference())));
           appOpsRefStateView.setVisibility(View.VISIBLE);
         }
       } else {
@@ -163,7 +161,7 @@ public class PermissionAdapter extends ListAdapter<Permission, ItemViewHolder> {
 
       if (permission.isAppOps()) {
         String time = permission.getAppOpsAccessTime();
-        if (!time.equals("null")) {
+        if (time != null) {
           appOpsTimeView.setText(time);
           appOpsTimeView.setVisibility(View.VISIBLE);
         }

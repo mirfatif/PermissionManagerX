@@ -167,13 +167,13 @@
   </string>
   <string name="extra_ops_cant_be_excluded">Extra AppOps cannot be excluded from visible list.</string>
   <string name="exclude_perm_from_list">Exclude permission from visible list.</string>
-  <string name="set_perm_state_reference">Set %1$s state as reference.</string>
-  <string name="clear_perm_state_reference">Clear %1$s state as reference.</string>
+  <string name="set_perm_state_reference"><![CDATA[<br/>Set <b>%1$s</b> state as reference.]]></string>
+  <string name="clear_perm_state_reference"><![CDATA[<br/>Clear <b>%1$s</b> state as reference.]]></string>
   <string name="permission_filtered_out">1 permission filtered out</string>
   <string name="count_permissions_filtered_out">%1$d permissions filtered out</string>
   <string name="requested_no_permissions">No permissions requested</string>
-  <string name="protection_level">Protection level: %1$s</string>
-  <string name="should_be">Should be %1$s</string>
+  <string name="protection_level"><![CDATA[<b>Protection level:</b> %1$s]]></string>
+  <string name="should_be"><![CDATA[Should be <b>%1$s</b>]]></string>
 
   <!--PreferenceActivity-->
   <string name="filter_settings">Filter Settings</string>
