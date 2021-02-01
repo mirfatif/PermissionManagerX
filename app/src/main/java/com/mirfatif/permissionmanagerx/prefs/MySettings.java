@@ -295,6 +295,10 @@ public class MySettings {
     return !TextUtils.isEmpty(mQueryText);
   }
 
+  public boolean isDeepSearching() {
+    return isSearching() && isDeepSearchEnabled();
+  }
+
   public boolean isDeepSearchEnabled() {
     return getBoolPref(R.string.pref_main_deep_search_enc_key);
   }
@@ -311,9 +315,16 @@ public class MySettings {
     savePref(R.string.pref_main_case_sensitive_search_enc_key, isSensitive);
   }
 
-  public boolean isQuickScan() {
-    return getBoolPref(R.string.pref_settings_quick_scan_key)
-        && (!isSearching() || !isDeepSearchEnabled());
+  public boolean isQuickScanEnabled() {
+    return getBoolPref(R.string.pref_settings_quick_scan_key);
+  }
+
+  public boolean shouldDoQuickScan() {
+    return isQuickScanEnabled() && !isDeepSearching();
+  }
+
+  public boolean shouldShowRefs() {
+    return !isQuickScanEnabled() && !isDeepSearching();
   }
 
   public boolean isRootGranted() {
@@ -365,6 +376,10 @@ public class MySettings {
 
   public boolean excludeNoPermissionsApps() {
     return getBoolPref(R.string.pref_filter_exclude_no_perms_apps_key);
+  }
+
+  public boolean shouldExcludeNoPermApps() {
+    return !isQuickScanEnabled() && excludeNoPermissionsApps();
   }
 
   // permissions

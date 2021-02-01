@@ -1,25 +1,28 @@
 package com.mirfatif.permissionmanagerx.parser;
 
+import android.annotation.SuppressLint;
 import android.text.TextUtils;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Package {
 
+  private final MySettings mMySettings = MySettings.getInstance();
+
   private String mPackageLabel;
   private String mPackageName;
-  private List<Permission> mPermissionsList;
+  private List<Permission> mPermissionsList, mSearchPermList;
   private boolean mIsFrameworkApp;
   private boolean mIsSystemApp;
   private boolean mIsEnabled;
   private int mUid;
   private Boolean mIsReferenced;
-  private boolean mQuickScan;
 
   private int mTotalPermCount;
-  private int mPermCount;
+  private int mPermCount, mSearchPermCount;
   private int mTotalAppOpsCount;
-  private int mAppOpsCount;
+  private int mAppOpsCount, mSearchAppOpsCount;
 
   void updatePackage(
       String label,
@@ -29,8 +32,7 @@ public class Package {
       boolean isSystemApp,
       boolean isEnabled,
       int uid,
-      Boolean reference,
-      boolean quickScan) {
+      Boolean reference) {
     mPackageLabel = label;
     mPackageName = name;
     mPermissionsList = permissionList;
@@ -39,7 +41,6 @@ public class Package {
     mIsEnabled = isEnabled;
     mUid = uid;
     mIsReferenced = reference;
-    mQuickScan = quickScan;
   }
 
   public String getLabel() {
@@ -50,8 +51,32 @@ public class Package {
     return mPackageName;
   }
 
+  private String mLastFormattedName = "";
+
+  public String getFormattedName() {
+    mLastFormattedName = getName();
+    if (!mMySettings.isQuickScanEnabled()) {
+      mLastFormattedName += " (" + getUid() + ")";
+    }
+    return mLastFormattedName;
+  }
+
   public List<Permission> getPermissionsList() {
+    if (mMySettings.isDeepSearching()) {
+      if (mSearchPermList == null) {
+        return new ArrayList<>();
+      }
+      return mSearchPermList;
+    }
+    return getFullPermsList();
+  }
+
+  public List<Permission> getFullPermsList() {
     return mPermissionsList;
+  }
+
+  public void setSearchPermList(List<Permission> permList) {
+    mSearchPermList = permList;
   }
 
   public boolean isFrameworkApp() {
@@ -67,7 +92,7 @@ public class Package {
   }
 
   public boolean isCriticalApp() {
-    return MySettings.getInstance().isCriticalApp(mPackageName);
+    return mMySettings.isCriticalApp(mPackageName);
   }
 
   public boolean isChangeable() {
@@ -86,8 +111,25 @@ public class Package {
     mPermCount = count;
   }
 
-  public int getPermCount() {
-    return mPermCount;
+  public void setSearchPermCount(int count) {
+    mSearchPermCount = count;
+  }
+
+  private String mLastPermCount = "";
+
+  public String getPermCount() {
+    if (mMySettings.isQuickScanEnabled()) {
+      return String.valueOf(getUid());
+    }
+    if (mMySettings.isDeepSearching()) {
+      mLastPermCount = mSearchPermCount + "/" + getTotalPermCount();
+    } else {
+      mLastPermCount = mPermCount + "/" + getTotalPermCount();
+    }
+    if (!mMySettings.excludeAppOpsPerms()) {
+      mLastPermCount += " | " + getAppOpsCount();
+    }
+    return mLastPermCount;
   }
 
   public void setTotalAppOpsCount(int count) {
@@ -102,8 +144,16 @@ public class Package {
     mAppOpsCount = count;
   }
 
-  public int getAppOpsCount() {
-    return mAppOpsCount;
+  public void setSearchAppOpsCount(int count) {
+    mSearchAppOpsCount = count;
+  }
+
+  private String getAppOpsCount() {
+    if (mMySettings.isDeepSearching()) {
+      return mSearchAppOpsCount + "/" + getTotalAppOpsCount();
+    } else {
+      return mAppOpsCount + "/" + getTotalAppOpsCount();
+    }
   }
 
   public int getUid() {
@@ -114,8 +164,11 @@ public class Package {
     return mIsReferenced;
   }
 
-  public boolean isQuicklyScanned() {
-    return MySettings.getInstance().isQuickScan() || mQuickScan;
+  private boolean mLastShowingRef = true;
+
+  public boolean shouldShowRefs() {
+    mLastShowingRef = mMySettings.shouldShowRefs();
+    return mLastShowingRef;
   }
 
   public static final String SEARCH_CRITICAL = ":Critical";
@@ -130,24 +183,34 @@ public class Package {
   public boolean contains(String queryText) {
     boolean isEmpty = true;
     for (String str : queryText.split("\\|")) {
-      if (TextUtils.isEmpty(str)) continue;
+      if (TextUtils.isEmpty(str)) {
+        continue;
+      }
       isEmpty = false;
-      if (contains_(str)) return true;
+      if (contains_(str)) {
+        return true;
+      }
     }
     return isEmpty;
   }
 
   private boolean contains_(String queryText) {
     for (String str : queryText.split("&")) {
-      if (TextUtils.isEmpty(str)) continue;
-      if (!_contains(str)) return false;
+      if (TextUtils.isEmpty(str)) {
+        continue;
+      }
+      if (!_contains(str)) {
+        return false;
+      }
     }
     return true;
   }
 
   private boolean _contains(String queryText) {
-    boolean isCaseSensitive = MySettings.getInstance().isCaseSensitiveSearch();
-    if (!isCaseSensitive) queryText = queryText.toUpperCase();
+    boolean isCaseSensitive = mMySettings.isCaseSensitiveSearch();
+    if (!isCaseSensitive) {
+      queryText = queryText.toUpperCase();
+    }
 
     for (String field :
         new String[] {
@@ -160,44 +223,61 @@ public class Package {
                   ? SEARCH_FRAMEWORK
                   : (mIsSystemApp ? SEARCH_SYSTEM : SEARCH_USER))),
           (mIsEnabled ? "" : SEARCH_DISABLED),
-          (isQuicklyScanned()
+          (mMySettings.isQuickScanEnabled()
               ? ""
               : (mIsReferenced == null
                   ? SEARCH_ORANGE
                   : (mIsReferenced ? SEARCH_GREEN : SEARCH_RED)))
         }) {
-      if (!isCaseSensitive) field = field.toUpperCase();
-      if (field.contains(queryText)) return true;
+      if (!isCaseSensitive) {
+        field = field.toUpperCase();
+      }
+      if (field.contains(queryText)) {
+        return true;
+      }
     }
     return false;
   }
 
-  // for ListAdapter/DiffUtil
-  // consider which fields can change
+  /*
+    For ListAdapter / DiffUtil.
+    Consider which fields can change when the Package Object changes and when it remains same.
+    When the Package remains same e.g. while searching, in order to compare the UI-only changes,
+    we need to retain the last returned values of changeable fields for later comparison.
+    When ref state or enabled state changes, Activity gets Live Package changed update. So no
+    need to retain their states.
+    boolean is not immutable like String, so preserve the old value before overwriting the Object.
+  */
   public boolean areContentsTheSame(Package pkg) {
+    if (!mMySettings.isQuickScanEnabled()) {
+      if (getNewBoolean(mLastShowingRef) != pkg.shouldShowRefs()) {
+        return false;
+      }
 
-    if (pkg.mQuickScan != this.mQuickScan) {
-      return false;
-    }
-
-    if (!isQuicklyScanned()) {
-      if (pkg.isReferenced() != null && this.isReferenced() != null) {
-        if (pkg.isReferenced() != this.isReferenced()) {
+      if (isReferenced() != null) {
+        if (!isReferenced().equals(pkg.isReferenced())) {
           return false;
         }
-      } else if (pkg.isReferenced() == null && this.isReferenced() != null) {
+      } else if (pkg.isReferenced() != null) {
         return false;
-      } else if (pkg.isReferenced() != null && this.isReferenced() == null) {
+      }
+
+      if (!mLastPermCount.equals(pkg.getPermCount())) {
         return false;
       }
     }
 
-    if (!pkg.getName().equals(this.getName())) {
+    // This necessarily changes when we change QuickScan settings
+    if (!mLastFormattedName.equals(pkg.getFormattedName())) {
       return false;
     }
-    if (!pkg.getPermissionsList().equals(this.getPermissionsList())) {
-      return false;
-    }
-    return pkg.isEnabled() != this.isEnabled();
+
+    return isEnabled() == pkg.isEnabled();
+  }
+
+  @SuppressLint("UseValueOf")
+  @SuppressWarnings("UnnecessaryBoxing,BooleanConstructorCall")
+  private Boolean getNewBoolean(boolean bool) {
+    return new Boolean(bool);
   }
 }

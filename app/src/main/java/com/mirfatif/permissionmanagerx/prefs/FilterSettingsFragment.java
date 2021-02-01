@@ -121,7 +121,7 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     excludeFrameworkAppsView.setChecked(mMySettings.excludeFrameworkApps());
     excludeDisabledAppsView.setChecked(mMySettings.excludeDisabledApps());
     excludeNoPermsAppsView.setChecked(mMySettings.excludeNoPermissionsApps());
-    excludeNoPermsAppsView.setVisible(!mMySettings.isQuickScan());
+    excludeNoPermsAppsView.setVisible(!mMySettings.isQuickScanEnabled());
     excludeInvalidPermsView.setChecked(mMySettings.excludeInvalidPermissions());
     excludeNotChangeablePermsView.setChecked(mMySettings.excludeNotChangeablePerms());
     excludeNotGrantedPermsView.setChecked(mMySettings.excludeNotGrantedPerms());

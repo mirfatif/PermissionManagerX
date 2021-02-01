@@ -13,16 +13,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.parser.Package;
-import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.PackageAdapter.ItemViewHolder;
+import com.mirfatif.permissionmanagerx.ui.base.MyListAdapter;
 import com.mirfatif.permissionmanagerx.util.Utils;
 
-public class PackageAdapter extends ListAdapter<Package, ItemViewHolder> {
+public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
 
   private final PkgClickListener mPkgClickListener;
   private final PkgLongClickListener mPkgLongClickListener;
@@ -92,9 +91,7 @@ public class PackageAdapter extends ListAdapter<Package, ItemViewHolder> {
         return;
       }
 
-      boolean isQuickScan = pkg.isQuicklyScanned();
-
-      if (!isQuickScan) {
+      if (pkg.shouldShowRefs()) {
         if (pkg.isReferenced() == null) {
           referenceView.setBackgroundColor(ORANGE);
         } else if (!pkg.isReferenced()) {
@@ -117,19 +114,8 @@ public class PackageAdapter extends ListAdapter<Package, ItemViewHolder> {
           });
 
       packageLabelView.setText(pkg.getLabel());
-
-      String pkgName = pkg.getName();
-      if (isQuickScan) {
-        permCountView.setText(String.valueOf(pkg.getUid()));
-      } else {
-        pkgName += " (" + pkg.getUid() + ")";
-        String count = pkg.getPermCount() + "/" + pkg.getTotalPermCount();
-        if (!MySettings.getInstance().excludeAppOpsPerms()) {
-          count += " | " + pkg.getAppOpsCount() + "/" + pkg.getTotalAppOpsCount();
-        }
-        permCountView.setText(count);
-      }
-      packageNameView.setText(pkgName);
+      packageNameView.setText(pkg.getFormattedName());
+      permCountView.setText(pkg.getPermCount());
 
       String packageState = null;
       if (pkg.isCriticalApp()) {

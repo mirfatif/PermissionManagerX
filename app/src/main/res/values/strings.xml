@@ -20,6 +20,7 @@
   <string name="switch_to_adb">Switch to ADB</string>
   <string name="_continue">Continue?</string>
   <string name="warning">Warning</string>
+  <string name="apps">apps</string>
 
   <!--App-->
   <string name="device_low_memory">Device is getting critically low on memory</string>

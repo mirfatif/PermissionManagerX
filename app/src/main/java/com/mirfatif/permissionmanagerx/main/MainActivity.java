@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,6 +54,7 @@ import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -81,9 +81,8 @@ public class MainActivity extends BaseActivity {
   private ProgressBar mProgressBar;
   private ProgressFrameLayout mRoundProgressContainer;
   private TextView mRoundProgressTextView;
-  private LinearLayout mProgressBarContainer;
+  private ProgressLinearLayout mProgressBarContainer;
   private SearchView mSearchView;
-  private Integer mProgressMax;
   private TextView mProgressNowView;
   private TextView mProgressMaxView;
   private PackageAdapter mPackageAdapter;
@@ -133,13 +132,21 @@ public class MainActivity extends BaseActivity {
         });
 
     mRefreshLayout = findViewById(R.id.refresh_layout);
-    mRefreshLayout.setOnRefreshListener(mPackageParser::updatePackagesList);
     mProgressBar = findViewById(R.id.progress_bar);
     mProgressBarContainer = findViewById(R.id.progress_bar_container);
     mProgressNowView = findViewById(R.id.progress_now);
     mProgressMaxView = findViewById(R.id.progress_max);
     mRoundProgressContainer = findViewById(R.id.round_progress_container);
     mRoundProgressTextView = findViewById(R.id.round_progress_text);
+
+    mRefreshLayout.setOnRefreshListener(
+        () -> {
+          if (mMySettings.isSearching()) {
+            handleSearchQuery();
+          } else {
+            mPackageParser.updatePackagesList();
+          }
+        });
 
     Future<?> checkRootAndAdbFuture =
         Utils.runInBg(
@@ -370,101 +377,108 @@ public class MainActivity extends BaseActivity {
   }
 
   private void setLiveDataObservers() {
-    mMyViewModel
-        .getProgressMax()
-        .observe(
-            this,
-            progressMax -> {
-              if (progressMax < 0) {
-                TextView progressTextView;
-                if (mRoundProgressContainer.getVisibility() == View.VISIBLE) {
-                  progressTextView = mRoundProgressTextView;
-                } else {
-                  progressTextView = mProgressNowView;
-                  mProgressBar.setIndeterminate(true);
-                  mProgressMaxView.setText("");
-                  mProgressBarContainer.setVisibility(View.VISIBLE);
-                }
-                progressTextView.setText(mPackageParser.getProgressTextResId(progressMax));
-                return;
-              }
-
-              mProgressBar.setIndeterminate(false);
-              mProgressBar.setProgress(0);
-              mProgressNowView.setText("0");
-              mProgressMax = progressMax;
-              mProgressBar.setMax(progressMax);
-              mProgressMaxView.setText(String.valueOf(progressMax));
-              mRoundProgressContainer.setVisibility(View.GONE);
-              mProgressBarContainer.setVisibility(View.VISIBLE);
-            });
-
-    mMyViewModel
-        .getProgressNow()
-        .observe(
-            this,
-            progressNow -> {
-              mProgressBar.setProgress(progressNow, true);
-              mProgressNowView.setText(String.valueOf(progressNow));
-              if (progressNow.equals(mProgressMax)) {
-                mProgressBarContainer.setVisibility(View.GONE);
-                if (mRefreshLayout.isRefreshing()) {
-                  mRefreshLayout.setRefreshing(false);
-                  showSnackBar(
-                      mPackageParser.getPackagesListSize() + " " + getString(R.string.packages),
-                      5000);
-                }
-                mMainActivityFlavor.onPackagesUpdated();
-                repeatUpdatesLock = false;
-              }
-            });
-
-    mMyViewModel
-        .getPackagesListLive()
-        .observe(
-            this,
-            packages -> {
-              if (mMySettings.isDebug()) {
-                Util.debugLog(
-                    TAG, "pkgListLiveObserver: " + packages.size() + " packages received");
-              }
-              // update visible list through quick search, if active
-              mPackageAdapter.submitList(new ArrayList<>(packages));
-              setRepeatUpdates();
-            });
-
-    mMyViewModel
-        .getChangedPackage()
-        .observe(
-            this,
-            pkg -> {
-              if (mMySettings.isDebug()) {
-                Util.debugLog(TAG, "pkgChangedLiveObserver: Package updated: " + pkg.getLabel());
-              }
-              int position = mPackageAdapter.getCurrentList().indexOf(pkg);
-              if (position != -1) {
-                mPackageAdapter.notifyItemChanged(position);
-              }
-            });
+    mMyViewModel.getProgressMax().observe(this, this::setMaxProgress);
+    mMyViewModel.getProgressNow().observe(this, this::setNowProgress);
+    mMyViewModel.getPackagesListLive().observe(this, this::packagesListReceived);
+    mMyViewModel.getChangedPackage().observe(this, this::packageChanged);
   }
 
-  // Always get repeat updates when returning from search
-  private boolean repeatUpdatesLock = false;
+  private void setMaxProgress(Integer progressMax) {
+    if (progressMax < 0) {
+      TextView progressTextView;
+      if (mRoundProgressContainer.getVisibility() == View.VISIBLE) {
+        progressTextView = mRoundProgressTextView;
+      } else {
+        progressTextView = mProgressNowView;
+        mProgressBar.setIndeterminate(true);
+        mProgressMaxView.setText("");
+        mProgressBarContainer.setVisibility(View.VISIBLE);
+      }
+      progressTextView.setText(mPackageParser.getProgressTextResId(progressMax));
+      return;
+    }
+
+    mProgressBar.setIndeterminate(false);
+    mProgressBar.setProgress(0);
+    mProgressNowView.setText("0");
+    mProgressBar.setMax(progressMax);
+    mProgressMaxView.setText(String.valueOf(progressMax));
+    mRoundProgressContainer.setVisibility(View.GONE);
+    mProgressBarContainer.setVisibility(View.VISIBLE);
+  }
+
+  // Keep track of received packages, mPackageAdapter.getItemCount() given wrong value.
+  // In PackageParser, Packages LiveList must be updated before updating ProgressBars.
+  private int mVisiblePkgCount;
+
+  private void setNowProgress(Integer progressNow) {
+    int progress = progressNow;
+    if (progress < 0 && mProgressBar.getMax() > 0) {
+      progress = mProgressBar.getMax();
+    }
+    if (progress >= 0) {
+      mProgressBar.setProgress(progress, true);
+      mProgressNowView.setText(String.valueOf(progress));
+    }
+    if (progressNow >= 0) {
+      return;
+    }
+
+    mProgressBarContainer.setVisibility(View.GONE);
+    boolean showPkgCount = true;
+
+    if (progressNow == PackageParser.PKG_PROG_ENDS) {
+      mMainActivityFlavor.onPackagesUpdated();
+      if (mMySettings.isSearching()) {
+        // Don't stop refreshing. We'll receive call later when search ends
+        return;
+      }
+      if (!mRefreshLayout.isRefreshing()) {
+        // Show Toast only if refreshed manually or by shallow search.
+        // Otherwise on every onResume() Toast is displayed
+        showPkgCount = false;
+      }
+    } else if (progressNow == PackageParser.SEARCH_ENDS) {
+      if (!mMySettings.isSearching()) {
+        // Do not show pkg count when returning from search
+        showPkgCount = false;
+      }
+    }
+
+    mRefreshLayout.setRefreshing(false);
+    if (showPkgCount) {
+      showSnackBar(mVisiblePkgCount + " " + getString(R.string.apps), 5000);
+    }
+  }
+
+  private void packagesListReceived(List<Package> packages) {
+    if (mMySettings.isDebug()) {
+      Util.debugLog(TAG, "pkgListLiveObserver: " + packages.size() + " packages received");
+    }
+    mVisiblePkgCount = packages.size();
+    mPackageAdapter.submitList(new ArrayList<>(packages));
+    setRepeatUpdates();
+  }
+
+  private void packageChanged(Package pkg) {
+    if (mMySettings.isDebug()) {
+      Util.debugLog(TAG, "pkgChangedLiveObserver: Package updated: " + pkg.getLabel());
+    }
+    int position = mPackageAdapter.getCurrentList().indexOf(pkg);
+    if (position != -1) {
+      mPackageAdapter.notifyItemChanged(position);
+    }
+  }
 
   /*
   Keep on receiving new items from PackageParser unless there are at least 5 invisible items at
    the bottom.
-  While making search, always do repeat updates.
   */
   private void setRepeatUpdates() {
-    boolean doRepeatUpdates = true;
-    if (!repeatUpdatesLock && !mMySettings.isSearching()) {
-      doRepeatUpdates =
-          mPackageAdapter.getItemCount() < mLayoutManager.findLastVisibleItemPosition() + 5;
-    }
-    mPackageParser.setDoRepeatUpdates(doRepeatUpdates);
+    boolean rep = mPackageAdapter.getItemCount() < mLayoutManager.findLastVisibleItemPosition() + 5;
+    mPackageParser.setRepeatUpdates(rep);
     if (mMySettings.isDebug()) {
-      Util.debugLog(TAG, "setRepeatUpdates(): " + doRepeatUpdates);
+      Util.debugLog(TAG, "setRepeatUpdates(): " + rep);
     }
   }
 
@@ -538,7 +552,7 @@ public class MainActivity extends BaseActivity {
             if (mMySettings.isDebug()) {
               Util.debugLog(TAG, "searchQueryTextSubmitted: " + query);
             }
-            handleSearchQuery(false);
+            handleSearchQuery();
             return true;
           }
 
@@ -547,7 +561,7 @@ public class MainActivity extends BaseActivity {
             if (mMySettings.isDebug()) {
               Util.debugLog(TAG, "searchQueryTextChanged: " + newText);
             }
-            handleSearchQuery(false);
+            handleSearchQuery();
             return true;
           }
         });
@@ -582,7 +596,7 @@ public class MainActivity extends BaseActivity {
     deepSearchSettings.setOnCheckedChangeListener(
         (buttonView, isChecked) -> {
           mMySettings.setDeepSearchEnabled(isChecked);
-          handleSearchQuery(true);
+          handleSearchQuery();
           if (mMySettings.isDebug()) {
             Util.debugLog(TAG, "setting deepSearch: " + isChecked);
           }
@@ -591,7 +605,7 @@ public class MainActivity extends BaseActivity {
     caseSensitiveSearchSettings.setOnCheckedChangeListener(
         (buttonView, isChecked) -> {
           mMySettings.setCaseSensitiveSearch(isChecked);
-          handleSearchQuery(false);
+          handleSearchQuery();
           if (mMySettings.isDebug()) {
             Util.debugLog(TAG, "setting caseSensitiveSearch: " + isChecked);
           }
@@ -606,18 +620,18 @@ public class MainActivity extends BaseActivity {
     }
     mSearchView.onActionViewCollapsed();
     mSearchView.setQuery(null, false);
-    handleSearchQuery(false); // mSearchView.setQuery(null, true) does not work
+    handleSearchQuery(); // mSearchView.setQuery(null, true) does not work
     findViewById(R.id.search_settings_container).setVisibility(View.GONE);
   }
 
-  private void handleSearchQuery(boolean doDeepSearch) {
+  private void handleSearchQuery() {
     CharSequence queryText = mSearchView.getQuery();
-    boolean isSearching = mMySettings.isSearching();
+    boolean wasSearching = mMySettings.isSearching();
 
     /** Save {@link queryText} to {@link MySettings#mQueryText} causes memory leak. */
-    mMySettings.setQueryText(queryText.toString());
+    mMySettings.setQueryText(queryText == null ? null : queryText.toString());
 
-    if (TextUtils.isEmpty(queryText) && !isSearching) {
+    if (!mMySettings.isSearching() && !wasSearching) {
       if (mMySettings.isDebug()) {
         Util.debugLog(TAG, "handleSearchQuery(): already empty text set, returning");
       }
@@ -628,12 +642,9 @@ public class MainActivity extends BaseActivity {
       Util.debugLog(TAG, "handleSearchQuery(): text set to: " + queryText);
     }
 
-    if (doDeepSearch || mMySettings.isDeepSearchEnabled()) {
-      repeatUpdatesLock = true;
-      mPackageParser.updatePackagesList();
-    } else {
-      mPackageParser.handleSearchQuery(true);
-    }
+    mRefreshLayout.setRefreshing(!mMySettings.isDeepSearchEnabled() || !mMySettings.isSearching());
+    mPackageParser.newUpdateRequest();
+    mPackageParser.handleSearchQuery(null);
   }
 
   //////////////////////////////////////////////////////////////////
