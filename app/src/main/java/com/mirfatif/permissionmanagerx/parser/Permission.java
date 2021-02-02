@@ -7,6 +7,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Permission {
 
+  private final MySettings mMySettings = MySettings.getInstance();
+
   public static final String PROTECTION_DANGEROUS = "Dangerous";
   public static final String PROTECTION_NORMAL = "Normal";
   public static final String PROTECTION_SIGNATURE = "Signature";
@@ -165,7 +167,7 @@ public class Permission {
   }
 
   public boolean isChangeable() {
-    if (MySettings.getInstance().isCriticalApp(mPackageName)) {
+    if (mMySettings.isCriticalApp(mPackageName)) {
       return false;
     }
     if (mIsAppOps) {
@@ -218,6 +220,10 @@ public class Permission {
   }
 
   public boolean contains(String queryText) {
+    if (!mMySettings.isSpecialSearch()) {
+      return _contains(queryText);
+    }
+
     boolean isEmpty = true;
     for (String str : queryText.split("\\|")) {
       if (TextUtils.isEmpty(str)) {
@@ -252,13 +258,13 @@ public class Permission {
   public static final String SEARCH_EXTRA = ":Extra";
 
   private boolean _contains(String queryText) {
-    boolean isCaseSensitive = MySettings.getInstance().isCaseSensitiveSearch();
+    boolean isCaseSensitive = mMySettings.isCaseSensitiveSearch();
     if (!isCaseSensitive) {
       queryText = queryText.toUpperCase();
     }
 
     boolean contains = true;
-    if (queryText.startsWith("!")) {
+    if (mMySettings.isSpecialSearch() && queryText.startsWith("!")) {
       queryText = queryText.replaceAll("^!", "");
       contains = false;
     }

@@ -223,6 +223,10 @@ public class Package {
   public static final String SEARCH_RED = ":RED";
 
   public boolean contains(String queryText) {
+    if (!mMySettings.isSpecialSearch()) {
+      return _contains(queryText);
+    }
+
     boolean isEmpty = true;
     for (String str : queryText.split("\\|")) {
       if (TextUtils.isEmpty(str)) {
@@ -255,7 +259,7 @@ public class Package {
     }
 
     boolean contains = true;
-    if (queryText.startsWith("!")) {
+    if (mMySettings.isSpecialSearch() && queryText.startsWith("!")) {
       queryText = queryText.replaceAll("^!", "");
       contains = false;
     }

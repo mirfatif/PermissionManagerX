@@ -29,4 +29,13 @@
     app:summary="@string/pref_settings_quick_scan_summary"
     app:title="@string/pref_settings_quick_scan_title" />
 
+  <PreferenceCategory />
+
+  <SwitchPreferenceCompat
+    app:defaultValue="@bool/pref_settings_special_search_default"
+    app:iconSpaceReserved="false"
+    app:key="@string/pref_settings_special_search_key"
+    app:summary="@string/pref_settings_special_search_summary"
+    app:title="@string/pref_settings_special_search_title" />
+
 </PreferenceScreen>
