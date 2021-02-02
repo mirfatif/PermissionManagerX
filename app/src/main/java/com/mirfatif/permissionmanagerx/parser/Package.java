@@ -254,6 +254,12 @@ public class Package {
       queryText = queryText.toUpperCase();
     }
 
+    boolean contains = true;
+    if (queryText.startsWith("!")) {
+      queryText = queryText.replaceAll("^!", "");
+      contains = false;
+    }
+
     for (String field :
         new String[] {
           mPackageLabel,
@@ -275,10 +281,10 @@ public class Package {
         field = field.toUpperCase();
       }
       if (field.contains(queryText)) {
-        return true;
+        return contains;
       }
     }
-    return false;
+    return !contains;
   }
 
   /*

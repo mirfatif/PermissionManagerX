@@ -257,6 +257,12 @@ public class Permission {
       queryText = queryText.toUpperCase();
     }
 
+    boolean contains = true;
+    if (queryText.startsWith("!")) {
+      queryText = queryText.replaceAll("^!", "");
+      contains = false;
+    }
+
     for (String field :
         new String[] {
           mPermissionName,
@@ -276,10 +282,10 @@ public class Permission {
         field = field.toUpperCase();
       }
       if (field.contains(queryText)) {
-        return true;
+        return contains;
       }
     }
-    return false;
+    return !contains;
   }
 
   // Required for ListAdapter/DiffUtil. Consider which fields can change in a Permission.
