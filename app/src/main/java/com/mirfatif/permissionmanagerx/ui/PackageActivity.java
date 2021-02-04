@@ -701,12 +701,15 @@ public class PackageActivity extends BaseActivity {
         msg += getString(warnResId);
       }
 
+      final boolean[] isYesButton = {false};
       Builder builder =
           new Builder(PackageActivity.this)
               .setPositiveButton(
                   R.string.yes,
-                  (d, which) ->
-                      Utils.runInBg(() -> setAppOpsMode(permission, pos, selectedValue, uidMode)))
+                  (dialog, which) -> {
+                    isYesButton[0] = true;
+                    Utils.runInBg(() -> setAppOpsMode(permission, pos, selectedValue, uidMode));
+                  })
               .setNegativeButton(R.string.no, null)
               .setTitle(R.string.warning)
               .setMessage(Utils.breakParas(msg));
@@ -718,7 +721,12 @@ public class PackageActivity extends BaseActivity {
 
       // UpdateSpinner on Dialog dismiss also suffices for Negative and Neutral buttons
       new AlertDialogFragment(builder.create())
-          .setOnDismissListener(d -> updateSpinnerSelectionInBg(pos))
+          .setOnDismissListener(
+              dialog -> {
+                if (!isYesButton[0]) {
+                  updateSpinnerSelectionInBg(pos);
+                }
+              })
           .show(PackageActivity.this, "PERM_CHANGE_WARNING", false);
     }
   }

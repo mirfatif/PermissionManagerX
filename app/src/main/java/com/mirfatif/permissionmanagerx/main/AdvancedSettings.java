@@ -104,7 +104,8 @@ class AdvancedSettings {
 
     AlertDialog dialog;
     if (mMySettings.isRootGranted() && !mMySettings.isAdbConnected()) {
-      builder.setNeutralButton(R.string.switch_to_adb, (d, w) -> Utils.runInBg(this::switchToAdb));
+      builder.setNeutralButton(
+          R.string.switch_to_adb, (d, w) -> Utils.runInBg(() -> switchToAdb(false)));
       dialog = builder.create();
       Utils.removeButtonPadding(dialog);
     } else {
@@ -116,10 +117,6 @@ class AdvancedSettings {
 
   private void saveSettings() {
     boolean restartDaemon = false, switchToAdb = false;
-    if (useHiddenAPIs != useHiddenAPIsView.isChecked()) {
-      restartDaemon = saveHiddenAPIsSettings(useHiddenAPIsView.isChecked());
-    }
-
     if (dexInTmpDir != dexInTmpDirView.isChecked()) {
       mMySettings.setDexInTmpDir(dexInTmpDirView.isChecked());
       restartDaemon = true;
@@ -166,40 +163,52 @@ class AdvancedSettings {
       restartDaemon = true;
     }
 
+    if (useHiddenAPIs != useHiddenAPIsView.isChecked()) {
+      saveHiddenAPIsSettings(useHiddenAPIsView.isChecked(), restartDaemon, switchToAdb);
+    } else {
+      restartDaemon(restartDaemon, switchToAdb);
+    }
+  }
+
+  private void restartDaemon(boolean restartDaemon, boolean switchToAdb) {
     if (mMySettings.isRootGranted() && switchToAdb) {
-      Utils.runInBg(this::switchToAdb);
+      Utils.runInBg(() -> switchToAdb(restartDaemon));
     } else if (restartDaemon) {
       mA.restartPrivDaemon(!switchToAdb);
     }
   }
 
-  private boolean saveHiddenAPIsSettings(boolean useHiddenAPIs) {
+  private void saveHiddenAPIsSettings(
+      boolean useHiddenAPIs, boolean restartDaemon, boolean switchToAdb) {
     if (useHiddenAPIs) {
       mMySettings.setUseHiddenAPIs(true);
 
-      // make sure read AppOps permission is granted
-      return true;
+      // Restart daemon to make sure that read AppOps permission is granted
+      restartDaemon(true, switchToAdb);
+      return;
     }
 
+    final boolean[] doRestartDaemon = {restartDaemon};
     AlertDialog dialog =
         new Builder(mA)
             .setPositiveButton(
                 R.string.yes,
                 (d, which) -> {
                   mMySettings.setUseHiddenAPIs(false);
-                  mA.restartPrivDaemon(true); // Start daemon if not running
+                  doRestartDaemon[0] = true; // Start daemon if not running
                 })
             .setNegativeButton(R.string.no, null)
             .setTitle(R.string.hidden_apis)
             .setMessage(R.string.hidden_apis_confirmation)
             .create();
-    new AlertDialogFragment(dialog).show(mA, "HIDDEN_APIS_CONFIRM", false);
-    return false;
+    new AlertDialogFragment(dialog)
+        .setOnDismissListener(d -> restartDaemon(doRestartDaemon[0], switchToAdb))
+        .show(mA, "HIDDEN_APIS_CONFIRM", false);
   }
 
-  private void switchToAdb() {
+  private void switchToAdb(boolean restartDaemon) {
     if (Utils.checkAdb(false)) {
-      restartDaemon();
+      restartDaemonWithAdb();
       return;
     }
 
@@ -208,36 +217,38 @@ class AdvancedSettings {
       Utils.runInFg(
           () ->
               Toast.makeText(App.getContext(), R.string.adb_switch_fail, Toast.LENGTH_LONG).show());
-      return;
+    } else {
+      Utils.runInBg(
+          () -> {
+            try (InputStreamReader reader = new InputStreamReader(process.getInputStream())) {
+              Utils.readProcessLog(new BufferedReader(reader), TAG);
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
+          });
+
+      Log.i(TAG, "Sending ADB switch commands");
+
+      PrintWriter writer = new PrintWriter(process.getOutputStream(), true);
+      writer.println("settings put global adb_enabled 0");
+      writer.println("stop adbd");
+      writer.println("setprop service.adb.tcp.port " + mMySettings.getAdbPort());
+      SystemClock.sleep(2000);
+      writer.println("settings put global adb_enabled 1");
+      writer.println("exec start adbd");
+      writer.close();
+
+      SystemClock.sleep(5000);
     }
 
-    Utils.runInBg(
-        () -> {
-          try (InputStreamReader reader = new InputStreamReader(process.getInputStream())) {
-            Utils.readProcessLog(new BufferedReader(reader), TAG);
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
-        });
-
-    Log.i(TAG, "Sending ADB switch commands");
-
-    PrintWriter writer = new PrintWriter(process.getOutputStream(), true);
-    writer.println("settings put global adb_enabled 0");
-    writer.println("stop adbd");
-    writer.println("setprop service.adb.tcp.port " + mMySettings.getAdbPort());
-    SystemClock.sleep(2000);
-    writer.println("settings put global adb_enabled 1");
-    writer.println("exec start adbd");
-    writer.close();
-
-    SystemClock.sleep(5000);
     if (Utils.checkAdb(true)) {
-      restartDaemon();
+      restartDaemonWithAdb();
+    } else if (restartDaemon) {
+      restartDaemon(true, false);
     }
   }
 
-  private void restartDaemon() {
+  private void restartDaemonWithAdb() {
     Log.i(TAG, "Restarting daemon");
     mA.restartPrivDaemon(false);
     Utils.runInFg(
