@@ -9,5 +9,9 @@
   public static void main(java.lang.String[]);
 }
 
+# Throwable names must not be obfuscated to correctly print e.toString()
+-keepnames class com.mirfatif.privtasks.hiddenapis.HiddenAPIsError
+-keepnames class com.mirfatif.privtasks.hiddenapis.HiddenAPIsException
+
 # Obfuscate everything else, but don't optimize (remove)
 -keep, allowobfuscation class * { *; }

@@ -44,3 +44,8 @@
 -keep class com.mirfatif.permissionmanagerx.prefs.settings.SettingsFrag* {
    void onCreatePreferences(android.os.Bundle, java.lang.String);
 }
+
+# Throwable names must not be obfuscated to correctly print e.toString()
+-keepnames class com.mirfatif.permissionmanagerx.privs.AdbException
+-keepnames class com.mirfatif.privtasks.hiddenapis.HiddenAPIsError
+-keepnames class com.mirfatif.privtasks.hiddenapis.HiddenAPIsException

@@ -358,11 +358,4 @@ public class Adb {
       adbStream.close();
     }
   }
-
-  static class AdbException extends Exception {
-
-    public AdbException(String message) {
-      super(message);
-    }
-  }
 }
