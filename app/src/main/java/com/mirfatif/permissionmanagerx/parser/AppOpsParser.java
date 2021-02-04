@@ -53,7 +53,7 @@ public class AppOpsParser {
         return getOpsForPackage(uid, packageName, op);
       }
     } else if (!mMySettings.isPrivDaemonAlive()) {
-      Utils.logDaemonDead(TAG + ": getOpsForPackage()");
+      Utils.logDaemonDead(TAG + ": getOpsForPackage");
       return null;
     } else {
       List<MyPackageOps> list = new ArrayList<>();
@@ -90,7 +90,7 @@ public class AppOpsParser {
         return buildOpToDefaultModeList();
       }
     } else if (!mMySettings.isPrivDaemonAlive()) {
-      Utils.logDaemonDead(TAG + ": buildOpToDefaultModeList()");
+      Utils.logDaemonDead(TAG + ": buildOpToDefaultModeList");
       return null;
     } else {
       Object object = mPrivDaemonHandler.sendRequest(Commands.OP_TO_DEF_MODE_LIST);
@@ -118,7 +118,7 @@ public class AppOpsParser {
         return buildOpToSwitchList();
       }
     } else if (!mMySettings.isPrivDaemonAlive()) {
-      Utils.logDaemonDead(TAG + ": buildOpToSwitchList()");
+      Utils.logDaemonDead(TAG + ": buildOpToSwitchList");
       return null;
     } else {
       Object object = mPrivDaemonHandler.sendRequest(Commands.OP_TO_SWITCH_LIST);
@@ -153,7 +153,7 @@ public class AppOpsParser {
         return buildPermissionToOpCodeMap();
       }
     } else if (!mMySettings.isPrivDaemonAlive()) {
-      Utils.logDaemonDead(TAG + ": buildPermissionToOpCodeMap()");
+      Utils.logDaemonDead(TAG + ": buildPermissionToOpCodeMap");
       return null;
     } else {
       Object object = mPrivDaemonHandler.sendRequest(Commands.PERM_TO_OP_CODE_LIST);
@@ -185,7 +185,7 @@ public class AppOpsParser {
         return buildAppOpsList();
       }
     } else if (!mMySettings.isPrivDaemonAlive()) {
-      Utils.logDaemonDead(TAG + ": buildAppOpsList()");
+      Utils.logDaemonDead(TAG + ": buildAppOpsList");
       return null;
     } else {
       Object object = mPrivDaemonHandler.sendRequest(Commands.OP_TO_NAME);
@@ -221,7 +221,7 @@ public class AppOpsParser {
         return buildAppOpsModes();
       }
     } else if (!mMySettings.isPrivDaemonAlive()) {
-      Utils.logDaemonDead(TAG + ": buildAppOpsModes()");
+      Utils.logDaemonDead(TAG + ": buildAppOpsModes");
       return null;
     } else {
       Object object = mPrivDaemonHandler.sendRequest(Commands.MODE_TO_NAME);

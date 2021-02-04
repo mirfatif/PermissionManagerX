@@ -242,7 +242,7 @@ public class MainActivity extends BaseActivity {
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
     if (mMySettings.isDebug()) {
-      Util.debugLog(TAG, "onOptionsItemSelected(): " + item.getTitle());
+      Util.debugLog(TAG, "onOptionsItemSelected: " + item.getTitle());
     }
     return mMainActivityFlavor.onOptionsItemSelected(item)
         || mDrawerToggle.onOptionsItemSelected(item)
@@ -253,14 +253,14 @@ public class MainActivity extends BaseActivity {
   public void onBackPressed() {
     if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
       if (mMySettings.isDebug()) {
-        Util.debugLog(TAG, "onBackPressed(): closing drawer");
+        Util.debugLog(TAG, "onBackPressed: closing drawer");
       }
       mDrawerLayout.closeDrawer(GravityCompat.START, true);
       return;
     }
     if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
       if (mMySettings.isDebug()) {
-        Util.debugLog(TAG, "onBackPressed(): collapsing searchView");
+        Util.debugLog(TAG, "onBackPressed: collapsing searchView");
       }
       collapseSearchView();
       return;
@@ -327,7 +327,7 @@ public class MainActivity extends BaseActivity {
   private PkgClickListener getPkgClickListener() {
     return pkg -> {
       if (mMySettings.isDebug()) {
-        Util.debugLog(TAG, "PkgClickListener(): Package received: " + pkg.getLabel());
+        Util.debugLog(TAG, "PkgClickListener: Package received: " + pkg.getLabel());
       }
       Intent intent = new Intent(App.getContext(), PackageActivity.class);
       intent.putExtra(EXTRA_PKG_POSITION, mPackageParser.getPackagePosition(pkg));
@@ -479,7 +479,7 @@ public class MainActivity extends BaseActivity {
     boolean rep = mPackageAdapter.getItemCount() < mLayoutManager.findLastVisibleItemPosition() + 5;
     mPackageParser.setRepeatUpdates(rep);
     if (mMySettings.isDebug()) {
-      Util.debugLog(TAG, "setRepeatUpdates(): " + rep);
+      Util.debugLog(TAG, "setRepeatUpdates: " + rep);
     }
   }
 
@@ -507,14 +507,14 @@ public class MainActivity extends BaseActivity {
           }
 
           if (mMySettings.isDebug()) {
-            Util.debugLog(TAG, "setPkgEnabledState(): sending command: " + command);
+            Util.debugLog(TAG, "setPkgEnabledState: sending command: " + command);
           }
           Object res = mPrivDaemonHandler.sendRequest(command);
           mPackageParser.updatePackage(pkg);
           if (res != null) {
             Utils.runInFg(
                 () -> Toast.makeText(App.getContext(), "Error occurred", Toast.LENGTH_LONG).show());
-            Log.e(TAG, "setPackageEnabledState(): Response is " + res);
+            Log.e(TAG, "setPackageEnabledState: Response is " + res);
           }
         });
   }
@@ -634,13 +634,13 @@ public class MainActivity extends BaseActivity {
 
     if (!mMySettings.isSearching() && !wasSearching) {
       if (mMySettings.isDebug()) {
-        Util.debugLog(TAG, "handleSearchQuery(): already empty text set, returning");
+        Util.debugLog(TAG, "handleSearchQuery: already empty text set, returning");
       }
       return;
     }
 
     if (mMySettings.isDebug()) {
-      Util.debugLog(TAG, "handleSearchQuery(): text set to: " + queryText);
+      Util.debugLog(TAG, "handleSearchQuery: text set to: " + queryText);
     }
 
     mRefreshLayout.setRefreshing(!mMySettings.isDeepSearchEnabled() || !mMySettings.isSearching());
@@ -655,7 +655,7 @@ public class MainActivity extends BaseActivity {
   private synchronized void startPrivDaemon(boolean isFirstRun, boolean preferRoot) {
     if (!mMySettings.isPrivDaemonAlive()) {
       if (mMySettings.isDebug()) {
-        Util.debugLog(TAG, "startPrivDaemon(): daemon is dead");
+        Util.debugLog(TAG, "startPrivDaemon: daemon is dead");
       }
       if (mMySettings.isRootGranted() || mMySettings.isAdbConnected()) {
         Utils.runInFg(() -> mRoundProgressTextView.setText(R.string.starting_daemon));
@@ -667,7 +667,7 @@ public class MainActivity extends BaseActivity {
           showSnackBar(getString(R.string.daemon_failed), 10000);
         }
       } else {
-        Log.e(TAG, "startPrivDaemon(): Root access: unavailable, ADB shell: unavailable");
+        Log.e(TAG, "startPrivDaemon: Root access: unavailable, ADB shell: unavailable");
 
         if (mMySettings.shouldRemindMissingPrivileges()) {
           Builder builder =
@@ -727,12 +727,12 @@ public class MainActivity extends BaseActivity {
               + Utils.getUserId();
 
       if (mMySettings.isDebug()) {
-        Util.debugLog(TAG, "checkAppOpsPerm(): sending command: " + command);
+        Util.debugLog(TAG, "checkAppOpsPerm: sending command: " + command);
       }
       mPrivDaemonHandler.sendRequest(command);
 
       if (!mMySettings.isAppOpsGranted()) {
-        Log.e(TAG, "startPrivDaemon(): granting " + APP_OPS_PERM + " failed");
+        Log.e(TAG, "startPrivDaemon: granting " + APP_OPS_PERM + " failed");
         showSnackBar(getString(R.string.granting_permission_failed) + ": " + APP_OPS_PERM, 10000);
       }
     }
@@ -772,7 +772,7 @@ public class MainActivity extends BaseActivity {
 
   private boolean handleNavigationItemSelected(MenuItem item) {
     if (mMySettings.isDebug()) {
-      Util.debugLog(TAG, "handleNavigationItemSelected(): " + item.getTitle());
+      Util.debugLog(TAG, "handleNavigationItemSelected: " + item.getTitle());
     }
     View view = item.getActionView();
     if (view instanceof CheckBox) {
@@ -784,7 +784,7 @@ public class MainActivity extends BaseActivity {
 
   private boolean handleNavigationItemChecked(MenuItem item) {
     if (mMySettings.isDebug()) {
-      Util.debugLog(TAG, "handleNavigationItemChecked(): " + item.getTitle());
+      Util.debugLog(TAG, "handleNavigationItemChecked: " + item.getTitle());
     }
     mDrawerLayout.closeDrawer(GravityCompat.START, true);
 

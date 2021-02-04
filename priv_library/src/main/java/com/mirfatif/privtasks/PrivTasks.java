@@ -112,7 +112,7 @@ public class PrivTasks {
         try {
           permInfoList = pm.queryPermissionsByGroup(permGroup, 0);
         } catch (PackageManager.NameNotFoundException e) {
-          rateLimitLog("buildPermToOpCodeList(): " + e.toString(), false);
+          rateLimitLog("buildPermToOpCodeList: " + e.toString(), false);
         }
       } else {
         try {
@@ -320,7 +320,7 @@ public class PrivTasks {
 
     @Override
     public void onInvalidOpCode(int opCode, String pkgName) {
-      rateLimitLog("getMyPackageOpsList(): bad op: " + opCode + " for package: " + pkgName, true);
+      rateLimitLog("getMyPackageOpsList: bad op: " + opCode + " for package: " + pkgName, true);
     }
   }
 }

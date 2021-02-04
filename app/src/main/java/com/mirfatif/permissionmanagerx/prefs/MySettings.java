@@ -92,7 +92,7 @@ public class MySettings {
   public boolean getBoolPref(int keyResId) {
     String prefKey = getString(keyResId);
     Integer boolKeyId =
-        Utils.getStaticIntField(prefKey + "_default", R.bool.class, TAG + ": getBoolPref()");
+        Utils.getStaticIntField(prefKey + "_default", R.bool.class, TAG + ": getBoolPref");
     if (boolKeyId == null) {
       return false;
     }
@@ -107,7 +107,7 @@ public class MySettings {
   public int getIntPref(int keyResId) {
     String prefKey = getString(keyResId);
     Integer intKeyId =
-        Utils.getStaticIntField(prefKey + "_default", R.integer.class, TAG + ": getIntPref()");
+        Utils.getStaticIntField(prefKey + "_default", R.integer.class, TAG + ": getIntPref");
     if (intKeyId == null) {
       return -1;
     }
@@ -528,7 +528,7 @@ public class MySettings {
   public void populateExcludedAppsList(boolean loadDefaults) {
     getExcludedAppsLock();
     if (DEBUG) {
-      Util.debugLog(TAG, "populateExcludedAppsList(): loadDefaults: " + loadDefaults);
+      Util.debugLog(TAG, "populateExcludedAppsList: loadDefaults: " + loadDefaults);
     }
 
     // on first run or after "reset to defaults" it returns null, so use default values
@@ -692,7 +692,7 @@ public class MySettings {
   public void populateExtraAppOpsList(boolean loadDefaults) {
     getExtraAppOpsLock();
     if (DEBUG) {
-      Util.debugLog(TAG, "populateExtraAppOpsList(): loadDefaults: " + loadDefaults);
+      Util.debugLog(TAG, "populateExtraAppOpsList: loadDefaults: " + loadDefaults);
     }
     // on first run or after "reset to defaults" it returns null, so use default values
     Set<String> savedExtraAppOps = mPrefs.getStringSet(mExtraAppOpsPrefKey, null);
@@ -747,7 +747,7 @@ public class MySettings {
       String strName = field.getName();
       if (strName.startsWith("pref_filter_") && strName.endsWith("_key")) {
         Integer strKeyResId =
-            Utils.getStaticIntField(strName, R.string.class, TAG + ": resetToDefaults()");
+            Utils.getStaticIntField(strName, R.string.class, TAG + ": resetToDefaults");
         if (strKeyResId == null) {
           continue;
         }
@@ -757,7 +757,7 @@ public class MySettings {
       }
     }
     prefEditor.apply();
-    Log.i(TAG, "resetToDefaults(): " + count + " preferences removed");
+    Log.i(TAG, "resetToDefaults: " + count + " preferences removed");
 
     // StringSet is not cleared (null) by remove() or clear() sometimes.
     populateExcludedAppsList(true);

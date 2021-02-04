@@ -135,7 +135,7 @@ public class PackageActivity extends BaseActivity {
             + " "
             + mode;
     if (mMySettings.isDebug()) {
-      Util.debugLog(TAG, "setAppOpsMode(): sending command: " + command);
+      Util.debugLog(TAG, "setAppOpsMode: sending command: " + command);
     }
     Object res = mPrivDaemonHandler.sendRequest(command);
 
@@ -145,7 +145,7 @@ public class PackageActivity extends BaseActivity {
           () ->
               Toast.makeText(App.getContext(), R.string.something_bad_happened, Toast.LENGTH_LONG)
                   .show());
-      Log.e(TAG, "setAppOpsMode(): response is " + res);
+      Log.e(TAG, "setAppOpsMode: response is " + res);
     }
 
     updateSpinnerSelection(true, pos);
@@ -445,7 +445,7 @@ public class PackageActivity extends BaseActivity {
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
     if (mMySettings.isDebug()) {
-      Util.debugLog(TAG, "onOptionsItemSelected(): " + item.getTitle());
+      Util.debugLog(TAG, "onOptionsItemSelected: " + item.getTitle());
     }
 
     if (item.getItemId() == R.id.action_information) {
@@ -501,7 +501,7 @@ public class PackageActivity extends BaseActivity {
     holdRefreshLock();
     String cmd = Commands.RESET_APP_OPS + " " + Utils.getUserId() + " " + mPackage.getName();
     if (mMySettings.isDebug()) {
-      Util.debugLog(TAG, "resetAppOps(): sending command: " + cmd);
+      Util.debugLog(TAG, "resetAppOps: sending command: " + cmd);
     }
     Object res = mPrivDaemonHandler.sendRequest(cmd);
     updatePackage();
@@ -510,7 +510,7 @@ public class PackageActivity extends BaseActivity {
           () ->
               Toast.makeText(App.getContext(), R.string.something_bad_happened, Toast.LENGTH_LONG)
                   .show());
-      Log.e(TAG, "resetAppOps(): response is " + res);
+      Log.e(TAG, "resetAppOps: response is " + res);
     }
     updateSpinnerSelection(true, null);
   }
@@ -553,7 +553,7 @@ public class PackageActivity extends BaseActivity {
     }
 
     if (mMySettings.isDebug()) {
-      Util.debugLog(TAG, "setPermission(): sending command: " + command);
+      Util.debugLog(TAG, "setPermission: sending command: " + command);
     }
     Object res = mPrivDaemonHandler.sendRequest(command);
     updatePackage();
@@ -564,7 +564,7 @@ public class PackageActivity extends BaseActivity {
           () ->
               Toast.makeText(App.getContext(), R.string.something_bad_happened, Toast.LENGTH_LONG)
                   .show());
-      Log.e(TAG, "setPermission(): response is " + res);
+      Log.e(TAG, "setPermission: response is " + res);
     }
   }
 

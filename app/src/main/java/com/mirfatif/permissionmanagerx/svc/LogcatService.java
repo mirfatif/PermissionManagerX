@@ -157,7 +157,7 @@ public class LogcatService extends Service {
         mDaemonHandler.sendRequest(Commands.STOP_LOGGING);
       }
       // Stop app logging
-      Log.i(TAG, "stopLogging(): please " + Commands.STOP_LOGGING);
+      Log.i(TAG, "stopLogging: please " + Commands.STOP_LOGGING);
     }
   }
 
@@ -200,8 +200,8 @@ public class LogcatService extends Service {
       mDaemonHandler.sendRequest(Commands.SHUTDOWN);
     }
 
-    Utils.runCommand(TAG + ": doLogging()", null, null, "logcat", "-c");
-    Log.d(TAG, "doLogging(): starting");
+    Utils.runCommand(TAG + ": doLogging", null, null, "logcat", "-c");
+    Log.d(TAG, "doLogging: starting");
 
     if (doLoggingFails("sh", "exec logcat --pid " + android.os.Process.myPid())) {
       stopSvcAndShowFailed();
@@ -218,18 +218,18 @@ public class LogcatService extends Service {
 
   public static boolean doLoggingFails(String... cmd) {
     if (cmd.length != 2) {
-      Log.e(TAG, "doLogging(): command length must be 2");
+      Log.e(TAG, "doLogging: command length must be 2");
       return true;
     }
 
-    Process process = Utils.runCommand(TAG + ": doLogging()", true, cmd[0]);
+    Process process = Utils.runCommand(TAG + ": doLogging", true, cmd[0]);
     if (process == null) {
       return true;
     }
 
     Utils.runInBg(() -> readLogcatStream(process, null));
 
-    Log.i(TAG, "doLogging(): sending command to shell: " + cmd[1]);
+    Log.i(TAG, "doLogging: sending command to shell: " + cmd[1]);
     new PrintWriter(process.getOutputStream(), true).println(cmd[1]);
 
     return false;
@@ -251,11 +251,11 @@ public class LogcatService extends Service {
         writeToLogFile(line);
       }
     } catch (IOException e) {
-      Log.e(TAG, "readLogcatStream(): " + e.toString());
+      Log.e(TAG, "readLogcatStream: " + e.toString());
     } finally {
       // If process exited itself
       sendStopLogIntent();
-      Utils.cleanProcess(reader, process, adb, TAG + ": readLogcatStream()");
+      Utils.cleanProcess(reader, process, adb, TAG + ": readLogcatStream");
     }
   }
 

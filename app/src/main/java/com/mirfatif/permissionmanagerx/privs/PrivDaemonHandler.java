@@ -134,7 +134,7 @@ public class PrivDaemonHandler {
         params += " " + Commands.CREATE_SOCKET;
       }
 
-      suProcess = Utils.runCommand(TAG + ": startDaemon()", false, "su");
+      suProcess = Utils.runCommand(TAG + ": startDaemon", false, "su");
       if (suProcess == null) {
         return false;
       }
@@ -144,7 +144,7 @@ public class PrivDaemonHandler {
       inReader = new BufferedReader(new InputStreamReader(inStream));
       cmdWriter = new PrintWriter(outStream, true);
 
-      Log.i(TAG, "startDaemon(): sending command: exec sh " + daemonScriptPath);
+      Log.i(TAG, "startDaemon: sending command: exec sh " + daemonScriptPath);
       cmdWriter.println("exec sh " + daemonScriptPath);
 
       Process finalSuProcess = suProcess;
@@ -156,7 +156,7 @@ public class PrivDaemonHandler {
       try {
         adb = new Adb("exec sh " + daemonScriptPath, true);
       } catch (AdbException e) {
-        Log.e(TAG, "startDaemon(): " + e.toString());
+        Log.e(TAG, "startDaemon: " + e.toString());
         return false;
       }
       inReader = new BufferedReader(adb.getReader());
@@ -166,7 +166,7 @@ public class PrivDaemonHandler {
     }
 
     // Daemon script waits and reads parameters from STDIN
-    Log.i(TAG, "startDaemon(): sending params");
+    Log.i(TAG, "startDaemon: sending params");
     cmdWriter.println(params);
 
     int pid = 0;
@@ -179,15 +179,15 @@ public class PrivDaemonHandler {
           port = Integer.parseInt(line.split(":")[2]);
           break;
         }
-        Log.i(TAG, "startDaemon(): " + DAEMON_CLASS_NAME + ": " + line);
+        Log.i(TAG, "startDaemon: " + DAEMON_CLASS_NAME + ": " + line);
       }
 
       if (pid <= 0 || (useSocket && port <= 0)) {
-        Log.e(TAG, "startDaemon(): bad or no response from privileged daemon");
+        Log.e(TAG, "startDaemon: bad or no response from privileged daemon");
         return false;
       }
 
-      Log.i(TAG, "startDaemon(): sending command: " + Commands.GET_READY);
+      Log.i(TAG, "startDaemon: sending command: " + Commands.GET_READY);
       cmdWriter.println(Commands.GET_READY);
 
       // We have single input stream to read in case of ADB, so
@@ -222,12 +222,12 @@ public class PrivDaemonHandler {
       // Get response to GET_READY command
       Object obj = responseInStream.readObject();
       if (!(obj instanceof String) || !obj.equals(Commands.GET_READY)) {
-        Log.e(TAG, "startDaemon(): bad response from privileged daemon");
+        Log.e(TAG, "startDaemon: bad response from privileged daemon");
         return false;
       }
     } catch (IOException | ClassNotFoundException e) {
       e.printStackTrace();
-      Log.e(TAG, "startDaemon(): error starting privileged daemon");
+      Log.e(TAG, "startDaemon: error starting privileged daemon");
       return false;
     }
 
@@ -255,7 +255,7 @@ public class PrivDaemonHandler {
         try {
           adbLogger = new Adb("exec " + logCommand, true);
         } catch (AdbException e) {
-          Log.e(TAG, "startDaemon(): " + e.toString());
+          Log.e(TAG, "startDaemon: " + e.toString());
           return null;
         }
         Utils.runInBg(() -> LogcatService.readLogcatStream(null, adbLogger));
@@ -270,7 +270,7 @@ public class PrivDaemonHandler {
     File binaryPath = new File(binDir, binary);
     if (!binaryPath.exists()) {
       if (!binDir.exists() && !binDir.mkdirs()) {
-        Log.e(TAG, "extractBin(): could not create directory " + binDir);
+        Log.e(TAG, "extractBin: could not create directory " + binDir);
         return false;
       }
 
@@ -281,20 +281,20 @@ public class PrivDaemonHandler {
         if (supportedABIs.contains("x86")) {
           arch = "_x86";
         } else if (!supportedABIs.contains("arm")) {
-          Log.e(TAG, "extractBin(): arch not supported " + supportedABIs);
+          Log.e(TAG, "extractBin: arch not supported " + supportedABIs);
           return false;
         }
 
         try (InputStream inputStream = App.getContext().getAssets().open(binary + arch);
             OutputStream outputStream = new FileOutputStream(binaryPath)) {
           if (Utils.copyStreamFails(inputStream, outputStream)) {
-            Log.e(TAG, "extractBin(): extracting " + binary + " failed");
+            Log.e(TAG, "extractBin: extracting " + binary + " failed");
             return false;
           }
           String command = "chmod 0755 " + binaryPath;
           Process p = Runtime.getRuntime().exec(command);
           if (p.waitFor() != 0) {
-            Log.e(TAG, "extractBin(): " + command + " failed");
+            Log.e(TAG, "extractBin: " + command + " failed");
             return false;
           }
         } catch (IOException | InterruptedException e) {
@@ -319,15 +319,15 @@ public class PrivDaemonHandler {
           }
           set_priv = "exec " + set_priv + " -- sh";
 
-          suProcess = Utils.runCommand(TAG + ": extractToTmpDir()", true, "su");
+          suProcess = Utils.runCommand(TAG + ": extractToTmpDir", true, "su");
           if (suProcess == null) {
             return false;
           }
           outStream = suProcess.getOutputStream();
           cmdWriter = new PrintWriter(outStream, true);
-          Log.i(TAG, "extractToTmpDir(): sending command: " + set_priv);
+          Log.i(TAG, "extractToTmpDir: sending command: " + set_priv);
           cmdWriter.println(set_priv);
-          Log.i(TAG, "extractToTmpDir(): sending command: " + cmd);
+          Log.i(TAG, "extractToTmpDir: sending command: " + cmd);
           cmdWriter.println(cmd);
           inReader = new BufferedReader(new InputStreamReader(suProcess.getInputStream()));
 
@@ -338,7 +338,7 @@ public class PrivDaemonHandler {
           inReader = new BufferedReader(adb.getReader());
 
         } else {
-          Log.e(TAG, "extractToTmpDir(): cannot start privileged daemon without root or ADB shell");
+          Log.e(TAG, "extractToTmpDir: cannot start privileged daemon without root or ADB shell");
           return false;
         }
 
@@ -346,14 +346,14 @@ public class PrivDaemonHandler {
         Utils.runInBg(
             () -> {
               try {
-                Utils.readProcessLog(new BufferedReader(finalReader), TAG + ": extractToTmpDir()");
+                Utils.readProcessLog(new BufferedReader(finalReader), TAG + ": extractToTmpDir");
               } catch (IOException ignored) {
               }
             });
 
         inStream = App.getContext().getAssets().open(file);
         if (Utils.copyStreamFails(inStream, outStream)) {
-          Log.e(TAG, "extractToTmpDir(): extracting " + file + " failed");
+          Log.e(TAG, "extractToTmpDir: extracting " + file + " failed");
           return false;
         }
         outStream.flush();
@@ -363,7 +363,7 @@ public class PrivDaemonHandler {
       e.printStackTrace();
       return false;
     } catch (AdbException e) {
-      Log.e(TAG, "extractToTmpDir(): " + e.toString());
+      Log.e(TAG, "extractToTmpDir: " + e.toString());
       return false;
     } finally {
       try {
@@ -375,7 +375,7 @@ public class PrivDaemonHandler {
         }
       } catch (IOException ignored) {
       }
-      Utils.cleanProcess(inReader, suProcess, adb, TAG + ": extractToTmpDir()");
+      Utils.cleanProcess(inReader, suProcess, adb, TAG + ": extractToTmpDir");
       suProcess = null;
       adb = null;
       inStream = null;
@@ -392,7 +392,7 @@ public class PrivDaemonHandler {
         inStream = App.getContext().getAssets().open(file);
         outStream = new FileOutputStream(file.equals(DAEMON_DEX) ? dex : script);
         if (Utils.copyStreamFails(inStream, outStream)) {
-          Log.e(TAG, "extractToSharedStorage(): extracting " + file + " failed");
+          Log.e(TAG, "extractToSharedStorage: extracting " + file + " failed");
           return false;
         }
         outStream.flush();
@@ -434,13 +434,13 @@ public class PrivDaemonHandler {
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
-      Utils.cleanProcess(reader, process, adb, TAG + ": readDaemonMessages()");
+      Utils.cleanProcess(reader, process, adb, TAG + ": readDaemonMessages");
 
       if (MySettings.getInstance().isPrivDaemonAlive()) {
         MySettings.getInstance().setPrivDaemonAlive(false);
-        Log.e(TAG, "readDaemonMessages(): privileged daemon died");
+        Log.e(TAG, "readDaemonMessages: privileged daemon died");
         SystemClock.sleep(5000);
-        Log.i(TAG, "readDaemonMessages(): restarting privileged daemon");
+        Log.i(TAG, "readDaemonMessages: restarting privileged daemon");
         startDaemon(mPreferRoot);
       }
     }
@@ -452,12 +452,12 @@ public class PrivDaemonHandler {
     synchronized (SEND_REQ_LOCK) {
       MySettings mySettings = MySettings.getInstance();
       if (!mySettings.isPrivDaemonAlive()) {
-        Log.e(TAG, "sendRequest(): " + request + ": Privileged daemon is dead");
+        Log.e(TAG, "sendRequest: " + request + ": Privileged daemon is dead");
         return null;
       }
 
       if (cmdWriter == null || responseInStream == null) {
-        Log.e(TAG, "sendRequest(): cmdWriter or ResponseReader is null");
+        Log.e(TAG, "sendRequest: cmdWriter or ResponseReader is null");
         return null;
       }
 
@@ -477,7 +477,7 @@ public class PrivDaemonHandler {
       } catch (IOException | ClassNotFoundException e) {
         e.printStackTrace();
 
-        Log.e(TAG, "sendRequest(): restarting privileged daemon");
+        Log.e(TAG, "sendRequest: restarting privileged daemon");
         cmdWriter.println(Commands.SHUTDOWN);
 
         return null;

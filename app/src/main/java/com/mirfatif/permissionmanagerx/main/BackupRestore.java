@@ -437,7 +437,7 @@ public class BackupRestore {
         if (strName.endsWith("_enc_key")) continue;
 
         Integer strKeyResId =
-            Utils.getStaticIntField(strName, R.string.class, TAG + ": isInvalidPrefKey()");
+            Utils.getStaticIntField(strName, R.string.class, TAG + ": isInvalidPrefKey");
         if (strKeyResId != null) {
           mPrefKeys.add(getString(strKeyResId));
         }
