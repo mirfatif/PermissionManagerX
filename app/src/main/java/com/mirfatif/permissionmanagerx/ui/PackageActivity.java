@@ -50,6 +50,9 @@ import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class PackageActivity extends BaseActivity {
@@ -359,7 +362,7 @@ public class PackageActivity extends BaseActivity {
   private void updatePermissionsList() {
     mPermissionsList = mPackage.getPermissionsList();
     mPkgActivityFlavor.sortPermsList(mPermissionsList);
-    handleSearchQuery();
+    submitPermsList();
     Utils.runInFg(this::checkEmptyPermissionsList);
     stopRefreshing();
   }
@@ -383,13 +386,13 @@ public class PackageActivity extends BaseActivity {
         new SearchView.OnQueryTextListener() {
           @Override
           public boolean onQueryTextSubmit(String query) {
-            Utils.runInBg(() -> handleSearchQuery());
+            Utils.runInBg(() -> submitPermsList());
             return true;
           }
 
           @Override
           public boolean onQueryTextChange(String newText) {
-            Utils.runInBg(() -> handleSearchQuery());
+            Utils.runInBg(() -> submitPermsList());
             return true;
           }
         });
@@ -420,26 +423,45 @@ public class PackageActivity extends BaseActivity {
     return super.onPrepareOptionsMenu(menu);
   }
 
-  private void handleSearchQuery() {
+  private void submitPermsList() {
     CharSequence queryText = mSearchView == null ? null : mSearchView.getQuery();
     if (queryText == null || TextUtils.isEmpty(queryText)) {
       Utils.runInFg(() -> mPermissionAdapter.submitList(new ArrayList<>(mPermissionsList)));
       return;
     }
 
+    synchronized (mSearchExecutor) {
+      if (mSearchFuture != null && !mSearchFuture.isDone()) {
+        mSearchFuture.cancel(true);
+      }
+      mSearchFuture = mSearchExecutor.submit(() -> handleSearchQuery(queryText.toString()));
+    }
+  }
+
+  private final ExecutorService mSearchExecutor = Executors.newSingleThreadExecutor();
+  private Future<?> mSearchFuture;
+
+  private void handleSearchQuery(String queryText) {
+    long ts = System.currentTimeMillis();
     List<Permission> permList = new ArrayList<>();
     for (Permission permission : mPermissionsList) {
-      if (permission.contains(queryText.toString())) {
+      if (permission.contains(queryText)) {
         permList.add(permission);
       }
-      Utils.runInFg(() -> mPermissionAdapter.submitList(new ArrayList<>(permList)));
+      if (Thread.interrupted()) {
+        return;
+      }
+      if (System.currentTimeMillis() - ts > 500) {
+        Utils.runInFg(() -> mPermissionAdapter.submitList(new ArrayList<>(permList)));
+      }
     }
+    Utils.runInFg(() -> mPermissionAdapter.submitList(new ArrayList<>(permList)));
   }
 
   private void collapseSearchView() {
     mSearchView.onActionViewCollapsed();
     mSearchView.setQuery(null, false);
-    Utils.runInBg(this::handleSearchQuery);
+    Utils.runInBg(this::submitPermsList);
   }
 
   @Override

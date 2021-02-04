@@ -258,10 +258,7 @@ public class Permission {
   public static final String SEARCH_EXTRA = ":Extra";
 
   private boolean _contains(String queryText) {
-    boolean isCaseSensitive = mMySettings.isCaseSensitiveSearch();
-    if (!isCaseSensitive) {
-      queryText = queryText.toUpperCase();
-    }
+    queryText = queryText.toUpperCase();
 
     boolean contains = true;
     if (mMySettings.isSpecialSearch() && queryText.startsWith("!")) {
@@ -284,10 +281,7 @@ public class Permission {
           getAppOpsAccessTime() != null ? SEARCH_TIME : "",
           (mIsExtraAppOp ? SEARCH_EXTRA : "")
         }) {
-      if (!isCaseSensitive) {
-        field = field.toUpperCase();
-      }
-      if (field.contains(queryText)) {
+      if (field.toUpperCase().contains(queryText)) {
         return contains;
       }
     }
