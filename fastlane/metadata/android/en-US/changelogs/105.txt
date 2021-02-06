@@ -1,0 +1,11 @@
+Fixed crash due to space in some permissions name
+Temp fix for bug in androidx.security: https://github.com/google/tink/issues/413
+Added option to run daemon from /data/local/tmp or external storage
+Run logcat collection as a foreground service with notification
+Build hidden APIs with official SDK without requiring any modifications
+Improved log tags
+Fixed ArrayAdapter memory leak
+Added quick scan option for speed lovers
+Make deep search faster
+Added NOT operator in search queries
+Added preference for special search characters: AND, OR and NOT
