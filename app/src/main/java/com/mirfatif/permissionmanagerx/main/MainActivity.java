@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -512,8 +511,7 @@ public class MainActivity extends BaseActivity {
           Object res = mPrivDaemonHandler.sendRequest(command);
           mPackageParser.updatePackage(pkg);
           if (res != null) {
-            Utils.runInFg(
-                () -> Toast.makeText(App.getContext(), "Error occurred", Toast.LENGTH_LONG).show());
+            Utils.showToast(R.string.something_bad_happened);
             Log.e(TAG, "setPackageEnabledState: Response is " + res);
           }
         });

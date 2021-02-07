@@ -12,7 +12,6 @@ import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.Log;
-import android.widget.Toast;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationCompat.Builder;
 import androidx.core.app.NotificationManagerCompat;
@@ -133,8 +132,7 @@ public class LogcatService extends Service {
 
   private void stopSvcAndShowFailed() {
     stopSvc();
-    Utils.runInFg(
-        () -> Toast.makeText(App.getContext(), R.string.logging_failed, Toast.LENGTH_LONG).show());
+    Utils.showToast(R.string.logging_failed);
   }
 
   private void stopLoggingAndSvc() {

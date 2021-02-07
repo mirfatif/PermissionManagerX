@@ -40,7 +40,6 @@
   <string name="hidden_apis">Hidden APIs</string>
   <string name="use_hidden_apis">Use Hidden APIs</string>
   <string name="dex_tmp_dir">Run Daemon from Temp Dir</string>
-  <string name="dex_location_changed">Switching daemon load location</string>
   <string name="adb_only_settings">ADB-Only Settings</string>
   <string name="root_only_settings">Root-Only Settings</string>
   <string name="adb_listening_port">ADBD Listening Port</string>
@@ -125,6 +124,10 @@
   <string name="send_report">Send Report</string>
   <string name="packages">Packages</string>
   <string name="permissions">Permissions</string>
+
+  <!--PrivDaemonHandler-->
+  <string name="dex_location_changed">Switching daemon load location</string>
+  <string name="priv_daemon_died">Privileged daemon died</string>
 
   <!--LogcatService-->
   <string name="logging">Logging</string>

@@ -2,7 +2,6 @@ package com.mirfatif.permissionmanagerx.privs;
 
 import android.util.Base64;
 import android.util.Log;
-import android.widget.Toast;
 import com.cgutman.adblib.AdbAuthenticationFailedException;
 import com.cgutman.adblib.AdbBase64;
 import com.cgutman.adblib.AdbConnection;
@@ -105,7 +104,7 @@ public class Adb {
     e.printStackTrace();
     closeQuietly();
     if (showToastOnFailure) {
-      Utils.runInFg(() -> Toast.makeText(App.getContext(), resId, Toast.LENGTH_LONG).show());
+      Utils.showToast(resId);
     }
     throw new AdbException(msg);
   }
@@ -189,9 +188,7 @@ public class Adb {
         }
       }
     }
-    Utils.runInFg(
-        () ->
-            Toast.makeText(App.getContext(), R.string.adb_command_fail, Toast.LENGTH_LONG).show());
+    Utils.showToast(R.string.adb_command_fail);
     return false;
   }
 

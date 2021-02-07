@@ -2,7 +2,6 @@ package com.mirfatif.permissionmanagerx.parser;
 
 import android.content.pm.PackageManager;
 import android.util.Log;
-import android.widget.Toast;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
@@ -238,10 +237,7 @@ public class AppOpsParser {
 
   private void hiddenAPIsNotWorking(String error) {
     if (mMySettings.useHiddenAPIs()) {
-      Utils.runInFg(
-          () ->
-              Toast.makeText(App.getContext(), R.string.hidden_apis_warning, Toast.LENGTH_LONG)
-                  .show());
+      Utils.showToast(R.string.hidden_apis_warning);
       mMySettings.setUseHiddenAPIs(false);
     }
     Log.e(TAG, error);

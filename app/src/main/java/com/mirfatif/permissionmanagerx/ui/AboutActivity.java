@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument;
@@ -92,7 +91,7 @@ public class AboutActivity extends BaseActivity {
       return;
     }
 
-    Toast.makeText(App.getContext(), R.string.select_log_file, Toast.LENGTH_LONG).show();
+    Utils.showToast(R.string.select_log_file);
     mLoggingLauncher.launch("PermissionManagerX_" + Utils.getCurrDateTime(false) + ".log");
   }
 
@@ -144,7 +143,7 @@ public class AboutActivity extends BaseActivity {
                     .setNegativeButton(android.R.string.cancel, null);
             new AlertDialogFragment(builder.create()).show(this, "APP_UPDATE", false);
           } else {
-            Toast.makeText(App.getContext(), messageResId, Toast.LENGTH_LONG).show();
+            Utils.showToast(messageResId);
           }
           mCheckForUpdateInProgress = false;
         });

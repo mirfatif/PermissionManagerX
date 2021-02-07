@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -94,7 +93,7 @@ public class FeedbackDialogFrag extends BottomSheetDialogFragment {
           } else {
             startActivity(new Intent(App.getContext(), AboutActivity.class));
           }
-          Toast.makeText(App.getContext(), R.string.thank_you, Toast.LENGTH_LONG).show();
+          Utils.showToast(R.string.thank_you);
         });
 
     negButton.setOnClickListener(v -> dismiss());

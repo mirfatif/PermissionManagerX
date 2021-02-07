@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog.Builder;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
@@ -94,7 +93,7 @@ class Donate {
         .getPackageManager()
         .queryIntentActivities(intent, PackageManager.MATCH_ALL)
         .isEmpty()) {
-      Toast.makeText(App.getContext(), R.string.no_bitcoin_app_installed, Toast.LENGTH_LONG).show();
+      Utils.showToast(R.string.no_bitcoin_app_installed);
     } else {
       mA.startActivity(intent);
     }

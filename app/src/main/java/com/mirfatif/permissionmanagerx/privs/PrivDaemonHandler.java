@@ -3,7 +3,6 @@ package com.mirfatif.permissionmanagerx.privs;
 import android.os.Build;
 import android.os.SystemClock;
 import android.util.Log;
-import android.widget.Toast;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
@@ -65,10 +64,7 @@ public class PrivDaemonHandler {
     }
     res = startDaemon(preferRoot, !dexInTmpDir);
     if (res == null || res) {
-      Utils.runInFg(
-          () ->
-              Toast.makeText(App.getContext(), R.string.dex_location_changed, Toast.LENGTH_LONG)
-                  .show());
+      Utils.showToast(R.string.dex_location_changed);
       mMySettings.setDexInTmpDir(!dexInTmpDir);
     }
     return res;
@@ -439,6 +435,7 @@ public class PrivDaemonHandler {
       if (MySettings.getInstance().isPrivDaemonAlive()) {
         MySettings.getInstance().setPrivDaemonAlive(false);
         Log.e(TAG, "readDaemonMessages: privileged daemon died");
+        Utils.showToast(R.string.priv_daemon_died);
         SystemClock.sleep(5000);
         Log.i(TAG, "readDaemonMessages: restarting privileged daemon");
         startDaemon(mPreferRoot);

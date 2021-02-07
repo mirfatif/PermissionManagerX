@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.widget.AppCompatSpinner;
@@ -126,7 +125,7 @@ class AdvancedSettings {
     if (!TextUtils.isEmpty(adbPortNew) && !adbPort.equals(adbPortNew)) {
       int port = Integer.parseInt(adbPortNew);
       if (port > 65535 || port <= 0) {
-        Toast.makeText(App.getContext(), R.string.bad_port_number, Toast.LENGTH_LONG).show();
+        Utils.showToast(R.string.bad_port_number);
       } else {
         mMySettings.setAdbPort(port);
         restartDaemon = true;
@@ -214,9 +213,7 @@ class AdvancedSettings {
 
     Process process = Utils.runCommand(TAG, true, "su");
     if (process == null) {
-      Utils.runInFg(
-          () ->
-              Toast.makeText(App.getContext(), R.string.adb_switch_fail, Toast.LENGTH_LONG).show());
+      Utils.showToast(R.string.adb_switch_fail);
     } else {
       Utils.runInBg(
           () -> {

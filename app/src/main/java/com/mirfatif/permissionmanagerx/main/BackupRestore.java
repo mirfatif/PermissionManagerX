@@ -8,7 +8,6 @@ import android.util.Log;
 import android.util.Xml;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.Toast;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -125,7 +124,7 @@ public class BackupRestore {
   }
 
   private void doBackupRestore(boolean isBackup) {
-    Toast.makeText(App.getContext(), R.string.select_backup_file, Toast.LENGTH_LONG).show();
+    Utils.showToast(R.string.select_backup_file);
     if (isBackup) {
       mBackupLauncher.launch("PermissionManagerX_" + Utils.getCurrDateTime(false) + ".xml");
     } else {

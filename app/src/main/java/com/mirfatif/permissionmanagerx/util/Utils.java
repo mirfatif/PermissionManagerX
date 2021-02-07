@@ -256,7 +256,7 @@ public class Utils {
       try {
         activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
       } catch (ActivityNotFoundException e) {
-        Toast.makeText(App.getContext(), R.string.no_browser_installed, Toast.LENGTH_LONG).show();
+        showToast(R.string.no_browser_installed);
       }
       return true;
     }
@@ -303,7 +303,7 @@ public class Utils {
     try {
       activity.startActivity(emailIntent);
     } catch (ActivityNotFoundException e) {
-      Toast.makeText(App.getContext(), R.string.no_email_app_installed, Toast.LENGTH_LONG).show();
+      showToast(R.string.no_email_app_installed);
     }
     return true;
   }
@@ -373,7 +373,7 @@ public class Utils {
         }
       }
 
-      runInFg(() -> Toast.makeText(App.getContext(), "No Encryption", Toast.LENGTH_LONG).show());
+      showToast("No Encryption");
 
       // TODO temp fix for https://github.com/google/tink/issues/413
       mEncPrefs = App.getContext().getSharedPreferences("_enc_prefs2", Context.MODE_PRIVATE);
@@ -418,8 +418,8 @@ public class Utils {
         + mySettings.isAdbConnected();
   }
 
-  public static String getString(int resId) {
-    return App.getContext().getString(resId);
+  public static String getString(int resId, Object... args) {
+    return App.getContext().getString(resId, args);
   }
 
   public static int getInteger(int resId) {
@@ -512,6 +512,18 @@ public class Utils {
       return String.format("#%08X", color);
     } else {
       return String.format("#%06X", 0xFFFFFF & color);
+    }
+  }
+
+  public static void showToast(String msg) {
+    if (msg != null) {
+      runInFg(() -> Toast.makeText(App.getContext(), msg, Toast.LENGTH_LONG).show());
+    }
+  }
+
+  public static void showToast(int resId, Object... args) {
+    if (resId != 0) {
+      showToast(getString(resId, args));
     }
   }
 
@@ -608,7 +620,7 @@ public class Utils {
             new NotificationCompat.BigTextStyle().bigText(getString(R.string.ask_to_report_crash)))
         .setContentIntent(pendingIntent)
         .addAction(0, getString(R.string.send_report), pendingIntent)
-        .setColor(Utils.getAccentColor())
+        .setColor(getAccentColor())
         .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setAutoCancel(true);
@@ -627,10 +639,7 @@ public class Utils {
     }
     boolean res = checkRoot();
     if (!res) {
-      runInFg(
-          () ->
-              Toast.makeText(App.getContext(), R.string.getting_root_fail, Toast.LENGTH_LONG)
-                  .show());
+      showToast(R.string.getting_root_fail);
     }
     return res;
   }

@@ -18,7 +18,6 @@ import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -77,7 +76,7 @@ public class PackageActivity extends BaseActivity {
 
     int position = getIntent().getIntExtra(MainActivity.EXTRA_PKG_POSITION, -1);
     if (position == -1) {
-      Toast.makeText(App.getContext(), R.string.something_bad_happened, Toast.LENGTH_LONG).show();
+      Utils.showToast(R.string.something_bad_happened);
       finish();
       return;
     }
@@ -144,10 +143,7 @@ public class PackageActivity extends BaseActivity {
 
     // new Permission objects are created, so cannot check previous one for new state
     if (res != null) {
-      Utils.runInFg(
-          () ->
-              Toast.makeText(App.getContext(), R.string.something_bad_happened, Toast.LENGTH_LONG)
-                  .show());
+      Utils.showToast(R.string.something_bad_happened);
       Log.e(TAG, "setAppOpsMode: response is " + res);
     }
 
@@ -528,10 +524,7 @@ public class PackageActivity extends BaseActivity {
     Object res = mPrivDaemonHandler.sendRequest(cmd);
     updatePackage();
     if (res != null) {
-      Utils.runInFg(
-          () ->
-              Toast.makeText(App.getContext(), R.string.something_bad_happened, Toast.LENGTH_LONG)
-                  .show());
+      Utils.showToast(R.string.something_bad_happened);
       Log.e(TAG, "resetAppOps: response is " + res);
     }
     updateSpinnerSelection(true, null);
@@ -582,10 +575,7 @@ public class PackageActivity extends BaseActivity {
 
     // new Permission objects are created, so cannot check previous one for new state
     if (res != null) {
-      Utils.runInFg(
-          () ->
-              Toast.makeText(App.getContext(), R.string.something_bad_happened, Toast.LENGTH_LONG)
-                  .show());
+      Utils.showToast(R.string.something_bad_happened);
       Log.e(TAG, "setPermission: response is " + res);
     }
   }
