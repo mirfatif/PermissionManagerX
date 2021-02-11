@@ -10,6 +10,7 @@ import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.MyPackageOps;
 import com.mirfatif.privtasks.PrivTasks;
+import com.mirfatif.privtasks.PrivTasks.PrivTasksCallback;
 import com.mirfatif.privtasks.Util;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIsError;
 import java.util.ArrayList;
@@ -32,11 +33,9 @@ public class AppOpsParser {
 
   private final MySettings mMySettings = MySettings.getInstance();
   private final PrivDaemonHandler mPrivDaemonHandler = PrivDaemonHandler.getInstance();
-  private final PrivTasks mPrivTasks;
+  private final PrivTasks mPrivTasks = new PrivTasks(new PrivTasksCallbackImpl());
 
   private AppOpsParser() {
-    mPrivTasks = new PrivTasks(mMySettings.isDebug());
-
     if (!mPrivTasks.canUseIAppOpsService()) {
       hiddenAPIsNotWorking("Could not initialize IAppOpsService");
     }
@@ -241,5 +240,18 @@ public class AppOpsParser {
       mMySettings.setUseHiddenAPIs(false);
     }
     Log.e(TAG, error);
+  }
+
+  private class PrivTasksCallbackImpl implements PrivTasksCallback {
+
+    @Override
+    public boolean isDebug() {
+      return mMySettings.isDebug();
+    }
+
+    @Override
+    public void logE(String msg) {
+      Log.e(TAG, msg);
+    }
   }
 }

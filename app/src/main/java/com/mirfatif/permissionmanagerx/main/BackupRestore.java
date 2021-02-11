@@ -2,6 +2,7 @@ package com.mirfatif.permissionmanagerx.main;
 
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
@@ -51,7 +52,7 @@ public class BackupRestore {
   private static final String TAG = "BackupRestore";
   private static final String TAG_BACKUP_RESTORE = "BACKUP_RESTORE";
 
-  private final MySettings mMySettings;
+  private final MySettings mMySettings = MySettings.getInstance();
 
   private final String KEY = "key";
   private final String VALUE = "value";
@@ -84,12 +85,10 @@ public class BackupRestore {
 
   public BackupRestore() {
     mA = null;
-    mMySettings = MySettings.getInstance();
   }
 
   BackupRestore(MainActivity activity) {
     mA = activity;
-    mMySettings = MySettings.getInstance();
   }
 
   private ActivityResultLauncher<String> mBackupLauncher;
@@ -449,7 +448,8 @@ public class BackupRestore {
 
   private boolean isInstalled(String pkgName) {
     if (mInstalledPackages.isEmpty()) {
-      for (PackageInfo info : App.getContext().getPackageManager().getInstalledPackages(0)) {
+      int flags = PackageManager.MATCH_UNINSTALLED_PACKAGES;
+      for (PackageInfo info : App.getContext().getPackageManager().getInstalledPackages(flags)) {
         mInstalledPackages.add(info.packageName);
       }
     }

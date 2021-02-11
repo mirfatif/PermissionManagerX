@@ -3,6 +3,7 @@
 
 # Because of serialzation
 -keep class com.mirfatif.privtasks.MyPackageOps* { *; }
+-keep class com.mirfatif.privtasks.MyPackageInfo { *; }
 
 # main method must be accessible to VM for start
 -keep class com.mirfatif.privdaemon.PrivDaemon {

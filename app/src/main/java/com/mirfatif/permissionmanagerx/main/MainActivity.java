@@ -71,9 +71,10 @@ public class MainActivity extends BaseActivity {
   private final PackageParser mPackageParser = PackageParser.getInstance();
   private final PrivDaemonHandler mPrivDaemonHandler = PrivDaemonHandler.getInstance();
 
-  private MyViewModel mMyViewModel;
   private MainActivityFlavor mMainActivityFlavor;
   private BackupRestore mBackupRestore;
+
+  private MyViewModel mMyViewModel;
 
   private SwipeRefreshLayout mRefreshLayout;
   private LinearLayoutManager mLayoutManager;
@@ -98,7 +99,16 @@ public class MainActivity extends BaseActivity {
       return; // Activity is recreated on switching to Dark Theme, so return here
     }
 
+    // ADB cannot access shared storage of secondary profiles on Pie+. On R+ shared storage of
+    // secondary profiles is not mounted (and hence not visible) in root mount namespace.
+    if (isSecondaryUser()) {
+      return;
+    }
+
     setContentView(R.layout.activity_main);
+
+    mMainActivityFlavor = new MainActivityFlavor(this);
+    mBackupRestore = new BackupRestore(this);
 
     // Create ViewModel instance and associate with current Activity. ViewModel holds
     // instances of other classes which must be retained irrespective of lifecycle of Activities
@@ -207,8 +217,6 @@ public class MainActivity extends BaseActivity {
     // Increment app launch count
     mMySettings.plusAppLaunchCount();
 
-    mMainActivityFlavor = new MainActivityFlavor(this);
-    mBackupRestore = new BackupRestore(this);
     mMainActivityFlavor.onCreated();
     mBackupRestore.onCreated();
 
@@ -233,19 +241,32 @@ public class MainActivity extends BaseActivity {
     mSearchView = searchMenuItem.getActionView().findViewById(R.id.action_search);
     setUpSearchView();
 
-    mMainActivityFlavor.onCreateOptionsMenu(menu);
+    if (mMainActivityFlavor != null) {
+      mMainActivityFlavor.onCreateOptionsMenu(menu);
+    }
     return super.onCreateOptionsMenu(menu);
   }
 
-  // required for navigation drawer tap to work
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    boolean res = false;
+    if (mMainActivityFlavor != null) {
+      res = mMainActivityFlavor.onPrepareOptionsMenu(menu);
+    }
+    return res || super.onPrepareOptionsMenu(menu);
+  }
+
+  // Required for navigation drawer tap to work
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "onOptionsItemSelected: " + item.getTitle());
     }
-    return mMainActivityFlavor.onOptionsItemSelected(item)
-        || mDrawerToggle.onOptionsItemSelected(item)
-        || super.onOptionsItemSelected(item);
+    boolean res = false;
+    if (mMainActivityFlavor != null) {
+      res = mMainActivityFlavor.onOptionsItemSelected(item);
+    }
+    return res || mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
   }
 
   @Override
@@ -301,6 +322,22 @@ public class MainActivity extends BaseActivity {
   //////////////////////////////////////////////////////////////////
   ///////////////////////////// GENERAL ////////////////////////////
   //////////////////////////////////////////////////////////////////
+
+  private boolean isSecondaryUser() {
+    if (Utils.getUserId() == 0) {
+      return false;
+    }
+    Builder builder =
+        new Builder(this)
+            .setPositiveButton(android.R.string.ok, null)
+            .setTitle(R.string.primary_account)
+            .setMessage(R.string.primary_profile_only);
+    new AlertDialogFragment(builder.create())
+        .setOnDismissListener(d -> finishAfterTransition())
+        .show(this, "PRIMARY_PROFILE", false);
+    Utils.getDefPrefs().edit().putBoolean("PRIMARY_USER", false).apply(); // Trigger auto-backup
+    return true;
+  }
 
   private boolean setNightTheme() {
     if (!mMySettings.forceDarkMode()) {
@@ -690,16 +727,18 @@ public class MainActivity extends BaseActivity {
       }
     }
 
-    // get AppOps permission if daemon is up
+    // Get GET_APP_OPS_STATS permission if daemon is up
     checkAppOpsPerm();
 
-    // if have gained privileges
+    // If have gained privileges
     if (mMySettings.isPrivDaemonAlive() || mMySettings.isAppOpsGranted()) {
       // If observers are set, update packages list.
       if (!isFirstRun) {
         mPackageParser.updatePackagesList();
       }
     }
+
+    mMainActivityFlavor.onPrivDaemonStarted();
   }
 
   void restartPrivDaemon(boolean preferRoot) {
@@ -730,8 +769,8 @@ public class MainActivity extends BaseActivity {
       mPrivDaemonHandler.sendRequest(command);
 
       if (!mMySettings.isAppOpsGranted()) {
-        Log.e(TAG, "startPrivDaemon: granting " + APP_OPS_PERM + " failed");
-        showSnackBar(getString(R.string.granting_permission_failed) + ": " + APP_OPS_PERM, 10000);
+        Log.e(TAG, "checkAppOpsPerm: granting " + APP_OPS_PERM + " failed");
+        showSnackBar(Utils.getString(R.string.granting_permission_failed, APP_OPS_PERM), 10000);
       }
     }
   }

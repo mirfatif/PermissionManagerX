@@ -1,16 +1,25 @@
 package com.mirfatif.privtasks.hiddenapis;
 
+import android.app.ActivityManagerNative;
 import android.app.AppOpsManager;
 import android.app.AppOpsManager.OpEntry;
 import android.app.AppOpsManager.PackageOps;
+import android.app.IActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.IPackageManager;
+import android.content.pm.PackageInfo;
 import android.content.pm.ParceledListSlice;
+import android.content.pm.UserInfo;
+import android.net.Uri;
 import android.os.Build;
+import android.os.IUserManager;
+import android.os.IUserManager.Stub;
 import android.os.Process;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.permission.IPermissionManager;
+import android.provider.Settings;
 import com.android.internal.app.IAppOpsService;
 import com.mirfatif.privtasks.MyPackageOps;
 import java.util.ArrayList;
@@ -21,8 +30,11 @@ public class HiddenAPIsImpl extends HiddenAPIs {
   private IAppOpsService mIAppOpsService;
   private IPackageManager mIPackageManager;
   private IPermissionManager mIPermissionManager;
+  private IUserManager mIUserManager;
+  private IActivityManager mIActivityManager;
 
-  public HiddenAPIsImpl() {
+  public HiddenAPIsImpl(HiddenAPIsCallback callback) {
+    super(callback);
     try {
       mIAppOpsService =
           IAppOpsService.Stub.asInterface(ServiceManager.getService(Context.APP_OPS_SERVICE));
@@ -43,6 +55,24 @@ public class HiddenAPIsImpl extends HiddenAPIs {
       } catch (NoSuchMethodError e) {
         e.printStackTrace();
       }
+    }
+
+    try {
+      mIUserManager = Stub.asInterface(ServiceManager.getService(Context.USER_SERVICE));
+    } catch (NoSuchMethodError e) {
+      e.printStackTrace();
+    }
+
+    try {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        // Also: ActivityManager.getService()
+        mIActivityManager =
+            IActivityManager.Stub.asInterface(ServiceManager.getService(Context.ACTIVITY_SERVICE));
+      } else {
+        mIActivityManager = ActivityManagerNative.getDefault();
+      }
+    } catch (NoSuchMethodError e) {
+      e.printStackTrace();
     }
   }
 
@@ -139,11 +169,10 @@ public class HiddenAPIsImpl extends HiddenAPIs {
     }
   }
 
-  public List<MyPackageOps> getMyPackageOpsList(
-      int uid, String packageName, String op, int opNum, Callback callback)
+  public List<MyPackageOps> getMyPackageOpsList(int uid, String packageName, String op, int opNum)
       throws HiddenAPIsException, HiddenAPIsError {
     try {
-      return _getMyPackageOpsList(uid, packageName, op, opNum, callback);
+      return _getMyPackageOpsList(uid, packageName, op, opNum);
     } catch (RemoteException e) {
       throw new HiddenAPIsException(e);
     } catch (NoSuchMethodError e) {
@@ -151,8 +180,7 @@ public class HiddenAPIsImpl extends HiddenAPIs {
     }
   }
 
-  private List<MyPackageOps> _getMyPackageOpsList(
-      int uid, String packageName, String op, int opNum, Callback callback)
+  private List<MyPackageOps> _getMyPackageOpsList(int uid, String packageName, String op, int opNum)
       throws RemoteException, NoSuchMethodError {
     int[] ops = op.equals("null") ? null : new int[] {Integer.parseInt(op)};
 
@@ -164,7 +192,7 @@ public class HiddenAPIsImpl extends HiddenAPIs {
       try {
         pkgOpsList = mIAppOpsService.getUidOps(uid, ops);
       } catch (NullPointerException e) {
-        callback.onGetUidOpsNpException(e);
+        mCallback.onGetUidOpsNpException(e);
         return null;
       }
     }
@@ -185,7 +213,7 @@ public class HiddenAPIsImpl extends HiddenAPIs {
         myOpEntry.op = opEntry.getOp();
 
         if (myOpEntry.op >= opNum) {
-          callback.onInvalidOpCode(myOpEntry.op, packageOps.getPackageName());
+          mCallback.onInvalidOpCode(myOpEntry.op, packageOps.getPackageName());
           continue;
         }
 
@@ -211,7 +239,6 @@ public class HiddenAPIsImpl extends HiddenAPIs {
     return myPackageOpsList;
   }
 
-  @SuppressWarnings("deprecation")
   private long getTime(OpEntry opEntry) {
     return opEntry.getTime();
   }
@@ -303,17 +330,83 @@ public class HiddenAPIsImpl extends HiddenAPIs {
       String pkg, int state, int flags, int userId, String callingPkg) throws HiddenAPIsException {
     try {
       mIPackageManager.setApplicationEnabledSetting(pkg, state, flags, userId, callingPkg);
-    } catch (RemoteException e) {
+    } catch (RemoteException | SecurityException e) {
+      throw new HiddenAPIsException(e);
+    }
+  }
+
+  @Override
+  public List<?> getInstalledPackages(int flags, int userId) throws HiddenAPIsException {
+    try {
+      return mIPackageManager.getInstalledPackages(flags, userId).getList();
+    } catch (RemoteException | SecurityException e) {
+      throw new HiddenAPIsException(e);
+    }
+  }
+
+  @Override
+  public PackageInfo getPkgInfo(String pkgName, int flags, int userId) throws HiddenAPIsException {
+    try {
+      return mIPackageManager.getPackageInfo(pkgName, flags, userId);
+    } catch (RemoteException | SecurityException e) {
       throw new HiddenAPIsException(e);
     }
   }
 
   //////////////////////////////////////////////////////////////////
-  //////////////////////////// PROCESSES ///////////////////////////
+  ////////////////////////////// OTHERS ////////////////////////////
   //////////////////////////////////////////////////////////////////
 
   public int[] getPidsForCommands(String[] commands) {
     return Process.getPidsForCommands(commands);
+  }
+
+  public int openAppInfo(String pkgName, int userId) throws HiddenAPIsException {
+    if (mIActivityManager == null) {
+      throw new HiddenAPIsException("Could not initialize IActivityManager");
+    }
+
+    Intent intent =
+        new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            .setData(Uri.parse("package:" + pkgName))
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+    try {
+      return mIActivityManager.startActivityAsUser(
+          null, null, intent, null, null, null, 0, 0, null, null, userId);
+    } catch (RemoteException | SecurityException e) {
+      throw new HiddenAPIsException(e);
+    }
+  }
+
+  private boolean isQPlus = true;
+
+  public List<String> getUsers() throws HiddenAPIsException {
+    if (mIUserManager == null) {
+      throw new HiddenAPIsException("Could not initialize mIUserManager");
+    }
+    List<UserInfo> userInfoList;
+    try {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && isQPlus) {
+        userInfoList = mIUserManager.getUsers(false, false, false);
+      } else {
+        userInfoList = mIUserManager.getUsers(false);
+      }
+    } catch (RemoteException | SecurityException e) {
+      throw new HiddenAPIsException(e);
+    } catch (NoSuchMethodError e) {
+      if (isQPlus) {
+        mCallback.logError("getUsers: " + e.toString());
+        isQPlus = false;
+        return getUsers();
+      }
+      throw new HiddenAPIsException(e);
+    }
+    List<String> userIds = new ArrayList<>();
+    for (UserInfo userInfo : userInfoList) {
+      userIds.add(userInfo.id + "|" + (userInfo.name != null ? userInfo.name : ""));
+    }
+    return userIds;
   }
 
   //////////////////////////////////////////////////////////////////

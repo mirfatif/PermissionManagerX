@@ -47,4 +47,4 @@ echo "Starting $PKG_NAME VM"
 export PATH
 export CLASSPATH
 
-exec $CMD app_process / --nice-name=${PKG_NAME}.${USER_ID} ${PKG_NAME}.${CLASS} $DEBUG $ARGS
+exec $CMD app_process / --nice-name=${PKG_NAME} ${PKG_NAME}.${CLASS} $DEBUG $ARGS

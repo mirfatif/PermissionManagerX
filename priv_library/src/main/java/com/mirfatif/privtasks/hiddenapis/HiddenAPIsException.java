@@ -9,4 +9,8 @@ public class HiddenAPIsException extends Exception {
   public HiddenAPIsException(Throwable cause) {
     super(cause);
   }
+
+  public HiddenAPIsException(String message) {
+    super(message);
+  }
 }

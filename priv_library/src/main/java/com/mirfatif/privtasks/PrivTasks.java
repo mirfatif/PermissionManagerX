@@ -1,13 +1,14 @@
 package com.mirfatif.privtasks;
 
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
 import android.os.Build;
 import android.os.Process;
-import android.util.Log;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIs;
-import com.mirfatif.privtasks.hiddenapis.HiddenAPIs.Callback;
+import com.mirfatif.privtasks.hiddenapis.HiddenAPIs.HiddenAPIsCallback;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIsError;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIsException;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIsImpl;
@@ -18,13 +19,13 @@ import java.util.List;
 public class PrivTasks {
 
   private static final String TAG = "PrivTaks";
-  private final boolean DEBUG; // Verbose logging
 
   private final HiddenAPIs mHiddenAPIs;
+  private final PrivTasksCallback mCallback;
 
-  public PrivTasks(boolean isDebug) {
-    DEBUG = isDebug;
-    mHiddenAPIs = new HiddenAPIsImpl();
+  public PrivTasks(PrivTasksCallback callback) {
+    mHiddenAPIs = new HiddenAPIsImpl(new HiddenAPIsCallbackImpl());
+    mCallback = callback;
   }
 
   //////////////////////////////////////////////////////////////////
@@ -111,8 +112,8 @@ public class PrivTasks {
       if (pm != null) {
         try {
           permInfoList = pm.queryPermissionsByGroup(permGroup, 0);
-        } catch (PackageManager.NameNotFoundException e) {
-          rateLimitLog("buildPermToOpCodeList: " + e.toString(), false);
+        } catch (NameNotFoundException e) {
+          mCallback.logE(TAG + ": buildPermToOpCodeList: " + e.toString());
         }
       } else {
         try {
@@ -139,7 +140,7 @@ public class PrivTasks {
 
   public Integer setAppOpsMode(String[] args) throws HiddenAPIsError {
     if (haveWrongArgs(args, 4)) {
-      return null;
+      return -1;
     }
     int op = mHiddenAPIs.strDebugOpToOp(args[1]);
     int uid = Integer.parseInt(args[2]);
@@ -161,7 +162,7 @@ public class PrivTasks {
 
   public Integer resetAppOps(String[] args) {
     if (haveWrongArgs(args, 2)) {
-      return null;
+      return -1;
     }
     try {
       mHiddenAPIs.resetAllModes(Integer.parseInt(args[1]), args[2]);
@@ -182,8 +183,7 @@ public class PrivTasks {
   public List<MyPackageOps> getMyPackageOpsList(int uid, String packageName, String op)
       throws HiddenAPIsError {
     try {
-      return mHiddenAPIs.getMyPackageOpsList(
-          uid, packageName, op, getNumOps(), new PkgOpsListCallback());
+      return mHiddenAPIs.getMyPackageOpsList(uid, packageName, op, getNumOps());
     } catch (HiddenAPIsException e) {
       rateLimitThrowable(e);
       return null;
@@ -208,7 +208,7 @@ public class PrivTasks {
 
   public Integer grantRevokePermission(boolean grant, String[] args) {
     if (haveWrongArgs(args, 3)) {
-      return null;
+      return -1;
     }
     try {
       if (grant) {
@@ -227,16 +227,16 @@ public class PrivTasks {
   //////////////////////////// PACKAGES ////////////////////////////
   //////////////////////////////////////////////////////////////////
 
-  public Integer setAppEnabledState(boolean enabled, String[] args) {
+  public Integer setAppEnabledState(boolean enable, String[] args) {
     if (haveWrongArgs(args, 2)) {
-      return null;
+      return -1;
     }
     String pkg = args[1];
     int userId = Integer.parseInt(args[2]);
     String callingPkg = "shell:" + Process.myUid();
 
     int state;
-    if (enabled) {
+    if (enable) {
       state = PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
     } else {
       state = PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER;
@@ -251,12 +251,102 @@ public class PrivTasks {
     }
   }
 
+  public List<MyPackageInfo> getInstalledPackages(String[] args) {
+    if (haveWrongArgs(args, 2)) {
+      return null;
+    }
+
+    int flags = Integer.parseInt(args[1]), userId = Integer.parseInt(args[2]);
+
+    try {
+      List<MyPackageInfo> myPkgInfoList = new ArrayList<>();
+      for (Object object : mHiddenAPIs.getInstalledPackages(flags, userId)) {
+        PackageInfo pkgInfo = (PackageInfo) object;
+        MyPackageInfo myPkgInfo = new MyPackageInfo();
+        myPkgInfo.packageName = pkgInfo.packageName;
+        myPkgInfo.requestedPermissionsFlags = pkgInfo.requestedPermissionsFlags;
+        myPkgInfo.uid = pkgInfo.applicationInfo.uid;
+        myPkgInfo.enabled = pkgInfo.applicationInfo.enabled;
+        myPkgInfoList.add(myPkgInfo);
+      }
+      return myPkgInfoList;
+    } catch (HiddenAPIsException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  public MyPackageInfo getPkgInfo(String[] args) {
+    if (haveWrongArgs(args, 3)) {
+      return null;
+    }
+
+    String pkgName = args[1];
+    int flags = Integer.parseInt(args[2]), userId = Integer.parseInt(args[3]);
+
+    PackageInfo pkgInfo;
+    try {
+      pkgInfo = mHiddenAPIs.getPkgInfo(pkgName, flags, userId);
+    } catch (HiddenAPIsException e) {
+      e.printStackTrace();
+      return null;
+    }
+
+    if (pkgInfo == null) {
+      return null;
+    }
+
+    MyPackageInfo myPkgInfo = new MyPackageInfo();
+    myPkgInfo.packageName = pkgInfo.packageName;
+    myPkgInfo.requestedPermissionsFlags = pkgInfo.requestedPermissionsFlags;
+    myPkgInfo.uid = pkgInfo.applicationInfo.uid;
+    myPkgInfo.enabled = pkgInfo.applicationInfo.enabled;
+    return myPkgInfo;
+  }
+
   //////////////////////////////////////////////////////////////////
-  //////////////////////////// PROCESSES ///////////////////////////
+  ////////////////////////////// OTHERS ////////////////////////////
   //////////////////////////////////////////////////////////////////
 
   public int[] getPidsForCommands(String[] commands) {
     return mHiddenAPIs.getPidsForCommands(commands);
+  }
+
+  public Integer openAppInfo(String[] args) {
+    if (haveWrongArgs(args, 2)) {
+      return -1;
+    }
+    String pkgName = args[1];
+    int userId = Integer.parseInt(args[2]);
+
+    try {
+      int res = mHiddenAPIs.openAppInfo(pkgName, userId);
+      if (res != getAmSuccessCode()) {
+        mCallback.logE(TAG + ": openAppInfo: result code: " + res);
+      }
+      return null;
+    } catch (HiddenAPIsException e) {
+      e.printStackTrace();
+      return -1;
+    }
+  }
+
+  private int getAmSuccessCode() {
+    try {
+      return mHiddenAPIs.getAmSuccessCode();
+    } catch (HiddenAPIsError e) {
+      mCallback.logE(TAG + ": getAmSuccessCode: " + e.toString());
+      return 0;
+    }
+  }
+
+  public List<String> getUsers() {
+    try {
+      return mHiddenAPIs.getUsers();
+    } catch (HiddenAPIsException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   //////////////////////////////////////////////////////////////////
@@ -275,14 +365,14 @@ public class PrivTasks {
     if (cmd.length == count + 1) {
       return false;
     }
-    Log.e(TAG, "Bad command: " + Arrays.toString(cmd));
+    mCallback.logE(TAG + ": Bad command: " + Arrays.toString(cmd));
     return true;
   }
 
   private long lastThrowableTimestamp = 0;
 
   private void rateLimitThrowable(Throwable t) {
-    if (!DEBUG && System.currentTimeMillis() - lastThrowableTimestamp < 1000) {
+    if (!mCallback.isDebug() && System.currentTimeMillis() - lastThrowableTimestamp < 1000) {
       return;
     }
     t.printStackTrace();
@@ -291,36 +381,43 @@ public class PrivTasks {
 
   private long lastLogTimestamp = 0;
 
-  private void rateLimitLog(String msg, boolean isError) {
-    if (DEBUG) {
-      if (isError) {
-        Log.e(TAG, msg + " - " + System.nanoTime());
-      } else {
-        Log.i(TAG, msg + " - " + System.nanoTime());
-      }
+  private void rateLimitLog(String msg) {
+    if (mCallback.isDebug()) {
+      mCallback.logE(TAG + ": " + msg + " - " + System.nanoTime());
     } else if (System.currentTimeMillis() - lastLogTimestamp >= 1000) {
-      if (isError) {
-        Log.e(TAG, msg);
-      } else {
-        Log.i(TAG, msg);
-      }
+      mCallback.logE(TAG + ": " + msg);
       lastLogTimestamp = System.currentTimeMillis();
     }
   }
 
-  private class PkgOpsListCallback implements Callback {
+  private class HiddenAPIsCallbackImpl implements HiddenAPIsCallback {
 
     @Override
     public void onGetUidOpsNpException(Exception e) {
       // Hey Android! You are buggy.
-      if (DEBUG) {
+      if (mCallback.isDebug()) {
         e.printStackTrace();
+      } else {
+        mCallback.logE(TAG + ": getMyPackageOpsList: " + e.toString());
       }
     }
 
     @Override
     public void onInvalidOpCode(int opCode, String pkgName) {
-      rateLimitLog("getMyPackageOpsList: bad op: " + opCode + " for package: " + pkgName, true);
+      rateLimitLog("getMyPackageOpsList: bad op: " + opCode + " for package: " + pkgName);
     }
+
+    @Override
+    public void logError(String msg) {
+      mCallback.logE(TAG + ": " + msg);
+    }
+  }
+
+  // Verbose logging
+  public interface PrivTasksCallback {
+
+    boolean isDebug();
+
+    void logE(String msg);
   }
 }

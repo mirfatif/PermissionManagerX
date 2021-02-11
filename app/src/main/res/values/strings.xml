@@ -53,6 +53,10 @@
   <string name="daemon_context_default">Default</string>
 
   <!--MainActivity strings-->
+  <string name="primary_account">Primary Account</string>
+  <string name="primary_profile_only">Permission Manager X can run only in primary user account /
+    device owner profile.
+  </string>
   <string name="deep_search">Deep Search (Permissions)</string>
   <string name="case_sensitive_search">Case Sensitive Search</string>
   <string name="grant_root_or_adb">Grant root access or connect to ADB to start privileged process.</string>
@@ -102,7 +106,7 @@
     be slower. Stop using hidden APIs?
   </string>
   <string name="bad_port_number">Bad port number</string>
-  <string name="granting_permission_failed">Granting permission failed</string>
+  <string name="granting_permission_failed">Granting permission failed: %1$s</string>
   <string name="love_using_app">Liking Permission Manager X?</string>
   <string name="contribute">Contribute</string>
   <string name="purchase_and_rate_the_app">You can help us improve the app by making a small donation
@@ -158,7 +162,7 @@
   <string name="disable_app_or_exclude_from_visible_list">Disable app or exclude from visible list.</string>
 
   <!--PackageActivity-->
-  <string name="something_bad_happened">Something bad happened</string>
+  <string name="something_bad_happened">Something went wrong</string>
   <string name="change_framework_perms_warning">Changing permissions of framework apps is a dangerous
     action. In worst-case scenario Android system may crash.\nAre you sure you want to continue?
   </string>
@@ -222,6 +226,7 @@
       <ul>
         <li>Sort apps and permissions by different parameters</li>
         <li>Scheduled check to notify bad reference states</li>
+        <li>Multiple users / work profile support</li>
         <li>Auto create backup file on changes</li>
         <li>Search suggestions</li>
         <li>Theming options</li>
@@ -262,4 +267,5 @@
   <!--HelpActivity-->
   <string name="zoom_in_menu_item">Zoom In</string>
   <string name="zoom_out_menu_item">Zoom Out</string>
+
 </resources>

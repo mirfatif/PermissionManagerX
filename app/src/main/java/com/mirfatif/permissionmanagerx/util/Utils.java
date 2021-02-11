@@ -77,6 +77,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -337,8 +338,13 @@ public class Utils {
     }
   }
 
+  // Divide by UserHandle#PER_USER_RANGE
+  public static int getUserId(int uid) {
+    return uid / 100000;
+  }
+
   public static int getUserId() {
-    return android.os.Process.myUid() / 100000;
+    return getUserId(android.os.Process.myUid());
   }
 
   private static SharedPreferences mEncPrefs;
@@ -549,7 +555,9 @@ public class Utils {
 
       File logFile = new File(App.getContext().getExternalFilesDir(null), "PMX_crash.log");
       boolean append = true;
-      if (!logFile.exists() || logFile.length() > 512 * 1024) {
+      if (!logFile.exists()
+          || logFile.length() > 512 * 1024
+          || logFile.lastModified() < System.currentTimeMillis() - TimeUnit.DAYS.toMillis(90)) {
         append = false;
       }
       try {

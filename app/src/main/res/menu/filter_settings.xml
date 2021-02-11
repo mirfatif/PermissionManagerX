@@ -2,10 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <item
-    android:id="@+id/action_reset_defaults"
-    android:title="@string/filter_settings_reset_defaults_menu_item"
-    app:showAsAction="never"/>
+  <group android:id="@+id/group1">
+    <item
+      android:id="@+id/action_reset_defaults"
+      android:title="@string/filter_settings_reset_defaults_menu_item"
+      app:showAsAction="never" />
+  </group>
 
   <item
     android:id="@+id/action_clear_excluded_apps"

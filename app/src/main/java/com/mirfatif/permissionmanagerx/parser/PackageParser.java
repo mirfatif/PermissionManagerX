@@ -66,20 +66,16 @@ public class PackageParser {
 
   private List<PackageInfo> mPackageInfoList;
   private final List<Package> mPackagesList = new ArrayList<>();
-  private List<Signature> systemSignatures;
   private final Map<String, Integer> mPermIconsResIds = new HashMap<>();
   private List<Integer> mOpToSwitchList;
   private List<Integer> mOpToDefModeList;
   private Map<String, String> mPermRefList;
   private Map<String, Integer> mPermToOpCodeMap;
 
-  private static final int PM_GET_SIGNATURES = PackageManager.GET_SIGNATURES;
-
   //////////////////////////////////////////////////////////////////
   //////////////////////////// PARSERS /////////////////////////////
   //////////////////////////////////////////////////////////////////
 
-  private long mLastPackageManagerCall = 0;
   private final ExecutorService mUpdatePackagesExecutor = Executors.newSingleThreadExecutor();
   private Future<?> mUpdatePackagesFuture;
 
@@ -114,19 +110,7 @@ public class PackageParser {
       long startTime = System.currentTimeMillis();
       mIsUpdating = true;
 
-      // Don't trouble Android on every call.
-      if (System.currentTimeMillis() - mLastPackageManagerCall > 5000) {
-        if (mMySettings.isDebug()) {
-          Util.debugLog(TAG, "updatePackagesListInBg: updating packages list");
-        }
-        setProgress(PACKAGES_LIST, true, false, isBgDeepScan);
-
-        mPackageInfoList =
-            mPackageManager.getInstalledPackages(
-                PackageManager.GET_PERMISSIONS | PM_GET_SIGNATURES);
-        mLastPackageManagerCall = System.currentTimeMillis();
-        mPkgParserFlavor.sortPkgList(mPackageInfoList);
-      }
+      buildPkgInfoList(isBgDeepScan);
 
       /** if permissions database changes, manually call {@link #updatePermReferences()} */
       if (mPermRefList == null) {
@@ -217,6 +201,25 @@ public class PackageParser {
     }
   }
 
+  private long mLastPackageManagerCall = 0;
+
+  private void buildPkgInfoList(boolean isBgDeepScan) {
+    if (System.currentTimeMillis() - mLastPackageManagerCall < 5000) {
+      return; // Don't trouble Android on every call.
+    }
+
+    if (mMySettings.isDebug()) {
+      Util.debugLog(TAG, "buildPkgInfoList: updating packages list");
+    }
+
+    setProgress(PACKAGES_LIST, true, false, isBgDeepScan);
+
+    mPackageInfoList = mPkgParserFlavor.getPackageList();
+    mPkgParserFlavor.sortPkgList(mPackageInfoList);
+
+    mLastPackageManagerCall = System.currentTimeMillis();
+  }
+
   //////////////////////////////////////////////////////////////////
   //////////////////////////// GETTERS /////////////////////////////
   //////////////////////////////////////////////////////////////////
@@ -226,7 +229,7 @@ public class PackageParser {
   public List<Package> getPackagesList(boolean update) {
     if (update) {
       if (!updatePackagesListInBg(false, false)) {
-        return null; // Interrupted in between
+        return null; // Interrupted in between, or could not get PackagesList
       }
     }
     return mPackagesList;
@@ -257,14 +260,14 @@ public class PackageParser {
   /////////////////////////// MODIFIERS ////////////////////////////
   //////////////////////////////////////////////////////////////////
 
-  // when calling from PackageActivity for existing package
+  // When calling from MainActivity or PackageActivity for existing package
   public void updatePackage(Package pkg) {
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "updatePackage: " + pkg.getLabel());
     }
-    PackageInfo packageInfo = getPackageInfo(pkg.getName(), true);
+    PackageInfo packageInfo = mPkgParserFlavor.getPackageInfo(pkg);
 
-    // package uninstalled, or disabled from MainActivity
+    // Package uninstalled, ref states changed, or disabled from MainActivity
     if (packageInfo == null || !isPkgUpdated(packageInfo, pkg, false)) {
       removePackage(pkg);
       return;
@@ -295,6 +298,7 @@ public class PackageParser {
       } else {
         postLiveData(mPackagesList);
       }
+      pkg.setIsRemoved(true);
     } else {
       Log.e(TAG, "removePackage: bad Package provided");
     }
@@ -513,15 +517,19 @@ public class PackageParser {
     return (packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
   }
 
+  private List<Signature> mSystemSignatures;
+
   private boolean isFrameworkApp(PackageInfo packageInfo) {
-    if (systemSignatures == null) {
-      PackageInfo pkgInfo = getPackageInfo("android", false);
+    if (mSystemSignatures == null) {
+      PackageInfo pkgInfo = getPackageInfo("android", null);
       if (pkgInfo != null) {
-        systemSignatures = Arrays.asList(getPackageSignatures(pkgInfo));
+        mSystemSignatures = Arrays.asList(getPackageSignatures(pkgInfo));
+      } else {
+        return false;
       }
     }
     for (Signature signature : getPackageSignatures(packageInfo)) {
-      if (systemSignatures.contains(signature)) {
+      if (mSystemSignatures.contains(signature)) {
         return true;
       }
     }
@@ -768,7 +776,7 @@ public class PackageParser {
 
     boolean isSystemApp = isSystemApp(packageInfo);
     if (isSystemApp || isFrameworkApp(packageInfo)) {
-      int permFlags = getPermissionFlags(perm, packageInfo.packageName);
+      int permFlags = getPermissionFlags(perm, packageInfo);
       int systemFixedFlag = getSystemFixedFlag();
       if (permFlags >= 0 && systemFixedFlag >= 0) {
         isSystemFixed = (permFlags & systemFixedFlag) != 0;
@@ -800,13 +808,19 @@ public class PackageParser {
         permDesc);
   }
 
-  private int getPermissionFlags(String perm, String pkg) {
+  private int getPermissionFlags(String perm, PackageInfo packageInfo) {
     if (!mMySettings.isPrivDaemonAlive()) {
       Utils.logDaemonDead(TAG + ": getPermissionFlags");
       return -1;
     } else {
       String command =
-          Commands.GET_PERMISSION_FLAGS + " " + perm + " " + pkg + " " + Utils.getUserId();
+          Commands.GET_PERMISSION_FLAGS
+              + " "
+              + perm
+              + " "
+              + packageInfo.packageName
+              + " "
+              + Utils.getUserId(packageInfo.applicationInfo.uid);
       Object object = mPrivDaemonHandler.sendRequest(command);
       if (object instanceof Integer) {
         return (int) object;
@@ -861,10 +875,9 @@ public class PackageParser {
     }
     int op = mappedOp;
 
-    int uid = packageInfo.applicationInfo.uid;
-
     List<MyPackageOps> pkgOpsList =
-        mAppOpsParser.getOpsForPackage(uid, packageInfo.packageName, op);
+        mAppOpsParser.getOpsForPackage(
+            packageInfo.applicationInfo.uid, packageInfo.packageName, op);
 
     // do not return changed (set) ops, they are handled separately
     if (pkgOpsList != null && pkgOpsList.size() == 0) {
@@ -1020,11 +1033,8 @@ public class PackageParser {
   //////////////////////////////////////////////////////////////////
 
   @SuppressLint("PackageManagerGetSignatures")
-  private PackageInfo getPackageInfo(String pkgName, boolean getPermissions) {
-    int flags = PM_GET_SIGNATURES;
-    if (getPermissions) {
-      flags = PackageManager.GET_PERMISSIONS | flags;
-    }
+  PackageInfo getPackageInfo(String pkgName, Integer pmFlags) {
+    int flags = pmFlags == null ? PM_GET_SIGNATURES : PM_GET_SIGNATURES | pmFlags;
     try {
       return mPackageManager.getPackageInfo(pkgName, flags);
     } catch (NameNotFoundException e) {
@@ -1032,6 +1042,8 @@ public class PackageParser {
       return null;
     }
   }
+
+  static final int PM_GET_SIGNATURES = PackageManager.GET_SIGNATURES;
 
   private Signature[] getPackageSignatures(PackageInfo packageInfo) {
     return packageInfo.signatures;
@@ -1119,7 +1131,6 @@ public class PackageParser {
       }
 
       boolean sendProgress = false;
-      String queryText = mMySettings.getQueryText();
 
       for (int i = 0; i < origPkgList.size(); i++) {
         if (!mIsUpdating && Thread.interrupted()) {
@@ -1143,12 +1154,8 @@ public class PackageParser {
           if (sendProgress) {
             setProgress(i, false, false, false);
           }
-          updateSearchLists(pkg, false);
-        } else if (pkg.contains(queryText)) {
-          synchronized (mSearchPkgList) {
-            mSearchPkgList.add(pkg);
-          }
         }
+        updateSearchLists(pkg, false);
         if (isFinal == null && shouldUpdateLiveData()) {
           postLiveData(mSearchPkgList);
         }
@@ -1161,10 +1168,24 @@ public class PackageParser {
   private final List<Package> mSearchPkgList = new ArrayList<>();
 
   private void updateSearchLists(Package pkg, boolean removeOnly) {
+    String queryText = mMySettings.getQueryText();
+    if (!mMySettings.isDeepSearching()) {
+      if (pkg.contains(queryText)) {
+        if (!removeOnly) {
+          synchronized (mSearchPkgList) {
+            mSearchPkgList.add(pkg);
+          }
+        }
+      } else if (removeOnly) {
+        removeSearchPackage(pkg);
+      }
+      return;
+    }
+
     List<Permission> permList = new ArrayList<>();
     int permCount = 0, appOpsCount = 0;
     for (Permission perm : pkg.getFullPermsList()) {
-      if (perm.contains(mMySettings.getQueryText())) {
+      if (perm.contains(queryText)) {
         permList.add(perm);
         if (perm.isAppOps()) {
           appOpsCount++;
@@ -1186,7 +1207,7 @@ public class PackageParser {
           mSearchPkgList.add(pkg);
         }
       }
-    } else if (removeOnly && mMySettings.isDeepSearching()) {
+    } else if (removeOnly) {
       removeSearchPackage(pkg);
     }
   }
@@ -1194,6 +1215,7 @@ public class PackageParser {
   private void removeSearchPackage(Package pkg) {
     synchronized (mSearchPkgList) {
       if (mSearchPkgList.remove(pkg)) {
+        pkg.setIsRemoved(true);
         postLiveData(mSearchPkgList);
       }
     }

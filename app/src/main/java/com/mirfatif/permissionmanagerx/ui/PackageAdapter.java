@@ -1,5 +1,6 @@
 package com.mirfatif.permissionmanagerx.ui;
 
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
@@ -17,14 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.parser.Package;
-import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.PackageAdapter.ItemViewHolder;
 import com.mirfatif.permissionmanagerx.ui.base.MyListAdapter;
 import com.mirfatif.permissionmanagerx.util.Utils;
 
 public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
-
-  private final MySettings mMySettings = MySettings.getInstance();
 
   private final PkgClickListener mPkgClickListener;
   private final PkgLongClickListener mPkgLongClickListener;
@@ -112,7 +110,9 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
       Utils.runInBg(
           () -> {
             try {
-              Drawable icon = mPackageManager.getApplicationIcon(pkg.getName());
+              int flags = PackageManager.MATCH_UNINSTALLED_PACKAGES;
+              ApplicationInfo appInfo = mPackageManager.getApplicationInfo(pkg.getName(), flags);
+              Drawable icon = mPackageManager.getApplicationIcon(appInfo);
               Utils.runInFg(() -> iconView.setImageDrawable(icon));
             } catch (NameNotFoundException ignored) {
             }

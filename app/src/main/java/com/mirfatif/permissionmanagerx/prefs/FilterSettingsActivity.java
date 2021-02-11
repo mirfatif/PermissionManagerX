@@ -1,6 +1,8 @@
 package com.mirfatif.permissionmanagerx.prefs;
 
 import android.content.SharedPreferences;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +20,7 @@ public class FilterSettingsActivity extends BaseActivity {
 
   private static final String TAG = "FilterSettingsActivity";
 
-  private MySettings mMySettings;
+  private final MySettings mMySettings = MySettings.getInstance();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +31,6 @@ public class FilterSettingsActivity extends BaseActivity {
     if (actionBar != null) {
       actionBar.setTitle(R.string.filter_menu_item);
     }
-
-    mMySettings = MySettings.getInstance();
 
     if (savedInstanceState == null) {
       getSupportFragmentManager()
@@ -45,6 +45,9 @@ public class FilterSettingsActivity extends BaseActivity {
   public boolean onCreateOptionsMenu(Menu menu) {
     // Create menu item(s)
     getMenuInflater().inflate(R.menu.filter_settings, menu);
+    if (VERSION.SDK_INT >= VERSION_CODES.P) {
+      menu.setGroupDividerEnabled(true);
+    }
     menu.findItem(R.id.action_clear_excluded_apps)
         .setEnabled(mMySettings.getExcludedAppsCount() != 0);
     menu.findItem(R.id.action_clear_excluded_perms)

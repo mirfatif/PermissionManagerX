@@ -1,12 +1,17 @@
 package com.mirfatif.privtasks.hiddenapis;
 
+import android.app.ActivityManager;
 import android.app.AppOpsManager;
 import android.app.AppOpsManager.OpEntry;
 import android.app.AppOpsManager.PackageOps;
+import android.app.IActivityManager;
 import android.content.pm.IPackageManager;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ParceledListSlice;
+import android.content.pm.UserInfo;
 import android.os.Build;
+import android.os.IUserManager;
 import android.os.Process;
 import android.os.ServiceManager;
 import android.permission.IPermissionManager;
@@ -15,6 +20,7 @@ import com.mirfatif.privtasks.MyPackageOps;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIs.HiddenClass.CType;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIs.HiddenClass.HiddenClasses;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIs.HiddenField.FType;
+import com.mirfatif.privtasks.hiddenapis.HiddenAPIs.HiddenField.HiddenFields;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIs.HiddenMethod.HiddenMethods;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIs.HiddenMethod.MType;
 import java.lang.annotation.ElementType;
@@ -26,23 +32,35 @@ import java.util.List;
 
 public abstract class HiddenAPIs {
 
+  final HiddenAPIsCallback mCallback;
   Integer OP_FLAGS_ALL = null;
 
   @HiddenClass(cls = ServiceManager.class)
   @HiddenClass(cls = IAppOpsService.class)
   @HiddenClass(cls = IPackageManager.class)
   @HiddenClass(cls = IPermissionManager.class)
+  @HiddenClass(cls = IActivityManager.class)
+  @HiddenClass(cls = IUserManager.class)
   @HiddenMethod(name = "getService", type = MType.STATIC_METHOD, cls = ServiceManager.class)
   @HiddenMethod(
       name = "asInterface",
       type = MType.STATIC_METHOD,
-      cls = {IAppOpsService.Stub.class, IPackageManager.Stub.class, IPermissionManager.Stub.class})
+      cls = {
+        IAppOpsService.Stub.class,
+        IPackageManager.Stub.class,
+        IPermissionManager.Stub.class,
+        IActivityManager.Stub.class,
+        IUserManager.Stub.class
+      })
   // IPackageManager and IPermissionManager don't have a constant in Context class
-  HiddenAPIs() {
-    try {
-      OP_FLAGS_ALL = getOpFlagAll();
-    } catch (HiddenAPIsError e) {
-      e.printStackTrace();
+  HiddenAPIs(HiddenAPIsCallback callback) {
+    mCallback = callback;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      try {
+        OP_FLAGS_ALL = getOpFlagAll();
+      } catch (HiddenAPIsError e) {
+        e.printStackTrace();
+      }
     }
   }
 
@@ -68,7 +86,11 @@ public abstract class HiddenAPIs {
     return getStaticIntField("OP_NONE", AppOpsManager.class);
   }
 
-  @HiddenField(name = "OP_FLAGS_ALL", type = FType.STATIC_FIELD, cls = AppOpsManager.class)
+  @HiddenField(
+      name = "OP_FLAGS_ALL",
+      type = FType.STATIC_FIELD,
+      cls = AppOpsManager.class,
+      minSDK = 29)
   public int getOpFlagAll() throws HiddenAPIsError {
     // Using directly the value in compile-time SDK gets hard-coded
     return getStaticIntField("OP_FLAGS_ALL", AppOpsManager.class);
@@ -92,24 +114,30 @@ public abstract class HiddenAPIs {
   @HiddenMethod(name = "permissionToOpCode", type = MType.STATIC_METHOD, cls = AppOpsManager.class)
   public abstract int permissionToOpCode(String permName);
 
-  @Privileged
+  @DaemonOnly
   @HiddenMethod(name = "strDebugOpToOp", type = MType.STATIC_METHOD, cls = AppOpsManager.class)
   public abstract int strDebugOpToOp(String opName) throws NoSuchMethodError;
 
   @HiddenMethod(name = "setMode", cls = IAppOpsService.class)
-  @Privileged(requires = "android.permission.UPDATE_APP_OPS_STATS")
-  @ThrowsSecurityException
+  @DaemonOnly
+  @Privileged(requires = "android.permission.MANAGE_APP_OPS_MODES")
+  @Throws(name = "SecurityException")
+  // Profile owners are allowed to change modes but only for apps within their user.
   public abstract void setMode(int op, int uid, String pkgName, int mode)
       throws HiddenAPIsException;
 
   @HiddenMethod(name = "setUidMode", cls = IAppOpsService.class)
-  @Privileged
-  @ThrowsSecurityException
+  @DaemonOnly
+  @Privileged(requires = "android.permission.MANAGE_APP_OPS_MODES")
+  @Throws(name = "SecurityException")
+  // Profile owners are allowed to change modes but only for apps within their user.
   public abstract void setUidMode(int op, int uid, int mode) throws HiddenAPIsException;
 
   @HiddenMethod(name = "resetAllModes", cls = IAppOpsService.class)
-  @Privileged(requires = "android.permission.UPDATE_APP_OPS_STATS")
-  @ThrowsSecurityException
+  @DaemonOnly
+  @Privileged(requires = "android.permission.MANAGE_APP_OPS_MODES")
+  @Throws(name = "SecurityException")
+  // Profile owners are allowed to change modes but only for apps within their user.
   public abstract void resetAllModes(int userId, String pkgName) throws HiddenAPIsException;
 
   @HiddenClass(cls = PackageOps.class, type = CType.INNER_CLASS)
@@ -122,6 +150,7 @@ public abstract class HiddenAPIs {
   @HiddenMethod(name = "getMode", cls = OpEntry.class)
   @HiddenMethod(name = "getLastAccessTime", cls = OpEntry.class)
   @HiddenMethod(name = "getTime", cls = OpEntry.class)
+  @Privileged(requires = "android.permission.GET_APP_OPS_STATS")
   /*
    getUidOps() (on Android 8?) is buggy, throws NullPointerException
    MIUI has bug and returns bad opCode like 10005, so compare with valid range
@@ -129,7 +158,7 @@ public abstract class HiddenAPIs {
    Returning null is considered an error, so return empty List if no error
   */
   public abstract List<MyPackageOps> getMyPackageOpsList(
-      int uid, String packageName, String op, int opNum, Callback callback)
+      int uid, String packageName, String op, int opNum)
       throws HiddenAPIsException, HiddenAPIsError;
 
   //////////////////////////////////////////////////////////////////
@@ -164,24 +193,27 @@ public abstract class HiddenAPIs {
   @HiddenMethod(
       name = "getPermissionFlags",
       cls = {IPackageManager.class, IPermissionManager.class})
+  @DaemonOnly
   @Privileged(
       requires = {"android.permission.GRANT_RUNTIME_PERMISSIONS", "REVOKE_RUNTIME_PERMISSIONS"})
-  @ThrowsSecurityException
+  @Throws(name = "SecurityException")
   // getPermissionFlags() moved from IPackageManager to IPermissionManager in SDK 30.
   public abstract int getPermissionFlags(String permName, String pkgName, int userId)
       throws HiddenAPIsException;
 
   @HiddenMethod(name = "grantRuntimePermission", cls = IPackageManager.class)
+  @DaemonOnly
   @Privileged(requires = "android.permission.GRANT_RUNTIME_PERMISSIONS")
-  @ThrowsSecurityException
+  @Throws(name = "SecurityException")
   public abstract void grantRuntimePermission(String pkgName, String permName, int userId)
       throws HiddenAPIsException;
 
   @HiddenMethod(
       name = "revokeRuntimePermission",
       cls = {IPackageManager.class, IPermissionManager.class})
+  @DaemonOnly
   @Privileged(requires = "android.permission.REVOKE_RUNTIME_PERMISSIONS")
-  @ThrowsSecurityException
+  @Throws(name = "SecurityException")
   // revokeRuntimePermission() moved from IPackageManager to IPermissionManager in SDK 30.
   public abstract void revokeRuntimePermission(String pkgName, String permName, int userId)
       throws HiddenAPIsException;
@@ -191,17 +223,59 @@ public abstract class HiddenAPIs {
   //////////////////////////////////////////////////////////////////
 
   @HiddenMethod(name = "setApplicationEnabledSetting", cls = IPackageManager.class)
-  @Privileged
+  @DaemonOnly
+  @Privileged(
+      requires = {
+        "android.permission.CHANGE_COMPONENT_ENABLED_STATE",
+        "android.permission.INTERACT_ACROSS_USERS"
+      })
+  @Throws(name = "SecurityException")
   public abstract void setApplicationEnabledSetting(
       String pkg, int state, int flags, int userId, String callingPkg) throws HiddenAPIsException;
 
+  @HiddenMethod(name = "getInstalledPackages", cls = IPackageManager.class)
+  @DaemonOnly
+  @Privileged(requires = "android.permission.INTERACT_ACROSS_USERS")
+  @Throws(name = "SecurityException")
+  public abstract List<?> getInstalledPackages(int flags, int userId) throws HiddenAPIsException;
+
+  @HiddenMethod(name = "getPackageInfo", cls = IPackageManager.class)
+  @DaemonOnly
+  @Privileged(requires = "android.permission.INTERACT_ACROSS_USERS")
+  @Throws(name = "SecurityException")
+  public abstract PackageInfo getPkgInfo(String pkgName, int flags, int userId)
+      throws HiddenAPIsException;
+
   //////////////////////////////////////////////////////////////////
-  //////////////////////////// PROCESSES ///////////////////////////
+  ////////////////////////////// OTHERS ////////////////////////////
   //////////////////////////////////////////////////////////////////
 
   @HiddenMethod(name = "getPidsForCommands", type = MType.STATIC_METHOD, cls = Process.class)
-  @Privileged
+  @DaemonOnly
   public abstract int[] getPidsForCommands(String[] commands);
+
+  @HiddenMethod(name = "startActivityAsUser", cls = IActivityManager.class)
+  @DaemonOnly
+  @Privileged
+  @Throws(name = "SecurityException")
+  public abstract int openAppInfo(String pkgName, int userId) throws HiddenAPIsException;
+
+  @HiddenField(name = "START_SUCCESS", type = FType.STATIC_FIELD, cls = ActivityManager.class)
+  @DaemonOnly
+  public int getAmSuccessCode() throws HiddenAPIsError {
+    return getStaticIntField("START_SUCCESS", ActivityManager.class);
+  }
+
+  @HiddenClass(cls = UserInfo.class)
+  @HiddenField(name = "id", type = FType.STATIC_FIELD, cls = UserInfo.class)
+  @HiddenField(name = "name", type = FType.STATIC_FIELD, cls = UserInfo.class)
+  @HiddenMethod(name = "getUsers(boolean)", cls = IUserManager.class, maxSDK = 29)
+  @HiddenMethod(name = "getUsers(boolean, boolean, boolean)", cls = IUserManager.class, minSDK = 29)
+  @DaemonOnly
+  @Privileged(requires = {"android.permission.MANAGE_USERS", "android.permission.CREATE_USERS"})
+  @Throws(name = "SecurityException")
+  // getUsers(boolean, boolean, boolean) was added in Android-10.0.0_r30, so cannot rely on SDK_INT
+  public abstract List<String> getUsers() throws HiddenAPIsException;
 
   //////////////////////////////////////////////////////////////////
   ///////////////////////// COMMON METHODS /////////////////////////
@@ -215,17 +289,19 @@ public abstract class HiddenAPIs {
     }
   }
 
-  // non-Daemon-only
+  @NonDaemonOnly
   public abstract boolean canUseIAppOpsService();
 
-  // non-Daemon-only
+  @NonDaemonOnly
   public abstract boolean canUseIPm();
 
-  public interface Callback {
+  public interface HiddenAPIsCallback {
 
     void onGetUidOpsNpException(Exception e);
 
     void onInvalidOpCode(int opCode, String pkgName);
+
+    void logError(String msg);
   }
 
   //////////////////////////////////////////////////////////////////
@@ -265,6 +341,10 @@ public abstract class HiddenAPIs {
 
     Class<?>[] cls();
 
+    int minSDK() default 1;
+
+    int maxSDK() default 1;
+
     enum MType {
       METHOD,
       STATIC_METHOD
@@ -280,6 +360,7 @@ public abstract class HiddenAPIs {
 
   @Retention(RetentionPolicy.SOURCE)
   @Target(ElementType.METHOD)
+  @Repeatable(HiddenFields.class)
   @interface HiddenField {
 
     String name();
@@ -288,21 +369,30 @@ public abstract class HiddenAPIs {
 
     Class<?> cls();
 
+    int minSDK() default 1;
+
     enum FType {
       FIELD,
       STATIC_FIELD
     }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @Target(ElementType.METHOD)
+    @interface HiddenFields {
+
+      HiddenField[] value();
+    }
   }
 
-  // Some methods throw SecurityException if the calling UID/PID doesn't have required permissions
-  //  e.g. ADB lacks these permissions on MIUI.
   @Retention(RetentionPolicy.SOURCE)
   @Target(ElementType.METHOD)
-  @interface ThrowsSecurityException {
+  @interface Throws {
 
-    String name() default "";
+    String name();
   }
 
+  // Mostly permission checks regard UIDs: 0 and 1000, some 2000 too. On failed check usually a
+  // SecurityException is thrown. E.g. ADB lacks permissions on MIUI.
   @Retention(RetentionPolicy.SOURCE)
   @Target(ElementType.METHOD)
   @interface Privileged {
@@ -311,4 +401,12 @@ public abstract class HiddenAPIs {
 
     String[] requires() default "";
   }
+
+  @Retention(RetentionPolicy.SOURCE)
+  @Target(ElementType.METHOD)
+  @interface DaemonOnly {}
+
+  @Retention(RetentionPolicy.SOURCE)
+  @Target(ElementType.METHOD)
+  @interface NonDaemonOnly {}
 }

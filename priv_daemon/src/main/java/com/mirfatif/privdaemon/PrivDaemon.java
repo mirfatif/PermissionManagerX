@@ -4,6 +4,7 @@ import android.os.Process;
 import android.util.Log;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.PrivTasks;
+import com.mirfatif.privtasks.PrivTasks.PrivTasksCallback;
 import com.mirfatif.privtasks.Util;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIs;
 import java.io.BufferedReader;
@@ -40,7 +41,7 @@ public class PrivDaemon {
     }
 
     DEBUG = Boolean.parseBoolean(arguments[0]);
-    mPrivTasks = new PrivTasks(DEBUG);
+    mPrivTasks = new PrivTasks(new PrivTasksCallbackImpl());
 
     for (int pid : mPrivTasks.getPidsForCommands(new String[] {TAG})) {
       if (pid != Process.myPid()) {
@@ -202,6 +203,18 @@ public class PrivDaemon {
       case Commands.GET_PERMISSION_FLAGS:
         sendResponse(mPrivTasks.getPermissionFlags(args));
         break;
+      case Commands.GET_INSTALLED_PKGS:
+        sendResponse(mPrivTasks.getInstalledPackages(args));
+        break;
+      case Commands.GET_PKG_INFO:
+        sendResponse(mPrivTasks.getPkgInfo(args));
+        break;
+      case Commands.OPEN_APP_INFO:
+        sendResponse(mPrivTasks.openAppInfo(args));
+        break;
+      case Commands.GET_USERS:
+        sendResponse(mPrivTasks.getUsers());
+        break;
       default:
         Log.e(TAG, "Unknown command: " + args[0]);
     }
@@ -220,6 +233,19 @@ public class PrivDaemon {
       e.printStackTrace();
       Log.e(TAG, "Write error, shutting down");
       System.exit(0);
+    }
+  }
+
+  private class PrivTasksCallbackImpl implements PrivTasksCallback {
+
+    @Override
+    public boolean isDebug() {
+      return DEBUG;
+    }
+
+    @Override
+    public void logE(String msg) {
+      System.err.println(msg);
     }
   }
 

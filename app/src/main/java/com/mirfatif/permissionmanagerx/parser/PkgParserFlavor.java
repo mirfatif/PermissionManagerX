@@ -1,5 +1,7 @@
 package com.mirfatif.permissionmanagerx.parser;
 
+import static com.mirfatif.permissionmanagerx.parser.PackageParser.PM_GET_SIGNATURES;
+
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import com.mirfatif.permissionmanagerx.app.App;
@@ -26,10 +28,19 @@ public class PkgParserFlavor {
 
   void onPkgListCompleted() {}
 
-  public void sortPkgList(List<PackageInfo> packageInfoList) {
+  void sortPkgList(List<PackageInfo> packageInfoList) {
     packageInfoList.sort(
         Comparator.comparing(
             pkgInfo ->
                 pkgInfo.applicationInfo.loadLabel(mPackageManager).toString().toUpperCase()));
+  }
+
+  List<PackageInfo> getPackageList() {
+    return mPackageManager.getInstalledPackages(PackageManager.GET_PERMISSIONS | PM_GET_SIGNATURES);
+  }
+
+  PackageInfo getPackageInfo(Package pkg) {
+    return PackageParser.getInstance()
+        .getPackageInfo(pkg.getName(), PackageManager.GET_PERMISSIONS);
   }
 }

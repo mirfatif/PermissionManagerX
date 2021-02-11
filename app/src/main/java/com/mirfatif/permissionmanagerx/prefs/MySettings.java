@@ -549,8 +549,12 @@ public class MySettings {
     for (String packageName : excludedApps) {
       String packageLabel;
       try {
+        int flags = PackageManager.MATCH_UNINSTALLED_PACKAGES;
         packageLabel =
-            packageManager.getApplicationInfo(packageName, 0).loadLabel(packageManager).toString();
+            packageManager
+                .getApplicationInfo(packageName, flags)
+                .loadLabel(packageManager)
+                .toString();
       } catch (NameNotFoundException e) {
         // package is not installed
         continue;

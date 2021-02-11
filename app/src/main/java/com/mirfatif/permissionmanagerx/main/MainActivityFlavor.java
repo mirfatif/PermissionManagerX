@@ -20,14 +20,24 @@ public class MainActivityFlavor {
   @SuppressWarnings("UnusedDeclaration")
   void onCreated() {}
 
-  @SuppressWarnings("UnusedDeclaration")
-  void onCreateOptionsMenu(Menu menu) {}
-
   void onResumed() {
     mFeedback.askForFeedback();
   }
 
   void onDestroyed() {}
+
+  @SuppressWarnings("UnusedDeclaration")
+  void onCreateOptionsMenu(Menu menu) {}
+
+  @SuppressWarnings("UnusedDeclaration")
+  boolean onPrepareOptionsMenu(Menu menu) {
+    return false;
+  }
+
+  @SuppressWarnings("UnusedDeclaration")
+  boolean onOptionsItemSelected(MenuItem item) {
+    return false;
+  }
 
   void onPackagesUpdated() {
     mMySettings.setMayAskForFeedback();
@@ -36,8 +46,5 @@ public class MainActivityFlavor {
 
   void onRestoreDone() {}
 
-  @SuppressWarnings("UnusedDeclaration")
-  public boolean onOptionsItemSelected(MenuItem item) {
-    return false;
-  }
+  void onPrivDaemonStarted() {}
 }

@@ -1,6 +1,8 @@
 package com.mirfatif.permissionmanagerx.parser;
 
 import android.annotation.SuppressLint;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.text.TextUtils;
@@ -8,6 +10,7 @@ import android.text.format.DateUtils;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.MySettingsFlavor;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -61,7 +64,9 @@ public class Package {
   static {
     try {
       PackageManager pm = App.getContext().getPackageManager();
-      BUILD_DATE = pm.getPackageInfo("android", 0).firstInstallTime;
+      PackageInfo pkgInfo = pm.getPackageInfo("android", 0);
+      ApplicationInfo appInfo = pkgInfo.applicationInfo;
+      BUILD_DATE = Math.max(pkgInfo.firstInstallTime, new File(appInfo.sourceDir).lastModified());
     } catch (NameNotFoundException ignored) {
       BUILD_DATE = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(365);
     }
@@ -211,6 +216,16 @@ public class Package {
               : null;
     }
     return mLastDate;
+  }
+
+  private boolean mIsRemoved = false;
+
+  public boolean isRemoved() {
+    return mIsRemoved;
+  }
+
+  public void setIsRemoved(boolean isRemoved) {
+    mIsRemoved = isRemoved;
   }
 
   public static final String SEARCH_CRITICAL = ":Critical";

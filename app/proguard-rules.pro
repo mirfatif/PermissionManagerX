@@ -22,6 +22,7 @@
 
 # Because of serialzation
 -keep class com.mirfatif.privtasks.MyPackageOps* { *; }
+-keep class com.mirfatif.privtasks.MyPackageInfo { *; }
 
 # Default preferences are accessed through Reflection
 -keep class com.mirfatif.permissionmanagerx.R$integer {

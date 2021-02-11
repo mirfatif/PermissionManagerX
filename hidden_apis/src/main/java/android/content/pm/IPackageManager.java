@@ -9,6 +9,10 @@ public interface IPackageManager {
 
   ParceledListSlice<?> queryPermissionsByGroup(String group, int flags) throws RemoteException;
 
+  ParceledListSlice<?> getInstalledPackages(int flags, int userId) throws RemoteException;
+
+  PackageInfo getPackageInfo(String packageName, int flags, int userId) throws RemoteException;
+
   int getPermissionFlags(String permName, String pkgName, int userId) throws RemoteException;
 
   void grantRuntimePermission(String pkgName, String permName, int userId) throws RemoteException;

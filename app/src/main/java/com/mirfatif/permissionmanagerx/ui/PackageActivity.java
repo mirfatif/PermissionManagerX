@@ -58,14 +58,16 @@ public class PackageActivity extends BaseActivity {
 
   private static final String TAG = "PackageActivity";
 
-  private List<Permission> mPermissionsList = new ArrayList<>();
-  private MySettings mMySettings;
-  private PrivDaemonHandler mPrivDaemonHandler;
-  private PackageParser mPackageParser;
-  private Package mPackage;
-  private SwipeRefreshLayout mRefreshLayout;
-  private PermissionAdapter mPermissionAdapter;
+  private final MySettings mMySettings = MySettings.getInstance();
+  private final PackageParser mPackageParser = PackageParser.getInstance();
+  private final PrivDaemonHandler mPrivDaemonHandler = PrivDaemonHandler.getInstance();
+
   private PkgActivityFlavor mPkgActivityFlavor;
+
+  private Package mPackage;
+  private List<Permission> mPermissionsList = new ArrayList<>();
+  private PermissionAdapter mPermissionAdapter;
+  private SwipeRefreshLayout mRefreshLayout;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -75,22 +77,18 @@ public class PackageActivity extends BaseActivity {
     mPkgActivityFlavor = new PkgActivityFlavor(this);
 
     int position = getIntent().getIntExtra(MainActivity.EXTRA_PKG_POSITION, -1);
-    if (position == -1) {
+    if (position == -1 || (mPackage = mPackageParser.getPackage(position)) == null) {
       Utils.showToast(R.string.something_bad_happened);
-      finish();
+      finishAfterTransition();
       return;
     }
 
-    mPackageParser = PackageParser.getInstance();
-    mPackage = mPackageParser.getPackage(position);
+    mPackage.setIsRemoved(false);
 
     ActionBar actionBar = getSupportActionBar();
     if (actionBar != null && mPackage != null) {
       actionBar.setTitle(mPackage.getLabel());
     }
-
-    mMySettings = MySettings.getInstance();
-    mPrivDaemonHandler = PrivDaemonHandler.getInstance();
 
     RecyclerView recyclerView = findViewById(R.id.package_recycler_view);
     mPermissionAdapter =
@@ -116,6 +114,14 @@ public class PackageActivity extends BaseActivity {
 
     mRefreshLayout = findViewById(R.id.package_refresh_layout);
     mRefreshLayout.setOnRefreshListener(() -> Utils.runInBg(this::updatePackage));
+  }
+
+  private boolean isPackageNull() {
+    if (mPackage == null) {
+      Utils.runInFg(this::finishAfterTransition);
+      return true;
+    }
+    return false;
   }
 
   private void setAppOpsMode(Permission permission, int pos, int mode, boolean uidMode) {
@@ -351,13 +357,20 @@ public class PackageActivity extends BaseActivity {
       Util.debugLog(TAG, "updatePackage() called");
     }
     mPackageParser.updatePackage(mPackage);
-    // The same Package Object is updated, but with new Permission Objects
-    updatePermissionsList();
+    if (mPackage == null || mPackage.isRemoved()) {
+      // Package is excluded due to changes made by user e.g. uninstalled or ref states changed
+      Utils.runInFg(this::finishAfterTransition);
+    } else {
+      // The same Package Object is updated, but with new Permission Objects
+      updatePermissionsList();
+    }
   }
 
   private void updatePermissionsList() {
     mPermissionsList = mPackage.getPermissionsList();
-    mPkgActivityFlavor.sortPermsList(mPermissionsList);
+    if (mPkgActivityFlavor != null) {
+      mPkgActivityFlavor.sortPermsList(mPermissionsList);
+    }
     submitPermsList();
     Utils.runInFg(this::checkEmptyPermissionsList);
     stopRefreshing();
@@ -404,7 +417,9 @@ public class PackageActivity extends BaseActivity {
     // Show a search hint
     mSearchView.setQueryHint(getString(R.string.search_menu_item));
 
-    mPkgActivityFlavor.onCreateOptionsMenu(menu);
+    if (mPkgActivityFlavor != null) {
+      mPkgActivityFlavor.onCreateOptionsMenu(menu);
+    }
     return super.onCreateOptionsMenu(menu);
   }
 
@@ -415,14 +430,16 @@ public class PackageActivity extends BaseActivity {
     menu.findItem(R.id.action_reset_app_ops).setVisible(havePerms);
     menu.findItem(R.id.action_set_all_references).setVisible(havePerms);
     menu.findItem(R.id.action_clear_references).setVisible(havePerms);
-    mPkgActivityFlavor.onPrepareOptionsMenu(menu, havePerms);
+    if (mPkgActivityFlavor != null) {
+      mPkgActivityFlavor.onPrepareOptionsMenu(menu, havePerms);
+    }
     return super.onPrepareOptionsMenu(menu);
   }
 
   private void submitPermsList() {
     CharSequence queryText = mSearchView == null ? null : mSearchView.getQuery();
     if (queryText == null || TextUtils.isEmpty(queryText)) {
-      Utils.runInFg(() -> mPermissionAdapter.submitList(new ArrayList<>(mPermissionsList)));
+      submitList(mPermissionsList);
       return;
     }
 
@@ -448,15 +465,23 @@ public class PackageActivity extends BaseActivity {
         return;
       }
       if (System.currentTimeMillis() - ts > 500) {
-        Utils.runInFg(() -> mPermissionAdapter.submitList(new ArrayList<>(permList)));
+        submitList(permList);
       }
     }
-    Utils.runInFg(() -> mPermissionAdapter.submitList(new ArrayList<>(permList)));
+    submitList(permList);
+  }
+
+  private void submitList(List<Permission> permList) {
+    if (mPermissionAdapter != null) {
+      Utils.runInFg(() -> mPermissionAdapter.submitList(new ArrayList<>(permList)));
+    }
   }
 
   private void collapseSearchView() {
-    mSearchView.onActionViewCollapsed();
-    mSearchView.setQuery(null, false);
+    if (mSearchView != null) {
+      mSearchView.onActionViewCollapsed();
+      mSearchView.setQuery(null, false);
+    }
     Utils.runInBg(this::submitPermsList);
   }
 
@@ -467,57 +492,91 @@ public class PackageActivity extends BaseActivity {
     }
 
     if (item.getItemId() == R.id.action_information) {
-      startActivity(
-          new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-              .setData(Uri.parse("package:" + mPackage.getName())));
+      openAppInfo();
       return true;
     }
 
     if (item.getItemId() == R.id.action_reset_app_ops && checkPrivileges()) {
-      AlertDialog dialog =
-          new Builder(this)
-              .setPositiveButton(R.string.yes, (d, which) -> Utils.runInBg(this::resetAppOps))
-              .setNegativeButton(R.string.no, null)
-              .setTitle(mPackage.getLabel())
-              .setMessage(R.string.reset_app_ops_confirmation)
-              .create();
-      new AlertDialogFragment(dialog).show(this, "RESET_APP_OPS_CONFIRM", false);
-
+      if (!isPackageNull()) {
+        AlertDialog dialog =
+            new Builder(this)
+                .setPositiveButton(R.string.yes, (d, which) -> Utils.runInBg(this::resetAppOps))
+                .setNegativeButton(R.string.no, null)
+                .setTitle(mPackage.getLabel())
+                .setMessage(R.string.reset_app_ops_confirmation)
+                .create();
+        new AlertDialogFragment(dialog).show(this, "RESET_APP_OPS_CONFIRM", false);
+      }
       return true;
     }
 
     if (item.getItemId() == R.id.action_set_all_references) {
-      AlertDialog dialog =
-          new Builder(this)
-              .setPositiveButton(R.string.yes, (d, which) -> Utils.runInBg(this::setAllReferences))
-              .setNegativeButton(R.string.no, null)
-              .setTitle(mPackage.getLabel())
-              .setMessage(R.string.set_references_confirmation)
-              .create();
-      new AlertDialogFragment(dialog).show(this, "SET_REF_CONFIRM", false);
-
+      if (!isPackageNull()) {
+        AlertDialog dialog =
+            new Builder(this)
+                .setPositiveButton(
+                    R.string.yes, (d, which) -> Utils.runInBg(this::setAllReferences))
+                .setNegativeButton(R.string.no, null)
+                .setTitle(mPackage.getLabel())
+                .setMessage(R.string.set_references_confirmation)
+                .create();
+        new AlertDialogFragment(dialog).show(this, "SET_REF_CONFIRM", false);
+      }
       return true;
     }
 
     if (item.getItemId() == R.id.action_clear_references) {
-      AlertDialog dialog =
-          new Builder(this)
-              .setPositiveButton(R.string.yes, (d, which) -> Utils.runInBg(this::clearReferences))
-              .setNegativeButton(R.string.no, null)
-              .setTitle(mPackage.getLabel())
-              .setMessage(R.string.clear_references_confirmation)
-              .create();
-      new AlertDialogFragment(dialog).show(this, "CLEAR_REF_CONFIRM", false);
-
+      if (!isPackageNull()) {
+        AlertDialog dialog =
+            new Builder(this)
+                .setPositiveButton(R.string.yes, (d, which) -> Utils.runInBg(this::clearReferences))
+                .setNegativeButton(R.string.no, null)
+                .setTitle(mPackage.getLabel())
+                .setMessage(R.string.clear_references_confirmation)
+                .create();
+        new AlertDialogFragment(dialog).show(this, "CLEAR_REF_CONFIRM", false);
+      }
       return true;
     }
 
-    return mPkgActivityFlavor.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    boolean res = false;
+    if (mPkgActivityFlavor != null) {
+      res = mPkgActivityFlavor.onOptionsItemSelected(item);
+    }
+    return res || super.onOptionsItemSelected(item);
+  }
+
+  private void openAppInfo() {
+    if (isPackageNull()) {
+      return;
+    }
+    int pkgUserId = Utils.getUserId(mPackage.getUid());
+    if (Utils.getUserId() == pkgUserId) {
+      startActivity(
+          new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+              .setData(Uri.parse("package:" + mPackage.getName())));
+    } else if (mMySettings.isPrivDaemonAlive()) {
+      String cmd = Commands.OPEN_APP_INFO + " " + mPackage.getName() + " " + pkgUserId;
+
+      if (mMySettings.isDebug()) {
+        Util.debugLog(TAG, "openAppInfo: sending command: " + cmd);
+      }
+
+      Utils.runInBg(() -> mPrivDaemonHandler.sendRequest(cmd));
+    }
   }
 
   private void resetAppOps() {
+    if (isPackageNull()) {
+      return;
+    }
     holdRefreshLock();
-    String cmd = Commands.RESET_APP_OPS + " " + Utils.getUserId() + " " + mPackage.getName();
+    String cmd =
+        Commands.RESET_APP_OPS
+            + " "
+            + Utils.getUserId(mPackage.getUid())
+            + " "
+            + mPackage.getName();
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "resetAppOps: sending command: " + cmd);
     }
@@ -527,10 +586,14 @@ public class PackageActivity extends BaseActivity {
       Utils.showToast(R.string.something_bad_happened);
       Log.e(TAG, "resetAppOps: response is " + res);
     }
+
     updateSpinnerSelection(true, null);
   }
 
   private void setAllReferences() {
+    if (isPackageNull()) {
+      return;
+    }
     List<BackupEntry> permEntries = new ArrayList<>();
     for (Permission permission : mPermissionsList) {
       if (!permission.isChangeable()) {
@@ -552,6 +615,9 @@ public class PackageActivity extends BaseActivity {
   }
 
   private void clearReferences() {
+    if (isPackageNull()) {
+      return;
+    }
     mMySettings.getPermDb().deletePackage(mPackage.getName());
     for (Permission permission : mPermissionsList) {
       mPackageParser.updatePermReferences(mPackage.getName(), permission.getName(), null);
@@ -560,7 +626,11 @@ public class PackageActivity extends BaseActivity {
   }
 
   private void setPermission(Permission permission) {
-    String command = mPackage.getName() + " " + permission.getName() + " " + Utils.getUserId();
+    if (isPackageNull()) {
+      return;
+    }
+    String command =
+        mPackage.getName() + " " + permission.getName() + " " + Utils.getUserId(mPackage.getUid());
     if (permission.isGranted()) {
       command = Commands.REVOKE_PERMISSION + " " + command;
     } else {
@@ -594,7 +664,7 @@ public class PackageActivity extends BaseActivity {
                       new Intent(App.getContext(), MainActivity.class)
                           .setAction(MainActivity.ACTION_SHOW_DRAWER)
                           .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
-                  finish();
+                  finishAfterTransition();
                 })
             .setNegativeButton(android.R.string.cancel, null)
             .setTitle(R.string.privileges)
@@ -625,7 +695,7 @@ public class PackageActivity extends BaseActivity {
 
   @Override
   public void onBackPressed() {
-    if (!TextUtils.isEmpty(mSearchView.getQuery())) {
+    if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
       collapseSearchView();
       return;
     }
@@ -636,6 +706,10 @@ public class PackageActivity extends BaseActivity {
 
     @Override
     public void onClick(Permission permission) {
+      if (isPackageNull()) {
+        return;
+      }
+
       if (!checkPrivileges()) {
         return;
       }
@@ -671,6 +745,11 @@ public class PackageActivity extends BaseActivity {
 
     @Override
     public void onSelect(Permission permission, int selectedValue) {
+      if (mPackage == null || mPermissionAdapter == null) {
+        finishAfterTransition();
+        return;
+      }
+
       int pos = mPermissionAdapter.getCurrentList().indexOf(permission);
       if (!checkPrivileges()) {
         updateSpinnerSelectionInBg(pos);
