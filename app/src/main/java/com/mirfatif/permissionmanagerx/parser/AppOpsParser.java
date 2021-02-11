@@ -6,6 +6,7 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
+import com.mirfatif.permissionmanagerx.svc.DaemonCmdRcvSvc;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.MyPackageOps;
@@ -252,6 +253,16 @@ public class AppOpsParser {
     @Override
     public void logE(String msg) {
       Log.e(TAG, msg);
+    }
+
+    @Override
+    public int getAppUserId() {
+      return Utils.getUserId();
+    }
+
+    @Override
+    public void sendRequest(String command) {
+      DaemonCmdRcvSvc.showDaemonMsg(command);
     }
   }
 }

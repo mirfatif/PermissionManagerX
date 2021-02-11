@@ -64,7 +64,9 @@ public class LogcatService extends Service {
             }
           }
         });
-    return super.onStartCommand(intent, flags, startId);
+
+    // Do not restart the service if the process is killed
+    return Service.START_NOT_STICKY;
   }
 
   private CountDownTimer mTimer;

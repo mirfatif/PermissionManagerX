@@ -47,6 +47,10 @@
 
     <service android:name=".svc.LogcatService" />
     <service android:name=".svc.NotifDismissSvc"/>
+    <service
+      android:exported="true"
+      android:name=".svc.DaemonCmdRcvSvc"
+      tools:ignore="ExportedService" />
 
     <provider
       android:name="androidx.core.content.FileProvider"

@@ -29,6 +29,8 @@ public class PrivDaemon {
   private InputStream mInputStream;
   private BufferedReader mCmdReader;
   private boolean DEBUG;
+  private int mAppUserId;
+  private String mCodeWord;
 
   private PrivDaemon(String[] arguments) {
     setDefaultExceptionHandler();
@@ -41,6 +43,8 @@ public class PrivDaemon {
     }
 
     DEBUG = Boolean.parseBoolean(arguments[0]);
+    mAppUserId = Integer.parseInt(arguments[1]);
+    mCodeWord = arguments[2];
     mPrivTasks = new PrivTasks(new PrivTasksCallbackImpl());
 
     for (int pid : mPrivTasks.getPidsForCommands(new String[] {TAG})) {
@@ -64,6 +68,7 @@ public class PrivDaemon {
           Log.d(TAG, "Listening at port " + port);
         }
       } catch (IOException e) {
+        mPrivTasks.sendRequest(Commands.LISTEN_ON_LOOPBACK_FAILED, mCodeWord);
         e.printStackTrace();
         return;
       }
@@ -88,6 +93,7 @@ public class PrivDaemon {
         mOutputStream = client.getOutputStream();
         mInputStream = client.getInputStream();
       } catch (IOException e) {
+        mPrivTasks.sendRequest(Commands.ESTABLISH_CONNECTION_FAILED, mCodeWord);
         e.printStackTrace();
         return;
       }
@@ -128,8 +134,8 @@ public class PrivDaemon {
       }
       Log.i(TAG, "Bye bye!");
     } catch (IOException e) {
+      System.err.println("Read/write error, shutting down");
       e.printStackTrace();
-      Log.e(TAG, "Read/write error, shutting down");
     }
   }
 
@@ -177,22 +183,28 @@ public class PrivDaemon {
         sendResponse(mPrivTasks.buildPermToOpCodeList(null));
         break;
       case Commands.GRANT_PERMISSION:
-        sendResponse(mPrivTasks.grantRevokePermission(true, args));
+        mPrivTasks.grantRevokePermission(true, args);
+        sendResponse(null);
         break;
       case Commands.REVOKE_PERMISSION:
-        sendResponse(mPrivTasks.grantRevokePermission(false, args));
+        mPrivTasks.grantRevokePermission(false, args);
+        sendResponse(null);
         break;
       case Commands.ENABLE_PACKAGE:
-        sendResponse(mPrivTasks.setAppEnabledState(true, args));
+        mPrivTasks.setAppEnabledState(true, args);
+        sendResponse(null);
         break;
       case Commands.DISABLE_PACKAGE:
-        sendResponse(mPrivTasks.setAppEnabledState(false, args));
+        mPrivTasks.setAppEnabledState(false, args);
+        sendResponse(null);
         break;
       case Commands.SET_APP_OPS_MODE:
-        sendResponse(mPrivTasks.setAppOpsMode(args));
+        mPrivTasks.setAppOpsMode(args);
+        sendResponse(null);
         break;
       case Commands.RESET_APP_OPS:
-        sendResponse(mPrivTasks.resetAppOps(args));
+        mPrivTasks.resetAppOps(args);
+        sendResponse(null);
         break;
       case Commands.GET_OP_NUM:
         sendResponse(mPrivTasks.getNumOps());
@@ -210,13 +222,14 @@ public class PrivDaemon {
         sendResponse(mPrivTasks.getPkgInfo(args));
         break;
       case Commands.OPEN_APP_INFO:
-        sendResponse(mPrivTasks.openAppInfo(args));
+        mPrivTasks.openAppInfo(args);
+        sendResponse(null);
         break;
       case Commands.GET_USERS:
         sendResponse(mPrivTasks.getUsers());
         break;
       default:
-        Log.e(TAG, "Unknown command: " + args[0]);
+        System.err.println("Unknown command: " + args[0]);
     }
   }
 
@@ -230,8 +243,8 @@ public class PrivDaemon {
       mStdOutStream.writeObject(object);
       mStdOutStream.flush();
     } catch (IOException e) {
+      System.err.println("sendResponse: write error, shutting down");
       e.printStackTrace();
-      Log.e(TAG, "Write error, shutting down");
       System.exit(0);
     }
   }
@@ -246,6 +259,16 @@ public class PrivDaemon {
     @Override
     public void logE(String msg) {
       System.err.println(msg);
+    }
+
+    @Override
+    public int getAppUserId() {
+      return mAppUserId;
+    }
+
+    @Override
+    public void sendRequest(String command) {
+      mPrivTasks.sendRequest(command, mCodeWord);
     }
   }
 

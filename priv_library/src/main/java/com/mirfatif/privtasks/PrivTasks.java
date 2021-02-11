@@ -102,6 +102,7 @@ public class PrivTasks {
           permGroupsList.add(((PermissionGroupInfo) pgi).name);
         }
       } catch (HiddenAPIsException e) {
+        mCallback.sendRequest(Commands.GET_PERM_GRP_INFO_LIST_FAILED);
         e.printStackTrace();
       }
     }
@@ -138,43 +139,39 @@ public class PrivTasks {
     return permToOpCodeList;
   }
 
-  public Integer setAppOpsMode(String[] args) throws HiddenAPIsError {
-    if (haveWrongArgs(args, 4)) {
-      return -1;
-    }
-    int op = mHiddenAPIs.strDebugOpToOp(args[1]);
-    int uid = Integer.parseInt(args[2]);
-    String pkgName = args[3];
-    int mode = Integer.parseInt(args[4]);
+  public void setAppOpsMode(String[] args) throws HiddenAPIsError {
+    if (!haveWrongArgs(args, 4)) {
+      int op = mHiddenAPIs.strDebugOpToOp(args[1]);
+      int uid = Integer.parseInt(args[2]);
+      String pkgName = args[3];
+      int mode = Integer.parseInt(args[4]);
 
-    try {
-      if (pkgName.equals("null")) {
-        mHiddenAPIs.setUidMode(op, uid, mode);
-      } else {
-        mHiddenAPIs.setMode(op, uid, pkgName, mode);
+      try {
+        if (pkgName.equals("null")) {
+          mHiddenAPIs.setUidMode(op, uid, mode);
+        } else {
+          mHiddenAPIs.setMode(op, uid, pkgName, mode);
+        }
+      } catch (HiddenAPIsException e) {
+        mCallback.sendRequest(Commands.SET_APP_OPS_MODE_FAILED);
+        e.printStackTrace();
       }
-      return null;
-    } catch (HiddenAPIsException e) {
-      e.printStackTrace();
-      return -1;
     }
   }
 
-  public Integer resetAppOps(String[] args) {
-    if (haveWrongArgs(args, 2)) {
-      return -1;
-    }
-    try {
-      mHiddenAPIs.resetAllModes(Integer.parseInt(args[1]), args[2]);
-      return null;
-    } catch (HiddenAPIsException e) {
-      e.printStackTrace();
-      return -1;
+  public void resetAppOps(String[] args) {
+    if (!haveWrongArgs(args, 2)) {
+      try {
+        mHiddenAPIs.resetAllModes(Integer.parseInt(args[1]), args[2]);
+      } catch (HiddenAPIsException e) {
+        mCallback.sendRequest(Commands.RESET_APP_OPS_FAILED);
+        e.printStackTrace();
+      }
     }
   }
 
   public List<MyPackageOps> getOpsForPackage(String[] args) {
-    if (haveWrongArgs(args, 3)) {
+    if (haveWrongArgs(args, 3, false)) {
       return null;
     }
     return getMyPackageOpsList(Integer.parseInt(args[1]), args[2], args[3]);
@@ -195,7 +192,7 @@ public class PrivTasks {
   //////////////////////////////////////////////////////////////////
 
   public Integer getPermissionFlags(String[] args) {
-    if (haveWrongArgs(args, 3)) {
+    if (haveWrongArgs(args, 3, false)) {
       return null;
     }
     try {
@@ -206,20 +203,18 @@ public class PrivTasks {
     }
   }
 
-  public Integer grantRevokePermission(boolean grant, String[] args) {
-    if (haveWrongArgs(args, 3)) {
-      return -1;
-    }
-    try {
-      if (grant) {
-        mHiddenAPIs.grantRuntimePermission(args[1], args[2], Integer.parseInt(args[3]));
-      } else {
-        mHiddenAPIs.revokeRuntimePermission(args[1], args[2], Integer.parseInt(args[3]));
+  public void grantRevokePermission(boolean grant, String[] args) {
+    if (!haveWrongArgs(args, 3)) {
+      try {
+        if (grant) {
+          mHiddenAPIs.grantRuntimePermission(args[1], args[2], Integer.parseInt(args[3]));
+        } else {
+          mHiddenAPIs.revokeRuntimePermission(args[1], args[2], Integer.parseInt(args[3]));
+        }
+      } catch (HiddenAPIsException e) {
+        mCallback.sendRequest(grant ? Commands.GRANT_PERM_FAILED : Commands.REVOKE_PERM_FAILED);
+        e.printStackTrace();
       }
-      return null;
-    } catch (HiddenAPIsException e) {
-      e.printStackTrace();
-      return -1;
     }
   }
 
@@ -227,27 +222,25 @@ public class PrivTasks {
   //////////////////////////// PACKAGES ////////////////////////////
   //////////////////////////////////////////////////////////////////
 
-  public Integer setAppEnabledState(boolean enable, String[] args) {
-    if (haveWrongArgs(args, 2)) {
-      return -1;
-    }
-    String pkg = args[1];
-    int userId = Integer.parseInt(args[2]);
-    String callingPkg = "shell:" + Process.myUid();
+  public void setAppEnabledState(boolean enable, String[] args) {
+    if (!haveWrongArgs(args, 2)) {
+      String pkg = args[1];
+      int userId = Integer.parseInt(args[2]);
+      String callingPkg = "shell:" + Process.myUid();
 
-    int state;
-    if (enable) {
-      state = PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
-    } else {
-      state = PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER;
-    }
+      int state;
+      if (enable) {
+        state = PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
+      } else {
+        state = PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER;
+      }
 
-    try {
-      mHiddenAPIs.setApplicationEnabledSetting(pkg, state, 0, userId, callingPkg);
-      return null;
-    } catch (HiddenAPIsException e) {
-      e.printStackTrace();
-      return -1;
+      try {
+        mHiddenAPIs.setApplicationEnabledSetting(pkg, state, 0, userId, callingPkg);
+      } catch (HiddenAPIsException e) {
+        mCallback.sendRequest(enable ? Commands.ENABLE_PKG_FAILED : Commands.DISABLE_PKG_FAILED);
+        e.printStackTrace();
+      }
     }
   }
 
@@ -271,6 +264,7 @@ public class PrivTasks {
       }
       return myPkgInfoList;
     } catch (HiddenAPIsException e) {
+      mCallback.sendRequest(Commands.GET_INSTALLED_PKGS_FAILED);
       e.printStackTrace();
       return null;
     }
@@ -288,6 +282,7 @@ public class PrivTasks {
     try {
       pkgInfo = mHiddenAPIs.getPkgInfo(pkgName, flags, userId);
     } catch (HiddenAPIsException e) {
+      mCallback.sendRequest(Commands.GET_PKG_INFO_FAILED);
       e.printStackTrace();
       return null;
     }
@@ -312,22 +307,20 @@ public class PrivTasks {
     return mHiddenAPIs.getPidsForCommands(commands);
   }
 
-  public Integer openAppInfo(String[] args) {
-    if (haveWrongArgs(args, 2)) {
-      return -1;
-    }
-    String pkgName = args[1];
-    int userId = Integer.parseInt(args[2]);
+  public void openAppInfo(String[] args) {
+    if (!haveWrongArgs(args, 2)) {
+      String pkgName = args[1];
+      int userId = Integer.parseInt(args[2]);
 
-    try {
-      int res = mHiddenAPIs.openAppInfo(pkgName, userId);
-      if (res != getAmSuccessCode()) {
-        mCallback.logE(TAG + ": openAppInfo: result code: " + res);
+      try {
+        int res = mHiddenAPIs.openAppInfo(pkgName, userId);
+        if (res != getAmSuccessCode()) {
+          mCallback.logE(TAG + ": openAppInfo: result code: " + res);
+        }
+      } catch (HiddenAPIsException e) {
+        mCallback.sendRequest(Commands.OPEN_APP_INFO_FAILED);
+        e.printStackTrace();
       }
-      return null;
-    } catch (HiddenAPIsException e) {
-      e.printStackTrace();
-      return -1;
     }
   }
 
@@ -340,10 +333,19 @@ public class PrivTasks {
     }
   }
 
+  public void sendRequest(String command, String codeWord) {
+    try {
+      mHiddenAPIs.sendRequest(command, mCallback.getAppUserId(), codeWord);
+    } catch (HiddenAPIsException e) {
+      e.printStackTrace();
+    }
+  }
+
   public List<String> getUsers() {
     try {
       return mHiddenAPIs.getUsers();
     } catch (HiddenAPIsException e) {
+      mCallback.sendRequest(Commands.GET_USERS_FAILED);
       e.printStackTrace();
       return null;
     }
@@ -362,8 +364,15 @@ public class PrivTasks {
   }
 
   private boolean haveWrongArgs(String[] cmd, int count) {
+    return haveWrongArgs(cmd, count, true);
+  }
+
+  private boolean haveWrongArgs(String[] cmd, int count, boolean showToast) {
     if (cmd.length == count + 1) {
       return false;
+    }
+    if (showToast) {
+      mCallback.sendRequest(Commands.WRONG_ARGS_RECEIVED);
     }
     mCallback.logE(TAG + ": Bad command: " + Arrays.toString(cmd));
     return true;
@@ -419,5 +428,9 @@ public class PrivTasks {
     boolean isDebug();
 
     void logE(String msg);
+
+    int getAppUserId();
+
+    void sendRequest(String command);
   }
 }

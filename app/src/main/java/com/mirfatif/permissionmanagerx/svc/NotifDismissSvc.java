@@ -37,7 +37,7 @@ public class NotifDismissSvc extends Service {
         startService(intent);
       }
     }
-    stopSelf();
-    return super.onStartCommand(intent, flags, startId);
+    stopSelf(startId); // Stop if no pending requests
+    return Service.START_NOT_STICKY;
   }
 }

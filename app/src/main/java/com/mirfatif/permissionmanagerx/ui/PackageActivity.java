@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -145,14 +144,7 @@ public class PackageActivity extends BaseActivity {
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "setAppOpsMode: sending command: " + command);
     }
-    Object res = mPrivDaemonHandler.sendRequest(command);
-
-    // new Permission objects are created, so cannot check previous one for new state
-    if (res != null) {
-      Utils.showToast(R.string.something_bad_happened);
-      Log.e(TAG, "setAppOpsMode: response is " + res);
-    }
-
+    mPrivDaemonHandler.sendRequest(command);
     updateSpinnerSelection(true, pos);
   }
 
@@ -580,13 +572,8 @@ public class PackageActivity extends BaseActivity {
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "resetAppOps: sending command: " + cmd);
     }
-    Object res = mPrivDaemonHandler.sendRequest(cmd);
+    mPrivDaemonHandler.sendRequest(cmd);
     updatePackage();
-    if (res != null) {
-      Utils.showToast(R.string.something_bad_happened);
-      Log.e(TAG, "resetAppOps: response is " + res);
-    }
-
     updateSpinnerSelection(true, null);
   }
 
@@ -640,14 +627,8 @@ public class PackageActivity extends BaseActivity {
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "setPermission: sending command: " + command);
     }
-    Object res = mPrivDaemonHandler.sendRequest(command);
+    mPrivDaemonHandler.sendRequest(command);
     updatePackage();
-
-    // new Permission objects are created, so cannot check previous one for new state
-    if (res != null) {
-      Utils.showToast(R.string.something_bad_happened);
-      Log.e(TAG, "setPermission: response is " + res);
-    }
   }
 
   private boolean checkPrivileges() {

@@ -35,4 +35,25 @@ public class Commands {
   public static final String GET_PKG_INFO = "GET_PKG_INFO";
   public static final String OPEN_APP_INFO = "OPEN_APP_INFO";
   public static final String GET_USERS = "GET_USERS";
+
+  // From daemon to app
+  public static final String APP_PKG_NAME = "com.mirfatif.permissionmanagerx";
+  public static final String CMD_RCV_SVC = ".svc.DaemonCmdRcvSvc";
+  public static final String CODE_WORD = "CODE_WORD";
+
+  public static final String LISTEN_ON_LOOPBACK_FAILED = "LISTEN_ON_LOOPBACK_FAILED";
+  public static final String ESTABLISH_CONNECTION_FAILED = "ESTABLISH_CONNECTION_FAILED";
+
+  public static final String WRONG_ARGS_RECEIVED = "WRONG_ARGS";
+  public static final String SET_APP_OPS_MODE_FAILED = "SET_APP_OPS_MODE_FAILED";
+  public static final String RESET_APP_OPS_FAILED = "RESET_APP_OPS_FAILED";
+  public static final String GRANT_PERM_FAILED = "GRANT_PERM_FAILED";
+  public static final String REVOKE_PERM_FAILED = "REVOKE_PERM_FAILED";
+  public static final String ENABLE_PKG_FAILED = "ENABLE_PKG_FAILED";
+  public static final String DISABLE_PKG_FAILED = "DISABLE_PKG_FAILED";
+  public static final String OPEN_APP_INFO_FAILED = "OPEN_APP_INFO_FAILED";
+  public static final String GET_PKG_INFO_FAILED = "GET_PKG_INFO_FAILED";
+  public static final String GET_INSTALLED_PKGS_FAILED = "GET_INSTALLED_PKGS_FAILED";
+  public static final String GET_USERS_FAILED = "GET_USERS_FAILED";
+  public static final String GET_PERM_GRP_INFO_LIST_FAILED = "GET_PERM_GRP_INFO_LIST_FAILED";
 }

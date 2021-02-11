@@ -6,6 +6,7 @@ import android.util.Log;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.svc.DaemonCmdRcvSvc;
 import com.mirfatif.permissionmanagerx.svc.LogcatService;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;
@@ -114,6 +115,8 @@ public class PrivDaemonHandler {
             + daemonContext
             + " "
             + Utils.getUserId()
+            + " "
+            + DaemonCmdRcvSvc.CODE_WORD
             + " "
             + dexFilePath
             + " "

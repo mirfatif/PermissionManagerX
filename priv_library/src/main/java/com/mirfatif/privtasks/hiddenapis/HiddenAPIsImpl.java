@@ -1,10 +1,14 @@
 package com.mirfatif.privtasks.hiddenapis;
 
+import static com.mirfatif.privtasks.Commands.APP_PKG_NAME;
+import static com.mirfatif.privtasks.Commands.CMD_RCV_SVC;
+
 import android.app.ActivityManagerNative;
 import android.app.AppOpsManager;
 import android.app.AppOpsManager.OpEntry;
 import android.app.AppOpsManager.PackageOps;
 import android.app.IActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.IPackageManager;
@@ -21,6 +25,7 @@ import android.os.ServiceManager;
 import android.permission.IPermissionManager;
 import android.provider.Settings;
 import com.android.internal.app.IAppOpsService;
+import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.MyPackageOps;
 import java.util.ArrayList;
 import java.util.List;
@@ -376,6 +381,27 @@ public class HiddenAPIsImpl extends HiddenAPIs {
           null, null, intent, null, null, null, 0, 0, null, null, userId);
     } catch (RemoteException | SecurityException e) {
       throw new HiddenAPIsException(e);
+    }
+  }
+
+  public void sendRequest(String command, int userId, String codeWord) throws HiddenAPIsException {
+    Intent intent = new Intent(command).setClassName(APP_PKG_NAME, APP_PKG_NAME + CMD_RCV_SVC);
+    intent.putExtra(Commands.CODE_WORD, codeWord);
+    ComponentName cn;
+    try {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        cn = mIActivityManager.startService(null, intent, null, false, APP_PKG_NAME, null, userId);
+      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        cn = mIActivityManager.startService(null, intent, null, false, APP_PKG_NAME, userId);
+      } else {
+        cn = mIActivityManager.startService(null, intent, null, APP_PKG_NAME, userId);
+      }
+    } catch (RemoteException | SecurityException e) {
+      throw new HiddenAPIsException(e);
+    }
+
+    if (cn == null || !cn.getPackageName().equals(APP_PKG_NAME)) {
+      throw new HiddenAPIsException("Could not start DaemonToastSvc");
     }
   }
 

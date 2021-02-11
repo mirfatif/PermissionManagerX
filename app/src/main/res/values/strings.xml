@@ -268,4 +268,21 @@
   <string name="zoom_in_menu_item">Zoom In</string>
   <string name="zoom_out_menu_item">Zoom Out</string>
 
+  <!--Daemon return messages-->
+  <string name="daemon_listen_on_loopback_failed">Daemon failed to listen on 127.0.0.1</string>
+  <string name="daemon_establish_connection_failed">Daemon failed to establish connection with client</string>
+
+  <string name="daemon_wrong_args_received">Wrong arguments</string>
+  <string name="daemon_set_app_ops_mode_failed">Setting AppOps mode failed</string>
+  <string name="daemon_reset_app_ops_failed">Resetting AppOps failed</string>
+  <string name="daemon_grant_perm_failed">Granting permission failed</string>
+  <string name="daemon_revoke_perm_failed">Revoking permission failed</string>
+  <string name="daemon_enable_pkg_failed">Enabling app failed</string>
+  <string name="daemon_disable_pkg_failed">Disabling app failed</string>
+  <string name="daemon_open_app_info_failed">Opening app info failed</string>
+  <string name="daemon_get_pkg_info_failed">Getting app info failed</string>
+  <string name="daemon_get_installed_pkgs_failed">Getting apps list failed</string>
+  <string name="daemon_get_users_failed">Getting users list failed</string>
+  <string name="daemon_get_perm_grp_info_list_failed">Getting permission groups failed</string>
+
 </resources>

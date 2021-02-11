@@ -266,6 +266,26 @@ public abstract class HiddenAPIs {
     return getStaticIntField("START_SUCCESS", ActivityManager.class);
   }
 
+  @HiddenMethod(
+      name =
+          "ComponentName startService(IApplicationThread, Intent, String, boolean, String, String, int)",
+      cls = IActivityManager.class,
+      minSDK = 30)
+  @HiddenMethod(
+      name = "ComponentName startService(IApplicationThread, Intent, String, boolean, String, int)",
+      cls = IActivityManager.class,
+      minSDK = 26,
+      maxSDK = 29)
+  @HiddenMethod(
+      name = "ComponentName startService(IApplicationThread, Intent, String, String, int)",
+      cls = IActivityManager.class,
+      maxSDK = 25)
+  @DaemonOnly
+  @Privileged
+  @Throws(name = "SecurityException")
+  public abstract void sendRequest(String command, int userId, String codeWord)
+      throws HiddenAPIsException;
+
   @HiddenClass(cls = UserInfo.class)
   @HiddenField(name = "id", type = FType.STATIC_FIELD, cls = UserInfo.class)
   @HiddenField(name = "name", type = FType.STATIC_FIELD, cls = UserInfo.class)
