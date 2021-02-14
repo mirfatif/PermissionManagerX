@@ -77,7 +77,7 @@
   <string name="adb_connect_interrupted">ADB connection interrupted</string>
   <string name="adb_key_pair_failed">Creating ADB key pair failed</string>
   <string name="adb_authentication_failed">ADB authentication failed</string>
-  <string name="adb_command_fail">ADB command execution failed</string>
+  <string name="adb_command_fail">ADB command failed</string>
   <string name="adb_connect_fail_long">
     <![CDATA[
       Connecting to ADB failed.
@@ -134,6 +134,7 @@
 
   <!--PrivDaemonHandler-->
   <string name="dex_location_changed">Switching daemon load location</string>
+  <string name="files_not_extracted_accessible">Files not extracted or not accessible</string>
   <string name="priv_daemon_died">Privileged daemon died</string>
 
   <!--LogcatService-->

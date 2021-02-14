@@ -91,8 +91,9 @@ public class MainActivity extends BaseActivity {
   private ActionBarDrawerToggle mDrawerToggle;
   private NavigationView mNavigationView;
 
+  // On Android 9- onCreate is called twice after applying night theme, so keep synced.
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
+  protected synchronized void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     if (setNightTheme()) {
@@ -592,7 +593,10 @@ public class MainActivity extends BaseActivity {
         });
   }
 
-  boolean waitForFuture(Future<?> future) {
+  private boolean waitForFuture(Future<?> future) {
+    if (future == null) {
+      return false;
+    }
     try {
       future.get();
       return true;
@@ -715,58 +719,62 @@ public class MainActivity extends BaseActivity {
   //////////////////////////// PRIVILEGES //////////////////////////
   //////////////////////////////////////////////////////////////////
 
-  private synchronized void startPrivDaemon(boolean isFirstRun, boolean preferRoot) {
-    if (!mMySettings.isPrivDaemonAlive()) {
-      if (mMySettings.isDebug()) {
-        Util.debugLog(TAG, "startPrivDaemon: daemon is dead");
-      }
-      if (mMySettings.isRootGranted() || mMySettings.isAdbConnected()) {
-        Utils.runInFg(() -> mRoundProgressTextView.setText(R.string.starting_daemon));
+  private static final Object START_DAEMON_LOCK = new Object();
 
-        Boolean res = mPrivDaemonHandler.startDaemon(preferRoot);
-        if (res == null) {
-          showSnackBar(getString(R.string.daemon_logging_failed), 10000);
-        } else if (!res) {
-          showSnackBar(getString(R.string.daemon_failed), 10000);
+  private void startPrivDaemon(boolean isFirstRun, boolean preferRoot) {
+    synchronized (START_DAEMON_LOCK) {
+      if (!mMySettings.isPrivDaemonAlive()) {
+        if (mMySettings.isDebug()) {
+          Util.debugLog(TAG, "startPrivDaemon: daemon is dead");
         }
-      } else {
-        Log.e(TAG, "startPrivDaemon: Root access: unavailable, ADB shell: unavailable");
+        if (mMySettings.isRootGranted() || mMySettings.isAdbConnected()) {
+          Utils.runInFg(() -> mRoundProgressTextView.setText(R.string.starting_daemon));
 
-        if (mMySettings.shouldRemindMissingPrivileges()) {
-          Builder builder =
-              new Builder(this)
-                  .setPositiveButton(
-                      android.R.string.ok, (dialog, which) -> openDrawerForPrivileges())
-                  .setNeutralButton(
-                      R.string.do_not_remind, (d, which) -> mMySettings.setPrivReminderOff())
-                  .setNegativeButton(
-                      R.string.get_help,
-                      (dialog, which) ->
-                          startActivity(new Intent(App.getContext(), HelpActivity.class)))
-                  .setTitle(R.string.privileges)
-                  .setMessage(getString(R.string.grant_root_or_adb));
-          Utils.runInFg(
-              () -> {
-                AlertDialog dialog = builder.create();
-                Utils.removeButtonPadding(dialog);
-                new AlertDialogFragment(dialog).show(this, TAG_GRANT_ROOT_OR_ADB, false);
-              });
+          Boolean res = mPrivDaemonHandler.startDaemon(preferRoot);
+          if (res == null) {
+            showSnackBar(getString(R.string.daemon_logging_failed), 10000);
+          } else if (!res) {
+            showSnackBar(getString(R.string.daemon_failed), 10000);
+          }
+        } else {
+          Log.e(TAG, "startPrivDaemon: Root access: unavailable, ADB shell: unavailable");
+
+          if (mMySettings.shouldRemindMissingPrivileges()) {
+            Builder builder =
+                new Builder(this)
+                    .setPositiveButton(
+                        android.R.string.ok, (dialog, which) -> openDrawerForPrivileges())
+                    .setNeutralButton(
+                        R.string.do_not_remind, (d, which) -> mMySettings.setPrivReminderOff())
+                    .setNegativeButton(
+                        R.string.get_help,
+                        (dialog, which) ->
+                            startActivity(new Intent(App.getContext(), HelpActivity.class)))
+                    .setTitle(R.string.privileges)
+                    .setMessage(getString(R.string.grant_root_or_adb));
+            Utils.runInFg(
+                () -> {
+                  AlertDialog dialog = builder.create();
+                  Utils.removeButtonPadding(dialog);
+                  new AlertDialogFragment(dialog).show(this, TAG_GRANT_ROOT_OR_ADB, false);
+                });
+          }
         }
       }
-    }
 
-    // Get GET_APP_OPS_STATS permission if daemon is up
-    checkAppOpsPerm();
+      // Get GET_APP_OPS_STATS permission if daemon is up
+      checkAppOpsPerm();
 
-    // If have gained privileges
-    if (mMySettings.isPrivDaemonAlive() || mMySettings.isAppOpsGranted()) {
-      // If observers are set, update packages list.
-      if (!isFirstRun) {
-        mPackageParser.updatePackagesList();
+      // If have gained privileges
+      if (mMySettings.isPrivDaemonAlive() || mMySettings.isAppOpsGranted()) {
+        // If observers are set, update packages list.
+        if (!isFirstRun) {
+          mPackageParser.updatePackagesList();
+        }
       }
-    }
 
-    mMainActivityFlavor.onPrivDaemonStarted();
+      mMainActivityFlavor.onPrivDaemonStarted();
+    }
   }
 
   void restartPrivDaemon(boolean preferRoot) {
@@ -813,19 +821,14 @@ public class MainActivity extends BaseActivity {
     }
     Menu menu = mNavigationView.getMenu();
 
-    // if recreating
+    // If recreating
     mNavigationView.invalidate();
 
     setBoxCheckedAndSetListener(menu, R.id.action_root, mMySettings.isRootGranted());
     setBoxCheckedAndSetListener(menu, R.id.action_adb, mMySettings.isAdbConnected());
     setBoxCheckedAndSetListener(menu, R.id.action_dark_theme, mMySettings.forceDarkMode());
 
-    setDonateVisibility(menu.findItem(R.id.action_donate));
-  }
-
-  @SuppressWarnings("ConstantConditions")
-  private void setDonateVisibility(MenuItem item) {
-    item.setVisible(BuildConfig.GH_VERSION && !BuildConfig.AMAZ_VERSION);
+    menu.findItem(R.id.action_donate).setVisible(mMainActivityFlavor.getDonateVisibility());
   }
 
   private void setBoxCheckedAndSetListener(Menu menu, int id, boolean checked) {

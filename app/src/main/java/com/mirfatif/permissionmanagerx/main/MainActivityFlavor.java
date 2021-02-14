@@ -2,6 +2,7 @@ package com.mirfatif.permissionmanagerx.main;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 
 public class MainActivityFlavor {
@@ -37,6 +38,10 @@ public class MainActivityFlavor {
   @SuppressWarnings("UnusedDeclaration")
   boolean onOptionsItemSelected(MenuItem item) {
     return false;
+  }
+
+  boolean getDonateVisibility() {
+    return !BuildConfig.AMAZ_VERSION;
   }
 
   void onPackagesUpdated() {

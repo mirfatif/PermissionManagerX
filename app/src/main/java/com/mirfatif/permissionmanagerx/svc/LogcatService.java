@@ -216,21 +216,16 @@ public class LogcatService extends Service {
     Utils.runInFg(() -> startActivity(intent));
   }
 
-  public static boolean doLoggingFails(String... cmd) {
-    if (cmd.length != 2) {
-      Log.e(TAG, "doLogging: command length must be 2");
-      return true;
-    }
-
-    Process process = Utils.runCommand(TAG + ": doLogging", true, cmd[0]);
+  public static boolean doLoggingFails(String cmd1, String cmd2) {
+    Process process = Utils.runCommand(TAG + ": doLogging", true, cmd1);
     if (process == null) {
       return true;
     }
 
     Utils.runInBg(() -> readLogcatStream(process, null));
 
-    Log.i(TAG, "doLogging: sending command to shell: " + cmd[1]);
-    new PrintWriter(process.getOutputStream(), true).println(cmd[1]);
+    Log.i(TAG, "doLogging: sending command to shell: " + cmd2);
+    new PrintWriter(process.getOutputStream(), true).println(cmd2);
 
     return false;
   }
@@ -255,7 +250,7 @@ public class LogcatService extends Service {
     } finally {
       // If process exited itself
       sendStopLogIntent();
-      Utils.cleanProcess(reader, process, adb, TAG + ": readLogcatStream");
+      Utils.cleanStreams(process, adb, TAG + ": readLogcatStream");
     }
   }
 

@@ -26,7 +26,6 @@ import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.BulletSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
@@ -105,32 +104,38 @@ public class Utils {
       return false;
     }
 
-    if (cmd2 != null) {
-      new PrintWriter(new OutputStreamWriter(process.getOutputStream()), true).println(cmd2);
-    }
+    String res = null;
+    try (PrintWriter cmdWriter =
+            new PrintWriter(new OutputStreamWriter(process.getOutputStream()), true);
+        BufferedReader stdIn =
+            new BufferedReader(new InputStreamReader(process.getInputStream()))) {
 
-    try (BufferedReader stdIn =
-        new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-      String line;
-      String res = "";
-      if (match != null) {
-        res = stdIn.readLine();
-        if (!TextUtils.isEmpty(res)) {
-          Log.i(tag, res);
-        }
+      if (cmd2 != null) {
+        Log.i(tag, "Sending command: " + cmd2);
+        cmdWriter.println(cmd2);
       }
+
+      String line;
       while ((line = stdIn.readLine()) != null) {
         Log.i(tag, line);
+        res = line;
       }
 
       if (process.waitFor() != 0) {
         return false;
       }
-      if (match == null || res.trim().equals(match)) {
-        return true;
-      }
     } catch (IOException | InterruptedException e) {
-      Log.e(tag, e.toString());
+      e.printStackTrace();
+    } finally {
+      cleanStreams(process, null, tag);
+    }
+
+    if (match == null) {
+      return true;
+    }
+
+    if (res != null) {
+      return res.trim().equals(match);
     }
     return false;
   }
@@ -314,13 +319,8 @@ public class Utils {
     return (uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
   }
 
-  public static void cleanProcess(BufferedReader reader, Process process, Adb adb, String tag) {
-    // Try best to kill the process. The on reading daemon's logcat might not
-    // be killed because of different UID.
+  public static void cleanStreams(Process process, Adb adb, String tag) {
     try {
-      if (reader != null) {
-        reader.close();
-      }
       if (adb != null) {
         adb.close();
       }
@@ -328,6 +328,8 @@ public class Utils {
         process.getInputStream().close();
         process.getErrorStream().close();
         process.getOutputStream().close();
+        // Try the best to kill the process. The on reading daemon's logcat might not
+        // be killed because of different UID.
         process.destroy();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
           process.destroyForcibly();

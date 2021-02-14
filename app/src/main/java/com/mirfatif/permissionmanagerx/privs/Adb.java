@@ -36,7 +36,7 @@ public class Adb {
 
   private final boolean showToastOnFailure;
 
-  Adb(String command, boolean showToastOnFailure) throws AdbException {
+  public Adb(String command, boolean showToastOnFailure) throws AdbException {
     this.showToastOnFailure = showToastOnFailure;
     createConnection(command, true);
   }
@@ -155,40 +155,46 @@ public class Adb {
   }
 
   public static boolean isConnected(boolean showToastOnFailure) {
+    boolean res = runCommand("exec id -u", showToastOnFailure, TAG + ": isConnected", "2000", "0");
+    if (!res) {
+      Utils.showToast(R.string.adb_command_fail);
+    }
+    return res;
+  }
+
+  public static boolean runCommand(
+      String cmd, boolean showToastOnFailure, String tag, String... matches) {
     Adb adb;
     try {
-      adb = new Adb("exec id -u", showToastOnFailure);
+      adb = new Adb(cmd, showToastOnFailure);
     } catch (AdbException e) {
-      Log.e(TAG, "isConnected: " + e.toString());
+      Log.e(tag, e.toString());
       return false;
     }
 
-    BufferedReader adbReader = new BufferedReader(adb.getReader());
     String line, res = null;
-
-    try {
+    try (BufferedReader adbReader = new BufferedReader(adb.getReader())) {
       while ((line = adbReader.readLine()) != null) {
-        Log.i(TAG, "isConnected: " + line);
+        Log.i(tag, line);
         res = line;
       }
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
-      try {
-        adbReader.close();
-        adb.close();
-      } catch (IOException ignored) {
-      }
+      Utils.cleanStreams(null, adb, tag);
+    }
+
+    if (matches == null || matches.length == 0) {
+      return true;
     }
 
     if (res != null) {
-      for (String match : new String[] {"2000", "0"}) {
+      for (String match : matches) {
         if (res.trim().equals(match)) {
           return true;
         }
       }
     }
-    Utils.showToast(R.string.adb_command_fail);
     return false;
   }
 
@@ -292,7 +298,7 @@ public class Adb {
 
   private AdbOutputStream adbOutputStream;
 
-  AdbOutputStream getOutputStream() {
+  public AdbOutputStream getOutputStream() {
     if (adbOutputStream == null) {
       adbOutputStream = new AdbOutputStream(adbStream);
     }

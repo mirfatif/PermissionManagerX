@@ -17,6 +17,7 @@ import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDao;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDatabase;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Util;
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -201,6 +202,15 @@ public class MySettings {
 
   public void setDexInTmpDir(boolean dexInTmpDir) {
     savePref(R.string.pref_main_daemon_tmp_dir_key, dexInTmpDir);
+  }
+
+  public boolean shouldExtractFiles() {
+    return new File(App.getContext().getApplicationInfo().sourceDir).lastModified()
+        > getLongPref(R.string.pref_main_file_extraction_ts_enc_key);
+  }
+
+  public void setFileExtractionTs() {
+    savePref(R.string.pref_main_file_extraction_ts_enc_key, System.currentTimeMillis());
   }
 
   public boolean shouldCheckForUpdates() {
