@@ -123,7 +123,7 @@ public class PackageActivity extends BaseActivity {
     return false;
   }
 
-  private void setAppOpsMode(Permission permission, int pos, int mode, boolean uidMode) {
+  private void setAppOpsMode(Permission permission, Integer pos, int mode, boolean uidMode) {
     holdRefreshLock();
     String pkgName;
     if (uidMode) {
@@ -148,7 +148,7 @@ public class PackageActivity extends BaseActivity {
     updateSpinnerSelection(true, pos);
   }
 
-  private void updateSpinnerSelectionInBg(int position) {
+  private void updateSpinnerSelectionInBg(Integer position) {
     Utils.runInBg(() -> updateSpinnerSelection(false, position));
   }
 
@@ -695,16 +695,16 @@ public class PackageActivity extends BaseActivity {
         return;
       }
 
-      int warnResId = 0;
+      String warn = null;
       if (mMySettings.getBoolPref(R.string.pref_package_warn_dang_change_enc_key)) {
-        if (mPackage.isSystemApp()) {
-          warnResId = R.string.change_system_perms_warning;
-        } else if (mPackage.isFrameworkApp()) {
-          warnResId = R.string.change_framework_perms_warning;
+        if (mPackage.isFrameworkApp()) {
+          warn = getString(R.string.change_perms_warning, getString(R.string.framework));
+        } else if (mPackage.isSystemApp()) {
+          warn = getString(R.string.change_perms_warning, getString(R.string.system));
         }
       }
 
-      if (warnResId == 0) {
+      if (warn == null) {
         Utils.runInBg(() -> setPermission(permission));
         return;
       }
@@ -714,9 +714,14 @@ public class PackageActivity extends BaseActivity {
               .setPositiveButton(
                   R.string.yes, (d, which) -> Utils.runInBg(() -> setPermission(permission)))
               .setNegativeButton(R.string.no, null)
-              .setNeutralButton(R.string.do_not_remind, (d, which) -> doNotRemindDangAction())
+              .setNeutralButton(
+                  R.string.do_not_remind,
+                  (d, which) -> {
+                    doNotRemindDangAction();
+                    Utils.runInBg(() -> setPermission(permission));
+                  })
               .setTitle(R.string.warning)
-              .setMessage(Utils.breakParas(getString(warnResId)))
+              .setMessage(Utils.breakParas(warn))
               .create();
       new AlertDialogFragment(dialog).show(PackageActivity.this, "PERM_CHANGE_WARNING", false);
     }
@@ -725,62 +730,63 @@ public class PackageActivity extends BaseActivity {
   private class SpinnerSelectListener implements PermSpinnerSelectListener {
 
     @Override
-    public void onSelect(Permission permission, int selectedValue) {
+    public void onSelect(Permission perm, int selectedValue) {
       if (mPackage == null || mPermissionAdapter == null) {
         finishAfterTransition();
         return;
       }
 
-      int pos = mPermissionAdapter.getCurrentList().indexOf(permission);
+      int position = mPermissionAdapter.getCurrentList().indexOf(perm); // May come -1
+      Integer pos = position == mPermissionsList.indexOf(perm) && position >= 0 ? position : null;
       if (!checkPrivileges()) {
         updateSpinnerSelectionInBg(pos);
         return;
       }
 
-      int warnResId = 0;
+      String warn = null;
       if (mMySettings.getBoolPref(R.string.pref_package_warn_dang_change_enc_key)) {
-        if (mPackage.isSystemApp()) {
-          warnResId = R.string.change_system_perms_warning;
-        } else if (mPackage.isFrameworkApp()) {
-          warnResId = R.string.change_framework_perms_warning;
+        if (mPackage.isFrameworkApp()) {
+          warn = getString(R.string.change_perms_warning, getString(R.string.framework));
+        } else if (mPackage.isSystemApp()) {
+          warn = getString(R.string.change_perms_warning, getString(R.string.system));
         }
       }
 
-      boolean uidMode = permission.isPerUid();
+      boolean uidMode = perm.isPerUid();
 
       int affectedPkgCount = 0;
       if (uidMode) {
         affectedPkgCount = getPackageManager().getPackagesForUid(mPackage.getUid()).length;
       }
 
-      if (warnResId == 0 && (!uidMode || affectedPkgCount <= 1)) {
-        Utils.runInBg(() -> setAppOpsMode(permission, pos, selectedValue, uidMode));
+      if (warn == null && (!uidMode || affectedPkgCount <= 1)) {
+        Utils.runInBg(() -> setAppOpsMode(perm, pos, selectedValue, uidMode));
         return;
       }
 
       String msg = "";
       if (affectedPkgCount > 1) {
         msg = getString(R.string.uid_mode_app_ops_warning, affectedPkgCount - 1);
-        if (warnResId == 0) {
+        if (warn == null) {
           msg += "\n" + getString(R.string._continue);
         }
       }
 
-      if (warnResId != 0) {
+      if (warn != null) {
         if (!msg.isEmpty()) {
           msg += "\n";
         }
-        msg += getString(warnResId);
+        msg += warn;
       }
 
-      final boolean[] isYesButton = {false};
+      final boolean[] isYes = {false};
       Builder builder =
           new Builder(PackageActivity.this)
               .setPositiveButton(
                   R.string.yes,
                   (dialog, which) -> {
-                    isYesButton[0] = true;
-                    Utils.runInBg(() -> setAppOpsMode(permission, pos, selectedValue, uidMode));
+                    isYes[0] = true;
+                    Utils.runInBg(() -> setAppOpsMode(perm, pos, selectedValue, uidMode));
                   })
               .setNegativeButton(R.string.no, null)
               .setTitle(R.string.warning)
@@ -788,14 +794,19 @@ public class PackageActivity extends BaseActivity {
 
       if (affectedPkgCount <= 1) {
         builder.setNeutralButton(
-            R.string.do_not_remind, (dialog, which) -> doNotRemindDangAction());
+            R.string.do_not_remind,
+            (dialog, which) -> {
+              isYes[0] = true;
+              Utils.runInBg(() -> setAppOpsMode(perm, pos, selectedValue, uidMode));
+              doNotRemindDangAction();
+            });
       }
 
       // UpdateSpinner on Dialog dismiss also suffices for Negative and Neutral buttons
       new AlertDialogFragment(builder.create())
           .setOnDismissListener(
               dialog -> {
-                if (!isYesButton[0]) {
+                if (!isYes[0]) {
                   updateSpinnerSelectionInBg(pos);
                 }
               })

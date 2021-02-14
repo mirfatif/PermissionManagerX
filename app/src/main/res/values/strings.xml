@@ -128,6 +128,9 @@
   <string name="send_report">Send Report</string>
   <string name="packages">Packages</string>
   <string name="permissions">Permissions</string>
+  <string name="disable_pkg_warning">Disabling a %1$s app is a dangerous action. In worst-case
+    scenario Android system may crash.\nAre you sure you want to continue?
+  </string>
 
   <!--PrivDaemonHandler-->
   <string name="dex_location_changed">Switching daemon load location</string>
@@ -163,12 +166,11 @@
 
   <!--PackageActivity-->
   <string name="something_bad_happened">Something went wrong</string>
-  <string name="change_framework_perms_warning">Changing permissions of framework apps is a dangerous
+  <string name="change_perms_warning">Changing permissions of a %1$s app is a dangerous
     action. In worst-case scenario Android system may crash.\nAre you sure you want to continue?
   </string>
-  <string name="change_system_perms_warning">Changing permissions of system apps is a dangerous
-    action. In worst-case scenario Android system may crash.\nAre you sure you want to continue?
-  </string>
+  <string name="system">system</string>
+  <string name="framework">framework</string>
   <string name="uid_mode_app_ops_warning">This is a UID mode AppOp.
     Changing it also affects %1$d other packages.
   </string>

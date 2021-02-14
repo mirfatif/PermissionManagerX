@@ -521,6 +521,7 @@ public class MainActivity extends BaseActivity {
 
   private void setPackageEnabledState(Package pkg) {
     if (!mMySettings.isPrivDaemonAlive()) {
+      Utils.logDaemonDead(TAG + ": setPackageEnabledState");
       AlertDialog dialog =
           new Builder(this)
               .setPositiveButton(android.R.string.ok, (d, which) -> openDrawerForPrivileges())
@@ -532,26 +533,53 @@ public class MainActivity extends BaseActivity {
       return;
     }
 
-    Utils.runInBg(
-        () -> {
-          boolean enabled = pkg.isEnabled();
-          String command = pkg.getName() + " " + Utils.getUserId();
-          if (enabled) {
-            command = Commands.DISABLE_PACKAGE + " " + command;
-          } else {
-            command = Commands.ENABLE_PACKAGE + " " + command;
-          }
+    boolean enabled = pkg.isEnabled();
 
-          if (mMySettings.isDebug()) {
-            Util.debugLog(TAG, "setPkgEnabledState: sending command: " + command);
-          }
-          Object res = mPrivDaemonHandler.sendRequest(command);
-          mPackageParser.updatePackage(pkg);
-          if (res != null) {
-            Utils.showToast(R.string.something_bad_happened);
-            Log.e(TAG, "setPackageEnabledState: Response is " + res);
-          }
-        });
+    String warn = null;
+    if (enabled && mMySettings.getBoolPref(R.string.pref_main_warn_dang_change_enc_key)) {
+      if (pkg.isFrameworkApp()) {
+        warn = getString(R.string.disable_pkg_warning, getString(R.string.framework));
+      } else if (pkg.isSystemApp()) {
+        warn = getString(R.string.disable_pkg_warning, getString(R.string.system));
+      }
+    }
+
+    if (warn == null) {
+      Utils.runInBg(() -> setPackageEnabledState(pkg, enabled));
+      return;
+    }
+
+    AlertDialog dialog =
+        new Builder(this)
+            .setPositiveButton(
+                R.string.yes,
+                (d, which) -> Utils.runInBg(() -> setPackageEnabledState(pkg, enabled)))
+            .setNegativeButton(R.string.no, null)
+            .setNeutralButton(
+                R.string.do_not_remind,
+                (d, which) -> {
+                  mMySettings.savePref(R.string.pref_main_warn_dang_change_enc_key, false);
+                  Utils.runInBg(() -> setPackageEnabledState(pkg, enabled));
+                })
+            .setTitle(R.string.warning)
+            .setMessage(Utils.breakParas(warn))
+            .create();
+    new AlertDialogFragment(dialog).show(this, "PKG_DISABLE_WARNING", false);
+  }
+
+  private void setPackageEnabledState(Package pkg, boolean enabled) {
+    String command = pkg.getName() + " " + Utils.getUserId(pkg.getUid());
+    if (enabled) {
+      command = Commands.DISABLE_PACKAGE + " " + command;
+    } else {
+      command = Commands.ENABLE_PACKAGE + " " + command;
+    }
+
+    if (mMySettings.isDebug()) {
+      Util.debugLog(TAG, "setPkgEnabledState: sending command: " + command);
+    }
+    mPrivDaemonHandler.sendRequest(command);
+    mPackageParser.updatePackage(pkg);
   }
 
   void showSnackBar(String text, int duration) {
