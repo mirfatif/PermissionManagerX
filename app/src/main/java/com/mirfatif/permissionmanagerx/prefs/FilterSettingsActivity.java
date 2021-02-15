@@ -72,8 +72,8 @@ public class FilterSettingsActivity extends BaseActivity {
       builder.setPositiveButton(
           R.string.yes,
           (dialogInterface, i) -> {
-            // clear existing values
-            Utils.runInBg(() -> mMySettings.resetToDefaults());
+            // Clear existing values
+            Utils.runInBg(mMySettings::resetToDefaults);
           });
 
       builder.setNegativeButton(R.string.no, null);

@@ -56,4 +56,5 @@ public class Commands {
   public static final String GET_INSTALLED_PKGS_FAILED = "GET_INSTALLED_PKGS_FAILED";
   public static final String GET_USERS_FAILED = "GET_USERS_FAILED";
   public static final String GET_PERM_GRP_INFO_LIST_FAILED = "GET_PERM_GRP_INFO_LIST_FAILED";
+  public static final String OP_NUM_INCONSISTENCY = "OP_NUM_INCONSISTENCY";
 }

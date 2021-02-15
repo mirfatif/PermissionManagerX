@@ -76,7 +76,71 @@ public class AppOpsParser {
     return getOpsForPackage(uid, "null", null);
   }
 
-  List<Integer> buildOpToDefaultModeList() {
+  private final List<String> mAppOpsList = new ArrayList<>();
+  private final List<String> mAppOpsModes = new ArrayList<>();
+  private final List<Integer> mOpToSwitchList = new ArrayList<>();
+  private final List<Integer> mOpToDefModeList = new ArrayList<>();
+  private final Map<String, Integer> mPermToOpCodeMap = new HashMap<>();
+
+  public List<String> getAppOpsList() {
+    return mAppOpsList;
+  }
+
+  public List<String> getAppOpsModes() {
+    return mAppOpsModes;
+  }
+
+  List<Integer> getOpToSwitchList() {
+    return mOpToSwitchList;
+  }
+
+  List<Integer> getOpToDefModeList() {
+    return mOpToDefModeList;
+  }
+
+  Map<String, Integer> getPermToOpCodeMap() {
+    return mPermToOpCodeMap;
+  }
+
+  private static final Object BUILD_LIST_LOCK = new Object();
+
+  void buildAppOpsLists() {
+    synchronized (BUILD_LIST_LOCK) {
+      if (mAppOpsList.isEmpty()) {
+        // Do not sort this list since the position is the AppOps code
+        List<String> appOpsList = buildAppOpsList();
+        if (appOpsList != null) {
+          mAppOpsList.addAll(appOpsList);
+        }
+      }
+      if (mAppOpsModes.isEmpty()) {
+        List<String> appOpsModes = buildAppOpsModes();
+        if (appOpsModes != null) {
+          mAppOpsModes.addAll(appOpsModes);
+        }
+      }
+      if (mOpToSwitchList.isEmpty()) {
+        List<Integer> opToSwitchList = buildOpToSwitchList();
+        if (opToSwitchList != null) {
+          mOpToSwitchList.addAll(opToSwitchList);
+        }
+      }
+      if (mOpToDefModeList.isEmpty()) {
+        List<Integer> opToDefaultModeList = buildOpToDefaultModeList();
+        if (opToDefaultModeList != null) {
+          mOpToDefModeList.addAll(opToDefaultModeList);
+        }
+      }
+      if (mPermToOpCodeMap.isEmpty()) {
+        Map<String, Integer> permToOpCodeMap = buildPermissionToOpCodeMap();
+        if (permToOpCodeMap != null) {
+          mPermToOpCodeMap.putAll(permToOpCodeMap);
+        }
+      }
+    }
+  }
+
+  private List<Integer> buildOpToDefaultModeList() {
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "buildOpToDefaultModeList() called");
     }
@@ -104,7 +168,7 @@ public class AppOpsParser {
     return null;
   }
 
-  List<Integer> buildOpToSwitchList() {
+  private List<Integer> buildOpToSwitchList() {
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "buildOpToSwitchList() called");
     }
@@ -132,7 +196,7 @@ public class AppOpsParser {
     return null;
   }
 
-  Map<String, Integer> buildPermissionToOpCodeMap() {
+  private Map<String, Integer> buildPermissionToOpCodeMap() {
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "buildPermissionToOpCodeMap() called");
     }
@@ -168,7 +232,7 @@ public class AppOpsParser {
     return null;
   }
 
-  public List<String> buildAppOpsList() {
+  private List<String> buildAppOpsList() {
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "buildAppOpsList() called");
     }
@@ -200,7 +264,7 @@ public class AppOpsParser {
     return null;
   }
 
-  public List<String> buildAppOpsModes() {
+  private List<String> buildAppOpsModes() {
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "buildAppOpsModes() called");
     }

@@ -287,5 +287,6 @@
   <string name="daemon_get_installed_pkgs_failed">Getting apps list failed</string>
   <string name="daemon_get_users_failed">Getting users list failed</string>
   <string name="daemon_get_perm_grp_info_list_failed">Getting permission groups failed</string>
+  <string name="daemon_op_num_inconsistency">Bad OEM</string>
 
 </resources>

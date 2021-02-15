@@ -100,13 +100,13 @@ public abstract class HiddenAPIs {
   public abstract int getOpModeNamesSize() throws HiddenAPIsError;
 
   @HiddenMethod(name = "opToDefaultMode", type = MType.STATIC_METHOD, cls = AppOpsManager.class)
-  public abstract int opToDefaultMode(int opCode) throws HiddenAPIsError;
+  public abstract int opToDefaultMode(int opCode) throws HiddenAPIsError, HiddenAPIsException;
 
   @HiddenMethod(name = "opToSwitch", type = MType.STATIC_METHOD, cls = AppOpsManager.class)
-  public abstract int opToSwitch(int opCode) throws HiddenAPIsError;
+  public abstract int opToSwitch(int opCode) throws HiddenAPIsError, HiddenAPIsException;
 
   @HiddenMethod(name = "opToName", type = MType.STATIC_METHOD, cls = AppOpsManager.class)
-  public abstract String opToName(int opCode) throws NoSuchMethodError;
+  public abstract String opToName(int opCode) throws HiddenAPIsError, HiddenAPIsException;
 
   @HiddenMethod(name = "modeToName", type = MType.STATIC_METHOD, cls = AppOpsManager.class)
   public abstract String modeToName(int opMode) throws HiddenAPIsError;
@@ -116,7 +116,7 @@ public abstract class HiddenAPIs {
 
   @DaemonOnly
   @HiddenMethod(name = "strDebugOpToOp", type = MType.STATIC_METHOD, cls = AppOpsManager.class)
-  public abstract int strDebugOpToOp(String opName) throws NoSuchMethodError;
+  public abstract int strDebugOpToOp(String opName) throws HiddenAPIsError;
 
   @HiddenMethod(name = "setMode", cls = IAppOpsService.class)
   @DaemonOnly
@@ -151,6 +151,7 @@ public abstract class HiddenAPIs {
   @HiddenMethod(name = "getLastAccessTime", cls = OpEntry.class)
   @HiddenMethod(name = "getTime", cls = OpEntry.class)
   @Privileged(requires = "android.permission.GET_APP_OPS_STATS")
+  @Throws(name = "SecurityException")
   /*
    getUidOps() (on Android 8?) is buggy, throws NullPointerException
    MIUI has bug and returns bad opCode like 10005, so compare with valid range
@@ -301,7 +302,7 @@ public abstract class HiddenAPIs {
   ///////////////////////// COMMON METHODS /////////////////////////
   //////////////////////////////////////////////////////////////////
 
-  static int getStaticIntField(String name, Class<?> cls) throws HiddenAPIsError {
+  public static int getStaticIntField(String name, Class<?> cls) throws HiddenAPIsError {
     try {
       return cls.getDeclaredField(name).getInt(null);
     } catch (IllegalAccessException | NoSuchFieldException e) {

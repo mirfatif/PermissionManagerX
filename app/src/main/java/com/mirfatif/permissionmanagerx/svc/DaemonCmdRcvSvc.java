@@ -87,6 +87,9 @@ public class DaemonCmdRcvSvc extends Service {
       case Commands.GET_PERM_GRP_INFO_LIST_FAILED:
         Utils.showToast(R.string.daemon_get_perm_grp_info_list_failed);
         break;
+      case Commands.OP_NUM_INCONSISTENCY:
+        Utils.showToast(R.string.daemon_op_num_inconsistency);
+        break;
       default:
         Log.e(TAG, "Wrong command received: " + command);
     }

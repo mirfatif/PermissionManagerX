@@ -102,27 +102,33 @@ public class HiddenAPIsImpl extends HiddenAPIs {
     }
   }
 
-  public int opToDefaultMode(int opCode) throws HiddenAPIsError {
+  public int opToDefaultMode(int opCode) throws HiddenAPIsError, HiddenAPIsException {
     try {
       return AppOpsManager.opToDefaultMode(opCode);
     } catch (NoSuchMethodError e) {
       throw new HiddenAPIsError(e);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new HiddenAPIsException(e);
     }
   }
 
-  public int opToSwitch(int opCode) throws HiddenAPIsError {
+  public int opToSwitch(int opCode) throws HiddenAPIsError, HiddenAPIsException {
     try {
       return AppOpsManager.opToSwitch(opCode);
     } catch (NoSuchMethodError e) {
       throw new HiddenAPIsError(e);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new HiddenAPIsException(e);
     }
   }
 
-  public String opToName(int opCode) throws HiddenAPIsError {
+  public String opToName(int opCode) throws HiddenAPIsError, HiddenAPIsException {
     try {
       return AppOpsManager.opToName(opCode);
     } catch (NoSuchMethodError e) {
       throw new HiddenAPIsError(e);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new HiddenAPIsException(e);
     }
   }
 
@@ -178,7 +184,7 @@ public class HiddenAPIsImpl extends HiddenAPIs {
       throws HiddenAPIsException, HiddenAPIsError {
     try {
       return _getMyPackageOpsList(uid, packageName, op, opNum);
-    } catch (RemoteException e) {
+    } catch (RemoteException | SecurityException e) {
       throw new HiddenAPIsException(e);
     } catch (NoSuchMethodError e) {
       throw new HiddenAPIsError(e);
@@ -186,7 +192,7 @@ public class HiddenAPIsImpl extends HiddenAPIs {
   }
 
   private List<MyPackageOps> _getMyPackageOpsList(int uid, String packageName, String op, int opNum)
-      throws RemoteException, NoSuchMethodError {
+      throws RemoteException, SecurityException, NoSuchMethodError {
     int[] ops = op.equals("null") ? null : new int[] {Integer.parseInt(op)};
 
     List<PackageOps> pkgOpsList = null;

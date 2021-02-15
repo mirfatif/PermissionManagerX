@@ -442,28 +442,6 @@ public class MySettings {
         == PackageManager.PERMISSION_GRANTED;
   }
 
-  // Do not sort this list since the position is the AppOps code
-  private List<String> mAppOpsList;
-
-  public List<String> getAppOpsList() {
-    if (mAppOpsList == null) {
-      mAppOpsList = AppOpsParser.getInstance().buildAppOpsList();
-    }
-    if (mAppOpsList == null) {
-      return new ArrayList<>();
-    }
-    return mAppOpsList;
-  }
-
-  private List<String> mAppOpsModes;
-
-  public List<String> getAppOpsModes() {
-    if (mAppOpsModes == null) {
-      mAppOpsModes = AppOpsParser.getInstance().buildAppOpsModes();
-    }
-    return mAppOpsModes;
-  }
-
   public boolean canUseHiddenAPIs() {
     return useHiddenAPIs() && isAppOpsGranted();
   }
@@ -717,14 +695,15 @@ public class MySettings {
       extraAppOps = new HashSet<>(Arrays.asList(defaultExtraAppOps));
     }
 
-    // let's remove AppOps not on this Android version
+    // Let's remove AppOps not on this Android version
+    List<String> appOpsList = AppOpsParser.getInstance().getAppOpsList();
     mExtraAppOps = new HashSet<>();
     for (String extraAppOp : extraAppOps) {
       // Necessarily build mExtraAppOps here even with excludeAppOpsPerms(). Otherwise on
       // unchecking
       // "Exclude AppOps" the immediate call to getExtraAppOps() from FilterSettingsFragment
       // receives an empty value which clears previous saved values.
-      if (getAppOpsList().size() == 0 || getAppOpsList().contains(extraAppOp)) {
+      if (appOpsList.size() == 0 || appOpsList.contains(extraAppOp)) {
         mExtraAppOps.add(extraAppOp);
       }
     }

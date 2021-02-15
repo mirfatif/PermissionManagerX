@@ -11,6 +11,7 @@ import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     implements OnSharedPreferenceChangeListener {
 
   private FilterSettingsActivity mParentActivity;
-  private MySettings mMySettings;
+  private final MySettings mMySettings = MySettings.getInstance();
 
   private CheckBoxPreference excludeNoIconAppsView;
   private CheckBoxPreference excludeUserAppsView;
@@ -50,7 +51,6 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     super.onAttach(context);
     mParentActivity = (FilterSettingsActivity) getActivity();
     Utils.getDefPrefs().unregisterOnSharedPreferenceChangeListener(this);
-    mMySettings = MySettings.getInstance();
   }
 
   // unregister so that changes in other activities don't trigger this
@@ -193,8 +193,7 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     Utils.runInBg(
         () -> {
           mMySettings.getExtraAppOpsLock();
-          // Need to be on background thread.
-          List<String> appOpsList = new ArrayList<>(mMySettings.getAppOpsList());
+          List<String> appOpsList = new ArrayList<>(AppOpsParser.getInstance().getAppOpsList());
           appOpsList.sort(Comparator.comparing(String::toUpperCase));
           Set<String> extraAppOps = mMySettings.getExtraAppOps();
 

@@ -19,8 +19,8 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
 import com.mirfatif.permissionmanagerx.parser.Permission;
-import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.ItemViewHolder;
 import com.mirfatif.permissionmanagerx.ui.base.MyListAdapter;
 import com.mirfatif.permissionmanagerx.util.Utils;
@@ -33,6 +33,8 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
   private final PermSpinnerSelectListener mSpinnerSelectListener;
   private final PermClickListenerWithLoc mPermClickListener;
   private final PermLongClickListener mPermLongClickListener;
+  private final ArrayAdapter<String> mAppOpModesAdapter;
+  private final ArrayAdapter<String> mAppOpModesBgAdapter;
 
   PermissionAdapter(
       Context context,
@@ -45,30 +47,9 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
     mSpinnerSelectListener = spinnerSelectListener;
     mPermClickListener = permClickListener;
     mPermLongClickListener = permLongClickListener;
-    buildSpinnerAdapters(context);
-  }
 
-  private ArrayAdapter<String> mAppOpModesAdapter;
-  private ArrayAdapter<String> mAppOpModesBgAdapter;
-
-  private void buildSpinnerAdapters(Context context) {
-    List<String> appOpsModesEllipsized = new ArrayList<>();
-    List<String> appOpsModes = MySettings.getInstance().getAppOpsModes();
-    if (appOpsModes == null) {
-      return; // AppOps permissions is not granted yet
-    }
-    for (String mode : appOpsModes) {
-      appOpsModesEllipsized.add(Utils.ellipsize(mode, 8));
-    }
-
-    mAppOpModesAdapter =
-        new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, appOpsModesEllipsized);
-
-    mAppOpModesBgAdapter =
-        new ArrayAdapterBg(context, android.R.layout.simple_spinner_item, appOpsModesEllipsized);
-
-    mAppOpModesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    mAppOpModesBgAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    mAppOpModesAdapter = new AppOpModesAdapter(context, false);
+    mAppOpModesBgAdapter = new AppOpModesAdapter(context, true);
   }
 
   // Override Adapter method
@@ -168,9 +149,9 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
 
         if (permission.getName().equals("RUN_IN_BACKGROUND")
             || permission.getName().equals("RUN_ANY_IN_BACKGROUND")) {
-          spinner.setAdapter(mAppOpModesBgAdapter);
+          spinner.setAdapter(getAppOpModesAdapter(true));
         } else {
-          spinner.setAdapter(mAppOpModesAdapter);
+          spinner.setAdapter(getAppOpModesAdapter(false));
         }
 
         spinner.setSelection(permission.getAppOpsMode());
@@ -211,23 +192,42 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
     }
   }
 
-  private static class ArrayAdapterBg extends ArrayAdapter<String> {
+  private static final Object ADAPTER_BUILD_LOCK = new Object();
 
-    private final List<String> appOpsModes = MySettings.getInstance().getAppOpsModes();
+  private ArrayAdapter<String> getAppOpModesAdapter(boolean forBg) {
+    synchronized (ADAPTER_BUILD_LOCK) {
+      if (mAppOpModesAdapter.isEmpty() || mAppOpModesBgAdapter.isEmpty()) {
+        for (String mode : AppOpsParser.getInstance().getAppOpsModes()) {
+          mAppOpModesAdapter.add(Utils.ellipsize(mode, 8));
+          mAppOpModesBgAdapter.add(Utils.ellipsize(mode, 8));
+        }
+      }
+    }
+    return forBg ? mAppOpModesBgAdapter : mAppOpModesAdapter;
+  }
 
-    public ArrayAdapterBg(@NonNull Context context, int resource, @NonNull List<String> objects) {
-      super(context, resource, objects);
+  private static class AppOpModesAdapter extends ArrayAdapter<String> {
+
+    private final List<String> appOpsModes = AppOpsParser.getInstance().getAppOpsModes();
+    private final boolean mForBg;
+
+    public AppOpModesAdapter(Context context, boolean forBg) {
+      super(context, android.R.layout.simple_spinner_item, new ArrayList<>());
+      setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+      mForBg = forBg;
     }
 
     @Override
     public boolean areAllItemsEnabled() {
-      return false;
+      return !mForBg;
     }
 
     @Override
     public boolean isEnabled(int position) {
-      if (appOpsModes.get(position).equals("Foreground")) {
-        return false;
+      if (mForBg) {
+        if (appOpsModes.get(position).equals("Foreground")) {
+          return false;
+        }
       }
       return super.isEnabled(position);
     }
@@ -237,14 +237,18 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
     @Override
     public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
       View view = super.getDropDownView(position, convertView, parent);
-      if (appOpsModes.get(position).equals("Foreground")) {
-        // Find TextView from android.R.layout.simple_spinner_dropdown_item.
-        TextView tView = view.findViewById(android.R.id.text1);
-        // Check null to avoid broken behavior on different Android versions.
-        if (tView != null) {
-          tView.setTextColor(App.getContext().getColor(R.color.disabledStateColor));
+
+      if (mForBg) {
+        if (appOpsModes.get(position).equals("Foreground")) {
+          // Find TextView from android.R.layout.simple_spinner_dropdown_item.
+          TextView tView = view.findViewById(android.R.id.text1);
+          // Check null to avoid broken behavior on different Android versions.
+          if (tView != null) {
+            tView.setTextColor(App.getContext().getColor(R.color.disabledStateColor));
+          }
         }
       }
+
       return view;
     }
   }

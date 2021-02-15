@@ -31,6 +31,7 @@ import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.main.BackupRestore;
 import com.mirfatif.permissionmanagerx.main.BackupRestore.BackupEntry;
 import com.mirfatif.permissionmanagerx.main.MainActivity;
+import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.parser.Permission;
@@ -309,7 +310,7 @@ public class PackageActivity extends BaseActivity {
 
   private String getPermState(Permission permission) {
     return permission.isAppOps()
-        ? mMySettings.getAppOpsModes().get(permission.getAppOpsMode())
+        ? AppOpsParser.getInstance().getAppOpsModes().get(permission.getAppOpsMode())
         : (permission.isGranted() ? Permission.GRANTED : Permission.REVOKED);
   }
 

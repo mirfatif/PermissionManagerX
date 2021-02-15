@@ -1,5 +1,6 @@
 package com.mirfatif.privtasks;
 
+import android.app.AppOpsManager;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -47,8 +48,22 @@ public class PrivTasks {
       return null;
     }
     List<Integer> opToDefModeList = new ArrayList<>();
+    boolean failed = false;
     for (int i = 0; i < opNum; i++) {
-      opToDefModeList.add(mHiddenAPIs.opToDefaultMode(i));
+      if (failed) {
+        opToDefModeList.add(HiddenAPIs.getStaticIntField("MODE_DEFAULT", AppOpsManager.class));
+        continue;
+      }
+      try {
+        opToDefModeList.add(mHiddenAPIs.opToDefaultMode(i));
+      } catch (HiddenAPIsException e) {
+        if (e.getCause() instanceof ArrayIndexOutOfBoundsException) {
+          // OEM you are shit!
+          failed = true;
+          mCallback.sendRequest(Commands.OP_NUM_INCONSISTENCY);
+          e.printStackTrace();
+        }
+      }
     }
     return opToDefModeList;
   }
@@ -59,8 +74,22 @@ public class PrivTasks {
       return null;
     }
     List<Integer> opToSwitchList = new ArrayList<>();
+    boolean failed = false;
     for (int i = 0; i < opNum; i++) {
-      opToSwitchList.add(mHiddenAPIs.opToSwitch(i));
+      if (failed) {
+        opToSwitchList.add(i);
+        continue;
+      }
+      try {
+        opToSwitchList.add(mHiddenAPIs.opToSwitch(i));
+      } catch (HiddenAPIsException e) {
+        if (e.getCause() instanceof ArrayIndexOutOfBoundsException) {
+          // OEM you are shit!
+          failed = true;
+          mCallback.sendRequest(Commands.OP_NUM_INCONSISTENCY);
+          e.printStackTrace();
+        }
+      }
     }
     return opToSwitchList;
   }
@@ -71,8 +100,22 @@ public class PrivTasks {
       return null;
     }
     List<String> appOpsList = new ArrayList<>();
+    boolean failed = false;
     for (int i = 0; i < opNum; i++) {
-      appOpsList.add(mHiddenAPIs.opToName(i));
+      if (failed) {
+        appOpsList.add("UNKNOWN");
+        continue;
+      }
+      try {
+        appOpsList.add(mHiddenAPIs.opToName(i));
+      } catch (HiddenAPIsException e) {
+        if (e.getCause() instanceof ArrayIndexOutOfBoundsException) {
+          // OEM you are shit!
+          failed = true;
+          mCallback.sendRequest(Commands.OP_NUM_INCONSISTENCY);
+          e.printStackTrace();
+        }
+      }
     }
     return appOpsList;
   }
@@ -171,7 +214,7 @@ public class PrivTasks {
   }
 
   public List<MyPackageOps> getOpsForPackage(String[] args) {
-    if (haveWrongArgs(args, 3, false)) {
+    if (haveWrongArgs(args, 3, true)) {
       return null;
     }
     return getMyPackageOpsList(Integer.parseInt(args[1]), args[2], args[3]);
@@ -192,7 +235,7 @@ public class PrivTasks {
   //////////////////////////////////////////////////////////////////
 
   public Integer getPermissionFlags(String[] args) {
-    if (haveWrongArgs(args, 3, false)) {
+    if (haveWrongArgs(args, 3, true)) {
       return null;
     }
     try {
@@ -364,14 +407,16 @@ public class PrivTasks {
   }
 
   private boolean haveWrongArgs(String[] cmd, int count) {
-    return haveWrongArgs(cmd, count, true);
+    return haveWrongArgs(cmd, count, false);
   }
 
-  private boolean haveWrongArgs(String[] cmd, int count, boolean showToast) {
+  private boolean haveWrongArgs(String[] cmd, int count, boolean rateLimitToast) {
     if (cmd.length == count + 1) {
       return false;
     }
-    if (showToast) {
+    if (rateLimitToast) {
+      rateLimitSendRequest(Commands.WRONG_ARGS_RECEIVED);
+    } else {
       mCallback.sendRequest(Commands.WRONG_ARGS_RECEIVED);
     }
     mCallback.logE(TAG + ": Bad command: " + Arrays.toString(cmd));
@@ -399,6 +444,15 @@ public class PrivTasks {
     }
   }
 
+  private long lastRequestTimestamp = 0;
+
+  private void rateLimitSendRequest(String cmd) {
+    if (System.currentTimeMillis() - lastRequestTimestamp >= 60000) {
+      mCallback.sendRequest(cmd);
+      lastRequestTimestamp = System.currentTimeMillis();
+    }
+  }
+
   private class HiddenAPIsCallbackImpl implements HiddenAPIsCallback {
 
     @Override
@@ -413,6 +467,8 @@ public class PrivTasks {
 
     @Override
     public void onInvalidOpCode(int opCode, String pkgName) {
+      // OEM you are shit!
+      rateLimitSendRequest(Commands.OP_NUM_INCONSISTENCY);
       rateLimitLog("getMyPackageOpsList: bad op: " + opCode + " for package: " + pkgName);
     }
 

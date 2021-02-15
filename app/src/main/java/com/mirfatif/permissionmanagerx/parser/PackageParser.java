@@ -64,13 +64,10 @@ public class PackageParser {
   private final MutableLiveData<Integer> mProgressMax = new MutableLiveData<>();
   private final MutableLiveData<Integer> mProgressNow = new MutableLiveData<>();
 
-  private List<PackageInfo> mPackageInfoList;
+  private final List<PackageInfo> mPackageInfoList = new ArrayList<>();
   private final List<Package> mPackagesList = new ArrayList<>();
   private final Map<String, Integer> mPermIconsResIds = new HashMap<>();
-  private List<Integer> mOpToSwitchList;
-  private List<Integer> mOpToDefModeList;
-  private Map<String, String> mPermRefList;
-  private Map<String, Integer> mPermToOpCodeMap;
+  private final Map<String, String> mPermRefList = new HashMap<>();
 
   //////////////////////////////////////////////////////////////////
   //////////////////////////// PARSERS /////////////////////////////
@@ -112,23 +109,15 @@ public class PackageParser {
 
       buildPkgInfoList(isBgDeepScan);
 
-      /** if permissions database changes, manually call {@link #updatePermReferences()} */
-      if (mPermRefList == null) {
+      // If permissions database changes, manually call buildPermRefList()
+      if (mPermRefList.isEmpty()) {
         setProgress(REF_PERMS_LIST, true, false, isBgDeepScan);
         buildPermRefList();
       }
 
       if (!mMySettings.excludeAppOpsPerms() && mMySettings.canReadAppOps()) {
         setProgress(APP_OPS_LISTS, true, false, isBgDeepScan);
-        if (mOpToSwitchList == null) {
-          mOpToSwitchList = mAppOpsParser.buildOpToSwitchList();
-        }
-        if (mOpToDefModeList == null) {
-          mOpToDefModeList = mAppOpsParser.buildOpToDefaultModeList();
-        }
-        if (mPermToOpCodeMap == null) {
-          mPermToOpCodeMap = mAppOpsParser.buildPermissionToOpCodeMap();
-        }
+        mAppOpsParser.buildAppOpsLists();
       }
 
       if (mMySettings.isDebug()) {
@@ -214,8 +203,11 @@ public class PackageParser {
 
     setProgress(PACKAGES_LIST, true, false, isBgDeepScan);
 
-    mPackageInfoList = mPkgParserFlavor.getPackageList();
-    mPkgParserFlavor.sortPkgList(mPackageInfoList);
+    synchronized (mPackageInfoList) {
+      mPackageInfoList.clear();
+      mPackageInfoList.addAll(mPkgParserFlavor.getPackageList());
+      mPkgParserFlavor.sortPkgList(mPackageInfoList);
+    }
 
     mLastPackageManagerCall = System.currentTimeMillis();
   }
@@ -583,9 +575,11 @@ public class PackageParser {
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "buildPermRefList() called");
     }
-    mPermRefList = new HashMap<>();
-    for (PermissionEntity entity : mMySettings.getPermDb().getAll()) {
-      mPermRefList.put(entity.pkgName + "_" + entity.permName, entity.state);
+    synchronized (mPermRefList) {
+      mPermRefList.clear();
+      for (PermissionEntity entity : mMySettings.getPermDb().getAll()) {
+        mPermRefList.put(entity.pkgName + "_" + entity.permName, entity.state);
+      }
     }
   }
 
@@ -647,10 +641,10 @@ public class PackageParser {
           Util.debugLog(TAG, "getPermissionsList: parsing extra AppOps");
         }
 
-        // irrelevant / extra AppOps, not set and not corresponding to any manifest permission
+        // Irrelevant / extra AppOps, not set and not corresponding to any manifest permission
         List<Integer> ops1 = new ArrayList<>();
         for (String opName : mMySettings.getExtraAppOps()) {
-          int op = mMySettings.getAppOpsList().indexOf(opName);
+          int op = mAppOpsParser.getAppOpsList().indexOf(opName);
           if (!processedAppOps.contains(op)) {
             ops1.add(op);
           }
@@ -869,7 +863,7 @@ public class PackageParser {
       List<Permission> permissionsList,
       List<Integer> processedAppOps) {
 
-    Integer mappedOp = mPermToOpCodeMap.get(perm);
+    Integer mappedOp = mAppOpsParser.getPermToOpCodeMap().get(perm);
     if (mappedOp == null) {
       return new int[] {0, 0};
     }
@@ -970,15 +964,15 @@ public class PackageParser {
       boolean isExtraAppOp,
       boolean isPerUid,
       long accessTime) {
-    int opSwitch = mOpToSwitchList.get(op);
-    String dependsOn = op == opSwitch ? null : mMySettings.getAppOpsList().get(opSwitch);
-    String opName = mMySettings.getAppOpsList().get(op);
+    int opSwitch = mAppOpsParser.getOpToSwitchList().get(op);
+    String dependsOn = op == opSwitch ? null : mAppOpsParser.getAppOpsList().get(opSwitch);
+    String opName = mAppOpsParser.getAppOpsList().get(op);
     boolean isAppOpSet = true;
     if (opMode < 0) {
       isAppOpSet = false;
-      opMode = mOpToDefModeList.get(op);
+      opMode = mAppOpsParser.getOpToDefModeList().get(op);
     }
-    String opState = mMySettings.getAppOpsModes().get(opMode);
+    String opState = mAppOpsParser.getAppOpsModes().get(opMode);
     RefPair refPair = getReference(packageInfo.packageName, opName, opState);
     GroupOrderPair groupOrderPair = mPermGroupsMapping.getOrderAndGroup(opName, true);
 
