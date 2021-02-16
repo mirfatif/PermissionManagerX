@@ -2,6 +2,7 @@ package com.mirfatif.permissionmanagerx.ui;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.style.TextAppearanceSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,9 +13,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mirfatif.permissionmanagerx.R;
@@ -103,31 +106,31 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
     }
 
     public void bind(int position) {
-      Permission permission = getItem(position);
+      Permission perm = getItem(position);
 
       appOpsRefStateView.setVisibility(View.GONE);
-      if (permission.isReferenced() == null) {
+      if (perm.isReferenced() == null) {
         referenceView.setBackgroundColor(PackageAdapter.ORANGE);
-      } else if (!permission.isReferenced()) {
+      } else if (!perm.isReferenced()) {
         referenceView.setBackgroundColor(Color.RED);
-        if (permission.isAppOps()) {
+        if (perm.isAppOps()) {
           appOpsRefStateView.setText(
               Utils.htmlToString(
-                  App.getContext().getString(R.string.should_be, permission.getReference())));
+                  App.getContext().getString(R.string.should_be, perm.getReference())));
           appOpsRefStateView.setVisibility(View.VISIBLE);
         }
       } else {
         referenceView.setBackgroundColor(Color.GREEN);
       }
 
-      if (permission.getIconResId() != null) {
-        groupIconView.setImageResource(permission.getIconResId());
+      if (perm.getIconResId() != null) {
+        groupIconView.setImageResource(perm.getIconResId());
       }
 
       spinnerContainer.setOnClickListener(null);
 
-      if (permission.isAppOps()) {
-        if (permission.dependsOn() == null) {
+      if (perm.isAppOps()) {
+        if (perm.dependsOn() == null) {
           spinnerContainer.setVisibility(View.VISIBLE);
           spinnerContainer.setOnClickListener(v -> spinner.performClick());
         } else {
@@ -135,41 +138,54 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
         }
       }
 
-      permissionNameView.setText(permission.createPermNameString());
-      protectionLevelView.setText(permission.createProtectLevelString());
-
+      permissionNameView.setText(perm.getPermNameString());
       appOpsTimeView.setVisibility(View.GONE);
 
-      if (permission.isAppOps()) {
-        String time = permission.getAppOpsAccessTime();
+      boolean isChangeable = perm.isChangeable();
+
+      if (perm.isCritical() && isChangeable) {
+        protectionLevelView.setText(
+            Utils.getHighlightString(
+                perm.getProtLevelString(),
+                getHighlightSpan(protectionLevelView.getCurrentTextColor()),
+                true,
+                Permission.FIXED,
+                Permission.PRIVILEGED));
+      } else {
+        protectionLevelView.setText(perm.getProtLevelString());
+      }
+
+      if (perm.isAppOps()) {
+        String time = perm.getAppOpsAccessTime();
         if (time != null) {
           appOpsTimeView.setText(time);
+          appOpsTimeView.setTextColor(getRedBlend(appOpsTimeView.getCurrentTextColor()));
           appOpsTimeView.setVisibility(View.VISIBLE);
         }
 
-        if (permission.getName().equals("RUN_IN_BACKGROUND")
-            || permission.getName().equals("RUN_ANY_IN_BACKGROUND")) {
+        if (perm.getName().equals("RUN_IN_BACKGROUND")
+            || perm.getName().equals("RUN_ANY_IN_BACKGROUND")) {
           spinner.setAdapter(getAppOpModesAdapter(true));
         } else {
           spinner.setAdapter(getAppOpModesAdapter(false));
         }
 
-        spinner.setSelection(permission.getAppOpsMode());
-        spinner.setOnItemSelectedListener(new AppOpsModeSelectListener(permission));
+        spinner.setSelection(perm.getAppOpsMode());
+        spinner.setOnItemSelectedListener(new AppOpsModeSelectListener(perm));
         stateSwitch.setVisibility(View.GONE);
-        spinner.setEnabled(permission.isChangeable());
-        appOpsDefaultView.setVisibility(permission.isAppOpsSet() ? View.GONE : View.VISIBLE);
+        spinner.setEnabled(isChangeable);
+        appOpsDefaultView.setVisibility(perm.isAppOpsSet() ? View.GONE : View.VISIBLE);
 
       } else {
-        if (permission.isProviderMissing()) {
+        if (perm.isProviderMissing()) {
           stateSwitch.setVisibility(View.INVISIBLE);
         } else {
-          stateSwitch.setChecked(permission.isGranted());
-          stateSwitch.setEnabled(permission.isChangeable());
+          stateSwitch.setChecked(perm.isGranted());
+          stateSwitch.setEnabled(isChangeable);
           stateSwitch.setOnClickListener(
               v -> {
-                stateSwitch.setChecked(permission.isGranted()); // do not change the state here
-                mSwitchToggleListener.onClick(permission);
+                stateSwitch.setChecked(perm.isGranted()); // Do not change the state here
+                mSwitchToggleListener.onClick(perm);
               });
           stateSwitch.setVisibility(View.VISIBLE);
         }
@@ -190,6 +206,24 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
       mPermLongClickListener.onLongClick(getItem(getBindingAdapterPosition()));
       return true;
     }
+  }
+
+  private TextAppearanceSpan HIGHLIGHT;
+
+  private TextAppearanceSpan getHighlightSpan(@ColorInt int currentColor) {
+    if (HIGHLIGHT == null) {
+      HIGHLIGHT = Utils.getHighlight(getRedBlend(currentColor));
+    }
+    return HIGHLIGHT;
+  }
+
+  private @ColorInt Integer mOrigTextColor;
+
+  private @ColorInt int getRedBlend(@ColorInt int currentColor) {
+    if (mOrigTextColor == null) {
+      mOrigTextColor = currentColor;
+    }
+    return ColorUtils.blendARGB(mOrigTextColor, Color.RED, 0.75f);
   }
 
   private static final Object ADAPTER_BUILD_LOCK = new Object();

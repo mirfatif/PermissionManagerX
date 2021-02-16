@@ -737,7 +737,7 @@ public class MainActivity extends BaseActivity {
             showSnackBar(getString(R.string.daemon_failed), 10000);
           }
         } else {
-          Log.e(TAG, "startPrivDaemon: Root access: unavailable, ADB shell: unavailable");
+          Log.w(TAG, "startPrivDaemon: Root access: unavailable, ADB shell: unavailable");
 
           if (mMySettings.shouldRemindMissingPrivileges()) {
             Builder builder =

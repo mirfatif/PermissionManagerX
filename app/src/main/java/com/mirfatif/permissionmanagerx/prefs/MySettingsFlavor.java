@@ -16,4 +16,8 @@ public class MySettingsFlavor {
   public Boolean isPkgInstallDate() {
     return null;
   }
+
+  public boolean allowCriticalChanges() {
+    return false;
+  }
 }

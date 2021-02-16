@@ -261,6 +261,20 @@ public class PrivTasks {
     }
   }
 
+  public void updatePermFlags(String[] args) {
+    if (!haveWrongArgs(args, 5)) {
+      String pkg = args[1], perm = args[2];
+      int flags = Integer.parseInt(args[3]), flagValues = Integer.parseInt(args[4]);
+      int userId = Integer.parseInt(args[5]);
+      try {
+        mHiddenAPIs.updatePermFlags(pkg, perm, flags, flagValues, userId);
+      } catch (HiddenAPIsException e) {
+        mCallback.sendRequest(Commands.SET_PERM_FLAGS_FAILED);
+        e.printStackTrace();
+      }
+    }
+  }
+
   //////////////////////////////////////////////////////////////////
   //////////////////////////// PACKAGES ////////////////////////////
   //////////////////////////////////////////////////////////////////
@@ -459,9 +473,9 @@ public class PrivTasks {
     public void onGetUidOpsNpException(Exception e) {
       // Hey Android! You are buggy.
       if (mCallback.isDebug()) {
-        e.printStackTrace();
-      } else {
         mCallback.logE(TAG + ": getMyPackageOpsList: " + e.toString());
+      } else {
+        rateLimitLog("getMyPackageOpsList: " + e.toString());
       }
     }
 

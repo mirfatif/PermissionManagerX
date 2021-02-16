@@ -30,6 +30,7 @@ class AdvancedSettings {
 
   private final MainActivity mA;
   private final MySettings mMySettings = MySettings.getInstance();
+  private final AdvancedSettingsFlavor mAdvancedSettingsFlavor;
 
   private final View dialogLayout;
   private final CheckBox useHiddenAPIsView;
@@ -81,19 +82,11 @@ class AdvancedSettings {
       contextResId = R.string.daemon_context_default;
     }
     contextSelectedPos = spinnerContexts.indexOf(getString(contextResId));
+
+    mAdvancedSettingsFlavor = new AdvancedSettingsFlavor(mA, dialogLayout);
   }
 
   private void show() {
-    daemonUidListArrow.setOnClickListener(v -> daemonUidSpinner.performClick());
-    daemonContextListArrow.setOnClickListener(v -> daemonContextSpinner.performClick());
-    useHiddenAPIsView.setChecked(useHiddenAPIs);
-    dexInTmpDirView.setChecked(dexInTmpDir);
-    adbPortView.setText(adbPort);
-    adbPortView.addTextChangedListener(new PortNumberWatcher());
-    useSocketView.setChecked(useSocket);
-    daemonUidSpinner.setSelection(uidSelectedPos);
-    daemonContextSpinner.setSelection(contextSelectedPos);
-
     Builder builder =
         new Builder(mA)
             .setTitle(R.string.advanced_settings_menu_item)
@@ -112,6 +105,16 @@ class AdvancedSettings {
     }
 
     new AlertDialogFragment(dialog).show(mA, "ADVANCED_SETTINGS", false);
+
+    daemonUidListArrow.setOnClickListener(v -> daemonUidSpinner.performClick());
+    daemonContextListArrow.setOnClickListener(v -> daemonContextSpinner.performClick());
+    useHiddenAPIsView.setChecked(useHiddenAPIs);
+    dexInTmpDirView.setChecked(dexInTmpDir);
+    adbPortView.setText(adbPort);
+    adbPortView.addTextChangedListener(new PortNumberWatcher());
+    useSocketView.setChecked(useSocket);
+    daemonUidSpinner.setSelection(uidSelectedPos);
+    daemonContextSpinner.setSelection(contextSelectedPos);
   }
 
   private void saveSettings() {
@@ -161,6 +164,8 @@ class AdvancedSettings {
       mMySettings.setDaemonContext(context);
       restartDaemon = true;
     }
+
+    mAdvancedSettingsFlavor.saveSettings(restartDaemon, switchToAdb);
 
     if (useHiddenAPIs != useHiddenAPIsView.isChecked()) {
       saveHiddenAPIsSettings(useHiddenAPIsView.isChecked(), restartDaemon, switchToAdb);

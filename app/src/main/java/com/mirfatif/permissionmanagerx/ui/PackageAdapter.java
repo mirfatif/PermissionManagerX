@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.text.style.TextAppearanceSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mirfatif.permissionmanagerx.R;
@@ -28,7 +30,7 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
   private final PkgLongClickListener mPkgLongClickListener;
   private final PackageManager mPackageManager;
 
-  // orange state color
+  // Orange state color
   static final int ORANGE = 0xFFFFC107;
 
   public PackageAdapter(
@@ -126,19 +128,27 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
       if (pkg.isCriticalApp()) {
         packageState = "Critical";
       } else if (pkg.isFrameworkApp()) {
-        packageState = "Framework";
+        packageState = Package.FRAMEWORK;
       } else if (pkg.isSystemApp()) {
         packageState = "System";
       }
       if (!pkg.isEnabled()) {
-        if (packageState == null) packageState = "Disabled";
-        else packageState = packageState + ", Disabled";
+        packageState = packageState == null ? "Disabled" : packageState + ", Disabled";
       }
 
       if (packageState == null) {
         packageStateView.setVisibility(View.GONE);
       } else {
-        packageStateView.setText(packageState);
+        if (pkg.isFrameworkApp() && pkg.isChangeable()) {
+          packageStateView.setText(
+              Utils.getHighlightString(
+                  packageState,
+                  getHighlightSpan(packageStateView.getCurrentTextColor()),
+                  true,
+                  Package.FRAMEWORK));
+        } else {
+          packageStateView.setText(packageState);
+        }
         packageStateView.setVisibility(View.VISIBLE);
       }
 
@@ -155,6 +165,15 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
       mPkgLongClickListener.onLongClick(getItem(getBindingAdapterPosition()));
       return true;
     }
+  }
+
+  private TextAppearanceSpan HIGHLIGHT;
+
+  private TextAppearanceSpan getHighlightSpan(int currentColor) {
+    if (HIGHLIGHT == null) {
+      HIGHLIGHT = Utils.getHighlight(ColorUtils.blendARGB(currentColor, Color.RED, 0.75f));
+    }
+    return HIGHLIGHT;
   }
 
   private static class DiffUtilItemCallBack extends DiffUtil.ItemCallback<Package> {

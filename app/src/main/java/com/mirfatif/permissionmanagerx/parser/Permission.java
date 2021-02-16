@@ -3,6 +3,7 @@ package com.mirfatif.permissionmanagerx.parser;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.prefs.MySettingsFlavor;
 import java.util.concurrent.TimeUnit;
 
 public class Permission {
@@ -15,8 +16,26 @@ public class Permission {
   public static final String GRANTED = "Granted";
   public static final String REVOKED = "Revoked";
 
+  // Common
   private final int mOrder;
   private final Integer mIconResId;
+  private final String mPackageName;
+  private final String mPermissionName;
+  private final boolean mIsGranted;
+  private final Boolean mIsReferenced;
+  private final String mReference;
+  private final boolean mIsSystemApp, mIsFrameworkApp;
+
+  // Manifest permissions
+  private final String mProtectionLevel;
+  private final boolean mIsPrivileged;
+  private final boolean mIsDevelopment;
+  private final boolean mIsManifestPermAppOp;
+  private final boolean mIsSystemFixed, mIsPolicyFixed;
+  private final boolean mProviderMissing;
+  private final CharSequence mPermDesc;
+
+  // AppOps
   private final boolean mIsAppOps;
   private final boolean mIsPerUid;
   private final boolean mIsAppOpsSet;
@@ -25,65 +44,93 @@ public class Permission {
   private String mAppOpsAccessTimeFormatted;
   private final String mDependsOn;
   private boolean mIsExtraAppOp;
-  private final String mPackageName;
-  private final String mPermissionName;
-  private final boolean mIsGranted;
-  private final String mProtectionLevel;
-  private final boolean mIsPrivileged;
-  private final boolean mIsDevelopment;
-  private final boolean mIsManifestPermAppOps;
-  private final boolean mIsSystemFixed;
-  private final boolean mProviderMissing;
-  private final Boolean mIsReferenced;
-  private final String mReference;
-  private final boolean mIsSystemApp;
-  private final CharSequence mPermDesc;
 
   Permission(
       int order,
       Integer iconResId,
-      boolean isAppOps,
+      String packageName,
+      String name,
+      boolean isGranted,
+      Boolean isReferenced,
+      String reference,
+      boolean isSystemApp,
+      boolean isFrameworkApp,
+      String protectionLevel,
+      boolean isPrivileged,
+      boolean isDevelopment,
+      boolean isManifestPermAppOp,
+      boolean isSystemFixed,
+      boolean isPolicyFixed,
+      boolean providerMissing,
+      CharSequence permDesc) {
+    mOrder = order;
+    mIconResId = iconResId;
+    mPackageName = packageName;
+    mPermissionName = name;
+    mIsGranted = isGranted;
+    mIsReferenced = isReferenced;
+    mReference = reference;
+    mIsSystemApp = isSystemApp;
+    mIsFrameworkApp = isFrameworkApp;
+    mProtectionLevel = protectionLevel;
+    mIsPrivileged = isPrivileged;
+    mIsDevelopment = isDevelopment;
+    mIsManifestPermAppOp = isManifestPermAppOp;
+    mIsSystemFixed = isSystemFixed;
+    mIsPolicyFixed = isPolicyFixed;
+    mProviderMissing = providerMissing;
+    mPermDesc = permDesc;
+
+    mIsAppOps = false;
+    mIsPerUid = false;
+    mIsAppOpsSet = false;
+    mAppOpsMode = -1;
+    mAppOpsAccessTime = -1;
+    mDependsOn = null;
+    mIsExtraAppOp = false;
+  }
+
+  Permission(
+      int order,
+      Integer iconResId,
+      String packageName,
+      String name,
+      boolean isGranted,
+      Boolean isReferenced,
+      String reference,
+      boolean isSystemApp,
+      boolean isFrameworkApp,
       boolean isPerUid,
       boolean isAppOpsSet,
       int appOpsMode,
       long appOpsAccessTime,
       String dependsOn,
-      boolean isExtraAppOp,
-      String packageName,
-      String name,
-      boolean isGranted,
-      String protectionLevel,
-      boolean isPrivileged,
-      boolean isDevelopment,
-      boolean isManifestPermAppOps,
-      boolean isSystemFixed,
-      boolean providerMissing,
-      Boolean isReferenced,
-      String reference,
-      boolean isSystemApp,
-      CharSequence permDesc) {
+      boolean isExtraAppOp) {
     mOrder = order;
     mIconResId = iconResId;
-    mIsAppOps = isAppOps;
+    mPackageName = packageName;
+    mPermissionName = name;
+    mIsGranted = isGranted;
+    mIsReferenced = isReferenced;
+    mReference = reference;
+    mIsSystemApp = isSystemApp;
+    mIsFrameworkApp = isFrameworkApp;
     mIsPerUid = isPerUid;
     mIsAppOpsSet = isAppOpsSet;
     mAppOpsMode = appOpsMode;
     mAppOpsAccessTime = appOpsAccessTime;
     mDependsOn = dependsOn;
     mIsExtraAppOp = isExtraAppOp;
-    mPackageName = packageName;
-    mPermissionName = name;
-    mIsGranted = isGranted;
-    mProtectionLevel = protectionLevel;
-    mIsPrivileged = isPrivileged;
-    mIsDevelopment = isDevelopment;
-    mIsManifestPermAppOps = isManifestPermAppOps;
-    mIsSystemFixed = isSystemFixed;
-    mProviderMissing = providerMissing;
-    mIsReferenced = isReferenced;
-    mReference = reference;
-    mIsSystemApp = isSystemApp;
-    mPermDesc = permDesc;
+
+    mIsAppOps = true;
+    mProtectionLevel = APP_OPS;
+    mIsPrivileged = false;
+    mIsDevelopment = false;
+    mIsManifestPermAppOp = false;
+    mIsSystemFixed = false;
+    mIsPolicyFixed = false;
+    mProviderMissing = false;
+    mPermDesc = null;
   }
 
   public int getOrder() {
@@ -158,6 +205,10 @@ public class Permission {
     return mProviderMissing;
   }
 
+  public boolean isSystemFixed() {
+    return mIsSystemFixed;
+  }
+
   public Boolean isReferenced() {
     return mIsReferenced;
   }
@@ -166,8 +217,13 @@ public class Permission {
     return mReference;
   }
 
+  public boolean isCritical() {
+    return (mIsSystemApp && mIsPrivileged) || mIsSystemFixed;
+  }
+
   public boolean isChangeable() {
-    if (mMySettings.isCriticalApp(mPackageName)) {
+    boolean allowCriticChanges = MySettingsFlavor.getInstance().allowCriticalChanges();
+    if ((mIsFrameworkApp && !allowCriticChanges) || mMySettings.isCriticalApp(mPackageName)) {
       return false;
     }
     if (mIsAppOps) {
@@ -175,8 +231,9 @@ public class Permission {
     } else {
       // BasePermission.java#enforceDeclaredUsedAndRuntimeOrDevelopment()
       return (mProtectionLevel.equals(PROTECTION_DANGEROUS) || mIsDevelopment)
-          && (!mIsSystemApp || !mIsPrivileged)
-          && !mIsSystemFixed;
+          && (!mIsSystemApp || !mIsPrivileged || allowCriticChanges)
+          && !mIsPolicyFixed
+          && (!mIsSystemFixed || allowCriticChanges);
     }
   }
 
@@ -184,7 +241,7 @@ public class Permission {
     return mPermDesc;
   }
 
-  public String createPermNameString() {
+  public String getPermNameString() {
     String permName = mPermissionName;
     if (mIsAppOps && mDependsOn != null) {
       permName += " (" + mDependsOn + ")";
@@ -192,17 +249,8 @@ public class Permission {
     return permName;
   }
 
-  public String createProtectLevelString() {
+  public String getProtLevelString() {
     String protectionLevel = mProtectionLevel;
-    if (mIsDevelopment) {
-      protectionLevel += ", Development"; // implies "Signature"
-    }
-    if (mIsManifestPermAppOps) {
-      protectionLevel += ", AppOps"; // implies "Signature"
-    }
-    if (mIsSystemFixed) {
-      protectionLevel += ", Fixed";
-    }
 
     if (mIsAppOps) {
       if (mIsPerUid) {
@@ -212,8 +260,17 @@ public class Permission {
         protectionLevel += ", Extra";
       }
     } else {
+      if (mIsDevelopment) {
+        protectionLevel += ", Development"; // Implies "Signature"
+      }
+      if (mIsManifestPermAppOp) {
+        protectionLevel += ", " + APP_OPS; // Implies "Signature"
+      }
       if (mIsPrivileged) {
-        protectionLevel += ", Privileged";
+        protectionLevel += ", " + PRIVILEGED; // Implies "Signature"
+      }
+      if (mIsSystemFixed || mIsPolicyFixed) {
+        protectionLevel += ", " + FIXED;
       }
     }
     return protectionLevel;
@@ -249,11 +306,15 @@ public class Permission {
     return true;
   }
 
-  public static final String SEARCH_APP_OPS = ":AppOps";
+  public static final String FIXED = "Fixed";
+  public static final String PRIVILEGED = "Privileged";
+  private static final String APP_OPS = "AppOps";
+
+  public static final String SEARCH_APP_OPS = ":" + APP_OPS;
   public static final String SEARCH_UID = ":UID";
-  public static final String SEARCH_PRIVILEGED = ":Privileged";
+  public static final String SEARCH_PRIVILEGED = ":" + PRIVILEGED;
   public static final String SEARCH_DEV = ":Development";
-  public static final String SEARCH_FIXED = ":Fixed";
+  public static final String SEARCH_FIXED = ":" + FIXED;
   public static final String SEARCH_TIME = ":TIME";
   public static final String SEARCH_EXTRA = ":Extra";
 
@@ -270,7 +331,7 @@ public class Permission {
         new String[] {
           mPermissionName,
           ":" + mProtectionLevel,
-          ((mIsAppOps || mIsManifestPermAppOps) ? SEARCH_APP_OPS : ""),
+          ((mIsAppOps || mIsManifestPermAppOp) ? SEARCH_APP_OPS : ""),
           ((mIsAppOps && mIsPerUid) ? SEARCH_UID : ""),
           (mIsPrivileged ? SEARCH_PRIVILEGED : ""),
           (mIsDevelopment ? SEARCH_DEV : ""),

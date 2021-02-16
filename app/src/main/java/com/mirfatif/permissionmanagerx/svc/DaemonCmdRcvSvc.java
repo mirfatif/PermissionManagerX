@@ -66,6 +66,9 @@ public class DaemonCmdRcvSvc extends Service {
       case Commands.REVOKE_PERM_FAILED:
         Utils.showToast(R.string.daemon_revoke_perm_failed);
         break;
+      case Commands.SET_PERM_FLAGS_FAILED:
+        Utils.showToast(R.string.daemon_set_perm_flags_failed);
+        break;
       case Commands.ENABLE_PKG_FAILED:
         Utils.showToast(R.string.daemon_enable_pkg_failed);
         break;

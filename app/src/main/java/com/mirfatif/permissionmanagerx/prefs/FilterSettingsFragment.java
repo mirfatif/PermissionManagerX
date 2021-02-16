@@ -176,7 +176,8 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
         () -> {
           mMySettings.getExcludedAppsLock();
           Set<String> excludedApps = mMySettings.getExcludedApps();
-          Utils.runInFg(() -> updateExcludedAppsView(excludedApps));
+          CharSequence[] excludedAppsLabels = mMySettings.getExcludedAppsLabels();
+          Utils.runInFg(() -> updateExcludedAppsView(excludedApps, excludedAppsLabels));
           mMySettings.releaseExcludedAppsLock();
         });
 
@@ -203,11 +204,12 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
         });
   }
 
-  private void updateExcludedAppsView(Set<String> excludedAppsSet) {
+  private void updateExcludedAppsView(
+      Set<String> excludedAppsSet, CharSequence[] excludedAppsLabels) {
     CharSequence[] excludedApps = excludedAppsSet.toArray(new String[0]);
-    int appCount = mMySettings.getExcludedAppsCount();
+    int appCount = excludedAppsSet.size();
 
-    excludedAppsView.setEntries(mMySettings.getExcludedAppsLabels());
+    excludedAppsView.setEntries(excludedAppsLabels);
     excludedAppsView.setEntryValues(excludedApps);
     excludedAppsView.setValues(excludedAppsSet);
 
@@ -229,7 +231,7 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
 
   private void updateExcludedPermsView(Set<String> excludedPermsSet) {
     CharSequence[] excludedPerms = excludedPermsSet.toArray(new String[0]);
-    int permCount = mMySettings.getExcludedPermsCount();
+    int permCount = excludedPermsSet.size();
 
     excludedPermsView.setEntries(excludedPerms);
     excludedPermsView.setEntryValues(excludedPerms);
@@ -265,7 +267,7 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
       extraAppOpsView.setValues(extraAppOps); // Checked entry values
     }
 
-    int count = mMySettings.getExtraAppOpsCount();
+    int count = extraAppOps.size();
 
     // Set summary
     if (count == 0 || !extraAppOpsView.isEnabled()) {

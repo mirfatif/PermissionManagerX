@@ -22,6 +22,20 @@ public interface IPackageManager {
   void setApplicationEnabledSetting(String pkg, int state, int flags, int userId, String callingPkg)
       throws RemoteException;
 
+  void updatePermissionFlags(
+      String permName,
+      String packageName,
+      int flagMask,
+      int flagValues,
+      boolean checkAdjustPolicyFlagPermission,
+      int userId)
+      throws RemoteException;
+
+  // P-
+  void updatePermissionFlags(
+      String permName, String packageName, int flagMask, int flagValues, int userId)
+      throws RemoteException;
+
   abstract class Stub {
 
     @SuppressWarnings("UnusedDeclaration")

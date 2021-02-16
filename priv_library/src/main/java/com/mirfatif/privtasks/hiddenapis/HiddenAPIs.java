@@ -153,10 +153,12 @@ public abstract class HiddenAPIs {
   @Privileged(requires = "android.permission.GET_APP_OPS_STATS")
   @Throws(name = "SecurityException")
   /*
-   getUidOps() (on Android 8?) is buggy, throws NullPointerException
-   MIUI has bug and returns bad opCode like 10005, so compare with valid range
-   N and O (P too?) don't have getLastAccessTime(), so use deprecated getTime()
-   Returning null is considered an error, so return empty List if no error
+   getUidOps() (on O and P) is buggy, throws NullPointerException. Check was added in Q:
+     android-10.0.0_r1: frameworks/base/services/core/java/com/android/server/appop/AppOpsService.java#1016
+   But don't consider it an error, it just means there are no UID AppOps for the package.
+   MIUI has bug and returns bad opCode like 10005, so compare with valid range.
+   N and O (P too?) don't have getLastAccessTime(), so use deprecated getTime().
+   Returning null is considered an error, so return empty List if no error.
   */
   public abstract List<MyPackageOps> getMyPackageOpsList(
       int uid, String packageName, String op, int opNum)
@@ -172,6 +174,14 @@ public abstract class HiddenAPIs {
       cls = PackageManager.class)
   public static int getSystemFixedFlag() throws HiddenAPIsError {
     return getStaticIntField("FLAG_PERMISSION_SYSTEM_FIXED", PackageManager.class);
+  }
+
+  @HiddenField(
+      name = "FLAG_PERMISSION_POLICY_FIXED",
+      type = FType.STATIC_FIELD,
+      cls = PackageManager.class)
+  public static int getPolicyFixedFlag() throws HiddenAPIsError {
+    return getStaticIntField("FLAG_PERMISSION_POLICY_FIXED", PackageManager.class);
   }
 
   @HiddenClass(cls = ParceledListSlice.class)
@@ -218,6 +228,29 @@ public abstract class HiddenAPIs {
   // revokeRuntimePermission() moved from IPackageManager to IPermissionManager in SDK 30.
   public abstract void revokeRuntimePermission(String pkgName, String permName, int userId)
       throws HiddenAPIsException;
+
+  @HiddenMethod(
+      name = "updatePermissionFlags(String, String, int, int, boolean, int)",
+      cls = IPermissionManager.class,
+      minSDK = 30)
+  @HiddenMethod(
+      name = "updatePermissionFlags(String, String, int, int, boolean, int)",
+      cls = IPackageManager.class,
+      minSDK = 29,
+      maxSDK = 29)
+  @HiddenMethod(
+      name = "updatePermissionFlags(String, String, int, int, int)",
+      cls = IPackageManager.class,
+      maxSDK = 28)
+  @DaemonOnly
+  @Privileged(
+      requires = {
+        "android.permission.REVOKE_RUNTIME_PERMISSIONS",
+        "android.permission.GRANT_RUNTIME_PERMISSIONS"
+      })
+  @Throws(name = "SecurityException")
+  public abstract void updatePermFlags(
+      String pkg, String perm, int flags, int flagValues, int userId) throws HiddenAPIsException;
 
   //////////////////////////////////////////////////////////////////
   //////////////////////////// PACKAGES ////////////////////////////
@@ -384,7 +417,7 @@ public abstract class HiddenAPIs {
   @Repeatable(HiddenFields.class)
   @interface HiddenField {
 
-    String name();
+    String[] name();
 
     FType type() default FType.FIELD;
 

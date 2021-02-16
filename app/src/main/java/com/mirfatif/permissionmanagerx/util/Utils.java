@@ -11,9 +11,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION;
@@ -24,10 +26,12 @@ import android.os.Parcel;
 import android.os.SystemClock;
 import android.text.Html;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.BulletSpan;
 import android.text.style.RelativeSizeSpan;
+import android.text.style.TextAppearanceSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.widget.Button;
@@ -299,6 +303,34 @@ public class Utils {
     return mAccentColor;
   }
 
+  public static TextAppearanceSpan getHighlight(@ColorInt int colorInt) {
+    return new TextAppearanceSpan(
+        null,
+        Typeface.NORMAL,
+        -1,
+        new ColorStateList(new int[][] {new int[] {}}, new int[] {colorInt}),
+        null);
+  }
+
+  public static SpannableString getHighlightString(
+      String text, TextAppearanceSpan highlightSpan, boolean isCaseSensitive, String... prominent) {
+    SpannableString spannable = new SpannableString(text);
+    for (String prom : prominent) {
+      int startPos;
+      if (isCaseSensitive) {
+        startPos = text.indexOf(prom);
+      } else {
+        startPos = text.toUpperCase().indexOf(prom.toUpperCase());
+      }
+      if (startPos < 0) {
+        continue;
+      }
+      int endPos = startPos + prom.length();
+      spannable.setSpan(highlightSpan, startPos, endPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+    return spannable;
+  }
+
   public static boolean sendMail(Activity activity, String body) {
     Intent emailIntent = new Intent(Intent.ACTION_SENDTO).setData(Uri.parse("mailto:"));
     emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {getString(R.string.email_address)});
@@ -543,7 +575,7 @@ public class Utils {
 
   public static void logDaemonDead(String tag) {
     if (MySettings.getInstance().isDebug() || System.currentTimeMillis() - daemonDeadLogTs > 1000) {
-      Log.e(tag, "Privileged daemon is not running");
+      Log.w(tag, "Privileged daemon is not running");
       daemonDeadLogTs = System.currentTimeMillis();
     }
   }

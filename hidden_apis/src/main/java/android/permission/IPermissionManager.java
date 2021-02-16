@@ -15,6 +15,15 @@ public interface IPermissionManager {
   void revokeRuntimePermission(String pkgName, String permName, int userId, String reason)
       throws RemoteException;
 
+  void updatePermissionFlags(
+      String permName,
+      String packageName,
+      int flagMask,
+      int flagValues,
+      boolean checkAdjustPolicyFlagPermission,
+      int userId)
+      throws RemoteException;
+
   abstract class Stub {
 
     @SuppressWarnings("UnusedDeclaration")

@@ -719,8 +719,8 @@ public class PackageParser {
     String protection = "Unknown";
     boolean isPrivileged = false;
     boolean isDevelopment = false;
-    boolean isManifestPermAppOps = false;
-    boolean isSystemFixed = false;
+    boolean isManifestPermAppOp = false;
+    boolean isSystemFixed = false, isPolicyFixed = false;
     boolean providerMissing = false;
     CharSequence permDesc = null;
 
@@ -756,7 +756,7 @@ public class PackageParser {
       isDevelopment =
           protectionLevel == PermissionInfo.PROTECTION_SIGNATURE
               && (protectionFlags & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0;
-      isManifestPermAppOps = (protectionFlags & PermissionInfo.PROTECTION_FLAG_APPOP) != 0;
+      isManifestPermAppOp = (protectionFlags & PermissionInfo.PROTECTION_FLAG_APPOP) != 0;
 
       permDesc = permissionInfo.loadDescription(mPackageManager);
     } catch (NameNotFoundException ignored) {
@@ -769,36 +769,34 @@ public class PackageParser {
     GroupOrderPair groupOrderPair = mPermGroupsMapping.getOrderAndGroup(perm, false);
 
     boolean isSystemApp = isSystemApp(packageInfo);
-    if (isSystemApp || isFrameworkApp(packageInfo)) {
+    boolean isFrameworkApp = isFrameworkApp(packageInfo);
+    if (isSystemApp || isFrameworkApp) {
       int permFlags = getPermissionFlags(perm, packageInfo);
-      int systemFixedFlag = getSystemFixedFlag();
-      if (permFlags >= 0 && systemFixedFlag >= 0) {
-        isSystemFixed = (permFlags & systemFixedFlag) != 0;
+      if (permFlags >= 0 && getSystemFixedFlag() != null) {
+        isSystemFixed = (permFlags & getSystemFixedFlag()) != 0;
+      }
+      if (permFlags >= 0 && getPolicyFixedFlag() != null) {
+        isPolicyFixed = (permFlags & getPolicyFixedFlag()) != 0;
       }
     }
 
     return new Permission(
         groupOrderPair.order,
         getIconResId(perm, groupOrderPair.group),
-        false,
-        false,
-        false,
-        -1,
-        -1,
-        null,
-        false,
         packageInfo.packageName,
         perm,
         isGranted,
-        protection,
-        isPrivileged,
-        isDevelopment,
-        isManifestPermAppOps,
-        isSystemFixed,
-        providerMissing,
         refPair.isReferenced,
         refPair.reference,
         isSystemApp,
+        isFrameworkApp,
+        protection,
+        isPrivileged,
+        isDevelopment,
+        isManifestPermAppOp,
+        isSystemFixed,
+        isPolicyFixed,
+        providerMissing,
         permDesc);
   }
 
@@ -824,10 +822,10 @@ public class PackageParser {
     return -1;
   }
 
-  private int SYSTEM_FIXED_FLAG = -1;
+  private Integer SYSTEM_FIXED_FLAG = null;
 
-  private int getSystemFixedFlag() {
-    if (SYSTEM_FIXED_FLAG != -1) {
+  public Integer getSystemFixedFlag() {
+    if (SYSTEM_FIXED_FLAG != null) {
       return SYSTEM_FIXED_FLAG;
     }
 
@@ -845,12 +843,41 @@ public class PackageParser {
 
     Object object = mPrivDaemonHandler.sendRequest(Commands.GET_SYSTEM_FIXED_FLAG);
     if (object instanceof Integer) {
-      SYSTEM_FIXED_FLAG = (int) object;
+      SYSTEM_FIXED_FLAG = (Integer) object;
       return SYSTEM_FIXED_FLAG;
     }
 
     Log.e(TAG, "Error occurred in getSystemFixedFlag()");
     return SYSTEM_FIXED_FLAG;
+  }
+
+  private Integer POLICY_FIXED_FLAG = null;
+
+  private Integer getPolicyFixedFlag() {
+    if (POLICY_FIXED_FLAG != null) {
+      return POLICY_FIXED_FLAG;
+    }
+
+    try {
+      POLICY_FIXED_FLAG = HiddenAPIs.getPolicyFixedFlag();
+      return POLICY_FIXED_FLAG;
+    } catch (HiddenAPIsError e) {
+      Log.e(TAG, "getPolicyFixedFlag: " + e.toString());
+    }
+
+    if (!mMySettings.isPrivDaemonAlive()) {
+      Utils.logDaemonDead(TAG + ": getPolicyFixedFlag");
+      return POLICY_FIXED_FLAG;
+    }
+
+    Object object = mPrivDaemonHandler.sendRequest(Commands.GET_POLICY_FIXED_FLAG);
+    if (object instanceof Integer) {
+      POLICY_FIXED_FLAG = (int) object;
+      return POLICY_FIXED_FLAG;
+    }
+
+    Log.e(TAG, "Error occurred in getPolicyFixedFlag()");
+    return POLICY_FIXED_FLAG;
   }
 
   //////////////////////////////////////////////////////////////////
@@ -980,26 +1007,19 @@ public class PackageParser {
         new Permission(
             groupOrderPair.order,
             getIconResId(opName, groupOrderPair.group),
-            true,
+            packageInfo.packageName,
+            opName,
+            opMode != AppOpsManager.MODE_IGNORED && opMode != AppOpsManager.MODE_ERRORED,
+            refPair.isReferenced,
+            refPair.reference,
+            isSystemApp(packageInfo),
+            isFrameworkApp(packageInfo),
             isPerUid,
             isAppOpSet,
             opMode,
             accessTime,
             dependsOn,
-            isExtraAppOp,
-            packageInfo.packageName,
-            opName,
-            opMode != AppOpsManager.MODE_IGNORED && opMode != AppOpsManager.MODE_ERRORED,
-            "AppOps",
-            false,
-            false,
-            false,
-            false,
-            false,
-            refPair.isReferenced,
-            refPair.reference,
-            isSystemApp(packageInfo),
-            null);
+            isExtraAppOp);
 
     // so that it's not repeated
     if (!isExtraAppOp) {

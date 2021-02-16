@@ -204,7 +204,6 @@ public class HiddenAPIsImpl extends HiddenAPIs {
         pkgOpsList = mIAppOpsService.getUidOps(uid, ops);
       } catch (NullPointerException e) {
         mCallback.onGetUidOpsNpException(e);
-        return null;
       }
     }
 
@@ -327,6 +326,21 @@ public class HiddenAPIsImpl extends HiddenAPIs {
         mIPermissionManager.revokeRuntimePermission(pkgName, permName, userId, null);
       } else {
         mIPackageManager.revokeRuntimePermission(pkgName, permName, userId);
+      }
+    } catch (RemoteException | SecurityException e) {
+      throw new HiddenAPIsException(e);
+    }
+  }
+
+  public void updatePermFlags(String pkg, String perm, int flags, int flagValues, int userId)
+      throws HiddenAPIsException {
+    try {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        mIPermissionManager.updatePermissionFlags(perm, pkg, flags, flagValues, true, userId);
+      } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+        mIPackageManager.updatePermissionFlags(perm, pkg, flags, flagValues, true, userId);
+      } else {
+        mIPackageManager.updatePermissionFlags(perm, pkg, flags, flagValues, userId);
       }
     } catch (RemoteException | SecurityException e) {
       throw new HiddenAPIsException(e);

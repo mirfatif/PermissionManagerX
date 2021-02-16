@@ -16,6 +16,7 @@ public class Commands {
   public static final String GET_READY = "GET_READY";
   public static final String STOP_LOGGING = "STOP_LOGGING";
   public static final String SHUTDOWN = "SHUTDOWN";
+  public static final String GET_UID = "GET_UID";
   public static final String OP_TO_NAME = "OP_TO_NAME";
   public static final String MODE_TO_NAME = "MODE_TO_NAME";
   public static final String GET_OPS_FOR_PKG_OR_UID = "GET_OPS_FOR_PKG_OR_UID";
@@ -30,11 +31,13 @@ public class Commands {
   public static final String RESET_APP_OPS = "RESET_APP_OPS";
   public static final String GET_OP_NUM = "GET_OP_NUM";
   public static final String GET_SYSTEM_FIXED_FLAG = "GET_SYSTEM_FIXED_FLAG";
+  public static final String GET_POLICY_FIXED_FLAG = "GET_POLICY_FIXED_FLAG";
   public static final String GET_PERMISSION_FLAGS = "GET_PERMISSION_FLAGS";
   public static final String GET_INSTALLED_PKGS = "GET_INSTALLED_PKGS";
   public static final String GET_PKG_INFO = "GET_PKG_INFO";
   public static final String OPEN_APP_INFO = "OPEN_APP_INFO";
   public static final String GET_USERS = "GET_USERS";
+  public static final String SET_PERM_FLAGS = "SET_PERM_FLAGS";
 
   // From daemon to app
   public static final String APP_PKG_NAME = "com.mirfatif.permissionmanagerx";
@@ -57,4 +60,5 @@ public class Commands {
   public static final String GET_USERS_FAILED = "GET_USERS_FAILED";
   public static final String GET_PERM_GRP_INFO_LIST_FAILED = "GET_PERM_GRP_INFO_LIST_FAILED";
   public static final String OP_NUM_INCONSISTENCY = "OP_NUM_INCONSISTENCY";
+  public static final String SET_PERM_FLAGS_FAILED = "SET_PERM_FLAGS_FAILED";
 }

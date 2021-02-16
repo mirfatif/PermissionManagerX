@@ -125,7 +125,8 @@ public class Package {
   }
 
   public boolean isChangeable() {
-    return !isCriticalApp() && !mIsFrameworkApp;
+    return !isCriticalApp()
+        && (!mIsFrameworkApp || MySettingsFlavor.getInstance().allowCriticalChanges());
   }
 
   public void setTotalPermCount(int count) {
@@ -227,6 +228,8 @@ public class Package {
   public void setIsRemoved(boolean isRemoved) {
     mIsRemoved = isRemoved;
   }
+
+  public static final String FRAMEWORK = "Framework";
 
   public static final String SEARCH_CRITICAL = ":Critical";
   public static final String SEARCH_FRAMEWORK = ":Framework";

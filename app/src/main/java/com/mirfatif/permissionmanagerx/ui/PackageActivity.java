@@ -197,18 +197,17 @@ public class PackageActivity extends BaseActivity {
   }
 
   private PermClickListenerWithLoc getPermClickListener() {
-    return (permission, yLocation) -> {
-      String permName = permission.createPermNameString();
-      Spanned protectionLevel =
-          Utils.htmlToString(
-              getString(R.string.protection_level, permission.createProtectLevelString()));
+    return (perm, yLocation) -> {
+      String permName = perm.getPermNameString();
+      String protLevelString = getString(R.string.protection_level, perm.getProtLevelString());
+      Spanned protLevel = Utils.htmlToString(protLevelString);
 
       View layout = getLayoutInflater().inflate(R.layout.permission_details_alert_dialog, null);
       ((TextView) layout.findViewById(R.id.permission_name_view)).setText(permName);
-      ((TextView) layout.findViewById(R.id.protection_level_view)).setText(protectionLevel);
-      if (permission.getDescription() != null) {
+      ((TextView) layout.findViewById(R.id.protection_level_view)).setText(protLevel);
+      if (perm.getDescription() != null) {
         TextView descView = layout.findViewById(R.id.perm_desc_view);
-        descView.setText(permission.getDescription());
+        descView.setText(perm.getDescription());
         descView.setVisibility(View.VISIBLE);
       }
 
@@ -613,10 +612,47 @@ public class PackageActivity extends BaseActivity {
     updatePackage();
   }
 
+  void onPermSwitchToggle(Permission perm) {
+    String warn = null;
+    if (mMySettings.getBoolPref(R.string.pref_package_warn_dang_change_enc_key)) {
+      if (mPackage.isFrameworkApp()) {
+        warn = getString(R.string.change_perms_warning, getString(R.string.framework));
+      } else if (mPackage.isSystemApp()) {
+        warn = getString(R.string.change_perms_warning, getString(R.string.system));
+      }
+    }
+
+    if (warn == null) {
+      Utils.runInBg(() -> setPermission(perm));
+      return;
+    }
+
+    AlertDialog dialog =
+        new Builder(PackageActivity.this)
+            .setPositiveButton(R.string.yes, (d, which) -> Utils.runInBg(() -> setPermission(perm)))
+            .setNegativeButton(R.string.no, null)
+            .setNeutralButton(
+                R.string.do_not_remind,
+                (d, which) -> {
+                  doNotRemindDangAction();
+                  Utils.runInBg(() -> setPermission(perm));
+                })
+            .setTitle(R.string.warning)
+            .setMessage(Utils.breakParas(warn))
+            .create();
+    new AlertDialogFragment(dialog).show(PackageActivity.this, "PERM_CHANGE_WARNING", false);
+  }
+
   private void setPermission(Permission permission) {
     if (isPackageNull()) {
       return;
     }
+
+    boolean isSystemFixed = permission.isSystemFixed();
+    if (!mPkgActivityFlavor.beforePermChange(mPackage, permission, isSystemFixed)) {
+      return;
+    }
+
     String command =
         mPackage.getName() + " " + permission.getName() + " " + Utils.getUserId(mPackage.getUid());
     if (permission.isGranted()) {
@@ -629,6 +665,8 @@ public class PackageActivity extends BaseActivity {
       Util.debugLog(TAG, "setPermission: sending command: " + command);
     }
     mPrivDaemonHandler.sendRequest(command);
+
+    mPkgActivityFlavor.afterPermChange(mPackage, permission, isSystemFixed);
     updatePackage();
   }
 
@@ -687,44 +725,10 @@ public class PackageActivity extends BaseActivity {
   private class SwitchToggleListener implements PermClickListener {
 
     @Override
-    public void onClick(Permission permission) {
-      if (isPackageNull()) {
-        return;
+    public void onClick(Permission perm) {
+      if (!isPackageNull() && checkPrivileges() && mPkgActivityFlavor != null) {
+        mPkgActivityFlavor.onPermClick(perm);
       }
-
-      if (!checkPrivileges()) {
-        return;
-      }
-
-      String warn = null;
-      if (mMySettings.getBoolPref(R.string.pref_package_warn_dang_change_enc_key)) {
-        if (mPackage.isFrameworkApp()) {
-          warn = getString(R.string.change_perms_warning, getString(R.string.framework));
-        } else if (mPackage.isSystemApp()) {
-          warn = getString(R.string.change_perms_warning, getString(R.string.system));
-        }
-      }
-
-      if (warn == null) {
-        Utils.runInBg(() -> setPermission(permission));
-        return;
-      }
-
-      AlertDialog dialog =
-          new Builder(PackageActivity.this)
-              .setPositiveButton(
-                  R.string.yes, (d, which) -> Utils.runInBg(() -> setPermission(permission)))
-              .setNegativeButton(R.string.no, null)
-              .setNeutralButton(
-                  R.string.do_not_remind,
-                  (d, which) -> {
-                    doNotRemindDangAction();
-                    Utils.runInBg(() -> setPermission(permission));
-                  })
-              .setTitle(R.string.warning)
-              .setMessage(Utils.breakParas(warn))
-              .create();
-      new AlertDialogFragment(dialog).show(PackageActivity.this, "PERM_CHANGE_WARNING", false);
     }
   }
 

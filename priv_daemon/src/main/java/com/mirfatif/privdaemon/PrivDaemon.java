@@ -164,6 +164,9 @@ public class PrivDaemon {
         Log.i(TAG, "Please " + Commands.STOP_LOGGING);
         sendResponse(null);
         break;
+      case Commands.GET_UID:
+        sendResponse(Process.myUid());
+        break;
       case Commands.OP_TO_NAME:
         sendResponse(mPrivTasks.buildOpToNameList());
         break;
@@ -190,6 +193,10 @@ public class PrivDaemon {
         mPrivTasks.grantRevokePermission(false, args);
         sendResponse(null);
         break;
+      case Commands.SET_PERM_FLAGS:
+        mPrivTasks.updatePermFlags(args);
+        sendResponse(null);
+        break;
       case Commands.ENABLE_PACKAGE:
         mPrivTasks.setAppEnabledState(true, args);
         sendResponse(null);
@@ -211,6 +218,9 @@ public class PrivDaemon {
         break;
       case Commands.GET_SYSTEM_FIXED_FLAG:
         sendResponse(HiddenAPIs.getSystemFixedFlag());
+        break;
+      case Commands.GET_POLICY_FIXED_FLAG:
+        sendResponse(HiddenAPIs.getPolicyFixedFlag());
         break;
       case Commands.GET_PERMISSION_FLAGS:
         sendResponse(mPrivTasks.getPermissionFlags(args));

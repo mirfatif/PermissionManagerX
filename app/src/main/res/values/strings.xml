@@ -43,6 +43,7 @@
   <string name="adb_only_settings">ADB-Only Settings</string>
   <string name="root_only_settings">Root-Only Settings</string>
   <string name="adb_listening_port">ADBD Listening Port</string>
+  <string name="allow_critical_changes">Allow Critical Changes</string>
   <string name="talk_to_daemon_over_socket">Talk to Daemon over Socket</string>
   <string name="daemon_uid">Privileged Daemon UID</string>
   <string name="daemon_uid_system">System</string>
@@ -184,6 +185,8 @@
   <string name="requested_no_permissions">No permissions requested</string>
   <string name="protection_level"><![CDATA[<b>Protection level:</b> %1$s]]></string>
   <string name="should_be"><![CDATA[Should be <b>%1$s</b>]]></string>
+  <string name="daemon_not_running_as_system">Daemon not running as system</string>
+  <string name="failed_get_system_fixed_flag">Failed getting system fixed flag</string>
 
   <!--PreferenceActivity-->
   <string name="filter_settings">Filter Settings</string>
@@ -229,6 +232,7 @@
       <ul>
         <li>Sort apps and permissions by different parameters</li>
         <li>Scheduled check to notify bad reference states</li>
+        <li>Make changes to critical apps and permissions</li>
         <li>Multiple users / work profile support</li>
         <li>Auto create backup file on changes</li>
         <li>Search suggestions</li>
@@ -288,5 +292,6 @@
   <string name="daemon_get_users_failed">Getting users list failed</string>
   <string name="daemon_get_perm_grp_info_list_failed">Getting permission groups failed</string>
   <string name="daemon_op_num_inconsistency">Bad OEM</string>
+  <string name="daemon_set_perm_flags_failed">Setting permission flags failed</string>
 
 </resources>

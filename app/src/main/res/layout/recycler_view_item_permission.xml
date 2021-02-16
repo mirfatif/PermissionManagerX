@@ -47,7 +47,6 @@
     <TextView
       android:id="@+id/app_ops_time_view"
       android:layout_width="match_parent"
-      android:textColor="@android:color/holo_red_light"
       android:layout_height="wrap_content"
       android:layout_margin="1dp"/>
 
