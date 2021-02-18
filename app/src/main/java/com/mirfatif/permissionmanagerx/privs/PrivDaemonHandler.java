@@ -222,6 +222,10 @@ public class PrivDaemonHandler {
       return false;
     }
 
+    // Even with ADB we may get System UID if ADBD is running as root.
+    Object obj = sendRequest(Commands.GET_UID, true);
+    mIsSystemUid = obj instanceof Integer && (Integer) obj == 1000;
+
     mMySettings.setPrivDaemonAlive(true);
 
     if (mMySettings.shouldStartDaemonLog()) {
@@ -287,8 +291,12 @@ public class PrivDaemonHandler {
   private final Object SEND_REQ_LOCK = new Object();
 
   public Object sendRequest(String request) {
+    return sendRequest(request, mMySettings.isPrivDaemonAlive());
+  }
+
+  private Object sendRequest(String request, boolean isPrivDaemonAlive) {
     synchronized (SEND_REQ_LOCK) {
-      if (!mMySettings.isPrivDaemonAlive()) {
+      if (!isPrivDaemonAlive) {
         Log.e(TAG, "sendRequest: " + request + ": Privileged daemon is dead");
         return null;
       }
@@ -320,6 +328,12 @@ public class PrivDaemonHandler {
         return null;
       }
     }
+  }
+
+  private boolean mIsSystemUid = false;
+
+  public boolean isSystemUid() {
+    return mIsSystemUid;
   }
 
   //////////////////////////////////////////////////////////////////

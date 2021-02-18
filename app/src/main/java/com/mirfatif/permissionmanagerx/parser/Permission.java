@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.MySettingsFlavor;
+import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import java.util.concurrent.TimeUnit;
 
 public class Permission {
@@ -221,7 +222,16 @@ public class Permission {
     return (mIsSystemApp && mIsPrivileged) || mIsSystemFixed;
   }
 
+  private Boolean mIsChangeable = null;
+
   public boolean isChangeable() {
+    if (mIsChangeable == null) {
+      mIsChangeable = _isChangeable();
+    }
+    return mIsChangeable;
+  }
+
+  private boolean _isChangeable() {
     boolean allowCriticChanges = MySettingsFlavor.getInstance().allowCriticalChanges();
     if ((mIsFrameworkApp && !allowCriticChanges) || mMySettings.isCriticalApp(mPackageName)) {
       return false;
@@ -233,7 +243,8 @@ public class Permission {
       return (mProtectionLevel.equals(PROTECTION_DANGEROUS) || mIsDevelopment)
           && (!mIsSystemApp || !mIsPrivileged || allowCriticChanges)
           && !mIsPolicyFixed
-          && (!mIsSystemFixed || allowCriticChanges);
+          && (!mIsSystemFixed
+              || (allowCriticChanges && PrivDaemonHandler.getInstance().isSystemUid()));
     }
   }
 
