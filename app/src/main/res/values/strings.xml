@@ -52,6 +52,8 @@
   <string name="daemon_context">Daemon SELinux Context</string>
   <string name="daemon_context_shell">Shell</string>
   <string name="daemon_context_default">Default</string>
+  <string name="su_exe_path">Superuser Executable Path</string>
+  <string name="su_exe_path_hint">$PATH</string>
 
   <!--MainActivity strings-->
   <string name="primary_account">Primary Account</string>
@@ -107,6 +109,7 @@
     be slower. Stop using hidden APIs?
   </string>
   <string name="bad_port_number">Bad port number</string>
+  <string name="bad_path">Bad path</string>
   <string name="granting_permission_failed">Granting permission failed: %1$s</string>
   <string name="love_using_app">Liking Permission Manager X?</string>
   <string name="contribute">Contribute</string>

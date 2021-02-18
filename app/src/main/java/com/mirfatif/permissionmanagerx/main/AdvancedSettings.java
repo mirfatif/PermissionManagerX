@@ -18,6 +18,7 @@ import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -41,6 +42,7 @@ class AdvancedSettings {
   private final AppCompatSpinner daemonContextSpinner;
   private final View daemonUidListArrow;
   private final View daemonContextListArrow;
+  private final EditText suExePathView;
 
   private final List<String> spinnerUids, spinnerContexts;
   private final int uidSelectedPos, contextSelectedPos;
@@ -49,6 +51,7 @@ class AdvancedSettings {
   private final boolean dexInTmpDir = mMySettings.dexInTmpDir();
   private final String adbPort = String.valueOf(mMySettings.getAdbPort());
   private final boolean useSocket = mMySettings.useSocket();
+  private final String suExePath = mMySettings.getSuExePath();
 
   @SuppressLint("InflateParams")
   private AdvancedSettings(MainActivity activity) {
@@ -65,6 +68,7 @@ class AdvancedSettings {
 
     daemonUidListArrow = dialogLayout.findViewById(R.id.daemon_uid_list_arrow);
     daemonContextListArrow = dialogLayout.findViewById(R.id.daemon_context_list_arrow);
+    suExePathView = dialogLayout.findViewById(R.id.su_exe_path);
 
     spinnerUids = Arrays.asList(mA.getResources().getStringArray(R.array.daemon_uids));
     spinnerContexts = Arrays.asList(mA.getResources().getStringArray(R.array.daemon_contexts));
@@ -115,6 +119,8 @@ class AdvancedSettings {
     useSocketView.setChecked(useSocket);
     daemonUidSpinner.setSelection(uidSelectedPos);
     daemonContextSpinner.setSelection(contextSelectedPos);
+    suExePathView.setText(suExePath);
+    suExePathView.addTextChangedListener(new SuPathWatcher());
   }
 
   private void saveSettings() {
@@ -124,9 +130,9 @@ class AdvancedSettings {
       restartDaemon = true;
     }
 
-    String adbPortNew = adbPortView.getText().toString().trim();
-    if (!TextUtils.isEmpty(adbPortNew) && !adbPort.equals(adbPortNew)) {
-      int port = Integer.parseInt(adbPortNew);
+    String newPort = adbPortView.getText() == null ? null : adbPortView.getText().toString().trim();
+    if (!TextUtils.isEmpty(newPort) && !adbPort.equals(newPort)) {
+      int port = Integer.parseInt(newPort);
       if (port > 65535 || port <= 0) {
         Utils.showToast(R.string.bad_port_number);
       } else {
@@ -163,6 +169,22 @@ class AdvancedSettings {
       }
       mMySettings.setDaemonContext(context);
       restartDaemon = true;
+    }
+
+    String suExePathNew =
+        suExePathView.getText() == null ? null : suExePathView.getText().toString().trim();
+    if (TextUtils.isEmpty(suExePathNew)) {
+      if (!TextUtils.isEmpty(suExePath)) {
+        mMySettings.setSuExePath(null);
+        restartDaemon = true;
+      }
+    } else if (!suExePathNew.equals(suExePath)) {
+      if (!isExecutableFile(suExePathNew)) {
+        Utils.showToast(R.string.bad_path);
+      } else {
+        mMySettings.setSuExePath(suExePathNew);
+        restartDaemon = true;
+      }
     }
 
     mAdvancedSettingsFlavor.saveSettings(restartDaemon, switchToAdb);
@@ -216,7 +238,7 @@ class AdvancedSettings {
       return;
     }
 
-    Process process = Utils.runCommand(TAG, true, "su");
+    Process process = Utils.runCommand(TAG, true, Utils.getSu());
     if (process == null) {
       Utils.showToast(R.string.adb_switch_fail);
     } else {
@@ -264,6 +286,11 @@ class AdvancedSettings {
     return App.getContext().getString(resId);
   }
 
+  private boolean isExecutableFile(CharSequence path) {
+    File suFile = new File(path.toString());
+    return suFile.isFile() && suFile.canExecute();
+  }
+
   private class PortNumberWatcher implements TextWatcher {
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -276,6 +303,22 @@ class AdvancedSettings {
       int port = Integer.parseInt(s.toString().trim());
       if (port > 65535 || port <= 0) {
         adbPortView.setError(getString(R.string.bad_port_number));
+      }
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {}
+  }
+
+  private class SuPathWatcher implements TextWatcher {
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+      if (!TextUtils.isEmpty(s) && !isExecutableFile(s)) {
+        suExePathView.setError(getString(R.string.bad_path));
       }
     }
 

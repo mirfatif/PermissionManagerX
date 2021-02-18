@@ -128,7 +128,7 @@ public class PrivDaemonHandler {
         params += " " + Commands.CREATE_SOCKET;
       }
 
-      Process suProcess = Utils.runCommand(TAG + ": startDaemon", false, "su");
+      Process suProcess = Utils.runCommand(TAG + ": startDaemon", false, Utils.getSu());
       if (suProcess == null) {
         return false;
       }
@@ -242,7 +242,7 @@ public class PrivDaemonHandler {
                 + daemonContext
                 + " -- "
                 + logCommand;
-        if (LogcatService.doLoggingFails("su", "exec " + logCommand)) {
+        if (LogcatService.doLoggingFails(Utils.getSu(), "exec " + logCommand)) {
           return null;
         }
       } else {
@@ -423,7 +423,7 @@ public class PrivDaemonHandler {
               "exec cat - >" + (file.equals(DAEMON_DEX) ? TMP_DIR_DEX_PATH : TMP_DIR_SCRIPT_PATH);
 
           if (mMySettings.isRootGranted()) {
-            suProcess = Utils.runCommand(TAG + ": extractToTmpDir", true, "su");
+            suProcess = Utils.runCommand(TAG + ": extractToTmpDir", true, Utils.getSu());
             if (suProcess == null) {
               Log.e(TAG, "extractToTmpDir: extraction failed");
               res = false;
@@ -533,7 +533,7 @@ public class PrivDaemonHandler {
     String EXIST = "EXIST";
     String cmd = "test -f " + dex + " && test -f " + script + " && echo " + EXIST + " ; exit $?";
     if (mPreferRoot) {
-      return Utils.runCommand(TAG + ": filesExist", EXIST, cmd, "su");
+      return Utils.runCommand(TAG + ": filesExist", EXIST, cmd, Utils.getSu());
     } else {
       return Adb.runCommand("exec sh -c '" + cmd + "'", true, TAG + ": filesExist", EXIST);
     }

@@ -129,7 +129,7 @@
         android:layout_marginEnd="-2dp"
         android:hint="@string/pref_main_adb_port_default"
         android:inputType="number"
-        tools:ignore="Autofill"/>
+        android:importantForAutofill="no"/>
 
     </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
@@ -244,6 +244,38 @@
         android:layout_gravity="center_vertical|end"
         android:src="@drawable/arrow_drop_down"
         tools:ignore="ContentDescription"/>
+
+    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+
+    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="2dp"
+      android:layout_marginBottom="4dp">
+
+      <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:text="@string/su_exe_path"
+        android:textColor="@color/dynamic_text_color"
+        android:textSize="16sp" />
+
+      <EditText
+        android:id="@+id/su_exe_path"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="-2dp"
+        android:hint="@string/su_exe_path_hint"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:maxLines="1"
+        android:maxWidth="120dp"
+        android:minHeight="24dp" />
 
     </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
   </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>

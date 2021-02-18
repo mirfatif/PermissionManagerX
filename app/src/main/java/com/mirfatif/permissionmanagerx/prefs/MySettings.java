@@ -174,7 +174,11 @@ public class MySettings {
   }
 
   public void setAdbPort(int port) {
-    savePref(R.string.pref_main_adb_port_key, port);
+    if (port == 0) {
+      mPrefs.edit().remove(getString(R.string.pref_main_adb_port_key)).apply();
+    } else {
+      savePref(R.string.pref_main_adb_port_key, port);
+    }
   }
 
   public int getDaemonUid() {
@@ -194,6 +198,21 @@ public class MySettings {
 
   public void setDaemonContext(String context) {
     mPrefs.edit().putString(getString(R.string.pref_main_daemon_context_key), context).apply();
+  }
+
+  public String getSuExePath() {
+    return Utils.getEncPrefs().getString(getString(R.string.pref_main_su_exe_path_enc_key), null);
+  }
+
+  public void setSuExePath(String path) {
+    Editor editor = Utils.getEncPrefs().edit();
+    String key = getString(R.string.pref_main_su_exe_path_enc_key);
+    if (path == null) {
+      editor.remove(key);
+    } else {
+      editor.putString(key, path);
+    }
+    editor.apply();
   }
 
   public boolean dexInTmpDir() {

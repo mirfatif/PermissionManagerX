@@ -688,7 +688,7 @@ public class Utils {
 
   public static boolean checkRoot() {
     MySettings mySettings = MySettings.getInstance();
-    boolean res = runCommand(TAG + ": checkRoot", "0", "exec id -u", "su");
+    boolean res = runCommand(TAG + ": checkRoot", "0", "exec id -u", getSu());
     mySettings.setRootGranted(res);
     if (mySettings.isDebug()) {
       Util.debugLog(TAG, "checkRoot: getting root privileges " + (res ? "succeeded" : "failed"));
@@ -712,5 +712,10 @@ public class Utils {
       Util.debugLog(TAG, "checkAdb: connecting to ADB " + (res ? "succeeded" : "failed"));
     }
     return res;
+  }
+
+  public static String getSu() {
+    String path = MySettings.getInstance().getSuExePath();
+    return path == null ? "su" : path;
   }
 }
