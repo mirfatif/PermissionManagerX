@@ -29,7 +29,6 @@ public class PrivDaemon {
   private InputStream mInputStream;
   private BufferedReader mCmdReader;
   private boolean DEBUG;
-  private int mAppUserId;
   private String mCodeWord;
 
   private PrivDaemon(String[] arguments) {
@@ -43,9 +42,10 @@ public class PrivDaemon {
     }
 
     DEBUG = Boolean.parseBoolean(arguments[0]);
-    mAppUserId = Integer.parseInt(arguments[1]);
-    mCodeWord = arguments[2];
-    mPrivTasks = new PrivTasks(new PrivTasksCallbackImpl());
+    String appId = arguments[1];
+    int appUserId = Integer.parseInt(arguments[2]);
+    mCodeWord = arguments[3];
+    mPrivTasks = new PrivTasks(new PrivTasksCallbackImpl(), appId, appUserId);
 
     for (int pid : mPrivTasks.getPidsForCommands(new String[] {TAG})) {
       if (pid != Process.myPid()) {
@@ -269,11 +269,6 @@ public class PrivDaemon {
     @Override
     public void logE(String msg) {
       System.err.println(msg);
-    }
-
-    @Override
-    public int getAppUserId() {
-      return mAppUserId;
     }
 
     @Override

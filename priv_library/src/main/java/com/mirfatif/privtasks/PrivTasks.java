@@ -23,10 +23,14 @@ public class PrivTasks {
 
   private final HiddenAPIs mHiddenAPIs;
   private final PrivTasksCallback mCallback;
+  private final String mAppId;
+  private final int mAppUserId;
 
-  public PrivTasks(PrivTasksCallback callback) {
+  public PrivTasks(PrivTasksCallback callback, String appId, int appUserId) {
     mHiddenAPIs = new HiddenAPIsImpl(new HiddenAPIsCallbackImpl());
     mCallback = callback;
+    mAppId = appId;
+    mAppUserId = appUserId;
   }
 
   //////////////////////////////////////////////////////////////////
@@ -392,7 +396,7 @@ public class PrivTasks {
 
   public void sendRequest(String command, String codeWord) {
     try {
-      mHiddenAPIs.sendRequest(command, mCallback.getAppUserId(), codeWord);
+      mHiddenAPIs.sendRequest(command, mAppId, mAppUserId, codeWord);
     } catch (HiddenAPIsException e) {
       e.printStackTrace();
     }
@@ -498,8 +502,6 @@ public class PrivTasks {
     boolean isDebug();
 
     void logE(String msg);
-
-    int getAppUserId();
 
     void sendRequest(String command);
   }

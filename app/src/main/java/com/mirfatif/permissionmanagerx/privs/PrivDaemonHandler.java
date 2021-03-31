@@ -3,6 +3,7 @@ package com.mirfatif.permissionmanagerx.privs;
 import android.os.Build;
 import android.os.SystemClock;
 import android.util.Log;
+import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
@@ -100,6 +101,8 @@ public class PrivDaemonHandler {
     String params =
         mMySettings.isDebug()
             + " "
+            + BuildConfig.APPLICATION_ID
+            + " "
             + daemonUid
             + " "
             + daemonContext
@@ -113,6 +116,8 @@ public class PrivDaemonHandler {
             + DAEMON_PACKAGE_NAME
             + " "
             + DAEMON_CLASS_NAME
+            + " pmx"
+            + (BuildConfig.DEBUG ? ".debug" : "")
             + " "
             + BIN_DIR
             + ":"
@@ -347,12 +352,12 @@ public class PrivDaemonHandler {
       App.getContext().getExternalFilesDir(null).getAbsolutePath();
   private static final String TMP_DIR = "/data/local/tmp/";
 
-  private static final String DAEMON_DEX = DAEMON_PACKAGE_NAME + ".dex";
+  private static final String DAEMON_DEX = DAEMON_PACKAGE_NAME + ".pmx.dex";
   private static final String SHARED_DIR_DEX_PATH =
       new File(SHARED_DIR, DAEMON_DEX).getAbsolutePath();
   private static final String TMP_DIR_DEX_PATH = new File(TMP_DIR, DAEMON_DEX).getAbsolutePath();
 
-  private static final String DAEMON_SCRIPT = DAEMON_PACKAGE_NAME + ".sh";
+  private static final String DAEMON_SCRIPT = DAEMON_PACKAGE_NAME + ".pmx.sh";
   private static final String SHARED_DIR_SCRIPT_PATH =
       new File(SHARED_DIR, DAEMON_SCRIPT).getAbsolutePath();
   private static final String TMP_DIR_SCRIPT_PATH =

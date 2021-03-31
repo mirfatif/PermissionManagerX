@@ -5,9 +5,9 @@ trap 'Error occurred in $0 >&2' EXIT
 
 echo "My UID: $(id -u)"
 
-read -r DEBUG UID CONTEXT USER_ID CODE_WORD CLASSPATH PKG_NAME CLASS PATH ARGS
+read -r DEBUG APP_ID UID CONTEXT USER_ID CODE_WORD CLASSPATH PKG_NAME CLASS SUFFIX PATH ARGS
 
-for f in DEBUG UID CONTEXT USER_ID CODE_WORD CLASSPATH PKG_NAME CLASS PATH; do
+for f in DEBUG APP_ID UID CONTEXT USER_ID CODE_WORD CLASSPATH PKG_NAME CLASS SUFFIX PATH; do
   var=$(eval echo '$'$f)
   if [ -z "$var" ]; then
     echo "Empty $f"
@@ -47,4 +47,4 @@ echo "Starting $PKG_NAME VM"
 export PATH
 export CLASSPATH
 
-exec $CMD app_process / --nice-name=${PKG_NAME} ${PKG_NAME}.${CLASS} $DEBUG $USER_ID $CODE_WORD $ARGS
+exec $CMD app_process / --nice-name=${PKG_NAME}.${SUFFIX} ${PKG_NAME}.${CLASS} $DEBUG $APP_ID $USER_ID $CODE_WORD $ARGS

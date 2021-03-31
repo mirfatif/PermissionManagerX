@@ -1,6 +1,5 @@
 package com.mirfatif.privtasks.hiddenapis;
 
-import static com.mirfatif.privtasks.Commands.APP_PKG_NAME;
 import static com.mirfatif.privtasks.Commands.CMD_RCV_SVC;
 
 import android.app.ActivityManagerNative;
@@ -404,23 +403,24 @@ public class HiddenAPIsImpl extends HiddenAPIs {
     }
   }
 
-  public void sendRequest(String command, int userId, String codeWord) throws HiddenAPIsException {
-    Intent intent = new Intent(command).setClassName(APP_PKG_NAME, APP_PKG_NAME + CMD_RCV_SVC);
+  public void sendRequest(String command, String appId, int userId, String codeWord)
+      throws HiddenAPIsException {
+    Intent intent = new Intent(command).setClassName(appId, CMD_RCV_SVC);
     intent.putExtra(Commands.CODE_WORD, codeWord);
     ComponentName cn;
     try {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        cn = mIActivityManager.startService(null, intent, null, false, APP_PKG_NAME, null, userId);
+        cn = mIActivityManager.startService(null, intent, null, false, appId, null, userId);
       } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        cn = mIActivityManager.startService(null, intent, null, false, APP_PKG_NAME, userId);
+        cn = mIActivityManager.startService(null, intent, null, false, appId, userId);
       } else {
-        cn = mIActivityManager.startService(null, intent, null, APP_PKG_NAME, userId);
+        cn = mIActivityManager.startService(null, intent, null, appId, userId);
       }
     } catch (RemoteException | SecurityException e) {
       throw new HiddenAPIsException(e);
     }
 
-    if (cn == null || !cn.getPackageName().equals(APP_PKG_NAME)) {
+    if (cn == null || !cn.getPackageName().equals(appId)) {
       throw new HiddenAPIsException("Could not start DaemonToastSvc");
     }
   }

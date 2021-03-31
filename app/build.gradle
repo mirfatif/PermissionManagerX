@@ -22,6 +22,10 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -76,7 +80,7 @@ task buildDaemon() {
     }
 
     doLast {
-        def dexFile = 'com.mirfatif.privdaemon.dex'
+        def dexFile = 'com.mirfatif.privdaemon.pmx.dex'
         def dstDir = new File(rootDir, "app/src/main/assets/")
         def dstFile = new File(dstDir, dexFile)
         delete dstFile

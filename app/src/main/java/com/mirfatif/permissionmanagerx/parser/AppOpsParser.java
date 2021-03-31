@@ -2,6 +2,7 @@ package com.mirfatif.permissionmanagerx.parser;
 
 import android.content.pm.PackageManager;
 import android.util.Log;
+import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
@@ -34,7 +35,8 @@ public class AppOpsParser {
 
   private final MySettings mMySettings = MySettings.getInstance();
   private final PrivDaemonHandler mPrivDaemonHandler = PrivDaemonHandler.getInstance();
-  private final PrivTasks mPrivTasks = new PrivTasks(new PrivTasksCallbackImpl());
+  private final PrivTasks mPrivTasks =
+      new PrivTasks(new PrivTasksCallbackImpl(), BuildConfig.APPLICATION_ID, Utils.getUserId());
 
   private AppOpsParser() {
     if (!mPrivTasks.canUseIAppOpsService()) {
@@ -317,11 +319,6 @@ public class AppOpsParser {
     @Override
     public void logE(String msg) {
       Log.e(TAG, msg);
-    }
-
-    @Override
-    public int getAppUserId() {
-      return Utils.getUserId();
     }
 
     @Override
