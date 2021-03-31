@@ -262,8 +262,8 @@
     PAID VERSION FROM PLAY STORE</a>
   </string>
   <string name="redeem_code_link"><a href="mailto:">ASK FOR REDEEM CODE</a></string>
-  <string name="redeem_code_request">Hello,\n\nI have made a donation of amount ____ to PMX. Please
-    provide a Play Store redeem code if available.
+  <string name="redeem_code_request">Hello,\n\nI have made a donation to PMX. Please provide a
+    Play Store redeem code if available.
   </string>
 
   <!--Notification Channels-->
