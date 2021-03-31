@@ -251,6 +251,8 @@
   <string name="new_version_available">New app version is available</string>
   <string name="tap_to_download">Tap to download</string>
   <string name="download">Download</string>
+  <string name="privacy_policy">Privacy Policy</string>
+  <string name="privacy_policy_link">https://mirfatif.github.io/PermissionManagerX/privacy_policy.html</string>
 
   <!--Donate-->
   <string name="bitcoin_link"><a href="bitcoin:">SEND BITCOINS</a></string>

@@ -271,6 +271,37 @@
 
         <ImageView
           style="@style/aboutActivityIconImg"
+          android:src="@drawable/privacy_policy"
+          tools:ignore="ContentDescription" />
+
+        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+          android:id="@+id/privacy_policy"
+          style="@style/aboutActivityItemContainer">
+
+          <TextView
+            style="@style/aboutActivityItemTitle"
+            android:text="@string/privacy_policy" />
+
+          <TextView
+            style="@style/aboutActivityItemSummary"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/privacy_policy_link" />
+
+        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+
+      <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/accentColor" />
+
+      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+          style="@style/aboutActivityIconImg"
           android:src="@drawable/update"
           tools:ignore="ContentDescription" />
 

@@ -45,6 +45,7 @@ public class AboutActivity extends BaseActivity {
     findViewById(R.id.contact).setOnClickListener(v -> Utils.sendMail(this, null));
     setLogTitle(mMySettings.isDebug() ? R.string.stop_logging : R.string.collect_logs);
     findViewById(R.id.logging).setOnClickListener(v -> handleLogging());
+    openWebUrl(R.id.privacy_policy, R.string.privacy_policy_link);
     findViewById((R.id.check_update)).setOnClickListener(v -> checkForUpdates());
 
     TextView paidFeaturesView = findViewById(R.id.paid_features_summary);
