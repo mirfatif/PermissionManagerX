@@ -1,3 +1,6 @@
 [submodule "AdbLib"]
 	path = AdbLib
 	url = https://github.com/mirfatif/AdbLib
+[submodule "libcap"]
+	path = libcap
+	url = https://android.googlesource.com/platform/external/libcap
