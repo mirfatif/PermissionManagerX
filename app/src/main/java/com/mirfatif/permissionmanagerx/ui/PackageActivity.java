@@ -7,7 +7,6 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
@@ -199,8 +198,7 @@ public class PackageActivity extends BaseActivity {
   private PermClickListenerWithLoc getPermClickListener() {
     return (perm, yLocation) -> {
       String permName = perm.getPermNameString();
-      String protLevelString = getString(R.string.protection_level, perm.getProtLevelString());
-      Spanned protLevel = Utils.htmlToString(protLevelString);
+      String protLevel = perm.getProtLevelString();
 
       View layout = getLayoutInflater().inflate(R.layout.permission_details_alert_dialog, null);
       ((TextView) layout.findViewById(R.id.permission_name_view)).setText(permName);

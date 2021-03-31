@@ -186,7 +186,7 @@
   <string name="permission_filtered_out">1 permission filtered out</string>
   <string name="count_permissions_filtered_out">%1$d permissions filtered out</string>
   <string name="requested_no_permissions">No permissions requested</string>
-  <string name="protection_level"><![CDATA[<b>Protection level:</b> %1$s]]></string>
+  <string name="protection_level">Protection level:</string>
   <string name="should_be"><![CDATA[Should be <b>%1$s</b>]]></string>
   <string name="daemon_not_running_as_system">Daemon not running as system</string>
   <string name="failed_get_system_fixed_flag">Failed getting system fixed flag</string>

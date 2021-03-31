@@ -27,16 +27,30 @@
     android:layout_height="wrap_content"
     android:textColor="@color/dynamic_text_color"/>
 
-  <TextView
-    android:id="@+id/protection_level_view"
-    android:layout_marginTop="2dp"
-    android:layout_marginStart="4dp"
-    android:layout_marginEnd="4dp"
+  <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:autoSizeTextType="uniform"
-    android:maxLines="1"
-    android:textColor="@color/dynamic_text_color"/>
+    android:layout_height="wrap_content">
+
+    <TextView
+      android:textStyle="bold"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="2dp"
+      android:layout_marginStart="4dp"
+      android:layout_marginEnd="4dp"
+      android:text="@string/protection_level"
+      android:textColor="@color/dynamic_text_color" />
+
+    <TextView
+      android:id="@+id/protection_level_view"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:layout_marginTop="2dp"
+      android:layout_marginEnd="4dp"
+      android:textColor="@color/dynamic_text_color" />
+
+  </LinearLayout>
 
   <TextView
     android:id="@+id/perm_desc_view"
