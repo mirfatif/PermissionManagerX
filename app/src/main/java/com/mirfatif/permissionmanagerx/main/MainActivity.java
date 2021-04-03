@@ -30,7 +30,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.parser.Package;
@@ -62,8 +61,11 @@ public class MainActivity extends BaseActivity {
 
   private static final String TAG = "MainActivity";
 
-  public static final String ACTION_SHOW_DRAWER = BuildConfig.APPLICATION_ID + ".SHOW_DRAWER";
-  public static final String EXTRA_PKG_POSITION = BuildConfig.APPLICATION_ID + ".PKG_POSITION";
+  public static final String ACTION_SHOW_DRAWER = "com.mirfatif.pmx.ACTION_SHOW_DRAWER";
+  public static final String EXTRA_PKG_POSITION = "com.mirfatif.pmx.PKG_POSITION";
+  public static final String ACTION_SEARCH_PACKAGES = "com.mirfatif.pmx.ACTION_SEARCH_PACKAGES";
+  public static final String EXTRA_SEARCH_STRINGS = "com.mirfatif.pmx.SEARCH_STRINGS";
+
   public static final String APP_OPS_PERM = "android.permission.GET_APP_OPS_STATS";
   public static final String TAG_GRANT_ROOT_OR_ADB = "GRANT_ROOT_OR_ADB";
 
@@ -127,9 +129,7 @@ public class MainActivity extends BaseActivity {
     mDrawerLayout.addDrawerListener(mDrawerToggle);
     mDrawerToggle.syncState();
 
-    if (getIntent().getAction() != null && getIntent().getAction().equals(ACTION_SHOW_DRAWER)) {
-      openDrawerForPrivileges();
-    }
+    handleIntentActions(getIntent());
 
     // Drawer items
     mNavigationView = findViewById(R.id.nav_view);
@@ -227,10 +227,7 @@ public class MainActivity extends BaseActivity {
   @Override
   protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
-    // Called from PackageActivity
-    if (intent.getAction() != null && intent.getAction().equals(ACTION_SHOW_DRAWER)) {
-      openDrawerForPrivileges();
-    }
+    handleIntentActions(intent);
   }
 
   @Override
@@ -239,8 +236,11 @@ public class MainActivity extends BaseActivity {
     MenuCompat.setGroupDividerEnabled(menu, true);
 
     MenuItem searchMenuItem = menu.findItem(R.id.action_search);
-    mSearchView = searchMenuItem.getActionView().findViewById(R.id.action_search);
-    setUpSearchView();
+    synchronized (SEARCH_VIEW_WAITER) {
+      mSearchView = searchMenuItem.getActionView().findViewById(R.id.action_search);
+      setUpSearchView();
+      SEARCH_VIEW_WAITER.notifyAll();
+    }
 
     if (mMainActivityFlavor != null) {
       mMainActivityFlavor.onCreateOptionsMenu(menu);
@@ -606,6 +606,18 @@ public class MainActivity extends BaseActivity {
     }
   }
 
+  // If called from PackageActivity or WR
+  private void handleIntentActions(Intent intent) {
+    String action = intent.getAction();
+    if (action != null) {
+      if (action.equals(ACTION_SHOW_DRAWER)) {
+        openDrawerForPrivileges();
+      } else if (action.equals(ACTION_SEARCH_PACKAGES)) {
+        Utils.runInBg(() -> doSearch(intent));
+      }
+    }
+  }
+
   //////////////////////////////////////////////////////////////////
   ///////////////////////////// SEARCH /////////////////////////////
   //////////////////////////////////////////////////////////////////
@@ -713,6 +725,39 @@ public class MainActivity extends BaseActivity {
     mRefreshLayout.setRefreshing(!mMySettings.isDeepSearchEnabled() || !mMySettings.isSearching());
     mPackageParser.newUpdateRequest();
     mPackageParser.handleSearchQuery(null);
+  }
+
+  private static final Object SEARCH_VIEW_WAITER = new Object();
+
+  // Do search if called from PackageActivity or WR
+  private void doSearch(Intent intent) {
+    String[] pkgArray = intent.getStringArrayExtra(EXTRA_SEARCH_STRINGS);
+    if (pkgArray == null) {
+      return;
+    }
+
+    synchronized (SEARCH_VIEW_WAITER) {
+      while (mSearchView == null) {
+        try {
+          SEARCH_VIEW_WAITER.wait();
+        } catch (InterruptedException ignored) {
+        }
+      }
+    }
+
+    StringBuilder queryText = new StringBuilder();
+    for (String pkg : pkgArray) {
+      queryText.append(pkg).append("|");
+    }
+
+    Utils.runInFg(
+        () -> {
+          mMySettings.setDeepSearchEnabled(false);
+          mMySettings.setCaseSensitiveSearch(true);
+          mSearchView.setIconified(false);
+          mSearchView.setQuery(queryText.toString(), true);
+          mSearchView.clearFocus();
+        });
   }
 
   //////////////////////////////////////////////////////////////////
