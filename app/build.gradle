@@ -98,10 +98,10 @@ preBuild.dependsOn(buildDaemon)
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
-def ndkDir = properties.getProperty('ndk.dir')
+def sdkDir = properties.getProperty('sdk.dir')
 
 task buildSetPriv(type: Exec) {
-    environment 'ANDROID_NDK', ndkDir
+    environment 'ANDROID_NDK', new File(sdkDir, "ndk/" + ndkVer).getAbsolutePath()
     workingDir "$rootDir"
     commandLine './build_set_priv.sh'
     doLast {

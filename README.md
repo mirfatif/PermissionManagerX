@@ -36,9 +36,8 @@ In short, <b>AppOps</b> provide a fine-grained control over many of the manifest
 
 ## How to Build
 * `build.gradle` calls a shell script to build native binaries. So a Linux environment is expected with all standard tools.
-* Download code: `git clone --recurse-submodules https://github.com/mirfatif/PermissionManagerX.git && cd PermissionManagerX`
-* Set `sdk.dir` in `local.properties` to the directory containing Android SDK API level (platform) 30 and build-tools 30.0.3 (and obviously the latest SDK `tools` and `platform-tools`).
-* Set `ndk.dir` in `local.properties` to the directory containing Android NDK (I used r21d (21.3)).
+* Download code: `git clone --depth=1 --recurse-submodules https://github.com/mirfatif/PermissionManagerX.git && cd PermissionManagerX`
+* Set `sdk.dir` in `local.properties` to the directory containing Android SDK API level (platform) 30, build-tools 30.0.3 (and obviously the latest SDK `tools` and `platform-tools`), and Android NDK 22.1.
 * Set `JAVA_HOME` environment variable to JDK 11 (`verifyGoogleJavaFormat` and some Annotations don't work with JDK 1.8). Or `java` and `javac` must be on `PATH`.
 * Run `./gradlew` with appropriate task name appended. Or use IntelliJ IDEA / Android Studio.
 

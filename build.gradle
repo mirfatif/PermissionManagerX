@@ -30,6 +30,7 @@ allprojects {
         buildToolsVer = "30.0.3"
         minSdkVer = 24
         targetSdkVer = 30
+        ndkVer = "22.1.7171670"
     }
 }
 
