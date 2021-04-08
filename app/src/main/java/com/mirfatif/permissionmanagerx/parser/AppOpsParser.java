@@ -36,7 +36,8 @@ public class AppOpsParser {
   private final MySettings mMySettings = MySettings.getInstance();
   private final PrivDaemonHandler mPrivDaemonHandler = PrivDaemonHandler.getInstance();
   private final PrivTasks mPrivTasks =
-      new PrivTasks(new PrivTasksCallbackImpl(), BuildConfig.APPLICATION_ID, Utils.getUserId());
+      new PrivTasks(
+          new PrivTasksCallbackImpl(), BuildConfig.APPLICATION_ID, Utils.getUserId(), false);
 
   private AppOpsParser() {
     if (!mPrivTasks.canUseIAppOpsService()) {

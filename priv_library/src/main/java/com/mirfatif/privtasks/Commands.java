@@ -59,5 +59,6 @@ public class Commands {
   public static final String GET_USERS_FAILED = "GET_USERS_FAILED";
   public static final String GET_PERM_GRP_INFO_LIST_FAILED = "GET_PERM_GRP_INFO_LIST_FAILED";
   public static final String OP_NUM_INCONSISTENCY = "OP_NUM_INCONSISTENCY";
+  public static final String OP_TO_DEF_MODE_NOT_FOUND = "OP_TO_DEF_MODE_NOT_FOUND";
   public static final String SET_PERM_FLAGS_FAILED = "SET_PERM_FLAGS_FAILED";
 }

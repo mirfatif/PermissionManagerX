@@ -91,6 +91,7 @@ public class DaemonCmdRcvSvc extends Service {
         Utils.showToast(R.string.daemon_get_perm_grp_info_list_failed);
         break;
       case Commands.OP_NUM_INCONSISTENCY:
+      case Commands.OP_TO_DEF_MODE_NOT_FOUND:
         Utils.showToast(R.string.daemon_op_num_inconsistency);
         break;
       default:

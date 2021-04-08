@@ -45,7 +45,7 @@ public class PrivDaemon {
     String appId = arguments[1];
     int appUserId = Integer.parseInt(arguments[2]);
     mCodeWord = arguments[3];
-    mPrivTasks = new PrivTasks(new PrivTasksCallbackImpl(), appId, appUserId);
+    mPrivTasks = new PrivTasks(new PrivTasksCallbackImpl(), appId, appUserId, true);
 
     for (int pid : mPrivTasks.getPidsForCommands(new String[] {TAG})) {
       if (pid != Process.myPid()) {

@@ -25,12 +25,14 @@ public class PrivTasks {
   private final PrivTasksCallback mCallback;
   private final String mAppId;
   private final int mAppUserId;
+  private final boolean mIsDaemon;
 
-  public PrivTasks(PrivTasksCallback callback, String appId, int appUserId) {
+  public PrivTasks(PrivTasksCallback callback, String appId, int appUserId, boolean isDaemon) {
     mHiddenAPIs = new HiddenAPIsImpl(new HiddenAPIsCallbackImpl());
     mCallback = callback;
     mAppId = appId;
     mAppUserId = appUserId;
+    mIsDaemon = isDaemon;
   }
 
   //////////////////////////////////////////////////////////////////
@@ -66,6 +68,15 @@ public class PrivTasks {
           failed = true;
           mCallback.sendRequest(Commands.OP_NUM_INCONSISTENCY);
           e.printStackTrace();
+        }
+      } catch (HiddenAPIsError e) {
+        if (e.getCause() instanceof NoSuchMethodError && mIsDaemon) {
+          // OEM you are shit!
+          failed = true;
+          mCallback.sendRequest(Commands.OP_TO_DEF_MODE_NOT_FOUND);
+          e.printStackTrace();
+        } else {
+          throw e;
         }
       }
     }
