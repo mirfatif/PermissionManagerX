@@ -1,11 +1,10 @@
 # PermissionManagerX [![Download](https://img.shields.io/github/v/release/mirfatif/PermissionManagerX?label="Download")](https://github.com/mirfatif/PermissionManagerX/releases/latest)
 eXtended Permission Manager for Android - view and set Manifest Permissions and AppOps
 
-<!--a href="https://f-droid.org/packages/com.mirfatif.permissionmanagerx"><img alt="Get it on F-Droid" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" height="100"></a-->
+<a href="https://f-droid.org/packages/com.mirfatif.permissionmanagerx"><img alt="Get it on F-Droid" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" height="100"></a>
 <a href="https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="100"></a>
 <a href="https://apt.izzysoft.de/fdroid/index/apk/com.mirfatif.permissionmanagerx"><img alt="Get it on F-Droid" src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="100"></a>
 <a href="https://amzn.to/2Ij50j4"><img alt="Available at Amazon AppStore" src="https://user-images.githubusercontent.com/33040459/98554253-56c9d600-22c2-11eb-83ba-bd24fb1263ae.png" height="100"></a>
-<a href="https://forum.xda-developers.com/t/app-7-0-permission-manager-x-manage-appops-and-manifest-permissions.4187657"><img alt="Get it on XDALabs" src="https://user-images.githubusercontent.com/33040459/98555696-110e0d00-22c4-11eb-8dd2-35903886cfce.png" height="100"></a>
 
 ## Features
 Using e<b>X</b>tended <b>Permission Manager</b>, for each installed app, on single screen, you can:
@@ -40,6 +39,9 @@ In short, <b>AppOps</b> provide a fine-grained control over many of the manifest
 * Set `sdk.dir` in `local.properties` to the directory containing Android SDK API level (platform) 30, build-tools 30.0.3 (and obviously the latest SDK `tools` and `platform-tools`), and Android NDK 22.1.
 * Set `JAVA_HOME` environment variable to JDK 11 (`verifyGoogleJavaFormat` and some Annotations don't work with JDK 1.8). Or `java` and `javac` must be on `PATH`.
 * Run `./gradlew` with appropriate task name appended. Or use IntelliJ IDEA / Android Studio.
+
+## Translations [![Crowdin](https://badges.crowdin.net/pmx/localized.svg)](https://crowdin.com/project/pmx)
+[Crowdin](https://crowdin.com/project/pmx)
 
 ## Third-Party Libraries
 Credits and thanks to the developers of:
