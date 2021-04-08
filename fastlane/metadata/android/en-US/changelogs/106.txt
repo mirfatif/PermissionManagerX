@@ -1,0 +1,4 @@
+Added receive back commands from daemon through Intents
+Improved About section, warnings and Advanced Settings
+Fixed crashes due to OEM's bad implementations
+Bumped library and NDK versions

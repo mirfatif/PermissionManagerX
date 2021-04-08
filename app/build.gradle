@@ -8,8 +8,8 @@ android {
         applicationId "com.mirfatif.permissionmanagerx"
         minSdkVersion minSdkVer
         targetSdkVersion targetSdkVer
-        versionCode 105
-        versionName "v1.05"
+        versionCode 106
+        versionName "v1.06"
 
         def br = "git rev-parse --abbrev-ref HEAD".execute().text.trim()
         buildConfigField "boolean", "GH_VERSION", (br != "ps" && br != "ps-dev") ? "true" : "false"
