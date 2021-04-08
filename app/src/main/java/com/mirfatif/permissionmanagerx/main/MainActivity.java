@@ -216,7 +216,9 @@ public class MainActivity extends BaseActivity {
     }
 
     // Increment app launch count
-    mMySettings.plusAppLaunchCount();
+    if (Intent.ACTION_MAIN.equals(getIntent().getAction())) {
+      mMySettings.plusAppLaunchCount();
+    }
 
     mMainActivityFlavor.onCreated();
     mBackupRestore.onCreated();

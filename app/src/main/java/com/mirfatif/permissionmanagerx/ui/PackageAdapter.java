@@ -157,12 +157,18 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
 
     @Override
     public void onClick(View v) {
-      mPkgClickListener.onClick(getItem(getBindingAdapterPosition()));
+      int pos = getBindingAdapterPosition();
+      if (pos != RecyclerView.NO_POSITION) {
+        mPkgClickListener.onClick(getItem(pos));
+      }
     }
 
     @Override
     public boolean onLongClick(View v) {
-      mPkgLongClickListener.onLongClick(getItem(getBindingAdapterPosition()));
+      int pos = getBindingAdapterPosition();
+      if (pos != RecyclerView.NO_POSITION) {
+        mPkgLongClickListener.onLongClick(getItem(pos));
+      }
       return true;
     }
   }

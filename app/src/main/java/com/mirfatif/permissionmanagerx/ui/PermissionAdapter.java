@@ -195,15 +195,20 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
 
     @Override
     public void onClick(View v) {
-      int[] location = new int[2];
-      v.getLocationInWindow(location);
-      mPermClickListener.onClick(
-          getItem(getBindingAdapterPosition()), location[1] - 2 * v.getHeight());
+      int pos = getBindingAdapterPosition();
+      if (pos != RecyclerView.NO_POSITION) {
+        int[] location = new int[2];
+        v.getLocationInWindow(location);
+        mPermClickListener.onClick(getItem(pos), location[1] - 2 * v.getHeight());
+      }
     }
 
     @Override
     public boolean onLongClick(View v) {
-      mPermLongClickListener.onLongClick(getItem(getBindingAdapterPosition()));
+      int pos = getBindingAdapterPosition();
+      if (pos != RecyclerView.NO_POSITION) {
+        mPermLongClickListener.onLongClick(getItem(pos));
+      }
       return true;
     }
   }

@@ -314,8 +314,21 @@ public class Utils {
 
   public static SpannableString getHighlightString(
       String text, TextAppearanceSpan highlightSpan, boolean isCaseSensitive, String... prominent) {
+
+    if (text == null || highlightSpan == null || prominent == null) {
+      return null;
+    }
+
     SpannableString spannable = new SpannableString(text);
+
+    // Same Span object cannot be applied multiple times, we need to create new instances.
+    Parcel parcel = Parcel.obtain();
+    highlightSpan.writeToParcel(parcel, 0);
+
     for (String prom : prominent) {
+      if (prom == null || prom.length() == 0) {
+        continue;
+      }
       int startPos;
       if (isCaseSensitive) {
         startPos = text.indexOf(prom);
@@ -326,8 +339,11 @@ public class Utils {
         continue;
       }
       int endPos = startPos + prom.length();
-      spannable.setSpan(highlightSpan, startPos, endPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+      parcel.setDataPosition(0); // For read
+      spannable.setSpan(
+          new TextAppearanceSpan(parcel), startPos, endPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
+    parcel.recycle();
     return spannable;
   }
 

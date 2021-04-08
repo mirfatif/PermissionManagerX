@@ -282,12 +282,12 @@ public class MySettings {
     }
     long lastTS = getLongPref(R.string.pref_main_ask_for_feedback_ts_enc_key);
     if (lastTS == 0) {
-      setAskForFeedbackTs(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(5));
+      setAskForFeedbackTs(System.currentTimeMillis());
       return false;
     }
     int appLaunchCountId = R.string.pref_main_app_launch_count_enc_key;
-    boolean ask = getIntPref(appLaunchCountId) >= 5;
-    ask = ask && (System.currentTimeMillis() - lastTS) >= TimeUnit.DAYS.toMillis(5);
+    boolean ask = getIntPref(appLaunchCountId) >= 10;
+    ask = ask && (System.currentTimeMillis() - lastTS) >= TimeUnit.DAYS.toMillis(10);
     if (ask) {
       savePref(appLaunchCountId, 0);
       setAskForFeedbackTs(System.currentTimeMillis());
