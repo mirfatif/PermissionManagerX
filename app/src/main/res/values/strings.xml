@@ -240,6 +240,7 @@
         <li>Auto create backup file on changes</li>
         <li>Search suggestions</li>
         <li>Theming options</li>
+        <li>Batch operations (profiles) (upcoming)</li>
       </ul>
     ]]>
   </string>
@@ -253,6 +254,19 @@
   <string name="download">Download</string>
   <string name="privacy_policy">Privacy Policy</string>
   <string name="privacy_policy_link">https://mirfatif.github.io/PermissionManagerX/privacy_policy.html</string>
+  <string name="translations">Translations</string>
+  <string name="translations_summary">Want to see the app in your language?</string>
+  <string name="translation_link">https://crowdin.com/project/pmx</string>
+  <string name="language_credits">
+    <![CDATA[
+      <ul>
+        <li><a href="">Add my language</a></li>
+      </ul>
+    ]]>
+  </string>
+  <string name="share">Share</string>
+  <string name="share_summary">Share the app with others</string>
+  <string name="share_text">Check out this amazing app! %1$s</string>
 
   <!--Donate-->
   <string name="bitcoin_link"><a href="bitcoin:">SEND BITCOINS</a></string>

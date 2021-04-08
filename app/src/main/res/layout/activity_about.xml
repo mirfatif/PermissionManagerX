@@ -302,6 +302,64 @@
 
         <ImageView
           style="@style/aboutActivityIconImg"
+          android:src="@drawable/locale"
+          tools:ignore="ContentDescription" />
+
+        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+          android:id="@+id/translate"
+          style="@style/aboutActivityItemContainer">
+
+          <TextView
+            style="@style/aboutActivityItemTitle"
+            android:text="@string/translations" />
+
+          <TextView
+            style="@style/aboutActivityItemSummary"
+            android:text="@string/translations_summary" />
+
+        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+
+      <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/accentColor" />
+
+      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+          style="@style/aboutActivityIconImg"
+          android:src="@drawable/share"
+          tools:ignore="ContentDescription" />
+
+        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+          android:id="@+id/share_app"
+          style="@style/aboutActivityItemContainer">
+
+          <TextView
+            style="@style/aboutActivityItemTitle"
+            android:text="@string/share" />
+
+          <TextView
+            style="@style/aboutActivityItemSummary"
+            android:text="@string/share_summary" />
+
+        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+
+      <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/accentColor" />
+
+      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+          style="@style/aboutActivityIconImg"
           android:src="@drawable/update"
           tools:ignore="ContentDescription" />
 

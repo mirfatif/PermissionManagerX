@@ -3,6 +3,7 @@ package com.mirfatif.permissionmanagerx.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -19,6 +20,7 @@ import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
 import com.mirfatif.permissionmanagerx.svc.LogcatService;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
+import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 
 public class AboutActivity extends BaseActivity {
 
@@ -47,6 +49,8 @@ public class AboutActivity extends BaseActivity {
     findViewById(R.id.logging).setOnClickListener(v -> handleLogging());
     openWebUrl(R.id.privacy_policy, R.string.privacy_policy_link);
     findViewById((R.id.check_update)).setOnClickListener(v -> checkForUpdates());
+    findViewById(R.id.translate).setOnClickListener(v -> showLocaleDialog());
+    findViewById(R.id.share_app).setOnClickListener(v -> sendShareIntent());
 
     TextView paidFeaturesView = findViewById(R.id.paid_features_summary);
     paidFeaturesView.setText(Utils.htmlToString(R.string.paid_features_summary));
@@ -148,6 +152,25 @@ public class AboutActivity extends BaseActivity {
           }
           mCheckForUpdateInProgress = false;
         });
+  }
+
+  private void showLocaleDialog() {
+    View view = getLayoutInflater().inflate(R.layout.translation_dialog, null);
+    TextView tView = view.findViewById(R.id.language_credits_view);
+    tView.setText(Utils.htmlToString(R.string.language_credits));
+    tView.setMovementMethod(
+        BetterLinkMovementMethod.newInstance()
+            .setOnLinkClickListener(
+                (tv, url) -> Utils.openWebUrl(this, getString(R.string.translation_link))));
+    Builder builder = new Builder(this).setTitle(R.string.translations).setView(view);
+    new AlertDialogFragment(builder.create()).show(this, "LOCALE", false);
+  }
+
+  private void sendShareIntent() {
+    Intent intent = new Intent(Intent.ACTION_SEND).setType("name/plain");
+    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
+    String text = getString(R.string.share_text, getString(R.string.play_store_url));
+    startActivity(intent.putExtra(Intent.EXTRA_TEXT, text));
   }
 
   @Override
