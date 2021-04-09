@@ -125,7 +125,7 @@ public class MainActivity extends BaseActivity {
 
     mDrawerLayout = findViewById(R.id.activity_main);
     mDrawerToggle =
-        new ActionBarDrawerToggle(this, mDrawerLayout, android.R.string.ok, R.string.close);
+        new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open_drawer, R.string.close_drawer);
     mDrawerLayout.addDrawerListener(mDrawerToggle);
     mDrawerToggle.syncState();
 
@@ -929,9 +929,7 @@ public class MainActivity extends BaseActivity {
               Utils.runInFg(() -> rootCheckBox.setChecked(true));
               restartPrivDaemon(true);
             } else {
-              showSnackBar(
-                  getString(R.string.getting_root_fail) + getString(R.string.are_you_rooted),
-                  10000);
+              showSnackBar(getString(R.string.getting_root_fail_long), 10000);
             }
           });
       return true;

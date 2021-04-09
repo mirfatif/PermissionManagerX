@@ -318,12 +318,8 @@ public class PackageActivity extends BaseActivity {
     if (mPermissionsList.size() == 0) {
       String message;
       if (mPackage.getTotalPermCount() != 0) {
-        if (mPackage.getTotalPermCount() == 1) {
-          message = getString(R.string.permission_filtered_out);
-        } else {
-          message =
-              getString(R.string.count_permissions_filtered_out, mPackage.getTotalPermCount());
-        }
+        int cnt = mPackage.getTotalPermCount();
+        message = Utils.getQtyString(R.plurals.count_permissions_filtered_out, cnt, cnt);
         filterSettingsButton.setOnClickListener(
             v -> startActivity(new Intent(App.getContext(), FilterSettingsActivity.class)));
         filterSettingsButton.setVisibility(View.VISIBLE);
@@ -769,7 +765,8 @@ public class PackageActivity extends BaseActivity {
 
       String msg = "";
       if (affectedPkgCount > 1) {
-        msg = getString(R.string.uid_mode_app_ops_warning, affectedPkgCount - 1);
+        int count = affectedPkgCount - 1;
+        msg = Utils.getQtyString(R.plurals.uid_mode_app_ops_warning, count, count);
         if (warn == null) {
           msg += "\n" + getString(R.string._continue);
         }

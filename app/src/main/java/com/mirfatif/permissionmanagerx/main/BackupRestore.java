@@ -520,12 +520,17 @@ public class BackupRestore {
       mA.getMainActivityFlavor().onRestoreDone();
     }
 
-    String message = mA.getString(R.string.backup_restore_process_entries, prefs, perms);
+    String message = Utils.getQtyString(R.plurals.backup_restore_processed_prefs, prefs, prefs);
+    message = Utils.getQtyString(R.plurals.backup_restore_processed_refs, perms, message, perms);
     if (invalidPrefs > 0) {
-      message += mA.getString(R.string.backup_restore_invalid_prefs, invalidPrefs);
+      message =
+          Utils.getQtyString(
+              R.plurals.backup_restore_invalid_prefs, invalidPrefs, message, invalidPrefs);
     }
     if (skippedApps > 0) {
-      message += mA.getString(R.string.backup_restore_uninstalled_apps, skippedApps);
+      message =
+          Utils.getQtyString(
+              R.plurals.backup_restore_uninstalled_apps, skippedApps, message, skippedApps);
     }
 
     showFinalDialog(isBackup, Utils.breakParas(message));

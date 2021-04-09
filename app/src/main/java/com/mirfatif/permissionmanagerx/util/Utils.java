@@ -478,6 +478,10 @@ public class Utils {
     return App.getContext().getString(resId, args);
   }
 
+  public static String getQtyString(int resId, int qty, Object... args) {
+    return App.getContext().getResources().getQuantityString(resId, qty, args);
+  }
+
   public static int getInteger(int resId) {
     return App.getContext().getResources().getInteger(resId);
   }

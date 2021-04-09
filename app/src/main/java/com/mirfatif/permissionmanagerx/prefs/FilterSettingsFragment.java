@@ -220,11 +220,8 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     } else {
       excludedAppsView.setEnabled(true);
       String message = excludedApps[0].toString();
-      if (appCount == 2) {
-        message += " " + getString(R.string.and_other_count, 1);
-      } else if (appCount > 2) {
-        message += " " + getString(R.string.and_others_count, appCount - 1);
-      }
+      appCount--;
+      message = Utils.getQtyString(R.plurals.and_others_count, appCount, message, appCount);
       excludedAppsView.setSummary(message);
     }
   }
@@ -244,11 +241,8 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     } else {
       excludedPermsView.setEnabled(true);
       String message = excludedPerms[0].toString();
-      if (permCount == 2) {
-        message += " " + getString(R.string.and_other_count, 1);
-      } else if (permCount > 2) {
-        message += " " + getString(R.string.and_others_count, permCount - 1);
-      }
+      permCount--;
+      message = Utils.getQtyString(R.plurals.and_others_count, permCount, message, permCount);
       excludedPermsView.setSummary(message);
     }
   }
@@ -278,14 +272,11 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
       extraAppOpsView.setSummary(message);
     } else {
       String message = (String) extraAppOps.toArray()[0];
-      if (count == 2) {
-        // Without providing context, getString() crashes with: "Fragment ... not attached to a
-        // context" on rotation. getActivity() may also return null.
-        message += " " + mParentActivity.getString(R.string.and_other_count, 1);
-      } else if (count > 2) {
-        message += " " + getString(R.string.and_others_count, count - 1);
-      }
-      extraAppOpsView.setSummary(message);
+      count--;
+      // Without providing context, getString() crashes with: "Fragment ... not attached to a
+      // context" on rotation. getActivity() may also return null.
+      extraAppOpsView.setSummary(
+          Utils.getQtyString(R.plurals.and_others_count, count, message, count));
     }
   }
 
