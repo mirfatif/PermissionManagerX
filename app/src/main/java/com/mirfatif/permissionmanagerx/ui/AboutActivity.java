@@ -167,10 +167,10 @@ public class AboutActivity extends BaseActivity {
   }
 
   private void sendShareIntent() {
-    Intent intent = new Intent(Intent.ACTION_SEND).setType("name/plain");
+    Intent intent = new Intent(Intent.ACTION_SEND).setType("text/plain");
     intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
     String text = getString(R.string.share_text, getString(R.string.play_store_url));
-    startActivity(intent.putExtra(Intent.EXTRA_TEXT, text));
+    startActivity(Intent.createChooser(intent.putExtra(Intent.EXTRA_TEXT, text), null));
   }
 
   @Override
