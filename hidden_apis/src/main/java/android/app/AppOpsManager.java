@@ -33,6 +33,12 @@ public class AppOpsManager {
     return 0;
   }
 
+  // LOS N:
+  // https://github.com/LineageOS/android_frameworks_base/blob/cm-14.1/core/java/android/app/AppOpsManager.java#L1350
+  public static int opToDefaultMode(int op, boolean isStrict) {
+    return 0;
+  }
+
   public static int opToSwitch(int op) {
     return 0;
   }

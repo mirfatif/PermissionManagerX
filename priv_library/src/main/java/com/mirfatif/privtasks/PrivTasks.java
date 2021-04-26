@@ -48,6 +48,10 @@ public class PrivTasks {
     return NUM_OP;
   }
 
+  // LOS N:
+  // https://github.com/LineageOS/android_frameworks_base/blob/cm-14.1/core/java/android/app/AppOpsManager.java#L1350
+  private boolean mUseOpToDefLOS = false;
+
   public List<Integer> buildOpToDefaultModeList() throws HiddenAPIsError {
     Integer opNum = getNumOps();
     if (opNum == null) {
@@ -61,7 +65,7 @@ public class PrivTasks {
         continue;
       }
       try {
-        opToDefModeList.add(mHiddenAPIs.opToDefaultMode(i));
+        opToDefModeList.add(mHiddenAPIs.opToDefaultMode(i, mUseOpToDefLOS));
       } catch (HiddenAPIsException e) {
         if (e.getCause() instanceof ArrayIndexOutOfBoundsException) {
           // OEM you are shit!
@@ -71,9 +75,14 @@ public class PrivTasks {
         }
       } catch (HiddenAPIsError e) {
         if (e.getCause() instanceof NoSuchMethodError && mIsDaemon) {
-          // OEM you are shit!
-          failed = true;
-          mCallback.sendRequest(Commands.OP_TO_DEF_MODE_NOT_FOUND);
+          if (mUseOpToDefLOS) {
+            // OEM you are shit!
+            failed = true;
+            mCallback.sendRequest(Commands.OP_TO_DEF_MODE_NOT_FOUND);
+          } else {
+            mUseOpToDefLOS = true;
+            return buildOpToDefaultModeList();
+          }
           e.printStackTrace();
         } else {
           throw e;

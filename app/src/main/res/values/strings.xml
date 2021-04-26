@@ -341,7 +341,7 @@
   <string name="daemon_get_installed_pkgs_failed" maxLength="20">Getting apps list failed</string>
   <string name="daemon_get_users_failed" maxLength="20">Getting users list failed</string>
   <string name="daemon_get_perm_grp_info_list_failed" maxLength="20">Getting permission groups failed</string>
-  <string name="daemon_op_num_inconsistency" maxLength="20">Bad OEM</string>
+  <string name="daemon_op_num_inconsistency" maxLength="20">Bad ROM</string>
   <string name="daemon_set_perm_flags_failed" maxLength="20">Setting permission flags failed</string>
 
 </resources>

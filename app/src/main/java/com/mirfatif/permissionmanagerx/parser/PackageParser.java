@@ -995,7 +995,8 @@ public class PackageParser {
     String dependsOn = op == opSwitch ? null : mAppOpsParser.getAppOpsList().get(opSwitch);
     String opName = mAppOpsParser.getAppOpsList().get(op);
     boolean isAppOpSet = true;
-    if (opMode < 0) {
+    // Mode can be greater than the modes list we have built. E.g. MODE_ASK in LOS N.
+    if (opMode < 0 || opMode >= mAppOpsParser.getAppOpsModes().size()) {
       isAppOpSet = false;
       opMode = mAppOpsParser.getOpToDefModeList().get(op);
     }
