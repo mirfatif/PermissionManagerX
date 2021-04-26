@@ -38,6 +38,7 @@ import com.mirfatif.permissionmanagerx.prefs.FilterSettingsActivity;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
 import com.mirfatif.permissionmanagerx.prefs.settings.SettingsActivity;
+import com.mirfatif.permissionmanagerx.privs.NativeDaemon;
 import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.ui.AboutActivity;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
@@ -140,6 +141,8 @@ public class MainActivity extends BaseActivity {
           }
           return super.onOptionsItemSelected(item);
         });
+    setDrawerLiveObserver();
+    setNavigationMenu();
 
     mRefreshLayout = findViewById(R.id.refresh_layout);
     mProgressBar = findViewById(R.id.progress_bar);
@@ -166,12 +169,6 @@ public class MainActivity extends BaseActivity {
               Utils.runInFg(() -> mRoundProgressTextView.setText(R.string.checking_adb_access));
               Utils.checkAdbIfEnabled();
             });
-
-    Utils.runInBg(
-        () -> {
-          waitForFuture(checkRootAndAdbFuture);
-          Utils.runInFg(this::setNavigationMenu);
-        });
 
     Future<?> privDaemonFuture =
         Utils.runInBg(
@@ -862,27 +859,46 @@ public class MainActivity extends BaseActivity {
   //////////////////////// NAVIGATION DRAWER ///////////////////////
   //////////////////////////////////////////////////////////////////
 
+  private void setDrawerLiveObserver() {
+    mMyViewModel.getDrawerChanged().observe(this, res -> setBoxesChecked());
+  }
+
   void setNavigationMenu() {
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "setNavigationMenu() called");
     }
-    Menu menu = mNavigationView.getMenu();
 
-    // If recreating
-    mNavigationView.invalidate();
-
-    setBoxCheckedAndSetListener(menu, R.id.action_root, mMySettings.isRootGranted());
-    setBoxCheckedAndSetListener(menu, R.id.action_adb, mMySettings.isAdbConnected());
-    setBoxCheckedAndSetListener(menu, R.id.action_dark_theme, mMySettings.forceDarkMode());
-
-    menu.findItem(R.id.action_donate).setVisible(mMainActivityFlavor.getDonateVisibility());
+    mNavigationView.invalidate(); // If recreating
+    setBoxesChecked();
+    setCheckBoxListeners();
+    mNavigationView
+        .getMenu()
+        .findItem(R.id.action_donate)
+        .setVisible(mMainActivityFlavor.getDonateVisibility());
   }
 
-  private void setBoxCheckedAndSetListener(Menu menu, int id, boolean checked) {
-    MenuItem menuItem = menu.findItem(id);
-    CheckBox checkBox = ((CheckBox) menuItem.getActionView());
-    checkBox.setChecked(checked);
-    checkBox.setOnClickListener(v -> handleNavigationItemChecked(menuItem));
+  private void setBoxesChecked() {
+    if (mNavigationView == null) {
+      return;
+    }
+    Menu menu = mNavigationView.getMenu();
+    ((CheckBox) menu.findItem(R.id.action_root).getActionView())
+        .setChecked(mMySettings.isRootGranted());
+    ((CheckBox) menu.findItem(R.id.action_adb).getActionView())
+        .setChecked(mMySettings.isAdbConnected());
+    ((CheckBox) menu.findItem(R.id.action_dark_theme).getActionView())
+        .setChecked(mMySettings.forceDarkMode());
+  }
+
+  private void setCheckBoxListeners() {
+    if (mNavigationView == null) {
+      return;
+    }
+    Menu menu = mNavigationView.getMenu();
+    for (int id : new int[] {R.id.action_root, R.id.action_adb, R.id.action_dark_theme}) {
+      MenuItem menuItem = menu.findItem(id);
+      menuItem.getActionView().setOnClickListener(v -> handleNavigationItemChecked(menuItem));
+    }
   }
 
   private boolean handleNavigationItemSelected(MenuItem item) {
@@ -917,6 +933,7 @@ public class MainActivity extends BaseActivity {
       CheckBox rootCheckBox = (CheckBox) item.getActionView();
       if (!rootCheckBox.isChecked()) {
         mMySettings.setRootGranted(false);
+        NativeDaemon.rootInstance().stopDaemon();
         return true;
       }
 
@@ -939,6 +956,7 @@ public class MainActivity extends BaseActivity {
       CheckBox adbCheckBox = (CheckBox) item.getActionView();
       if (!adbCheckBox.isChecked()) {
         mMySettings.setAdbConnected(false);
+        NativeDaemon.adbInstance().stopDaemon();
         return true;
       }
 

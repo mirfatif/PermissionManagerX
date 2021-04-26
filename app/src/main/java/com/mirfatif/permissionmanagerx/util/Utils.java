@@ -58,6 +58,7 @@ import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.Adb;
+import com.mirfatif.permissionmanagerx.privs.NativeDaemon;
 import com.mirfatif.permissionmanagerx.svc.NotifDismissSvc;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
@@ -68,7 +69,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -102,46 +102,23 @@ public class Utils {
     return mExecutor.submit(runnable);
   }
 
-  public static boolean runCommand(String tag, String match, String cmd2, String... cmd1) {
-    Process process = runCommand(tag, true, cmd1);
+  public static void runCommand(String tag, String... cmd) {
+    Process process = runCommand(tag, true, cmd);
     if (process == null) {
-      return false;
+      return;
     }
 
-    String res = null;
-    try (PrintWriter cmdWriter =
-            new PrintWriter(new OutputStreamWriter(process.getOutputStream()), true);
-        BufferedReader stdIn =
-            new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-
-      if (cmd2 != null) {
-        Log.i(tag, "Sending command: " + cmd2);
-        cmdWriter.println(cmd2);
-      }
-
+    try (BufferedReader stdIn =
+        new BufferedReader(new InputStreamReader(process.getInputStream()))) {
       String line;
       while ((line = stdIn.readLine()) != null) {
         Log.i(tag, line);
-        res = line;
       }
-
-      if (process.waitFor() != 0) {
-        return false;
-      }
-    } catch (IOException | InterruptedException e) {
+    } catch (IOException e) {
       e.printStackTrace();
     } finally {
       cleanStreams(process, null, tag);
     }
-
-    if (match == null) {
-      return true;
-    }
-
-    if (res != null) {
-      return res.trim().equals(match);
-    }
-    return false;
   }
 
   public static Process runCommand(String tag, boolean redirectStdErr, String... cmd) {
@@ -191,9 +168,9 @@ public class Utils {
   }
 
   // org.apache.commons.io.IOUtils.copy()
-  public static boolean copyStreamFails(InputStream input, OutputStream output) {
+  public static boolean copyStream(InputStream input, OutputStream output) {
     if (input == null || output == null) {
-      return true;
+      return false;
     }
     byte[] buffer = new byte[8192];
     int len;
@@ -205,9 +182,9 @@ public class Utils {
       }
     } catch (IOException e) {
       e.printStackTrace();
-      return true;
+      return false;
     }
-    return count > Integer.MAX_VALUE;
+    return count <= Integer.MAX_VALUE;
   }
 
   public static String capitalizeWords(String str) {
@@ -458,6 +435,8 @@ public class Utils {
         + (BuildConfig.GH_VERSION ? "" : " PlayStore")
         + "\nSDK: "
         + VERSION.SDK_INT
+        + "\nROM: "
+        + Build.DISPLAY
         + "\nBuild: "
         + Build.TYPE
         + "\nDevice: "
@@ -708,8 +687,7 @@ public class Utils {
 
   public static boolean checkRoot() {
     MySettings mySettings = MySettings.getInstance();
-    boolean res = runCommand(TAG + ": checkRoot", "0", "exec id -u", getSu());
-    mySettings.setRootGranted(res);
+    boolean res = NativeDaemon.rootInstance().isRunning();
     if (mySettings.isDebug()) {
       Util.debugLog(TAG, "checkRoot: getting root privileges " + (res ? "succeeded" : "failed"));
     }
@@ -726,8 +704,7 @@ public class Utils {
 
   public static boolean checkAdb(boolean showToastOnFailure) {
     MySettings mySettings = MySettings.getInstance();
-    boolean res = Adb.isConnected(showToastOnFailure);
-    mySettings.setAdbConnected(res);
+    boolean res = NativeDaemon.adbInstance().isRunning(showToastOnFailure);
     if (mySettings.isDebug()) {
       Util.debugLog(TAG, "checkAdb: connecting to ADB " + (res ? "succeeded" : "failed"));
     }

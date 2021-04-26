@@ -7,9 +7,6 @@ public class Commands {
   // the last String response, afterwards only serialized Objects are sent over stream
   public static final String HELLO = "HELLO";
 
-  // listen over TCP socket
-  public static final String CREATE_SOCKET = "CREATE_SOCKET";
-
   // Indicates the start of a crash log which the app handles
   public static final String CRASH_LOG_STARTS = "PRIVILEGED_DAEMON_CRASH_LOG_STARTS";
 

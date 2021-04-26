@@ -100,17 +100,17 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def sdkDir = properties.getProperty('sdk.dir')
 
-task buildSetPriv(type: Exec) {
+task buildNative(type: Exec) {
     environment 'ANDROID_NDK', new File(sdkDir, "ndk/" + ndkVer).getAbsolutePath()
-    workingDir "$rootDir"
-    commandLine './build_set_priv.sh'
+    workingDir "$rootDir/native"
+    commandLine './build_native.sh'
     doLast {
         if (execResult.getExitValue() != 0) {
-            println "buildSetPriv failed!"
+            println "buildNative failed!"
         }
     }
 }
-preBuild.dependsOn(buildSetPriv)
+preBuild.dependsOn(buildNative)
 
 apply plugin: 'com.github.sherter.google-java-format'
 preBuild.dependsOn(verifyGoogleJavaFormat)

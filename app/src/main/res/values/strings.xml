@@ -93,7 +93,6 @@
     ]]>
   </string>
   <string name="daemon_failed" maxLength="20">Starting privileged daemon failed</string>
-  <string name="adb_switch_fail" maxLength="20">Switching to ADB failed</string>
   <string name="backup" maxLength="10">Backup</string>
   <string name="restore" maxLength="10">Restore</string>
   <string name="choose_backup_restore">Backup or restore preferences and permission references.</string>
@@ -154,6 +153,9 @@
   <string name="dex_location_changed" maxLength="20">Switching daemon load location</string>
   <string name="files_not_extracted_accessible" maxLength="20">Files not extracted or not accessible</string>
   <string name="priv_daemon_died" maxLength="20">Privileged daemon died</string>
+
+  <!--NativeDaemon-->
+  <string name="native_daemon_died" maxLength="20">Native daemon died</string>
 
   <!-- LogcatService -->
   <string name="logging" maxLength="15">Logging</string>

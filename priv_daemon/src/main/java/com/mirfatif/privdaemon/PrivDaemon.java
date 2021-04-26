@@ -18,7 +18,6 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Arrays;
 
 public class PrivDaemon {
 
@@ -31,7 +30,7 @@ public class PrivDaemon {
   private boolean DEBUG;
   private String mCodeWord;
 
-  private PrivDaemon(String[] arguments) {
+  private PrivDaemon() {
     setDefaultExceptionHandler();
 
     try (BufferedReader reader = new BufferedReader(new FileReader("/proc/self/cmdline"))) {
@@ -41,10 +40,21 @@ public class PrivDaemon {
       return;
     }
 
-    DEBUG = Boolean.parseBoolean(arguments[0]);
-    String appId = arguments[1];
-    int appUserId = Integer.parseInt(arguments[2]);
-    mCodeWord = arguments[3];
+    Log.i(TAG, "Reading parameters");
+    String[] params;
+    try {
+      params = new BufferedReader(new InputStreamReader(System.in)).readLine().split(" ");
+    } catch (IOException e) {
+      e.printStackTrace();
+      return;
+    }
+
+    DEBUG = Boolean.parseBoolean(params[0]);
+    boolean useSocket = Boolean.parseBoolean(params[1]);
+    int appUserId = Integer.parseInt(params[2]);
+    String appId = params[3];
+    mCodeWord = params[4];
+
     mPrivTasks = new PrivTasks(new PrivTasksCallbackImpl(), appId, appUserId, true);
 
     for (int pid : mPrivTasks.getPidsForCommands(new String[] {TAG})) {
@@ -57,7 +67,7 @@ public class PrivDaemon {
     ServerSocket server = null;
     Socket client = null;
     int port = 0;
-    if (Arrays.asList(arguments).contains(Commands.CREATE_SOCKET)) {
+    if (useSocket) {
       if (DEBUG) {
         Log.d(TAG, "Creating server socket");
       }
@@ -139,6 +149,8 @@ public class PrivDaemon {
     }
   }
 
+  /////////////////////////////////////////////////////////////////////////////////
+
   private UncaughtExceptionHandler defaultExceptionHandler;
 
   private void setDefaultExceptionHandler() {
@@ -151,6 +163,8 @@ public class PrivDaemon {
           defaultExceptionHandler.uncaughtException(t, e);
         });
   }
+
+  /////////////////////////////////////////////////////////////////////////////////
 
   private void handleCommand(String[] args) throws IOException {
     switch (args[0]) {
@@ -277,7 +291,7 @@ public class PrivDaemon {
     }
   }
 
-  public static void main(String[] arguments) {
-    new PrivDaemon(arguments);
+  public static void main(String[] args) {
+    new PrivDaemon();
   }
 }

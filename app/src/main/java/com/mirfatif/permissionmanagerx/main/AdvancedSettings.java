@@ -15,13 +15,10 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.privs.NativeDaemon;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.util.Utils;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -131,7 +128,7 @@ class AdvancedSettings {
     }
 
     String newPort = adbPortView.getText() == null ? null : adbPortView.getText().toString().trim();
-    if (!TextUtils.isEmpty(newPort) && !adbPort.equals(newPort)) {
+    if (newPort != null && !TextUtils.isEmpty(newPort) && !adbPort.equals(newPort)) {
       int port = Integer.parseInt(newPort);
       if (port > 65535 || port <= 0) {
         Utils.showToast(R.string.bad_port_number);
@@ -178,7 +175,7 @@ class AdvancedSettings {
         mMySettings.setSuExePath(null);
         restartDaemon = true;
       }
-    } else if (!suExePathNew.equals(suExePath)) {
+    } else if (suExePathNew != null && !suExePathNew.equals(suExePath)) {
       if (!isExecutableFile(suExePathNew)) {
         Utils.showToast(R.string.bad_path);
       } else {
@@ -238,32 +235,15 @@ class AdvancedSettings {
       return;
     }
 
-    Process process = Utils.runCommand(TAG, true, Utils.getSu());
-    if (process == null) {
-      Utils.showToast(R.string.adb_switch_fail);
-    } else {
-      Utils.runInBg(
-          () -> {
-            try (InputStreamReader reader = new InputStreamReader(process.getInputStream())) {
-              Utils.readProcessLog(new BufferedReader(reader), TAG);
-            } catch (IOException e) {
-              e.printStackTrace();
-            }
-          });
-
-      Log.i(TAG, "Sending ADB switch commands");
-
-      PrintWriter writer = new PrintWriter(process.getOutputStream(), true);
-      writer.println("settings put global adb_enabled 0");
-      writer.println("stop adbd");
-      writer.println("setprop service.adb.tcp.port " + mMySettings.getAdbPort());
-      SystemClock.sleep(2000);
-      writer.println("settings put global adb_enabled 1");
-      writer.println("exec start adbd");
-      writer.close();
-
-      SystemClock.sleep(5000);
-    }
+    Log.i(TAG, "Sending ADB switch commands");
+    NativeDaemon daemon = NativeDaemon.rootInstance();
+    daemon.sendCommand("run settings put global adb_enabled 0");
+    daemon.sendCommand("run stop adbd");
+    daemon.sendCommand("run setprop service.adb.tcp.port " + mMySettings.getAdbPort());
+    SystemClock.sleep(2000);
+    daemon.sendCommand("run settings put global adb_enabled 1");
+    daemon.sendCommand("run start adbd");
+    SystemClock.sleep(5000);
 
     if (Utils.checkAdb(true)) {
       restartDaemonWithAdb();
@@ -286,6 +266,7 @@ class AdvancedSettings {
     return App.getContext().getString(resId);
   }
 
+  @SuppressWarnings("BooleanMethodIsAlwaysInverted")
   private boolean isExecutableFile(CharSequence path) {
     File suFile = new File(path.toString());
     return suFile.isFile() && suFile.canExecute();
