@@ -101,19 +101,19 @@
   <string name="restore_in_progress" maxLength="15">Restore In Progress</string>
 
   <plurals name="backup_restore_processed_prefs">
-    <item quantity="one">Processed 1 preference</item>
+    <item quantity="one">Processed %1$d preference</item>
     <item quantity="other">Processed %1$d preferences</item>
   </plurals>
   <plurals name="backup_restore_processed_refs">
-    <item quantity="one">%1$s and 1 permission reference.</item>
+    <item quantity="one">%1$s and %2$d permission reference.</item>
     <item quantity="other">%1$s and %2$d permission references.</item>
   </plurals>
   <plurals name="backup_restore_invalid_prefs">
-    <item quantity="one">%1$s\nSkipped 1 invalid preference.</item>
+    <item quantity="one">%1$s\nSkipped %2$d invalid preference.</item>
     <item quantity="other">%1$s\nSkipped %2$d invalid preferences.</item>
   </plurals>
   <plurals name="backup_restore_uninstalled_apps">
-    <item quantity="one">%1$s\nSkipped 1 uninstalled app.</item>
+    <item quantity="one">%1$s\nSkipped %2$d uninstalled app.</item>
     <item quantity="other">%1$s\nSkipped %2$d uninstalled apps.</item>
   </plurals>
 
@@ -195,7 +195,7 @@
   <string name="framework">framework</string>
 
   <plurals name="uid_mode_app_ops_warning">
-    <item quantity="one">This is a UID mode AppOp. Changing it also affects 1 other package.</item>
+    <item quantity="one">This is a UID mode AppOp. Changing it also affects %1$d other package.</item>
     <item quantity="other">This is a UID mode AppOp. Changing it also affects %1$d other packages.</item>
   </plurals>
 
@@ -205,7 +205,7 @@
   <string comment="AppOps or manifest permission state" name="clear_perm_state_reference"><![CDATA[<br/>Clear <b>%1$s</b> state as reference.]]></string>
 
   <plurals name="count_permissions_filtered_out">
-    <item quantity="one">1 permission filtered out</item>
+    <item quantity="one">%1$d permission filtered out</item>
     <item quantity="other">%1$d permissions filtered out</item>
   </plurals>
 
@@ -223,7 +223,7 @@
   <string name="extra_app_ops_summary_count">(Total: %1$d)</string>
 
   <plurals name="and_others_count">
-    <item quantity="one">%1$s and 1 other</item>
+    <item quantity="one">%1$s and %2$d other</item>
     <item quantity="other">%1$s and %2$d others</item>
   </plurals>
 
@@ -343,5 +343,8 @@
   <string name="daemon_get_perm_grp_info_list_failed" maxLength="20">Getting permission groups failed</string>
   <string name="daemon_op_num_inconsistency" maxLength="20">Bad ROM</string>
   <string name="daemon_set_perm_flags_failed" maxLength="20">Setting permission flags failed</string>
+
+  <!-- Locale -->
+  <string name="help_file_name">help.html</string>
 
 </resources>

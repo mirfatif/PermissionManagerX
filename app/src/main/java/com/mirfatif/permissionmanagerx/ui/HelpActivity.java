@@ -43,7 +43,7 @@ public class HelpActivity extends BaseActivity {
     enableJs();
     webView.addJavascriptInterface(new HelpJsInterface(this), "Android");
 
-    webView.loadUrl("file:///android_asset/help.html");
+    webView.loadUrl("file:///android_asset/" + Utils.getString(R.string.help_file_name));
   }
 
   @SuppressLint("SetJavaScriptEnabled")
