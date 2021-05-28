@@ -1,11 +1,11 @@
 package com.mirfatif.permissionmanagerx.main;
 
-import android.view.View;
+import com.mirfatif.permissionmanagerx.databinding.AdvSettingsDialogBinding;
 
 public class AdvancedSettingsFlavor {
 
   @SuppressWarnings("UnusedDeclaration")
-  AdvancedSettingsFlavor(MainActivity activity, View dialogLayout) {}
+  AdvancedSettingsFlavor(MainActivity activity, AdvSettingsDialogBinding binding) {}
 
   @SuppressWarnings("UnusedDeclaration")
   void saveSettings(boolean restartDaemon, boolean switchToAdb) {}

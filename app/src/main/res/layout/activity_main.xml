@@ -69,14 +69,16 @@
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <!--In MoveUpwardBehavior we'll move up only this container, not SwipeRefreshLayout -->
-        <include layout="@layout/activity_main_moving_container" />
+        <include
+          android:id="@+id/mov_cont"
+          layout="@layout/activity_main_moving_container" />
 
       </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
     </com.mirfatif.permissionmanagerx.ui.base.MyCoordinatorLayout>
   </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
   <com.mirfatif.permissionmanagerx.main.ProgressFrameLayout
-    android:id="@+id/round_progress_container"
+    android:id="@+id/rnd_prog_cont"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -91,7 +93,7 @@
       android:indeterminateDrawable="@drawable/circle_progress_bar" />
 
     <TextView
-      android:id="@+id/round_progress_text"
+      android:id="@+id/rnd_prog_text_v"
       android:textStyle="bold"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -107,7 +109,7 @@
   </com.mirfatif.permissionmanagerx.main.ProgressFrameLayout>
 
   <com.mirfatif.permissionmanagerx.ui.base.MyNavigationView
-    android:id="@+id/nav_view"
+    android:id="@+id/nav_v"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_gravity="start"

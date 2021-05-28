@@ -27,10 +27,12 @@ android {
             versionNameSuffix "-debug"
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     dependenciesInfo {
         includeInApk false
     }
@@ -40,6 +42,10 @@ android {
             // Due to android:extractNativeLibs set to "true" in AndroidManifest.
             useLegacyPackaging true
         }
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 }
 

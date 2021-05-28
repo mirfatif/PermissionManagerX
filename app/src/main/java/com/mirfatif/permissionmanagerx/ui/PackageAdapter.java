@@ -11,14 +11,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
-import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.databinding.RvItemPkgBinding;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.ui.PackageAdapter.ItemViewHolder;
 import com.mirfatif.permissionmanagerx.ui.base.MyListAdapter;
@@ -46,10 +44,9 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
   @NonNull
   @Override
   public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-    View itemView =
-        LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.recycler_view_item_package, parent, false);
-    return new ItemViewHolder(itemView);
+    LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+    RvItemPkgBinding binding = RvItemPkgBinding.inflate(inflater, parent, false);
+    return new ItemViewHolder(binding);
   }
 
   // Override Adapter method
@@ -63,29 +60,13 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
   class ItemViewHolder extends RecyclerView.ViewHolder
       implements OnClickListener, OnLongClickListener {
 
-    View referenceView;
-    ImageView iconView;
-    TextView packageLabelView;
-    TextView packageNameView;
-    TextView packageStateView;
-    TextView permCountView;
-    TextView dateView;
+    private final RvItemPkgBinding mB;
 
-    public ItemViewHolder(@NonNull View itemView) {
-      super(itemView);
-
-      // Find Views inside the itemView in XML layout with the given IDs
-      referenceView = itemView.findViewById(R.id.reference_indication_view);
-      iconView = itemView.findViewById(R.id.icon_view);
-      packageLabelView = itemView.findViewById(R.id.package_label_view);
-      packageNameView = itemView.findViewById(R.id.package_name_view);
-      packageStateView = itemView.findViewById(R.id.package_state_view);
-      permCountView = itemView.findViewById(R.id.package_perm_count_view);
-      dateView = itemView.findViewById(R.id.date_view);
-
-      // Set click listener on whole item
-      itemView.setOnClickListener(this);
-      itemView.setOnLongClickListener(this);
+    public ItemViewHolder(RvItemPkgBinding binding) {
+      super(binding.getRoot());
+      mB = binding;
+      binding.getRoot().setOnClickListener(this);
+      binding.getRoot().setOnLongClickListener(this);
     }
 
     public void bind(int position) {
@@ -98,15 +79,15 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
 
       if (pkg.shouldShowRefs()) {
         if (pkg.isReferenced() == null) {
-          referenceView.setBackgroundColor(ORANGE);
+          mB.refIndicationV.setBackgroundColor(ORANGE);
         } else if (!pkg.isReferenced()) {
-          referenceView.setBackgroundColor(Color.RED);
+          mB.refIndicationV.setBackgroundColor(Color.RED);
         } else {
-          referenceView.setBackgroundColor(Color.GREEN);
+          mB.refIndicationV.setBackgroundColor(Color.GREEN);
         }
-        referenceView.setVisibility(View.VISIBLE);
+        mB.refIndicationV.setVisibility(View.VISIBLE);
       } else {
-        referenceView.setVisibility(View.GONE);
+        mB.refIndicationV.setVisibility(View.GONE);
       }
 
       Utils.runInBg(
@@ -115,14 +96,14 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
               int flags = PackageManager.MATCH_UNINSTALLED_PACKAGES;
               ApplicationInfo appInfo = mPackageManager.getApplicationInfo(pkg.getName(), flags);
               Drawable icon = mPackageManager.getApplicationIcon(appInfo);
-              Utils.runInFg(() -> iconView.setImageDrawable(icon));
+              Utils.runInFg(() -> mB.iconV.setImageDrawable(icon));
             } catch (NameNotFoundException ignored) {
             }
           });
 
-      packageLabelView.setText(pkg.getLabel());
-      packageNameView.setText(pkg.getFormattedName());
-      permCountView.setText(pkg.getPermCount());
+      mB.pkgLabelV.setText(pkg.getLabel());
+      mB.pkgNameV.setText(pkg.getFormattedName());
+      mB.pkgPermCountV.setText(pkg.getPermCount());
 
       String packageState = null;
       if (pkg.isCriticalApp()) {
@@ -137,22 +118,22 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
       }
 
       if (packageState == null) {
-        packageStateView.setVisibility(View.GONE);
+        mB.pkgStateV.setVisibility(View.GONE);
       } else {
         if (pkg.isFrameworkApp() && pkg.isChangeable()) {
-          packageStateView.setText(
+          mB.pkgStateV.setText(
               Utils.getHighlightString(
                   packageState,
-                  getHighlightSpan(packageStateView.getCurrentTextColor()),
+                  getHighlightSpan(mB.pkgStateV.getCurrentTextColor()),
                   true,
                   Package.FRAMEWORK));
         } else {
-          packageStateView.setText(packageState);
+          mB.pkgStateV.setText(packageState);
         }
-        packageStateView.setVisibility(View.VISIBLE);
+        mB.pkgStateV.setVisibility(View.VISIBLE);
       }
 
-      dateView.setText(pkg.getDate());
+      mB.dateV.setText(pkg.getDate());
     }
 
     @Override

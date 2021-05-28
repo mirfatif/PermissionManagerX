@@ -14,12 +14,6 @@ import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
 @Keep
 public class MoveUpwardBehavior extends CoordinatorLayout.Behavior<View> {
 
-  @SuppressWarnings("UnusedDeclaration")
-  public MoveUpwardBehavior() {
-    super();
-  }
-
-  @SuppressWarnings("UnusedDeclaration")
   public MoveUpwardBehavior(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
@@ -36,10 +30,10 @@ public class MoveUpwardBehavior extends CoordinatorLayout.Behavior<View> {
 
     float translationY = Math.min(0, dependency.getTranslationY() - dependency.getHeight());
 
-    UtilsFlavor.onSnackBarMoved(child.findViewById(R.id.moving_container));
+    UtilsFlavor.onSnackBarMoved(child.findViewById(R.id.mov_cont));
 
     // Move the container up and down with SnackBar.
-    child.findViewById(R.id.moving_container).setTranslationY(translationY);
+    child.findViewById(R.id.mov_cont).setTranslationY(translationY);
     return true;
   }
 
@@ -50,6 +44,6 @@ public class MoveUpwardBehavior extends CoordinatorLayout.Behavior<View> {
     super.onDependentViewRemoved(parent, child, dependency);
 
     // Move the container down.
-    UtilsFlavor.onSnackBarSwiped(child.findViewById(R.id.moving_container));
+    UtilsFlavor.onSnackBarSwiped(child.findViewById(R.id.mov_cont));
   }
 }

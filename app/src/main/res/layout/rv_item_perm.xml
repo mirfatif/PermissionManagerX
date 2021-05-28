@@ -6,12 +6,12 @@
   android:orientation="horizontal">
 
   <View
-    android:id="@+id/reference_indication_view"
+    android:id="@+id/ref_indication_v"
     android:layout_width="4dp"
     android:layout_height="match_parent"/>
 
   <ImageView
-    android:id="@+id/icon_view"
+    android:id="@+id/icon_v"
     android:layout_width="24dp"
     android:layout_height="24dp"
     android:layout_gravity="center"
@@ -28,7 +28,7 @@
     android:padding="8dp">
 
     <TextView
-      android:id="@+id/permission_name_view"
+      android:id="@+id/perm_name_v"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_margin="1dp"
@@ -37,7 +37,7 @@
       android:textStyle="bold"/>
 
     <TextView
-      android:id="@+id/protection_level_view"
+      android:id="@+id/prot_level_v"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_margin="1dp"
@@ -45,13 +45,13 @@
       android:ellipsize="end"/>
 
     <TextView
-      android:id="@+id/app_ops_time_view"
+      android:id="@+id/app_ops_time_v"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_margin="1dp"/>
 
     <TextView
-      android:id="@+id/app_ops_ref_state_view"
+      android:id="@+id/app_ops_ref_state_v"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_margin="1dp"/>
@@ -59,13 +59,13 @@
   </LinearLayout>
 
   <androidx.appcompat.widget.SwitchCompat
-    android:id="@+id/permission_state_switch"
+    android:id="@+id/perm_state_switch"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:padding="8dp"/>
 
   <LinearLayout
-    android:id="@+id/permission_state_spinner_container"
+    android:id="@+id/perm_state_spinner_cont"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -73,7 +73,7 @@
     android:padding="8dp">
 
     <androidx.appcompat.widget.AppCompatSpinner
-      android:id="@+id/permission_state_spinner"
+      android:id="@+id/perm_state_spinner"
       android:layout_width="wrap_content"
       android:layout_height="0dp"
       android:layout_weight="1"
@@ -81,7 +81,7 @@
       android:background="@null"/>
 
     <TextView
-      android:id="@+id/app_ops_default_view"
+      android:id="@+id/app_ops_default_v"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:textSize="10sp"

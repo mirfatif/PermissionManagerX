@@ -8,7 +8,7 @@
   android:orientation="vertical">
 
   <TextView
-    android:id="@+id/permission_name_view"
+    android:id="@+id/perm_name_v"
     android:textStyle="bold"
     android:layout_margin="4dp"
     android:layout_width="match_parent"
@@ -42,7 +42,7 @@
       android:textColor="@color/dynamic_text_color" />
 
     <TextView
-      android:id="@+id/protection_level_view"
+      android:id="@+id/prot_level_v"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_weight="1"

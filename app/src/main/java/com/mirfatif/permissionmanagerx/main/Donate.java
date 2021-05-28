@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog.Builder;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.databinding.DonateAlertDialogBinding;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import me.saket.bettermovementmethod.BetterLinkMovementMethod;
@@ -17,30 +18,12 @@ import me.saket.bettermovementmethod.BetterLinkMovementMethod.OnLinkClickListene
 class Donate {
 
   private final MainActivity mA;
-  private final View layout;
-  private final View bitcoinButton;
-  private final View bitcoinContainer;
-  private final TextView bitcoinLinkView;
-  private final View bankButton;
-  private final TextView bankLinkView;
-  private final View psButton;
-  private final TextView psLinkView;
-  private final View redeemButton;
-  private final TextView redeemLinkView;
+  private final DonateAlertDialogBinding mB;
 
   @SuppressLint("InflateParams")
   private Donate(MainActivity activity) {
     mA = activity;
-    layout = mA.getLayoutInflater().inflate(R.layout.donate_alert_dialog, null);
-    bitcoinButton = layout.findViewById(R.id.bitcoin_button);
-    bitcoinContainer = layout.findViewById(R.id.bitcoin_container);
-    bitcoinLinkView = layout.findViewById(R.id.bitcoin_link);
-    bankButton = layout.findViewById(R.id.bank_account_button);
-    bankLinkView = layout.findViewById(R.id.bank_account_link);
-    psButton = layout.findViewById(R.id.play_store_button);
-    psLinkView = layout.findViewById(R.id.play_store_link);
-    redeemButton = layout.findViewById(R.id.redeem_code_button);
-    redeemLinkView = layout.findViewById(R.id.redeem_code_link);
+    mB = DonateAlertDialogBinding.inflate(mA.getLayoutInflater());
   }
 
   static void showDialog(MainActivity activity) {
@@ -48,26 +31,26 @@ class Donate {
   }
 
   private void show() {
-    setButtonClickListener(bitcoinButton, bitcoinContainer);
-    setButtonClickListener(bankButton, bankLinkView);
-    setButtonClickListener(psButton, psLinkView);
-    setButtonClickListener(redeemButton, redeemLinkView);
+    setButtonClickListener(mB.bitcoinButton, mB.bitcoinContainer);
+    setButtonClickListener(mB.bankAccountButton, mB.bankAccountLink);
+    setButtonClickListener(mB.playStoreButton, mB.playStoreLink);
+    setButtonClickListener(mB.redeemCodeButton, mB.redeemCodeLink);
 
-    setMovementMethod(bitcoinLinkView, (textView, url) -> handleBitcoinClick());
-    setMovementMethod(psLinkView, (textView, url) -> Utils.openWebUrl(mA, url));
-    sendMail(bankLinkView, R.string.bank_account_request);
-    sendMail(redeemLinkView, R.string.redeem_code_request);
+    setMovementMethod(mB.bitcoinLink, (textView, url) -> handleBitcoinClick());
+    setMovementMethod(mB.playStoreLink, (textView, url) -> Utils.openWebUrl(mA, url));
+    sendMail(mB.bankAccountLink, R.string.bank_account_request);
+    sendMail(mB.redeemCodeLink, R.string.redeem_code_request);
 
     new AlertDialogFragment(
-            new Builder(mA).setTitle(R.string.donate_menu_item).setView(layout).create())
+            new Builder(mA).setTitle(R.string.donate_menu_item).setView(mB.getRoot()).create())
         .show(mA, "DONATION", true);
   }
 
   private void hideAll() {
-    bitcoinContainer.setVisibility(View.GONE);
-    bankLinkView.setVisibility(View.GONE);
-    psLinkView.setVisibility(View.GONE);
-    redeemLinkView.setVisibility(View.GONE);
+    mB.bitcoinContainer.setVisibility(View.GONE);
+    mB.bankAccountLink.setVisibility(View.GONE);
+    mB.playStoreLink.setVisibility(View.GONE);
+    mB.redeemCodeLink.setVisibility(View.GONE);
   }
 
   private void setButtonClickListener(View button, View detailsView) {
