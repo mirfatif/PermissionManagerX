@@ -54,7 +54,7 @@ Credits and thanks to the developers of:
 
 ## License [![License](https://img.shields.io/github/license/mirfatif/PermissionManagerX?label="License")](https://github.com/mirfatif/PermissionManagerX/blob/master/LICENSE)
 
-You **CANNOT** use and distribute the app icon in anyway, except for **Permission Manager X** app.
+You **CANNOT** use and distribute the app icon in anyway, except for **Permission Manager X** (`com.mirfatif.permissionmanagerx`) app.
 
     Permission Manager X is free software: you can redistribute it and/or modify
     it under the terms of the Affero GNU General Public License as published by
