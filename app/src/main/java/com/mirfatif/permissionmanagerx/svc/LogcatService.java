@@ -23,6 +23,7 @@ import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.Adb;
 import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.util.Utils;
+import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
 import com.mirfatif.privtasks.Commands;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -99,7 +100,7 @@ public class LogcatService extends Service {
         .setOnlyAlertOnce(true)
         .setSmallIcon(R.drawable.notification_icon)
         .setContentTitle(Utils.getString(R.string.logging))
-        .setColor(Utils.getAccentColor())
+        .setColor(UtilsFlavor.getAccentColor())
         .setStyle(
             new NotificationCompat.BigTextStyle().bigText(getString(R.string.logging_warning)))
         .addAction(0, getString(R.string.stop_logging), stopIntent);

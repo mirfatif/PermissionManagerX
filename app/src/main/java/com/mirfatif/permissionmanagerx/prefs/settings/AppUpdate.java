@@ -16,6 +16,7 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.util.Utils;
+import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -129,7 +130,7 @@ public class AppUpdate {
     Builder notificationBuilder = new Builder(App.getContext(), CHANNEL_ID);
     notificationBuilder
         .setSmallIcon(R.drawable.notification_icon)
-        .setColor(Utils.getAccentColor())
+        .setColor(UtilsFlavor.getAccentColor())
         .setContentTitle(Utils.getString(R.string.new_version_available))
         .setContentText(Utils.getString(R.string.tap_to_download) + " " + mVersion)
         .setContentIntent(pendingIntent)

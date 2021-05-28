@@ -20,17 +20,18 @@ class Feedback {
     mFeedbackContainer = mA.findViewById(R.id.feedback_container);
   }
 
+  // Resuming visibility and alpha of the Feedback container after it's
+  // swiped away is buggy. So we show the container only once per Activity launch.
+  private boolean mFeedbackSwiped = false;
+
   void askForFeedback() {
-    if (MySettings.getInstance().shouldAskForFeedback()) {
+    if (!mFeedbackSwiped && MySettings.getInstance().shouldAskForFeedback()) {
       mFeedbackContainer.setVisibility(View.VISIBLE);
     }
 
     if (mFeedbackContainer.getVisibility() != View.VISIBLE) {
       return;
     }
-
-    // Undo animation effects from previous swipe.
-    mFeedbackContainer.setAlpha(1f);
 
     mA.findViewById(R.id.liking_app_yes_button).setOnClickListener(v -> showDialog(true));
     mA.findViewById(R.id.liking_app_no_button).setOnClickListener(v -> showDialog(false));
@@ -59,6 +60,7 @@ class Feedback {
     @Override
     public void onDismiss(View view) {
       mFeedbackContainer.setVisibility(View.GONE);
+      mFeedbackSwiped = true;
     }
 
     @Override

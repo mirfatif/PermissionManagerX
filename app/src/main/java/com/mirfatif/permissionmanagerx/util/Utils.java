@@ -269,17 +269,6 @@ public class Utils {
     return MaterialColors.getColor(activity, colorAttrResId, Color.TRANSPARENT);
   }
 
-  // We cannot get Attr colors belonging to Activity themes from App or Service Contexts
-  private static @ColorInt int mAccentColor = App.getContext().getColor(R.color.green);
-
-  public static void setAccentColor(@ColorInt int color) {
-    mAccentColor = color;
-  }
-
-  public static @ColorInt int getAccentColor() {
-    return mAccentColor;
-  }
-
   public static TextAppearanceSpan getHighlight(@ColorInt int colorInt) {
     return new TextAppearanceSpan(
         null,
@@ -661,7 +650,7 @@ public class Utils {
             new NotificationCompat.BigTextStyle().bigText(getString(R.string.ask_to_report_crash)))
         .setContentIntent(pendingIntent)
         .addAction(0, getString(R.string.send_report), pendingIntent)
-        .setColor(getAccentColor())
+        .setColor(UtilsFlavor.getAccentColor())
         .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setAutoCancel(true);
