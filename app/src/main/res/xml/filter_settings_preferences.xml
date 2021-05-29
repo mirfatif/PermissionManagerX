@@ -9,36 +9,42 @@
     app:defaultValue="@bool/pref_filter_exclude_no_icon_apps_default"
     app:iconSpaceReserved="false"
     app:key="@string/pref_filter_exclude_no_icon_apps_key"
+    app:singleLineTitle="false"
     app:title="@string/pref_filter_exclude_no_icon_apps_title" />
 
   <CheckBoxPreference
     app:defaultValue="@bool/pref_filter_exclude_user_apps_default"
     app:iconSpaceReserved="false"
     app:key="@string/pref_filter_exclude_user_apps_key"
+    app:singleLineTitle="false"
     app:title="@string/pref_filter_exclude_user_apps_title" />
 
   <CheckBoxPreference
     app:defaultValue="@bool/pref_filter_exclude_system_apps_default"
     app:iconSpaceReserved="false"
     app:key="@string/pref_filter_exclude_system_apps_key"
+    app:singleLineTitle="false"
     app:title="@string/pref_filter_exclude_system_apps_title" />
 
   <CheckBoxPreference
     app:defaultValue="@bool/pref_filter_exclude_framework_apps_default"
     app:iconSpaceReserved="false"
     app:key="@string/pref_filter_exclude_framework_apps_key"
+    app:singleLineTitle="false"
     app:title="@string/pref_filter_exclude_framework_apps_title" />
 
   <CheckBoxPreference
     app:defaultValue="@bool/pref_filter_exclude_disabled_apps_default"
     app:iconSpaceReserved="false"
     app:key="@string/pref_filter_exclude_disabled_apps_key"
+    app:singleLineTitle="false"
     app:title="@string/pref_filter_exclude_disabled_apps_title" />
 
   <CheckBoxPreference
     app:defaultValue="@bool/pref_filter_exclude_no_perms_apps_default"
     app:iconSpaceReserved="false"
     app:key="@string/pref_filter_exclude_no_perms_apps_key"
+    app:singleLineTitle="false"
     app:title="@string/pref_filter_exclude_no_perms_apps_title" />
 
   <MultiSelectListPreference
@@ -54,12 +60,14 @@
     app:defaultValue="@bool/pref_filter_exclude_not_changeable_perms_default"
     app:iconSpaceReserved="false"
     app:key="@string/pref_filter_exclude_not_changeable_perms_key"
+    app:singleLineTitle="false"
     app:title="@string/pref_filter_exclude_not_changeable_perms_title" />
 
   <CheckBoxPreference
     app:defaultValue="@bool/pref_filter_exclude_not_granted_perms_default"
     app:iconSpaceReserved="false"
     app:key="@string/pref_filter_exclude_not_granted_perms_key"
+    app:singleLineTitle="false"
     app:title="@string/pref_filter_exclude_not_granted_perms_title" />
 
   <MultiSelectListPreference
@@ -75,30 +83,35 @@
     app:defaultValue="@bool/pref_filter_exclude_invalid_perms_default"
     app:iconSpaceReserved="false"
     app:key="@string/pref_filter_exclude_invalid_perms_key"
+    app:singleLineTitle="false"
     app:title="@string/pref_filter_exclude_invalid_perms_title" />
 
   <CheckBoxPreference
     app:defaultValue="@bool/pref_filter_exclude_normal_perms_default"
     app:iconSpaceReserved="false"
     app:key="@string/pref_filter_exclude_normal_perms_key"
+    app:singleLineTitle="false"
     app:title="@string/pref_filter_exclude_normal_perms_title" />
 
   <CheckBoxPreference
     app:defaultValue="@bool/pref_filter_exclude_dangerous_perms_default"
     app:iconSpaceReserved="false"
     app:key="@string/pref_filter_exclude_dangerous_perms_key"
+    app:singleLineTitle="false"
     app:title="@string/pref_filter_exclude_dangerous_perms_title" />
 
   <CheckBoxPreference
     app:defaultValue="@bool/pref_filter_exclude_signature_perms_default"
     app:iconSpaceReserved="false"
     app:key="@string/pref_filter_exclude_signature_perms_key"
+    app:singleLineTitle="false"
     app:title="@string/pref_filter_exclude_signature_perms_title" />
 
   <CheckBoxPreference
     app:defaultValue="@bool/pref_filter_exclude_privileged_perms_default"
     app:iconSpaceReserved="false"
     app:key="@string/pref_filter_exclude_privileged_perms_key"
+    app:singleLineTitle="false"
     app:title="@string/pref_filter_exclude_privileged_perms_title" />
 
   <PreferenceCategory
@@ -109,12 +122,14 @@
     app:defaultValue="@bool/pref_filter_exclude_appops_perms_default"
     app:iconSpaceReserved="false"
     app:key="@string/pref_filter_exclude_appops_perms_key"
+    app:singleLineTitle="false"
     app:title="@string/pref_filter_exclude_appops_perms_title" />
 
   <CheckBoxPreference
     app:defaultValue="@bool/pref_filter_exclude_not_set_appops_default"
     app:iconSpaceReserved="false"
     app:key="@string/pref_filter_exclude_not_set_appops_key"
+    app:singleLineTitle="false"
     app:title="@string/pref_filter_exclude_not_set_appops_title" />
 
   <MultiSelectListPreference
