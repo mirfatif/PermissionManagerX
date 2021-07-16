@@ -34,12 +34,12 @@ class Donate {
     setButtonClickListener(mB.bitcoinButton, mB.bitcoinContainer);
     setButtonClickListener(mB.bankAccountButton, mB.bankAccountLink);
     setButtonClickListener(mB.playStoreButton, mB.playStoreLink);
-    setButtonClickListener(mB.redeemCodeButton, mB.redeemCodeLink);
 
     setMovementMethod(mB.bitcoinLink, (textView, url) -> handleBitcoinClick());
     setMovementMethod(mB.playStoreLink, (textView, url) -> Utils.openWebUrl(mA, url));
-    sendMail(mB.bankAccountLink, R.string.bank_account_request);
-    sendMail(mB.redeemCodeLink, R.string.redeem_code_request);
+    setMovementMethod(
+        mB.bankAccountLink,
+        (textView, url) -> Utils.sendMail(mA, Utils.getString(R.string.bank_account_request)));
 
     new AlertDialogFragment(
             new Builder(mA).setTitle(R.string.donate_menu_item).setView(mB.getRoot()).create())
@@ -50,7 +50,6 @@ class Donate {
     mB.bitcoinContainer.setVisibility(View.GONE);
     mB.bankAccountLink.setVisibility(View.GONE);
     mB.playStoreLink.setVisibility(View.GONE);
-    mB.redeemCodeLink.setVisibility(View.GONE);
   }
 
   private void setButtonClickListener(View button, View detailsView) {
@@ -63,10 +62,6 @@ class Donate {
 
   private void setMovementMethod(TextView view, OnLinkClickListener listener) {
     view.setMovementMethod(BetterLinkMovementMethod.newInstance().setOnLinkClickListener(listener));
-  }
-
-  private void sendMail(TextView view, int msgResId) {
-    setMovementMethod(view, (textView, url) -> Utils.sendMail(mA, Utils.getString(msgResId)));
   }
 
   private boolean handleBitcoinClick() {

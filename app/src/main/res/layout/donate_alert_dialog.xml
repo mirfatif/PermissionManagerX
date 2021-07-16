@@ -64,19 +64,6 @@
         app:maxImageSize="36dp"
         tools:ignore="ContentDescription" />
 
-      <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/redeem_code_button"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_margin="4dp"
-        android:src="@drawable/redeem"
-        app:backgroundTint="?attr/accentColor"
-        app:borderWidth="4dp"
-        app:elevation="4dp"
-        app:fabCustomSize="56dp"
-        app:maxImageSize="36dp"
-        tools:ignore="ContentDescription" />
-
     </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
     <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
@@ -131,15 +118,6 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="@string/play_store_link"
-      android:textSize="16sp"
-      android:visibility="gone" />
-
-    <TextView
-      android:id="@+id/redeem_code_link"
-      android:textStyle="bold"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/redeem_code_link"
       android:textSize="16sp"
       android:visibility="gone" />
 

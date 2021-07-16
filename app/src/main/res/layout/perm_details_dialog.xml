@@ -10,15 +10,16 @@
   <TextView
     android:id="@+id/perm_name_v"
     android:textStyle="bold"
-    android:layout_margin="4dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:autoSizeTextType="uniform"
+    android:layout_margin="4dp"
     android:maxLines="1"
-    android:textColor="@color/dynamic_text_color"/>
+    android:textColor="@color/dynamic_text_color"
+    app:autoSizeMinTextSize="8sp"
+    app:autoSizeTextType="uniform" />
 
   <TextView
-    android:id="@+id/perm_group_view"
+    android:id="@+id/perm_group_v"
     android:visibility="gone"
     android:layout_marginTop="4dp"
     android:layout_marginStart="4dp"
@@ -53,7 +54,7 @@
   </LinearLayout>
 
   <TextView
-    android:id="@+id/perm_desc_view"
+    android:id="@+id/perm_desc_v"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="2dp"

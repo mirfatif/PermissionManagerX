@@ -603,7 +603,7 @@ public class Utils {
       return;
     }
 
-    String authority = BuildConfig.APPLICATION_ID + ".FileProvider";
+    String authority = BuildConfig.APP_ID + ".FileProvider";
     Uri logFileUri = FileProvider.getUriForFile(App.getContext(), authority, logFile);
 
     final String CHANNEL_ID = "channel_crash_report";

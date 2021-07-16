@@ -141,7 +141,7 @@ public class BackupRestore {
   }
 
   private void doBackupRestoreInBg(boolean isBackup, Uri uri) {
-    if (mA == null) {
+    if (mA == null || uri == null) {
       return;
     }
     if (isBackup) {

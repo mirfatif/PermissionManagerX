@@ -202,8 +202,8 @@ public class PackageActivity extends BaseActivity {
       b.permNameV.setText(permName);
       b.protLevelV.setText(protLevel);
       if (perm.getDescription() != null) {
-        b.permDescView.setText(perm.getDescription());
-        b.permDescView.setVisibility(View.VISIBLE);
+        b.permDescV.setText(perm.getDescription());
+        b.permDescV.setVisibility(View.VISIBLE);
       }
 
       AlertDialog dialog = new Builder(this).setView(b.getRoot()).create();
