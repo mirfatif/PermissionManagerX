@@ -3,6 +3,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   android:orientation="horizontal">
 
   <View
@@ -47,7 +48,10 @@
       android:id="@+id/pkg_state_v"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_margin="1dp"/>
+      android:layout_margin="1dp"
+      android:ellipsize="end"
+      android:maxLines="1"
+      app:autoSizeTextType="uniform" />
 
     <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
       android:layout_width="match_parent"

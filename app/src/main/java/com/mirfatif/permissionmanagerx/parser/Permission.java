@@ -1,7 +1,10 @@
 package com.mirfatif.permissionmanagerx.parser;
 
+import static com.mirfatif.permissionmanagerx.util.Utils.getString;
+
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.MySettingsFlavor;
 import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
@@ -11,6 +14,7 @@ public class Permission {
 
   private final MySettings mMySettings = MySettings.getInstance();
 
+  public static final String PROTECTION_UNKNOWN = "Unknown";
   public static final String PROTECTION_DANGEROUS = "Dangerous";
   public static final String PROTECTION_NORMAL = "Normal";
   public static final String PROTECTION_SIGNATURE = "Signature";
@@ -261,27 +265,48 @@ public class Permission {
   }
 
   public String getProtLevelString() {
-    String protectionLevel = mProtectionLevel;
+    int strId;
+
+    switch (mProtectionLevel) {
+      case PROTECTION_UNKNOWN:
+      default:
+        strId = R.string.prot_lvl_unknown;
+        break;
+      case PROTECTION_NORMAL:
+        strId = R.string.prot_lvl_normal;
+        break;
+      case PROTECTION_DANGEROUS:
+        strId = R.string.prot_lvl_dangerous;
+        break;
+      case PROTECTION_SIGNATURE:
+        strId = R.string.prot_lvl_signature;
+        break;
+      case APP_OPS:
+        strId = R.string.prot_lvl_app_ops;
+        break;
+    }
+
+    String protectionLevel = getString(strId);
 
     if (mIsAppOps) {
       if (mIsPerUid) {
-        protectionLevel += ", UID mode";
+        protectionLevel = getString(R.string.prot_lvl_uid_mode, protectionLevel);
       }
       if (mIsExtraAppOp) {
-        protectionLevel += ", Extra";
+        protectionLevel = getString(R.string.prot_lvl_extra, protectionLevel);
       }
     } else {
-      if (mIsDevelopment) {
-        protectionLevel += ", Development"; // Implies "Signature"
+      if (mIsDevelopment) { // Implies "Signature"
+        protectionLevel = getString(R.string.prot_lvl_development, protectionLevel);
       }
-      if (mIsManifestPermAppOp) {
-        protectionLevel += ", " + APP_OPS; // Implies "Signature"
+      if (mIsManifestPermAppOp) { // Implies "Signature"
+        protectionLevel = getString(R.string.prot_lvl_app_ops2, protectionLevel);
       }
-      if (mIsPrivileged) {
-        protectionLevel += ", " + PRIVILEGED; // Implies "Signature"
+      if (mIsPrivileged) { // Implies "Signature"
+        protectionLevel = getString(R.string.prot_lvl_privileged2, protectionLevel);
       }
       if (mIsSystemFixed || mIsPolicyFixed) {
-        protectionLevel += ", " + FIXED;
+        protectionLevel = getString(R.string.prot_lvl_fixed2, protectionLevel);
       }
     }
     return protectionLevel;
@@ -317,15 +342,13 @@ public class Permission {
     return true;
   }
 
-  public static final String FIXED = "Fixed";
-  public static final String PRIVILEGED = "Privileged";
   private static final String APP_OPS = "AppOps";
 
   public static final String SEARCH_APP_OPS = ":" + APP_OPS;
   public static final String SEARCH_UID = ":UID";
-  public static final String SEARCH_PRIVILEGED = ":" + PRIVILEGED;
+  public static final String SEARCH_PRIVILEGED = ":" + "Privileged";
   public static final String SEARCH_DEV = ":Development";
-  public static final String SEARCH_FIXED = ":" + FIXED;
+  public static final String SEARCH_FIXED = ":" + "Fixed";
   public static final String SEARCH_TIME = ":TIME";
   public static final String SEARCH_EXTRA = ":Extra";
 

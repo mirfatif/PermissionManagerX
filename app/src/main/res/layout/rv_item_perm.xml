@@ -3,6 +3,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   android:orientation="horizontal">
 
   <View
@@ -41,8 +42,9 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_margin="1dp"
+      android:ellipsize="end"
       android:maxLines="1"
-      android:ellipsize="end"/>
+      app:autoSizeTextType="uniform" />
 
     <TextView
       android:id="@+id/app_ops_time_v"

@@ -1,5 +1,7 @@
 package com.mirfatif.permissionmanagerx.ui;
 
+import static com.mirfatif.permissionmanagerx.util.Utils.getString;
+
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -15,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
+import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.RvItemPkgBinding;
 import com.mirfatif.permissionmanagerx.parser.Package;
@@ -105,30 +108,33 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
       mB.pkgNameV.setText(pkg.getFormattedName());
       mB.pkgPermCountV.setText(pkg.getPermCount());
 
-      String packageState = null;
+      String pkgState = null;
       if (pkg.isCriticalApp()) {
-        packageState = "Critical";
+        pkgState = getString(R.string.pkg_state_critical);
       } else if (pkg.isFrameworkApp()) {
-        packageState = Package.FRAMEWORK;
+        pkgState = getString(R.string.pkg_state_framework);
       } else if (pkg.isSystemApp()) {
-        packageState = "System";
+        pkgState = getString(R.string.pkg_state_system);
       }
       if (!pkg.isEnabled()) {
-        packageState = packageState == null ? "Disabled" : packageState + ", Disabled";
+        pkgState =
+            pkgState == null
+                ? getString(R.string.pkg_state_disabled)
+                : getString(R.string.pkg_state_disabled2, pkgState);
       }
 
-      if (packageState == null) {
+      if (pkgState == null) {
         mB.pkgStateV.setVisibility(View.GONE);
       } else {
         if (pkg.isFrameworkApp() && pkg.isChangeable()) {
           mB.pkgStateV.setText(
               Utils.getHighlightString(
-                  packageState,
+                  pkgState,
                   getHighlightSpan(mB.pkgStateV.getCurrentTextColor()),
                   true,
-                  Package.FRAMEWORK));
+                  getString(R.string.pkg_state_framework)));
         } else {
-          mB.pkgStateV.setText(packageState);
+          mB.pkgStateV.setText(pkgState);
         }
         mB.pkgStateV.setVisibility(View.VISIBLE);
       }

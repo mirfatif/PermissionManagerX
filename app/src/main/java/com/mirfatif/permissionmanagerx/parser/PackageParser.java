@@ -717,7 +717,7 @@ public class PackageParser {
 
   private Permission createPermission(PackageInfo packageInfo, String perm, int count) {
     int[] requestedPermissionsFlags = packageInfo.requestedPermissionsFlags;
-    String protection = "Unknown";
+    String protection = Permission.PROTECTION_UNKNOWN;
     boolean isPrivileged = false;
     boolean isDevelopment = false;
     boolean isManifestPermAppOp = false;

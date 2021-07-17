@@ -1,5 +1,7 @@
 package com.mirfatif.permissionmanagerx.ui;
 
+import static com.mirfatif.permissionmanagerx.util.Utils.getString;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.text.style.TextAppearanceSpan;
@@ -24,6 +26,7 @@ import com.mirfatif.permissionmanagerx.parser.Permission;
 import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.ItemViewHolder;
 import com.mirfatif.permissionmanagerx.ui.base.MyListAdapter;
 import com.mirfatif.permissionmanagerx.util.Utils;
+import com.mirfatif.privtasks.Commands;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,9 +94,11 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
       } else if (!perm.isReferenced()) {
         mB.refIndicationV.setBackgroundColor(Color.RED);
         if (perm.isAppOps()) {
-          mB.appOpsRefStateV.setText(
-              Utils.htmlToString(
-                  App.getContext().getString(R.string.should_be, perm.getReference())));
+          String state = getLocalizedMode(perm.getReference());
+          if (state == null) {
+            state = perm.getReference();
+          }
+          mB.appOpsRefStateV.setText(Utils.htmlToString(getString(R.string.should_be, state)));
           mB.appOpsRefStateV.setVisibility(View.VISIBLE);
         }
       } else {
@@ -126,8 +131,8 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
                 perm.getProtLevelString(),
                 getHighlightSpan(mB.protLevelV.getCurrentTextColor()),
                 true,
-                Permission.FIXED,
-                Permission.PRIVILEGED));
+                getString(R.string.prot_lvl_fixed),
+                getString(R.string.prot_lvl_privileged)));
       } else {
         mB.protLevelV.setText(perm.getProtLevelString());
       }
@@ -208,14 +213,39 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
     return ColorUtils.blendARGB(mOrigTextColor, Color.RED, 0.75f);
   }
 
+  private String getLocalizedMode(String appOpMode) {
+    switch (appOpMode.toLowerCase()) {
+      case Commands.APP_OP_MODE_ALLOW:
+        return getString(R.string.app_op_mode_allow);
+      case Commands.APP_OP_MODE_IGNORE:
+        return getString(R.string.app_op_mode_ignore);
+      case Commands.APP_OP_MODE_DENY:
+        return getString(R.string.app_op_mode_deny);
+      case Commands.APP_OP_MODE_DEFAULT:
+        return getString(R.string.app_op_mode_default);
+      case Commands.APP_OP_MODE_FG:
+        return getString(R.string.app_op_mode_foreground);
+    }
+    return null;
+  }
+
   private static final Object ADAPTER_BUILD_LOCK = new Object();
 
   private ArrayAdapter<String> getAppOpModesAdapter(boolean forBg) {
     synchronized (ADAPTER_BUILD_LOCK) {
       if (mAppOpModesAdapter.isEmpty() || mAppOpModesBgAdapter.isEmpty()) {
         for (String mode : AppOpsParser.getInstance().getAppOpsModes()) {
-          mAppOpModesAdapter.add(Utils.ellipsize(mode, 8));
-          mAppOpModesBgAdapter.add(Utils.ellipsize(mode, 8));
+          String localizedMode = getLocalizedMode(mode);
+          if (localizedMode != null) {
+            mode = localizedMode;
+            if (mode.toLowerCase().equals(Commands.APP_OP_MODE_FG)) {
+              mode = Utils.ellipsize(mode, 8);
+            }
+          } else {
+            mode = Utils.ellipsize(mode, 8);
+          }
+          mAppOpModesAdapter.add(mode);
+          mAppOpModesBgAdapter.add(mode);
         }
       }
     }

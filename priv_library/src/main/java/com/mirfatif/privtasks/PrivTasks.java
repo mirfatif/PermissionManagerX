@@ -151,7 +151,12 @@ public class PrivTasks {
         appOpsModes.add(mHiddenAPIs.modeToName(i));
       }
     } else {
-      appOpsModes = Arrays.asList("allow", "ignore", "deny", "default");
+      appOpsModes =
+          Arrays.asList(
+              Commands.APP_OP_MODE_ALLOW,
+              Commands.APP_OP_MODE_IGNORE,
+              Commands.APP_OP_MODE_DENY,
+              Commands.APP_OP_MODE_DEFAULT);
     }
     return appOpsModes;
   }

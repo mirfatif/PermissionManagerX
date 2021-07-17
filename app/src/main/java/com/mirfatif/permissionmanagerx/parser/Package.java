@@ -229,8 +229,6 @@ public class Package {
     mIsRemoved = isRemoved;
   }
 
-  public static final String FRAMEWORK = "Framework";
-
   public static final String SEARCH_CRITICAL = ":Critical";
   public static final String SEARCH_FRAMEWORK = ":Framework";
   public static final String SEARCH_SYSTEM = ":System";
