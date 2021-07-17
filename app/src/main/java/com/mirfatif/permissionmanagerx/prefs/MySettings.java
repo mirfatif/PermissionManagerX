@@ -71,6 +71,12 @@ public class MySettings {
     savePref(R.string.pref_settings_privileges_reminder_key, false);
   }
 
+  public String getLocale() {
+    return mPrefs.getString(
+        getString(R.string.pref_settings_locale_key),
+        getString(R.string.pref_settings_locale_default));
+  }
+
   private boolean DEBUG = false;
   private boolean daemonLogging = false;
 

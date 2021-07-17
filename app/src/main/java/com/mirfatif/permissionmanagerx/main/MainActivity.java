@@ -302,6 +302,12 @@ public class MainActivity extends BaseActivity {
   ///////////////////////////// GENERAL ////////////////////////////
   //////////////////////////////////////////////////////////////////
 
+  public static void restart() {
+    Intent intent = new Intent(App.getContext(), MainActivity.class);
+    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+    App.getContext().startActivity(intent);
+  }
+
   private boolean isSecondaryUser() {
     if (Utils.getUserId() == 0) {
       return false;

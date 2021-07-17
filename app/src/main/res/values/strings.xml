@@ -283,19 +283,6 @@
   <string name="privacy_policy_link" translatable="false">https://mirfatif.github.io/PermissionManagerX/privacy_policy.html</string>
   <string name="translations">Translations</string>
   <string name="translations_summary">Want to see the app in your language?</string>
-<!--  <string name="language_credits">-->
-<!--    <![CDATA[-->
-<!--      <ul>-->
-<!--        <li><b>Russian</b>-->
-<!--          <ul>-->
-<!--            <li><a href="https://crowdin.com/profile/tommynok">tommynok</a></li>-->
-<!--            <li><a href="https://crowdin.com/profile/siebenbrodt">siebenbrodt</a></li>-->
-<!--          </ul>-->
-<!--        </li>-->
-<!--        <li><a href="https://crowdin.com/project/pmx"><b>Add my language</b></a></li>-->
-<!--      </ul>-->
-<!--    ]]>-->
-<!--  </string>-->
   <string name="language_credits">
     <![CDATA[
       <b>Russian</b>

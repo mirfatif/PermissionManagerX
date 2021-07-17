@@ -38,4 +38,14 @@
     app:summary="@string/pref_settings_special_search_summary"
     app:title="@string/pref_settings_special_search_title" />
 
+  <PreferenceCategory />
+
+  <ListPreference
+    app:defaultValue="@string/pref_settings_locale_default"
+    app:entries="@array/locales"
+    app:entryValues="@array/locale_codes"
+    app:iconSpaceReserved="false"
+    app:key="@string/pref_settings_locale_key"
+    app:title="@string/pref_settings_locale_title" />
+
 </PreferenceScreen>

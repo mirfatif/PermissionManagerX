@@ -34,6 +34,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.BulletSpan;
 import android.text.style.ImageSpan;
 import android.text.style.RelativeSizeSpan;
@@ -361,6 +362,20 @@ public class Utils {
 
     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
     return true;
+  }
+
+  public static Context setLocale(Context context) {
+    String lang = MySettings.getInstance().getLocale();
+    Locale locale;
+    if (TextUtils.isEmpty(lang)) {
+      locale = Resources.getSystem().getConfiguration().getLocales().get(0);
+    } else {
+      locale = new Locale(lang);
+    }
+    Locale.setDefault(locale);
+    Configuration config = context.getResources().getConfiguration();
+    config.setLocale(locale);
+    return context.createConfigurationContext(config);
   }
 
   public static void cleanStreams(Process process, Adb adb, String tag) {

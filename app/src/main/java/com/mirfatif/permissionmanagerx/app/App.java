@@ -14,16 +14,14 @@ public class App extends Application {
 
   private static final String TAG = "App";
 
-  @SuppressWarnings("FieldCanBeLocal")
-  private AppFlavor mAppFlavor;
-
-  private static Context mAppContext;
+  private static Context mContext;
   private Thread.UncaughtExceptionHandler defaultExceptionHandler;
 
   @Override
   public void onCreate() {
     super.onCreate();
-    mAppContext = getApplicationContext();
+    mContext = getApplicationContext();
+    updateContext();
     defaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 
     Thread.setDefaultUncaughtExceptionHandler(
@@ -41,21 +39,21 @@ public class App extends Application {
         });
 
     // User is waiting for the first glance. Free the main thread.
-    Utils.runInBg(
-        () -> {
-          mAppFlavor = new AppFlavor();
-          mAppFlavor.onCreated();
-        });
+    Utils.runInBg(() -> new AppFlavor().onCreated());
 
     Utils.runInBg(this::getEncPrefs);
   }
 
+  public static void updateContext() {
+    mContext = Utils.setLocale(mContext);
+  }
+
   public static Context getContext() {
-    return mAppContext;
+    return mContext;
   }
 
   public static Resources getRes() {
-    return mAppContext.getResources();
+    return mContext.getResources();
   }
 
   // To avoid delays later
