@@ -16,7 +16,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.SearchView.OnQueryTextListener;
 import androidx.core.view.GravityCompat;
@@ -88,7 +87,7 @@ public class MainActivity extends BaseActivity {
   protected synchronized void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    if (setNightTheme()) {
+    if (Utils.setNightTheme(this)) {
       return; // Activity is recreated on switching to Dark Theme, so return here
     }
 
@@ -316,27 +315,6 @@ public class MainActivity extends BaseActivity {
         .setOnDismissListener(d -> finishAfterTransition())
         .show(this, "PRIMARY_PROFILE", false);
     Utils.getDefPrefs().edit().putBoolean("PRIMARY_USER", false).apply(); // Trigger auto-backup
-    return true;
-  }
-
-  private boolean setNightTheme() {
-    if (!mMySettings.forceDarkMode()) {
-      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-      return false;
-    }
-
-    // Dark Mode applied on whole device
-    if (Utils.isNightMode(this)) {
-      return false;
-    }
-
-    // Dark Mode already applied in app
-    int defMode = AppCompatDelegate.getDefaultNightMode();
-    if (defMode == AppCompatDelegate.MODE_NIGHT_YES) {
-      return false;
-    }
-
-    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
     return true;
   }
 
@@ -972,7 +950,7 @@ public class MainActivity extends BaseActivity {
     if (item.getItemId() == R.id.action_dark_theme) {
       CheckBox darkCheckBox = (CheckBox) item.getActionView();
       mMySettings.setForceDarkMode(darkCheckBox.isChecked());
-      setNightTheme();
+      Utils.setNightTheme(this);
       return true;
     }
 

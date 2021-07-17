@@ -39,6 +39,7 @@ import android.widget.Toast;
 import androidx.annotation.AttrRes;
 import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.browser.customtabs.CustomTabColorSchemeParams;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.browser.customtabs.CustomTabsService;
@@ -331,6 +332,27 @@ public class Utils {
   public static boolean isNightMode(Activity activity) {
     int uiMode = activity.getResources().getConfiguration().uiMode;
     return (uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+  }
+
+  public static boolean setNightTheme(Activity activity) {
+    if (!MySettings.getInstance().forceDarkMode()) {
+      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+      return false;
+    }
+
+    // Dark Mode applied on whole device
+    if (Utils.isNightMode(activity)) {
+      return false;
+    }
+
+    // Dark Mode already applied in app
+    int defMode = AppCompatDelegate.getDefaultNightMode();
+    if (defMode == AppCompatDelegate.MODE_NIGHT_YES) {
+      return false;
+    }
+
+    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+    return true;
   }
 
   public static void cleanStreams(Process process, Adb adb, String tag) {

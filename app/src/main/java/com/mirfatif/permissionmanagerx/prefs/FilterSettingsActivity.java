@@ -25,6 +25,9 @@ public class FilterSettingsActivity extends BaseActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    if (Utils.setNightTheme(this)) {
+      return;
+    }
     setContentView(R.layout.activity_fragment_container);
 
     ActionBar actionBar = getSupportActionBar();

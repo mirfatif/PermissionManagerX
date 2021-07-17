@@ -69,6 +69,9 @@ public class PackageActivity extends BaseActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    if (Utils.setNightTheme(this)) {
+      return;
+    }
     mB = ActivityPackageBinding.inflate(getLayoutInflater());
     setContentView(mB.getRoot());
 

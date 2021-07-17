@@ -25,6 +25,9 @@ public class HelpActivity extends BaseActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    if (Utils.setNightTheme(this)) {
+      return;
+    }
     ActivityHelpBinding b = ActivityHelpBinding.inflate(getLayoutInflater());
     setContentView(b.getRoot());
 

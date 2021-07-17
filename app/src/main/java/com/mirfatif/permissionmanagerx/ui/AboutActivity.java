@@ -32,6 +32,9 @@ public class AboutActivity extends BaseActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    if (Utils.setNightTheme(this)) {
+      return;
+    }
     mB = ActivityAboutBinding.inflate(getLayoutInflater());
     setContentView(mB.getRoot());
 
