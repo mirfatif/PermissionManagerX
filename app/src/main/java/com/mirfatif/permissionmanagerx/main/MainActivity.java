@@ -634,6 +634,10 @@ public class MainActivity extends BaseActivity {
     mB.deepSearch.setChecked(mMySettings.isDeepSearchEnabled());
     mB.caseSensitiveSearch.setChecked(mMySettings.isCaseSensitiveSearch());
 
+    // For android:ellipsize="marquee" to work
+    mB.deepSearch.setSelected(true);
+    mB.caseSensitiveSearch.setSelected(true);
+
     mB.deepSearch.setOnCheckedChangeListener(
         (buttonView, isChecked) -> {
           mMySettings.setDeepSearchEnabled(isChecked);

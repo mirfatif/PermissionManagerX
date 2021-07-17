@@ -5,15 +5,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.view.View;
-import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog.Builder;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.DonateAlertDialogBinding;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.util.Utils;
-import me.saket.bettermovementmethod.BetterLinkMovementMethod;
-import me.saket.bettermovementmethod.BetterLinkMovementMethod.OnLinkClickListener;
 
 class Donate {
 
@@ -32,14 +29,14 @@ class Donate {
 
   private void show() {
     setButtonClickListener(mB.bitcoinButton, mB.bitcoinContainer);
-    setButtonClickListener(mB.bankAccountButton, mB.bankAccountLink);
-    setButtonClickListener(mB.playStoreButton, mB.playStoreLink);
+    setButtonClickListener(mB.bankAccountButton, mB.bankAccountButton2);
+    setButtonClickListener(mB.playStoreButton, mB.playStoreButton2);
 
-    setMovementMethod(mB.bitcoinLink, (textView, url) -> handleBitcoinClick());
-    setMovementMethod(mB.playStoreLink, (textView, url) -> Utils.openWebUrl(mA, url));
-    setMovementMethod(
-        mB.bankAccountLink,
-        (textView, url) -> Utils.sendMail(mA, Utils.getString(R.string.bank_account_request)));
+    mB.bitcoinButton2.setOnClickListener(v -> handleBitcoinClick());
+    String psLink = Utils.getString(R.string.play_store_url);
+    mB.playStoreButton2.setOnClickListener(v -> Utils.openWebUrl(mA, psLink));
+    String text = Utils.getString(R.string.bank_account_request);
+    mB.bankAccountButton2.setOnClickListener(v -> Utils.sendMail(mA, text));
 
     new AlertDialogFragment(
             new Builder(mA).setTitle(R.string.donate_menu_item).setView(mB.getRoot()).create())
@@ -48,8 +45,8 @@ class Donate {
 
   private void hideAll() {
     mB.bitcoinContainer.setVisibility(View.GONE);
-    mB.bankAccountLink.setVisibility(View.GONE);
-    mB.playStoreLink.setVisibility(View.GONE);
+    mB.bankAccountButton2.setVisibility(View.GONE);
+    mB.playStoreButton2.setVisibility(View.GONE);
   }
 
   private void setButtonClickListener(View button, View detailsView) {
@@ -60,11 +57,7 @@ class Donate {
         });
   }
 
-  private void setMovementMethod(TextView view, OnLinkClickListener listener) {
-    view.setMovementMethod(BetterLinkMovementMethod.newInstance().setOnLinkClickListener(listener));
-  }
-
-  private boolean handleBitcoinClick() {
+  private void handleBitcoinClick() {
     Intent intent = new Intent(Intent.ACTION_VIEW);
     intent.setData(Uri.parse("bitcoin:" + Utils.getString(R.string.bitcoin_address)));
     if (App.getContext()
@@ -75,6 +68,5 @@ class Donate {
     } else {
       mA.startActivity(intent);
     }
-    return true;
   }
 }

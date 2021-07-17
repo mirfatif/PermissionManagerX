@@ -300,17 +300,14 @@
   <string name="share_text">Check out this amazing app! %1$s</string>
 
   <!-- Donate -->
-  <string name="bitcoin_link"><a href="bitcoin:">SEND BITCOINS</a></string>
+  <string name="send_bitcoin">Send Bitcoin</string>
   <string name="bitcoin_address" translatable="false">18ijfsv5fcDKQ6CTe4wycKxZMmti4oUXjW</string>
   <string name="no_bitcoin_app_installed">"Bitcoin Wallet app not found"</string>
-  <string name="bank_account_link"><a href="mailto:">ASK FOR BANK ACCOUNT</a></string>
+  <string name="ask_for_bank_account">Ask For Bank Account</string>
   <string name="bank_account_request" translatable="false">Hello,\n\nI need your IBAN and SWIFT/BIC
     to make a donation.
   </string>
-  <string name="play_store_link"><a
-    href="https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx">GET PAID
-    VERSION FROM PLAY STORE</a>
-  </string>
+  <string name="get_paid_version_from_ps">Get Paid Version From Play Store</string>
 
   <!-- Notification Channels -->
   <string name="channel_app_update">App Updates</string>

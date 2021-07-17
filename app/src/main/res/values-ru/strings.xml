@@ -257,12 +257,10 @@
   <string name="share_summary">Поделиться приложением с другими</string>
   <string name="share_text">Попробуйте это замечательное приложение! %1$s</string>
   <!-- Donate -->
-  <string name="bitcoin_link"><a href="bitcoin:">ОТПРАВИТЬ БИТКОИНЫ</a></string>
+  <string name="send_bitcoin">ОТПРАВИТЬ БИТКОИНЫ</string>
   <string name="no_bitcoin_app_installed">"Не найдено приложение Биткоин-кошелька"</string>
-  <string name="bank_account_link"><a href="mailto:">ЗАПРОСИТЬ БАНКОВСКИЙ СЧЁТ</a></string>
-  <string name="play_store_link"><a href="https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx">ПОЛУЧИТЬ
-    ПЛАТНУЮ ВЕРСИЮ ИЗ PLAY STORE</a>
-  </string>
+  <string name="ask_for_bank_account">ЗАПРОСИТЬ БАНКОВСКИЙ СЧЁТ</string>
+  <string name="get_paid_version_from_ps">ПОЛУЧИТЬ ПЛАТНУЮ ВЕРСИЮ ИЗ PLAY STORE</string>
   <!-- Notification Channels -->
   <string name="channel_app_update">Обновления приложения</string>
   <string name="channel_crash_report">Отчёт о падении</string>
