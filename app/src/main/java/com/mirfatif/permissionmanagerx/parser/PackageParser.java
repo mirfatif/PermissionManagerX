@@ -103,6 +103,7 @@ public class PackageParser {
   private final Object UPDATE_PKG_BG_LOCK = new Object();
 
   private boolean updatePackagesListInBg(boolean isBgDeepScan, boolean quickScan) {
+    Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
     synchronized (UPDATE_PKG_BG_LOCK) {
       long startTime = System.currentTimeMillis();
       mIsUpdating = true;

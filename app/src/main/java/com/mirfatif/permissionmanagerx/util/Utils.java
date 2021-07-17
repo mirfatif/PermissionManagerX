@@ -1,5 +1,6 @@
 package com.mirfatif.permissionmanagerx.util;
 
+import static android.os.Build.VERSION.SDK_INT;
 import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import static android.text.style.DynamicDrawableSpan.ALIGN_BASELINE;
 import static com.mirfatif.permissionmanagerx.util.UtilsFlavor.getAccentColor;
@@ -23,7 +24,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Handler;
 import android.os.Looper;
@@ -97,6 +97,11 @@ import java.util.regex.Pattern;
 public class Utils {
 
   private static final String TAG = "Utils";
+
+  public static final int UID_SYSTEM = android.os.Process.SYSTEM_UID;
+  public static final int UID_ROOT = SDK_INT >= VERSION_CODES.Q ? android.os.Process.ROOT_UID : 0;
+  public static final int UID_SHELL =
+      SDK_INT >= VERSION_CODES.Q ? android.os.Process.SHELL_UID : 2000;
 
   private Utils() {}
 
@@ -323,7 +328,7 @@ public class Utils {
     return spannable;
   }
 
-  public static boolean sendMail(Activity activity, String body) {
+  public static void sendMail(Activity activity, String body) {
     Intent emailIntent = new Intent(Intent.ACTION_SENDTO).setData(Uri.parse("mailto:"));
     emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {getString(R.string.email_address)});
     emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
@@ -335,7 +340,6 @@ public class Utils {
     } catch (ActivityNotFoundException e) {
       showToast(R.string.no_email_app_installed);
     }
-    return true;
   }
 
   public static boolean isNightMode(Activity activity) {
@@ -390,7 +394,7 @@ public class Utils {
         // Try the best to kill the process. The on reading daemon's logcat might not
         // be killed because of different UID.
         process.destroy();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (SDK_INT >= Build.VERSION_CODES.O) {
           process.destroyForcibly();
         }
       }
@@ -468,7 +472,7 @@ public class Utils {
         + BuildConfig.VERSION_NAME
         + (BuildConfig.GH_VERSION ? "" : " PlayStore")
         + "\nSDK: "
-        + VERSION.SDK_INT
+        + SDK_INT
         + "\nROM: "
         + Build.DISPLAY
         + "\nBuild: "
@@ -696,7 +700,7 @@ public class Utils {
         NotificationManagerCompat.from(App.getContext());
 
     NotificationChannel channel = notificationManager.getNotificationChannel(CHANNEL_ID);
-    if (channel == null && VERSION.SDK_INT >= VERSION_CODES.O) {
+    if (channel == null && SDK_INT >= VERSION_CODES.O) {
       channel =
           new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
       notificationManager.createNotificationChannel(channel);

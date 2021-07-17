@@ -1,6 +1,8 @@
 package com.mirfatif.permissionmanagerx.privs;
 
 import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.PMX_BIN_PATH;
+import static com.mirfatif.permissionmanagerx.util.Utils.UID_SHELL;
+import static com.mirfatif.permissionmanagerx.util.Utils.UID_SYSTEM;
 
 import android.os.SystemClock;
 import android.util.Log;
@@ -231,7 +233,7 @@ public class PrivDaemonHandler {
 
     // Even with ADB we may get System UID if ADBD is running as root.
     Object obj = sendRequest(Commands.GET_UID, true);
-    mIsSystemUid = obj instanceof Integer && (Integer) obj == 1000;
+    mIsSystemUid = obj instanceof Integer && (Integer) obj == UID_SYSTEM;
 
     mMySettings.setPrivDaemonAlive(true);
 
@@ -393,7 +395,8 @@ public class PrivDaemonHandler {
           return;
         }
         if (daemon.isRoot()) {
-          daemon.sendCommand("perm 2000 2000 0644 PARENT " + TMP_DIR_DEX_PATH);
+          daemon.sendCommand(
+              "perm " + UID_SHELL + " " + UID_SHELL + " 0644 PARENT " + TMP_DIR_DEX_PATH);
         }
       } catch (IOException e) {
         e.printStackTrace();

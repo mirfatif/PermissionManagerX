@@ -1,5 +1,9 @@
 package com.mirfatif.permissionmanagerx.main;
 
+import static com.mirfatif.permissionmanagerx.util.Utils.UID_ROOT;
+import static com.mirfatif.permissionmanagerx.util.Utils.UID_SHELL;
+import static com.mirfatif.permissionmanagerx.util.Utils.UID_SYSTEM;
+
 import android.annotation.SuppressLint;
 import android.os.SystemClock;
 import android.text.Editable;
@@ -47,9 +51,9 @@ class AdvancedSettings {
     spinnerContexts = Arrays.asList(mA.getResources().getStringArray(R.array.daemon_contexts));
 
     int uidResId = R.string.daemon_uid_system;
-    if (mMySettings.getDaemonUid() == 0) {
+    if (mMySettings.getDaemonUid() == UID_ROOT) {
       uidResId = R.string.daemon_uid_root;
-    } else if (mMySettings.getDaemonUid() == 2000) {
+    } else if (mMySettings.getDaemonUid() == UID_SHELL) {
       uidResId = R.string.daemon_uid_adb;
     }
     uidSelectedPos = spinnerUids.indexOf(getString(uidResId));
@@ -96,6 +100,9 @@ class AdvancedSettings {
     mB.suExePath.addTextChangedListener(new SuPathWatcher());
   }
 
+  private static final int MIN_PORT = 1;
+  private static final int MAX_PORT = 65535;
+
   private void saveSettings() {
     boolean restartDaemon = false, switchToAdb = false;
     if (dexInTmpDir != mB.dexTmpDir.isChecked()) {
@@ -106,7 +113,7 @@ class AdvancedSettings {
     String newPort = mB.adbPort.getText() == null ? null : mB.adbPort.getText().toString().trim();
     if (newPort != null && !TextUtils.isEmpty(newPort) && !adbPort.equals(newPort)) {
       int port = Integer.parseInt(newPort);
-      if (port > 65535 || port <= 0) {
+      if (port > MAX_PORT || port < MIN_PORT) {
         Utils.showToast(R.string.bad_port_number);
       } else {
         mMySettings.setAdbPort(port);
@@ -123,11 +130,11 @@ class AdvancedSettings {
     int uidSelectedPosNew = mB.daemonUidList.getSelectedItemPosition();
     if (uidSelectedPos != uidSelectedPosNew) {
       String newSelection = spinnerUids.get(uidSelectedPosNew);
-      int uid = 1000;
+      int uid = UID_SYSTEM;
       if (newSelection.equals(getString(R.string.daemon_uid_root))) {
-        uid = 0;
+        uid = UID_ROOT;
       } else if (newSelection.equals(getString(R.string.daemon_uid_adb))) {
-        uid = 2000;
+        uid = UID_SHELL;
       }
       mMySettings.setDaemonUid(uid);
       restartDaemon = true;
@@ -258,7 +265,7 @@ class AdvancedSettings {
         return;
       }
       int port = Integer.parseInt(s.toString().trim());
-      if (port > 65535 || port <= 0) {
+      if (port > MAX_PORT || port < MIN_PORT) {
         mB.adbPort.setError(getString(R.string.bad_port_number));
       }
     }
