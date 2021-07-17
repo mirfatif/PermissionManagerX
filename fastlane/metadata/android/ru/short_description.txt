@@ -1,0 +1,1 @@
+eXtended Permission Manager — небольшое приложение для управления разрешениями и AppOps

@@ -2,6 +2,7 @@ package com.mirfatif.permissionmanagerx.app;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
 import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
 import com.mirfatif.permissionmanagerx.svc.LogcatService;
@@ -51,6 +52,10 @@ public class App extends Application {
 
   public static Context getContext() {
     return mAppContext;
+  }
+
+  public static Resources getRes() {
+    return mAppContext.getResources();
   }
 
   // To avoid delays later

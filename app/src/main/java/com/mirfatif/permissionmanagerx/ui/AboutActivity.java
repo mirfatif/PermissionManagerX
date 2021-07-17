@@ -157,10 +157,9 @@ public class AboutActivity extends BaseActivity {
   private void showLocaleDialog() {
     TranslationDialogBinding b = TranslationDialogBinding.inflate(getLayoutInflater());
     b.langCreditsV.setText(Utils.htmlToString(R.string.language_credits));
-    b.langCreditsV.setMovementMethod(
-        BetterLinkMovementMethod.newInstance()
-            .setOnLinkClickListener(
-                (tv, url) -> Utils.openWebUrl(this, getString(R.string.translation_link))));
+    BetterLinkMovementMethod method = BetterLinkMovementMethod.newInstance();
+    method.setOnLinkClickListener((tv, url) -> Utils.openWebUrl(this, url));
+    b.langCreditsV.setMovementMethod(method);
     Builder builder = new Builder(this).setTitle(R.string.translations).setView(b.getRoot());
     new AlertDialogFragment(builder.create()).show(this, "LOCALE", false);
   }

@@ -283,12 +283,29 @@
   <string name="privacy_policy_link" translatable="false">https://mirfatif.github.io/PermissionManagerX/privacy_policy.html</string>
   <string name="translations">Translations</string>
   <string name="translations_summary">Want to see the app in your language?</string>
-  <string name="translation_link">https://crowdin.com/project/pmx</string>
+<!--  <string name="language_credits">-->
+<!--    <![CDATA[-->
+<!--      <ul>-->
+<!--        <li><b>Russian</b>-->
+<!--          <ul>-->
+<!--            <li><a href="https://crowdin.com/profile/tommynok">tommynok</a></li>-->
+<!--            <li><a href="https://crowdin.com/profile/siebenbrodt">siebenbrodt</a></li>-->
+<!--          </ul>-->
+<!--        </li>-->
+<!--        <li><a href="https://crowdin.com/project/pmx"><b>Add my language</b></a></li>-->
+<!--      </ul>-->
+<!--    ]]>-->
+<!--  </string>-->
   <string name="language_credits">
     <![CDATA[
+      <b>Russian</b>
       <ul>
-        <li><a href="">Add my language</a></li>
+        <li>Rikishi007 (rikishi0071@gmail.com)</li>
+        <li>tommynok <a href="https://crowdin.com/profile/tommynok">LINK</a></li>
+        <li>siebenbrodt <a href="https://crowdin.com/profile/siebenbrodt">LINK</a></li>
       </ul>
+      <br/>
+      <a href="https://crowdin.com/project/pmx"><b>Add my language</b></a>
     ]]>
   </string>
   <string name="share">Share</string>
@@ -341,6 +358,6 @@
   <string name="daemon_set_perm_flags_failed" maxLength="20">Setting permission flags failed</string>
 
   <!-- Locale -->
-  <string name="help_file_name">help.html</string>
+  <string name="help_file_name">help_en.html</string>
 
 </resources>

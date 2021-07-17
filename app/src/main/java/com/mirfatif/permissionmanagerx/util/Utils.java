@@ -1,5 +1,9 @@
 package com.mirfatif.permissionmanagerx.util;
 
+import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
+import static android.text.style.DynamicDrawableSpan.ALIGN_BASELINE;
+import static com.mirfatif.permissionmanagerx.util.UtilsFlavor.getAccentColor;
+
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -16,6 +20,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION;
@@ -30,8 +35,10 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.BulletSpan;
+import android.text.style.ImageSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.TextAppearanceSpan;
+import android.text.style.URLSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.widget.Button;
@@ -46,6 +53,7 @@ import androidx.browser.customtabs.CustomTabsService;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.FileProvider;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.preference.PreferenceManager;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.EncryptedSharedPreferences.PrefKeyEncryptionScheme;
@@ -510,8 +518,25 @@ public class Utils {
       string.setSpan(new BulletSpan(parcel), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
-    breakParas(string);
     parcel.recycle();
+
+    Drawable d = ResourcesCompat.getDrawable(App.getRes(), R.drawable.link, null);
+    if (d != null) {
+      // DrawableCompat.setTint()
+      d.setTint(getAccentColor());
+      d.setBounds(0, 0, dpToPx(12), dpToPx(12));
+    }
+
+    for (URLSpan span : string.getSpans(0, string.length(), URLSpan.class)) {
+      int start = string.getSpanStart(span);
+      int end = string.getSpanEnd(span);
+      if (!string.substring(start, end).equals("LINK")) {
+        continue;
+      }
+      string.setSpan(new ImageSpan(d, ALIGN_BASELINE), start, end, SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    breakParas(string);
     return string;
   }
 
@@ -672,7 +697,7 @@ public class Utils {
             new NotificationCompat.BigTextStyle().bigText(getString(R.string.ask_to_report_crash)))
         .setContentIntent(pendingIntent)
         .addAction(0, getString(R.string.send_report), pendingIntent)
-        .setColor(UtilsFlavor.getAccentColor())
+        .setColor(getAccentColor())
         .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setAutoCancel(true);
