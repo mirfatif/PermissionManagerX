@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.webkit.WebViewClientCompat;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.databinding.ActivityHelpBinding;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
@@ -21,29 +22,40 @@ public class HelpActivity extends BaseActivity {
   private WebSettings mWebSettings;
   private final MySettings mMySettings = MySettings.getInstance();
 
+  private static final String URL = "https://mirfatif.github.io/PermissionManagerX/help/";
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_help);
+    if (Utils.setNightTheme(this)) {
+      return;
+    }
+    ActivityHelpBinding b = ActivityHelpBinding.inflate(getLayoutInflater());
+    setContentView(b.getRoot());
 
     if (getSupportActionBar() != null) {
       getSupportActionBar().setTitle(R.string.help_menu_item);
     }
 
-    WebView webView = findViewById(R.id.help_web_view);
-    mWebSettings = webView.getSettings();
+    mWebSettings = b.webView.getSettings();
 
     mFontSize = mMySettings.getIntPref(R.string.pref_help_font_size_key);
     setFontSize();
 
     mWebSettings.setSupportZoom(false);
-    mWebSettings.setBlockNetworkLoads(true);
-    webView.setWebViewClient(new MyWebViewClient());
+    mWebSettings.setBlockNetworkLoads(false);
+    mWebSettings.setBlockNetworkImage(false);
+    mWebSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 
+    b.webView.setWebViewClient(new MyWebViewClient());
     enableJs();
-    webView.addJavascriptInterface(new HelpJsInterface(this), "Android");
+    b.webView.addJavascriptInterface(new HelpJsInterface(this), "Android");
 
-    webView.loadUrl("file:///android_asset/help.html");
+    if (mMySettings.isAppUpdated()) {
+      b.webView.clearCache(true);
+    }
+
+    b.webView.loadUrl(URL + Utils.getString(R.string.help_file_name));
   }
 
   @SuppressLint("SetJavaScriptEnabled")
@@ -94,7 +106,7 @@ public class HelpActivity extends BaseActivity {
     @Override
     public boolean shouldOverrideUrlLoading(@NonNull WebView view, WebResourceRequest request) {
       String url = request.getUrl().toString();
-      if (url.startsWith("http://") || url.startsWith("https://")) {
+      if ((url.startsWith("http://") || url.startsWith("https://")) && !url.startsWith(URL)) {
         Utils.openWebUrl(HelpActivity.this, url);
         return true;
       }

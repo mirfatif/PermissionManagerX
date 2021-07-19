@@ -103,6 +103,7 @@ public class PackageParser {
   private final Object UPDATE_PKG_BG_LOCK = new Object();
 
   private boolean updatePackagesListInBg(boolean isBgDeepScan, boolean quickScan) {
+    Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
     synchronized (UPDATE_PKG_BG_LOCK) {
       long startTime = System.currentTimeMillis();
       mIsUpdating = true;
@@ -716,7 +717,7 @@ public class PackageParser {
 
   private Permission createPermission(PackageInfo packageInfo, String perm, int count) {
     int[] requestedPermissionsFlags = packageInfo.requestedPermissionsFlags;
-    String protection = "Unknown";
+    String protection = Permission.PROTECTION_UNKNOWN;
     boolean isPrivileged = false;
     boolean isDevelopment = false;
     boolean isManifestPermAppOp = false;
@@ -995,7 +996,8 @@ public class PackageParser {
     String dependsOn = op == opSwitch ? null : mAppOpsParser.getAppOpsList().get(opSwitch);
     String opName = mAppOpsParser.getAppOpsList().get(op);
     boolean isAppOpSet = true;
-    if (opMode < 0) {
+    // Mode can be greater than the modes list we have built. E.g. MODE_ASK in LOS N.
+    if (opMode < 0 || opMode >= mAppOpsParser.getAppOpsModes().size()) {
       isAppOpSet = false;
       opMode = mAppOpsParser.getOpToDefModeList().get(op);
     }

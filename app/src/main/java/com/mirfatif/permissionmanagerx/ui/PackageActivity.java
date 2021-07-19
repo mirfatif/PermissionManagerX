@@ -1,6 +1,5 @@
 package com.mirfatif.permissionmanagerx.ui;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build.VERSION;
@@ -14,8 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
-import android.widget.Button;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -23,10 +20,11 @@ import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.databinding.ActivityPackageBinding;
+import com.mirfatif.permissionmanagerx.databinding.ActivityPkgPermTitleBinding;
+import com.mirfatif.permissionmanagerx.databinding.PermDetailsDialogBinding;
 import com.mirfatif.permissionmanagerx.main.BackupRestore;
 import com.mirfatif.permissionmanagerx.main.BackupRestore.BackupEntry;
 import com.mirfatif.permissionmanagerx.main.MainActivity;
@@ -66,12 +64,16 @@ public class PackageActivity extends BaseActivity {
   private Package mPackage;
   private List<Permission> mPermissionsList = new ArrayList<>();
   private PermissionAdapter mPermissionAdapter;
-  private SwipeRefreshLayout mRefreshLayout;
+  private ActivityPackageBinding mB;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_package);
+    if (Utils.setNightTheme(this)) {
+      return;
+    }
+    mB = ActivityPackageBinding.inflate(getLayoutInflater());
+    setContentView(mB.getRoot());
 
     mPkgActivityFlavor = new PkgActivityFlavor(this);
 
@@ -89,7 +91,6 @@ public class PackageActivity extends BaseActivity {
       actionBar.setTitle(mPackage.getLabel());
     }
 
-    RecyclerView recyclerView = findViewById(R.id.package_recycler_view);
     mPermissionAdapter =
         new PermissionAdapter(
             this,
@@ -99,20 +100,19 @@ public class PackageActivity extends BaseActivity {
             getPermLongClickListener());
 
     // Set Adapter on RecyclerView
-    recyclerView.setAdapter(mPermissionAdapter);
+    mB.recyclerV.setAdapter(mPermissionAdapter);
 
     // Create and set a vertically scrolling list
     LinearLayoutManager layoutManager =
         new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-    recyclerView.setLayoutManager(layoutManager);
+    mB.recyclerV.setLayoutManager(layoutManager);
 
     // Create and add divider between rows
-    recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+    mB.recyclerV.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
     Utils.runInBg(this::updatePermissionsList);
 
-    mRefreshLayout = findViewById(R.id.package_refresh_layout);
-    mRefreshLayout.setOnRefreshListener(() -> Utils.runInBg(this::updatePackage));
+    mB.refreshLayout.setOnRefreshListener(() -> Utils.runInBg(this::updatePackage));
   }
 
   private boolean isPackageNull() {
@@ -187,12 +187,12 @@ public class PackageActivity extends BaseActivity {
     if (STOP_REFRESH_LOCK.isLocked()) {
       return;
     }
-    Utils.runInFg(() -> mRefreshLayout.setRefreshing(false));
+    Utils.runInFg(() -> mB.refreshLayout.setRefreshing(false));
   }
 
   private void holdRefreshLock() {
     STOP_REFRESH_LOCK.lock();
-    Utils.runInFg(() -> mRefreshLayout.setRefreshing(true));
+    Utils.runInFg(() -> mB.refreshLayout.setRefreshing(true));
   }
 
   private PermClickListenerWithLoc getPermClickListener() {
@@ -200,16 +200,16 @@ public class PackageActivity extends BaseActivity {
       String permName = perm.getPermNameString();
       String protLevel = perm.getProtLevelString();
 
-      View layout = getLayoutInflater().inflate(R.layout.permission_details_alert_dialog, null);
-      ((TextView) layout.findViewById(R.id.permission_name_view)).setText(permName);
-      ((TextView) layout.findViewById(R.id.protection_level_view)).setText(protLevel);
+      PermDetailsDialogBinding b = PermDetailsDialogBinding.inflate(getLayoutInflater());
+
+      b.permNameV.setText(permName);
+      b.protLevelV.setText(protLevel);
       if (perm.getDescription() != null) {
-        TextView descView = layout.findViewById(R.id.perm_desc_view);
-        descView.setText(perm.getDescription());
-        descView.setVisibility(View.VISIBLE);
+        b.permDescV.setText(perm.getDescription());
+        b.permDescV.setVisibility(View.VISIBLE);
       }
 
-      AlertDialog dialog = new Builder(this).setView(layout).create();
+      AlertDialog dialog = new Builder(this).setView(b.getRoot()).create();
 
       Window dialogWindow = dialog.getWindow();
       if (dialogWindow != null) {
@@ -274,11 +274,9 @@ public class PackageActivity extends BaseActivity {
           });
 
       // Set message, create and show the AlertDialog
-      @SuppressLint("InflateParams")
-      View layout = getLayoutInflater().inflate(R.layout.activity_package_perm_title, null);
-      TextView titleView = layout.findViewById(R.id.permission_title_view);
-      titleView.setText(permission.getName());
-      builder.setCustomTitle(titleView);
+      ActivityPkgPermTitleBinding b = ActivityPkgPermTitleBinding.inflate(getLayoutInflater());
+      b.getRoot().setText(permission.getName());
+      builder.setCustomTitle(b.getRoot());
 
       String message;
       if (permission.isExtraAppOp()) {
@@ -312,32 +310,25 @@ public class PackageActivity extends BaseActivity {
   }
 
   private void checkEmptyPermissionsList() {
-    TextView noPermissionsView = findViewById(R.id.no_permissions_view);
-    Button filterSettingsButton = findViewById(R.id.open_filter_settings);
-
     if (mPermissionsList.size() == 0) {
       String message;
       if (mPackage.getTotalPermCount() != 0) {
-        if (mPackage.getTotalPermCount() == 1) {
-          message = getString(R.string.permission_filtered_out);
-        } else {
-          message =
-              getString(R.string.count_permissions_filtered_out, mPackage.getTotalPermCount());
-        }
-        filterSettingsButton.setOnClickListener(
+        int cnt = mPackage.getTotalPermCount();
+        message = Utils.getQtyString(R.plurals.count_permissions_filtered_out, cnt, cnt);
+        mB.settingsButton.setOnClickListener(
             v -> startActivity(new Intent(App.getContext(), FilterSettingsActivity.class)));
-        filterSettingsButton.setVisibility(View.VISIBLE);
+        mB.settingsButton.setVisibility(View.VISIBLE);
       } else {
         message = getString(R.string.requested_no_permissions);
-        filterSettingsButton.setVisibility(View.GONE);
+        mB.settingsButton.setVisibility(View.GONE);
       }
-      noPermissionsView.setText(message);
-      noPermissionsView.setVisibility(View.VISIBLE);
-      mRefreshLayout.setVisibility(View.GONE);
+      mB.noPermsView.setText(message);
+      mB.noPermsView.setVisibility(View.VISIBLE);
+      mB.refreshLayout.setVisibility(View.GONE);
     } else {
-      mRefreshLayout.setVisibility(View.VISIBLE);
-      noPermissionsView.setVisibility(View.GONE);
-      filterSettingsButton.setVisibility(View.GONE);
+      mB.refreshLayout.setVisibility(View.VISIBLE);
+      mB.noPermsView.setVisibility(View.GONE);
+      mB.settingsButton.setVisibility(View.GONE);
     }
     invalidateOptionsMenu();
   }
@@ -378,7 +369,7 @@ public class PackageActivity extends BaseActivity {
     menu.findItem(R.id.action_reset_app_ops).setVisible(!mMySettings.excludeAppOpsPerms());
 
     MenuItem searchMenuItem = menu.findItem(R.id.action_search);
-    mSearchView = searchMenuItem.getActionView().findViewById(R.id.action_search);
+    mSearchView = (SearchView) searchMenuItem.getActionView();
     mSearchView.setMaxWidth(Integer.MAX_VALUE);
 
     mSearchView.setOnQueryTextListener(
@@ -769,7 +760,8 @@ public class PackageActivity extends BaseActivity {
 
       String msg = "";
       if (affectedPkgCount > 1) {
-        msg = getString(R.string.uid_mode_app_ops_warning, affectedPkgCount - 1);
+        int count = affectedPkgCount - 1;
+        msg = Utils.getQtyString(R.plurals.uid_mode_app_ops_warning, count, count);
         if (warn == null) {
           msg += "\n" + getString(R.string._continue);
         }

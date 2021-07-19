@@ -1,0 +1,4 @@
+Added Russian translation
+Major changes for locale awareness
+Fix for modified AppOp modes in LineageOS
+Numerous fixes and improvements

@@ -7,58 +7,61 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams;
 import com.google.android.material.behavior.SwipeDismissBehavior;
 import com.google.android.material.behavior.SwipeDismissBehavior.OnDismissListener;
 import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.databinding.ActivityMainBinding;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.util.Utils;
 
 class Feedback {
 
   private final MainActivity mA;
-  private final View mFeedbackContainer;
+  private final ActivityMainBinding mB;
 
   Feedback(MainActivity activity) {
     mA = activity;
-    mFeedbackContainer = mA.findViewById(R.id.feedback_container);
+    mB = mA.getRootView();
   }
 
+  // Resuming visibility and alpha of the Feedback container after it's
+  // swiped away is buggy. So we show the container only once per Activity launch.
+  private boolean mFeedbackSwiped = false;
+
   void askForFeedback() {
-    if (MySettings.getInstance().shouldAskForFeedback()) {
-      mFeedbackContainer.setVisibility(View.VISIBLE);
+    if (!mFeedbackSwiped && MySettings.getInstance().shouldAskForFeedback()) {
+      mB.movCont.feedbackCont.setVisibility(View.VISIBLE);
     }
 
-    if (mFeedbackContainer.getVisibility() != View.VISIBLE) {
+    if (mB.movCont.feedbackCont.getVisibility() != View.VISIBLE) {
       return;
     }
 
-    // Undo animation effects from previous swipe.
-    mFeedbackContainer.setAlpha(1f);
-
-    mA.findViewById(R.id.liking_app_yes_button).setOnClickListener(v -> showDialog(true));
-    mA.findViewById(R.id.liking_app_no_button).setOnClickListener(v -> showDialog(false));
+    mB.movCont.likingAppYesButton.setOnClickListener(v -> showDialog(true));
+    mB.movCont.likingAppNoButton.setOnClickListener(v -> showDialog(false));
 
     SwipeDismissBehavior<View> dismissBehavior = new SwipeDismissBehavior<>();
     dismissBehavior.setListener(new FeedbackDismissListener());
-    ((LayoutParams) mFeedbackContainer.getLayoutParams()).setBehavior(dismissBehavior);
+    ((LayoutParams) mB.movCont.feedbackCont.getLayoutParams()).setBehavior(dismissBehavior);
 
     Utils.runInBg(
         () -> {
           SystemClock.sleep(1000);
           Utils.runInFg(
               () ->
-                  mFeedbackContainer.startAnimation(
+                  mB.movCont.feedbackCont.startAnimation(
                       AnimationUtils.loadAnimation(mA, R.anim.shake)));
         });
   }
 
   private void showDialog(boolean isYes) {
     FeedbackDialogFrag.newInstance(isYes).show(mA.getSupportFragmentManager(), "FEEDBACK_RATING");
-    mFeedbackContainer.setVisibility(View.GONE);
+    mB.movCont.feedbackCont.setVisibility(View.GONE);
   }
 
   private class FeedbackDismissListener implements OnDismissListener {
 
     @Override
     public void onDismiss(View view) {
-      mFeedbackContainer.setVisibility(View.GONE);
+      mB.movCont.feedbackCont.setVisibility(View.GONE);
+      mFeedbackSwiped = true;
     }
 
     @Override

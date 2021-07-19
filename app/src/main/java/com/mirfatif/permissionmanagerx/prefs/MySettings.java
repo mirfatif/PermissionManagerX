@@ -1,5 +1,7 @@
 package com.mirfatif.permissionmanagerx.prefs;
 
+import static com.mirfatif.permissionmanagerx.util.Utils.getString;
+
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
@@ -8,6 +10,7 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.room.Room;
+import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
 import com.mirfatif.permissionmanagerx.app.App;
@@ -71,6 +74,12 @@ public class MySettings {
     savePref(R.string.pref_settings_privileges_reminder_key, false);
   }
 
+  public String getLocale() {
+    return mPrefs.getString(
+        getString(R.string.pref_settings_locale_key),
+        getString(R.string.pref_settings_locale_default));
+  }
+
   private boolean DEBUG = false;
   private boolean daemonLogging = false;
 
@@ -131,10 +140,6 @@ public class MySettings {
 
   private Set<String> getSetPref(int keyId) {
     return mPrefs.getStringSet(getString(keyId), null);
-  }
-
-  private String getString(int keyResId) {
-    return App.getContext().getString(keyResId);
   }
 
   public void savePref(int key, boolean bool) {
@@ -297,6 +302,19 @@ public class MySettings {
 
   public void setAskForFeedbackTs(long timeStamp) {
     savePref(R.string.pref_main_ask_for_feedback_ts_enc_key, timeStamp);
+  }
+
+  public boolean isAppUpdated() {
+    PackageManager pm = App.getContext().getPackageManager();
+    try {
+      long lastUpdate = pm.getPackageInfo(BuildConfig.APPLICATION_ID, 0).lastUpdateTime;
+      long lastCheck = getLongPref(R.string.pref_help_update_check_ts_enc_key);
+      boolean updated = lastUpdate >= lastCheck;
+      savePref(R.string.pref_help_update_check_ts_enc_key, System.currentTimeMillis());
+      return updated;
+    } catch (NameNotFoundException ignored) {
+    }
+    return true;
   }
 
   private PermissionDao mPermDb;

@@ -8,8 +8,11 @@ android {
         applicationId "com.mirfatif.permissionmanagerx"
         minSdkVersion minSdkVer
         targetSdkVersion targetSdkVer
-        versionCode 106
-        versionName "v1.06"
+        versionCode 107
+        versionName "v1.07"
+
+        // BuildType-independent and Flavor-independent BuildConfig.APPLICATION_ID
+        buildConfigField "String", "APP_ID", '"' + applicationId + '"'
 
         def br = "git rev-parse --abbrev-ref HEAD".execute().text.trim()
         buildConfigField "boolean", "GH_VERSION", (br != "ps" && br != "ps-dev") ? "true" : "false"
@@ -27,12 +30,25 @@ android {
             versionNameSuffix "-debug"
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     dependenciesInfo {
         includeInApk false
+    }
+
+    packagingOptions {
+        jniLibs {
+            // Due to android:extractNativeLibs set to "true" in AndroidManifest.
+            useLegacyPackaging true
+        }
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 }
 
@@ -40,25 +56,25 @@ dependencies {
     implementation project(path: ':AdbLib')
     implementation project(path: ':priv_library')
 
-    implementation 'androidx.appcompat:appcompat:1.3.0-rc01'
-    implementation 'androidx.recyclerview:recyclerview:1.2.0-rc01'
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01'
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.browser:browser:1.3.0'
-    implementation 'androidx.room:room-runtime:2.3.0-rc01'
+    implementation 'androidx.room:room-runtime:2.3.0'
     implementation "androidx.security:security-crypto:1.1.0-alpha03"
     implementation 'androidx.webkit:webkit:1.4.0'
-    annotationProcessor 'androidx.room:room-compiler:2.3.0-rc01'
+    annotationProcessor 'androidx.room:room-compiler:2.3.0'
 
     // For SnackBar and NavigationView. Also includes CoordinatorLayout
-    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'com.google.android.material:material:1.4.0'
 
     // To handle hyperlink onClick in TextView
     implementation 'me.saket:better-link-movement-method:2.2.0'
 
     // Let's behave responsibly
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.6'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 }
 
 task buildDaemon() {
@@ -100,17 +116,17 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def sdkDir = properties.getProperty('sdk.dir')
 
-task buildSetPriv(type: Exec) {
+task buildNative(type: Exec) {
     environment 'ANDROID_NDK', new File(sdkDir, "ndk/" + ndkVer).getAbsolutePath()
-    workingDir "$rootDir"
-    commandLine './build_set_priv.sh'
+    workingDir "$rootDir/native"
+    commandLine './build_native.sh'
     doLast {
         if (execResult.getExitValue() != 0) {
-            println "buildSetPriv failed!"
+            println "buildNative failed!"
         }
     }
 }
-preBuild.dependsOn(buildSetPriv)
+preBuild.dependsOn(buildNative)
 
 apply plugin: 'com.github.sherter.google-java-format'
 preBuild.dependsOn(verifyGoogleJavaFormat)

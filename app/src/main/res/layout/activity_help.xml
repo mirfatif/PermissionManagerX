@@ -11,7 +11,7 @@
     android:background="?attr/accentColor" />
 
   <com.mirfatif.permissionmanagerx.ui.base.MyWebView
-    android:id="@+id/help_web_view"
+    android:id="@+id/web_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" />
 

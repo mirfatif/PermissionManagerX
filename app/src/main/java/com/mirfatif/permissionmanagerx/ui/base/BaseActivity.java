@@ -1,9 +1,11 @@
 package com.mirfatif.permissionmanagerx.ui.base;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
 
 public class BaseActivity extends AppCompatActivity {
@@ -22,5 +24,10 @@ public class BaseActivity extends AppCompatActivity {
       return true;
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  protected void attachBaseContext(Context context) {
+    super.attachBaseContext(Utils.setLocale(context));
   }
 }

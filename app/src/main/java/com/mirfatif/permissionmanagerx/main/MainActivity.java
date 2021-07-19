@@ -10,34 +10,31 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.SearchView.OnQueryTextListener;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.databinding.ActivityMainBinding;
+import com.mirfatif.permissionmanagerx.databinding.ActivityMainPkgDialogBinding;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.prefs.FilterSettingsActivity;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
 import com.mirfatif.permissionmanagerx.prefs.settings.SettingsActivity;
+import com.mirfatif.permissionmanagerx.privs.NativeDaemon;
 import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.ui.AboutActivity;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
@@ -76,29 +73,21 @@ public class MainActivity extends BaseActivity {
   private MainActivityFlavor mMainActivityFlavor;
   private BackupRestore mBackupRestore;
 
+  private ActivityMainBinding mB;
   private MyViewModel mMyViewModel;
 
-  private SwipeRefreshLayout mRefreshLayout;
   private LinearLayoutManager mLayoutManager;
-  private ProgressBar mProgressBar;
-  private ProgressFrameLayout mRoundProgressContainer;
-  private TextView mRoundProgressTextView;
-  private ProgressLinearLayout mProgressBarContainer;
   private SearchView mSearchView;
-  private TextView mProgressNowView;
-  private TextView mProgressMaxView;
   private PackageAdapter mPackageAdapter;
 
-  private DrawerLayout mDrawerLayout;
   private ActionBarDrawerToggle mDrawerToggle;
-  private NavigationView mNavigationView;
 
   // On Android 9- onCreate is called twice after applying night theme, so keep synced.
   @Override
   protected synchronized void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    if (setNightTheme()) {
+    if (Utils.setNightTheme(this)) {
       return; // Activity is recreated on switching to Dark Theme, so return here
     }
 
@@ -108,7 +97,8 @@ public class MainActivity extends BaseActivity {
       return;
     }
 
-    setContentView(R.layout.activity_main);
+    mB = ActivityMainBinding.inflate(getLayoutInflater());
+    setContentView(mB.getRoot());
 
     mMainActivityFlavor = new MainActivityFlavor(this);
     mBackupRestore = new BackupRestore(this);
@@ -123,33 +113,25 @@ public class MainActivity extends BaseActivity {
       actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
-    mDrawerLayout = findViewById(R.id.activity_main);
     mDrawerToggle =
-        new ActionBarDrawerToggle(this, mDrawerLayout, android.R.string.ok, R.string.close);
-    mDrawerLayout.addDrawerListener(mDrawerToggle);
+        new ActionBarDrawerToggle(this, mB.getRoot(), R.string.open_drawer, R.string.close_drawer);
+    mB.getRoot().addDrawerListener(mDrawerToggle);
     mDrawerToggle.syncState();
 
     handleIntentActions(getIntent());
 
     // Drawer items
-    mNavigationView = findViewById(R.id.nav_view);
-    mNavigationView.setNavigationItemSelectedListener(
+    mB.navV.setNavigationItemSelectedListener(
         item -> {
           if (handleNavigationItemSelected(item)) {
             return true;
           }
           return super.onOptionsItemSelected(item);
         });
+    setDrawerLiveObserver();
+    setNavigationMenu();
 
-    mRefreshLayout = findViewById(R.id.refresh_layout);
-    mProgressBar = findViewById(R.id.progress_bar);
-    mProgressBarContainer = findViewById(R.id.progress_bar_container);
-    mProgressNowView = findViewById(R.id.progress_now);
-    mProgressMaxView = findViewById(R.id.progress_max);
-    mRoundProgressContainer = findViewById(R.id.round_progress_container);
-    mRoundProgressTextView = findViewById(R.id.round_progress_text);
-
-    mRefreshLayout.setOnRefreshListener(
+    mB.refreshLayout.setOnRefreshListener(
         () -> {
           if (mMySettings.isSearching()) {
             handleSearchQuery();
@@ -161,17 +143,11 @@ public class MainActivity extends BaseActivity {
     Future<?> checkRootAndAdbFuture =
         Utils.runInBg(
             () -> {
-              Utils.runInFg(() -> mRoundProgressTextView.setText(R.string.checking_root_access));
+              Utils.runInFg(() -> mB.rndProgTextV.setText(R.string.checking_root_access));
               Utils.checkRootIfEnabled();
-              Utils.runInFg(() -> mRoundProgressTextView.setText(R.string.checking_adb_access));
+              Utils.runInFg(() -> mB.rndProgTextV.setText(R.string.checking_adb_access));
               Utils.checkAdbIfEnabled();
             });
-
-    Utils.runInBg(
-        () -> {
-          waitForFuture(checkRootAndAdbFuture);
-          Utils.runInFg(this::setNavigationMenu);
-        });
 
     Future<?> privDaemonFuture =
         Utils.runInBg(
@@ -183,21 +159,21 @@ public class MainActivity extends BaseActivity {
               }
             });
 
-    RecyclerView recyclerView = findViewById(R.id.recycler_view);
     mPackageAdapter = new PackageAdapter(getPkgClickListener(), getPkgLongClickListener());
 
     // Set Adapter on RecyclerView
-    recyclerView.setAdapter(mPackageAdapter);
+    mB.recyclerView.setAdapter(mPackageAdapter);
 
     // Create and set a vertically scrolling list
     mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-    recyclerView.setLayoutManager(mLayoutManager);
+    mB.recyclerView.setLayoutManager(mLayoutManager);
 
     // Create and add divider between rows
-    recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+    mB.recyclerView.addItemDecoration(
+        new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
     // Set whether to receive new items frequent updates from PackageParser
-    recyclerView.setOnScrollChangeListener(
+    mB.recyclerView.setOnScrollChangeListener(
         (v, scrollX, scrollY, oldScrollX, oldScrollY) -> setRepeatUpdates());
 
     Utils.runInBg(
@@ -239,7 +215,7 @@ public class MainActivity extends BaseActivity {
 
     MenuItem searchMenuItem = menu.findItem(R.id.action_search);
     synchronized (SEARCH_VIEW_WAITER) {
-      mSearchView = searchMenuItem.getActionView().findViewById(R.id.action_search);
+      mSearchView = (SearchView) searchMenuItem.getActionView();
       setUpSearchView();
       SEARCH_VIEW_WAITER.notifyAll();
     }
@@ -274,11 +250,11 @@ public class MainActivity extends BaseActivity {
 
   @Override
   public void onBackPressed() {
-    if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+    if (mB != null && mB.getRoot().isDrawerOpen(GravityCompat.START)) {
       if (mMySettings.isDebug()) {
         Util.debugLog(TAG, "onBackPressed: closing drawer");
       }
-      mDrawerLayout.closeDrawer(GravityCompat.START, true);
+      mB.getRoot().closeDrawer(GravityCompat.START, true);
       return;
     }
     if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
@@ -326,6 +302,12 @@ public class MainActivity extends BaseActivity {
   ///////////////////////////// GENERAL ////////////////////////////
   //////////////////////////////////////////////////////////////////
 
+  public static void restart() {
+    Intent intent = new Intent(App.getContext(), MainActivity.class);
+    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+    App.getContext().startActivity(intent);
+  }
+
   private boolean isSecondaryUser() {
     if (Utils.getUserId() == 0) {
       return false;
@@ -339,27 +321,6 @@ public class MainActivity extends BaseActivity {
         .setOnDismissListener(d -> finishAfterTransition())
         .show(this, "PRIMARY_PROFILE", false);
     Utils.getDefPrefs().edit().putBoolean("PRIMARY_USER", false).apply(); // Trigger auto-backup
-    return true;
-  }
-
-  private boolean setNightTheme() {
-    if (!mMySettings.forceDarkMode()) {
-      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-      return false;
-    }
-
-    // Dark Mode applied on whole device
-    if (Utils.isNightMode(this)) {
-      return false;
-    }
-
-    // Dark Mode already applied in app
-    int defMode = AppCompatDelegate.getDefaultNightMode();
-    if (defMode == AppCompatDelegate.MODE_NIGHT_YES) {
-      return false;
-    }
-
-    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
     return true;
   }
 
@@ -403,12 +364,13 @@ public class MainActivity extends BaseActivity {
         message = getString(R.string.enable_app_or_exclude_from_visible_list);
       }
 
-      View layout = getLayoutInflater().inflate(R.layout.activity_main_pkg_alert_dialog, null);
-      ((TextView) layout.findViewById(R.id.package_name_view)).setText(pkg.getName());
-      ((TextView) layout.findViewById(R.id.message_view)).setText(message);
+      ActivityMainPkgDialogBinding b = ActivityMainPkgDialogBinding.inflate(getLayoutInflater());
+
+      b.pkgNameV.setText(pkg.getName());
+      b.msgV.setText(message);
 
       // Set message, create and show the AlertDialog
-      AlertDialog dialog = builder.setTitle(pkg.getLabel()).setView(layout).create();
+      AlertDialog dialog = builder.setTitle(pkg.getLabel()).setView(b.getRoot()).create();
       boolean finalEnabled = enabled;
       dialog.setOnShowListener(
           d -> dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(finalEnabled));
@@ -426,25 +388,25 @@ public class MainActivity extends BaseActivity {
   private void setMaxProgress(Integer progressMax) {
     if (progressMax < 0) {
       TextView progressTextView;
-      if (mRoundProgressContainer.getVisibility() == View.VISIBLE) {
-        progressTextView = mRoundProgressTextView;
+      if (mB.rndProgCont.getVisibility() == View.VISIBLE) {
+        progressTextView = mB.rndProgTextV;
       } else {
-        progressTextView = mProgressNowView;
-        mProgressBar.setIndeterminate(true);
-        mProgressMaxView.setText("");
-        mProgressBarContainer.setVisibility(View.VISIBLE);
+        progressTextView = mB.movCont.progNowV;
+        mB.movCont.progBar.setIndeterminate(true);
+        mB.movCont.progMaxV.setText("");
+        mB.movCont.progBarCont.setVisibility(View.VISIBLE);
       }
       progressTextView.setText(mPackageParser.getProgressTextResId(progressMax));
       return;
     }
 
-    mProgressBar.setIndeterminate(false);
-    mProgressBar.setProgress(0);
-    mProgressNowView.setText("0");
-    mProgressBar.setMax(progressMax);
-    mProgressMaxView.setText(String.valueOf(progressMax));
-    mRoundProgressContainer.setVisibility(View.GONE);
-    mProgressBarContainer.setVisibility(View.VISIBLE);
+    mB.movCont.progBar.setIndeterminate(false);
+    mB.movCont.progBar.setProgress(0);
+    mB.movCont.progNowV.setText("0");
+    mB.movCont.progBar.setMax(progressMax);
+    mB.movCont.progMaxV.setText(String.valueOf(progressMax));
+    mB.rndProgCont.setVisibility(View.GONE);
+    mB.movCont.progBarCont.setVisibility(View.VISIBLE);
   }
 
   // Keep track of received packages, mPackageAdapter.getItemCount() given wrong value.
@@ -453,18 +415,18 @@ public class MainActivity extends BaseActivity {
 
   private void setNowProgress(Integer progressNow) {
     int progress = progressNow;
-    if (progress < 0 && mProgressBar.getMax() > 0) {
-      progress = mProgressBar.getMax();
+    if (progress < 0 && mB.movCont.progBar.getMax() > 0) {
+      progress = mB.movCont.progBar.getMax();
     }
     if (progress >= 0) {
-      mProgressBar.setProgress(progress, true);
-      mProgressNowView.setText(String.valueOf(progress));
+      mB.movCont.progBar.setProgress(progress, true);
+      mB.movCont.progNowV.setText(String.valueOf(progress));
     }
     if (progressNow >= 0) {
       return;
     }
 
-    mProgressBarContainer.setVisibility(View.GONE);
+    mB.movCont.progBarCont.setVisibility(View.GONE);
     boolean showPkgCount = true;
 
     if (progressNow == PackageParser.PKG_PROG_ENDS) {
@@ -473,7 +435,7 @@ public class MainActivity extends BaseActivity {
         // Don't stop refreshing. We'll receive call later when search ends
         return;
       }
-      if (!mRefreshLayout.isRefreshing()) {
+      if (!mB.refreshLayout.isRefreshing()) {
         // Show Toast only if refreshed manually or by shallow search.
         // Otherwise on every onResume() Toast is displayed
         showPkgCount = false;
@@ -485,7 +447,7 @@ public class MainActivity extends BaseActivity {
       }
     }
 
-    mRefreshLayout.setRefreshing(false);
+    mB.refreshLayout.setRefreshing(false);
     if (showPkgCount) {
       showSnackBar(mVisiblePkgCount + " " + getString(R.string.apps), 5000);
     }
@@ -588,7 +550,7 @@ public class MainActivity extends BaseActivity {
   void showSnackBar(String text, int duration) {
     Utils.runInFg(
         () -> {
-          Snackbar snackBar = Snackbar.make(mProgressBarContainer, text, duration);
+          Snackbar snackBar = Snackbar.make(mB.movCont.progBarCont, text, duration);
           snackBar.setTextColor(getColor(R.color.dynamic_text_color));
           snackBar.getView().setBackgroundColor(getColor(R.color.dynamicBackground));
           snackBar.show();
@@ -655,7 +617,7 @@ public class MainActivity extends BaseActivity {
             Util.debugLog(TAG, "searchViewFocused: " + hasFocus);
           }
           showSearchActionSettings();
-          mDrawerLayout.closeDrawer(GravityCompat.START, true);
+          mB.getRoot().closeDrawer(GravityCompat.START, true);
           if (!hasFocus && TextUtils.isEmpty(mSearchView.getQuery())) {
             collapseSearchView();
           }
@@ -666,16 +628,17 @@ public class MainActivity extends BaseActivity {
   }
 
   private void showSearchActionSettings() {
-    CheckBox deepSearchSettings = findViewById(R.id.deep_search);
-    CheckBox caseSensitiveSearchSettings = findViewById(R.id.case_sensitive_search);
+    mB.deepSearch.setOnCheckedChangeListener(null);
+    mB.caseSensitiveSearch.setOnCheckedChangeListener(null);
 
-    deepSearchSettings.setOnCheckedChangeListener(null);
-    caseSensitiveSearchSettings.setOnCheckedChangeListener(null);
+    mB.deepSearch.setChecked(mMySettings.isDeepSearchEnabled());
+    mB.caseSensitiveSearch.setChecked(mMySettings.isCaseSensitiveSearch());
 
-    deepSearchSettings.setChecked(mMySettings.isDeepSearchEnabled());
-    caseSensitiveSearchSettings.setChecked(mMySettings.isCaseSensitiveSearch());
+    // For android:ellipsize="marquee" to work
+    mB.deepSearch.setSelected(true);
+    mB.caseSensitiveSearch.setSelected(true);
 
-    deepSearchSettings.setOnCheckedChangeListener(
+    mB.deepSearch.setOnCheckedChangeListener(
         (buttonView, isChecked) -> {
           mMySettings.setDeepSearchEnabled(isChecked);
           handleSearchQuery();
@@ -684,7 +647,7 @@ public class MainActivity extends BaseActivity {
           }
         });
 
-    caseSensitiveSearchSettings.setOnCheckedChangeListener(
+    mB.caseSensitiveSearch.setOnCheckedChangeListener(
         (buttonView, isChecked) -> {
           mMySettings.setCaseSensitiveSearch(isChecked);
           handleSearchQuery();
@@ -693,7 +656,7 @@ public class MainActivity extends BaseActivity {
           }
         });
 
-    findViewById(R.id.search_settings_container).setVisibility(View.VISIBLE);
+    mB.searchSettingsContainer.setVisibility(View.VISIBLE);
   }
 
   private void collapseSearchView() {
@@ -703,7 +666,7 @@ public class MainActivity extends BaseActivity {
     mSearchView.onActionViewCollapsed();
     mSearchView.setQuery(null, false);
     handleSearchQuery(); // mSearchView.setQuery(null, true) does not work
-    findViewById(R.id.search_settings_container).setVisibility(View.GONE);
+    mB.searchSettingsContainer.setVisibility(View.GONE);
   }
 
   private void handleSearchQuery() {
@@ -724,7 +687,8 @@ public class MainActivity extends BaseActivity {
       Util.debugLog(TAG, "handleSearchQuery: text set to: " + queryText);
     }
 
-    mRefreshLayout.setRefreshing(!mMySettings.isDeepSearchEnabled() || !mMySettings.isSearching());
+    mB.refreshLayout.setRefreshing(
+        !mMySettings.isDeepSearchEnabled() || !mMySettings.isSearching());
     mPackageParser.newUpdateRequest();
     mPackageParser.handleSearchQuery(null);
   }
@@ -775,7 +739,7 @@ public class MainActivity extends BaseActivity {
           Util.debugLog(TAG, "startPrivDaemon: daemon is dead");
         }
         if (mMySettings.isRootGranted() || mMySettings.isAdbConnected()) {
-          Utils.runInFg(() -> mRoundProgressTextView.setText(R.string.starting_daemon));
+          Utils.runInFg(() -> mB.rndProgTextV.setText(R.string.starting_daemon));
 
           Boolean res = mPrivDaemonHandler.startDaemon(preferRoot);
           if (res == null) {
@@ -862,27 +826,46 @@ public class MainActivity extends BaseActivity {
   //////////////////////// NAVIGATION DRAWER ///////////////////////
   //////////////////////////////////////////////////////////////////
 
+  private void setDrawerLiveObserver() {
+    mMyViewModel.getDrawerChanged().observe(this, res -> setBoxesChecked());
+  }
+
   void setNavigationMenu() {
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "setNavigationMenu() called");
     }
-    Menu menu = mNavigationView.getMenu();
 
-    // If recreating
-    mNavigationView.invalidate();
-
-    setBoxCheckedAndSetListener(menu, R.id.action_root, mMySettings.isRootGranted());
-    setBoxCheckedAndSetListener(menu, R.id.action_adb, mMySettings.isAdbConnected());
-    setBoxCheckedAndSetListener(menu, R.id.action_dark_theme, mMySettings.forceDarkMode());
-
-    menu.findItem(R.id.action_donate).setVisible(mMainActivityFlavor.getDonateVisibility());
+    mB.navV.invalidate(); // If recreating
+    setBoxesChecked();
+    setCheckBoxListeners();
+    mB.navV
+        .getMenu()
+        .findItem(R.id.action_donate)
+        .setVisible(mMainActivityFlavor.getDonateVisibility());
   }
 
-  private void setBoxCheckedAndSetListener(Menu menu, int id, boolean checked) {
-    MenuItem menuItem = menu.findItem(id);
-    CheckBox checkBox = ((CheckBox) menuItem.getActionView());
-    checkBox.setChecked(checked);
-    checkBox.setOnClickListener(v -> handleNavigationItemChecked(menuItem));
+  private void setBoxesChecked() {
+    if (mB == null) {
+      return;
+    }
+    Menu menu = mB.navV.getMenu();
+    ((CheckBox) menu.findItem(R.id.action_root).getActionView())
+        .setChecked(mMySettings.isRootGranted());
+    ((CheckBox) menu.findItem(R.id.action_adb).getActionView())
+        .setChecked(mMySettings.isAdbConnected());
+    ((CheckBox) menu.findItem(R.id.action_dark_theme).getActionView())
+        .setChecked(mMySettings.forceDarkMode());
+  }
+
+  private void setCheckBoxListeners() {
+    if (mB == null) {
+      return;
+    }
+    Menu menu = mB.navV.getMenu();
+    for (int id : new int[] {R.id.action_root, R.id.action_adb, R.id.action_dark_theme}) {
+      MenuItem menuItem = menu.findItem(id);
+      menuItem.getActionView().setOnClickListener(v -> handleNavigationItemChecked(menuItem));
+    }
   }
 
   private boolean handleNavigationItemSelected(MenuItem item) {
@@ -901,7 +884,7 @@ public class MainActivity extends BaseActivity {
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "handleNavigationItemChecked: " + item.getTitle());
     }
-    mDrawerLayout.closeDrawer(GravityCompat.START, true);
+    mB.getRoot().closeDrawer(GravityCompat.START, true);
 
     if (item.getItemId() == R.id.action_settings) {
       startActivity(new Intent(App.getContext(), SettingsActivity.class));
@@ -917,6 +900,7 @@ public class MainActivity extends BaseActivity {
       CheckBox rootCheckBox = (CheckBox) item.getActionView();
       if (!rootCheckBox.isChecked()) {
         mMySettings.setRootGranted(false);
+        NativeDaemon.rootInstance().stopDaemon();
         return true;
       }
 
@@ -929,9 +913,7 @@ public class MainActivity extends BaseActivity {
               Utils.runInFg(() -> rootCheckBox.setChecked(true));
               restartPrivDaemon(true);
             } else {
-              showSnackBar(
-                  getString(R.string.getting_root_fail) + getString(R.string.are_you_rooted),
-                  10000);
+              showSnackBar(getString(R.string.getting_root_fail_long), 10000);
             }
           });
       return true;
@@ -941,6 +923,7 @@ public class MainActivity extends BaseActivity {
       CheckBox adbCheckBox = (CheckBox) item.getActionView();
       if (!adbCheckBox.isChecked()) {
         mMySettings.setAdbConnected(false);
+        NativeDaemon.adbInstance().stopDaemon();
         return true;
       }
 
@@ -977,7 +960,7 @@ public class MainActivity extends BaseActivity {
     if (item.getItemId() == R.id.action_dark_theme) {
       CheckBox darkCheckBox = (CheckBox) item.getActionView();
       mMySettings.setForceDarkMode(darkCheckBox.isChecked());
-      setNightTheme();
+      Utils.setNightTheme(this);
       return true;
     }
 
@@ -1010,8 +993,8 @@ public class MainActivity extends BaseActivity {
           while (getWindow() == null) {
             SystemClock.sleep(100);
           }
-          if (mDrawerLayout != null) {
-            Utils.runInFg(() -> mDrawerLayout.openDrawer(GravityCompat.START));
+          if (mB != null) {
+            Utils.runInFg(() -> mB.getRoot().openDrawer(GravityCompat.START));
           }
           float f = new Random().nextBoolean() ? 360 : -360;
           Utils.runInBg(() -> rotateMenuItemCheckbox(R.id.action_root, f));
@@ -1021,10 +1004,10 @@ public class MainActivity extends BaseActivity {
 
   private void rotateMenuItemCheckbox(int resId, float angle) {
     SystemClock.sleep(1000);
-    if (mNavigationView != null) {
+    if (mB != null) {
       Utils.runInFg(
           () ->
-              mNavigationView
+              mB.navV
                   .getMenu()
                   .findItem(resId)
                   .getActionView()
@@ -1039,12 +1022,16 @@ public class MainActivity extends BaseActivity {
   ////////////////////////// FOR SUBCLASSES ////////////////////////
   //////////////////////////////////////////////////////////////////
 
+  ActivityMainBinding getRootView() {
+    return mB;
+  }
+
   ProgressFrameLayout getRoundProgressContainer() {
-    return mRoundProgressContainer;
+    return mB.rndProgCont;
   }
 
   TextView getRoundProgressTextView() {
-    return mRoundProgressTextView;
+    return mB.rndProgTextV;
   }
 
   @SuppressWarnings("UnusedDeclaration")

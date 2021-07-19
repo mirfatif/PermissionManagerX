@@ -16,6 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.databinding.BackupRestoreDialogBinding;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionEntity;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
@@ -83,6 +84,7 @@ public class BackupRestore {
 
   private boolean mSkipUninstalledApps = false;
 
+  @SuppressWarnings("UnusedDeclaration")
   public BackupRestore() {
     mA = null;
   }
@@ -95,6 +97,9 @@ public class BackupRestore {
   private ActivityResultLauncher<String[]> mRestoreLauncher;
 
   void onCreated() {
+    if (mA == null) {
+      return;
+    }
     // registerForActivityResult() must be called before onStart() is called
     ActivityResultCallback<Uri> backupCallback =
         uri -> Utils.runInBg(() -> doBackupRestoreInBg(true, uri));
@@ -108,8 +113,12 @@ public class BackupRestore {
   }
 
   void doBackupRestore() {
-    View layout = mA.getLayoutInflater().inflate(R.layout.backup_restore_alert_dialog, null);
-    CheckBox checkbox = layout.findViewById(R.id.skip_uninstalled_packages);
+    if (mA == null) {
+      return;
+    }
+    BackupRestoreDialogBinding b = BackupRestoreDialogBinding.inflate(mA.getLayoutInflater());
+
+    CheckBox checkbox = b.skipUninstalledPackages;
     checkbox.setOnClickListener(v -> mSkipUninstalledApps = checkbox.isChecked());
 
     AlertDialog dialog =
@@ -117,7 +126,7 @@ public class BackupRestore {
             .setPositiveButton(R.string.backup, (d, which) -> doBackupRestore(true))
             .setNegativeButton(R.string.restore, (d, which) -> doBackupRestore(false))
             .setTitle(getString(R.string.backup) + " / " + getString(R.string.restore))
-            .setView(layout)
+            .setView(b.getRoot())
             .create();
     new AlertDialogFragment(dialog).show(mA, TAG_BACKUP_RESTORE, false);
   }
@@ -132,6 +141,9 @@ public class BackupRestore {
   }
 
   private void doBackupRestoreInBg(boolean isBackup, Uri uri) {
+    if (mA == null || uri == null) {
+      return;
+    }
     if (isBackup) {
       try (OutputStream outStream =
           mA.getApplication().getContentResolver().openOutputStream(uri, "w")) {
@@ -520,12 +532,17 @@ public class BackupRestore {
       mA.getMainActivityFlavor().onRestoreDone();
     }
 
-    String message = mA.getString(R.string.backup_restore_process_entries, prefs, perms);
+    String message = Utils.getQtyString(R.plurals.backup_restore_processed_prefs, prefs, prefs);
+    message = Utils.getQtyString(R.plurals.backup_restore_processed_refs, perms, message, perms);
     if (invalidPrefs > 0) {
-      message += mA.getString(R.string.backup_restore_invalid_prefs, invalidPrefs);
+      message =
+          Utils.getQtyString(
+              R.plurals.backup_restore_invalid_prefs, invalidPrefs, message, invalidPrefs);
     }
     if (skippedApps > 0) {
-      message += mA.getString(R.string.backup_restore_uninstalled_apps, skippedApps);
+      message =
+          Utils.getQtyString(
+              R.plurals.backup_restore_uninstalled_apps, skippedApps, message, skippedApps);
     }
 
     showFinalDialog(isBackup, Utils.breakParas(message));

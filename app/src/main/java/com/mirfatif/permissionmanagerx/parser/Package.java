@@ -1,5 +1,7 @@
 package com.mirfatif.permissionmanagerx.parser;
 
+import static com.mirfatif.permissionmanagerx.parser.SearchConstants.CONSTANTS;
+
 import android.annotation.SuppressLint;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -229,17 +231,6 @@ public class Package {
     mIsRemoved = isRemoved;
   }
 
-  public static final String FRAMEWORK = "Framework";
-
-  public static final String SEARCH_CRITICAL = ":Critical";
-  public static final String SEARCH_FRAMEWORK = ":Framework";
-  public static final String SEARCH_SYSTEM = ":System";
-  public static final String SEARCH_USER = ":User";
-  public static final String SEARCH_DISABLED = ":Disabled";
-  public static final String SEARCH_GREEN = ":GREEN";
-  public static final String SEARCH_ORANGE = ":ORANGE";
-  public static final String SEARCH_RED = ":RED";
-
   public boolean contains(String queryText) {
     if (!mMySettings.isSpecialSearch()) {
       return _contains(queryText);
@@ -288,16 +279,16 @@ public class Package {
           mPackageName,
           String.valueOf(mUid),
           (isCriticalApp()
-              ? SEARCH_CRITICAL
+              ? CONSTANTS.SEARCH_CRITICAL
               : (mIsFrameworkApp
-                  ? SEARCH_FRAMEWORK
-                  : (mIsSystemApp ? SEARCH_SYSTEM : SEARCH_USER))),
-          (mIsEnabled ? "" : SEARCH_DISABLED),
+                  ? CONSTANTS.SEARCH_FRAMEWORK
+                  : (mIsSystemApp ? CONSTANTS.SEARCH_SYSTEM : CONSTANTS.SEARCH_USER))),
+          (mIsEnabled ? "" : CONSTANTS.SEARCH_DISABLED),
           (mMySettings.isQuickScanEnabled()
               ? ""
               : (mIsReferenced == null
-                  ? SEARCH_ORANGE
-                  : (mIsReferenced ? SEARCH_GREEN : SEARCH_RED)))
+                  ? CONSTANTS.SEARCH_ORANGE
+                  : (mIsReferenced ? CONSTANTS.SEARCH_GREEN : CONSTANTS.SEARCH_RED)))
         }) {
       if (!isCaseSensitive) {
         field = field.toUpperCase();

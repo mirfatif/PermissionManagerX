@@ -21,13 +21,14 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginBottom="4dp"
+      android:gravity="center_vertical"
       android:visibility="gone">
 
       <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical"
         android:text="@string/allow_critical_changes"
         android:textColor="@color/dynamic_text_color"
         android:textSize="16sp" />
@@ -38,6 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="-2dp"
+        android:layout_gravity="center_vertical"
         android:minHeight="24dp" />
 
     </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
@@ -46,24 +48,26 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="4dp"
-      android:layout_marginBottom="4dp">
+      android:layout_marginBottom="4dp"
+      android:gravity="center_vertical">
 
       <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical"
+        android:text="@string/use_hidden_apis"
         android:textColor="@color/dynamic_text_color"
-        android:textSize="16sp"
-        android:text="@string/use_hidden_apis"/>
+        android:textSize="16sp" />
 
       <CheckBox
         android:id="@+id/use_hidden_apis"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minHeight="24dp"
         android:layout_marginStart="4dp"
-        android:layout_marginEnd="-2dp"/>
+        android:layout_marginEnd="-2dp"
+        android:layout_gravity="center_vertical"
+        android:minHeight="24dp" />
 
     </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
@@ -71,24 +75,26 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="4dp"
-      android:layout_marginBottom="4dp">
+      android:layout_marginBottom="4dp"
+      android:gravity="center_vertical">
 
       <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical"
+        android:text="@string/dex_tmp_dir"
         android:textColor="@color/dynamic_text_color"
-        android:textSize="16sp"
-        android:text="@string/dex_tmp_dir"/>
+        android:textSize="16sp" />
 
       <CheckBox
         android:id="@+id/dex_tmp_dir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minHeight="24dp"
         android:layout_marginStart="4dp"
-        android:layout_marginEnd="-2dp"/>
+        android:layout_marginEnd="-2dp"
+        android:layout_gravity="center_vertical"
+        android:minHeight="24dp" />
 
     </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
@@ -109,16 +115,17 @@
 
     <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content">
+      android:layout_height="wrap_content"
+      android:gravity="center_vertical">
 
       <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical"
+        android:text="@string/adb_listening_port"
         android:textColor="@color/dynamic_text_color"
-        android:textSize="16sp"
-        android:text="@string/adb_listening_port"/>
+        android:textSize="16sp" />
 
       <EditText
         android:id="@+id/adb_port"
@@ -126,6 +133,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="-2dp"
+        android:layout_gravity="center_vertical"
         android:hint="@string/pref_main_adb_port_default"
         android:importantForAutofill="no"
         android:inputType="number"
@@ -155,24 +163,26 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="4dp"
-      android:layout_marginBottom="4dp">
+      android:layout_marginBottom="4dp"
+      android:gravity="center_vertical">
 
       <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical"
+        android:text="@string/talk_to_daemon_over_socket"
         android:textColor="@color/dynamic_text_color"
-        android:textSize="16sp"
-        android:text="@string/talk_to_daemon_over_socket"/>
+        android:textSize="16sp" />
 
       <CheckBox
         android:id="@+id/use_socket"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minHeight="24dp"
         android:layout_marginStart="4dp"
-        android:layout_marginEnd="-2dp"/>
+        android:layout_marginEnd="-2dp"
+        android:layout_gravity="center_vertical"
+        android:minHeight="24dp" />
 
     </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
@@ -180,26 +190,28 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
-      android:layout_marginBottom="4dp">
+      android:layout_marginBottom="4dp"
+      android:gravity="center_vertical">
 
       <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical"
+        android:text="@string/daemon_uid"
         android:textColor="@color/dynamic_text_color"
-        android:textSize="16sp"
-        android:text="@string/daemon_uid"/>
+        android:textSize="16sp" />
 
       <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/daemon_uid_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minHeight="24dp"
+        android:layout_marginStart="4dp"
+        android:layout_gravity="center_vertical"
+        android:background="@null"
         android:entries="@array/daemon_uids"
         android:gravity="end"
-        android:background="@null"
-        android:layout_marginStart="4dp"/>
+        android:minHeight="24dp" />
 
       <ImageView
         android:id="@+id/daemon_uid_list_arrow"
@@ -209,7 +221,7 @@
         android:layout_marginEnd="4dp"
         android:layout_gravity="center_vertical|end"
         android:src="@drawable/arrow_drop_down"
-        tools:ignore="ContentDescription"/>
+        tools:ignore="ContentDescription" />
 
     </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
@@ -217,26 +229,28 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="12dp"
-      android:layout_marginBottom="4dp">
+      android:layout_marginBottom="4dp"
+      android:gravity="center_vertical">
 
       <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical"
+        android:text="@string/daemon_context"
         android:textColor="@color/dynamic_text_color"
-        android:textSize="16sp"
-        android:text="@string/daemon_context"/>
+        android:textSize="16sp" />
 
       <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/daemon_context_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minHeight="24dp"
+        android:layout_marginStart="4dp"
+        android:layout_gravity="center_vertical"
+        android:background="@null"
         android:entries="@array/daemon_contexts"
         android:gravity="end"
-        android:background="@null"
-        android:layout_marginStart="4dp"/>
+        android:minHeight="24dp" />
 
       <ImageView
         android:id="@+id/daemon_context_list_arrow"
@@ -246,7 +260,7 @@
         android:layout_marginEnd="4dp"
         android:layout_gravity="center_vertical|end"
         android:src="@drawable/arrow_drop_down"
-        tools:ignore="ContentDescription"/>
+        tools:ignore="ContentDescription" />
 
     </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
@@ -254,14 +268,15 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="2dp"
-      android:layout_marginBottom="4dp">
+      android:layout_marginBottom="4dp"
+      android:gravity="center_vertical">
 
       <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:layout_gravity="center_vertical"
         android:ellipsize="end"
-        android:gravity="center_vertical"
         android:maxLines="1"
         android:text="@string/su_exe_path"
         android:textColor="@color/dynamic_text_color"
@@ -273,6 +288,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="-2dp"
+        android:layout_gravity="center_vertical"
         android:hint="@string/su_exe_path_hint"
         android:importantForAutofill="no"
         android:inputType="text"

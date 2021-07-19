@@ -1,5 +1,7 @@
 package com.mirfatif.permissionmanagerx.ui;
 
+import static com.mirfatif.permissionmanagerx.util.Utils.getString;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.text.style.TextAppearanceSpan;
@@ -10,23 +12,21 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.databinding.RvItemPermBinding;
 import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
 import com.mirfatif.permissionmanagerx.parser.Permission;
 import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.ItemViewHolder;
 import com.mirfatif.permissionmanagerx.ui.base.MyListAdapter;
 import com.mirfatif.permissionmanagerx.util.Utils;
+import com.mirfatif.privtasks.Commands;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,8 +61,8 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
   @Override
   public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
     LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-    View itemView = inflater.inflate(R.layout.recycler_view_item_permission, parent, false);
-    return new ItemViewHolder(itemView);
+    RvItemPermBinding b = RvItemPermBinding.inflate(inflater, parent, false);
+    return new ItemViewHolder(b);
   }
 
   // Override RecyclerView.Adapter method
@@ -75,121 +75,103 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
   // Store and recycle items as they are scrolled off screen
   class ItemViewHolder extends RecyclerView.ViewHolder
       implements OnClickListener, OnLongClickListener {
-    View referenceView;
-    ImageView groupIconView;
-    TextView permissionNameView;
-    TextView protectionLevelView;
-    TextView appOpsTimeView;
-    TextView appOpsRefStateView;
-    SwitchCompat stateSwitch;
-    AppCompatSpinner spinner;
-    LinearLayout spinnerContainer;
-    TextView appOpsDefaultView;
 
-    public ItemViewHolder(@NonNull View itemView) {
-      super(itemView);
+    private final RvItemPermBinding mB;
 
-      // Find Views inside the itemView in XML layout with the given IDs
-      referenceView = itemView.findViewById(R.id.reference_indication_view);
-      groupIconView = itemView.findViewById(R.id.icon_view);
-      permissionNameView = itemView.findViewById(R.id.permission_name_view);
-      protectionLevelView = itemView.findViewById(R.id.protection_level_view);
-      appOpsTimeView = itemView.findViewById(R.id.app_ops_time_view);
-      appOpsRefStateView = itemView.findViewById(R.id.app_ops_ref_state_view);
-      stateSwitch = itemView.findViewById(R.id.permission_state_switch);
-      spinner = itemView.findViewById(R.id.permission_state_spinner);
-      spinnerContainer = itemView.findViewById(R.id.permission_state_spinner_container);
-      appOpsDefaultView = itemView.findViewById(R.id.app_ops_default_view);
-
-      itemView.setOnClickListener(this);
-      itemView.setOnLongClickListener(this);
+    public ItemViewHolder(RvItemPermBinding binding) {
+      super(binding.getRoot());
+      mB = binding;
+      binding.getRoot().setOnClickListener(this);
+      binding.getRoot().setOnLongClickListener(this);
     }
 
     public void bind(int position) {
       Permission perm = getItem(position);
 
-      appOpsRefStateView.setVisibility(View.GONE);
+      mB.appOpsRefStateV.setVisibility(View.GONE);
       if (perm.isReferenced() == null) {
-        referenceView.setBackgroundColor(PackageAdapter.ORANGE);
+        mB.refIndicationV.setBackgroundColor(PackageAdapter.ORANGE);
       } else if (!perm.isReferenced()) {
-        referenceView.setBackgroundColor(Color.RED);
+        mB.refIndicationV.setBackgroundColor(Color.RED);
         if (perm.isAppOps()) {
-          appOpsRefStateView.setText(
-              Utils.htmlToString(
-                  App.getContext().getString(R.string.should_be, perm.getReference())));
-          appOpsRefStateView.setVisibility(View.VISIBLE);
+          String state = getLocalizedMode(perm.getReference());
+          if (state == null) {
+            state = perm.getReference();
+          }
+          mB.appOpsRefStateV.setText(Utils.htmlToString(getString(R.string.should_be, state)));
+          mB.appOpsRefStateV.setVisibility(View.VISIBLE);
         }
       } else {
-        referenceView.setBackgroundColor(Color.GREEN);
+        mB.refIndicationV.setBackgroundColor(Color.GREEN);
       }
 
       if (perm.getIconResId() != null) {
-        groupIconView.setImageResource(perm.getIconResId());
+        mB.iconV.setImageResource(perm.getIconResId());
       }
 
-      spinnerContainer.setOnClickListener(null);
+      mB.permStateSpinnerCont.setOnClickListener(null);
 
       if (perm.isAppOps()) {
         if (perm.dependsOn() == null) {
-          spinnerContainer.setVisibility(View.VISIBLE);
-          spinnerContainer.setOnClickListener(v -> spinner.performClick());
+          mB.permStateSpinnerCont.setVisibility(View.VISIBLE);
+          mB.permStateSpinnerCont.setOnClickListener(v -> mB.permStateSpinner.performClick());
         } else {
-          spinnerContainer.setVisibility(View.INVISIBLE);
+          mB.permStateSpinnerCont.setVisibility(View.INVISIBLE);
         }
       }
 
-      permissionNameView.setText(perm.getPermNameString());
-      appOpsTimeView.setVisibility(View.GONE);
+      mB.permNameV.setText(perm.getPermNameString());
+      mB.appOpsTimeV.setVisibility(View.GONE);
 
       boolean isChangeable = perm.isChangeable();
 
       if (perm.isCritical() && isChangeable) {
-        protectionLevelView.setText(
+        mB.protLevelV.setText(
             Utils.getHighlightString(
                 perm.getProtLevelString(),
-                getHighlightSpan(protectionLevelView.getCurrentTextColor()),
+                getHighlightSpan(mB.protLevelV.getCurrentTextColor()),
                 true,
-                Permission.FIXED,
-                Permission.PRIVILEGED));
+                getString(R.string.prot_lvl_fixed),
+                getString(R.string.prot_lvl_privileged)));
       } else {
-        protectionLevelView.setText(perm.getProtLevelString());
+        mB.protLevelV.setText(perm.getProtLevelString());
       }
 
       if (perm.isAppOps()) {
         String time = perm.getAppOpsAccessTime();
         if (time != null) {
-          appOpsTimeView.setText(time);
-          appOpsTimeView.setTextColor(getRedBlend(appOpsTimeView.getCurrentTextColor()));
-          appOpsTimeView.setVisibility(View.VISIBLE);
+          mB.appOpsTimeV.setText(time);
+          mB.appOpsTimeV.setTextColor(getRedBlend(mB.appOpsTimeV.getCurrentTextColor()));
+          mB.appOpsTimeV.setVisibility(View.VISIBLE);
         }
 
         if (perm.getName().equals("RUN_IN_BACKGROUND")
             || perm.getName().equals("RUN_ANY_IN_BACKGROUND")) {
-          spinner.setAdapter(getAppOpModesAdapter(true));
+          mB.permStateSpinner.setAdapter(getAppOpModesAdapter(true));
         } else {
-          spinner.setAdapter(getAppOpModesAdapter(false));
+          mB.permStateSpinner.setAdapter(getAppOpModesAdapter(false));
         }
 
-        spinner.setSelection(perm.getAppOpsMode());
-        spinner.setOnItemSelectedListener(new AppOpsModeSelectListener(perm));
-        stateSwitch.setVisibility(View.GONE);
-        spinner.setEnabled(isChangeable);
-        appOpsDefaultView.setVisibility(perm.isAppOpsSet() ? View.GONE : View.VISIBLE);
+        mB.permStateSpinner.setSelection(perm.getAppOpsMode());
+        mB.permStateSpinner.setOnItemSelectedListener(new AppOpsModeSelectListener(perm));
+        mB.permStateSwitch.setVisibility(View.GONE);
+        mB.permStateSpinner.setEnabled(isChangeable);
+        mB.appOpsDefaultV.setVisibility(perm.isAppOpsSet() ? View.GONE : View.VISIBLE);
 
       } else {
         if (perm.isProviderMissing()) {
-          stateSwitch.setVisibility(View.INVISIBLE);
+          mB.permStateSwitch.setVisibility(View.INVISIBLE);
         } else {
-          stateSwitch.setChecked(perm.isGranted());
-          stateSwitch.setEnabled(isChangeable);
-          stateSwitch.setOnClickListener(
+          mB.permStateSwitch.setChecked(perm.isGranted());
+          mB.permStateSwitch.setEnabled(isChangeable);
+          mB.permStateSwitch.setOnClickListener(
               v -> {
-                stateSwitch.setChecked(perm.isGranted()); // Do not change the state here
+                mB.permStateSwitch.setChecked(perm.isGranted()); // Do not change the state here
                 mSwitchToggleListener.onClick(perm);
               });
-          stateSwitch.setVisibility(View.VISIBLE);
+          mB.permStateSwitch.setVisibility(View.VISIBLE);
         }
-        spinnerContainer.setVisibility(View.GONE);
+        mB.permStateSpinnerCont.setVisibility(View.GONE);
       }
     }
 
@@ -231,14 +213,39 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
     return ColorUtils.blendARGB(mOrigTextColor, Color.RED, 0.75f);
   }
 
+  private String getLocalizedMode(String appOpMode) {
+    switch (appOpMode.toLowerCase()) {
+      case Commands.APP_OP_MODE_ALLOW:
+        return getString(R.string.app_op_mode_allow);
+      case Commands.APP_OP_MODE_IGNORE:
+        return getString(R.string.app_op_mode_ignore);
+      case Commands.APP_OP_MODE_DENY:
+        return getString(R.string.app_op_mode_deny);
+      case Commands.APP_OP_MODE_DEFAULT:
+        return getString(R.string.app_op_mode_default);
+      case Commands.APP_OP_MODE_FG:
+        return getString(R.string.app_op_mode_foreground);
+    }
+    return null;
+  }
+
   private static final Object ADAPTER_BUILD_LOCK = new Object();
 
   private ArrayAdapter<String> getAppOpModesAdapter(boolean forBg) {
     synchronized (ADAPTER_BUILD_LOCK) {
       if (mAppOpModesAdapter.isEmpty() || mAppOpModesBgAdapter.isEmpty()) {
         for (String mode : AppOpsParser.getInstance().getAppOpsModes()) {
-          mAppOpModesAdapter.add(Utils.ellipsize(mode, 8));
-          mAppOpModesBgAdapter.add(Utils.ellipsize(mode, 8));
+          String localizedMode = getLocalizedMode(mode);
+          if (localizedMode != null) {
+            mode = localizedMode;
+            if (mode.toLowerCase().equals(Commands.APP_OP_MODE_FG)) {
+              mode = Utils.ellipsize(mode, 8);
+            }
+          } else {
+            mode = Utils.ellipsize(mode, 8);
+          }
+          mAppOpModesAdapter.add(mode);
+          mAppOpModesBgAdapter.add(mode);
         }
       }
     }

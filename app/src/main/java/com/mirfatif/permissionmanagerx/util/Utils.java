@@ -1,5 +1,10 @@
 package com.mirfatif.permissionmanagerx.util;
 
+import static android.os.Build.VERSION.SDK_INT;
+import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
+import static android.text.style.DynamicDrawableSpan.ALIGN_BASELINE;
+import static com.mirfatif.permissionmanagerx.util.UtilsFlavor.getAccentColor;
+
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -16,9 +21,9 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Handler;
 import android.os.Looper;
@@ -29,9 +34,12 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.BulletSpan;
+import android.text.style.ImageSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.TextAppearanceSpan;
+import android.text.style.URLSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.widget.Button;
@@ -39,12 +47,14 @@ import android.widget.Toast;
 import androidx.annotation.AttrRes;
 import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.browser.customtabs.CustomTabColorSchemeParams;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.browser.customtabs.CustomTabsService;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.FileProvider;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.preference.PreferenceManager;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.EncryptedSharedPreferences.PrefKeyEncryptionScheme;
@@ -58,6 +68,7 @@ import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.Adb;
+import com.mirfatif.permissionmanagerx.privs.NativeDaemon;
 import com.mirfatif.permissionmanagerx.svc.NotifDismissSvc;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
@@ -68,7 +79,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -88,6 +98,11 @@ public class Utils {
 
   private static final String TAG = "Utils";
 
+  public static final int UID_SYSTEM = android.os.Process.SYSTEM_UID;
+  public static final int UID_ROOT = SDK_INT >= VERSION_CODES.Q ? android.os.Process.ROOT_UID : 0;
+  public static final int UID_SHELL =
+      SDK_INT >= VERSION_CODES.Q ? android.os.Process.SHELL_UID : 2000;
+
   private Utils() {}
 
   private static final Handler mMainThreadHandler = new Handler(Looper.getMainLooper());
@@ -102,46 +117,23 @@ public class Utils {
     return mExecutor.submit(runnable);
   }
 
-  public static boolean runCommand(String tag, String match, String cmd2, String... cmd1) {
-    Process process = runCommand(tag, true, cmd1);
+  public static void runCommand(String tag, String... cmd) {
+    Process process = runCommand(tag, true, cmd);
     if (process == null) {
-      return false;
+      return;
     }
 
-    String res = null;
-    try (PrintWriter cmdWriter =
-            new PrintWriter(new OutputStreamWriter(process.getOutputStream()), true);
-        BufferedReader stdIn =
-            new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-
-      if (cmd2 != null) {
-        Log.i(tag, "Sending command: " + cmd2);
-        cmdWriter.println(cmd2);
-      }
-
+    try (BufferedReader stdIn =
+        new BufferedReader(new InputStreamReader(process.getInputStream()))) {
       String line;
       while ((line = stdIn.readLine()) != null) {
         Log.i(tag, line);
-        res = line;
       }
-
-      if (process.waitFor() != 0) {
-        return false;
-      }
-    } catch (IOException | InterruptedException e) {
+    } catch (IOException e) {
       e.printStackTrace();
     } finally {
       cleanStreams(process, null, tag);
     }
-
-    if (match == null) {
-      return true;
-    }
-
-    if (res != null) {
-      return res.trim().equals(match);
-    }
-    return false;
   }
 
   public static Process runCommand(String tag, boolean redirectStdErr, String... cmd) {
@@ -191,9 +183,9 @@ public class Utils {
   }
 
   // org.apache.commons.io.IOUtils.copy()
-  public static boolean copyStreamFails(InputStream input, OutputStream output) {
+  public static boolean copyStream(InputStream input, OutputStream output) {
     if (input == null || output == null) {
-      return true;
+      return false;
     }
     byte[] buffer = new byte[8192];
     int len;
@@ -205,9 +197,9 @@ public class Utils {
       }
     } catch (IOException e) {
       e.printStackTrace();
-      return true;
+      return false;
     }
-    return count > Integer.MAX_VALUE;
+    return count <= Integer.MAX_VALUE;
   }
 
   public static String capitalizeWords(String str) {
@@ -292,17 +284,6 @@ public class Utils {
     return MaterialColors.getColor(activity, colorAttrResId, Color.TRANSPARENT);
   }
 
-  // We cannot get Attr colors belonging to Activity themes from App or Service Contexts
-  private static @ColorInt int mAccentColor = App.getContext().getColor(R.color.green);
-
-  public static void setAccentColor(@ColorInt int color) {
-    mAccentColor = color;
-  }
-
-  public static @ColorInt int getAccentColor() {
-    return mAccentColor;
-  }
-
   public static TextAppearanceSpan getHighlight(@ColorInt int colorInt) {
     return new TextAppearanceSpan(
         null,
@@ -347,7 +328,7 @@ public class Utils {
     return spannable;
   }
 
-  public static boolean sendMail(Activity activity, String body) {
+  public static void sendMail(Activity activity, String body) {
     Intent emailIntent = new Intent(Intent.ACTION_SENDTO).setData(Uri.parse("mailto:"));
     emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {getString(R.string.email_address)});
     emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
@@ -359,12 +340,46 @@ public class Utils {
     } catch (ActivityNotFoundException e) {
       showToast(R.string.no_email_app_installed);
     }
-    return true;
   }
 
   public static boolean isNightMode(Activity activity) {
     int uiMode = activity.getResources().getConfiguration().uiMode;
     return (uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+  }
+
+  public static boolean setNightTheme(Activity activity) {
+    if (!MySettings.getInstance().forceDarkMode()) {
+      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+      return false;
+    }
+
+    // Dark Mode applied on whole device
+    if (Utils.isNightMode(activity)) {
+      return false;
+    }
+
+    // Dark Mode already applied in app
+    int defMode = AppCompatDelegate.getDefaultNightMode();
+    if (defMode == AppCompatDelegate.MODE_NIGHT_YES) {
+      return false;
+    }
+
+    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+    return true;
+  }
+
+  public static Context setLocale(Context context) {
+    String lang = MySettings.getInstance().getLocale();
+    Locale locale;
+    if (TextUtils.isEmpty(lang)) {
+      locale = Resources.getSystem().getConfiguration().getLocales().get(0);
+    } else {
+      locale = new Locale(lang);
+    }
+    Locale.setDefault(locale);
+    Configuration config = context.getResources().getConfiguration();
+    config.setLocale(locale);
+    return context.createConfigurationContext(config);
   }
 
   public static void cleanStreams(Process process, Adb adb, String tag) {
@@ -379,7 +394,7 @@ public class Utils {
         // Try the best to kill the process. The on reading daemon's logcat might not
         // be killed because of different UID.
         process.destroy();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (SDK_INT >= Build.VERSION_CODES.O) {
           process.destroyForcibly();
         }
       }
@@ -457,7 +472,9 @@ public class Utils {
         + BuildConfig.VERSION_NAME
         + (BuildConfig.GH_VERSION ? "" : " PlayStore")
         + "\nSDK: "
-        + VERSION.SDK_INT
+        + SDK_INT
+        + "\nROM: "
+        + Build.DISPLAY
         + "\nBuild: "
         + Build.TYPE
         + "\nDevice: "
@@ -476,6 +493,10 @@ public class Utils {
 
   public static String getString(int resId, Object... args) {
     return App.getContext().getString(resId, args);
+  }
+
+  public static String getQtyString(int resId, int qty, Object... args) {
+    return App.getContext().getResources().getQuantityString(resId, qty, args);
   }
 
   public static int getInteger(int resId) {
@@ -516,8 +537,25 @@ public class Utils {
       string.setSpan(new BulletSpan(parcel), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
-    breakParas(string);
     parcel.recycle();
+
+    Drawable d = ResourcesCompat.getDrawable(App.getRes(), R.drawable.link, null);
+    if (d != null) {
+      // DrawableCompat.setTint()
+      d.setTint(getAccentColor());
+      d.setBounds(0, 0, dpToPx(12), dpToPx(12));
+    }
+
+    for (URLSpan span : string.getSpans(0, string.length(), URLSpan.class)) {
+      int start = string.getSpanStart(span);
+      int end = string.getSpanEnd(span);
+      if (!string.substring(start, end).equals("LINK")) {
+        continue;
+      }
+      string.setSpan(new ImageSpan(d, ALIGN_BASELINE), start, end, SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    breakParas(string);
     return string;
   }
 
@@ -631,7 +669,7 @@ public class Utils {
       return;
     }
 
-    String authority = BuildConfig.APPLICATION_ID + ".FileProvider";
+    String authority = BuildConfig.APP_ID + ".FileProvider";
     Uri logFileUri = FileProvider.getUriForFile(App.getContext(), authority, logFile);
 
     final String CHANNEL_ID = "channel_crash_report";
@@ -662,7 +700,7 @@ public class Utils {
         NotificationManagerCompat.from(App.getContext());
 
     NotificationChannel channel = notificationManager.getNotificationChannel(CHANNEL_ID);
-    if (channel == null && VERSION.SDK_INT >= VERSION_CODES.O) {
+    if (channel == null && SDK_INT >= VERSION_CODES.O) {
       channel =
           new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
       notificationManager.createNotificationChannel(channel);
@@ -704,8 +742,7 @@ public class Utils {
 
   public static boolean checkRoot() {
     MySettings mySettings = MySettings.getInstance();
-    boolean res = runCommand(TAG + ": checkRoot", "0", "exec id -u", getSu());
-    mySettings.setRootGranted(res);
+    boolean res = NativeDaemon.rootInstance().isRunning();
     if (mySettings.isDebug()) {
       Util.debugLog(TAG, "checkRoot: getting root privileges " + (res ? "succeeded" : "failed"));
     }
@@ -722,8 +759,7 @@ public class Utils {
 
   public static boolean checkAdb(boolean showToastOnFailure) {
     MySettings mySettings = MySettings.getInstance();
-    boolean res = Adb.isConnected(showToastOnFailure);
-    mySettings.setAdbConnected(res);
+    boolean res = NativeDaemon.adbInstance().isRunning(showToastOnFailure);
     if (mySettings.isDebug()) {
       Util.debugLog(TAG, "checkAdb: connecting to ADB " + (res ? "succeeded" : "failed"));
     }

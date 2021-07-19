@@ -16,6 +16,9 @@ public class SettingsActivity extends BaseActivity implements OnPreferenceStartF
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    if (Utils.setNightTheme(this)) {
+      return;
+    }
     setContentView(R.layout.activity_fragment_container);
 
     ActionBar actionBar = getSupportActionBar();

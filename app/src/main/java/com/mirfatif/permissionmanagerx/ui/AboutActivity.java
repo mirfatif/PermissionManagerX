@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument;
@@ -15,6 +14,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.databinding.ActivityAboutBinding;
+import com.mirfatif.permissionmanagerx.databinding.TranslationDialogBinding;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
 import com.mirfatif.permissionmanagerx.svc.LogcatService;
@@ -24,46 +25,47 @@ import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 
 public class AboutActivity extends BaseActivity {
 
-  private MySettings mMySettings;
+  private final MySettings mMySettings = MySettings.getInstance();
+  private ActivityAboutBinding mB;
   private ActivityResultLauncher<String> mLoggingLauncher;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_about);
+    if (Utils.setNightTheme(this)) {
+      return;
+    }
+    mB = ActivityAboutBinding.inflate(getLayoutInflater());
+    setContentView(mB.getRoot());
 
     ActionBar actionBar = getSupportActionBar();
     if (actionBar != null) {
       actionBar.setTitle(R.string.about_menu_item);
     }
 
-    mMySettings = MySettings.getInstance();
-
-    ((TextView) findViewById(R.id.version)).setText(BuildConfig.VERSION_NAME);
-    openWebUrl(R.id.telegram, R.string.telegram_link);
-    openWebUrl(R.id.source_code, R.string.source_url);
-    openWebUrl(R.id.issues, R.string.issues_url);
-    openWebUrl(R.id.rating, R.string.play_store_url);
-    findViewById(R.id.contact).setOnClickListener(v -> Utils.sendMail(this, null));
+    mB.version.setText(BuildConfig.VERSION_NAME);
+    openWebUrl(mB.telegram, R.string.telegram_link);
+    openWebUrl(mB.sourceCode, R.string.source_url);
+    openWebUrl(mB.issues, R.string.issues_url);
+    openWebUrl(mB.rating, R.string.play_store_url);
+    mB.contact.setOnClickListener(v -> Utils.sendMail(this, null));
     setLogTitle(mMySettings.isDebug() ? R.string.stop_logging : R.string.collect_logs);
-    findViewById(R.id.logging).setOnClickListener(v -> handleLogging());
-    openWebUrl(R.id.privacy_policy, R.string.privacy_policy_link);
-    findViewById((R.id.check_update)).setOnClickListener(v -> checkForUpdates());
-    findViewById(R.id.translate).setOnClickListener(v -> showLocaleDialog());
-    findViewById(R.id.share_app).setOnClickListener(v -> sendShareIntent());
+    mB.logging.setOnClickListener(v -> handleLogging());
+    openWebUrl(mB.privacyPolicy, R.string.privacy_policy_link);
+    mB.checkUpdate.setOnClickListener(v -> checkForUpdates());
+    mB.translate.setOnClickListener(v -> showLocaleDialog());
+    mB.shareApp.setOnClickListener(v -> sendShareIntent());
 
-    TextView paidFeaturesView = findViewById(R.id.paid_features_summary);
-    paidFeaturesView.setText(Utils.htmlToString(R.string.paid_features_summary));
+    mB.paidFeaturesSummary.setText(Utils.htmlToString(R.string.paid_features_summary));
 
-    findViewById(R.id.paid_features)
-        .setOnClickListener(
-            v -> {
-              if (paidFeaturesView.getMaxLines() == 1) {
-                paidFeaturesView.setMaxLines(1000);
-              } else {
-                paidFeaturesView.setMaxLines(1);
-              }
-            });
+    mB.paidFeatures.setOnClickListener(
+        v -> {
+          if (mB.paidFeaturesSummary.getMaxLines() == 1) {
+            mB.paidFeaturesSummary.setMaxLines(1000);
+          } else {
+            mB.paidFeaturesSummary.setMaxLines(1);
+          }
+        });
 
     ActivityResultCallback<Uri> callback =
         logFile -> {
@@ -80,19 +82,19 @@ public class AboutActivity extends BaseActivity {
     mLoggingLauncher = registerForActivityResult(new CreateDocument(), callback);
   }
 
-  private void openWebUrl(int viewResId, int linkResId) {
-    findViewById(viewResId).setOnClickListener(v -> Utils.openWebUrl(this, getString(linkResId)));
+  private void openWebUrl(View view, int linkResId) {
+    view.setOnClickListener(v -> Utils.openWebUrl(this, getString(linkResId)));
   }
 
   private void setLogTitle(int resId) {
-    ((TextView) findViewById(R.id.logging_title)).setText(resId);
+    mB.loggingTitle.setText(resId);
   }
 
   private void handleLogging() {
     if (mMySettings.isDebug()) {
       LogcatService.sendStopLogIntent();
       setLogTitle(R.string.collect_logs);
-      Snackbar.make(findViewById(R.id.logging), R.string.logging_stopped, 5000).show();
+      Snackbar.make(mB.logging, R.string.logging_stopped, 5000).show();
       return;
     }
 
@@ -101,7 +103,6 @@ public class AboutActivity extends BaseActivity {
   }
 
   private boolean mCheckForUpdateInProgress = false;
-  private TextView mCheckUpdatesSummary;
 
   private void checkForUpdates() {
     if (mCheckForUpdateInProgress) {
@@ -109,8 +110,7 @@ public class AboutActivity extends BaseActivity {
     }
     mCheckForUpdateInProgress = true;
 
-    mCheckUpdatesSummary = findViewById(R.id.check_update_summary);
-    mCheckUpdatesSummary.setText(R.string.check_in_progress);
+    mB.checkUpdateSummary.setText(R.string.check_in_progress);
     Utils.runInBg(this::checkForUpdatesInBg);
   }
 
@@ -133,7 +133,7 @@ public class AboutActivity extends BaseActivity {
     Utils.runInFg(
         () -> {
           if (!isFinishing()) {
-            mCheckUpdatesSummary.setText(R.string.update_summary);
+            mB.checkUpdateSummary.setText(R.string.update_summary);
           }
 
           if (finalShowDialog) {
@@ -155,22 +155,20 @@ public class AboutActivity extends BaseActivity {
   }
 
   private void showLocaleDialog() {
-    View view = getLayoutInflater().inflate(R.layout.translation_dialog, null);
-    TextView tView = view.findViewById(R.id.language_credits_view);
-    tView.setText(Utils.htmlToString(R.string.language_credits));
-    tView.setMovementMethod(
-        BetterLinkMovementMethod.newInstance()
-            .setOnLinkClickListener(
-                (tv, url) -> Utils.openWebUrl(this, getString(R.string.translation_link))));
-    Builder builder = new Builder(this).setTitle(R.string.translations).setView(view);
+    TranslationDialogBinding b = TranslationDialogBinding.inflate(getLayoutInflater());
+    b.langCreditsV.setText(Utils.htmlToString(R.string.language_credits));
+    BetterLinkMovementMethod method = BetterLinkMovementMethod.newInstance();
+    method.setOnLinkClickListener((tv, url) -> Utils.openWebUrl(this, url));
+    b.langCreditsV.setMovementMethod(method);
+    Builder builder = new Builder(this).setTitle(R.string.translations).setView(b.getRoot());
     new AlertDialogFragment(builder.create()).show(this, "LOCALE", false);
   }
 
   private void sendShareIntent() {
-    Intent intent = new Intent(Intent.ACTION_SEND).setType("name/plain");
+    Intent intent = new Intent(Intent.ACTION_SEND).setType("text/plain");
     intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
     String text = getString(R.string.share_text, getString(R.string.play_store_url));
-    startActivity(intent.putExtra(Intent.EXTRA_TEXT, text));
+    startActivity(Intent.createChooser(intent.putExtra(Intent.EXTRA_TEXT, text), null));
   }
 
   @Override

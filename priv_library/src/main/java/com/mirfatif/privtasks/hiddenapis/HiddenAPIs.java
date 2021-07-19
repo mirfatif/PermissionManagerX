@@ -100,7 +100,8 @@ public abstract class HiddenAPIs {
   public abstract int getOpModeNamesSize() throws HiddenAPIsError;
 
   @HiddenMethod(name = "opToDefaultMode", type = MType.STATIC_METHOD, cls = AppOpsManager.class)
-  public abstract int opToDefaultMode(int opCode) throws HiddenAPIsError, HiddenAPIsException;
+  public abstract int opToDefaultMode(int opCode, boolean isLos)
+      throws HiddenAPIsError, HiddenAPIsException;
 
   @HiddenMethod(name = "opToSwitch", type = MType.STATIC_METHOD, cls = AppOpsManager.class)
   public abstract int opToSwitch(int opCode) throws HiddenAPIsError, HiddenAPIsException;

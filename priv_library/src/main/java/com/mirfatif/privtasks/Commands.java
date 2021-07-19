@@ -7,9 +7,6 @@ public class Commands {
   // the last String response, afterwards only serialized Objects are sent over stream
   public static final String HELLO = "HELLO";
 
-  // listen over TCP socket
-  public static final String CREATE_SOCKET = "CREATE_SOCKET";
-
   // Indicates the start of a crash log which the app handles
   public static final String CRASH_LOG_STARTS = "PRIVILEGED_DAEMON_CRASH_LOG_STARTS";
 
@@ -61,4 +58,11 @@ public class Commands {
   public static final String OP_NUM_INCONSISTENCY = "OP_NUM_INCONSISTENCY";
   public static final String OP_TO_DEF_MODE_NOT_FOUND = "OP_TO_DEF_MODE_NOT_FOUND";
   public static final String SET_PERM_FLAGS_FAILED = "SET_PERM_FLAGS_FAILED";
+
+  // AppOp modes
+  public static final String APP_OP_MODE_ALLOW = "allow";
+  public static final String APP_OP_MODE_IGNORE = "ignore";
+  public static final String APP_OP_MODE_DENY = "deny";
+  public static final String APP_OP_MODE_DEFAULT = "default";
+  public static final String APP_OP_MODE_FG = "foreground";
 }

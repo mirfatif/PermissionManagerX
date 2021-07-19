@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -17,6 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.databinding.FeedbackDialogBinding;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.AboutActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
@@ -57,28 +56,24 @@ public class FeedbackDialogFrag extends BottomSheetDialogFragment {
       @Nullable Bundle savedInstanceState) {
 
     boolean isYes = requireArguments().getBoolean(YES);
+    FeedbackDialogBinding b =
+        FeedbackDialogBinding.inflate(getLayoutInflater(), container, container != null);
 
-    View view = inflater.inflate(R.layout.feedback_dialog, container);
-    TextView msgView = view.findViewById(R.id.message_view);
-    Button neuButton = view.findViewById(R.id.neutral_button);
-    Button negButton = view.findViewById(R.id.negative_button);
-    Button posButton = view.findViewById(R.id.positive_button);
-
-    msgView.setText(
+    b.msgV.setText(
         isYes
             ? (BuildConfig.GH_VERSION ? R.string.purchase_and_rate_the_app : R.string.rate_the_app)
             : R.string.ask_to_provide_feedback);
-    neuButton.setText(R.string.do_not_ask);
-    posButton.setText(
+    b.neutralButton.setText(R.string.do_not_ask);
+    b.posButton.setText(
         isYes ? (BuildConfig.GH_VERSION ? R.string.i_will : R.string.rate) : R.string.contact);
 
-    neuButton.setOnClickListener(
+    b.neutralButton.setOnClickListener(
         v -> {
           MySettings.getInstance().setAskForFeedbackTs(Long.MAX_VALUE);
           dismiss();
         });
 
-    posButton.setOnClickListener(
+    b.posButton.setOnClickListener(
         v -> {
           dismiss();
           if (isYes) {
@@ -96,9 +91,9 @@ public class FeedbackDialogFrag extends BottomSheetDialogFragment {
           Utils.showToast(R.string.thank_you);
         });
 
-    negButton.setOnClickListener(v -> dismiss());
+    b.negButton.setOnClickListener(v -> dismiss());
 
-    return view;
+    return b.getRoot();
   }
 
   @Override

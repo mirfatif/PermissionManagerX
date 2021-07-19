@@ -1,6 +1,9 @@
 package com.mirfatif.permissionmanagerx.privs;
 
-import android.os.Build;
+import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.PMX_BIN_PATH;
+import static com.mirfatif.permissionmanagerx.util.Utils.UID_SHELL;
+import static com.mirfatif.permissionmanagerx.util.Utils.UID_SYSTEM;
+
 import android.os.SystemClock;
 import android.util.Log;
 import com.mirfatif.permissionmanagerx.BuildConfig;
@@ -20,10 +23,8 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.Reader;
 import java.net.Inet4Address;
 import java.net.Socket;
-import java.util.Arrays;
 
 public class PrivDaemonHandler {
 
@@ -39,6 +40,9 @@ public class PrivDaemonHandler {
   }
 
   private final MySettings mMySettings = MySettings.getInstance();
+  private final NativeDaemon mRootDaemon = NativeDaemon.rootInstance();
+  private final NativeDaemon mAdbDaemon = NativeDaemon.adbInstance();
+  private static final String DAEMON_GROUPS = "2000,3003,3009,1015,1023,1078,9997";
 
   private PrivDaemonHandler() {}
 
@@ -74,54 +78,47 @@ public class PrivDaemonHandler {
       return false;
     }
 
-    boolean extractFiles = mMySettings.shouldExtractFiles() || mForceFilesExtraction;
-    if (extractFiles) {
-      extractFiles();
+    boolean extractDex = mMySettings.shouldExtractFiles() || mForceFilesExtraction;
+    if (extractDex) {
+      extractToTmpDir();
+      extractToSharedDir();
+      mForceFilesExtraction = false;
     }
 
     String dexFilePath = dexInTmpDir ? TMP_DIR_DEX_PATH : SHARED_DIR_DEX_PATH;
-    String daemonScriptPath = dexInTmpDir ? TMP_DIR_SCRIPT_PATH : SHARED_DIR_SCRIPT_PATH;
 
-    if (!SET_PRIV_FILE.exists() || !daemonFilesExist(dexFilePath, daemonScriptPath)) {
-      if (!extractFiles) {
+    if (!dexExists(dexFilePath)) {
+      if (!extractDex) {
         mForceFilesExtraction = true;
         return startDaemon(preferRoot, dexInTmpDir);
       } else {
         Utils.showToast(R.string.files_not_extracted_accessible);
         return false;
       }
-    } else if (extractFiles) {
+    } else if (extractDex) {
       mMySettings.setFileExtractionTs();
     }
 
-    int daemonUid = mMySettings.getDaemonUid();
     String daemonContext = mMySettings.getDaemonContext();
-    boolean useSocket = mMySettings.useSocket();
 
-    String params =
-        mMySettings.isDebug()
-            + " "
-            + BuildConfig.APPLICATION_ID
-            + " "
-            + daemonUid
-            + " "
-            + daemonContext
-            + " "
-            + Utils.getUserId()
-            + " "
-            + DaemonCmdRcvSvc.CODE_WORD
-            + " "
-            + dexFilePath
-            + " "
-            + DAEMON_PACKAGE_NAME
-            + " "
-            + DAEMON_CLASS_NAME
-            + " pmx"
-            + (BuildConfig.DEBUG ? ".debug" : "")
-            + " "
-            + BIN_DIR
-            + ":"
-            + System.getenv("PATH");
+    String vmName = DAEMON_PACKAGE_NAME + ".pmx" + (BuildConfig.DEBUG ? ".debug" : "");
+    String vmClass = DAEMON_PACKAGE_NAME + "." + DAEMON_CLASS_NAME;
+    String vmCmd = "app_process / --nice-name=" + vmName + " " + vmClass;
+    if (mPreferRoot || mAdbDaemon.isRoot()) {
+      vmCmd =
+          PMX_BIN_PATH
+              + " --ns 1 --set-cg --rcaps "
+              + (daemonContext.equals(MySettings.CONTEXT_DEFAULT) ? "" : "--cxt " + daemonContext)
+              + " -u "
+              + mMySettings.getDaemonUid()
+              + " -g "
+              + mMySettings.getDaemonUid()
+              + " --groups "
+              + DAEMON_GROUPS
+              + " -- "
+              + vmCmd;
+    }
+    vmCmd = "export CLASSPATH=" + dexFilePath + "; exec " + vmCmd;
 
     Adb adb = null;
     InputStream inStream = null;
@@ -129,10 +126,6 @@ public class PrivDaemonHandler {
     BufferedReader inReader;
 
     if (mPreferRoot) {
-      if (useSocket) {
-        params += " " + Commands.CREATE_SOCKET;
-      }
-
       Process suProcess = Utils.runCommand(TAG + ": startDaemon", false, Utils.getSu());
       if (suProcess == null) {
         return false;
@@ -143,16 +136,14 @@ public class PrivDaemonHandler {
       inReader = new BufferedReader(new InputStreamReader(inStream));
       mCmdWriter = new PrintWriter(outStream, true);
 
-      Log.i(TAG, "startDaemon: sending command: exec sh " + daemonScriptPath);
-      mCmdWriter.println("exec sh " + daemonScriptPath);
+      Log.i(TAG, "startDaemon: sending command: " + vmCmd);
+      mCmdWriter.println(vmCmd);
 
       Utils.runInBg(() -> readDaemonMessages(suProcess, null));
 
     } else {
-      params += " " + Commands.CREATE_SOCKET;
-      useSocket = true;
       try {
-        adb = new Adb("exec sh " + daemonScriptPath, true);
+        adb = new Adb(vmCmd, true);
       } catch (AdbException e) {
         Log.e(TAG, "startDaemon: " + e.toString());
         return false;
@@ -161,7 +152,20 @@ public class PrivDaemonHandler {
       mCmdWriter = new PrintWriter(adb.getWriter(), true);
     }
 
-    // Daemon script waits and reads parameters from STDIN
+    boolean useSocket = !mPreferRoot || mMySettings.useSocket();
+
+    String params =
+        mMySettings.isDebug()
+            + " "
+            + useSocket
+            + " "
+            + Utils.getUserId()
+            + " "
+            + BuildConfig.APPLICATION_ID
+            + " "
+            + DaemonCmdRcvSvc.CODE_WORD;
+
+    // Daemon waits and reads parameters from STDIN
     Log.i(TAG, "startDaemon: sending params");
     mCmdWriter.println(params);
 
@@ -229,31 +233,21 @@ public class PrivDaemonHandler {
 
     // Even with ADB we may get System UID if ADBD is running as root.
     Object obj = sendRequest(Commands.GET_UID, true);
-    mIsSystemUid = obj instanceof Integer && (Integer) obj == 1000;
+    mIsSystemUid = obj instanceof Integer && (Integer) obj == UID_SYSTEM;
 
     mMySettings.setPrivDaemonAlive(true);
 
     if (mMySettings.shouldStartDaemonLog()) {
-      String logCommand = "logcat --pid " + pid;
+      String logCommand = "exec logcat --pid " + pid;
 
       if (mPreferRoot) {
-        logCommand =
-            SET_PRIV_PATH
-                + " -u "
-                + daemonUid
-                + " -g "
-                + daemonUid
-                + " --context "
-                + daemonContext
-                + " -- "
-                + logCommand;
-        if (LogcatService.doLoggingFails(Utils.getSu(), "exec " + logCommand)) {
+        if (!LogcatService.doLogging(Utils.getSu(), logCommand)) {
           return null;
         }
       } else {
         Adb adbLogger;
         try {
-          adbLogger = new Adb("exec " + logCommand, true);
+          adbLogger = new Adb(logCommand, true);
         } catch (AdbException e) {
           Log.e(TAG, "startDaemon: " + e.toString());
           return null;
@@ -280,13 +274,14 @@ public class PrivDaemonHandler {
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
+      boolean restart = mMySettings.isPrivDaemonAlive();
+      mMySettings.setPrivDaemonAlive(false);
       Utils.cleanStreams(process, adb, TAG + ": readDaemonMessages");
 
-      if (mMySettings.isPrivDaemonAlive()) {
-        mMySettings.setPrivDaemonAlive(false);
+      if (restart) {
         Log.e(TAG, "readDaemonMessages: privileged daemon died");
         Utils.showToast(R.string.priv_daemon_died);
-        SystemClock.sleep(5000);
+        SystemClock.sleep(10000); // Wait must be greater than NativeDaemon
         Log.i(TAG, "readDaemonMessages: restarting privileged daemon");
         startDaemon(mPreferRoot);
       }
@@ -357,47 +352,20 @@ public class PrivDaemonHandler {
       new File(SHARED_DIR, DAEMON_DEX).getAbsolutePath();
   private static final String TMP_DIR_DEX_PATH = new File(TMP_DIR, DAEMON_DEX).getAbsolutePath();
 
-  private static final String DAEMON_SCRIPT = DAEMON_PACKAGE_NAME + ".pmx.sh";
-  private static final String SHARED_DIR_SCRIPT_PATH =
-      new File(SHARED_DIR, DAEMON_SCRIPT).getAbsolutePath();
-  private static final String TMP_DIR_SCRIPT_PATH =
-      new File(TMP_DIR, DAEMON_SCRIPT).getAbsolutePath();
-
-  private static final File BIN_DIR =
-      new File(App.getContext().getFilesDir(), "bin").getAbsoluteFile();
-  private static final String SET_PRIV = "set_priv";
-  private static final File SET_PRIV_FILE = new File(BIN_DIR, "set_priv");
-  private static final String SET_PRIV_PATH = SET_PRIV_FILE.getAbsolutePath();
-
-  private void extractFiles() {
-    extractSetPrivBin(); // Required for extraction to TmpDir.
-    extractToTmpDir();
-    extractToSharedDir();
-    SystemClock.sleep(1000); // Let the files settle
-  }
-
   private final Object SHARED_DIR_LOCK = new Object();
 
   private void extractToSharedDir() {
     synchronized (SHARED_DIR_LOCK) {
-      boolean res = true;
-      for (String file : new String[] {DAEMON_DEX, DAEMON_SCRIPT}) {
-        String targetFile = file.equals(DAEMON_DEX) ? SHARED_DIR_DEX_PATH : SHARED_DIR_SCRIPT_PATH;
-        try (InputStream inStream = App.getContext().getAssets().open(file);
-            OutputStream outStream = new FileOutputStream(targetFile)) {
-          if (Utils.copyStreamFails(inStream, outStream)) {
-            Log.e(TAG, "extractToSharedDir: extracting " + file + " failed");
-            res = false;
-            continue;
-          }
+      try (InputStream inStream = App.getContext().getAssets().open(DAEMON_DEX);
+          OutputStream outStream = new FileOutputStream(SHARED_DIR_DEX_PATH)) {
+        if (!Utils.copyStream(inStream, outStream)) {
+          Log.e(TAG, "extractToSharedDir: extracting " + DAEMON_DEX + " failed");
+        } else {
           outStream.flush();
-        } catch (IOException e) {
-          e.printStackTrace();
-          return;
+          Log.i(TAG, "extractToSharedDir: extracted file successfully");
         }
-      }
-      if (res) {
-        Log.i(TAG, "extractToSharedDir: extracted files successfully");
+      } catch (IOException e) {
+        e.printStackTrace();
       }
     }
   }
@@ -406,141 +374,48 @@ public class PrivDaemonHandler {
 
   private void extractToTmpDir() {
     synchronized (TMP_DIR_LOCK) {
-      Process suProcess = null;
-      Adb adb = null;
-      OutputStream outStream;
-      InputStream inStream = null;
-      PrintWriter cmdWriter;
-      BufferedReader inReader;
-
-      boolean res = true;
-
-      String set_priv = SET_PRIV_PATH + " -u " + 2000 + " -g " + 2000;
-      if (new File("/proc/self/attr/current").exists()) {
-        set_priv += " --context u:r:shell:s0";
+      NativeDaemon daemon;
+      if (mMySettings.isRootGranted()) {
+        daemon = mRootDaemon;
+      } else if (mMySettings.isAdbConnected()) {
+        daemon = mAdbDaemon;
+      } else {
+        return;
       }
-      set_priv = "exec " + set_priv + " -- sh";
 
-      try {
-        for (String file : new String[] {DAEMON_DEX, DAEMON_SCRIPT}) {
-
-          String cmd =
-              "exec cat - >" + (file.equals(DAEMON_DEX) ? TMP_DIR_DEX_PATH : TMP_DIR_SCRIPT_PATH);
-
-          if (mMySettings.isRootGranted()) {
-            suProcess = Utils.runCommand(TAG + ": extractToTmpDir", true, Utils.getSu());
-            if (suProcess == null) {
-              Log.e(TAG, "extractToTmpDir: extraction failed");
-              res = false;
-              continue;
-            }
-            outStream = suProcess.getOutputStream();
-            cmdWriter = new PrintWriter(outStream, true);
-            Log.i(TAG, "extractToTmpDir: sending command: " + set_priv);
-            cmdWriter.println(set_priv);
-            Log.i(TAG, "extractToTmpDir: sending command: " + cmd);
-            cmdWriter.println(cmd);
-            inReader = new BufferedReader(new InputStreamReader(suProcess.getInputStream()));
-
-          } else if (mMySettings.isAdbConnected()) {
-            adb = new Adb("exec sh -c '" + cmd + "'", true);
-            outStream = adb.getOutputStream();
-            inReader = new BufferedReader(adb.getReader());
-          } else {
-            return;
-          }
-
-          Reader finalReader = inReader;
-          Utils.runInBg(
-              () -> {
-                try {
-                  Utils.readProcessLog(new BufferedReader(finalReader), TAG + ": extractToTmpDir");
-                } catch (IOException ignored) {
-                }
-              });
-
-          inStream = App.getContext().getAssets().open(file);
-          if (Utils.copyStreamFails(inStream, outStream)) {
-            Log.e(TAG, "extractToTmpDir: extracting " + file + " failed");
-            res = false;
-            continue;
-          }
-          outStream.flush();
-          outStream.close();
-          try {
-            if (suProcess != null) {
-              // Let the cat process terminate itself.
-              suProcess.waitFor();
-            }
-          } catch (InterruptedException ignored) {
-          }
+      try (InputStream inStream1 = App.getContext().getAssets().open(DAEMON_DEX);
+          InputStream inStream2 = App.getContext().getAssets().open(DAEMON_DEX)) {
+        int size = 0;
+        while (inStream1.read() != -1) {
+          size++;
         }
-      } catch (IOException e) {
-        e.printStackTrace();
-        return;
-      } catch (AdbException e) {
-        Log.e(TAG, "extractToTmpDir: " + e.toString());
-        return;
-      } finally {
-        try {
-          if (inStream != null) {
-            inStream.close();
-          }
-        } catch (IOException ignored) {
-        }
-        Utils.cleanStreams(suProcess, adb, TAG + ": extractToTmpDir");
-      }
-      if (res) {
-        Log.i(TAG, "extractToTmpDir: extracted files successfully");
-      }
-    }
-  }
 
-  private final Object SET_PRIV_LOCK = new Object();
-
-  // Required to start daemon if running as root (ADBD or su)
-  private void extractSetPrivBin() {
-    synchronized (SET_PRIV_LOCK) {
-      if (!BIN_DIR.exists() && !BIN_DIR.mkdirs()) {
-        Log.e(TAG, "extractSetPrivBin: could not create directory " + BIN_DIR);
-        return;
-      }
-
-      String arch = "_arm";
-      String supportedABIs = Arrays.toString(Build.SUPPORTED_ABIS).toLowerCase();
-      if (supportedABIs.contains("x86")) {
-        arch = "_x86";
-      } else if (!supportedABIs.contains("arm")) {
-        Log.e(TAG, "extractSetPrivBin: arch not supported " + supportedABIs);
-        return;
-      }
-
-      try (InputStream inputStream = App.getContext().getAssets().open(SET_PRIV + arch);
-          OutputStream outputStream = new FileOutputStream(SET_PRIV_FILE)) {
-        if (Utils.copyStreamFails(inputStream, outputStream)) {
-          Log.e(TAG, "extractSetPrivBin: extracting " + SET_PRIV + " failed");
+        if (!daemon.copyStream(size, TMP_DIR_DEX_PATH, inStream2)) {
+          Log.e(TAG, "extractToTmpDir: extracting " + DAEMON_DEX + " failed");
           return;
         }
-        outputStream.flush();
+        if (daemon.isRoot()) {
+          daemon.sendCommand(
+              "perm " + UID_SHELL + " " + UID_SHELL + " 0644 PARENT " + TMP_DIR_DEX_PATH);
+        }
       } catch (IOException e) {
         e.printStackTrace();
         return;
       }
 
-      String command = "exec chmod 0755 " + SET_PRIV_FILE;
-      Utils.runCommand(TAG + ": extractSetPrivBin", null, command, "sh");
-
-      Log.i(TAG, "extractSetPrivBin: extracted binary successfully");
+      Log.i(TAG, "extractToTmpDir: extracted file successfully");
     }
   }
 
-  private boolean daemonFilesExist(String dex, String script) {
-    String EXIST = "EXIST";
-    String cmd = "test -f " + dex + " && test -f " + script + " && echo " + EXIST + " ; exit $?";
-    if (mPreferRoot) {
-      return Utils.runCommand(TAG + ": filesExist", EXIST, cmd, Utils.getSu());
+  private boolean dexExists(String dexPath) {
+    NativeDaemon daemon;
+    if (mMySettings.isRootGranted()) {
+      daemon = mRootDaemon;
+    } else if (mMySettings.isAdbConnected()) {
+      daemon = mAdbDaemon;
     } else {
-      return Adb.runCommand("exec sh -c '" + cmd + "'", true, TAG + ": filesExist", EXIST);
+      return false;
     }
+    return daemon.sendCommand("exist " + dexPath, "EXIST");
   }
 }

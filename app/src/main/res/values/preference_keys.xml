@@ -1,148 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <!--
-    NOTE:
-    - Always and only use "pref_" prefix with names and values of preference keys.
-    - Use suffix "_enc" with key values which should be saved as encrypted preferences.
-    - Key name of default value must be the preference key value suffixed with "_default".
-    - All preference key names starting with "pref_filter_" are cleared on "Reset to Defaults"
-      in FilterSettingsActivity.
-    - Only preference key names not ending with "_enc_key" are restored from backup file.
-  -->
+  <!-- NOTE:
+       - Always and only use "pref_" prefix with names and values of preference keys.
+       - Use suffix "_enc" with key values which should be saved as encrypted preferences.
+       - Key name of default value must be the preference key value suffixed with "_default".
+       - All preference key names starting with "pref_filter_" are cleared on "Reset to Defaults"
+         in FilterSettingsActivity.
+       - Only preference key names not ending with "_enc_key" are restored from backup file. -->
 
-  <!--MainActivity Preferences-->
-  <string name="pref_main_crash_report_ts_enc_key">pref_main_crash_report_ts_enc</string>
-  <string name="pref_main_ask_for_feedback_ts_enc_key">pref_main_ask_for_feedback_ts_enc</string>
-  <string name="pref_main_daemon_context_key">pref_main_daemon_context</string>
-  <string name="pref_main_file_extraction_ts_enc_key">pref_main_file_extraction_ts_enc</string>
-  <string name="pref_main_su_exe_path_enc_key">pref_main_su_exe_path_enc</string>
+  <!-- MainActivity Preferences -->
+  <string name="pref_main_crash_report_ts_enc_key" translatable="false">pref_main_crash_report_ts_enc</string>
+  <string name="pref_main_ask_for_feedback_ts_enc_key" translatable="false">pref_main_ask_for_feedback_ts_enc</string>
+  <string name="pref_main_daemon_context_key" translatable="false">pref_main_daemon_context</string>
+  <string name="pref_main_file_extraction_ts_enc_key" translatable="false">pref_main_file_extraction_ts_enc</string>
+  <string name="pref_main_su_exe_path_enc_key" translatable="false">pref_main_su_exe_path_enc</string>
 
-  <!--MainActivity Preferences corresponding to default values-->
-  <string name="pref_main_adb_port_key">pref_main_adb_port</string>
+  <!-- MainActivity Preferences corresponding to default values -->
+  <string name="pref_main_adb_port_key" translatable="false">pref_main_adb_port</string>
   <integer name="pref_main_adb_port_default">5555</integer>
-  <string name="pref_main_adb_port_default">5555</string>
-  <string name="pref_main_daemon_uid_key">pref_main_daemon_uid</string>
+  <string name="pref_main_adb_port_default" translatable="false">5555</string>
+  <string name="pref_main_daemon_uid_key" translatable="false">pref_main_daemon_uid</string>
   <integer name="pref_main_daemon_uid_default">1000</integer>
-  <string name="pref_main_daemon_tmp_dir_key">pref_main_daemon_tmp_dir</string>
+  <string name="pref_main_daemon_tmp_dir_key" translatable="false">pref_main_daemon_tmp_dir</string>
   <bool name="pref_main_daemon_tmp_dir_default">true</bool>
-  <string name="pref_main_app_launch_count_enc_key">pref_main_app_launch_count_enc</string>
+  <string name="pref_main_app_launch_count_enc_key" translatable="false">pref_main_app_launch_count_enc</string>
   <integer name="pref_main_app_launch_count_enc_default">0</integer>
-  <string name="pref_main_deep_search_enc_key">pref_main_deep_search_enc</string>
+  <string name="pref_main_deep_search_enc_key" translatable="false">pref_main_deep_search_enc</string>
   <bool name="pref_main_deep_search_enc_default">false</bool>
-  <string name="pref_main_case_sensitive_search_enc_key">pref_main_case_sensitive_search_enc</string>
+  <string name="pref_main_case_sensitive_search_enc_key" translatable="false">pref_main_case_sensitive_search_enc</string>
   <bool name="pref_main_case_sensitive_search_enc_default">false</bool>
-  <string name="pref_main_dark_theme_key">pref_main_dark_theme</string>
+  <string name="pref_main_dark_theme_key" translatable="false">pref_main_dark_theme</string>
   <bool name="pref_main_dark_theme_default">true</bool>
-  <string name="pref_main_use_hidden_apis_enc_key">pref_main_use_hidden_apis_enc</string>
+  <string name="pref_main_use_hidden_apis_enc_key" translatable="false">pref_main_use_hidden_apis_enc</string>
   <bool name="pref_main_use_hidden_apis_enc_default">true</bool>
-  <string name="pref_main_use_socket_enc_key">pref_main_use_socket_enc</string>
+  <string name="pref_main_use_socket_enc_key" translatable="false">pref_main_use_socket_enc</string>
   <bool name="pref_main_use_socket_enc_default">false</bool>
-  <string name="pref_main_root_granted_enc_key">pref_main_root_granted_enc</string>
+  <string name="pref_main_root_granted_enc_key" translatable="false">pref_main_root_granted_enc</string>
   <bool name="pref_main_root_granted_enc_default">false</bool>
-  <string name="pref_main_adb_connected_enc_key">pref_main_adb_connected_enc</string>
+  <string name="pref_main_adb_connected_enc_key" translatable="false">pref_main_adb_connected_enc</string>
   <bool name="pref_main_adb_connected_enc_default">false</bool>
-  <string name="pref_main_crash_report_count_enc_key">pref_main_crash_report_count_enc</string>
+  <string name="pref_main_crash_report_count_enc_key" translatable="false">pref_main_crash_report_count_enc</string>
   <integer name="pref_main_crash_report_count_enc_default">1</integer>
-  <string name="pref_main_warn_dang_change_enc_key">pref_main_warn_dang_change_enc</string>
+  <string name="pref_main_warn_dang_change_enc_key" translatable="false">pref_main_warn_dang_change_enc</string>
   <bool name="pref_main_warn_dang_change_enc_default">true</bool>
 
-  <!--PreferencesActivity packages titles, keys and defaults-->
-  <string name="pref_filter_packages_cat_title">Packages</string>
-  <string name="pref_filter_exclude_no_icon_apps_key">pref_filter_exclude_no_icon_apps</string>
+  <!-- PreferencesActivity packages titles, keys and defaults -->
+  <string name="pref_filter_packages_cat_title" maxLength="20">Packages</string>
+  <string name="pref_filter_exclude_no_icon_apps_key" translatable="false">pref_filter_exclude_no_icon_apps</string>
   <bool name="pref_filter_exclude_no_icon_apps_default">true</bool>
-  <string name="pref_filter_exclude_no_icon_apps_title">Exclude apps without icons</string>
-  <string name="pref_filter_exclude_user_apps_key">pref_filter_exclude_user_apps</string>
+  <string name="pref_filter_exclude_no_icon_apps_title" maxLength="20">Exclude apps without icons</string>
+  <string name="pref_filter_exclude_user_apps_key" translatable="false">pref_filter_exclude_user_apps</string>
   <bool name="pref_filter_exclude_user_apps_default">false</bool>
-  <string name="pref_filter_exclude_user_apps_title">Exclude user apps</string>
-  <string name="pref_filter_exclude_system_apps_key">pref_filter_exclude_system_apps</string>
+  <string name="pref_filter_exclude_user_apps_title" maxLength="20">Exclude user apps</string>
+  <string name="pref_filter_exclude_system_apps_key" translatable="false">pref_filter_exclude_system_apps</string>
   <bool name="pref_filter_exclude_system_apps_default">false</bool>
-  <string name="pref_filter_exclude_system_apps_title">Exclude system apps</string>
-  <string name="pref_filter_exclude_framework_apps_key">pref_filter_exclude_framework_apps</string>
+  <string name="pref_filter_exclude_system_apps_title" maxLength="20">Exclude system apps</string>
+  <string name="pref_filter_exclude_framework_apps_key" translatable="false">pref_filter_exclude_framework_apps</string>
   <bool name="pref_filter_exclude_framework_apps_default">true</bool>
-  <string name="pref_filter_exclude_framework_apps_title">Exclude framework apps</string>
-  <string name="pref_filter_exclude_disabled_apps_key">pref_filter_exclude_disabled_apps</string>
+  <string name="pref_filter_exclude_framework_apps_title" maxLength="20">Exclude framework apps</string>
+  <string name="pref_filter_exclude_disabled_apps_key" translatable="false">pref_filter_exclude_disabled_apps</string>
   <bool name="pref_filter_exclude_disabled_apps_default">true</bool>
-  <string name="pref_filter_exclude_disabled_apps_title">Exclude disabled apps</string>
-  <string name="pref_filter_exclude_no_perms_apps_key">pref_filter_exclude_no_perms_apps</string>
+  <string name="pref_filter_exclude_disabled_apps_title" maxLength="20">Exclude disabled apps</string>
+  <string name="pref_filter_exclude_no_perms_apps_key" translatable="false">pref_filter_exclude_no_perms_apps</string>
   <bool name="pref_filter_exclude_no_perms_apps_default">true</bool>
-  <string name="pref_filter_exclude_no_perms_apps_title">Exclude apps without permissions</string>
-  <string name="pref_filter_excluded_apps_key">pref_filter_excluded_apps</string>
-  <string name="pref_filter_excluded_apps_title">Manually excluded apps</string>
+  <string name="pref_filter_exclude_no_perms_apps_title" maxLength="20">Exclude apps without permissions</string>
+  <string name="pref_filter_excluded_apps_key" translatable="false">pref_filter_excluded_apps</string>
+  <string name="pref_filter_excluded_apps_title" maxLength="20">Manually excluded apps</string>
 
-  <!--PreferencesActivity permissions titles, keys and defaults-->
-  <string name="pref_filter_permissions_cat_title">Permissions</string>
-  <string name="pref_filter_exclude_not_changeable_perms_key">pref_filter_exclude_not_changeable_perms</string>
+  <!-- PreferencesActivity permissions titles, keys and defaults -->
+  <string name="pref_filter_permissions_cat_title" maxLength="20">Permissions</string>
+  <string name="pref_filter_exclude_not_changeable_perms_key" translatable="false">pref_filter_exclude_not_changeable_perms</string>
   <bool name="pref_filter_exclude_not_changeable_perms_default">true</bool>
-  <string name="pref_filter_exclude_not_changeable_perms_title">Exclude permissions not changeable</string>
-  <string name="pref_filter_exclude_not_granted_perms_key">pref_filter_exclude_not_granted_perms</string>
+  <string name="pref_filter_exclude_not_changeable_perms_title" maxLength="20">Exclude permissions not changeable</string>
+  <string name="pref_filter_exclude_not_granted_perms_key" translatable="false">pref_filter_exclude_not_granted_perms</string>
   <bool name="pref_filter_exclude_not_granted_perms_default">false</bool>
-  <string name="pref_filter_exclude_not_granted_perms_title">Exclude permissions not granted</string>
-  <string name="pref_filter_excluded_perms_key">pref_filter_excluded_perms</string>
-  <string name="pref_filter_excluded_perms_title">Manually excluded permissions</string>
+  <string name="pref_filter_exclude_not_granted_perms_title" maxLength="20">Exclude permissions not granted</string>
+  <string name="pref_filter_excluded_perms_key" translatable="false">pref_filter_excluded_perms</string>
+  <string name="pref_filter_excluded_perms_title" maxLength="20">Manually excluded permissions</string>
 
-  <!--PreferencesActivity manifest permissions titles, keys and defaults-->
-  <string name="pref_filter_man_permissions_cat_title">Manifest Permissions</string>
-  <string name="pref_filter_exclude_invalid_perms_key">pref_filter_exclude_invalid_perms</string>
+  <!-- PreferencesActivity manifest permissions titles, keys and defaults -->
+  <string name="pref_filter_man_permissions_cat_title" maxLength="20">Manifest Permissions</string>
+  <string name="pref_filter_exclude_invalid_perms_key" translatable="false">pref_filter_exclude_invalid_perms</string>
   <bool name="pref_filter_exclude_invalid_perms_default">true</bool>
-  <string name="pref_filter_exclude_invalid_perms_title">Exclude invalid permissions</string>
-  <string name="pref_filter_exclude_normal_perms_key">pref_filter_exclude_normal_perms</string>
+  <string name="pref_filter_exclude_invalid_perms_title" maxLength="20">Exclude invalid permissions</string>
+  <string name="pref_filter_exclude_normal_perms_key" translatable="false">pref_filter_exclude_normal_perms</string>
   <bool name="pref_filter_exclude_normal_perms_default">false</bool>
-  <string name="pref_filter_exclude_normal_perms_title">Exclude normal permissions</string>
-  <string name="pref_filter_exclude_dangerous_perms_key">pref_filter_exclude_dangerous_perms</string>
+  <string name="pref_filter_exclude_normal_perms_title" maxLength="20">Exclude normal permissions</string>
+  <string name="pref_filter_exclude_dangerous_perms_key" translatable="false">pref_filter_exclude_dangerous_perms</string>
   <bool name="pref_filter_exclude_dangerous_perms_default">false</bool>
-  <string name="pref_filter_exclude_dangerous_perms_title">Exclude dangerous permissions</string>
-  <string name="pref_filter_exclude_signature_perms_key">pref_filter_exclude_signature_perms</string>
+  <string name="pref_filter_exclude_dangerous_perms_title" maxLength="20">Exclude dangerous permissions</string>
+  <string name="pref_filter_exclude_signature_perms_key" translatable="false">pref_filter_exclude_signature_perms</string>
   <bool name="pref_filter_exclude_signature_perms_default">false</bool>
-  <string name="pref_filter_exclude_signature_perms_title">Exclude signature permissions</string>
-  <string name="pref_filter_exclude_privileged_perms_key">pref_filter_exclude_privileged_perms</string>
+  <string name="pref_filter_exclude_signature_perms_title" maxLength="20">Exclude signature permissions</string>
+  <string name="pref_filter_exclude_privileged_perms_key" translatable="false">pref_filter_exclude_privileged_perms</string>
   <bool name="pref_filter_exclude_privileged_perms_default">false</bool>
-  <string name="pref_filter_exclude_privileged_perms_title">Exclude privileged permissions</string>
+  <string name="pref_filter_exclude_privileged_perms_title" maxLength="20">Exclude privileged permissions</string>
 
-  <!--PreferencesActivity AppOps permissions titles, keys and defaults-->
-  <string name="pref_filter_app_ops_permissions_cat_title">AppOps Permissions</string>
-  <string name="pref_filter_exclude_appops_perms_key">pref_filter_exclude_appops_perms</string>
+  <!-- PreferencesActivity AppOps permissions titles, keys and defaults -->
+  <string name="pref_filter_app_ops_permissions_cat_title" maxLength="20">AppOps Permissions</string>
+  <string name="pref_filter_exclude_appops_perms_key" translatable="false">pref_filter_exclude_appops_perms</string>
   <bool name="pref_filter_exclude_appops_perms_default">false</bool>
-  <string name="pref_filter_exclude_appops_perms_title">Exclude AppOps</string>
-  <string name="pref_filter_exclude_not_set_appops_key">pref_filter_exclude_not_set_appops</string>
+  <string name="pref_filter_exclude_appops_perms_title" maxLength="20">Exclude AppOps</string>
+  <string name="pref_filter_exclude_not_set_appops_key" translatable="false">pref_filter_exclude_not_set_appops</string>
   <bool name="pref_filter_exclude_not_set_appops_default">false</bool>
-  <string name="pref_filter_exclude_not_set_appops_title">Exclude AppOps not set (Defaults)</string>
-  <string name="pref_filter_extra_appops_key">pref_filter_extra_appops</string>
-  <string name="pref_filter_extra_appops_title">Extra AppOps, never excluded</string>
+  <string name="pref_filter_exclude_not_set_appops_title" maxLength="20">Exclude AppOps not set (Defaults)</string>
+  <string name="pref_filter_extra_appops_key" translatable="false">pref_filter_extra_appops</string>
+  <string name="pref_filter_extra_appops_title" maxLength="20">Extra AppOps, never excluded</string>
 
 
-  <!--SettingsActivity-->
-  <string name="pref_settings_check_for_updates_title">Check for updates</string>
+  <!-- SettingsActivity -->
+  <string name="pref_settings_check_for_updates_title" maxLength="20">Check for updates</string>
   <string name="pref_settings_check_for_updates_summary">Show a notification when a new version is
     available
   </string>
-  <string name="pref_settings_check_for_updates_key">pref_settings_check_for_updates</string>
+  <string name="pref_settings_check_for_updates_key" translatable="false">pref_settings_check_for_updates</string>
   <bool name="pref_settings_check_for_updates_default">true</bool>
-  <string name="pref_settings_check_for_updates_ts_enc_key">pref_settings_check_for_updates_ts_enc</string>
-  <string name="pref_settings_privileges_reminder_title">Remind missing privileges</string>
+  <string name="pref_settings_check_for_updates_ts_enc_key" translatable="false">pref_settings_check_for_updates_ts_enc</string>
+  <string name="pref_settings_privileges_reminder_title" maxLength="20">Remind missing privileges</string>
   <string name="pref_settings_privileges_reminder_summary">Show a dialog on app start if root and ADB
     privileges are not granted
   </string>
-  <string name="pref_settings_privileges_reminder_key">pref_settings_privileges_reminder</string>
+  <string name="pref_settings_privileges_reminder_key" translatable="false">pref_settings_privileges_reminder</string>
   <bool name="pref_settings_privileges_reminder_default">true</bool>
-  <string name="pref_settings_quick_scan_title">Perform quick scan</string>
+  <string name="pref_settings_quick_scan_title" maxLength="20">Perform quick scan</string>
   <string name="pref_settings_quick_scan_summary">Don\'t scan permissions, and don\'t show app\'s
     reference state and permission count
   </string>
-  <string name="pref_settings_quick_scan_key">pref_settings_quick_scan</string>
+  <string name="pref_settings_quick_scan_key" translatable="false">pref_settings_quick_scan</string>
   <bool name="pref_settings_quick_scan_default">false</bool>
-  <string name="pref_settings_special_search_key">pref_settings_special_search</string>
+  <string name="pref_settings_special_search_key" translatable="false">pref_settings_special_search</string>
   <bool name="pref_settings_special_search_default">true</bool>
-  <string name="pref_settings_special_search_title">Special search characters</string>
+  <string name="pref_settings_special_search_title" maxLength="20">Special search characters</string>
   <string name="pref_settings_special_search_summary">Use AND (&amp;), OR (|) and NOT (!) characters
     in search to combine queries
   </string>
+  <string name="pref_settings_locale_title" maxLength="20">Application language</string>
+  <string name="pref_settings_locale_key" translatable="false">pref_settings_locale</string>
+  <string name="pref_settings_locale_default" translatable="false" />
 
-  <!--HelpActivity-->
-  <string name="pref_help_font_size_key">pref_help_font_size</string>
+  <!-- HelpActivity -->
+  <string name="pref_help_font_size_key" translatable="false">pref_help_font_size</string>
   <integer name="pref_help_font_size_default">14</integer>
+  <string name="pref_help_update_check_ts_enc_key" translatable="false">pref_help_update_check_ts_enc</string>
 
-  <!--PackageActivity-->
-  <string name="pref_package_warn_dang_change_enc_key">pref_package_warn_dang_change_enc</string>
+  <!-- PackageActivity -->
+  <string name="pref_package_warn_dang_change_enc_key" translatable="false">pref_package_warn_dang_change_enc</string>
   <bool name="pref_package_warn_dang_change_enc_default">true</bool>
 
 </resources>

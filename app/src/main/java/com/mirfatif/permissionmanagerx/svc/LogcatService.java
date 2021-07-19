@@ -23,6 +23,7 @@ import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.Adb;
 import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.util.Utils;
+import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
 import com.mirfatif.privtasks.Commands;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -99,7 +100,7 @@ public class LogcatService extends Service {
         .setOnlyAlertOnce(true)
         .setSmallIcon(R.drawable.notification_icon)
         .setContentTitle(Utils.getString(R.string.logging))
-        .setColor(Utils.getAccentColor())
+        .setColor(UtilsFlavor.getAccentColor())
         .setStyle(
             new NotificationCompat.BigTextStyle().bigText(getString(R.string.logging_warning)))
         .addAction(0, getString(R.string.stop_logging), stopIntent);
@@ -139,10 +140,10 @@ public class LogcatService extends Service {
 
   private void stopLoggingAndSvc() {
     stopSvc();
-    stopLogging();
+    stopLogging(true);
   }
 
-  private void stopLogging() {
+  private void stopLogging(boolean sendCmd) {
     synchronized (LOG_WRITER_LOCK) {
       if (!mMySettings.isDebug()) {
         return;
@@ -152,6 +153,11 @@ public class LogcatService extends Service {
         mLogcatWriter.close();
       }
       mLogcatWriter = null;
+
+      if (!sendCmd) {
+        return;
+      }
+
       if (mMySettings.isPrivDaemonAlive()) {
         // Stop daemon logging
         mDaemonHandler.sendRequest(Commands.STOP_LOGGING);
@@ -193,6 +199,7 @@ public class LogcatService extends Service {
       return;
     }
 
+    mMySettings.setDebugLog(true);
     writeToLogFile(Utils.getDeviceInfo());
 
     if (mMySettings.isPrivDaemonAlive()) {
@@ -200,26 +207,27 @@ public class LogcatService extends Service {
       mDaemonHandler.sendRequest(Commands.SHUTDOWN);
     }
 
-    Utils.runCommand(TAG + ": doLogging", null, null, "logcat", "-c");
-    Log.d(TAG, "doLogging: starting");
+    Utils.runCommand(TAG + ": doLogging", "logcat", "-c");
+    Log.d(TAG, "doLogging: Starting");
 
-    if (doLoggingFails("sh", "exec logcat --pid " + android.os.Process.myPid())) {
+    if (!doLogging("sh", "exec logcat --pid " + android.os.Process.myPid())) {
       stopSvcAndShowFailed();
+      stopLogging(false);
       return;
     }
 
     Utils.runInFg(this::startTimer);
-    mMySettings.setDebugLog(true);
 
     Intent intent = new Intent(App.getContext(), MainActivity.class);
     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
     Utils.runInFg(() -> startActivity(intent));
   }
 
-  public static boolean doLoggingFails(String cmd1, String cmd2) {
+  @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+  public static boolean doLogging(String cmd1, String cmd2) {
     Process process = Utils.runCommand(TAG + ": doLogging", true, cmd1);
     if (process == null) {
-      return true;
+      return false;
     }
 
     Utils.runInBg(() -> readLogcatStream(process, null));
@@ -227,7 +235,7 @@ public class LogcatService extends Service {
     Log.i(TAG, "doLogging: sending command to shell: " + cmd2);
     new PrintWriter(process.getOutputStream(), true).println(cmd2);
 
-    return false;
+    return true;
   }
 
   public static void readLogcatStream(Process process, Adb adb) {
@@ -256,6 +264,7 @@ public class LogcatService extends Service {
 
   private static PrintWriter mLogcatWriter;
   private static final Object LOG_WRITER_LOCK = new Object();
+  private static int mLinesWritten;
 
   private static void writeToLogFile(String line) {
     synchronized (LOG_WRITER_LOCK) {
@@ -266,6 +275,13 @@ public class LogcatService extends Service {
         return;
       }
       mLogcatWriter.println(line);
+
+      // Let's be flash friendly
+      mLinesWritten++;
+      if (mLinesWritten >= 100) {
+        mLogcatWriter.flush();
+        mLinesWritten = 0;
+      }
     }
   }
 

@@ -17,7 +17,7 @@
     android:orientation="vertical">
 
     <TextView
-      android:id="@+id/no_permissions_view"
+      android:id="@+id/no_perms_view"
       android:visibility="gone"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
       android:textStyle="italic" />
 
     <Button
-      android:id="@+id/open_filter_settings"
+      android:id="@+id/settings_button"
       android:visibility="gone"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -36,12 +36,12 @@
   </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
   <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-    android:id="@+id/package_refresh_layout"
+    android:id="@+id/refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/package_recycler_view"
+      android:id="@+id/recycler_v"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:scrollbars="vertical" />

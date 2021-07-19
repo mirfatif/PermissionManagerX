@@ -11,7 +11,6 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.util.Utils;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -154,50 +153,6 @@ public class Adb {
     }
   }
 
-  public static boolean isConnected(boolean showToastOnFailure) {
-    boolean res = runCommand("exec id -u", showToastOnFailure, TAG + ": isConnected", "2000", "0");
-    if (!res) {
-      Utils.showToast(R.string.adb_command_fail);
-    }
-    return res;
-  }
-
-  public static boolean runCommand(
-      String cmd, boolean showToastOnFailure, String tag, String... matches) {
-    Adb adb;
-    try {
-      adb = new Adb(cmd, showToastOnFailure);
-    } catch (AdbException e) {
-      Log.e(tag, e.toString());
-      return false;
-    }
-
-    String line, res = null;
-    try (BufferedReader adbReader = new BufferedReader(adb.getReader())) {
-      while ((line = adbReader.readLine()) != null) {
-        Log.i(tag, line);
-        res = line;
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    } finally {
-      Utils.cleanStreams(null, adb, tag);
-    }
-
-    if (matches == null || matches.length == 0) {
-      return true;
-    }
-
-    if (res != null) {
-      for (String match : matches) {
-        if (res.trim().equals(match)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
   private static class AdbReader extends Reader {
 
     private final AdbStream adbStream;
@@ -298,6 +253,7 @@ public class Adb {
 
   private AdbOutputStream adbOutputStream;
 
+  @SuppressWarnings("UnusedDeclaration")
   public AdbOutputStream getOutputStream() {
     if (adbOutputStream == null) {
       adbOutputStream = new AdbOutputStream(adbStream);

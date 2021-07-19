@@ -101,9 +101,14 @@ public class HiddenAPIsImpl extends HiddenAPIs {
     }
   }
 
-  public int opToDefaultMode(int opCode) throws HiddenAPIsError, HiddenAPIsException {
+  public int opToDefaultMode(int opCode, boolean isLos)
+      throws HiddenAPIsError, HiddenAPIsException {
     try {
-      return AppOpsManager.opToDefaultMode(opCode);
+      if (isLos) {
+        return AppOpsManager.opToDefaultMode(opCode, false);
+      } else {
+        return AppOpsManager.opToDefaultMode(opCode);
+      }
     } catch (NoSuchMethodError e) {
       throw new HiddenAPIsError(e);
     } catch (ArrayIndexOutOfBoundsException e) {

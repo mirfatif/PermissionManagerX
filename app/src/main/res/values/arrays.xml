@@ -152,4 +152,17 @@
     <item>@string/daemon_context_shell</item>
     <item>@string/daemon_context_default</item>
   </string-array>
+
+  <string-array name="locales">
+    <item>@string/locale_system</item>
+    <item>@string/locale_en</item>
+    <item>@string/locale_ru</item>
+  </string-array>
+
+  <string-array name="locale_codes">
+    <item />
+    <item>en</item>
+    <item>ru</item>
+  </string-array>
+
 </resources>

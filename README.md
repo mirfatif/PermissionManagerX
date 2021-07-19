@@ -28,6 +28,10 @@ In short, <b>AppOps</b> provide a fine-grained control over many of the manifest
 
 * The app is tested on stock Android 7-11. Some highly customized ROMs may behave unexpectedly.
 
+## Privacy Policy
+
+https://mirfatif.github.io/PermissionManagerX/privacy_policy.html
+
 ## Screenshots
 
 <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" width="250">
@@ -54,7 +58,7 @@ Credits and thanks to the developers of:
 
 ## License [![License](https://img.shields.io/github/license/mirfatif/PermissionManagerX?label="License")](https://github.com/mirfatif/PermissionManagerX/blob/master/LICENSE)
 
-You **CANNOT** use and distribute the app icon in anyway, except for **Permission Manager X** app.
+You **CANNOT** use and distribute the app icon in anyway, except for **Permission Manager X** (`com.mirfatif.permissionmanagerx`) app.
 
     Permission Manager X is free software: you can redistribute it and/or modify
     it under the terms of the Affero GNU General Public License as published by

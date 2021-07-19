@@ -11,7 +11,7 @@
   android:scrollbars="vertical">
 
   <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:paddingStart="12dp"
@@ -64,37 +64,21 @@
         app:maxImageSize="36dp"
         tools:ignore="ContentDescription" />
 
-      <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/redeem_code_button"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_margin="4dp"
-        android:src="@drawable/redeem"
-        app:backgroundTint="?attr/accentColor"
-        app:borderWidth="4dp"
-        app:elevation="4dp"
-        app:fabCustomSize="56dp"
-        app:maxImageSize="36dp"
-        tools:ignore="ContentDescription" />
-
     </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
     <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
       android:id="@+id/bitcoin_container"
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:gravity="center_horizontal"
       android:orientation="vertical"
       android:visibility="gone">
 
-      <TextView
-        android:id="@+id/bitcoin_link"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
+      <Button
+        android:id="@+id/bitcoin_button2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="4dp"
-        android:text="@string/bitcoin_link"
-        android:textSize="16sp" />
+        android:text="@string/send_bitcoin" />
 
       <ImageView
         android:layout_width="250dp"
@@ -116,31 +100,18 @@
 
     </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
-    <TextView
-      android:id="@+id/bank_account_link"
-      android:textStyle="bold"
-      android:layout_width="wrap_content"
+    <Button
+      android:id="@+id/bank_account_button2"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="@string/bank_account_link"
-      android:textSize="16sp"
+      android:text="@string/ask_for_bank_account"
       android:visibility="gone" />
 
-    <TextView
-      android:id="@+id/play_store_link"
-      android:textStyle="bold"
-      android:layout_width="wrap_content"
+    <Button
+      android:id="@+id/play_store_button2"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="@string/play_store_link"
-      android:textSize="16sp"
-      android:visibility="gone" />
-
-    <TextView
-      android:id="@+id/redeem_code_link"
-      android:textStyle="bold"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/redeem_code_link"
-      android:textSize="16sp"
+      android:text="@string/get_paid_version_from_ps"
       android:visibility="gone" />
 
   </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
