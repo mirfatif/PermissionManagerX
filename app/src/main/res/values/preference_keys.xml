@@ -141,6 +141,7 @@
   <!-- HelpActivity -->
   <string name="pref_help_font_size_key" translatable="false">pref_help_font_size</string>
   <integer name="pref_help_font_size_default">14</integer>
+  <string name="pref_help_update_check_ts_enc_key" translatable="false">pref_help_update_check_ts_enc</string>
 
   <!-- PackageActivity -->
   <string name="pref_package_warn_dang_change_enc_key" translatable="false">pref_package_warn_dang_change_enc</string>
