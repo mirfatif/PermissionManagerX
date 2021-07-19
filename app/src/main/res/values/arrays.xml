@@ -154,9 +154,9 @@
   </string-array>
 
   <string-array name="locales">
-    <item>System</item>
-    <item>English</item>
-    <item>Russian</item>
+    <item>@string/locale_system</item>
+    <item>@string/locale_en</item>
+    <item>@string/locale_ru</item>
   </string-array>
 
   <string-array name="locale_codes">

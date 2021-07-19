@@ -238,7 +238,7 @@
   <string name="app_op_mode_default">Default</string>
   <string name="app_op_mode_foreground">Foreground</string>
 
-  <!-- PreferenceActivity -->
+  <!-- FilterSettingsActivity -->
   <string name="filter_settings" maxLength="15">Filter Settings</string>
   <string name="excluded_apps_summary">Long press on a package name to exclude it</string>
   <string name="excluded_perms_summary">Long press on a permission name to exclude it</string>
@@ -249,6 +249,11 @@
     <item quantity="one">%1$s and %2$d other</item>
     <item quantity="other">%1$s and %2$d others</item>
   </plurals>
+
+  <!-- SettingsActivity -->
+  <string name="locale_system">System</string>
+  <string name="locale_en">English</string>
+  <string name="locale_ru">Russian</string>
 
   <!-- PreferenceActivity menu items -->
   <string name="filter_settings_reset_defaults_menu_item" maxLength="15">Reset To Defaults</string>

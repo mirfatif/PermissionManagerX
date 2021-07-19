@@ -10,48 +10,49 @@
   <!-- MainActivity Preferences -->
   <!-- MainActivity Preferences corresponding to default values -->
   <!-- PreferencesActivity packages titles, keys and defaults -->
-  <string name="pref_filter_packages_cat_title">Пакеты</string>
-  <string name="pref_filter_exclude_no_icon_apps_title">Исключить приложения без иконок</string>
-  <string name="pref_filter_exclude_user_apps_title">Исключить пользовательские приложения</string>
-  <string name="pref_filter_exclude_system_apps_title">Исключить системные приложения</string>
-  <string name="pref_filter_exclude_framework_apps_title">Исключить приложения уровня фреймворка</string>
-  <string name="pref_filter_exclude_disabled_apps_title">Исключить замороженные приложения</string>
-  <string name="pref_filter_exclude_no_perms_apps_title">Исключить приложения без разрешений</string>
-  <string name="pref_filter_excluded_apps_title">Исключённые вручную приложения</string>
+  <string name="pref_filter_packages_cat_title" maxLength="20">Пакеты</string>
+  <string name="pref_filter_exclude_no_icon_apps_title" maxLength="20">Исключить приложения без иконок</string>
+  <string name="pref_filter_exclude_user_apps_title" maxLength="20">Исключить пользовательские приложения</string>
+  <string name="pref_filter_exclude_system_apps_title" maxLength="20">Исключить системные приложения</string>
+  <string name="pref_filter_exclude_framework_apps_title" maxLength="20">Исключить приложения уровня фреймворка</string>
+  <string name="pref_filter_exclude_disabled_apps_title" maxLength="20">Исключить замороженные приложения</string>
+  <string name="pref_filter_exclude_no_perms_apps_title" maxLength="20">Исключить приложения без разрешений</string>
+  <string name="pref_filter_excluded_apps_title" maxLength="20">Исключённые вручную приложения</string>
   <!-- PreferencesActivity permissions titles, keys and defaults -->
-  <string name="pref_filter_permissions_cat_title">Разрешения</string>
-  <string name="pref_filter_exclude_not_changeable_perms_title">Исключить неизменяемые разрешения</string>
-  <string name="pref_filter_exclude_not_granted_perms_title">Исключить не предоставленные разрешения</string>
-  <string name="pref_filter_excluded_perms_title">Исключённые вручную разрешения</string>
+  <string name="pref_filter_permissions_cat_title" maxLength="20">Разрешения</string>
+  <string name="pref_filter_exclude_not_changeable_perms_title" maxLength="20">Исключить неизменяемые разрешения</string>
+  <string name="pref_filter_exclude_not_granted_perms_title" maxLength="20">Исключить не предоставленные разрешения</string>
+  <string name="pref_filter_excluded_perms_title" maxLength="20">Исключённые вручную разрешения</string>
   <!-- PreferencesActivity manifest permissions titles, keys and defaults -->
-  <string name="pref_filter_man_permissions_cat_title">Разрешения манифеста</string>
-  <string name="pref_filter_exclude_invalid_perms_title">Исключить недопустимые разрешения</string>
-  <string name="pref_filter_exclude_normal_perms_title">Исключить обычные разрешения</string>
-  <string name="pref_filter_exclude_dangerous_perms_title">Исключить опасные разрешения</string>
-  <string name="pref_filter_exclude_signature_perms_title">Исключить разрешения с уровнем \"подпись\"</string>
-  <string name="pref_filter_exclude_privileged_perms_title">Исключить привилегированные разрешения</string>
+  <string name="pref_filter_man_permissions_cat_title" maxLength="20">Разрешения манифеста</string>
+  <string name="pref_filter_exclude_invalid_perms_title" maxLength="20">Исключить недопустимые разрешения</string>
+  <string name="pref_filter_exclude_normal_perms_title" maxLength="20">Исключить обычные разрешения</string>
+  <string name="pref_filter_exclude_dangerous_perms_title" maxLength="20">Исключить опасные разрешения</string>
+  <string name="pref_filter_exclude_signature_perms_title" maxLength="20">Исключить разрешения с уровнем «подпись»</string>
+  <string name="pref_filter_exclude_privileged_perms_title" maxLength="20">Исключить привилегированные разрешения</string>
   <!-- PreferencesActivity AppOps permissions titles, keys and defaults -->
-  <string name="pref_filter_app_ops_permissions_cat_title">Разрешения AppOps</string>
-  <string name="pref_filter_exclude_appops_perms_title">Исключить AppOps</string>
-  <string name="pref_filter_exclude_not_set_appops_title">Исключить ненастроенные AppOps (По умолчанию)</string>
-  <string name="pref_filter_extra_appops_title">Дополнительные AppOps, никогда не исключаемые</string>
+  <string name="pref_filter_app_ops_permissions_cat_title" maxLength="20">Разрешения AppOps</string>
+  <string name="pref_filter_exclude_appops_perms_title" maxLength="20">Исключить AppOps</string>
+  <string name="pref_filter_exclude_not_set_appops_title" maxLength="20">Исключить ненастроенные AppOps (По умолчанию)</string>
+  <string name="pref_filter_extra_appops_title" maxLength="20">Дополнительные AppOps, никогда не исключаемые</string>
   <!-- SettingsActivity -->
-  <string name="pref_settings_check_for_updates_title">Проверка обновлений</string>
+  <string name="pref_settings_check_for_updates_title" maxLength="20">Проверка обновлений</string>
   <string name="pref_settings_check_for_updates_summary">Показывать уведомление, когда доступна
     новая версия
   </string>
-  <string name="pref_settings_privileges_reminder_title">Напоминать об отсутствии root-прав</string>
+  <string name="pref_settings_privileges_reminder_title" maxLength="20">Напоминать об отсутствии root-прав</string>
   <string name="pref_settings_privileges_reminder_summary">Показать диалог при запуске приложения, если права root и ADB
     не предоставлены
   </string>
-  <string name="pref_settings_quick_scan_title">Быстрое сканирование</string>
+  <string name="pref_settings_quick_scan_title" maxLength="20">Быстрое сканирование</string>
   <string name="pref_settings_quick_scan_summary">Не сканировать разрешения и не показывать
-     индикатор и число разрешений
+     индикатор и количество разрешений
   </string>
-  <string name="pref_settings_special_search_title">Спецсимволы поиска</string>
+  <string name="pref_settings_special_search_title" maxLength="20">Спецсимволы поиска</string>
   <string name="pref_settings_special_search_summary">Используйте символы И (&amp;), ИЛИ (|) и НЕ (!)
     для уточнения поиска
   </string>
+  <string name="pref_settings_locale_title" maxLength="20">Язык приложения</string>
   <!-- HelpActivity -->
   <!-- PackageActivity -->
 </resources>
