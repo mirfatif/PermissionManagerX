@@ -168,6 +168,8 @@ public class PackageParser {
         }
       }
 
+      mPkgParserFlavor.sortPkgListAgain(packageList);
+
       // finally update complete list and complete progress
       submitLiveData(packageList, true);
       setProgress(PKG_PROG_ENDS, false, true, isBgDeepScan);
@@ -414,11 +416,11 @@ public class PackageParser {
 
   public int getProgressTextResId(int progressMax) {
     switch (progressMax) {
-      case PackageParser.PACKAGES_LIST:
+      case PACKAGES_LIST:
         return R.string.creating_packages_list;
-      case PackageParser.REF_PERMS_LIST:
+      case REF_PERMS_LIST:
         return R.string.reading_reference_perms;
-      case PackageParser.APP_OPS_LISTS:
+      case APP_OPS_LISTS:
         return R.string.creating_app_ops_lists;
     }
     return 0;

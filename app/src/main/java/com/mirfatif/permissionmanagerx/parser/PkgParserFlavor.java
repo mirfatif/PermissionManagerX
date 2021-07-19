@@ -35,6 +35,9 @@ public class PkgParserFlavor {
                 pkgInfo.applicationInfo.loadLabel(mPackageManager).toString().toUpperCase()));
   }
 
+  @SuppressWarnings("UnusedDeclaration")
+  void sortPkgListAgain(List<Package> packageList) {}
+
   List<PackageInfo> getPackageList() {
     return mPackageManager.getInstalledPackages(PackageManager.GET_PERMISSIONS | PM_GET_SIGNATURES);
   }

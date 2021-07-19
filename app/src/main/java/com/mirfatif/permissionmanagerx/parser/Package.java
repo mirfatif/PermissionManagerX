@@ -164,6 +164,28 @@ public class Package {
     return mLastPermCount;
   }
 
+  @SuppressWarnings("UnusedDeclaration")
+  public int getTotalPermAppOpCount() {
+    if (mMySettings.isQuickScanEnabled()) {
+      return 0;
+    }
+    return getTotalAppOpsCount() + getTotalPermCount();
+  }
+
+  @SuppressWarnings("UnusedDeclaration")
+  public int getGrantedPermAppOpCount() {
+    if (mMySettings.isQuickScanEnabled()) {
+      return 0;
+    }
+    int granted = 0;
+    for (Permission perm : getPermissionsList()) {
+      if (perm.isGranted()) {
+        granted++;
+      }
+    }
+    return granted;
+  }
+
   public void setTotalAppOpsCount(int count) {
     mTotalAppOpsCount = count;
   }
