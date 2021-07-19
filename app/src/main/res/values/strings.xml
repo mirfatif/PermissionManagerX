@@ -151,6 +151,7 @@
   <string name="pkg_state_critical">Critical</string>
   <string name="pkg_state_framework">Framework</string>
   <string name="pkg_state_system">System</string>
+  <string name="pkg_state_user">User</string>
   <string name="pkg_state_disabled">Disabled</string>
   <string name="pkg_state_disabled2">%s, Disabled</string>
 
@@ -227,11 +228,18 @@
   <string name="prot_lvl_app_ops2">%s, AppOps</string>
   <string name="prot_lvl_uid_mode">%s, UID mode</string>
   <string name="prot_lvl_extra">%s, Extra</string>
-  <string name="prot_lvl_development">%s, Development</string>
+  <string name="prot_lvl_development">Development</string>
+  <string name="prot_lvl_development2">%s, Development</string>
   <string name="prot_lvl_privileged">Privileged</string>
   <string name="prot_lvl_privileged2">%s, Privileged</string>
   <string name="prot_lvl_fixed">Fixed</string>
   <string name="prot_lvl_fixed2">%s, Fixed</string>
+  <string name="search_str_uid">UID</string>
+  <string name="search_str_time">TIME</string>
+  <string name="search_str_extra">EXTRA</string>
+  <string name="search_str_red">RED</string>
+  <string name="search_str_orange">ORANGE</string>
+  <string name="search_str_green">GREEN</string>
   <string name="app_op_mode_allow">Allow</string>
   <string name="app_op_mode_ignore">Ignore</string>
   <string name="app_op_mode_deny">Deny</string>

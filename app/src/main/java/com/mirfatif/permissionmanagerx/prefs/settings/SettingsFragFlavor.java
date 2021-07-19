@@ -12,6 +12,7 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.main.MainActivity;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
+import com.mirfatif.permissionmanagerx.parser.SearchConstants;
 import com.mirfatif.permissionmanagerx.util.Utils;
 
 @SuppressWarnings("UnusedDeclaration")
@@ -51,6 +52,7 @@ public class SettingsFragFlavor extends PreferenceFragmentCompat
       PackageParser.getInstance().updatePackagesList();
     } else if (key.equals(getString(R.string.pref_settings_locale_key))) {
       App.updateContext();
+      SearchConstants.recreate();
       MainActivity.restart();
     }
   }

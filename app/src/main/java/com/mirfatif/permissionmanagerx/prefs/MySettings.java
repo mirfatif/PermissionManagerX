@@ -1,5 +1,7 @@
 package com.mirfatif.permissionmanagerx.prefs;
 
+import static com.mirfatif.permissionmanagerx.util.Utils.getString;
+
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
@@ -137,10 +139,6 @@ public class MySettings {
 
   private Set<String> getSetPref(int keyId) {
     return mPrefs.getStringSet(getString(keyId), null);
-  }
-
-  private String getString(int keyResId) {
-    return App.getContext().getString(keyResId);
   }
 
   public void savePref(int key, boolean bool) {

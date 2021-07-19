@@ -143,6 +143,7 @@
   <string name="pkg_state_critical">Критический</string>
   <string name="pkg_state_framework">Фреймворк</string>
   <string name="pkg_state_system">Система</string>
+  <string name="pkg_state_user">Пользователь</string>
   <string name="pkg_state_disabled">Заморожено</string>
   <string name="pkg_state_disabled2">%s, заморожено</string>
   <!-- PrivDaemonHandler -->
@@ -207,11 +208,18 @@
   <string name="prot_lvl_app_ops2">%s, AppOps</string>
   <string name="prot_lvl_uid_mode">%s, UID режим</string>
   <string name="prot_lvl_extra">%s, дополнительные</string>
-  <string name="prot_lvl_development">%s, разработка</string>
+  <string name="prot_lvl_development">разработка</string>
+  <string name="prot_lvl_development2">%s, разработка</string>
   <string name="prot_lvl_privileged">Привилегированный</string>
   <string name="prot_lvl_privileged2">%s, привилегированный</string>
   <string name="prot_lvl_fixed">Фиксированный</string>
   <string name="prot_lvl_fixed2">%s, фиксированный</string>
+  <string name="search_str_uid">UID</string>
+  <string name="search_str_time">ВРЕМЯ</string>
+  <string name="search_str_extra">ДОПОЛНИТЕЛЬНЫЙ</string>
+  <string name="search_str_red">КРАСНЫЙ</string>
+  <string name="search_str_orange">АПЕЛЬСИН</string>
+  <string name="search_str_green">ЗЕЛЕНЫЙ</string>
   <string name="app_op_mode_allow">Разрешить</string>
   <string name="app_op_mode_ignore">Игнорировать</string>
   <string name="app_op_mode_deny">Запретить</string>
@@ -231,7 +239,7 @@
   </plurals>
   <!-- SettingsActivity -->
   <string name="locale_system">системного</string>
-  <string name="locale_en">английский</string>
+  <string name="locale_en">Английский</string>
   <string name="locale_ru">Русский</string>
   <!-- PreferenceActivity menu items -->
   <string name="filter_settings_reset_defaults_menu_item" maxLength="15">Сброс по умолчанию</string>

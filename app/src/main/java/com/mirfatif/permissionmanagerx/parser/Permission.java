@@ -1,5 +1,6 @@
 package com.mirfatif.permissionmanagerx.parser;
 
+import static com.mirfatif.permissionmanagerx.parser.SearchConstants.CONSTANTS;
 import static com.mirfatif.permissionmanagerx.util.Utils.getString;
 
 import android.text.TextUtils;
@@ -14,12 +15,15 @@ public class Permission {
 
   private final MySettings mMySettings = MySettings.getInstance();
 
-  public static final String PROTECTION_UNKNOWN = "Unknown";
-  public static final String PROTECTION_DANGEROUS = "Dangerous";
-  public static final String PROTECTION_NORMAL = "Normal";
-  public static final String PROTECTION_SIGNATURE = "Signature";
-  public static final String GRANTED = "Granted";
-  public static final String REVOKED = "Revoked";
+  public static final String PROTECTION_UNKNOWN = "PROTECTION_UNKNOWN";
+  public static final String PROTECTION_DANGEROUS = "PROTECTION_DANGEROUS";
+  public static final String PROTECTION_NORMAL = "PROTECTION_NORMAL";
+  public static final String PROTECTION_SIGNATURE = "PROTECTION_SIGNATURE";
+
+  public static final String GRANTED = "GRANTED";
+  public static final String REVOKED = "REVOKED";
+
+  private static final String APP_OPS = "APP_OPS";
 
   // Common
   private final int mOrder;
@@ -264,29 +268,24 @@ public class Permission {
     return permName;
   }
 
-  public String getProtLevelString() {
-    int strId;
-
+  private String getLocalizedProtectionLevel() {
     switch (mProtectionLevel) {
       case PROTECTION_UNKNOWN:
       default:
-        strId = R.string.prot_lvl_unknown;
-        break;
+        return getString(R.string.prot_lvl_unknown);
       case PROTECTION_NORMAL:
-        strId = R.string.prot_lvl_normal;
-        break;
+        return getString(R.string.prot_lvl_normal);
       case PROTECTION_DANGEROUS:
-        strId = R.string.prot_lvl_dangerous;
-        break;
+        return getString(R.string.prot_lvl_dangerous);
       case PROTECTION_SIGNATURE:
-        strId = R.string.prot_lvl_signature;
-        break;
+        return getString(R.string.prot_lvl_signature);
       case APP_OPS:
-        strId = R.string.prot_lvl_app_ops;
-        break;
+        return getString(R.string.prot_lvl_app_ops);
     }
+  }
 
-    String protectionLevel = getString(strId);
+  public String getProtLevelString() {
+    String protectionLevel = getLocalizedProtectionLevel();
 
     if (mIsAppOps) {
       if (mIsPerUid) {
@@ -297,7 +296,7 @@ public class Permission {
       }
     } else {
       if (mIsDevelopment) { // Implies "Signature"
-        protectionLevel = getString(R.string.prot_lvl_development, protectionLevel);
+        protectionLevel = getString(R.string.prot_lvl_development2, protectionLevel);
       }
       if (mIsManifestPermAppOp) { // Implies "Signature"
         protectionLevel = getString(R.string.prot_lvl_app_ops2, protectionLevel);
@@ -342,16 +341,6 @@ public class Permission {
     return true;
   }
 
-  private static final String APP_OPS = "AppOps";
-
-  public static final String SEARCH_APP_OPS = ":" + APP_OPS;
-  public static final String SEARCH_UID = ":UID";
-  public static final String SEARCH_PRIVILEGED = ":" + "Privileged";
-  public static final String SEARCH_DEV = ":Development";
-  public static final String SEARCH_FIXED = ":" + "Fixed";
-  public static final String SEARCH_TIME = ":TIME";
-  public static final String SEARCH_EXTRA = ":Extra";
-
   private boolean _contains(String queryText) {
     queryText = queryText.toUpperCase();
 
@@ -364,17 +353,17 @@ public class Permission {
     for (String field :
         new String[] {
           mPermissionName,
-          ":" + mProtectionLevel,
-          ((mIsAppOps || mIsManifestPermAppOp) ? SEARCH_APP_OPS : ""),
-          ((mIsAppOps && mIsPerUid) ? SEARCH_UID : ""),
-          (mIsPrivileged ? SEARCH_PRIVILEGED : ""),
-          (mIsDevelopment ? SEARCH_DEV : ""),
-          (mIsSystemFixed ? SEARCH_FIXED : ""),
+          ":" + getLocalizedProtectionLevel(),
+          ((mIsAppOps || mIsManifestPermAppOp) ? CONSTANTS.SEARCH_APP_OPS : ""),
+          ((mIsAppOps && mIsPerUid) ? CONSTANTS.SEARCH_UID : ""),
+          (mIsPrivileged ? CONSTANTS.SEARCH_PRIVILEGED : ""),
+          (mIsDevelopment ? CONSTANTS.SEARCH_DEV : ""),
+          (mIsSystemFixed ? CONSTANTS.SEARCH_FIXED : ""),
           (mIsReferenced == null
-              ? Package.SEARCH_ORANGE
-              : (mIsReferenced ? Package.SEARCH_GREEN : Package.SEARCH_RED)),
-          getAppOpsAccessTime() != null ? SEARCH_TIME : "",
-          (mIsExtraAppOp ? SEARCH_EXTRA : "")
+              ? CONSTANTS.SEARCH_ORANGE
+              : (mIsReferenced ? CONSTANTS.SEARCH_GREEN : CONSTANTS.SEARCH_RED)),
+          getAppOpsAccessTime() != null ? CONSTANTS.SEARCH_TIME : "",
+          (mIsExtraAppOp ? CONSTANTS.SEARCH_EXTRA : "")
         }) {
       if (field.toUpperCase().contains(queryText)) {
         return contains;
