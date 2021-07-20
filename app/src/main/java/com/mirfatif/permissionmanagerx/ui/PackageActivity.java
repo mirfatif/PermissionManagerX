@@ -123,28 +123,9 @@ public class PackageActivity extends BaseActivity {
     return false;
   }
 
-  private void setAppOpsMode(Permission permission, Integer pos, int mode, boolean uidMode) {
+  private void setAppOpsMode(Permission permission, Integer pos, int mode) {
     holdRefreshLock();
-    String pkgName;
-    if (uidMode) {
-      pkgName = "null";
-    } else {
-      pkgName = mPackage.getName();
-    }
-    String command =
-        Commands.SET_APP_OPS_MODE
-            + " "
-            + permission.getName()
-            + " "
-            + mPackage.getUid()
-            + " "
-            + pkgName
-            + " "
-            + mode;
-    if (mMySettings.isDebug()) {
-      Util.debugLog(TAG, "setAppOpsMode: sending command: " + command);
-    }
-    mPrivDaemonHandler.sendRequest(command);
+    Permission.setAppOpMode(mPackage, permission, mode);
     updateSpinnerSelection(true, pos);
   }
 
@@ -642,18 +623,7 @@ public class PackageActivity extends BaseActivity {
       return;
     }
 
-    String command =
-        mPackage.getName() + " " + permission.getName() + " " + Utils.getUserId(mPackage.getUid());
-    if (permission.isGranted()) {
-      command = Commands.REVOKE_PERMISSION + " " + command;
-    } else {
-      command = Commands.GRANT_PERMISSION + " " + command;
-    }
-
-    if (mMySettings.isDebug()) {
-      Util.debugLog(TAG, "setPermission: sending command: " + command);
-    }
-    mPrivDaemonHandler.sendRequest(command);
+    Permission.setPermission(mPackage, permission);
 
     mPkgActivityFlavor.afterPermChange(mPackage, permission, isSystemFixed);
     updatePackage();
@@ -754,7 +724,7 @@ public class PackageActivity extends BaseActivity {
       }
 
       if (warn == null && (!uidMode || affectedPkgCount <= 1)) {
-        Utils.runInBg(() -> setAppOpsMode(perm, pos, selectedValue, uidMode));
+        Utils.runInBg(() -> setAppOpsMode(perm, pos, selectedValue));
         return;
       }
 
@@ -781,7 +751,7 @@ public class PackageActivity extends BaseActivity {
                   R.string.yes,
                   (dialog, which) -> {
                     isYes[0] = true;
-                    Utils.runInBg(() -> setAppOpsMode(perm, pos, selectedValue, uidMode));
+                    Utils.runInBg(() -> setAppOpsMode(perm, pos, selectedValue));
                   })
               .setNegativeButton(R.string.no, null)
               .setTitle(R.string.warning)
@@ -792,7 +762,7 @@ public class PackageActivity extends BaseActivity {
             R.string.do_not_remind,
             (dialog, which) -> {
               isYes[0] = true;
-              Utils.runInBg(() -> setAppOpsMode(perm, pos, selectedValue, uidMode));
+              Utils.runInBg(() -> setAppOpsMode(perm, pos, selectedValue));
               doNotRemindDangAction();
             });
       }

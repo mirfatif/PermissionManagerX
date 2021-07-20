@@ -9,9 +9,14 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.MySettingsFlavor;
 import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
+import com.mirfatif.permissionmanagerx.util.Utils;
+import com.mirfatif.privtasks.Commands;
+import com.mirfatif.privtasks.Util;
 import java.util.concurrent.TimeUnit;
 
 public class Permission {
+
+  private static final String TAG = "Permission";
 
   private final MySettings mMySettings = MySettings.getInstance();
 
@@ -406,5 +411,42 @@ public class Permission {
     }
 
     return isExtraAppOp() == newPerm.isExtraAppOp();
+  }
+
+  public static void setAppOpMode(Package pkg, Permission perm, int mode) {
+    String pkgName;
+    if (perm.isPerUid()) {
+      pkgName = "null";
+    } else {
+      pkgName = pkg.getName();
+    }
+    String command =
+        Commands.SET_APP_OPS_MODE
+            + " "
+            + perm.getName()
+            + " "
+            + pkg.getUid()
+            + " "
+            + pkgName
+            + " "
+            + mode;
+    if (MySettings.getInstance().isDebug()) {
+      Util.debugLog(TAG, "setAppOpsMode: sending command: " + command);
+    }
+    PrivDaemonHandler.getInstance().sendRequest(command);
+  }
+
+  public static void setPermission(Package pkg, Permission perm) {
+    String command = pkg.getName() + " " + perm.getName() + " " + Utils.getUserId(pkg.getUid());
+    if (perm.isGranted()) {
+      command = Commands.REVOKE_PERMISSION + " " + command;
+    } else {
+      command = Commands.GRANT_PERMISSION + " " + command;
+    }
+
+    if (MySettings.getInstance().isDebug()) {
+      Util.debugLog(TAG, "setPermission: sending command: " + command);
+    }
+    PrivDaemonHandler.getInstance().sendRequest(command);
   }
 }
