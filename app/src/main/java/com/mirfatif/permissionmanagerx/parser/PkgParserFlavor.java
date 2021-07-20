@@ -46,4 +46,9 @@ public class PkgParserFlavor {
     return PackageParser.getInstance()
         .getPackageInfo(pkg.getName(), PackageManager.GET_PERMISSIONS);
   }
+
+  @SuppressWarnings("UnusedDeclaration")
+  public Boolean handleSearchQuery(String queryText, Package pkg, Permission perm) {
+    return null;
+  }
 }

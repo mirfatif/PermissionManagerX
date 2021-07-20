@@ -1203,7 +1203,8 @@ public class PackageParser {
     List<Permission> permList = new ArrayList<>();
     int permCount = 0, appOpsCount = 0;
     for (Permission perm : pkg.getFullPermsList()) {
-      if (perm.contains(queryText)) {
+      Boolean handled = mPkgParserFlavor.handleSearchQuery(queryText, pkg, perm);
+      if ((handled == null && perm.contains(queryText)) || Boolean.FALSE.equals(handled)) {
         permList.add(perm);
         if (perm.isAppOps()) {
           appOpsCount++;
