@@ -1,0 +1,1 @@
+Fixed crash due to theme not set in Activity

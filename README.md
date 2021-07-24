@@ -56,6 +56,10 @@ Credits and thanks to the developers of:
 * https://github.com/saket/Better-Link-Movement-Method
 * https://github.com/square/leakcanary
 
+## Support
+
+Telegram group: https://t.me/PermissionManagerX
+
 ## License [![License](https://img.shields.io/github/license/mirfatif/PermissionManagerX?label="License")](https://github.com/mirfatif/PermissionManagerX/blob/master/LICENSE)
 
 You **CANNOT** use and distribute the app icon in anyway, except for **Permission Manager X** (`com.mirfatif.permissionmanagerx`) app.
