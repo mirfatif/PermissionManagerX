@@ -51,6 +51,20 @@ public class HelpJsInterface {
   @JavascriptInterface
   @SuppressWarnings("UnusedDeclaration")
   public String getImgMaxWidth() {
-    return Utils.dpToPx(200f) + "px";
+    return calcImgMaxWidth() + "px";
+  }
+
+  @JavascriptInterface
+  @SuppressWarnings("UnusedDeclaration")
+  public String getSmallImgMaxWidth() {
+    return (calcImgMaxWidth() / 2) + "px";
+  }
+
+  private final float DEFAULT_FONT_SIZE = Utils.getInteger(R.integer.pref_help_font_size_default);
+  private static final float DEFAULT_IMG_WIDTH = 200f;
+
+  private int calcImgMaxWidth() {
+    float fontSize = MySettings.getInstance().getIntPref(R.string.pref_help_font_size_key);
+    return Utils.dpToPx(DEFAULT_IMG_WIDTH * fontSize / DEFAULT_FONT_SIZE);
   }
 }

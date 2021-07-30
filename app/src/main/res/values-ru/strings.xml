@@ -332,5 +332,5 @@
   <string name="daemon_op_num_inconsistency" maxLength="20">Потенциально неподдерживаемая прошивка</string>
   <string name="daemon_set_perm_flags_failed" maxLength="20">Не удалось установить флаги разрешений</string>
   <!-- Locale -->
-  <string name="help_file_name">help_ru.html</string>
+  <string name="help_file_name">help.html</string>
 </resources>

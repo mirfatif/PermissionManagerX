@@ -14,4 +14,9 @@
     android:title="@string/zoom_in_menu_item"
     app:showAsAction="ifRoom" />
 
+  <item
+    android:id="@+id/action_help_reload"
+    android:title="@string/load_internet_menu_item"
+    app:showAsAction="never" />
+
 </menu>
