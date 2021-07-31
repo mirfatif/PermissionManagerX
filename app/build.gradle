@@ -8,8 +8,8 @@ android {
         applicationId "com.mirfatif.permissionmanagerx"
         minSdk minSdkVer
         targetSdk targetSdkVer
-        versionCode 109
-        versionName "v1.09"
+        versionCode 110
+        versionName "v1.10"
 
         // BuildType-independent and Flavor-independent BuildConfig.APPLICATION_ID
         buildConfigField "String", "APP_ID", '"' + applicationId + '"'
