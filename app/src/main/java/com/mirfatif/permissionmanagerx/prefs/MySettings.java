@@ -433,6 +433,10 @@ public class MySettings {
     return !isQuickScanEnabled() && excludeNoPermissionsApps();
   }
 
+  public boolean showExtraAppOps() {
+    return getBoolPref(R.string.pref_filter_show_extra_app_ops_key);
+  }
+
   // permissions
   public boolean excludeInvalidPermissions() {
     return getBoolPref(R.string.pref_filter_exclude_invalid_perms_key);
@@ -444,6 +448,10 @@ public class MySettings {
 
   public boolean excludeNotGrantedPerms() {
     return getBoolPref(R.string.pref_filter_exclude_not_granted_perms_key);
+  }
+
+  public boolean manuallyExcludePerms() {
+    return getBoolPref(R.string.pref_filter_manually_exclude_perms_key);
   }
 
   public boolean excludeNormalPerms() {
@@ -468,6 +476,10 @@ public class MySettings {
 
   public boolean excludeNotSetAppOps() {
     return getBoolPref(R.string.pref_filter_exclude_not_set_appops_key);
+  }
+
+  public boolean manuallyExcludeApps() {
+    return getBoolPref(R.string.pref_filter_manually_exclude_apps_key);
   }
 
   public boolean canReadAppOps() {
@@ -537,7 +549,7 @@ public class MySettings {
   }
 
   public boolean isPkgExcluded(String packageName) {
-    return getExcludedApps().contains(packageName);
+    return manuallyExcludeApps() && getExcludedApps().contains(packageName);
   }
 
   private final ReentrantLock EXCLUDED_APPS_LOCK = new ReentrantLock();
@@ -644,7 +656,7 @@ public class MySettings {
   }
 
   public boolean isPermExcluded(String permissionName) {
-    return getExcludedPerms().contains(permissionName);
+    return manuallyExcludePerms() && getExcludedPerms().contains(permissionName);
   }
 
   private final ReentrantLock EXCLUDED_PERMS_LOCK = new ReentrantLock();
@@ -705,7 +717,7 @@ public class MySettings {
   }
 
   public boolean isExtraAppOp(String opName) {
-    return getExtraAppOps().contains(opName);
+    return showExtraAppOps() && getExtraAppOps().contains(opName);
   }
 
   private final ReentrantLock EXTRA_APP_OPS_LOCK = new ReentrantLock();
@@ -737,9 +749,8 @@ public class MySettings {
     mExtraAppOps = new HashSet<>();
     for (String extraAppOp : extraAppOps) {
       // Necessarily build mExtraAppOps here even with excludeAppOpsPerms(). Otherwise on
-      // unchecking
-      // "Exclude AppOps" the immediate call to getExtraAppOps() from FilterSettingsFragment
-      // receives an empty value which clears previous saved values.
+      // unchecking "Exclude AppOps" the immediate call to getExtraAppOps() from
+      // FilterSettingsFragment receives an empty value which clears previous saved values.
       if (appOpsList.size() == 0 || appOpsList.contains(extraAppOp)) {
         mExtraAppOps.add(extraAppOp);
       }

@@ -549,7 +549,7 @@ public class Utils {
     for (URLSpan span : string.getSpans(0, string.length(), URLSpan.class)) {
       int start = string.getSpanStart(span);
       int end = string.getSpanEnd(span);
-      if (!string.substring(start, end).equals("LINK")) {
+      if (!string.toString().substring(start, end).equals("LINK")) {
         continue;
       }
       string.setSpan(new ImageSpan(d, ALIGN_BASELINE), start, end, SPAN_EXCLUSIVE_EXCLUSIVE);

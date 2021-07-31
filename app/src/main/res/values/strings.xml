@@ -355,6 +355,7 @@
   <integer name="channel_logcat_collection">300</integer>
 
   <!-- HelpActivity -->
+  <string name="load_internet_menu_item" maxLength="15">Load from internet</string>
   <string name="zoom_in_menu_item" maxLength="15">Zoom In</string>
   <string name="zoom_out_menu_item" maxLength="15">Zoom Out</string>
 
@@ -379,6 +380,6 @@
   <string name="daemon_set_perm_flags_failed" maxLength="20">Setting permission flags failed</string>
 
   <!-- Locale -->
-  <string name="help_file_name">help_en.html</string>
+  <string name="help_file_name">help.html</string>
 
 </resources>

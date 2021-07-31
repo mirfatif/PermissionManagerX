@@ -47,6 +47,13 @@
     app:singleLineTitle="false"
     app:title="@string/pref_filter_exclude_no_perms_apps_title" />
 
+  <CheckBoxPreference
+    app:defaultValue="@bool/pref_filter_manually_exclude_apps_default"
+    app:iconSpaceReserved="false"
+    app:key="@string/pref_filter_manually_exclude_apps_key"
+    app:singleLineTitle="false"
+    app:title="@string/pref_filter_manually_exclude_apps_title" />
+
   <MultiSelectListPreference
     app:iconSpaceReserved="false"
     app:key="@string/pref_filter_excluded_apps_key"
@@ -69,6 +76,13 @@
     app:key="@string/pref_filter_exclude_not_granted_perms_key"
     app:singleLineTitle="false"
     app:title="@string/pref_filter_exclude_not_granted_perms_title" />
+
+  <CheckBoxPreference
+    app:defaultValue="@bool/pref_filter_manually_exclude_perms_default"
+    app:iconSpaceReserved="false"
+    app:key="@string/pref_filter_manually_exclude_perms_key"
+    app:singleLineTitle="false"
+    app:title="@string/pref_filter_manually_exclude_perms_title" />
 
   <MultiSelectListPreference
     app:iconSpaceReserved="false"
@@ -131,6 +145,13 @@
     app:key="@string/pref_filter_exclude_not_set_appops_key"
     app:singleLineTitle="false"
     app:title="@string/pref_filter_exclude_not_set_appops_title" />
+
+  <CheckBoxPreference
+    app:defaultValue="@bool/pref_filter_show_extra_app_ops_default"
+    app:iconSpaceReserved="false"
+    app:key="@string/pref_filter_show_extra_app_ops_key"
+    app:singleLineTitle="false"
+    app:title="@string/pref_filter_show_extra_app_ops_title" />
 
   <MultiSelectListPreference
     app:iconSpaceReserved="false"

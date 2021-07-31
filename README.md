@@ -30,7 +30,7 @@ In short, <b>AppOps</b> provide a fine-grained control over many of the manifest
 
 ## Privacy Policy
 
-https://mirfatif.github.io/PermissionManagerX/privacy_policy.html
+[https://mirfatif.github.io/PermissionManagerX/privacy_policy.html](https://mirfatif.github.io/PermissionManagerX/privacy_policy.html)
 
 ## Screenshots
 
@@ -49,12 +49,12 @@ https://mirfatif.github.io/PermissionManagerX/privacy_policy.html
 
 ## Third-Party Libraries
 Credits and thanks to the developers of:
-* https://github.com/anggrayudi/android-hidden-api
-* https://github.com/cgutman/AdbLib
-* https://github.com/sherter/google-java-format-gradle-plugin
-* https://github.com/material-components/material-components-android
-* https://github.com/saket/Better-Link-Movement-Method
-* https://github.com/square/leakcanary
+* [https://github.com/anggrayudi/android-hidden-api](https://github.com/anggrayudi/android-hidden-api)
+* [https://github.com/cgutman/AdbLib](https://github.com/cgutman/AdbLib)
+* [https://github.com/sherter/google-java-format-gradle-plugin](https://github.com/sherter/google-java-format-gradle-plugin)
+* [https://github.com/material-components/material-components-android](https://github.com/material-components/material-components-android)
+* [https://github.com/saket/Better-Link-Movement-Method](https://github.com/saket/Better-Link-Movement-Method)
+* [https://github.com/square/leakcanary](https://github.com/square/leakcanary)
 
 ## License [![License](https://img.shields.io/github/license/mirfatif/PermissionManagerX?label="License")](https://github.com/mirfatif/PermissionManagerX/blob/master/LICENSE)
 
@@ -72,3 +72,12 @@ You **CANNOT** use and distribute the app icon in anyway, except for **Permissio
 
     You should have received a copy of the Affero GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+## Need help?
+
+See guide and FAQs: [https://mirfatif.github.io/PermissionManagerX/help/help.html](https://mirfatif.github.io/PermissionManagerX/help/help.html)
+
+## Contact Us
+
+**Telegram:** [https://t.me/PermissionManagerX](https://t.me/PermissionManagerX)  
+**Email:** [mirfatif@gmail.com](mailto:mirfatif@gmail.com)

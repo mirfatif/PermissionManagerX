@@ -102,7 +102,7 @@ public class PackageParser {
   private boolean mIsUpdating;
   private final Object UPDATE_PKG_BG_LOCK = new Object();
 
-  private boolean updatePackagesListInBg(boolean isBgDeepScan, boolean quickScan) {
+  boolean updatePackagesListInBg(boolean isBgDeepScan, boolean quickScan) {
     Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
     synchronized (UPDATE_PKG_BG_LOCK) {
       long startTime = System.currentTimeMillis();
@@ -219,14 +219,8 @@ public class PackageParser {
   //////////////////////////// GETTERS /////////////////////////////
   //////////////////////////////////////////////////////////////////
 
-  // For RefCheckWorker
   @SuppressWarnings("UnusedDeclaration")
-  public List<Package> getPackagesList(boolean update) {
-    if (update) {
-      if (!updatePackagesListInBg(false, false)) {
-        return null; // Interrupted in between, or could not get PackagesList
-      }
-    }
+  List<Package> getPackageList() {
     return mPackagesList;
   }
 
@@ -636,9 +630,10 @@ public class PackageParser {
         AppOps is selected in list.
         In case of quick scan excludeNoPermissionsApps() is ignored, so show all.
       */
-      if (!mMySettings.shouldExcludeNoPermApps()
-          || requestedPermissions != null
-          || appOpsCount2[0] != 0) {
+      if (mMySettings.showExtraAppOps()
+          && (!mMySettings.shouldExcludeNoPermApps()
+              || requestedPermissions != null
+              || appOpsCount2[0] != 0)) {
 
         if (mMySettings.isDebug()) {
           Util.debugLog(TAG, "getPermissionsList: parsing extra AppOps");
@@ -1203,8 +1198,7 @@ public class PackageParser {
     List<Permission> permList = new ArrayList<>();
     int permCount = 0, appOpsCount = 0;
     for (Permission perm : pkg.getFullPermsList()) {
-      Boolean handled = mPkgParserFlavor.handleSearchQuery(queryText, pkg, perm);
-      if ((handled == null && perm.contains(queryText)) || Boolean.FALSE.equals(handled)) {
+      if (perm.contains(pkg, queryText)) {
         permList.add(perm);
         if (perm.isAppOps()) {
           appOpsCount++;
