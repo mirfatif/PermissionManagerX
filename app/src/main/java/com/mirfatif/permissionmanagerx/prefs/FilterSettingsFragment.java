@@ -32,19 +32,24 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
   private CheckBoxPreference excludeFrameworkAppsView;
   private CheckBoxPreference excludeDisabledAppsView;
   private CheckBoxPreference excludeNoPermsAppsView;
-  private MultiSelectListPreference excludedAppsView;
+  private CheckBoxPreference manuallyExcludeAppsView;
+  private MultiSelectListPreference excludedAppsListView;
 
-  private CheckBoxPreference excludeInvalidPermsView;
   private CheckBoxPreference excludeNotChangeablePermsView;
   private CheckBoxPreference excludeNotGrantedPermsView;
+  private CheckBoxPreference manuallyExcludePermsView;
+  private MultiSelectListPreference excludedPermsListView;
+
+  private CheckBoxPreference excludeInvalidPermsView;
   private CheckBoxPreference excludeNormalPermsView;
   private CheckBoxPreference excludeDangerousPermsView;
   private CheckBoxPreference excludeSignaturePermsView;
   private CheckBoxPreference excludePrivilegedPermsView;
+
   private CheckBoxPreference excludeAppOpsPermsView;
   private CheckBoxPreference excludeNotSetAppOpsView;
-  private MultiSelectListPreference excludedPermsView;
-  private MultiSelectListPreference extraAppOpsView;
+  private CheckBoxPreference showExtraAppOpsView;
+  private MultiSelectListPreference extraAppOpsListView;
 
   @Override
   public void onAttach(@NonNull Context context) {
@@ -80,14 +85,20 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
         findPreference(getString(R.string.pref_filter_exclude_disabled_apps_key));
     excludeNoPermsAppsView =
         findPreference(getString(R.string.pref_filter_exclude_no_perms_apps_key));
-    excludedAppsView = findPreference(getString(R.string.pref_filter_excluded_apps_key));
+    manuallyExcludeAppsView =
+        findPreference(getString(R.string.pref_filter_manually_exclude_apps_key));
+    excludedAppsListView = findPreference(getString(R.string.pref_filter_excluded_apps_key));
 
-    excludeInvalidPermsView =
-        findPreference(getString(R.string.pref_filter_exclude_invalid_perms_key));
     excludeNotChangeablePermsView =
         findPreference(getString(R.string.pref_filter_exclude_not_changeable_perms_key));
     excludeNotGrantedPermsView =
         findPreference(getString(R.string.pref_filter_exclude_not_granted_perms_key));
+    manuallyExcludePermsView =
+        findPreference(getString(R.string.pref_filter_manually_exclude_perms_key));
+    excludedPermsListView = findPreference(getString(R.string.pref_filter_excluded_perms_key));
+
+    excludeInvalidPermsView =
+        findPreference(getString(R.string.pref_filter_exclude_invalid_perms_key));
     excludeNormalPermsView =
         findPreference(getString(R.string.pref_filter_exclude_normal_perms_key));
     excludeDangerousPermsView =
@@ -96,12 +107,13 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
         findPreference(getString(R.string.pref_filter_exclude_signature_perms_key));
     excludePrivilegedPermsView =
         findPreference(getString(R.string.pref_filter_exclude_privileged_perms_key));
+
     excludeAppOpsPermsView =
         findPreference(getString(R.string.pref_filter_exclude_appops_perms_key));
     excludeNotSetAppOpsView =
         findPreference(getString(R.string.pref_filter_exclude_not_set_appops_key));
-    excludedPermsView = findPreference(getString(R.string.pref_filter_excluded_perms_key));
-    extraAppOpsView = findPreference(getString(R.string.pref_filter_extra_appops_key));
+    showExtraAppOpsView = findPreference(getString(R.string.pref_filter_show_extra_app_ops_key));
+    extraAppOpsListView = findPreference(getString(R.string.pref_filter_extra_appops_key));
 
     updateViews();
 
@@ -122,15 +134,21 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     excludeDisabledAppsView.setChecked(mMySettings.excludeDisabledApps());
     excludeNoPermsAppsView.setChecked(mMySettings.excludeNoPermissionsApps());
     excludeNoPermsAppsView.setVisible(!mMySettings.isQuickScanEnabled());
-    excludeInvalidPermsView.setChecked(mMySettings.excludeInvalidPermissions());
+    manuallyExcludeAppsView.setChecked(mMySettings.manuallyExcludeApps());
+
     excludeNotChangeablePermsView.setChecked(mMySettings.excludeNotChangeablePerms());
     excludeNotGrantedPermsView.setChecked(mMySettings.excludeNotGrantedPerms());
+    manuallyExcludePermsView.setChecked(mMySettings.manuallyExcludePerms());
+
+    excludeInvalidPermsView.setChecked(mMySettings.excludeInvalidPermissions());
     excludeNormalPermsView.setChecked(mMySettings.excludeNormalPerms());
     excludeDangerousPermsView.setChecked(mMySettings.excludeDangerousPerms());
     excludeSignaturePermsView.setChecked(mMySettings.excludeSignaturePerms());
     excludePrivilegedPermsView.setChecked(mMySettings.excludePrivilegedPerms());
+
     excludeAppOpsPermsView.setChecked(mMySettings.excludeAppOpsPerms());
     excludeNotSetAppOpsView.setChecked(mMySettings.excludeNotSetAppOps());
+    showExtraAppOpsView.setChecked(mMySettings.showExtraAppOps());
 
     // required on manually changed by tapping
     if (excludeUserAppsView.isChecked()) {
@@ -156,16 +174,10 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
       excludeUserAppsView.setEnabled(true);
     }
 
-    if (excludeAppOpsPermsView.isChecked()) {
-      if (!excludeNotSetAppOpsView.isChecked()) {
-        excludeNotSetAppOpsView.setChecked(true);
-      }
-      excludeNotSetAppOpsView.setEnabled(false);
-      extraAppOpsView.setEnabled(false);
-    } else {
-      excludeNotSetAppOpsView.setEnabled(true);
-      extraAppOpsView.setEnabled(true);
-    }
+    boolean showAppOps = !excludeAppOpsPermsView.isChecked();
+    excludeNotSetAppOpsView.setVisible(showAppOps);
+    showExtraAppOpsView.setVisible(showAppOps);
+    extraAppOpsListView.setVisible(showAppOps);
 
     // Lists in Preferences must have been updated before starting settings fragment, otherwise
     // MultiSelectPreferenceList shows unchecked items.
@@ -209,75 +221,75 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     CharSequence[] excludedApps = excludedAppsSet.toArray(new String[0]);
     int appCount = excludedAppsSet.size();
 
-    excludedAppsView.setEntries(excludedAppsLabels);
-    excludedAppsView.setEntryValues(excludedApps);
-    excludedAppsView.setValues(excludedAppsSet);
+    excludedAppsListView.setEntries(excludedAppsLabels);
+    excludedAppsListView.setEntryValues(excludedApps);
+    excludedAppsListView.setValues(excludedAppsSet);
 
     // Disable if no excluded apps
     if (appCount == 0) {
-      excludedAppsView.setEnabled(false);
-      excludedAppsView.setSummary(R.string.excluded_apps_summary);
+      excludedAppsListView.setSummary(R.string.excluded_apps_summary);
     } else {
-      excludedAppsView.setEnabled(true);
       String message = excludedApps[0].toString();
-      appCount--;
-      message = Utils.getQtyString(R.plurals.and_others_count, appCount, message, appCount);
-      excludedAppsView.setSummary(message);
+      int count = appCount - 1;
+      message = Utils.getQtyString(R.plurals.and_others_count, count, message, count);
+      excludedAppsListView.setSummary(message);
     }
+    excludedAppsListView.setEnabled(manuallyExcludeAppsView.isChecked() && appCount != 0);
   }
 
   private void updateExcludedPermsView(Set<String> excludedPermsSet) {
     CharSequence[] excludedPerms = excludedPermsSet.toArray(new String[0]);
     int permCount = excludedPermsSet.size();
 
-    excludedPermsView.setEntries(excludedPerms);
-    excludedPermsView.setEntryValues(excludedPerms);
-    excludedPermsView.setValues(excludedPermsSet);
+    excludedPermsListView.setEntries(excludedPerms);
+    excludedPermsListView.setEntryValues(excludedPerms);
+    excludedPermsListView.setValues(excludedPermsSet);
 
     // Disable if no excluded permissions
     if (permCount == 0) {
-      excludedPermsView.setEnabled(false);
-      excludedPermsView.setSummary(R.string.excluded_perms_summary);
+      excludedPermsListView.setSummary(R.string.excluded_perms_summary);
     } else {
-      excludedPermsView.setEnabled(true);
       String message = excludedPerms[0].toString();
-      permCount--;
-      message = Utils.getQtyString(R.plurals.and_others_count, permCount, message, permCount);
-      excludedPermsView.setSummary(message);
+      int count = permCount - 1;
+      message = Utils.getQtyString(R.plurals.and_others_count, count, message, count);
+      excludedPermsListView.setSummary(message);
     }
+    excludedPermsListView.setEnabled(manuallyExcludePermsView.isChecked() && permCount != 0);
   }
 
   private void updateExtraAppOpsView(CharSequence[] appOpsList, Set<String> extraAppOps) {
-    // Handle MySettings.excludeAppOpsPerms() case.
-    if (appOpsList.length == 0) {
-      extraAppOpsView.setEnabled(false);
-    } else {
-      // Item names in list
-      extraAppOpsView.setEntries(appOpsList);
-      // Corresponding values of shown items. EntryValues must exactly correspond to Entries.
-      extraAppOpsView.setEntryValues(appOpsList);
+    // Returned AppOps list is empty if unable to read AppOps due to no privileges.
+    int appOpsCount = appOpsList.length;
 
-      /** Do not set this accidentally if {@link MySettings#getExtraAppOps()} returns empty list */
-      extraAppOpsView.setValues(extraAppOps); // Checked entry values
+    if (appOpsCount != 0) {
+      // Item names in list
+      extraAppOpsListView.setEntries(appOpsList);
+      // Corresponding values of shown items. EntryValues must exactly correspond to Entries.
+      extraAppOpsListView.setEntryValues(appOpsList);
+      // Checked entry values. This overwrites previously saved values. So the returned list
+      // must not be empty (due to missing privileges).
+      extraAppOpsListView.setValues(extraAppOps);
     }
 
-    int count = extraAppOps.size();
+    int extraAppOpsCount = extraAppOps.size();
 
     // Set summary
-    if (count == 0 || !extraAppOpsView.isEnabled()) {
+    if (extraAppOpsCount == 0 || appOpsCount == 0) {
       String message = getString(R.string.extra_app_ops_summary);
-      if (extraAppOpsView.isEnabled()) {
-        message += " " + getString(R.string.extra_app_ops_summary_count, appOpsList.length);
+      if (appOpsCount != 0) {
+        message += " " + getString(R.string.extra_app_ops_summary_count, appOpsCount);
       }
-      extraAppOpsView.setSummary(message);
+      extraAppOpsListView.setSummary(message);
     } else {
       String message = (String) extraAppOps.toArray()[0];
-      count--;
+      extraAppOpsCount--;
       // Without providing context, getString() crashes with: "Fragment ... not attached to a
       // context" on rotation. getActivity() may also return null.
-      extraAppOpsView.setSummary(
-          Utils.getQtyString(R.plurals.and_others_count, count, message, count));
+      extraAppOpsListView.setSummary(
+          Utils.getQtyString(
+              R.plurals.and_others_count, extraAppOpsCount, message, extraAppOpsCount));
     }
+    extraAppOpsListView.setEnabled(showExtraAppOpsView.isChecked() && appOpsCount != 0);
   }
 
   @Override

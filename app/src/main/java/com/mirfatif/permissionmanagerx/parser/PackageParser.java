@@ -636,9 +636,10 @@ public class PackageParser {
         AppOps is selected in list.
         In case of quick scan excludeNoPermissionsApps() is ignored, so show all.
       */
-      if (!mMySettings.shouldExcludeNoPermApps()
-          || requestedPermissions != null
-          || appOpsCount2[0] != 0) {
+      if (mMySettings.showExtraAppOps()
+          && (!mMySettings.shouldExcludeNoPermApps()
+              || requestedPermissions != null
+              || appOpsCount2[0] != 0)) {
 
         if (mMySettings.isDebug()) {
           Util.debugLog(TAG, "getPermissionsList: parsing extra AppOps");
