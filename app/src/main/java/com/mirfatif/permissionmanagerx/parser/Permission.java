@@ -19,6 +19,7 @@ public class Permission {
   private static final String TAG = "Permission";
 
   private final MySettings mMySettings = MySettings.getInstance();
+  private final MySettingsFlavor mMySettingsFlavor = MySettingsFlavor.getInstance();
 
   public static final String PROTECTION_UNKNOWN = "PROTECTION_UNKNOWN";
   public static final String PROTECTION_DANGEROUS = "PROTECTION_DANGEROUS";
@@ -316,9 +317,9 @@ public class Permission {
     return protectionLevel;
   }
 
-  public boolean contains(String queryText) {
+  public boolean contains(Package pkg, String queryText) {
     if (!mMySettings.isSpecialSearch()) {
-      return _contains(queryText);
+      return _contains(pkg, queryText);
     }
 
     boolean isEmpty = true;
@@ -327,33 +328,42 @@ public class Permission {
         continue;
       }
       isEmpty = false;
-      if (contains_(str)) {
+      if (contains_(pkg, str)) {
         return true;
       }
     }
     return isEmpty;
   }
 
-  private boolean contains_(String queryText) {
+  private boolean contains_(Package pkg, String queryText) {
     for (String str : queryText.split("&")) {
       if (TextUtils.isEmpty(str)) {
         continue;
       }
-      if (!_contains(str)) {
+      if (!_contains(pkg, str)) {
         return false;
       }
     }
     return true;
   }
 
-  private boolean _contains(String queryText) {
-    queryText = queryText.toUpperCase();
-
+  private boolean _contains(Package pkg, String queryText) {
     boolean contains = true;
     if (mMySettings.isSpecialSearch() && queryText.startsWith("!")) {
       queryText = queryText.replaceAll("^!", "");
       contains = false;
     }
+
+    Boolean handled = mMySettingsFlavor.handleSearchQuery(queryText, pkg, this);
+    if (handled != null) {
+      if (handled) {
+        return contains;
+      } else {
+        return !contains;
+      }
+    }
+
+    queryText = queryText.toUpperCase();
 
     for (String field :
         new String[] {
