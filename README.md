@@ -17,12 +17,12 @@ The app evolved from a shell script to a GUI for my personal needs. After a ROM 
 
 <b>Manifest permissions</b> are those normally called permissions e.g. Storage, Camera etc. AppOps (app operations) is a robust framework Android uses at back end for access control. With every Android release manifest permissions are becoming more dependent on AppOps. So it's fun to control both simultaneously and see how they relate to each other.
 
-In short, <b>AppOps</b> provide a fine-grained control over many of the manifest permissions. Plus it provides additional controls like background execution, vibration, clipboard access etc. Explore the app to see more.
+In short, <b>AppOps</b> provide a fine-grained control over many of the manifest permissions. Plus it provides additional controls like background execution, vibration, clipboard access etc. Explore the app to see more. Also check <a href="https://mirfatif.github.io/PermissionManagerX/help/help.html#intro">What is PMX?</a>
 
 ## Required Privileges / Permissions
 
 * In order to let Permission Manager X serve you at its best, either the device must be <b>rooted</b> or you need to enable <b>ADB over network</b>.
-* <b>android.permission.INTERNET</b> is required to use ADB over network. The only connection made outside the device is to check for app updates.
+* <b>android.permission.INTERNET</b> is required to use ADB over network. The only connections made outside the device are to check for app updates or to fetch help contents.
 
 ## Note:
 
