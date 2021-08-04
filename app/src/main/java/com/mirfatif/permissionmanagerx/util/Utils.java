@@ -46,6 +46,7 @@ import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.AttrRes;
 import androidx.annotation.ColorInt;
+import androidx.annotation.PluralsRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.browser.customtabs.CustomTabColorSchemeParams;
@@ -495,7 +496,7 @@ public class Utils {
     return App.getContext().getString(resId, args);
   }
 
-  public static String getQtyString(int resId, int qty, Object... args) {
+  public static String getQtyString(@PluralsRes int resId, int qty, Object... args) {
     return App.getContext().getResources().getQuantityString(resId, qty, args);
   }
 

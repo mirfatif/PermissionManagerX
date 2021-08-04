@@ -744,7 +744,7 @@ public class MainActivity extends BaseActivity {
           Boolean res = mPrivDaemonHandler.startDaemon(preferRoot);
           if (res == null) {
             showSnackBar(getString(R.string.daemon_logging_failed), 10000);
-          } else if (!res) {
+          } else if (!res && !mMySettings.isPrivDaemonAlive()) {
             showSnackBar(getString(R.string.daemon_failed), 10000);
           }
         } else {

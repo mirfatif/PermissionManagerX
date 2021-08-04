@@ -109,17 +109,7 @@ public class PackageParser {
       mIsUpdating = true;
 
       buildPkgInfoList(isBgDeepScan);
-
-      // If permissions database changes, manually call buildPermRefList()
-      if (mPermRefList.isEmpty()) {
-        setProgress(REF_PERMS_LIST, true, false, isBgDeepScan);
-        buildPermRefList();
-      }
-
-      if (!mMySettings.excludeAppOpsPerms() && mMySettings.canReadAppOps()) {
-        setProgress(APP_OPS_LISTS, true, false, isBgDeepScan);
-        mAppOpsParser.buildAppOpsLists();
-      }
+      buildRequiredData(isBgDeepScan);
 
       if (mMySettings.isDebug()) {
         Util.debugLog(
@@ -213,6 +203,19 @@ public class PackageParser {
     }
 
     mLastPackageManagerCall = System.currentTimeMillis();
+  }
+
+  public void buildRequiredData(boolean isBgDeepScan) {
+    // If permissions database changes, manually call buildPermRefList()
+    if (mPermRefList.isEmpty()) {
+      setProgress(REF_PERMS_LIST, true, false, isBgDeepScan);
+      buildPermRefList();
+    }
+
+    if (!mMySettings.excludeAppOpsPerms() && mMySettings.canReadAppOps()) {
+      setProgress(APP_OPS_LISTS, true, false, isBgDeepScan);
+      mAppOpsParser.buildAppOpsLists();
+    }
   }
 
   //////////////////////////////////////////////////////////////////
@@ -424,7 +427,7 @@ public class PackageParser {
   /////////////////////////// PACKAGES /////////////////////////////
   //////////////////////////////////////////////////////////////////
 
-  private boolean isPkgUpdated(PackageInfo packageInfo, Package pkg, boolean quickScan) {
+  boolean isPkgUpdated(PackageInfo packageInfo, Package pkg, boolean quickScan) {
     if (isFilteredOutPkgName(packageInfo.packageName)) {
       return false;
     }
@@ -508,7 +511,7 @@ public class PackageParser {
 
   private List<Signature> mSystemSignatures;
 
-  private boolean isFrameworkApp(PackageInfo packageInfo) {
+  public boolean isFrameworkApp(PackageInfo packageInfo) {
     if (mSystemSignatures == null) {
       PackageInfo pkgInfo = getPackageInfo("android", null);
       if (pkgInfo != null) {
@@ -1056,7 +1059,7 @@ public class PackageParser {
     }
   }
 
-  static final int PM_GET_SIGNATURES = PackageManager.GET_SIGNATURES;
+  public static final int PM_GET_SIGNATURES = PackageManager.GET_SIGNATURES;
 
   private Signature[] getPackageSignatures(PackageInfo packageInfo) {
     return packageInfo.signatures;

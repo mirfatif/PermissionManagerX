@@ -1,6 +1,7 @@
 package com.mirfatif.permissionmanagerx.privs;
 
 import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.PMX_BIN_PATH;
+import static com.mirfatif.permissionmanagerx.util.Utils.UID_ROOT;
 import static com.mirfatif.permissionmanagerx.util.Utils.UID_SHELL;
 import static com.mirfatif.permissionmanagerx.util.Utils.UID_SYSTEM;
 
@@ -233,7 +234,11 @@ public class PrivDaemonHandler {
 
     // Even with ADB we may get System UID if ADBD is running as root.
     Object obj = sendRequest(Commands.GET_UID, true);
-    mIsSystemUid = obj instanceof Integer && (Integer) obj == UID_SYSTEM;
+    if (obj instanceof Integer) {
+      int uid = (int) obj;
+      mIsSystemUid = uid == UID_SYSTEM;
+      mIsRootUid = uid == UID_ROOT;
+    }
 
     mMySettings.setPrivDaemonAlive(true);
 
@@ -330,10 +335,15 @@ public class PrivDaemonHandler {
     }
   }
 
-  private boolean mIsSystemUid = false;
+  private boolean mIsSystemUid = false, mIsRootUid = false;
 
   public boolean isSystemUid() {
     return mIsSystemUid;
+  }
+
+  @SuppressWarnings("UnusedDeclaration")
+  public boolean isRootUid() {
+    return mIsRootUid;
   }
 
   //////////////////////////////////////////////////////////////////
