@@ -50,7 +50,7 @@
       android:parentActivityName=".main.MainActivity"/>
 
     <service android:name=".svc.LogcatService" />
-    <service android:name=".svc.NotifDismissSvc"/>
+    <service android:name=".svc.NotifDismissSvc" />
     <service
       android:exported="true"
       android:name=".svc.DaemonCmdRcvSvc"

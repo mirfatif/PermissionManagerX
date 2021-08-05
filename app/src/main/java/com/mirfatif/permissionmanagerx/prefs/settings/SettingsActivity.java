@@ -21,9 +21,14 @@ public class SettingsActivity extends BaseActivity implements OnPreferenceStartF
     }
     setContentView(R.layout.activity_fragment_container);
 
+    mCloseOnBackPressed = SettingsFragFlavor.shouldCloseOnBackPressed(getIntent());
+
     ActionBar actionBar = getSupportActionBar();
     if (actionBar != null) {
       actionBar.setTitle(R.string.settings_menu_item);
+      if (mCloseOnBackPressed) {
+        actionBar.setDisplayHomeAsUpEnabled(false);
+      }
     }
 
     /*
@@ -37,6 +42,17 @@ public class SettingsActivity extends BaseActivity implements OnPreferenceStartF
           .beginTransaction()
           .replace(R.id.fragment_container, new SettingsFragFlavor())
           .commit();
+    }
+  }
+
+  private boolean mCloseOnBackPressed = false;
+
+  @Override
+  public void onBackPressed() {
+    if (mCloseOnBackPressed) {
+      finishAfterTransition();
+    } else {
+      super.onBackPressed();
     }
   }
 

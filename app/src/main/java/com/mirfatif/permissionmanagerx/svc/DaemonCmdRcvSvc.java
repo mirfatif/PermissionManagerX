@@ -24,7 +24,9 @@ public class DaemonCmdRcvSvc extends Service {
   public int onStartCommand(Intent intent, int flags, int startId) {
     String action = intent.getAction();
     if (action != null && CODE_WORD.equals(intent.getStringExtra(Commands.CODE_WORD))) {
-      Utils.runInBg(() -> showDaemonMsg(action));
+      if (!DaemonCmdRcvSvcFlavor.handleCmd(action)) {
+        Utils.runInBg(() -> showDaemonMsg(action));
+      }
     }
     return Service.START_NOT_STICKY;
   }

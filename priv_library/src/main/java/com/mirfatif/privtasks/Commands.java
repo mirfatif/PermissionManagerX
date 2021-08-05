@@ -30,11 +30,7 @@ public class Commands {
   public static final String GET_SYSTEM_FIXED_FLAG = "GET_SYSTEM_FIXED_FLAG";
   public static final String GET_POLICY_FIXED_FLAG = "GET_POLICY_FIXED_FLAG";
   public static final String GET_PERMISSION_FLAGS = "GET_PERMISSION_FLAGS";
-  public static final String GET_INSTALLED_PKGS = "GET_INSTALLED_PKGS";
-  public static final String GET_PKG_INFO = "GET_PKG_INFO";
   public static final String OPEN_APP_INFO = "OPEN_APP_INFO";
-  public static final String GET_USERS = "GET_USERS";
-  public static final String SET_PERM_FLAGS = "SET_PERM_FLAGS";
 
   // From daemon to app
   public static final String CMD_RCV_SVC = "com.mirfatif.permissionmanagerx.svc.DaemonCmdRcvSvc";

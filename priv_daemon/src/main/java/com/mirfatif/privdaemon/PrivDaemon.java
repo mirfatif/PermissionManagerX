@@ -24,6 +24,7 @@ public class PrivDaemon {
   private static String TAG = "com.mirfatif.privdaemon";
 
   private PrivTasks mPrivTasks;
+  private PrivDaemonFlavor mPrivDaemonFlavor;
   private OutputStream mOutputStream;
   private InputStream mInputStream;
   private BufferedReader mCmdReader;
@@ -56,6 +57,7 @@ public class PrivDaemon {
     mCodeWord = params[4];
 
     mPrivTasks = new PrivTasks(new PrivTasksCallbackImpl(), appId, appUserId, true);
+    mPrivDaemonFlavor = new PrivDaemonFlavor(this, mPrivTasks);
 
     for (int pid : mPrivTasks.getPidsForCommands(new String[] {TAG})) {
       if (pid != Process.myPid()) {
@@ -207,10 +209,6 @@ public class PrivDaemon {
         mPrivTasks.grantRevokePermission(false, args);
         sendResponse(null);
         break;
-      case Commands.SET_PERM_FLAGS:
-        mPrivTasks.updatePermFlags(args);
-        sendResponse(null);
-        break;
       case Commands.ENABLE_PACKAGE:
         mPrivTasks.setAppEnabledState(true, args);
         sendResponse(null);
@@ -239,27 +237,20 @@ public class PrivDaemon {
       case Commands.GET_PERMISSION_FLAGS:
         sendResponse(mPrivTasks.getPermissionFlags(args));
         break;
-      case Commands.GET_INSTALLED_PKGS:
-        sendResponse(mPrivTasks.getInstalledPackages(args));
-        break;
-      case Commands.GET_PKG_INFO:
-        sendResponse(mPrivTasks.getPkgInfo(args));
-        break;
       case Commands.OPEN_APP_INFO:
         mPrivTasks.openAppInfo(args);
         sendResponse(null);
         break;
-      case Commands.GET_USERS:
-        sendResponse(mPrivTasks.getUsers());
-        break;
       default:
-        System.err.println("Unknown command: " + args[0]);
+        if (!mPrivDaemonFlavor.handleCommand(args)) {
+          System.err.println("Unknown command: " + args[0]);
+        }
     }
   }
 
   private ObjectOutputStream mStdOutStream;
 
-  private synchronized void sendResponse(Object object) {
+  synchronized void sendResponse(Object object) {
     if (mStdOutStream == null) {
       return;
     }

@@ -1,7 +1,6 @@
 package com.mirfatif.privtasks;
 
 import android.app.AppOpsManager;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.PermissionGroupInfo;
@@ -21,14 +20,14 @@ public class PrivTasks {
 
   private static final String TAG = "PrivTaks";
 
-  private final HiddenAPIs mHiddenAPIs;
+  private final HiddenAPIsCallbackImpl mHiddenAPIsCallbackImpl = new HiddenAPIsCallbackImpl();
+  private final HiddenAPIs mHiddenAPIs = HiddenAPIsImpl.getInstance(mHiddenAPIsCallbackImpl);
   private final PrivTasksCallback mCallback;
   private final String mAppId;
   private final int mAppUserId;
   private final boolean mIsDaemon;
 
   public PrivTasks(PrivTasksCallback callback, String appId, int appUserId, boolean isDaemon) {
-    mHiddenAPIs = new HiddenAPIsImpl(new HiddenAPIsCallbackImpl());
     mCallback = callback;
     mAppId = appId;
     mAppUserId = appUserId;
@@ -70,7 +69,7 @@ public class PrivTasks {
         if (e.getCause() instanceof ArrayIndexOutOfBoundsException) {
           // OEM you are shit!
           failed = true;
-          mCallback.sendRequest(Commands.OP_NUM_INCONSISTENCY);
+          sendRequest(Commands.OP_NUM_INCONSISTENCY);
           e.printStackTrace();
         }
       } catch (HiddenAPIsError e) {
@@ -78,7 +77,7 @@ public class PrivTasks {
           if (mUseOpToDefLOS) {
             // OEM you are shit!
             failed = true;
-            mCallback.sendRequest(Commands.OP_TO_DEF_MODE_NOT_FOUND);
+            sendRequest(Commands.OP_TO_DEF_MODE_NOT_FOUND);
           } else {
             mUseOpToDefLOS = true;
             return buildOpToDefaultModeList();
@@ -110,7 +109,7 @@ public class PrivTasks {
         if (e.getCause() instanceof ArrayIndexOutOfBoundsException) {
           // OEM you are shit!
           failed = true;
-          mCallback.sendRequest(Commands.OP_NUM_INCONSISTENCY);
+          sendRequest(Commands.OP_NUM_INCONSISTENCY);
           e.printStackTrace();
         }
       }
@@ -136,7 +135,7 @@ public class PrivTasks {
         if (e.getCause() instanceof ArrayIndexOutOfBoundsException) {
           // OEM you are shit!
           failed = true;
-          mCallback.sendRequest(Commands.OP_NUM_INCONSISTENCY);
+          sendRequest(Commands.OP_NUM_INCONSISTENCY);
           e.printStackTrace();
         }
       }
@@ -174,7 +173,7 @@ public class PrivTasks {
           permGroupsList.add(((PermissionGroupInfo) pgi).name);
         }
       } catch (HiddenAPIsException e) {
-        mCallback.sendRequest(Commands.GET_PERM_GRP_INFO_LIST_FAILED);
+        sendRequest(Commands.GET_PERM_GRP_INFO_LIST_FAILED);
         e.printStackTrace();
       }
     }
@@ -225,7 +224,7 @@ public class PrivTasks {
           mHiddenAPIs.setMode(op, uid, pkgName, mode);
         }
       } catch (HiddenAPIsException e) {
-        mCallback.sendRequest(Commands.SET_APP_OPS_MODE_FAILED);
+        sendRequest(Commands.SET_APP_OPS_MODE_FAILED);
         e.printStackTrace();
       }
     }
@@ -236,7 +235,7 @@ public class PrivTasks {
       try {
         mHiddenAPIs.resetAllModes(Integer.parseInt(args[1]), args[2]);
       } catch (HiddenAPIsException e) {
-        mCallback.sendRequest(Commands.RESET_APP_OPS_FAILED);
+        sendRequest(Commands.RESET_APP_OPS_FAILED);
         e.printStackTrace();
       }
     }
@@ -284,21 +283,7 @@ public class PrivTasks {
           mHiddenAPIs.revokeRuntimePermission(args[1], args[2], Integer.parseInt(args[3]));
         }
       } catch (HiddenAPIsException e) {
-        mCallback.sendRequest(grant ? Commands.GRANT_PERM_FAILED : Commands.REVOKE_PERM_FAILED);
-        e.printStackTrace();
-      }
-    }
-  }
-
-  public void updatePermFlags(String[] args) {
-    if (!haveWrongArgs(args, 5)) {
-      String pkg = args[1], perm = args[2];
-      int flags = Integer.parseInt(args[3]), flagValues = Integer.parseInt(args[4]);
-      int userId = Integer.parseInt(args[5]);
-      try {
-        mHiddenAPIs.updatePermFlags(pkg, perm, flags, flagValues, userId);
-      } catch (HiddenAPIsException e) {
-        mCallback.sendRequest(Commands.SET_PERM_FLAGS_FAILED);
+        sendRequest(grant ? Commands.GRANT_PERM_FAILED : Commands.REVOKE_PERM_FAILED);
         e.printStackTrace();
       }
     }
@@ -324,65 +309,10 @@ public class PrivTasks {
       try {
         mHiddenAPIs.setApplicationEnabledSetting(pkg, state, 0, userId, callingPkg);
       } catch (HiddenAPIsException e) {
-        mCallback.sendRequest(enable ? Commands.ENABLE_PKG_FAILED : Commands.DISABLE_PKG_FAILED);
+        sendRequest(enable ? Commands.ENABLE_PKG_FAILED : Commands.DISABLE_PKG_FAILED);
         e.printStackTrace();
       }
     }
-  }
-
-  public List<MyPackageInfo> getInstalledPackages(String[] args) {
-    if (haveWrongArgs(args, 2)) {
-      return null;
-    }
-
-    int flags = Integer.parseInt(args[1]), userId = Integer.parseInt(args[2]);
-
-    try {
-      List<MyPackageInfo> myPkgInfoList = new ArrayList<>();
-      for (Object object : mHiddenAPIs.getInstalledPackages(flags, userId)) {
-        PackageInfo pkgInfo = (PackageInfo) object;
-        MyPackageInfo myPkgInfo = new MyPackageInfo();
-        myPkgInfo.packageName = pkgInfo.packageName;
-        myPkgInfo.requestedPermissionsFlags = pkgInfo.requestedPermissionsFlags;
-        myPkgInfo.uid = pkgInfo.applicationInfo.uid;
-        myPkgInfo.enabled = pkgInfo.applicationInfo.enabled;
-        myPkgInfoList.add(myPkgInfo);
-      }
-      return myPkgInfoList;
-    } catch (HiddenAPIsException e) {
-      mCallback.sendRequest(Commands.GET_INSTALLED_PKGS_FAILED);
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-  public MyPackageInfo getPkgInfo(String[] args) {
-    if (haveWrongArgs(args, 3)) {
-      return null;
-    }
-
-    String pkgName = args[1];
-    int flags = Integer.parseInt(args[2]), userId = Integer.parseInt(args[3]);
-
-    PackageInfo pkgInfo;
-    try {
-      pkgInfo = mHiddenAPIs.getPkgInfo(pkgName, flags, userId);
-    } catch (HiddenAPIsException e) {
-      mCallback.sendRequest(Commands.GET_PKG_INFO_FAILED);
-      e.printStackTrace();
-      return null;
-    }
-
-    if (pkgInfo == null) {
-      return null;
-    }
-
-    MyPackageInfo myPkgInfo = new MyPackageInfo();
-    myPkgInfo.packageName = pkgInfo.packageName;
-    myPkgInfo.requestedPermissionsFlags = pkgInfo.requestedPermissionsFlags;
-    myPkgInfo.uid = pkgInfo.applicationInfo.uid;
-    myPkgInfo.enabled = pkgInfo.applicationInfo.enabled;
-    return myPkgInfo;
   }
 
   //////////////////////////////////////////////////////////////////
@@ -404,7 +334,7 @@ public class PrivTasks {
           mCallback.logE(TAG + ": openAppInfo: result code: " + res);
         }
       } catch (HiddenAPIsException e) {
-        mCallback.sendRequest(Commands.OPEN_APP_INFO_FAILED);
+        sendRequest(Commands.OPEN_APP_INFO_FAILED);
         e.printStackTrace();
       }
     }
@@ -427,16 +357,6 @@ public class PrivTasks {
     }
   }
 
-  public List<String> getUsers() {
-    try {
-      return mHiddenAPIs.getUsers();
-    } catch (HiddenAPIsException e) {
-      mCallback.sendRequest(Commands.GET_USERS_FAILED);
-      e.printStackTrace();
-      return null;
-    }
-  }
-
   //////////////////////////////////////////////////////////////////
   ///////////////////////// COMMON METHODS /////////////////////////
   //////////////////////////////////////////////////////////////////
@@ -449,7 +369,8 @@ public class PrivTasks {
     return mHiddenAPIs.canUseIPm();
   }
 
-  private boolean haveWrongArgs(String[] cmd, int count) {
+  @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+  boolean haveWrongArgs(String[] cmd, int count) {
     return haveWrongArgs(cmd, count, false);
   }
 
@@ -460,7 +381,7 @@ public class PrivTasks {
     if (rateLimitToast) {
       rateLimitSendRequest(Commands.WRONG_ARGS_RECEIVED);
     } else {
-      mCallback.sendRequest(Commands.WRONG_ARGS_RECEIVED);
+      sendRequest(Commands.WRONG_ARGS_RECEIVED);
     }
     mCallback.logE(TAG + ": Bad command: " + Arrays.toString(cmd));
     return true;
@@ -491,9 +412,18 @@ public class PrivTasks {
 
   private void rateLimitSendRequest(String cmd) {
     if (System.currentTimeMillis() - lastRequestTimestamp >= 60000) {
-      mCallback.sendRequest(cmd);
+      sendRequest(cmd);
       lastRequestTimestamp = System.currentTimeMillis();
     }
+  }
+
+  public void sendRequest(String command) {
+    mCallback.sendRequest(command);
+  }
+
+  @SuppressWarnings("UnusedDeclaration")
+  public void logError(String msg) {
+    mCallback.logE(TAG + ": " + msg);
   }
 
   private class HiddenAPIsCallbackImpl implements HiddenAPIsCallback {
@@ -514,14 +444,8 @@ public class PrivTasks {
       rateLimitSendRequest(Commands.OP_NUM_INCONSISTENCY);
       rateLimitLog("getMyPackageOpsList: bad op: " + opCode + " for package: " + pkgName);
     }
-
-    @Override
-    public void logError(String msg) {
-      mCallback.logE(TAG + ": " + msg);
-    }
   }
 
-  // Verbose logging
   public interface PrivTasksCallback {
 
     boolean isDebug();

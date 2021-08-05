@@ -6,12 +6,9 @@ import android.app.AppOpsManager.OpEntry;
 import android.app.AppOpsManager.PackageOps;
 import android.app.IActivityManager;
 import android.content.pm.IPackageManager;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ParceledListSlice;
-import android.content.pm.UserInfo;
 import android.os.Build;
-import android.os.IUserManager;
 import android.os.Process;
 import android.os.ServiceManager;
 import android.permission.IPermissionManager;
@@ -40,7 +37,6 @@ public abstract class HiddenAPIs {
   @HiddenClass(cls = IPackageManager.class)
   @HiddenClass(cls = IPermissionManager.class)
   @HiddenClass(cls = IActivityManager.class)
-  @HiddenClass(cls = IUserManager.class)
   @HiddenMethod(name = "getService", type = MType.STATIC_METHOD, cls = ServiceManager.class)
   @HiddenMethod(
       name = "asInterface",
@@ -50,7 +46,6 @@ public abstract class HiddenAPIs {
         IPackageManager.Stub.class,
         IPermissionManager.Stub.class,
         IActivityManager.Stub.class,
-        IUserManager.Stub.class
       })
   // IPackageManager and IPermissionManager don't have a constant in Context class
   HiddenAPIs(HiddenAPIsCallback callback) {
@@ -230,29 +225,6 @@ public abstract class HiddenAPIs {
   public abstract void revokeRuntimePermission(String pkgName, String permName, int userId)
       throws HiddenAPIsException;
 
-  @HiddenMethod(
-      name = "updatePermissionFlags(String, String, int, int, boolean, int)",
-      cls = IPermissionManager.class,
-      minSDK = 30)
-  @HiddenMethod(
-      name = "updatePermissionFlags(String, String, int, int, boolean, int)",
-      cls = IPackageManager.class,
-      minSDK = 29,
-      maxSDK = 29)
-  @HiddenMethod(
-      name = "updatePermissionFlags(String, String, int, int, int)",
-      cls = IPackageManager.class,
-      maxSDK = 28)
-  @DaemonOnly
-  @Privileged(
-      requires = {
-        "android.permission.REVOKE_RUNTIME_PERMISSIONS",
-        "android.permission.GRANT_RUNTIME_PERMISSIONS"
-      })
-  @Throws(name = "SecurityException")
-  public abstract void updatePermFlags(
-      String pkg, String perm, int flags, int flagValues, int userId) throws HiddenAPIsException;
-
   //////////////////////////////////////////////////////////////////
   //////////////////////////// PACKAGES ////////////////////////////
   //////////////////////////////////////////////////////////////////
@@ -267,19 +239,6 @@ public abstract class HiddenAPIs {
   @Throws(name = "SecurityException")
   public abstract void setApplicationEnabledSetting(
       String pkg, int state, int flags, int userId, String callingPkg) throws HiddenAPIsException;
-
-  @HiddenMethod(name = "getInstalledPackages", cls = IPackageManager.class)
-  @DaemonOnly
-  @Privileged(requires = "android.permission.INTERACT_ACROSS_USERS")
-  @Throws(name = "SecurityException")
-  public abstract List<?> getInstalledPackages(int flags, int userId) throws HiddenAPIsException;
-
-  @HiddenMethod(name = "getPackageInfo", cls = IPackageManager.class)
-  @DaemonOnly
-  @Privileged(requires = "android.permission.INTERACT_ACROSS_USERS")
-  @Throws(name = "SecurityException")
-  public abstract PackageInfo getPkgInfo(String pkgName, int flags, int userId)
-      throws HiddenAPIsException;
 
   //////////////////////////////////////////////////////////////////
   ////////////////////////////// OTHERS ////////////////////////////
@@ -321,17 +280,6 @@ public abstract class HiddenAPIs {
   public abstract void sendRequest(String command, String appId, int userId, String codeWord)
       throws HiddenAPIsException;
 
-  @HiddenClass(cls = UserInfo.class)
-  @HiddenField(name = "id", type = FType.STATIC_FIELD, cls = UserInfo.class)
-  @HiddenField(name = "name", type = FType.STATIC_FIELD, cls = UserInfo.class)
-  @HiddenMethod(name = "getUsers(boolean)", cls = IUserManager.class, maxSDK = 29)
-  @HiddenMethod(name = "getUsers(boolean, boolean, boolean)", cls = IUserManager.class, minSDK = 29)
-  @DaemonOnly
-  @Privileged(requires = {"android.permission.MANAGE_USERS", "android.permission.CREATE_USERS"})
-  @Throws(name = "SecurityException")
-  // getUsers(boolean, boolean, boolean) was added in Android-10.0.0_r30, so cannot rely on SDK_INT
-  public abstract List<String> getUsers() throws HiddenAPIsException;
-
   //////////////////////////////////////////////////////////////////
   ///////////////////////// COMMON METHODS /////////////////////////
   //////////////////////////////////////////////////////////////////
@@ -355,8 +303,6 @@ public abstract class HiddenAPIs {
     void onGetUidOpsNpException(Exception e);
 
     void onInvalidOpCode(int opCode, String pkgName);
-
-    void logError(String msg);
   }
 
   //////////////////////////////////////////////////////////////////

@@ -34,6 +34,7 @@ public interface IActivityManager {
       throws RemoteException;
 
   // O+
+  @SuppressWarnings("UnusedDeclaration")
   ComponentName startService(
       IApplicationThread caller,
       Intent service,
@@ -43,6 +44,7 @@ public interface IActivityManager {
       int userId)
       throws RemoteException;
 
+  @SuppressWarnings("UnusedDeclaration")
   ComponentName startService(
       IApplicationThread caller,
       Intent service,

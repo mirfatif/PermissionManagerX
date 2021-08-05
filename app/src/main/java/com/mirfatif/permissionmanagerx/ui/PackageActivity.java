@@ -233,6 +233,7 @@ public class PackageActivity extends BaseActivity {
                     mPackageParser.updatePermReferences(
                         mPackage.getName(), permission.getName(), null);
                     updatePackage();
+                    mPkgActivityFlavor.pkgRefChanged(mPackage);
                   });
               return;
             }
@@ -251,6 +252,7 @@ public class PackageActivity extends BaseActivity {
                   mPackageParser.updatePermReferences(
                       mPackage.getName(), permission.getName(), permState);
                   updatePackage();
+                  mPkgActivityFlavor.pkgRefChanged(mPackage);
                 });
           });
 
@@ -569,6 +571,7 @@ public class PackageActivity extends BaseActivity {
     }
     BackupRestore.updatePermissionEntities(permEntries);
     updatePackage();
+    mPkgActivityFlavor.pkgRefChanged(mPackage);
   }
 
   private void clearReferences() {
@@ -580,6 +583,7 @@ public class PackageActivity extends BaseActivity {
       mPackageParser.updatePermReferences(mPackage.getName(), permission.getName(), null);
     }
     updatePackage();
+    mPkgActivityFlavor.pkgRefChanged(mPackage);
   }
 
   void onPermSwitchToggle(Permission perm) {
@@ -670,6 +674,22 @@ public class PackageActivity extends BaseActivity {
   protected void onResume() {
     super.onResume();
     Utils.runInBg(this::updatePackage);
+  }
+
+  @Override
+  protected void onStart() {
+    if (mPkgActivityFlavor != null) {
+      mPkgActivityFlavor.onStart();
+    }
+    super.onStart();
+  }
+
+  @Override
+  protected void onStop() {
+    if (mPkgActivityFlavor != null) {
+      mPkgActivityFlavor.onStop();
+    }
+    super.onStop();
   }
 
   @Override

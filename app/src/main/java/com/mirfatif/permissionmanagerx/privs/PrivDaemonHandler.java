@@ -54,7 +54,7 @@ public class PrivDaemonHandler {
 
   public synchronized Boolean startDaemon(boolean preferRoot) {
     if (mMySettings.isPrivDaemonAlive()) {
-      Log.e(TAG, "startDaemon: daemon already running");
+      Log.w(TAG, "startDaemon: daemon already running");
       return false;
     }
     boolean dexInTmpDir = mMySettings.dexInTmpDir();

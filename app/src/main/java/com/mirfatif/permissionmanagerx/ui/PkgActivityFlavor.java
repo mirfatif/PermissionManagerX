@@ -41,4 +41,11 @@ public class PkgActivityFlavor {
   public void onPermClick(Permission perm) {
     mA.onPermSwitchToggle(perm);
   }
+
+  public void onStart() {}
+
+  public void onStop() {}
+
+  @SuppressWarnings("UnusedDeclaration")
+  public void pkgRefChanged(Package mPackage) {}
 }
