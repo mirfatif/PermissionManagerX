@@ -372,12 +372,8 @@
   <string name="daemon_enable_pkg_failed" maxLength="20">Enabling app failed</string>
   <string name="daemon_disable_pkg_failed" maxLength="20">Disabling app failed</string>
   <string name="daemon_open_app_info_failed" maxLength="20">Opening app info failed</string>
-  <string name="daemon_get_pkg_info_failed" maxLength="20">Getting app info failed</string>
-  <string name="daemon_get_installed_pkgs_failed" maxLength="20">Getting apps list failed</string>
-  <string name="daemon_get_users_failed" maxLength="20">Getting users list failed</string>
   <string name="daemon_get_perm_grp_info_list_failed" maxLength="20">Getting permission groups failed</string>
   <string name="daemon_op_num_inconsistency" maxLength="20">Bad ROM</string>
-  <string name="daemon_set_perm_flags_failed" maxLength="20">Setting permission flags failed</string>
 
   <!-- Locale -->
   <string name="help_file_name">help.html</string>

@@ -661,12 +661,6 @@ public class PackageActivity extends BaseActivity {
     mMySettings.savePref(R.string.pref_package_warn_dang_change_enc_key, false);
   }
 
-  @Override
-  protected void onSaveInstanceState(@NonNull Bundle outState) {
-    AlertDialogFragment.removeAll(this);
-    super.onSaveInstanceState(outState);
-  }
-
   // update package when coming back after changing FilterSettings
   // also called on first time activity launch to populate view
   // don't update list, it's already updated from FilterSettingsActivity (if made any changes)

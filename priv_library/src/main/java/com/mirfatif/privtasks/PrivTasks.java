@@ -349,6 +349,7 @@ public class PrivTasks {
     }
   }
 
+  // Must be called only when the app is in foreground or a fg service is running.
   public void sendRequest(String command, String codeWord) {
     try {
       mHiddenAPIs.sendRequest(command, mAppId, mAppUserId, codeWord);

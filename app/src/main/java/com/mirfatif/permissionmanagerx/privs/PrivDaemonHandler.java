@@ -47,27 +47,31 @@ public class PrivDaemonHandler {
 
   private PrivDaemonHandler() {}
 
+  private final Object START_DAEMON_LOCK = new Object();
+
   private boolean mForceFilesExtraction = false;
   private boolean mPreferRoot;
   private PrintWriter mCmdWriter;
   private ObjectInputStream mResponseInStream;
 
-  public synchronized Boolean startDaemon(boolean preferRoot) {
-    if (mMySettings.isPrivDaemonAlive()) {
-      Log.w(TAG, "startDaemon: daemon already running");
-      return false;
+  public Boolean startDaemon(boolean preferRoot) {
+    synchronized (START_DAEMON_LOCK) {
+      if (mMySettings.isPrivDaemonAlive()) {
+        Log.w(TAG, "startDaemon: daemon already running");
+        return false;
+      }
+      boolean dexInTmpDir = mMySettings.dexInTmpDir();
+      Boolean res = startDaemon(preferRoot, dexInTmpDir);
+      if (res == null || res) {
+        return true;
+      }
+      res = startDaemon(preferRoot, !dexInTmpDir);
+      if (res == null || res) {
+        Utils.showToast(R.string.dex_location_changed);
+        mMySettings.setDexInTmpDir(!dexInTmpDir);
+      }
+      return res;
     }
-    boolean dexInTmpDir = mMySettings.dexInTmpDir();
-    Boolean res = startDaemon(preferRoot, dexInTmpDir);
-    if (res == null || res) {
-      return true;
-    }
-    res = startDaemon(preferRoot, !dexInTmpDir);
-    if (res == null || res) {
-      Utils.showToast(R.string.dex_location_changed);
-      mMySettings.setDexInTmpDir(!dexInTmpDir);
-    }
-    return res;
   }
 
   private Boolean startDaemon(boolean preferRoot, boolean dexInTmpDir) {
@@ -302,7 +306,13 @@ public class PrivDaemonHandler {
   private Object sendRequest(String request, boolean isPrivDaemonAlive) {
     synchronized (SEND_REQ_LOCK) {
       if (!isPrivDaemonAlive) {
-        Log.e(TAG, "sendRequest: " + request + ": Privileged daemon is dead");
+        String str;
+        if (mMySettings.isDebug()) {
+          str = request;
+        } else {
+          str = Utils.ellipsize(request, 200);
+        }
+        Log.e(TAG, "sendRequest: " + str + ": Privileged daemon is dead");
         return null;
       }
 

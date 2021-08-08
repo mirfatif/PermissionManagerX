@@ -1,5 +1,6 @@
 package com.mirfatif.permissionmanagerx.main;
 
+import android.Manifest.permission;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -63,7 +64,6 @@ public class MainActivity extends BaseActivity {
   public static final String ACTION_SEARCH_PACKAGES = "com.mirfatif.pmx.ACTION_SEARCH_PACKAGES";
   public static final String EXTRA_SEARCH_STRINGS = "com.mirfatif.pmx.SEARCH_STRINGS";
 
-  public static final String APP_OPS_PERM = "android.permission.GET_APP_OPS_STATS";
   public static final String TAG_GRANT_ROOT_OR_ADB = "GRANT_ROOT_OR_ADB";
 
   private final MySettings mMySettings = MySettings.getInstance();
@@ -273,29 +273,11 @@ public class MainActivity extends BaseActivity {
   }
 
   @Override
-  protected void onSaveInstanceState(@NonNull Bundle outState) {
-
-    // We can't save state of AlertDialogFragment since AlertDialog is passed as a constructor
-    // argument. Otherwise separate AlertDialogFragment class needs to be created for every dialog.
-    AlertDialogFragment.removeAll(this);
-
-    super.onSaveInstanceState(outState);
-  }
-
-  @Override
   protected void onResume() {
     super.onResume();
     if (mMainActivityFlavor != null) {
       mMainActivityFlavor.onResumed();
     }
-  }
-
-  @Override
-  protected void onDestroy() {
-    if (mMainActivityFlavor != null) {
-      mMainActivityFlavor.onDestroyed();
-    }
-    super.onDestroy();
   }
 
   //////////////////////////////////////////////////////////////////
@@ -806,7 +788,7 @@ public class MainActivity extends BaseActivity {
               + " "
               + getPackageName()
               + " "
-              + APP_OPS_PERM
+              + permission.GET_APP_OPS_STATS
               + " "
               + Utils.getUserId();
 
@@ -816,8 +798,9 @@ public class MainActivity extends BaseActivity {
       mPrivDaemonHandler.sendRequest(command);
 
       if (!mMySettings.isAppOpsGranted()) {
-        Log.e(TAG, "checkAppOpsPerm: granting " + APP_OPS_PERM + " failed");
-        showSnackBar(Utils.getString(R.string.granting_permission_failed, APP_OPS_PERM), 10000);
+        Log.e(TAG, "checkAppOpsPerm: granting " + permission.GET_APP_OPS_STATS + " failed");
+        String text = getString(R.string.granting_permission_failed, permission.GET_APP_OPS_STATS);
+        showSnackBar(text, 10000);
       }
     }
   }

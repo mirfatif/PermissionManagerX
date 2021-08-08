@@ -7,7 +7,6 @@ import android.view.View;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog.Builder;
 import com.google.android.material.snackbar.Snackbar;
@@ -169,11 +168,5 @@ public class AboutActivity extends BaseActivity {
     intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
     String text = getString(R.string.share_text, getString(R.string.play_store_url));
     startActivity(Intent.createChooser(intent.putExtra(Intent.EXTRA_TEXT, text), null));
-  }
-
-  @Override
-  protected void onSaveInstanceState(@NonNull Bundle outState) {
-    AlertDialogFragment.removeAll(this);
-    super.onSaveInstanceState(outState);
   }
 }

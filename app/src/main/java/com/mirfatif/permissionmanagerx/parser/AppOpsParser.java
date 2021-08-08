@@ -26,7 +26,7 @@ public class AppOpsParser {
 
   private static AppOpsParser mAppOpsParser;
 
-  public static AppOpsParser getInstance() {
+  public static synchronized AppOpsParser getInstance() {
     if (mAppOpsParser == null) {
       mAppOpsParser = new AppOpsParser();
     }

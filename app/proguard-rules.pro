@@ -32,6 +32,11 @@
   int pref_*_default;
 }
 -keep class com.mirfatif.permissionmanagerx.R$string {
+  int pref_*_default;
+}
+# Used in BackupRestore to check valid permissions and
+# in MySettings#resetToDefaults()
+-keep class com.mirfatif.permissionmanagerx.R$string {
   int pref_*_key;
 }
 

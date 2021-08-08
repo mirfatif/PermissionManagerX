@@ -46,4 +46,7 @@ public class PkgParserFlavor {
     return PackageParser.getInstance()
         .getPackageInfo(pkg.getName(), PackageManager.GET_PERMISSIONS);
   }
+
+  @SuppressWarnings("UnusedDeclaration")
+  public void setProgress(boolean isMax, int value) {}
 }

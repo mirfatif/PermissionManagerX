@@ -68,9 +68,6 @@ public class DaemonCmdRcvSvc extends Service {
       case Commands.REVOKE_PERM_FAILED:
         Utils.showToast(R.string.daemon_revoke_perm_failed);
         break;
-      case Commands.SET_PERM_FLAGS_FAILED:
-        Utils.showToast(R.string.daemon_set_perm_flags_failed);
-        break;
       case Commands.ENABLE_PKG_FAILED:
         Utils.showToast(R.string.daemon_enable_pkg_failed);
         break;
@@ -79,15 +76,6 @@ public class DaemonCmdRcvSvc extends Service {
         break;
       case Commands.OPEN_APP_INFO_FAILED:
         Utils.showToast(R.string.daemon_open_app_info_failed);
-        break;
-      case Commands.GET_PKG_INFO_FAILED:
-        Utils.showToast(R.string.daemon_get_pkg_info_failed);
-        break;
-      case Commands.GET_INSTALLED_PKGS_FAILED:
-        Utils.showToast(R.string.daemon_get_installed_pkgs_failed);
-        break;
-      case Commands.GET_USERS_FAILED:
-        Utils.showToast(R.string.daemon_get_users_failed);
         break;
       case Commands.GET_PERM_GRP_INFO_LIST_FAILED:
         Utils.showToast(R.string.daemon_get_perm_grp_info_list_failed);

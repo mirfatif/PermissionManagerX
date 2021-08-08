@@ -31,4 +31,9 @@ public class SearchConstants {
   public final String SEARCH_FIXED = ":" + getString(R.string.prot_lvl_fixed);
   public final String SEARCH_TIME = ":" + getString(R.string.search_str_time);
   public final String SEARCH_EXTRA = ":" + getString(R.string.search_str_extra);
+
+  public final String SEARCH_PROT_UNKNOWN = ":" + getString(R.string.prot_lvl_unknown);
+  public final String SEARCH_PROT_NORMAL = ":" + getString(R.string.prot_lvl_normal);
+  public final String SEARCH_PROT_DANGEROUS = ":" + getString(R.string.prot_lvl_dangerous);
+  public final String SEARCH_PROT_SIGNATURE = ":" + getString(R.string.prot_lvl_signature);
 }

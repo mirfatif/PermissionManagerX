@@ -529,7 +529,6 @@ public class BackupRestore {
       PackageParser packageParser = PackageParser.getInstance();
       packageParser.buildPermRefList();
       packageParser.updatePackagesList();
-      mA.getMainActivityFlavor().onRestoreDone();
     }
 
     String message = Utils.getQtyString(R.plurals.backup_restore_processed_prefs, prefs, prefs);
@@ -555,8 +554,15 @@ public class BackupRestore {
             .setPositiveButton(android.R.string.ok, null)
             .setTitle(isBackup ? R.string.backup : R.string.restore)
             .setMessage(message);
+
     Utils.runInFg(
-        () -> new AlertDialogFragment(builder.create()).show(mA, TAG_BACKUP_RESTORE, false));
+        () -> {
+          AlertDialogFragment dialog = new AlertDialogFragment(builder.create());
+          if (!isBackup) {
+            dialog.setOnDismissListener(d -> mA.getMainActivityFlavor().onRestoreDone());
+          }
+          dialog.show(mA, TAG_BACKUP_RESTORE, false);
+        });
   }
 
   public static class BackupEntry {

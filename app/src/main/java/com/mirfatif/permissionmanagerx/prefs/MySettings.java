@@ -2,6 +2,7 @@ package com.mirfatif.permissionmanagerx.prefs;
 
 import static com.mirfatif.permissionmanagerx.util.Utils.getString;
 
+import android.Manifest.permission;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
@@ -14,7 +15,6 @@ import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
 import com.mirfatif.permissionmanagerx.app.App;
-import com.mirfatif.permissionmanagerx.main.MainActivity;
 import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDao;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDatabase;
@@ -487,7 +487,7 @@ public class MySettings {
   }
 
   public boolean isAppOpsGranted() {
-    return App.getContext().checkSelfPermission(MainActivity.APP_OPS_PERM)
+    return App.getContext().checkSelfPermission(permission.GET_APP_OPS_STATS)
         == PackageManager.PERMISSION_GRANTED;
   }
 

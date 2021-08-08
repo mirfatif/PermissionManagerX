@@ -13,18 +13,17 @@ import android.os.Process;
 import android.os.ServiceManager;
 import android.permission.IPermissionManager;
 import com.android.internal.app.IAppOpsService;
+import com.mirfatif.annotation.DaemonOnly;
+import com.mirfatif.annotation.HiddenClass;
+import com.mirfatif.annotation.HiddenClass.CType;
+import com.mirfatif.annotation.HiddenField;
+import com.mirfatif.annotation.HiddenField.FType;
+import com.mirfatif.annotation.HiddenMethod;
+import com.mirfatif.annotation.HiddenMethod.MType;
+import com.mirfatif.annotation.NonDaemonOnly;
+import com.mirfatif.annotation.Privileged;
+import com.mirfatif.annotation.Throws;
 import com.mirfatif.privtasks.MyPackageOps;
-import com.mirfatif.privtasks.hiddenapis.HiddenAPIs.HiddenClass.CType;
-import com.mirfatif.privtasks.hiddenapis.HiddenAPIs.HiddenClass.HiddenClasses;
-import com.mirfatif.privtasks.hiddenapis.HiddenAPIs.HiddenField.FType;
-import com.mirfatif.privtasks.hiddenapis.HiddenAPIs.HiddenField.HiddenFields;
-import com.mirfatif.privtasks.hiddenapis.HiddenAPIs.HiddenMethod.HiddenMethods;
-import com.mirfatif.privtasks.hiddenapis.HiddenAPIs.HiddenMethod.MType;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Repeatable;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.util.List;
 
 public abstract class HiddenAPIs {
@@ -304,110 +303,4 @@ public abstract class HiddenAPIs {
 
     void onInvalidOpCode(int opCode, String pkgName);
   }
-
-  //////////////////////////////////////////////////////////////////
-  /////////////////////////// ANNOTATIONS //////////////////////////
-  //////////////////////////////////////////////////////////////////
-
-  @Retention(RetentionPolicy.SOURCE)
-  @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
-  @Repeatable(HiddenClasses.class)
-  @interface HiddenClass {
-
-    Class<?> cls();
-
-    CType type() default CType.CLASS;
-
-    enum CType {
-      CLASS,
-      INNER_CLASS
-    }
-
-    @Retention(RetentionPolicy.SOURCE)
-    @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
-    @interface HiddenClasses {
-
-      HiddenClass[] value();
-    }
-  }
-
-  @Retention(RetentionPolicy.SOURCE)
-  @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
-  @Repeatable(HiddenMethods.class)
-  @interface HiddenMethod {
-
-    String name();
-
-    MType type() default MType.METHOD;
-
-    Class<?>[] cls();
-
-    int minSDK() default 1;
-
-    int maxSDK() default 1;
-
-    enum MType {
-      METHOD,
-      STATIC_METHOD
-    }
-
-    @Retention(RetentionPolicy.SOURCE)
-    @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
-    @interface HiddenMethods {
-
-      HiddenMethod[] value();
-    }
-  }
-
-  @Retention(RetentionPolicy.SOURCE)
-  @Target(ElementType.METHOD)
-  @Repeatable(HiddenFields.class)
-  @interface HiddenField {
-
-    String[] name();
-
-    FType type() default FType.FIELD;
-
-    Class<?> cls();
-
-    int minSDK() default 1;
-
-    enum FType {
-      FIELD,
-      STATIC_FIELD
-    }
-
-    @Retention(RetentionPolicy.SOURCE)
-    @Target(ElementType.METHOD)
-    @interface HiddenFields {
-
-      HiddenField[] value();
-    }
-  }
-
-  @Retention(RetentionPolicy.SOURCE)
-  @Target(ElementType.METHOD)
-  @interface Throws {
-
-    String name();
-  }
-
-  // Mostly permission checks regard UIDs: 0 and 1000, some 2000 too. On failed check usually a
-  // SecurityException is thrown. E.g. ADB lacks permissions on MIUI.
-  @Retention(RetentionPolicy.SOURCE)
-  @Target(ElementType.METHOD)
-  @interface Privileged {
-
-    String name() default "";
-
-    String[] requires() default "";
-  }
-
-  @Retention(RetentionPolicy.SOURCE)
-  @Target(ElementType.METHOD)
-  @interface DaemonOnly {}
-
-  @Retention(RetentionPolicy.SOURCE)
-  @Target(ElementType.METHOD)
-  @interface NonDaemonOnly {}
 }

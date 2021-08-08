@@ -25,8 +25,6 @@ public class MainActivityFlavor {
     mFeedback.askForFeedback();
   }
 
-  void onDestroyed() {}
-
   @SuppressWarnings("UnusedDeclaration")
   void onCreateOptionsMenu(Menu menu) {}
 

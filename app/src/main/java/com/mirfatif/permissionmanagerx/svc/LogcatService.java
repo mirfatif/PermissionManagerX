@@ -70,6 +70,12 @@ public class LogcatService extends Service {
     return Service.START_NOT_STICKY;
   }
 
+  @Override
+  public void onDestroy() {
+    stopLoggingAndSvc();
+    super.onDestroy();
+  }
+
   private CountDownTimer mTimer;
   private NotificationManagerCompat mNotificationManager;
   private Builder mNotificationBuilder;
@@ -168,8 +174,7 @@ public class LogcatService extends Service {
   }
 
   public static void sendStopLogIntent() {
-    // Intent without start action would stop the service and logging.
-    App.getContext().startService(new Intent(App.getContext(), LogcatService.class));
+    App.getContext().stopService(new Intent(App.getContext(), LogcatService.class));
   }
 
   private void startTimer() {

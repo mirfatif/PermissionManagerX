@@ -278,20 +278,20 @@ public class Permission {
     switch (mProtectionLevel) {
       case PROTECTION_UNKNOWN:
       default:
-        return getString(R.string.prot_lvl_unknown);
+        return CONSTANTS.SEARCH_PROT_UNKNOWN;
       case PROTECTION_NORMAL:
-        return getString(R.string.prot_lvl_normal);
+        return CONSTANTS.SEARCH_PROT_NORMAL;
       case PROTECTION_DANGEROUS:
-        return getString(R.string.prot_lvl_dangerous);
+        return CONSTANTS.SEARCH_PROT_DANGEROUS;
       case PROTECTION_SIGNATURE:
-        return getString(R.string.prot_lvl_signature);
+        return CONSTANTS.SEARCH_PROT_SIGNATURE;
       case APP_OPS:
-        return getString(R.string.prot_lvl_app_ops);
+        return CONSTANTS.SEARCH_APP_OPS;
     }
   }
 
   public String getProtLevelString() {
-    String protectionLevel = getLocalizedProtectionLevel();
+    String protectionLevel = getLocalizedProtectionLevel().replaceFirst("^:", "");
 
     if (mIsAppOps) {
       if (mIsPerUid) {

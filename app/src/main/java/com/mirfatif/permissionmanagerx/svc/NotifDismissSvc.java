@@ -34,7 +34,7 @@ public class NotifDismissSvc extends Service {
       if (type == INTENT_TYPE_ACTIVITY) {
         startActivity(intent);
       } else if (type == INTENT_TYPE_SERVICE) {
-        startService(intent);
+        startService(intent); // Doesn't crash due to app in background?
       }
     }
     stopSelf(startId); // Stop if no pending requests

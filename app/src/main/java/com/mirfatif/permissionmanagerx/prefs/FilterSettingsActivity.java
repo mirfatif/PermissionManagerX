@@ -130,10 +130,4 @@ public class FilterSettingsActivity extends BaseActivity {
 
     return super.onOptionsItemSelected(item);
   }
-
-  @Override
-  protected void onSaveInstanceState(@NonNull Bundle outState) {
-    AlertDialogFragment.removeAll(this);
-    super.onSaveInstanceState(outState);
-  }
 }

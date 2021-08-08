@@ -24,8 +24,6 @@ import com.mirfatif.privtasks.MyPackageOps;
 import com.mirfatif.privtasks.Util;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIs;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIsError;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -374,20 +372,20 @@ public class PackageParser {
 
     if (isMax) {
       Utils.runInFg(() -> mProgressMax.setValue(value));
-      propertyChange.firePropertyChange(PROP_MAX_PROGRESS, 0, value);
+      mPkgParserFlavor.setProgress(true, value);
       return;
     }
 
     if (isFinal) {
       Utils.runInFg(() -> mProgressNow.setValue(value));
-      propertyChange.firePropertyChange(PROP_NOW_PROGRESS, 0, value);
+      mPkgParserFlavor.setProgress(false, value);
       return;
     }
 
     // set progress updates, but not too frequent
     if ((System.currentTimeMillis() - mLastProgressTimeStamp) > 100) {
       Utils.runInFg(() -> mProgressNow.setValue(value));
-      propertyChange.firePropertyChange(PROP_NOW_PROGRESS, 0, value);
+      mPkgParserFlavor.setProgress(false, value);
       mLastProgressTimeStamp = System.currentTimeMillis();
     }
   }
@@ -1257,23 +1255,5 @@ public class PackageParser {
     if (isFinal == null ? !mIsUpdating : isFinal) {
       setProgress(SEARCH_ENDS, false, true, false);
     }
-  }
-
-  //////////////////////////////////////////////////////////////////
-  /////////////////////////// OBSERVABLE ///////////////////////////
-  //////////////////////////////////////////////////////////////////
-
-  private final PropertyChangeSupport propertyChange = new PropertyChangeSupport(this);
-  public static final String PROP_MAX_PROGRESS = "PROP_MAX_PROGRESS";
-  public static final String PROP_NOW_PROGRESS = "PROP_NOW_PROGRESS";
-
-  @SuppressWarnings("UnusedDeclaration")
-  public void addPropertyChangeListener(PropertyChangeListener listener) {
-    propertyChange.addPropertyChangeListener(listener);
-  }
-
-  @SuppressWarnings("UnusedDeclaration")
-  public void removePropertyChangeListener(PropertyChangeListener listener) {
-    propertyChange.removePropertyChangeListener(listener);
   }
 }

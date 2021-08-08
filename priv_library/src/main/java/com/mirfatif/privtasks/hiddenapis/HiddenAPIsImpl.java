@@ -29,7 +29,7 @@ public class HiddenAPIsImpl extends HiddenAPIs {
 
   private static HiddenAPIsImpl mHiddenAPIs;
 
-  public static HiddenAPIsImpl getInstance(HiddenAPIsCallback callback) {
+  public static synchronized HiddenAPIsImpl getInstance(HiddenAPIsCallback callback) {
     if (mHiddenAPIs == null) {
       mHiddenAPIs = new HiddenAPIsImpl(callback);
       return mHiddenAPIs;
