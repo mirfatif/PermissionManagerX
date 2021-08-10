@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <item
+    android:id="@+id/action_perm_status"
+    android:icon="@drawable/permission"
+    android:title="@string/perm_status_menu_item"
+    app:showAsAction="ifRoom" />
+
+</menu>

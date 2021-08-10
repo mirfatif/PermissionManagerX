@@ -11,4 +11,9 @@ public class Process {
   public static int myUid() {
     return 0;
   }
+
+  // Not hidden API
+  public static int myPid() {
+    return 0;
+  }
 }

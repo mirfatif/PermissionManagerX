@@ -201,7 +201,10 @@ public abstract class HiddenAPIs {
       cls = {IPackageManager.class, IPermissionManager.class})
   @DaemonOnly
   @Privileged(
-      requires = {"android.permission.GRANT_RUNTIME_PERMISSIONS", "REVOKE_RUNTIME_PERMISSIONS"})
+      requires = {
+        "android.permission.GRANT_RUNTIME_PERMISSIONS",
+        "android.permission.REVOKE_RUNTIME_PERMISSIONS"
+      })
   @Throws(name = "SecurityException")
   // getPermissionFlags() moved from IPackageManager to IPermissionManager in SDK 30.
   public abstract int getPermissionFlags(String permName, String pkgName, int userId)
@@ -223,6 +226,11 @@ public abstract class HiddenAPIs {
   // revokeRuntimePermission() moved from IPackageManager to IPermissionManager in SDK 30.
   public abstract void revokeRuntimePermission(String pkgName, String permName, int userId)
       throws HiddenAPIsException;
+
+  @HiddenMethod(
+      name = "checkPermission",
+      cls = {IActivityManager.class})
+  public abstract int checkPermission(String perm, int pid, int uid) throws HiddenAPIsException;
 
   //////////////////////////////////////////////////////////////////
   //////////////////////////// PACKAGES ////////////////////////////

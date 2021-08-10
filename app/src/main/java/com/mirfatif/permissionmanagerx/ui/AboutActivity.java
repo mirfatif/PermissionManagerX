@@ -3,23 +3,33 @@ package com.mirfatif.permissionmanagerx.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog.Builder;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.databinding.AboutPrivilegesDialogBinding;
 import com.mirfatif.permissionmanagerx.databinding.ActivityAboutBinding;
 import com.mirfatif.permissionmanagerx.databinding.TranslationDialogBinding;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
+import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.svc.LogcatService;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
+import com.mirfatif.privtasks.Commands;
+import com.mirfatif.privtasks.PermStatus;
+import java.util.ArrayList;
+import java.util.List;
 import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 
 public class AboutActivity extends BaseActivity {
@@ -168,5 +178,59 @@ public class AboutActivity extends BaseActivity {
     intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
     String text = getString(R.string.share_text, getString(R.string.play_store_url));
     startActivity(Intent.createChooser(intent.putExtra(Intent.EXTRA_TEXT, text), null));
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.about_menu, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    menu.findItem(R.id.action_perm_status).setEnabled(mMySettings.isPrivDaemonAlive());
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.action_perm_status) {
+      if (mMySettings.isPrivDaemonAlive()) {
+        Utils.runInBg(this::showPermStatusDialog);
+      } else {
+        item.setEnabled(false);
+      }
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+  private void showPermStatusDialog() {
+    PrivDaemonHandler daemonHandler = PrivDaemonHandler.getInstance();
+    Object obj = daemonHandler.sendRequest(Commands.GET_UID);
+    if (!(obj instanceof Integer)) {
+      return;
+    }
+    int uid = (int) obj;
+    obj = daemonHandler.sendRequest(Commands.GET_PERM_STATUS);
+    if (!(obj instanceof List<?>)) {
+      return;
+    }
+    List<PermStatus> permStatusList = new ArrayList<>();
+    for (Object item : (List<?>) obj) {
+      permStatusList.add((PermStatus) item);
+    }
+    Utils.runInFg(() -> showPermStatusDialog(uid, permStatusList));
+  }
+
+  private void showPermStatusDialog(int uid, List<PermStatus> permStatusList) {
+    AboutPrivilegesDialogBinding b = AboutPrivilegesDialogBinding.inflate(getLayoutInflater());
+    b.uidV.setText(String.valueOf(uid));
+    b.recyclerV.setAdapter(new AboutPrivilegesAdapter(permStatusList));
+    b.recyclerV.setLayoutManager(new LinearLayoutManager(this));
+    b.recyclerV.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+    Builder builder =
+        new Builder(this).setTitle(R.string.perm_status_menu_item).setView(b.getRoot());
+    new AlertDialogFragment(builder.create()).show(this, "PERM_STATUS", false);
   }
 }

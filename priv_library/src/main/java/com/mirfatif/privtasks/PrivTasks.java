@@ -358,6 +358,38 @@ public class PrivTasks {
     }
   }
 
+  public List<PermStatus> getPermStatus() {
+    try {
+      List<PermStatus> permStatusList = new ArrayList<>();
+      for (String perm : PERMISSIONS) {
+        int status = mHiddenAPIs.checkPermission(perm, Process.myPid(), Process.myUid());
+        permStatusList.add(new PermStatus(perm, status == PackageManager.PERMISSION_GRANTED));
+      }
+      return permStatusList;
+    } catch (HiddenAPIsException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  private final String[] PERMISSIONS =
+      new String[] {
+        "android.permission.CREATE_USERS",
+        "android.permission.MANAGE_USERS",
+        "android.permission.INTERACT_ACROSS_USERS",
+        "android.permission.INTERACT_ACROSS_USERS_FULL",
+        "android.permission.GET_APP_OPS_STATS",
+        "android.permission.MANAGE_APP_OPS_MODES",
+        "android.permission.GRANT_RUNTIME_PERMISSIONS",
+        "android.permission.REVOKE_RUNTIME_PERMISSIONS",
+        "android.permission.OBSERVE_GRANT_REVOKE_PERMISSIONS",
+        "android.permission.CHANGE_COMPONENT_ENABLED_STATE",
+        "android.permission.PACKAGE_USAGE_STATS",
+        "android.permission.REAL_GET_TASKS",
+        "android.permission.GET_TASKS",
+        "android.permission.SET_ACTIVITY_WATCHER"
+      };
+
   //////////////////////////////////////////////////////////////////
   ///////////////////////// COMMON METHODS /////////////////////////
   //////////////////////////////////////////////////////////////////

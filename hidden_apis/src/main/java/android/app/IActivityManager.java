@@ -53,6 +53,8 @@ public interface IActivityManager {
       int userId)
       throws RemoteException;
 
+  int checkPermission(String permission, int pid, int uid) throws RemoteException;
+
   abstract class Stub {
 
     @SuppressWarnings("UnusedDeclaration")

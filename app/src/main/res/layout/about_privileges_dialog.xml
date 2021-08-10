@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:paddingTop="16dp"
+  android:paddingBottom="16dp"
+  android:paddingStart="4dp"
+  android:paddingEnd="4dp"
+  android:scrollbars="vertical">
+
+  <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="8dp"
+      android:paddingStart="20dp"
+      android:paddingEnd="20dp"
+      android:gravity="center_horizontal"
+      android:orientation="horizontal">
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/uid"
+        android:textColor="@color/dynamic_text_color"
+        android:textSize="16sp" />
+
+      <TextView
+        android:id="@+id/uid_v"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:textColor="@color/dynamic_text_color"
+        android:textSize="16sp" />
+
+    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/recycler_v"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" />
+
+  </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+</androidx.core.widget.NestedScrollView>

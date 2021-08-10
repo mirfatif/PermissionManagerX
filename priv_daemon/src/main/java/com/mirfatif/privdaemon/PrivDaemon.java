@@ -241,6 +241,9 @@ public class PrivDaemon {
         mPrivTasks.openAppInfo(args);
         sendResponse(null);
         break;
+      case Commands.GET_PERM_STATUS:
+        sendResponse(mPrivTasks.getPermStatus());
+        break;
       default:
         if (!mPrivDaemonFlavor.handleCommand(args)) {
           System.err.println("Unknown command: " + args[0]);

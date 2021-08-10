@@ -340,6 +340,15 @@ public class HiddenAPIsImpl extends HiddenAPIs {
     }
   }
 
+  @Override
+  public int checkPermission(String perm, int pid, int uid) throws HiddenAPIsException {
+    try {
+      return mIActivityManager.checkPermission(perm, pid, uid);
+    } catch (RemoteException e) {
+      throw new HiddenAPIsException(e);
+    }
+  }
+
   //////////////////////////////////////////////////////////////////
   //////////////////////////// PACKAGES ////////////////////////////
   //////////////////////////////////////////////////////////////////
