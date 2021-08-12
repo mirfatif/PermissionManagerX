@@ -280,7 +280,8 @@ public class PackageActivity extends BaseActivity {
       dialog.setOnShowListener(
           d -> {
             dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(permission.isChangeable());
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(!permission.isExtraAppOp());
+            boolean canBeExcluded = mMySettings.canBeExcluded(permission);
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(canBeExcluded);
           });
       new AlertDialogFragment(dialog).show(this, "PERM_OPTIONS", false);
     };

@@ -16,6 +16,8 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
+import com.mirfatif.permissionmanagerx.parser.Package;
+import com.mirfatif.permissionmanagerx.parser.Permission;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDao;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDatabase;
 import com.mirfatif.permissionmanagerx.util.Utils;
@@ -548,8 +550,14 @@ public class MySettings {
     return getExcludedApps().size();
   }
 
+  // getExcludedApps() must be called at least once from bg thread so that to avoid
+  // blocking UI later in canBeExcluded().
   public boolean isPkgExcluded(String packageName) {
-    return manuallyExcludeApps() && getExcludedApps().contains(packageName);
+    return getExcludedApps().contains(packageName) && manuallyExcludeApps();
+  }
+
+  public boolean canBeExcluded(Package pkg) {
+    return !getExcludedApps().contains(pkg.getName());
   }
 
   private final ReentrantLock EXCLUDED_APPS_LOCK = new ReentrantLock();
@@ -655,8 +663,14 @@ public class MySettings {
     return getExcludedPerms().size();
   }
 
+  // getExcludedPerms() must be called at least once from bg thread so that to avoid
+  // blocking UI later in canBeExcluded().
   public boolean isPermExcluded(String permissionName) {
-    return manuallyExcludePerms() && getExcludedPerms().contains(permissionName);
+    return getExcludedPerms().contains(permissionName) && manuallyExcludePerms();
+  }
+
+  public boolean canBeExcluded(Permission perm) {
+    return getExcludedPerms().contains(perm.getName()) && !perm.isExtraAppOp();
   }
 
   private final ReentrantLock EXCLUDED_PERMS_LOCK = new ReentrantLock();

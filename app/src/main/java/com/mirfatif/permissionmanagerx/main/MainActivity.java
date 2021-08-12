@@ -355,7 +355,11 @@ public class MainActivity extends BaseActivity {
       AlertDialog dialog = builder.setTitle(pkg.getLabel()).setView(b.getRoot()).create();
       boolean finalEnabled = enabled;
       dialog.setOnShowListener(
-          d -> dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(finalEnabled));
+          d -> {
+            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(finalEnabled);
+            boolean canBeExcluded = mMySettings.canBeExcluded(pkg);
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(canBeExcluded);
+          });
       new AlertDialogFragment(dialog).show(this, "PKG_OPTIONS", false);
     };
   }
