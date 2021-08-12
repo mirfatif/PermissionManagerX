@@ -9,6 +9,17 @@
     android:background="?attr/accentColor"
     android:layout_height="1dp"/>
 
+  <ToggleButton
+    android:id="@+id/exc_filters_master_switch"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginStart="12dp"
+    android:layout_marginEnd="12dp"
+    android:textOff="@string/enable_exc_filters"
+    android:textOn="@string/disable_exc_filters"
+    android:visibility="gone" />
+
   <androidx.fragment.app.FragmentContainerView
     android:id="@+id/fragment_container"
     android:layout_width="match_parent"

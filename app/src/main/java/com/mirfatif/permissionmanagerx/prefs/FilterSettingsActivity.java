@@ -6,11 +6,14 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.databinding.ActivityFragmentContainerBinding;
+import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
@@ -21,6 +24,8 @@ public class FilterSettingsActivity extends BaseActivity {
   private static final String TAG = "FilterSettingsActivity";
 
   private final MySettings mMySettings = MySettings.getInstance();
+  private ActivityFragmentContainerBinding mB;
+  private FilterSettingsFragment mFilterSettingsFrag;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -28,18 +33,52 @@ public class FilterSettingsActivity extends BaseActivity {
     if (Utils.setNightTheme(this)) {
       return;
     }
-    setContentView(R.layout.activity_fragment_container);
+    mB = ActivityFragmentContainerBinding.inflate(getLayoutInflater());
+    setContentView(mB.getRoot());
 
     ActionBar actionBar = getSupportActionBar();
     if (actionBar != null) {
       actionBar.setTitle(R.string.filter_menu_item);
     }
 
+    mB.excFiltersMasterSwitch.setVisibility(View.VISIBLE);
+
+    if (mMySettings.getExcFiltersEnabled()) {
+      mB.excFiltersMasterSwitch.setChecked(true);
+      addFrag(savedInstanceState);
+    }
+
+    // Must use commitNow(). Or the whole settings may get cleared.
+    mB.excFiltersMasterSwitch.setOnClickListener(
+        v -> {
+          if (mB.excFiltersMasterSwitch.isChecked()) {
+            // This must be set before setting fragment. Or the whole settings are cleared.
+            mMySettings.setExcFiltersEnabled(mB.excFiltersMasterSwitch.isChecked());
+            addFrag(savedInstanceState);
+          } else {
+            removeFrag();
+            // This must be set after removing fragment. Or the whole settings are cleared.
+            mMySettings.setExcFiltersEnabled(mB.excFiltersMasterSwitch.isChecked());
+          }
+          PackageParser.getInstance().updatePackagesList();
+        });
+  }
+
+  private void addFrag(Bundle savedInstanceState) {
     if (savedInstanceState == null) {
+      if (mFilterSettingsFrag == null) {
+        mFilterSettingsFrag = new FilterSettingsFragment();
+      }
       getSupportFragmentManager()
           .beginTransaction()
-          .replace(R.id.fragment_container, new FilterSettingsFragment())
-          .commit();
+          .replace(R.id.fragment_container, mFilterSettingsFrag)
+          .commitNow();
+    }
+  }
+
+  private void removeFrag() {
+    if (mFilterSettingsFrag != null) {
+      getSupportFragmentManager().beginTransaction().remove(mFilterSettingsFrag).commitNow();
     }
   }
 
@@ -57,7 +96,17 @@ public class FilterSettingsActivity extends BaseActivity {
         .setEnabled(mMySettings.getExcludedPermsCount() != 0);
     menu.findItem(R.id.action_clear_extra_app_ops)
         .setEnabled(mMySettings.getExtraAppOpsCount() != 0);
-    return super.onCreateOptionsMenu(menu);
+    return true;
+  }
+
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    boolean filtersEnabled = mMySettings.getExcFiltersEnabled();
+    menu.findItem(R.id.action_reset_defaults).setVisible(filtersEnabled);
+    menu.findItem(R.id.action_clear_excluded_apps).setVisible(filtersEnabled);
+    menu.findItem(R.id.action_clear_excluded_perms).setVisible(filtersEnabled);
+    menu.findItem(R.id.action_clear_extra_app_ops).setVisible(filtersEnabled);
+    return true;
   }
 
   /**

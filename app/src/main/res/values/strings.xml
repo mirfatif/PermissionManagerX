@@ -252,6 +252,8 @@
   <string name="excluded_perms_summary">Long press on a permission name to exclude it</string>
   <string name="extra_app_ops_summary">AppOps always shown in every app</string>
   <string name="extra_app_ops_summary_count">(Total: %1$d)</string>
+  <string name="enable_exc_filters" maxLength="10">Enable Filters</string>
+  <string name="disable_exc_filters" maxLength="10">Disable Filters</string>
 
   <plurals name="and_others_count">
     <item quantity="one">%1$s and %2$d other</item>

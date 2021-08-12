@@ -406,29 +406,38 @@ public class MySettings {
     return mCriticalApps.contains(packageName);
   }
 
+  // Exclusion filters master switch
+  public boolean getExcFiltersEnabled() {
+    return getBoolPref(R.string.pref_filter_master_switch_key);
+  }
+
+  public void setExcFiltersEnabled(boolean enabled) {
+    savePref(R.string.pref_filter_master_switch_key, enabled);
+  }
+
   // apps
   public boolean excludeNoIconApps() {
-    return getBoolPref(R.string.pref_filter_exclude_no_icon_apps_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_no_icon_apps_key);
   }
 
   public boolean excludeUserApps() {
-    return getBoolPref(R.string.pref_filter_exclude_user_apps_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_user_apps_key);
   }
 
   public boolean excludeSystemApps() {
-    return getBoolPref(R.string.pref_filter_exclude_system_apps_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_system_apps_key);
   }
 
   public boolean excludeFrameworkApps() {
-    return getBoolPref(R.string.pref_filter_exclude_framework_apps_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_framework_apps_key);
   }
 
   public boolean excludeDisabledApps() {
-    return getBoolPref(R.string.pref_filter_exclude_disabled_apps_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_disabled_apps_key);
   }
 
   public boolean excludeNoPermissionsApps() {
-    return getBoolPref(R.string.pref_filter_exclude_no_perms_apps_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_no_perms_apps_key);
   }
 
   public boolean shouldExcludeNoPermApps() {
@@ -436,52 +445,54 @@ public class MySettings {
   }
 
   public boolean showExtraAppOps() {
-    return getBoolPref(R.string.pref_filter_show_extra_app_ops_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_show_extra_app_ops_key);
   }
 
   // permissions
   public boolean excludeInvalidPermissions() {
-    return getBoolPref(R.string.pref_filter_exclude_invalid_perms_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_invalid_perms_key);
   }
 
   public boolean excludeNotChangeablePerms() {
-    return getBoolPref(R.string.pref_filter_exclude_not_changeable_perms_key);
+    return getExcFiltersEnabled()
+        && getBoolPref(R.string.pref_filter_exclude_not_changeable_perms_key);
   }
 
   public boolean excludeNotGrantedPerms() {
-    return getBoolPref(R.string.pref_filter_exclude_not_granted_perms_key);
+    return getExcFiltersEnabled()
+        && getBoolPref(R.string.pref_filter_exclude_not_granted_perms_key);
   }
 
   public boolean manuallyExcludePerms() {
-    return getBoolPref(R.string.pref_filter_manually_exclude_perms_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_manually_exclude_perms_key);
   }
 
   public boolean excludeNormalPerms() {
-    return getBoolPref(R.string.pref_filter_exclude_normal_perms_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_normal_perms_key);
   }
 
   public boolean excludeDangerousPerms() {
-    return getBoolPref(R.string.pref_filter_exclude_dangerous_perms_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_dangerous_perms_key);
   }
 
   public boolean excludeSignaturePerms() {
-    return getBoolPref(R.string.pref_filter_exclude_signature_perms_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_signature_perms_key);
   }
 
   public boolean excludePrivilegedPerms() {
-    return getBoolPref(R.string.pref_filter_exclude_privileged_perms_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_privileged_perms_key);
   }
 
   public boolean excludeAppOpsPerms() {
-    return getBoolPref(R.string.pref_filter_exclude_appops_perms_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_appops_perms_key);
   }
 
   public boolean excludeNotSetAppOps() {
-    return getBoolPref(R.string.pref_filter_exclude_not_set_appops_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_not_set_appops_key);
   }
 
   public boolean manuallyExcludeApps() {
-    return getBoolPref(R.string.pref_filter_manually_exclude_apps_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_manually_exclude_apps_key);
   }
 
   public boolean canReadAppOps() {
@@ -557,7 +568,7 @@ public class MySettings {
   }
 
   public boolean canBeExcluded(Package pkg) {
-    return !getExcludedApps().contains(pkg.getName());
+    return getExcFiltersEnabled() && !getExcludedApps().contains(pkg.getName());
   }
 
   private final ReentrantLock EXCLUDED_APPS_LOCK = new ReentrantLock();
@@ -670,7 +681,9 @@ public class MySettings {
   }
 
   public boolean canBeExcluded(Permission perm) {
-    return getExcludedPerms().contains(perm.getName()) && !perm.isExtraAppOp();
+    return getExcFiltersEnabled()
+        && getExcludedPerms().contains(perm.getName())
+        && !perm.isExtraAppOp();
   }
 
   private final ReentrantLock EXCLUDED_PERMS_LOCK = new ReentrantLock();
