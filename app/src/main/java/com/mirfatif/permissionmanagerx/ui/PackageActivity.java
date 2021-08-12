@@ -422,7 +422,7 @@ public class PackageActivity extends BaseActivity {
     long ts = System.currentTimeMillis();
     List<Permission> permList = new ArrayList<>();
     for (Permission permission : mPermissionsList) {
-      if (permission.contains(mPackage, queryText)) {
+      if (permission.contains(mPackage, queryText, false)) {
         permList.add(permission);
       }
       if (Thread.interrupted()) {

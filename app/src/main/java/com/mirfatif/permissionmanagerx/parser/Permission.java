@@ -317,9 +317,9 @@ public class Permission {
     return protectionLevel;
   }
 
-  public boolean contains(Package pkg, String queryText) {
+  public boolean contains(Package pkg, String queryText, boolean caseSensitive) {
     if (!mMySettings.isSpecialSearch()) {
-      return _contains(pkg, queryText);
+      return _contains(pkg, queryText, caseSensitive);
     }
 
     boolean isEmpty = true;
@@ -328,26 +328,26 @@ public class Permission {
         continue;
       }
       isEmpty = false;
-      if (contains_(pkg, str)) {
+      if (contains_(pkg, str, caseSensitive)) {
         return true;
       }
     }
     return isEmpty;
   }
 
-  private boolean contains_(Package pkg, String queryText) {
+  private boolean contains_(Package pkg, String queryText, boolean caseSensitive) {
     for (String str : queryText.split("&")) {
       if (TextUtils.isEmpty(str)) {
         continue;
       }
-      if (!_contains(pkg, str)) {
+      if (!_contains(pkg, str, caseSensitive)) {
         return false;
       }
     }
     return true;
   }
 
-  private boolean _contains(Package pkg, String queryText) {
+  private boolean _contains(Package pkg, String queryText, boolean caseSensitive) {
     boolean contains = true;
     if (mMySettings.isSpecialSearch() && queryText.startsWith("!")) {
       queryText = queryText.replaceAll("^!", "");
@@ -355,15 +355,16 @@ public class Permission {
     }
 
     Boolean handled = mMySettingsFlavor.handleSearchQuery(queryText, pkg, this);
-    if (handled != null) {
-      if (handled) {
-        return contains;
-      } else {
-        return !contains;
-      }
+    if (Boolean.TRUE.equals(handled)) {
+      return contains;
+    } else if (Boolean.FALSE.equals(handled)) {
+      return !contains;
     }
 
-    queryText = queryText.toUpperCase();
+    caseSensitive = caseSensitive && mMySettings.isCaseSensitiveSearch();
+    if (!caseSensitive) {
+      queryText = queryText.toUpperCase();
+    }
 
     for (String field :
         new String[] {
@@ -380,7 +381,10 @@ public class Permission {
           getAppOpsAccessTime() != null ? CONSTANTS.SEARCH_TIME : "",
           (mIsExtraAppOp ? CONSTANTS.SEARCH_EXTRA : "")
         }) {
-      if (field.toUpperCase().contains(queryText)) {
+      if (!caseSensitive) {
+        field = field.toUpperCase();
+      }
+      if (field.contains(queryText)) {
         return contains;
       }
     }

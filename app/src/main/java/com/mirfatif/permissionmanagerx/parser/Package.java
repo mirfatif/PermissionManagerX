@@ -243,6 +243,11 @@ public class Package {
     return mLastDate;
   }
 
+  @SuppressWarnings("UnusedDeclaration")
+  public long getInstallTime() {
+    return mInstallDate;
+  }
+
   private boolean mIsRemoved = false;
 
   public boolean isRemoved() {
@@ -284,15 +289,22 @@ public class Package {
   }
 
   private boolean _contains(String queryText) {
-    boolean isCaseSensitive = mMySettings.isCaseSensitiveSearch();
-    if (!isCaseSensitive) {
-      queryText = queryText.toUpperCase();
-    }
-
     boolean contains = true;
     if (mMySettings.isSpecialSearch() && queryText.startsWith("!")) {
       queryText = queryText.replaceAll("^!", "");
       contains = false;
+    }
+
+    Boolean handled = mMySettingsFlavor.handleSearchQuery(queryText, this, null);
+    if (Boolean.TRUE.equals(handled)) {
+      return contains;
+    } else if (Boolean.FALSE.equals(handled)) {
+      return !contains;
+    }
+
+    boolean isCaseSensitive = mMySettings.isCaseSensitiveSearch();
+    if (!isCaseSensitive) {
+      queryText = queryText.toUpperCase();
     }
 
     for (String field :
