@@ -74,7 +74,8 @@ public class PackageParser {
   private final ExecutorService mUpdatePackagesExecutor = Executors.newSingleThreadExecutor();
   private Future<?> mUpdatePackagesFuture;
 
-  public void updatePackagesList() {
+  @SuppressWarnings("UnusedReturnValue")
+  public Future<?> updatePackagesList() {
     synchronized (mUpdatePackagesExecutor) {
       if (mMySettings.isDebug()) {
         Util.debugLog(TAG, "updatePackagesList() called");
@@ -94,6 +95,7 @@ public class PackageParser {
       mUpdatePackagesFuture =
           mUpdatePackagesExecutor.submit(
               () -> updatePackagesListInBg(false, mMySettings.shouldDoQuickScan()));
+      return mUpdatePackagesFuture;
     }
   }
 
@@ -145,7 +147,7 @@ public class PackageParser {
         }
 
         Package pkg = new Package();
-        if (isPkgUpdated(packageInfo, pkg, quickScan)) {
+        if (isPkgUpdated(packageInfo, pkg, quickScan, true)) {
           packageList.add(pkg);
           mPkgParserFlavor.onPkgCreated(pkg);
 
@@ -258,7 +260,7 @@ public class PackageParser {
     PackageInfo packageInfo = mPkgParserFlavor.getPackageInfo(pkg);
 
     // Package uninstalled, ref states changed, or disabled from MainActivity
-    if (packageInfo == null || !isPkgUpdated(packageInfo, pkg, false)) {
+    if (packageInfo == null || !isPkgUpdated(packageInfo, pkg, false, true)) {
       removePackage(pkg);
       return;
     }
@@ -425,7 +427,13 @@ public class PackageParser {
   /////////////////////////// PACKAGES /////////////////////////////
   //////////////////////////////////////////////////////////////////
 
-  boolean isPkgUpdated(PackageInfo packageInfo, Package pkg, boolean quickScan) {
+  @SuppressWarnings("SameParameterValue")
+  boolean isPkgUpdated(
+      PackageInfo packageInfo, Package pkg, boolean quickScan, boolean applyFilter) {
+    if (applyFilter && mPkgParserFlavor.isFilteredOut(packageInfo, pkg)) {
+      return false;
+    }
+
     if (isFilteredOutPkgName(packageInfo.packageName)) {
       return false;
     }
@@ -444,7 +452,6 @@ public class PackageParser {
     }
 
     ApplicationInfo appInfo = packageInfo.applicationInfo;
-
     boolean isEnabled = appInfo.enabled;
     if (isFilteredOutDisabledPkg(!isEnabled)) {
       return false;
@@ -496,6 +503,11 @@ public class PackageParser {
         pkgIsReferenced,
         packageInfo.firstInstallTime,
         new File(appInfo.sourceDir).lastModified());
+
+    if (applyFilter && mPkgParserFlavor.isFilteredOut(pkg)) {
+      return false;
+    }
+
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "isPkgUpdated: Package created");
     }
@@ -590,12 +602,18 @@ public class PackageParser {
     int[] appOpsCount1 = new int[] {0, 0};
     List<Integer> processedAppOps = new ArrayList<>();
 
+    List<String> filter = pkg.getPermFilter();
+
     if (requestedPermissions != null) {
       if (mMySettings.isDebug()) {
         Util.debugLog(TAG, "getPermissionsList: parsing permissions list");
       }
       for (int count = 0; count < requestedPermissions.length; count++) {
         String perm = requestedPermissions[count].replaceAll("\\s", "");
+        if (filter != null && !filter.contains(perm)) {
+          continue;
+        }
+
         permission = createPermission(packageInfo, perm, count);
         if (isNotFilteredOut(permission)) {
           permissionsList.add(permission);
@@ -605,7 +623,7 @@ public class PackageParser {
         // not set AppOps corresponding to manifest permission
         if (!mMySettings.excludeAppOpsPerms() && mMySettings.canReadAppOps()) {
           int[] appOpsCount =
-              createPermsAppOpsNotSet(packageInfo, perm, permissionsList, processedAppOps);
+              createPermsAppOpsNotSet(packageInfo, perm, permissionsList, processedAppOps, filter);
           appOpsCount1[0] += appOpsCount[0];
           appOpsCount1[1] += appOpsCount[1];
         }
@@ -623,7 +641,7 @@ public class PackageParser {
         Util.debugLog(
             TAG, "getPermissionsList: parsing AppOps not corresponding to any manifest permission");
       }
-      appOpsCount2 = createSetAppOps(packageInfo, permissionsList, processedAppOps);
+      appOpsCount2 = createSetAppOps(packageInfo, permissionsList, processedAppOps, filter);
 
       /*
         Do not count extra AppOps if app has no manifest permission and no other AppOp.
@@ -654,7 +672,7 @@ public class PackageParser {
           for (int i = 0; i < ops1.size(); i++) {
             ops2[i] = ops1.get(i);
           }
-          appOpsCount3 = createExtraAppOps(packageInfo, permissionsList, ops2);
+          appOpsCount3 = createExtraAppOps(packageInfo, permissionsList, ops2, filter);
         }
       }
     }
@@ -887,7 +905,8 @@ public class PackageParser {
       PackageInfo packageInfo,
       String perm,
       List<Permission> permissionsList,
-      List<Integer> processedAppOps) {
+      List<Integer> processedAppOps,
+      List<String> filter) {
 
     Integer mappedOp = mAppOpsParser.getPermToOpCodeMap().get(perm);
     if (mappedOp == null) {
@@ -901,27 +920,32 @@ public class PackageParser {
 
     // do not return changed (set) ops, they are handled separately
     if (pkgOpsList != null && pkgOpsList.size() == 0) {
-      return createAppOp(packageInfo, op, -1, permissionsList, processedAppOps, false, false, -1);
+      return createAppOp(
+          packageInfo, op, -1, permissionsList, processedAppOps, false, false, -1, filter);
     }
 
     return new int[] {0, 0};
   }
 
   private int[] createSetAppOps(
-      PackageInfo packageInfo, List<Permission> permissionsList, List<Integer> processedAppOps) {
-    return createAppOpsList(packageInfo, permissionsList, processedAppOps, null);
+      PackageInfo packageInfo,
+      List<Permission> permissionsList,
+      List<Integer> processedAppOps,
+      List<String> filter) {
+    return createAppOpsList(packageInfo, permissionsList, processedAppOps, null, filter);
   }
 
   private int[] createExtraAppOps(
-      PackageInfo packageInfo, List<Permission> permissionsList, int[] ops) {
-    return createAppOpsList(packageInfo, permissionsList, null, ops);
+      PackageInfo packageInfo, List<Permission> permissionsList, int[] ops, List<String> filter) {
+    return createAppOpsList(packageInfo, permissionsList, null, ops, filter);
   }
 
   private int[] createAppOpsList(
       PackageInfo packageInfo,
       List<Permission> permissionsList,
       List<Integer> processedAppOps,
-      int[] ops) {
+      int[] ops,
+      List<String> filter) {
 
     List<MyPackageOps> pkgOpsList = new ArrayList<>();
     int totalAppOpsCount = 0;
@@ -936,7 +960,8 @@ public class PackageParser {
         if (list != null) {
           if (list.size() == 0) {
             int[] count =
-                createAppOp(packageInfo, op, -1, permissionsList, processedAppOps, true, false, -1);
+                createAppOp(
+                    packageInfo, op, -1, permissionsList, processedAppOps, true, false, -1, filter);
             totalAppOpsCount += count[0];
             appOpsCount += count[1];
           } else {
@@ -973,7 +998,8 @@ public class PackageParser {
                 processedAppOps,
                 isExtraAppOp,
                 isPerUid,
-                lastAccessTime);
+                lastAccessTime,
+                filter);
         totalAppOpsCount += count[0];
         appOpsCount += count[1];
       }
@@ -989,10 +1015,15 @@ public class PackageParser {
       List<Integer> processedAppOps,
       boolean isExtraAppOp,
       boolean isPerUid,
-      long accessTime) {
+      long accessTime,
+      List<String> filter) {
+    String opName = mAppOpsParser.getAppOpsList().get(op);
+    if (filter != null && !filter.contains(opName)) {
+      return new int[] {1, 0};
+    }
+
     int opSwitch = mAppOpsParser.getOpToSwitchList().get(op);
     String dependsOn = op == opSwitch ? null : mAppOpsParser.getAppOpsList().get(opSwitch);
-    String opName = mAppOpsParser.getAppOpsList().get(op);
     boolean isAppOpSet = true;
     // Mode can be greater than the modes list we have built. E.g. MODE_ASK in LOS N.
     if (opMode < 0 || opMode >= mAppOpsParser.getAppOpsModes().size()) {

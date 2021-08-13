@@ -49,4 +49,18 @@ public class PkgParserFlavor {
 
   @SuppressWarnings("UnusedDeclaration")
   public void setProgress(boolean isMax, int value) {}
+
+  @SuppressWarnings("UnusedDeclaration")
+  public boolean isFilteredOut(PackageInfo packageInfo, Package pkg) {
+    return false;
+  }
+
+  @SuppressWarnings("UnusedDeclaration")
+  public boolean isFilteredOut(Package pkg) {
+    return false;
+  }
+
+  public boolean allowQuickScan() {
+    return true;
+  }
 }

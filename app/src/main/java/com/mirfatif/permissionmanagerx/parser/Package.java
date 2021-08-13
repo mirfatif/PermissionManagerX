@@ -38,6 +38,8 @@ public class Package {
   private int mTotalAppOpsCount;
   private int mAppOpsCount, mSearchAppOpsCount;
 
+  private List<String> mPermFilter;
+
   void updatePackage(
       String label,
       String name,
@@ -256,6 +258,16 @@ public class Package {
 
   public void setIsRemoved(boolean isRemoved) {
     mIsRemoved = isRemoved;
+  }
+
+  @SuppressWarnings("UnusedDeclaration")
+  public List<String> getPermFilter() {
+    return mPermFilter;
+  }
+
+  @SuppressWarnings("UnusedDeclaration")
+  public void setPermFilter(List<String> permFilter) {
+    mPermFilter = permFilter;
   }
 
   public boolean contains(String queryText) {

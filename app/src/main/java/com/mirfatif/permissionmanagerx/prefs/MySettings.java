@@ -18,6 +18,7 @@ import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.Permission;
+import com.mirfatif.permissionmanagerx.parser.PkgParserFlavor;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDao;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDatabase;
 import com.mirfatif.permissionmanagerx.util.Utils;
@@ -369,7 +370,8 @@ public class MySettings {
   }
 
   public boolean isQuickScanEnabled() {
-    return getBoolPref(R.string.pref_settings_quick_scan_key);
+    return getBoolPref(R.string.pref_settings_quick_scan_key)
+        && PkgParserFlavor.getInstance().allowQuickScan();
   }
 
   public boolean shouldDoQuickScan() {
