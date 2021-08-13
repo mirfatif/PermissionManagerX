@@ -1,6 +1,7 @@
 package com.mirfatif.permissionmanagerx.main;
 
-import android.Manifest.permission;
+import static com.mirfatif.permissionmanagerx.prefs.MySettings.PERM_GET_APP_OPS_STATS;
+
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -792,7 +793,7 @@ public class MainActivity extends BaseActivity {
               + " "
               + getPackageName()
               + " "
-              + permission.GET_APP_OPS_STATS
+              + PERM_GET_APP_OPS_STATS
               + " "
               + Utils.getUserId();
 
@@ -802,8 +803,8 @@ public class MainActivity extends BaseActivity {
       mPrivDaemonHandler.sendRequest(command);
 
       if (!mMySettings.isAppOpsGranted()) {
-        Log.e(TAG, "checkAppOpsPerm: granting " + permission.GET_APP_OPS_STATS + " failed");
-        String text = getString(R.string.granting_permission_failed, permission.GET_APP_OPS_STATS);
+        Log.e(TAG, "checkAppOpsPerm: granting " + PERM_GET_APP_OPS_STATS + " failed");
+        String text = getString(R.string.granting_permission_failed, PERM_GET_APP_OPS_STATS);
         showSnackBar(text, 10000);
       }
     }
@@ -829,6 +830,8 @@ public class MainActivity extends BaseActivity {
         .getMenu()
         .findItem(R.id.action_donate)
         .setVisible(mMainActivityFlavor.getDonateVisibility());
+
+    mMainActivityFlavor.setNavMenu(mB.navV.getMenu());
   }
 
   private void setBoxesChecked() {
@@ -971,7 +974,7 @@ public class MainActivity extends BaseActivity {
       return true;
     }
 
-    return false;
+    return mMainActivityFlavor.handleNavItemChecked(item);
   }
 
   private void openDrawerForPrivileges() {

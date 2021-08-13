@@ -2,7 +2,6 @@ package com.mirfatif.permissionmanagerx.prefs;
 
 import static com.mirfatif.permissionmanagerx.util.Utils.getString;
 
-import android.Manifest.permission;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
@@ -501,8 +500,10 @@ public class MySettings {
     return canUseHiddenAPIs() || mPrivDaemonAlive;
   }
 
+  public static final String PERM_GET_APP_OPS_STATS = "android.permission.GET_APP_OPS_STATS";
+
   public boolean isAppOpsGranted() {
-    return App.getContext().checkSelfPermission(permission.GET_APP_OPS_STATS)
+    return App.getContext().checkSelfPermission(PERM_GET_APP_OPS_STATS)
         == PackageManager.PERMISSION_GRANTED;
   }
 

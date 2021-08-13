@@ -14,6 +14,18 @@
       android:icon="@drawable/filter"/>
   </group>
 
+  <group android:id="@+id/group1.5">
+    <item
+      android:id="@+id/action_sched_check"
+      android:title="@null"
+      android:visible="false" />
+
+    <item
+      android:id="@+id/action_perm_watcher"
+      android:title="@null"
+      android:visible="false" />
+  </group>
+
   <group android:id="@+id/group2">
     <item
       android:id="@+id/action_root"

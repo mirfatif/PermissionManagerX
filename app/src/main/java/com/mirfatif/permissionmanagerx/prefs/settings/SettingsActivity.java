@@ -1,5 +1,8 @@
 package com.mirfatif.permissionmanagerx.prefs.settings;
 
+import static com.mirfatif.permissionmanagerx.BuildConfig.APPLICATION_ID;
+
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -12,6 +15,8 @@ import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
 
 public class SettingsActivity extends BaseActivity implements OnPreferenceStartFragmentCallback {
+
+  public static final String EXTRA_NO_PARENT = APPLICATION_ID + ".extra.NO_PARENT";
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,7 +31,8 @@ public class SettingsActivity extends BaseActivity implements OnPreferenceStartF
     ActionBar actionBar = getSupportActionBar();
     if (actionBar != null) {
       actionBar.setTitle(R.string.settings_menu_item);
-      if (mCloseOnBackPressed) {
+      Intent intent = getIntent();
+      if (intent != null && intent.getBooleanExtra(EXTRA_NO_PARENT, false)) {
         actionBar.setDisplayHomeAsUpEnabled(false);
       }
     }

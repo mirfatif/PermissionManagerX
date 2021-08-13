@@ -38,6 +38,14 @@ public class MainActivityFlavor {
     return false;
   }
 
+  @SuppressWarnings("UnusedDeclaration")
+  public void setNavMenu(Menu menu) {}
+
+  @SuppressWarnings("UnusedDeclaration")
+  public boolean handleNavItemChecked(MenuItem item) {
+    return false;
+  }
+
   boolean getDonateVisibility() {
     return !BuildConfig.AMAZ_VERSION;
   }
