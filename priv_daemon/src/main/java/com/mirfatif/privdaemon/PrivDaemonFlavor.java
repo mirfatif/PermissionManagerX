@@ -11,4 +11,6 @@ public class PrivDaemonFlavor {
   public boolean handleCommand(String[] args) {
     return false;
   }
+
+  public void onExit() {}
 }

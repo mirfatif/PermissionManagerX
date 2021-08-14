@@ -87,7 +87,7 @@ public class PrivDaemon {
     }
 
     // signal the client I'm up
-    System.out.println(Commands.HELLO + ":" + Process.myPid() + ":" + port);
+    System.out.println(Commands.HELLO + ":" + Process.myPid() + ":" + Process.myUid() + ":" + port);
     System.out.flush();
 
     if (server == null) {
@@ -112,7 +112,7 @@ public class PrivDaemon {
     }
 
     mCmdReader = new BufferedReader(new InputStreamReader(System.in));
-    Log.i(TAG, "I'm up! Send commands");
+    Log.i(TAG, "I'm up! Send commands (PID: " + Process.myPid() + ")");
     String line;
     try {
       // stop listening when app process is killed
@@ -144,11 +144,12 @@ public class PrivDaemon {
         }
         server.close();
       }
-      Log.i(TAG, "Bye bye!");
+      Log.i(TAG, "Bye bye! (PID: " + Process.myPid() + ")");
     } catch (IOException e) {
       System.err.println("Read/write error, shutting down");
       e.printStackTrace();
     }
+    mPrivDaemonFlavor.onExit();
   }
 
   /////////////////////////////////////////////////////////////////////////////////

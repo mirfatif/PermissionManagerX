@@ -207,12 +207,7 @@ public class AboutActivity extends BaseActivity {
 
   private void showPermStatusDialog() {
     PrivDaemonHandler daemonHandler = PrivDaemonHandler.getInstance();
-    Object obj = daemonHandler.sendRequest(Commands.GET_UID);
-    if (!(obj instanceof Integer)) {
-      return;
-    }
-    int uid = (int) obj;
-    obj = daemonHandler.sendRequest(Commands.GET_PERM_STATUS);
+    Object obj = daemonHandler.sendRequest(Commands.GET_PERM_STATUS);
     if (!(obj instanceof List<?>)) {
       return;
     }
@@ -220,7 +215,7 @@ public class AboutActivity extends BaseActivity {
     for (Object item : (List<?>) obj) {
       permStatusList.add((PermStatus) item);
     }
-    Utils.runInFg(() -> showPermStatusDialog(uid, permStatusList));
+    Utils.runInFg(() -> showPermStatusDialog(daemonHandler.getUid(), permStatusList));
   }
 
   private void showPermStatusDialog(int uid, List<PermStatus> permStatusList) {

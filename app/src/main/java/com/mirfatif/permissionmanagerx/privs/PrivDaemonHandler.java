@@ -174,25 +174,33 @@ public class PrivDaemonHandler {
     Log.i(TAG, "startDaemon: sending params");
     mCmdWriter.println(params);
 
-    int pid = 0;
+    mDaemonPid = mDaemonUid = -1;
     int port = 0;
     try {
       String line;
       while ((line = inReader.readLine()) != null) {
         if (line.startsWith(Commands.HELLO)) {
-          pid = Integer.parseInt(line.split(":")[1]);
-          port = Integer.parseInt(line.split(":")[2]);
+          String[] split = line.split(":");
+          mDaemonPid = Integer.parseInt(split[1]);
+          mDaemonUid = Integer.parseInt(split[2]);
+          port = Integer.parseInt(split[3]);
           break;
         }
         Log.i(TAG, "startDaemon: " + DAEMON_CLASS_NAME + ": " + line);
       }
 
-      if (pid <= 0 || (useSocket && port <= 0)) {
+      if (mDaemonPid <= 0 || (useSocket && port <= 0)) {
         Log.e(TAG, "startDaemon: bad or no response from privileged daemon");
         return false;
       }
 
-      Log.i(TAG, "startDaemon: sending command: " + Commands.GET_READY);
+      Log.i(
+          TAG,
+          "startDaemon: sending command: "
+              + Commands.GET_READY
+              + " to daemon (PID: "
+              + mDaemonPid
+              + ")");
       mCmdWriter.println(Commands.GET_READY);
 
       // We have single input stream to read in case of ADB, so
@@ -236,18 +244,10 @@ public class PrivDaemonHandler {
       return false;
     }
 
-    // Even with ADB we may get System UID if ADBD is running as root.
-    Object obj = sendRequest(Commands.GET_UID, true);
-    if (obj instanceof Integer) {
-      int uid = (int) obj;
-      mIsSystemUid = uid == UID_SYSTEM;
-      mIsRootUid = uid == UID_ROOT;
-    }
-
     mMySettings.setPrivDaemonAlive(true);
 
     if (mMySettings.shouldStartDaemonLog()) {
-      String logCommand = "exec logcat --pid " + pid;
+      String logCommand = "exec logcat --pid " + mDaemonPid;
 
       if (mPreferRoot) {
         if (!LogcatService.doLogging(Utils.getSu(), logCommand)) {
@@ -267,6 +267,8 @@ public class PrivDaemonHandler {
 
     return true;
   }
+
+  private int mDaemonPid;
 
   private void readDaemonMessages(Process process, Adb adb) {
     BufferedReader reader;
@@ -288,7 +290,7 @@ public class PrivDaemonHandler {
       Utils.cleanStreams(process, adb, TAG + ": readDaemonMessages");
 
       if (restart) {
-        Log.e(TAG, "readDaemonMessages: privileged daemon died");
+        Log.e(TAG, "readDaemonMessages: privileged daemon (PID: " + mDaemonPid + ") died");
         Utils.showToast(R.string.priv_daemon_died);
         SystemClock.sleep(10000); // Wait must be greater than NativeDaemon
         Log.i(TAG, "readDaemonMessages: restarting privileged daemon");
@@ -345,15 +347,20 @@ public class PrivDaemonHandler {
     }
   }
 
-  private boolean mIsSystemUid = false, mIsRootUid = false;
+  // Even with ADB we may get System UID if ADBD is running as root.
+  private int mDaemonUid;
+
+  public int getUid() {
+    return mDaemonUid;
+  }
 
   public boolean isSystemUid() {
-    return mIsSystemUid;
+    return mDaemonUid == UID_SYSTEM;
   }
 
   @SuppressWarnings("UnusedDeclaration")
   public boolean isRootUid() {
-    return mIsRootUid;
+    return mDaemonUid == UID_ROOT;
   }
 
   //////////////////////////////////////////////////////////////////
