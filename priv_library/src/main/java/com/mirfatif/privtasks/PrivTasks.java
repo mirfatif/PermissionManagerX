@@ -69,6 +69,7 @@ public class PrivTasks {
         if (e.getCause() instanceof ArrayIndexOutOfBoundsException) {
           // OEM you are shit!
           failed = true;
+          opToDefModeWorking = false;
           sendRequest(Commands.OP_NUM_INCONSISTENCY);
           e.printStackTrace();
         }
@@ -109,6 +110,7 @@ public class PrivTasks {
         if (e.getCause() instanceof ArrayIndexOutOfBoundsException) {
           // OEM you are shit!
           failed = true;
+          opToSwitchWorking = false;
           sendRequest(Commands.OP_NUM_INCONSISTENCY);
           e.printStackTrace();
         }
@@ -135,6 +137,7 @@ public class PrivTasks {
         if (e.getCause() instanceof ArrayIndexOutOfBoundsException) {
           // OEM you are shit!
           failed = true;
+          opToNameWorking = false;
           sendRequest(Commands.OP_NUM_INCONSISTENCY);
           e.printStackTrace();
         }
@@ -390,6 +393,28 @@ public class PrivTasks {
         "android.permission.SET_ACTIVITY_WATCHER"
       };
 
+  private boolean opToDefModeWorking = true;
+  private boolean opToSwitchWorking = true;
+  private boolean opToNameWorking = true;
+  private boolean opNumConsistent = true;
+
+  public Integer getAppOpsStatus() {
+    int status = 0;
+    if (opToDefModeWorking) {
+      status |= Commands.OP_TO_DEF_MODE_WORKS;
+    }
+    if (opToSwitchWorking) {
+      status |= Commands.OP_TO_SWITCH_WORKS;
+    }
+    if (opToNameWorking) {
+      status |= Commands.OP_TO_NAME_WORKS;
+    }
+    if (opNumConsistent) {
+      status |= Commands.OP_NUM_CONSISTENT;
+    }
+    return status;
+  }
+
   //////////////////////////////////////////////////////////////////
   ///////////////////////// COMMON METHODS /////////////////////////
   //////////////////////////////////////////////////////////////////
@@ -474,6 +499,7 @@ public class PrivTasks {
     @Override
     public void onInvalidOpCode(int opCode, String pkgName) {
       // OEM you are shit!
+      opNumConsistent = false;
       rateLimitSendRequest(Commands.OP_NUM_INCONSISTENCY);
       rateLimitLog("getMyPackageOpsList: bad op: " + opCode + " for package: " + pkgName);
     }

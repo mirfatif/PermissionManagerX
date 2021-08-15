@@ -338,7 +338,13 @@
   <string name="share_summary">Share the app with others</string>
   <string name="share_text">Check out this amazing app! %1$s</string>
   <string name="perm_status_menu_item" maxLength="15">Privileges</string>
-  <string name="uid">UID: </string>
+  <string name="uid">UID:</string>
+  <string name="app_ops">AppOps</string>
+  <string name="op_to_def_mode">Op To Default Mode</string>
+  <string name="op_to_switch">Op To Switch</string>
+  <string name="op_to_name">Op To Name</string>
+  <string name="op_num_consistency">Op Numbers Consistency</string>
+  <string name="permissions">Permissions</string>
 
   <!-- Donate -->
   <string name="send_bitcoin">Send Bitcoin</string>

@@ -9,6 +9,7 @@ import android.view.View;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument;
+import androidx.annotation.DrawableRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -215,17 +216,33 @@ public class AboutActivity extends BaseActivity {
     for (Object item : (List<?>) obj) {
       permStatusList.add((PermStatus) item);
     }
-    Utils.runInFg(() -> showPermStatusDialog(daemonHandler.getUid(), permStatusList));
+    obj = daemonHandler.sendRequest(Commands.GET_APP_OP_STATUS);
+    if (!(obj instanceof Integer)) {
+      return;
+    }
+    int appOpsStatus = (int) obj;
+    Utils.runInFg(() -> showPermStatusDialog(daemonHandler.getUid(), permStatusList, appOpsStatus));
   }
 
-  private void showPermStatusDialog(int uid, List<PermStatus> permStatusList) {
+  private void showPermStatusDialog(int uid, List<PermStatus> permStatusList, int appOpStatus) {
     AboutPrivilegesDialogBinding b = AboutPrivilegesDialogBinding.inflate(getLayoutInflater());
     b.uidV.setText(String.valueOf(uid));
+
+    b.opToDefModeV.setImageResource(getIcon(appOpStatus, Commands.OP_TO_DEF_MODE_WORKS));
+    b.opToSwV.setImageResource(getIcon(appOpStatus, Commands.OP_TO_SWITCH_WORKS));
+    b.opToNameV.setImageResource(getIcon(appOpStatus, Commands.OP_TO_NAME_WORKS));
+    b.opNumConsistentV.setImageResource(getIcon(appOpStatus, Commands.OP_NUM_CONSISTENT));
+
     b.recyclerV.setAdapter(new AboutPrivilegesAdapter(permStatusList));
     b.recyclerV.setLayoutManager(new LinearLayoutManager(this));
     b.recyclerV.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+
     Builder builder =
         new Builder(this).setTitle(R.string.perm_status_menu_item).setView(b.getRoot());
     new AlertDialogFragment(builder.create()).show(this, "PERM_STATUS", false);
+  }
+
+  private @DrawableRes int getIcon(int appOpStatus, int type) {
+    return ((appOpStatus & type) != 0) ? R.drawable.tick : R.drawable.cross;
   }
 }

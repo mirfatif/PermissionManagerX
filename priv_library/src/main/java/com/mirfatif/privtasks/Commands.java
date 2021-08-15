@@ -32,6 +32,7 @@ public class Commands {
   public static final String GET_PERMISSION_FLAGS = "GET_PERMISSION_FLAGS";
   public static final String OPEN_APP_INFO = "OPEN_APP_INFO";
   public static final String GET_PERM_STATUS = "GET_PERM_STATUS";
+  public static final String GET_APP_OP_STATUS = "GET_APP_OP_STATUS";
 
   // From daemon to app
   public static final String CMD_RCV_SVC = "com.mirfatif.permissionmanagerx.svc.DaemonCmdRcvSvc";
@@ -59,4 +60,10 @@ public class Commands {
   public static final String APP_OP_MODE_DENY = "deny";
   public static final String APP_OP_MODE_DEFAULT = "default";
   public static final String APP_OP_MODE_FG = "foreground";
+
+  // AppOps working status
+  public static final int OP_TO_DEF_MODE_WORKS = 1;
+  public static final int OP_TO_SWITCH_WORKS = 1 << 1;
+  public static final int OP_TO_NAME_WORKS = 1 << 2;
+  public static final int OP_NUM_CONSISTENT = 1 << 3;
 }
