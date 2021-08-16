@@ -610,14 +610,12 @@ public class PackageParser {
       }
       for (int count = 0; count < requestedPermissions.length; count++) {
         String perm = requestedPermissions[count].replaceAll("\\s", "");
-        if (filter != null && !filter.contains(perm)) {
-          continue;
-        }
-
-        permission = createPermission(packageInfo, perm, count);
-        if (isNotFilteredOut(permission)) {
-          permissionsList.add(permission);
-          permCount++;
+        if (filter == null || filter.contains(perm)) {
+          permission = createPermission(packageInfo, perm, count);
+          if (isNotFilteredOut(permission)) {
+            permissionsList.add(permission);
+            permCount++;
+          }
         }
 
         // not set AppOps corresponding to manifest permission
