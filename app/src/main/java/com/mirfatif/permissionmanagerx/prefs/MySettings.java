@@ -685,7 +685,7 @@ public class MySettings {
 
   public boolean canBeExcluded(Permission perm) {
     return getExcFiltersEnabled()
-        && getExcludedPerms().contains(perm.getName())
+        && !getExcludedPerms().contains(perm.getName())
         && !perm.isExtraAppOp();
   }
 
