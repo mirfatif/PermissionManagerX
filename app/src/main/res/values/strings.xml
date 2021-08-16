@@ -299,8 +299,9 @@
     <![CDATA[
       <ul>
         <li>Sort apps and permissions by different parameters</li>
-        <li>Scheduled check to notify bad reference states</li>
+        <li>Scheduled Check to notify bad reference states</li>
         <li>Auto revoke granted permissions with RED states</li>
+        <li>Permission Watcher to remove permissions quickly</li>
         <li>Make changes to critical apps and permissions</li>
         <li>Multiple users / work profile support</li>
         <li>Auto create backup file on changes</li>
