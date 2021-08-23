@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Permission Manager X</string>
+    <string name="pref_filter_packages_cat_title">Paquetes</string>
+    <string name="pref_filter_exclude_no_icon_apps_title">Excluir aplicaciones sin ícono</string>
+    <string name="pref_filter_exclude_user_apps_title">Excluir aplicaciones del usuario</string>
+    <string name="pref_filter_exclude_system_apps_title">Excluir aplicaciones del sistema</string>
+    <string name="pref_filter_exclude_framework_apps_title">Excluir aplicaciones de framework</string>
+    <string name="pref_filter_exclude_disabled_apps_title">Excluir aplicaciones deshabilitadas</string>
+    <string name="pref_filter_exclude_no_perms_apps_title">Excluir aplicaciones sin permisos</string>
+    <string name="pref_filter_manually_exclude_apps_title">Aplicaciones excluidas manualmente</string>
+    <string name="pref_filter_excluded_apps_title">Lista de aplicaciones excluidas manualmente</string>
+    <string name="pref_filter_permissions_cat_title">Permisos</string>
+    <string name="pref_filter_exclude_not_changeable_perms_title">Excluir permisos no modificables</string>
+    <string name="pref_filter_exclude_not_granted_perms_title">Excluir permisos no otorgados</string>
+    <string name="pref_filter_manually_exclude_perms_title">Permisos excluidos manualmente</string>
+    <string name="pref_filter_excluded_perms_title">Lista de permisos excluidos manualmente</string>
+    <string name="pref_filter_man_permissions_cat_title">Permisos del Manifiesto</string>
+    <string name="pref_filter_exclude_invalid_perms_title">Excluir permisos inválidos</string>
+    <string name="pref_filter_exclude_normal_perms_title">Excluir permisos normales</string>
+    <string name="pref_filter_exclude_dangerous_perms_title">Excluir permisos peligrosos</string>
+    <string name="pref_filter_exclude_signature_perms_title">Excluir permisos de firma</string>
+    <string name="pref_filter_exclude_privileged_perms_title">Excluir permisos privilegiados</string>
+    <string name="pref_filter_app_ops_permissions_cat_title">Permisos AppOps</string>
+    <string name="pref_filter_exclude_appops_perms_title">Excluir AppOps</string>
+    <string name="pref_filter_exclude_not_set_appops_title">Excluir AppOps no establecidos (Predeterminados)</string>
+    <string name="pref_filter_show_extra_app_ops_title">Mostrar AppOps extra, nunca exluidas</string>
+    <string name="pref_filter_extra_appops_title">Lista de AppOps extra</string>
+    <string name="pref_settings_check_for_updates_title">Buscar actualizaciones</string>
+    <string name="pref_settings_check_for_updates_summary">Mostrar una notificación cuando una nueva versión esté disponible</string>
+    <string name="pref_settings_privileges_reminder_title">Recordar privilegios no otorgados</string>
+    <string name="pref_settings_privileges_reminder_summary">Mostrar un recordatorio al iniciar la app si los privilegios root y ADB no fueron otorgados</string>
+    <string name="pref_settings_quick_scan_title">Realizar escaneo rápido</string>
+    <string name="pref_settings_quick_scan_summary">No escanear permisos, y no mostrar estado de refecencia ni conteo de permisos de las apps</string>
+    <string name="pref_settings_special_search_title">Caracteres de búsqueda especial</string>
+    <string name="pref_settings_special_search_summary">Usa los caracteres de Y (&amp;), O (|) y NO (!) en la búsqueda para combinar consultas</string>
+    <string name="pref_settings_locale_title">Lenguaje de la aplicación</string>
+    <string name="yes">S</string>
+    <string name="no">No</string>
+    <string name="save">Guardar</string>
+    <string name="_default">Predeterminado</string>
+    <string name="open_drawer">Abrir</string>
+    <string name="close_drawer">Cerrar</string>
+    <string name="contact">Escribir Ahora</string>
+    <string name="i_will">Lo haré</string>
+    <string name="rate">Puntuar ahora</string>
+    <string name="do_not_remind">No Recordar</string>
+    <string name="get_help">Obtener Ayuda</string>
+    <string name="switch_to_adb">Cambiar a ADB</string>
+    <string name="_continue">¿Continuar?</string>
+    <string name="warning">Advertencia</string>
+    <string name="apps">aplicaciones</string>
+    <string name="search_menu_item">Buscar</string>
+    <string name="settings_menu_item">Ajustes</string>
+    <string name="filter_menu_item">Filtros de exclusión</string>
+    <string name="root_menu_item">Acceso Root</string>
+    <string name="adb_menu_item">Consola ADB</string>
+    <string name="dark_theme_menu_item">Forzar Tema Obscuro</string>
+    <string name="backup_restore_menu_item">Copia de seguridad / Restaurar</string>
+    <string name="help_menu_item">Ayuda</string>
+    <string name="donate_menu_item">Donar</string>
+    <string name="about_menu_item">Acerca de</string>
+    <string name="advanced_settings_menu_item">Ajustes Avanzados</string>
+    <string name="hidden_apis">APIs Ocultas</string>
+    <string name="use_hidden_apis">Usar APIs Ocultar</string>
+    <string name="dex_tmp_dir">Correr Daemon desde Carpeta Temporal</string>
+    <string name="adb_only_settings">Ajustes Solo-ADB</string>
+    <string name="root_only_settings">Ajustes Solo-Root</string>
+    <string name="adb_listening_port">Escuchar Puerto ADBD</string>
+    <string name="allow_critical_changes">Permitir Cambios Críticos</string>
+    <string name="talk_to_daemon_over_socket">Comunicar con Daemon sobre el Socket</string>
+    <string name="daemon_uid">UID de Daemon Privilegiado</string>
+    <string name="daemon_uid_system">Sistema</string>
+    <string name="daemon_uid_root">Root</string>
+    <string name="daemon_uid_adb">ADB</string>
+    <string name="daemon_context">Contexto Daemon SELinux</string>
+    <string name="daemon_context_shell">Consola</string>
+    <string name="daemon_context_default">Predeterminado</string>
+    <string name="su_exe_path">Ruta al Ejecutable de Superusuario</string>
+    <string name="primary_account">Cuenta Primaria</string>
+    <string name="primary_profile_only">Permission Manager X puede correr únicamente en la cuenta del usuario principal /\n perfil del propietario del dispositivo.</string>
+    <string name="deep_search">Búsqueda Profunda (Permisos)</string>
+    <string name="case_sensitive_search">Búsqueda Sensible a Mayúsculas</string>
+    <string name="grant_root_or_adb">Concede accerso root o conecta a ADB para iniciar procesos privilegiados.</string>
+    <string name="logging_failed">Registro fallido</string>
+    <string name="daemon_logging_failed">Registro para daemon privilegiado fallido</string>
+    <string name="creating_packages_list">Creando Lista de Aplicaciones</string>
+    <string name="reading_reference_perms">Leyendo Referencias</string>
+    <string name="creating_app_ops_lists">Preparando datos de AppOps</string>
+    <string name="starting_daemon">Iniciando Daemon</string>
+    <string name="checking_root_access">Verificando Acceso Root</string>
+    <string name="checking_adb_access">Verificando Acceso ADB</string>
+    <string name="root_granted">Root otorgado</string>
+    <string name="getting_root_fail">Obtención de privilegios root fallido</string>
+    <string name="getting_root_fail_long">Obtención de privilegios root fallido. ¿Estás rooteado?</string>
+    <string name="connected_to_adb">Conectado a ADB</string>
+    <string name="adb_connect_timed_out">Se acabó el tiempo de espera de conexión ADB</string>
+    <string name="adb_connect_failed">Conexión ADB fallida</string>
+    <string name="adb_connect_interrupted">Conexión ADB interrumpida</string>
+    <string name="adb_key_pair_failed">Creación de pareja de clave ADB fallida</string>
+    <string name="adb_authentication_failed">Autenticación de ADB fallida</string>
+    <string name="adb_command_fail">Comando ADB fallido</string>
+    <string name="adb_connect_fail_long">"\n    <![CDATA[
+      Conexión a ADB fallida.
+      <ul>
+        <li>Activa <b><i>ADB Sobre Red</i></b> y regresa a conectarte.</li>
+        <li>Permite la autenticación ADB si notifica.</li>
+      </ul>
+    ]]>\n  "</string>
+    <string name="daemon_failed">Inicio de daemon privilegiado fallido</string>
+    <string name="backup">Copia de seguridad</string>
+    <string name="restore">Restaurar</string>
+    <string name="choose_backup_restore">Preferencias y referencias de permiso de creación y restauración de copias de seguridad.</string>
+    <string name="select_backup_file">Selecciona archivo de copia de seguridad</string>
+    <string name="backup_in_progress">Copia de Seguridad En Progreso</string>
+    <string name="restore_in_progress">Restauración En Progreso</string>
+    <string name="backup_restore_failed">Falló. Ocurrió algún error.</string>
+    <string name="skip_uninstalled_packages">Omitir paquetes desinstalados</string>
+    <string name="privileges">Privilegios</string>
+    <string name="hidden_apis_warning">Las APIs ocultas están en la lista negra, cambiando a daemon</string>
+    <string name="hidden_apis_confirmation">Algunas ROMs permiten usar APIs ocultas del sistema. El modo daemon podría\n ser más lento. ¿Detener el uso de APIs ocultas?</string>
+    <string name="bad_port_number">Número de puerto incorrecto</string>
+    <string name="bad_path">Ruta incorrecta</string>
+    <string name="granting_permission_failed">Otorgamiento de permisos fallido: %1$s</string>
+    <string name="love_using_app">¿Te gusta Permission Manager X?</string>
+    <string name="purchase_and_rate_the_app">Puedes ayudarnos a mejorar la aplicación haciendo una pequeña donación\n o dejando una buena reseña de la aplicación para que podamos atender mejor tus necesidades.</string>
+    <string name="rate_the_app">Las buenas puntuaciones y reseñas nos ayudan a mejorar la aplicación y nos permite\n atender mejor tus necesidades.</string>
+    <string name="ask_to_provide_feedback">Lamentamos oír eso. Puedes ayudarnos a mejorar la aplicación\n contactándonos por correo electrónico o Telegram para que podamos atender mejor tus necesidades.</string>
+    <string name="thank_you">Gracias</string>
+    <string name="crash_report">Reporte de Error</string>
+    <string name="ask_to_report_crash_small">Enviar el reporte de error al desarrollador</string>
+    <string name="ask_to_report_crash">Lo sentimos, un componente de la aplicación tuvo un problema y se cerró de golpe.\n Envía el registro al desarrollador vía correo electrónico o Telegram para que el error sea arreglado.</string>
+    <string name="send_report">Enviar Reporte</string>
+    <string name="disable_pkg_warning">Deshabilitar una aplicación de %1$s es una\n    acción peligrosa. En el peor de los casos el sistema Android podría colapsar.\n¿Seguro que quieres continuar?</string>
+    <string name="pkg_state_critical">Crítica</string>
+    <string name="pkg_state_framework">Framework</string>
+    <string name="pkg_state_system">Sistema</string>
+    <string name="pkg_state_user">Usuario</string>
+    <string name="pkg_state_disabled">Deshabilitada</string>
+    <string name="pkg_state_disabled2">%s, Deshabilitada</string>
+    <string name="dex_location_changed">Cambiando locación de carga de daemon</string>
+    <string name="files_not_extracted_accessible">Archivos no extraídos o no accesibles</string>
+    <string name="priv_daemon_died">Murió el daemon privilegiado</string>
+    <string name="native_daemon_died">Murió el daemon nativo</string>
+    <string name="logging">Registrando</string>
+    <string name="logging_warning">La aplicación podría responder lento debido a los registros y el archivo de registros podría crecer\n a un tamaño muy grande. El registro es detenido automaticamente después de 5 minutos.</string>
+    <string name="disable">Deshabilitar</string>
+    <string name="enable">Habilitar</string>
+    <string name="exclude">Excluir</string>
+    <string name="clear_reference">Limpiar Ref</string>
+    <string name="set_reference">Establecer Ref</string>
+    <string name="do_not_ask">No preguntar de nuevo</string>
+    <string name="package_information_menu_item">Info de App</string>
+    <string name="reset_app_ops">Reiniciar AppOps</string>
+    <string name="reset_app_ops_confirmation">¿Reiniciar todas las AppOps a sus modos por defecto?</string>
+    <string name="clear_references">Limpiar Referencias</string>
+    <string name="clear_references_confirmation">¿Limpiar todas las referencias de permisos?</string>
+    <string name="set_references">Establecer Referencias</string>
+    <string name="set_references_confirmation">¿Establecer todos los estados actuales de permisos como referencias?</string>
+    <string name="exclude_app_from_visible_list">Excluir aplicación de la lista visible.</string>
+    <string name="enable_app_or_exclude_from_visible_list">Habilitar aplicación o excluir de la lista visible.</string>
+    <string name="disable_app_or_exclude_from_visible_list">Deshabilitar aplicación o excluir de la lista visible.</string>
+    <string name="something_bad_happened">Algo salió mal</string>
+    <string name="change_perms_warning">Cambiar los permisos de una\n    aplicación de %1$s es una acción peligrosa. En el peor de los casos el sistema Android podría colapsar.\n ¿Seguro\n    que quieres continuar?</string>
+    <string name="system">sistema</string>
+    <string name="framework">framework</string>
+    <string name="extra_ops_cant_be_excluded">AppOps extra no pueden ser excluídas de la lista visible.</string>
+    <string name="exclude_perm_from_list">Excluír permisos de la lista visible.</string>
+    <string name="set_perm_state_reference"><![CDATA[<br/>Establecer estado <b>%1$s</b> como referencuia.]]></string>
+    <string name="clear_perm_state_reference"><![CDATA[<br/>Limpiar estado <b>%1$s</b> como referencia.]]></string>
+    <string name="requested_no_permissions">No se solicitaron permisos</string>
+    <string name="protection_level">Nivel de protección:</string>
+    <string name="should_be"><![CDATA[Debería ser <b>%1$s</b>]]></string>
+    <string name="daemon_not_running_as_system">Daemon no está corriendo como sistema</string>
+    <string name="failed_get_system_fixed_flag">Falló el obtener indicador fijo de sistema</string>
+    <string name="prot_lvl_unknown">Desconocido</string>
+    <string name="prot_lvl_normal">Normal</string>
+    <string name="prot_lvl_dangerous">Peligroso</string>
+    <string name="prot_lvl_signature">Firma</string>
+    <string name="prot_lvl_app_ops">AppOps</string>
+    <string name="prot_lvl_app_ops2">%s, AppOps</string>
+    <string name="prot_lvl_uid_mode">%s, modo UID</string>
+    <string name="prot_lvl_extra">%s, Extra</string>
+    <string name="prot_lvl_development">Desarrollo</string>
+    <string name="prot_lvl_development2">%s, Desarrollo</string>
+    <string name="prot_lvl_privileged">Privilegiado</string>
+    <string name="prot_lvl_privileged2">%s, Privilegiado</string>
+    <string name="prot_lvl_fixed">Fijo</string>
+    <string name="prot_lvl_fixed2">%s, Fijo</string>
+    <string name="search_str_uid">UID</string>
+    <string name="search_str_time">TIEMPO</string>
+    <string name="search_str_extra">EXTRA</string>
+    <string name="search_str_red">ROJO</string>
+    <string name="search_str_orange">NARANJA</string>
+    <string name="search_str_green">VERDE</string>
+    <string name="app_op_mode_allow">Permitir</string>
+    <string name="app_op_mode_ignore">Ignorar</string>
+    <string name="app_op_mode_deny">Denegar</string>
+    <string name="app_op_mode_default">Predeterminado</string>
+    <string name="app_op_mode_foreground">Segundo plano</string>
+    <string name="filter_settings">Ajustes de Filtro</string>
+    <string name="excluded_apps_summary">Mantenga pulsado en un nombre de paquete para excluirlo</string>
+    <string name="excluded_perms_summary">Mantenga pulsado en un nombre de permiso para excluirlo</string>
+    <string name="extra_app_ops_summary">AppOps siempre mostrado en todas las aplicaciones</string>
+    <string name="extra_app_ops_summary_count">(Total: %1$d)</string>
+    <string name="locale_system">Sistema</string>
+    <string name="locale_en">Inglés</string>
+    <string name="locale_ru">Ruso</string>
+    <string name="filter_settings_reset_defaults_menu_item">Restaurar A Predeterminado</string>
+    <string name="filter_settings_reset_confirmation">¿Reiniciar ajustes de filtro a los valores por defecto?</string>
+    <string name="filter_settings_clear_excluded_apps_menu_item">Limpiar Aplicaciones Excluidas</string>
+    <string name="filter_settings_clear_apps_confirmation">¿Limpiar todas las aplicaciones excluidas?</string>
+    <string name="filter_settings_clear_excluded_perms_menu_item">Limpiar Permisos Excluidos</string>
+    <string name="filter_settings_clear_perms_confirmation">¿Limpiar todos los permisos excluidos?</string>
+    <string name="filter_settings_clear_extra_app_ops_menu_item">Limpiar AppOps Extra</string>
+    <string name="filter_settings_clear_app_ops_confirmation">¿Limpiar todas las (siempre mostradas) AppOps extra?</string>
+    <string name="source">Origen</string>
+    <string name="email">Correo Electrónico</string>
+    <string name="telegram_group">Grupo de Telegram</string>
+    <string name="no_email_app_installed">No hay aplicación de correo instalada</string>
+    <string name="no_browser_installed">No hay navegador web instalado</string>
+    <string name="collect_logs">Recolectar Registros</string>
+    <string name="collect_logs_summary">Guardar archivo de registro detallado</string>
+    <string name="report_issues">Reportar Problemas</string>
+    <string name="report_issues_summary">Errores, mejoras, sugerencias…</string>
+    <string name="select_log_file">Seleccionar archivo para guardar registro</string>
+    <string name="stop_logging">Detener Registro</string>
+    <string name="logging_stopped">Registro Detenido</string>
+    <string name="app_rating">Puntúame</string>
+    <string name="app_rating_summary">Puntúa / reseña en Play Store</string>
+    <string name="paid_features">Características de Paga</string>
+    <string name="paid_features_summary">"\n    <![CDATA[
+      <ul>
+        <li>Ordena aplicaciones y permisos por diferentes parámetros</li>
+        <li>Chequeo programado para notificar estados de referencia malos</li>
+        <li>Autorevocar permisos otorgados con estados ROJOS</li>
+        <li>Hacer cambios a aplicaciones y permisos críticos</li>
+        <li>Soporte a múltiples usuarios / perfiles de trabajo</li>
+        <li>Crear copias de seguridad automaticamente al hacer cambios</li>
+        <li>Sugerencias de búsqueda</li>
+        <li>Opciones de tema</li>
+        <li>Operaciones por lotes (perfiles) (próximamente)</li>
+      </ul>
+    ]]>\n  "</string>
+    <string name="update">Actualizar</string>
+    <string name="update_summary">Verificar actualizaciones de la aplicación</string>
+    <string name="check_in_progress">Verificación en progreso</string>
+    <string name="check_for_updates_failed">Verificación de actualizaciones fallido</string>
+    <string name="app_is_up_to_date">La aplicación está actualizada</string>
+    <string name="new_version_available">Una nueva versión de la aplicación está disponible</string>
+    <string name="tap_to_download">Toca para descargar</string>
+    <string name="download">Descargar</string>
+    <string name="privacy_policy">Política de privacidad</string>
+    <string name="translations">Traducciones</string>
+    <string name="translations_summary">¿Quieres ver la aplicación en tu lenguaje?</string>
+    <string name="language_credits">"\n    <![CDATA[
+      <b>Ruso</b>
+      <ul>
+        <li>Rikishi007 (rikishi0071@gmail.com)</li>
+        <li>tommynok <a href="https://crowdin.com/profile/tommynok">LINK</a></li>
+        <li>siebenbrodt <a href="https://crowdin.com/profile/siebenbrodt">LINK</a></li>
+      </ul>
+      <br/>
+	  <b>Español</b>
+      <ul>
+        <li>LuisAlfredo92 <a href="https://crowdin.com/profile/luisalfredo92">LINK</a></li>
+      </ul>
+      <br/>
+      <a href="https://crowdin.com/project/pmx"><b>Añadir mi lenguaje</b></a>
+    ]]>\n  "</string>
+    <string name="share">Compartir</string>
+    <string name="share_summary">Compartir la aplicación con otros</string>
+    <string name="share_text">¡Mira esta asombrosa aplicación! %1$s</string>
+    <string name="send_bitcoin">Enviar Bitcoin</string>
+    <string name="no_bitcoin_app_installed">Aplicación de Cartera Bitcoin no encontrada</string>
+    <string name="ask_for_bank_account">Solicitar Cuenta Bancaria</string>
+    <string name="get_paid_version_from_ps">Obtén la Versión de Paga Desde Play Store</string>
+    <string name="channel_app_update">Actualizaciones de la aplicación</string>
+    <string name="channel_crash_report">Reporte de fallos</string>
+    <string name="channel_logcat_collection">Recolección de Registros</string>
+    <string name="load_internet_menu_item">Cargar desde internet</string>
+    <string name="zoom_in_menu_item">Acercarse</string>
+    <string name="zoom_out_menu_item">Alejarse</string>
+    <string name="daemon_listen_on_loopback_failed">Daemon falló al escuchar 127.0.0.1</string>
+    <string name="daemon_establish_connection_failed">Daemon falló al establecer\n    conexión con el cliente</string>
+    <string name="daemon_wrong_args_received">Argumentos erróneos</string>
+    <string name="daemon_set_app_ops_mode_failed">Establecimiento del modo AppOps fallido</string>
+    <string name="daemon_reset_app_ops_failed">Restablecimiento de Appops fallido</string>
+    <string name="daemon_grant_perm_failed">Otorgamiento de permisos fallido</string>
+    <string name="daemon_revoke_perm_failed">Revocación de permiso fallida</string>
+    <string name="daemon_enable_pkg_failed">Habilitación de aplicación fallida</string>
+    <string name="daemon_disable_pkg_failed">Deshabilitación de aplicación fallida</string>
+    <string name="daemon_open_app_info_failed">Apertura de información de aplicación fallida</string>
+    <string name="daemon_get_pkg_info_failed">Obtención de información de aplicación fallida</string>
+    <string name="daemon_get_installed_pkgs_failed">Obtención de listado de aplicaciones fallida</string>
+    <string name="daemon_get_users_failed">Obtención de listado de usuarios fallida</string>
+    <string name="daemon_get_perm_grp_info_list_failed">Obtención de permisos de grupos fallida</string>
+    <string name="daemon_op_num_inconsistency">ROM mala</string>
+    <string name="daemon_set_perm_flags_failed">Establecimiento de indicadores de permisos fallid</string>
+</resources>

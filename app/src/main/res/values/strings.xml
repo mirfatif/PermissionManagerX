@@ -320,8 +320,7 @@
   <string name="privacy_policy_link" translatable="false">https://mirfatif.github.io/PermissionManagerX/privacy_policy.html</string>
   <string name="translations">Translations</string>
   <string name="translations_summary">Want to see the app in your language?</string>
-  <string name="language_credits">
-    <![CDATA[
+  <string name="language_credits">"\n    <![CDATA[
       <b>Russian</b>
       <ul>
         <li>Rikishi007 (rikishi0071@gmail.com)</li>
@@ -329,9 +328,13 @@
         <li>siebenbrodt <a href="https://crowdin.com/profile/siebenbrodt">LINK</a></li>
       </ul>
       <br/>
+	  <b>Spanish</b>
+      <ul>
+        <li>LuisAlfredo92 <a href="https://crowdin.com/profile/luisalfredo92">LINK</a></li>
+      </ul>
+      <br/>
       <a href="https://crowdin.com/project/pmx"><b>Add my language</b></a>
-    ]]>
-  </string>
+    ]]>\n  "</string>
   <string name="share">Share</string>
   <string name="share_summary">Share the app with others</string>
   <string name="share_text">Check out this amazing app! %1$s</string>
@@ -380,6 +383,6 @@
   <string name="daemon_set_perm_flags_failed" maxLength="20">Setting permission flags failed</string>
 
   <!-- Locale -->
-  <string name="help_file_name">help.html</string>
+  <string name="help_file_name" translatable="false">help.html</string>
 
 </resources>
