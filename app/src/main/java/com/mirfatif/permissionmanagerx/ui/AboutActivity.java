@@ -190,11 +190,17 @@ public class AboutActivity extends BaseActivity {
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
     menu.findItem(R.id.action_perm_status).setEnabled(mMySettings.isPrivDaemonAlive());
+    menu.findItem(R.id.action_dump_daemon_heap).setVisible(BuildConfig.DEBUG);
     return true;
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.action_dump_daemon_heap) {
+      Utils.runInBg(() -> PrivDaemonHandler.getInstance().sendRequest(Commands.DUMP_HEAP));
+      return true;
+    }
+
     if (item.getItemId() == R.id.action_perm_status) {
       if (mMySettings.isPrivDaemonAlive()) {
         Utils.runInBg(this::showPermStatusDialog);

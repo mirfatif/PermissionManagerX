@@ -233,7 +233,7 @@ public class PrivDaemonHandler {
       }
 
       // Get response to GET_READY command
-      Object obj = mResponseInStream.readObject();
+      Object obj = mResponseInStream.readUnshared();
       if (!(obj instanceof String) || !obj.equals(Commands.GET_READY)) {
         Log.e(TAG, "startDaemon: bad response from privileged daemon");
         return false;
@@ -335,7 +335,7 @@ public class PrivDaemonHandler {
       }
 
       try {
-        return mResponseInStream.readObject();
+        return mResponseInStream.readUnshared();
       } catch (IOException | ClassNotFoundException e) {
         e.printStackTrace();
 

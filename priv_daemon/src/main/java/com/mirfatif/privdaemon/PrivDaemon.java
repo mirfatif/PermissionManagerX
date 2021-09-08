@@ -1,5 +1,7 @@
 package com.mirfatif.privdaemon;
 
+import android.os.Debug;
+import android.os.Environment;
 import android.os.Process;
 import android.util.Log;
 import com.mirfatif.privtasks.Commands;
@@ -8,6 +10,7 @@ import com.mirfatif.privtasks.PrivTasks.PrivTasksCallback;
 import com.mirfatif.privtasks.Util;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIs;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +33,7 @@ public class PrivDaemon {
   private BufferedReader mCmdReader;
   private boolean DEBUG;
   private String mCodeWord;
+  private String mAppId;
 
   private PrivDaemon() {
     setDefaultExceptionHandler();
@@ -53,10 +57,10 @@ public class PrivDaemon {
     DEBUG = Boolean.parseBoolean(params[0]);
     boolean useSocket = Boolean.parseBoolean(params[1]);
     int appUserId = Integer.parseInt(params[2]);
-    String appId = params[3];
+    mAppId = params[3];
     mCodeWord = params[4];
 
-    mPrivTasks = new PrivTasks(new PrivTasksCallbackImpl(), appId, appUserId, true);
+    mPrivTasks = new PrivTasks(new PrivTasksCallbackImpl(), mAppId, appUserId, true);
     mPrivDaemonFlavor = new PrivDaemonFlavor(this, mPrivTasks);
 
     for (int pid : mPrivTasks.getPidsForCommands(new String[] {TAG})) {
@@ -167,6 +171,36 @@ public class PrivDaemon {
         });
   }
 
+  private void dumpHeap() {
+    String filesDir = "Android/data/" + mAppId + "/files";
+    File dir = new File(Environment.getExternalStorageDirectory(), filesDir);
+    if (dir.isDirectory()) {
+      File file = new File(dir, "com.mirfatif.privdaemon.pmx.hprof");
+      try {
+        // "am dumpheap" does not work for non-app processes.
+        Debug.dumpHprofData(file.getAbsolutePath());
+      } catch (IOException ex) {
+        ex.printStackTrace();
+      }
+    }
+  }
+
+  /*
+   Use reset() to avoid building handle table in OOS and OIS which may cause OOM.
+   Despite of using writeUnshared(), still null is written to handle table.
+   https://courses.cs.washington.edu/courses/cse341/98au/java/jdk1.2beta4/docs/guide/serialization/serialfaq.html#OutOfMemoryError
+  */
+
+  public void resetOos() {
+    if (mStdOutStream != null) {
+      try {
+        mStdOutStream.reset();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
   /////////////////////////////////////////////////////////////////////////////////
 
   private void handleCommand(String[] args) throws IOException {
@@ -248,6 +282,14 @@ public class PrivDaemon {
       case Commands.GET_APP_OP_STATUS:
         sendResponse(mPrivTasks.getAppOpsStatus());
         break;
+      case Commands.RESET_OOS:
+        resetOos();
+        sendResponse(null);
+        break;
+      case Commands.DUMP_HEAP:
+        dumpHeap();
+        sendResponse(null);
+        break;
       default:
         if (!mPrivDaemonFlavor.handleCommand(args)) {
           System.err.println("Unknown command: " + args[0]);
@@ -262,7 +304,7 @@ public class PrivDaemon {
       return;
     }
     try {
-      mStdOutStream.writeObject(object);
+      mStdOutStream.writeUnshared(object);
       mStdOutStream.flush();
     } catch (IOException e) {
       System.err.println("sendResponse: write error, shutting down");

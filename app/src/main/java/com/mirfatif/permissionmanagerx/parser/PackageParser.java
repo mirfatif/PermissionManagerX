@@ -179,6 +179,7 @@ public class PackageParser {
 
       mPkgParserFlavor.onPkgListCompleted();
       mIsUpdating = false;
+      Utils.runInBg(() -> mPrivDaemonHandler.sendRequest(Commands.RESET_OOS));
       return true;
     }
   }

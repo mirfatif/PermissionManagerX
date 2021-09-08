@@ -3,6 +3,12 @@
   xmlns:app="http://schemas.android.com/apk/res-auto">
 
   <item
+    android:id="@+id/action_dump_daemon_heap"
+    android:title="@string/dump_daemon_heap_menu_item"
+    android:visible="false"
+    app:showAsAction="never" />
+
+  <item
     android:id="@+id/action_perm_status"
     android:icon="@drawable/permission"
     android:title="@string/perm_status_menu_item"

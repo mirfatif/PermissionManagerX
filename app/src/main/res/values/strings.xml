@@ -339,6 +339,7 @@
   <string name="share">Share</string>
   <string name="share_summary">Share the app with others</string>
   <string name="share_text">Check out this amazing app! %1$s</string>
+  <string name="dump_daemon_heap_menu_item" translatable="false" maxLength="15">Dump Heap</string>
   <string name="perm_status_menu_item" maxLength="15">Privileges</string>
   <string name="uid">UID:</string>
   <string name="app_ops">AppOps</string>
