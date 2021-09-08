@@ -100,18 +100,18 @@
 
     <View
       android:layout_width="match_parent"
-      android:background="?attr/accentColor"
       android:layout_height="1dp"
       android:layout_marginTop="8dp"
-      android:layout_marginBottom="8dp"/>
+      android:layout_marginBottom="8dp"
+      android:background="?attr/accentColor" />
 
     <TextView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:textSize="16sp"
-      android:text="@string/adb_only_settings"
       android:layout_marginBottom="8dp"
-      android:textColor="?attr/accentColor"/>
+      android:text="@string/adb_only_settings"
+      android:textColor="?attr/accentColor"
+      android:textSize="16sp" />
 
     <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
       android:layout_width="match_parent"
@@ -146,18 +146,18 @@
 
     <View
       android:layout_width="match_parent"
-      android:background="?attr/accentColor"
       android:layout_height="1dp"
       android:layout_marginTop="8dp"
-      android:layout_marginBottom="8dp"/>
+      android:layout_marginBottom="8dp"
+      android:background="?attr/accentColor" />
 
     <TextView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:textSize="16sp"
-      android:text="@string/root_only_settings"
       android:layout_marginBottom="8dp"
-      android:textColor="?attr/accentColor"/>
+      android:text="@string/root_only_settings"
+      android:textColor="?attr/accentColor"
+      android:textSize="16sp" />
 
     <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
       android:layout_width="match_parent"

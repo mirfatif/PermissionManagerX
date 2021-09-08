@@ -3,15 +3,16 @@ package com.mirfatif.permissionmanagerx.parser;
 import java.util.Arrays;
 
 class PermGroupsMapping {
+
   GroupOrderPair getOrderAndGroup(String perm, boolean isAppOp) {
-    int index = Arrays.asList(isAppOp ? appOps : perms).indexOf(perm);
+    int index = Arrays.asList(isAppOp ? APP_OPS : PERMS).indexOf(perm);
     GroupOrderPair groupOrderPair = new GroupOrderPair();
-    groupOrderPair.order = index >= 0 ? index : groups.length;
-    groupOrderPair.group = (index >= 0 && groups[index] != null) ? groups[index] : "Others";
+    groupOrderPair.order = index >= 0 ? index : GROUPS.length;
+    groupOrderPair.group = (index >= 0 && GROUPS[index] != null) ? GROUPS[index] : "Others";
     return groupOrderPair;
   }
 
-  private static final String[] groups =
+  private final String[] GROUPS =
       new String[] {
         "Accounts",
         "Accounts",
@@ -90,6 +91,7 @@ class PermGroupsMapping {
         "Home",
         "Home",
         "Home",
+        "Location",
         "Location",
         "Location",
         "Location",
@@ -228,7 +230,7 @@ class PermGroupsMapping {
         null
       };
 
-  private static final String[] perms =
+  private final String[] PERMS =
       new String[] {
         "android.permission.ACCOUNT_MANAGER",
         "android.permission.AUTHENTICATE_ACCOUNTS",
@@ -310,6 +312,7 @@ class PermGroupsMapping {
         "android.permission.ACCESS_BACKGROUND_LOCATION",
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_LOCATION_EXTRA_COMMANDS",
         null,
         null,
         null,
@@ -445,7 +448,7 @@ class PermGroupsMapping {
         "android.permission.MANAGE_IPSEC_TUNNELS"
       };
 
-  private static final String[] appOps =
+  private final String[] APP_OPS =
       new String[] {
         null,
         null,
@@ -527,6 +530,7 @@ class PermGroupsMapping {
         null,
         "COARSE_LOCATION",
         "FINE_LOCATION",
+        null,
         "GPS",
         "MONITOR_HIGH_POWER_LOCATION",
         "MONITOR_LOCATION",
@@ -663,6 +667,7 @@ class PermGroupsMapping {
       };
 
   static class GroupOrderPair {
+
     public int order;
     public String group;
   }

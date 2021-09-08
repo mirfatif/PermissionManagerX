@@ -214,7 +214,7 @@ public class PrivDaemonHandler {
         mResponseInStream = new ObjectInputStream(inStream);
       } else {
         // AdbLib redirects stdErr to stdIn. So create direct Socket.
-        // Also in case of ADB binary, ADB over Network speed sucks
+        // Also in case of ADB, ADB over Network speed sucks.
         Socket socket = new Socket(Inet4Address.getByAddress(new byte[] {127, 0, 0, 1}), port);
         socket.setTcpNoDelay(true);
 
