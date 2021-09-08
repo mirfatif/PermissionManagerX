@@ -188,8 +188,9 @@
 
   <!--PackageActivity Dialogs-->
   <string name="exclude_app_from_visible_list">Exclude app from visible list.</string>
-  <string name="enable_app_or_exclude_from_visible_list">Enable app or exclude from visible list.</string>
-  <string name="disable_app_or_exclude_from_visible_list">Disable app or exclude from visible list.</string>
+  <string name="enable_app">Enable app.</string>
+  <string name="disable_app">Disable app.</string>
+  <string name="exclude_from_visible_list">%s Exclude from visible list.</string>
 
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">Something went wrong</string>

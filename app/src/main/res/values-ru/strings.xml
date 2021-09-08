@@ -172,8 +172,6 @@
   <string name="set_references_confirmation">Установить все текущие состояния разрешений в качестве целевых?</string>
   <!--PackageActivity Dialogs-->
   <string name="exclude_app_from_visible_list">Исключить приложение из списка отображаемых.</string>
-  <string name="enable_app_or_exclude_from_visible_list">Включить приложение или исключить из списка отображаемых.</string>
-  <string name="disable_app_or_exclude_from_visible_list">Заморозить приложение или исключить из списка отображаемых.</string>
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">Что-то пошло не так</string>
   <string name="change_perms_warning" comment="'system' or 'framework'">Изменение разрешений %1$s приложения — потенциально опасное действие вплоть до сбоя системы Android.\nВы уверены, что хотите продолжить?</string>

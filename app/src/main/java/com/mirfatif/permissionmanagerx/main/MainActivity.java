@@ -320,6 +320,12 @@ public class MainActivity extends BaseActivity {
 
   private PkgLongClickListener getPkgLongClickListener() {
     return pkg -> {
+      boolean canBeExcluded = mMySettings.canBeExcluded(pkg);
+      boolean canBeDisabled = pkg.isChangeable() && !pkg.getName().equals(getPackageName());
+      if (!canBeExcluded && !canBeDisabled) {
+        return;
+      }
+
       Builder builder = new Builder(this);
       builder.setPositiveButton(
           R.string.exclude,
@@ -337,14 +343,17 @@ public class MainActivity extends BaseActivity {
           (dialog, which) -> setPackageEnabledState(pkg));
 
       String message;
-      boolean enabled = true;
-      if (!pkg.isChangeable() || pkg.getName().equals(getPackageName())) {
-        message = getString(R.string.exclude_app_from_visible_list);
-        enabled = false;
-      } else if (pkg.isEnabled()) {
-        message = getString(R.string.disable_app_or_exclude_from_visible_list);
+      if (canBeDisabled) {
+        if (pkg.isEnabled()) {
+          message = getString(R.string.disable_app);
+        } else {
+          message = getString(R.string.enable_app);
+        }
+        if (canBeExcluded) {
+          message = getString(R.string.exclude_from_visible_list, message);
+        }
       } else {
-        message = getString(R.string.enable_app_or_exclude_from_visible_list);
+        message = getString(R.string.exclude_app_from_visible_list);
       }
 
       ActivityMainPkgDialogBinding b = ActivityMainPkgDialogBinding.inflate(getLayoutInflater());
@@ -354,11 +363,9 @@ public class MainActivity extends BaseActivity {
 
       // Set message, create and show the AlertDialog
       AlertDialog dialog = builder.setTitle(pkg.getLabel()).setView(b.getRoot()).create();
-      boolean finalEnabled = enabled;
       dialog.setOnShowListener(
           d -> {
-            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(finalEnabled);
-            boolean canBeExcluded = mMySettings.canBeExcluded(pkg);
+            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(canBeDisabled);
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(canBeExcluded);
           });
       new AlertDialogFragment(dialog).show(this, "PKG_OPTIONS", false);
