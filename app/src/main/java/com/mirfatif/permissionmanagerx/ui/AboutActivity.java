@@ -11,6 +11,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument;
 import androidx.annotation.DrawableRes;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,6 +24,7 @@ import com.mirfatif.permissionmanagerx.databinding.ActivityAboutBinding;
 import com.mirfatif.permissionmanagerx.databinding.TranslationDialogBinding;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
+import com.mirfatif.permissionmanagerx.prefs.settings.SettingsActivity;
 import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.svc.LogcatService;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
@@ -63,7 +65,7 @@ public class AboutActivity extends BaseActivity {
     mB.logging.setOnClickListener(v -> handleLogging());
     openWebUrl(mB.privacyPolicy, R.string.privacy_policy_link);
     mB.checkUpdate.setOnClickListener(v -> checkForUpdates());
-    mB.translate.setOnClickListener(v -> showLocaleDialog());
+    mB.translate.setOnClickListener(v -> AlertDialogFragment.show(this, null, TAG_LOCALE));
     mB.shareApp.setOnClickListener(v -> sendShareIntent());
 
     mB.paidFeaturesSummary.setText(Utils.htmlToString(R.string.paid_features_summary));
@@ -156,22 +158,12 @@ public class AboutActivity extends BaseActivity {
                         (dialog, which) ->
                             Utils.runInFg(() -> Utils.openWebUrl(this, appUpdate.getUpdateUrl())))
                     .setNegativeButton(android.R.string.cancel, null);
-            new AlertDialogFragment(builder.create()).show(this, "APP_UPDATE", false);
+            AlertDialogFragment.show(this, builder.create(), "APP_UPDATE");
           } else {
             Utils.showToast(messageResId);
           }
           mCheckForUpdateInProgress = false;
         });
-  }
-
-  private void showLocaleDialog() {
-    TranslationDialogBinding b = TranslationDialogBinding.inflate(getLayoutInflater());
-    b.langCreditsV.setText(Utils.htmlToString(R.string.language_credits));
-    BetterLinkMovementMethod method = BetterLinkMovementMethod.newInstance();
-    method.setOnLinkClickListener((tv, url) -> Utils.openWebUrl(this, url));
-    b.langCreditsV.setMovementMethod(method);
-    Builder builder = new Builder(this).setTitle(R.string.translations).setView(b.getRoot());
-    new AlertDialogFragment(builder.create()).show(this, "LOCALE", false);
   }
 
   private void sendShareIntent() {
@@ -203,7 +195,7 @@ public class AboutActivity extends BaseActivity {
 
     if (item.getItemId() == R.id.action_perm_status) {
       if (mMySettings.isPrivDaemonAlive()) {
-        Utils.runInBg(this::showPermStatusDialog);
+        AlertDialogFragment.show(this, null, TAG_PERM_STATUS);
       } else {
         item.setEnabled(false);
       }
@@ -212,43 +204,73 @@ public class AboutActivity extends BaseActivity {
     return super.onOptionsItemSelected(item);
   }
 
-  private void showPermStatusDialog() {
+  private void updatePermStatusDialog(
+      AboutPrivilegesDialogBinding b,
+      AboutPrivilegesAdapter adapter,
+      AlertDialogFragment dialogFragment) {
     PrivDaemonHandler daemonHandler = PrivDaemonHandler.getInstance();
     Object obj = daemonHandler.sendRequest(Commands.GET_PERM_STATUS);
-    if (!(obj instanceof List<?>)) {
-      return;
+
+    if (obj instanceof List<?>) {
+      List<PermStatus> permStatusList = new ArrayList<>();
+      for (Object item : (List<?>) obj) {
+        permStatusList.add((PermStatus) item);
+      }
+
+      obj = daemonHandler.sendRequest(Commands.GET_APP_OP_STATUS);
+      if (obj instanceof Integer) {
+        int appOpsStatus = (int) obj;
+
+        Utils.runInFg(
+            () -> {
+              adapter.submitList(permStatusList);
+              b.opToDefModeV.setImageResource(getIcon(appOpsStatus, Commands.OP_TO_DEF_MODE_WORKS));
+              b.opToSwV.setImageResource(getIcon(appOpsStatus, Commands.OP_TO_SWITCH_WORKS));
+              b.opToNameV.setImageResource(getIcon(appOpsStatus, Commands.OP_TO_NAME_WORKS));
+              b.opNumConsistentV.setImageResource(
+                  getIcon(appOpsStatus, Commands.OP_NUM_CONSISTENT));
+            });
+
+        return;
+      }
     }
-    List<PermStatus> permStatusList = new ArrayList<>();
-    for (Object item : (List<?>) obj) {
-      permStatusList.add((PermStatus) item);
-    }
-    obj = daemonHandler.sendRequest(Commands.GET_APP_OP_STATUS);
-    if (!(obj instanceof Integer)) {
-      return;
-    }
-    int appOpsStatus = (int) obj;
-    Utils.runInFg(() -> showPermStatusDialog(daemonHandler.getUid(), permStatusList, appOpsStatus));
-  }
-
-  private void showPermStatusDialog(int uid, List<PermStatus> permStatusList, int appOpStatus) {
-    AboutPrivilegesDialogBinding b = AboutPrivilegesDialogBinding.inflate(getLayoutInflater());
-    b.uidV.setText(String.valueOf(uid));
-
-    b.opToDefModeV.setImageResource(getIcon(appOpStatus, Commands.OP_TO_DEF_MODE_WORKS));
-    b.opToSwV.setImageResource(getIcon(appOpStatus, Commands.OP_TO_SWITCH_WORKS));
-    b.opToNameV.setImageResource(getIcon(appOpStatus, Commands.OP_TO_NAME_WORKS));
-    b.opNumConsistentV.setImageResource(getIcon(appOpStatus, Commands.OP_NUM_CONSISTENT));
-
-    b.recyclerV.setAdapter(new AboutPrivilegesAdapter(permStatusList));
-    b.recyclerV.setLayoutManager(new LinearLayoutManager(this));
-    b.recyclerV.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-
-    Builder builder =
-        new Builder(this).setTitle(R.string.perm_status_menu_item).setView(b.getRoot());
-    new AlertDialogFragment(builder.create()).show(this, "PERM_STATUS", false);
+    Utils.runInFg(dialogFragment::dismissAllowingStateLoss);
   }
 
   private @DrawableRes int getIcon(int appOpStatus, int type) {
     return ((appOpStatus & type) != 0) ? R.drawable.tick : R.drawable.cross;
+  }
+
+  private static final String CLASS = SettingsActivity.class.getName();
+  static final String TAG_LOCALE = CLASS + ".LOCALE";
+  private static final String TAG_PERM_STATUS = CLASS + ".PERM_STATUS";
+
+  @Override
+  public AlertDialog createDialog(String tag, AlertDialogFragment dialogFragment) {
+    if (TAG_LOCALE.equals(tag)) {
+      TranslationDialogBinding b = TranslationDialogBinding.inflate(getLayoutInflater());
+      b.langCreditsV.setText(Utils.htmlToString(R.string.language_credits));
+      BetterLinkMovementMethod method = BetterLinkMovementMethod.newInstance();
+      method.setOnLinkClickListener((tv, url) -> Utils.openWebUrl(this, url));
+      b.langCreditsV.setMovementMethod(method);
+      return new Builder(this).setTitle(R.string.translations).setView(b.getRoot()).create();
+    }
+
+    if (TAG_PERM_STATUS.equals(tag)) {
+      AboutPrivilegesDialogBinding b = AboutPrivilegesDialogBinding.inflate(getLayoutInflater());
+      AboutPrivilegesAdapter adapter = new AboutPrivilegesAdapter();
+      Utils.runInBg(() -> updatePermStatusDialog(b, adapter, dialogFragment));
+      b.uidV.setText(String.valueOf(PrivDaemonHandler.getInstance().getUid()));
+      b.recyclerV.setLayoutManager(new LinearLayoutManager(this));
+      b.recyclerV.addItemDecoration(
+          new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+      b.recyclerV.setAdapter(adapter);
+      return new Builder(this)
+          .setTitle(R.string.perm_status_menu_item)
+          .setView(b.getRoot())
+          .create();
+    }
+
+    return super.createDialog(tag, dialogFragment);
   }
 }

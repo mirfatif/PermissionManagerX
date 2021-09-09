@@ -1,5 +1,6 @@
 package com.mirfatif.permissionmanagerx.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build.VERSION;
@@ -154,6 +155,7 @@ public class PackageActivity extends BaseActivity {
     }
   }
 
+  @SuppressLint("NotifyDataSetChanged")
   private void updateSpinnerSelection(Integer position) {
     if (position != null) {
       Utils.runInFg(() -> mPermissionAdapter.notifyItemChanged(position));
@@ -199,7 +201,7 @@ public class PackageActivity extends BaseActivity {
         layoutParams.y = yLocation;
       }
 
-      new AlertDialogFragment(dialog).show(this, "PERM_DETAILS", false);
+      AlertDialogFragment.show(this, dialog, "PERM_DETAILS");
     };
   }
 
@@ -283,7 +285,7 @@ public class PackageActivity extends BaseActivity {
             boolean canBeExcluded = mMySettings.canBeExcluded(permission);
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(canBeExcluded);
           });
-      new AlertDialogFragment(dialog).show(this, "PERM_OPTIONS", false);
+      AlertDialogFragment.show(this, dialog, "PERM_OPTIONS");
     };
   }
 
@@ -463,43 +465,21 @@ public class PackageActivity extends BaseActivity {
 
     if (item.getItemId() == R.id.action_reset_app_ops && checkPrivileges()) {
       if (!isPackageNull()) {
-        AlertDialog dialog =
-            new Builder(this)
-                .setPositiveButton(R.string.yes, (d, which) -> Utils.runInBg(this::resetAppOps))
-                .setNegativeButton(R.string.no, null)
-                .setTitle(mPackage.getLabel())
-                .setMessage(R.string.reset_app_ops_confirmation)
-                .create();
-        new AlertDialogFragment(dialog).show(this, "RESET_APP_OPS_CONFIRM", false);
+        AlertDialogFragment.show(this, null, TAG_RESET_APP_OPS_CONFIRM);
       }
       return true;
     }
 
     if (item.getItemId() == R.id.action_set_all_references) {
       if (!isPackageNull()) {
-        AlertDialog dialog =
-            new Builder(this)
-                .setPositiveButton(
-                    R.string.yes, (d, which) -> Utils.runInBg(this::setAllReferences))
-                .setNegativeButton(R.string.no, null)
-                .setTitle(mPackage.getLabel())
-                .setMessage(R.string.set_references_confirmation)
-                .create();
-        new AlertDialogFragment(dialog).show(this, "SET_REF_CONFIRM", false);
+        AlertDialogFragment.show(this, null, TAG_SET_REF_CONFIRM);
       }
       return true;
     }
 
     if (item.getItemId() == R.id.action_clear_references) {
       if (!isPackageNull()) {
-        AlertDialog dialog =
-            new Builder(this)
-                .setPositiveButton(R.string.yes, (d, which) -> Utils.runInBg(this::clearReferences))
-                .setNegativeButton(R.string.no, null)
-                .setTitle(mPackage.getLabel())
-                .setMessage(R.string.clear_references_confirmation)
-                .create();
-        new AlertDialogFragment(dialog).show(this, "CLEAR_REF_CONFIRM", false);
+        AlertDialogFragment.show(this, null, TAG_CLEAR_REF_CONFIRM);
       }
       return true;
     }
@@ -615,7 +595,7 @@ public class PackageActivity extends BaseActivity {
             .setTitle(R.string.warning)
             .setMessage(Utils.breakParas(warn))
             .create();
-    new AlertDialogFragment(dialog).show(PackageActivity.this, "PERM_CHANGE_WARNING", false);
+    AlertDialogFragment.show(PackageActivity.this, dialog, "PERM_CHANGE_WARNING");
   }
 
   private void setPermission(Permission permission) {
@@ -638,23 +618,7 @@ public class PackageActivity extends BaseActivity {
     if (mMySettings.isPrivDaemonAlive()) {
       return true;
     }
-
-    AlertDialog dialog =
-        new Builder(this)
-            .setPositiveButton(
-                android.R.string.ok,
-                (d, which) -> {
-                  startActivity(
-                      new Intent(App.getContext(), MainActivity.class)
-                          .setAction(MainActivity.ACTION_SHOW_DRAWER)
-                          .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
-                  finishAfterTransition();
-                })
-            .setNegativeButton(android.R.string.cancel, null)
-            .setTitle(R.string.privileges)
-            .setMessage(R.string.grant_root_or_adb)
-            .create();
-    new AlertDialogFragment(dialog).show(this, MainActivity.TAG_GRANT_ROOT_OR_ADB, false);
+    AlertDialogFragment.show(this, null, TAG_GRANT_ROOT_OR_ADB);
     return false;
   }
 
@@ -783,14 +747,77 @@ public class PackageActivity extends BaseActivity {
       }
 
       // UpdateSpinner on Dialog dismiss also suffices for Negative and Neutral buttons
-      new AlertDialogFragment(builder.create())
+      AlertDialogFragment.show(PackageActivity.this, builder.create(), "PERM_CHANGE_WARNING")
           .setOnDismissListener(
               dialog -> {
                 if (!isYes[0]) {
                   updateSpinnerSelectionInBg(pos);
                 }
-              })
-          .show(PackageActivity.this, "PERM_CHANGE_WARNING", false);
+              });
     }
+  }
+
+  private static final String CLASS = PackageActivity.class.getName();
+  private static final String TAG_GRANT_ROOT_OR_ADB = CLASS + ".GRANT_ROOT_OR_ADB";
+  private static final String TAG_RESET_APP_OPS_CONFIRM = CLASS + ".RESET_APP_OPS_CONFIRM";
+  private static final String TAG_SET_REF_CONFIRM = CLASS + ".SET_REF_CONFIRM";
+  private static final String TAG_CLEAR_REF_CONFIRM = CLASS + ".CLEAR_REF_CONFIRM";
+
+  @Override
+  public AlertDialog createDialog(String tag, AlertDialogFragment dialogFragment) {
+    if (TAG_GRANT_ROOT_OR_ADB.equals(tag)) {
+      return new Builder(this)
+          .setPositiveButton(
+              android.R.string.ok,
+              (d, which) -> {
+                startActivity(
+                    new Intent(App.getContext(), MainActivity.class)
+                        .setAction(MainActivity.ACTION_SHOW_DRAWER)
+                        .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                finishAfterTransition();
+              })
+          .setNegativeButton(android.R.string.cancel, null)
+          .setTitle(R.string.privileges)
+          .setMessage(R.string.grant_root_or_adb)
+          .create();
+    }
+
+    if (TAG_RESET_APP_OPS_CONFIRM.equals(tag)) {
+      if (isPackageNull()) {
+        return null;
+      }
+      return new Builder(this)
+          .setPositiveButton(R.string.yes, (d, which) -> Utils.runInBg(this::resetAppOps))
+          .setNegativeButton(R.string.no, null)
+          .setTitle(mPackage.getLabel())
+          .setMessage(R.string.reset_app_ops_confirmation)
+          .create();
+    }
+
+    if (TAG_SET_REF_CONFIRM.equals(tag)) {
+      if (isPackageNull()) {
+        return null;
+      }
+      return new Builder(this)
+          .setPositiveButton(R.string.yes, (d, which) -> Utils.runInBg(this::setAllReferences))
+          .setNegativeButton(R.string.no, null)
+          .setTitle(mPackage.getLabel())
+          .setMessage(R.string.set_references_confirmation)
+          .create();
+    }
+
+    if (TAG_CLEAR_REF_CONFIRM.equals(tag)) {
+      if (isPackageNull()) {
+        return null;
+      }
+      return new Builder(this)
+          .setPositiveButton(R.string.yes, (d, which) -> Utils.runInBg(this::clearReferences))
+          .setNegativeButton(R.string.no, null)
+          .setTitle(mPackage.getLabel())
+          .setMessage(R.string.clear_references_confirmation)
+          .create();
+    }
+
+    return super.createDialog(tag, dialogFragment);
   }
 }

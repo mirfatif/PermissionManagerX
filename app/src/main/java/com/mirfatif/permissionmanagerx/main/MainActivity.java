@@ -65,8 +65,6 @@ public class MainActivity extends BaseActivity {
   public static final String ACTION_SEARCH_PACKAGES = "com.mirfatif.pmx.ACTION_SEARCH_PACKAGES";
   public static final String EXTRA_SEARCH_STRINGS = "com.mirfatif.pmx.SEARCH_STRINGS";
 
-  public static final String TAG_GRANT_ROOT_OR_ADB = "GRANT_ROOT_OR_ADB";
-
   private final MySettings mMySettings = MySettings.getInstance();
   private final PackageParser mPackageParser = PackageParser.getInstance();
   private final PrivDaemonHandler mPrivDaemonHandler = PrivDaemonHandler.getInstance();
@@ -198,7 +196,6 @@ public class MainActivity extends BaseActivity {
     }
 
     mMainActivityFlavor.onCreated();
-    mBackupRestore.onCreated();
 
     Utils.runInBg(() -> new AppUpdate().check(true));
   }
@@ -211,6 +208,14 @@ public class MainActivity extends BaseActivity {
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
+    if (Utils.getUserId() != 0) {
+      /*
+       Do not show menu if secondary user. onCreate is not completed,
+       so tapping on menu items may crash.
+      */
+      return false;
+    }
+
     getMenuInflater().inflate(R.menu.main_search, menu);
     MenuCompat.setGroupDividerEnabled(menu, true);
 
@@ -265,7 +270,7 @@ public class MainActivity extends BaseActivity {
       collapseSearchView();
       return;
     }
-    // TODO https://issuetracker.google.com/issues/139738913
+    // https://issuetracker.google.com/issues/139738913
     if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
       finishAfterTransition();
     } else {
@@ -279,6 +284,64 @@ public class MainActivity extends BaseActivity {
     if (mMainActivityFlavor != null) {
       mMainActivityFlavor.onResumed();
     }
+  }
+
+  private static final String CLASS = MainActivity.class.getName();
+  private static final String TAG_ADVANCED_SETTINGS = CLASS + ".ADVANCED_SETTINGS";
+  private static final String TAG_PRIVS_REQ_FOR_DAEMON = CLASS + ".PRIVS_REQ_FOR_DAEMON";
+  private static final String TAG_GRANT_ROOT_OR_ADB = CLASS + ".GRANT_ROOT_OR_ADB";
+  private static final String TAG_ADB_CONNECT_FAILED = CLASS + ".ADB_CONNECT_FAILED";
+  private static final String TAG_BACKUP_RESTORE = CLASS + ".TAG_BACKUP_RESTORE";
+  static final String TAG_DONATION = CLASS + ".TAG_DONATION";
+
+  @Override
+  public AlertDialog createDialog(String tag, AlertDialogFragment dialogFragment) {
+    if (TAG_PRIVS_REQ_FOR_DAEMON.equals(tag)) {
+      AlertDialog dialog =
+          new Builder(this)
+              .setPositiveButton(android.R.string.ok, (d, which) -> openDrawerForPrivileges())
+              .setNeutralButton(
+                  R.string.do_not_remind, (d, which) -> mMySettings.setPrivReminderOff())
+              .setNegativeButton(
+                  R.string.get_help,
+                  (d, which) -> startActivity(new Intent(App.getContext(), HelpActivity.class)))
+              .setTitle(R.string.privileges)
+              .setMessage(getString(R.string.grant_root_or_adb))
+              .create();
+      Utils.removeButtonPadding(dialog);
+      return dialog;
+    }
+
+    if (TAG_GRANT_ROOT_OR_ADB.equals(tag)) {
+      return new Builder(this)
+          .setPositiveButton(android.R.string.ok, (d, which) -> openDrawerForPrivileges())
+          .setNegativeButton(android.R.string.cancel, null)
+          .setTitle(R.string.privileges)
+          .setMessage(R.string.grant_root_or_adb)
+          .create();
+    }
+
+    if (TAG_ADB_CONNECT_FAILED.equals(tag)) {
+      return new Builder(this)
+          .setPositiveButton(android.R.string.ok, null)
+          .setTitle(R.string.privileges)
+          .setMessage(Utils.htmlToString(R.string.adb_connect_fail_long))
+          .create();
+    }
+
+    if (TAG_BACKUP_RESTORE.equals(tag)) {
+      return mBackupRestore.createDialog();
+    }
+
+    if (TAG_ADVANCED_SETTINGS.equals(tag)) {
+      return new AdvancedSettings(this).createDialog();
+    }
+
+    if (TAG_DONATION.equals(tag)) {
+      return new Donate(this).createDialog();
+    }
+
+    return super.createDialog(tag, dialogFragment);
   }
 
   //////////////////////////////////////////////////////////////////
@@ -295,14 +358,15 @@ public class MainActivity extends BaseActivity {
     if (Utils.getUserId() == 0) {
       return false;
     }
+
     Builder builder =
         new Builder(this)
             .setPositiveButton(android.R.string.ok, null)
             .setTitle(R.string.primary_account)
             .setMessage(R.string.primary_profile_only);
-    new AlertDialogFragment(builder.create())
-        .setOnDismissListener(d -> finishAfterTransition())
-        .show(this, "PRIMARY_PROFILE", false);
+    AlertDialogFragment.show(this, builder.create(), "PRIMARY_PROFILE")
+        .setOnDismissListener(d -> finishAfterTransition());
+
     Utils.getDefPrefs().edit().putBoolean("PRIMARY_USER", false).apply(); // Trigger auto-backup
     return true;
   }
@@ -368,7 +432,7 @@ public class MainActivity extends BaseActivity {
             dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(canBeDisabled);
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(canBeExcluded);
           });
-      new AlertDialogFragment(dialog).show(this, "PKG_OPTIONS", false);
+      AlertDialogFragment.show(this, dialog, "PKG_OPTIONS");
     };
   }
 
@@ -481,14 +545,7 @@ public class MainActivity extends BaseActivity {
   private void setPackageEnabledState(Package pkg) {
     if (!mMySettings.isPrivDaemonAlive()) {
       Utils.logDaemonDead(TAG + ": setPackageEnabledState");
-      AlertDialog dialog =
-          new Builder(this)
-              .setPositiveButton(android.R.string.ok, (d, which) -> openDrawerForPrivileges())
-              .setNegativeButton(android.R.string.cancel, null)
-              .setTitle(R.string.privileges)
-              .setMessage(R.string.grant_root_or_adb)
-              .create();
-      new AlertDialogFragment(dialog).show(this, TAG_GRANT_ROOT_OR_ADB, false);
+      AlertDialogFragment.show(this, null, TAG_GRANT_ROOT_OR_ADB);
       return;
     }
 
@@ -523,7 +580,7 @@ public class MainActivity extends BaseActivity {
             .setTitle(R.string.warning)
             .setMessage(Utils.breakParas(warn))
             .create();
-    new AlertDialogFragment(dialog).show(this, "PKG_DISABLE_WARNING", false);
+    AlertDialogFragment.show(this, dialog, "PKG_DISABLE_WARNING");
   }
 
   private void setPackageEnabledState(Package pkg, boolean enabled) {
@@ -743,26 +800,8 @@ public class MainActivity extends BaseActivity {
           }
         } else {
           Log.w(TAG, "startPrivDaemon: Root access: unavailable, ADB shell: unavailable");
-
           if (mMySettings.shouldRemindMissingPrivileges()) {
-            Builder builder =
-                new Builder(this)
-                    .setPositiveButton(
-                        android.R.string.ok, (dialog, which) -> openDrawerForPrivileges())
-                    .setNeutralButton(
-                        R.string.do_not_remind, (d, which) -> mMySettings.setPrivReminderOff())
-                    .setNegativeButton(
-                        R.string.get_help,
-                        (dialog, which) ->
-                            startActivity(new Intent(App.getContext(), HelpActivity.class)))
-                    .setTitle(R.string.privileges)
-                    .setMessage(getString(R.string.grant_root_or_adb));
-            Utils.runInFg(
-                () -> {
-                  AlertDialog dialog = builder.create();
-                  Utils.removeButtonPadding(dialog);
-                  new AlertDialogFragment(dialog).show(this, TAG_GRANT_ROOT_OR_ADB, false);
-                });
+            Utils.runInFg(() -> AlertDialogFragment.show(this, null, TAG_PRIVS_REQ_FOR_DAEMON));
           }
         }
       }
@@ -934,15 +973,7 @@ public class MainActivity extends BaseActivity {
               Utils.runInFg(() -> adbCheckBox.setChecked(true));
               restartPrivDaemon(false);
             } else {
-              Builder builder =
-                  new Builder(this)
-                      .setPositiveButton(android.R.string.ok, null)
-                      .setTitle(R.string.privileges)
-                      .setMessage(Utils.htmlToString(R.string.adb_connect_fail_long));
-              Utils.runInFg(
-                  () ->
-                      new AlertDialogFragment(builder.create())
-                          .show(this, "ADB_CONNECT_FAILED", false));
+              Utils.runInFg(() -> AlertDialogFragment.show(this, null, TAG_ADB_CONNECT_FAILED));
             }
             Utils.runInFg(() -> adbCheckBox.setEnabled(true));
           });
@@ -950,7 +981,7 @@ public class MainActivity extends BaseActivity {
     }
 
     if (item.getItemId() == R.id.action_advanced_settings) {
-      AdvancedSettings.showDialog(this);
+      AlertDialogFragment.show(this, null, TAG_ADVANCED_SETTINGS);
       return true;
     }
 
@@ -962,7 +993,7 @@ public class MainActivity extends BaseActivity {
     }
 
     if (item.getItemId() == R.id.action_backup_restore) {
-      mBackupRestore.doBackupRestore();
+      AlertDialogFragment.show(this, null, TAG_BACKUP_RESTORE);
       return true;
     }
 
@@ -972,7 +1003,7 @@ public class MainActivity extends BaseActivity {
     }
 
     if (item.getItemId() == R.id.action_donate) {
-      Donate.showDialog(this);
+      AlertDialogFragment.show(this, null, TAG_DONATION);
       return true;
     }
 

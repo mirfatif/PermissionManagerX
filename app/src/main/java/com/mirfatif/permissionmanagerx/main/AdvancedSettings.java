@@ -4,7 +4,6 @@ import static com.mirfatif.permissionmanagerx.util.Utils.UID_ROOT;
 import static com.mirfatif.permissionmanagerx.util.Utils.UID_SHELL;
 import static com.mirfatif.permissionmanagerx.util.Utils.UID_SYSTEM;
 
-import android.annotation.SuppressLint;
 import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -42,8 +41,7 @@ class AdvancedSettings {
 
   private final AdvSettingsDialogBinding mB;
 
-  @SuppressLint("InflateParams")
-  private AdvancedSettings(MainActivity activity) {
+  AdvancedSettings(MainActivity activity) {
     mA = activity;
     mB = AdvSettingsDialogBinding.inflate(mA.getLayoutInflater());
 
@@ -65,9 +63,21 @@ class AdvancedSettings {
     contextSelectedPos = spinnerContexts.indexOf(getString(contextResId));
 
     mAdvancedSettingsFlavor = new AdvancedSettingsFlavor(mA, mB);
+
+    mB.daemonUidListArrow.setOnClickListener(v -> mB.daemonUidList.performClick());
+    mB.daemonContextListArrow.setOnClickListener(v -> mB.daemonContextList.performClick());
+    mB.useHiddenApis.setChecked(useHiddenAPIs);
+    mB.dexTmpDir.setChecked(dexInTmpDir);
+    mB.adbPort.setText(adbPort);
+    mB.adbPort.addTextChangedListener(new PortNumberWatcher());
+    mB.useSocket.setChecked(useSocket);
+    mB.daemonUidList.setSelection(uidSelectedPos);
+    mB.daemonContextList.setSelection(contextSelectedPos);
+    mB.suExePath.setText(suExePath);
+    mB.suExePath.addTextChangedListener(new SuPathWatcher());
   }
 
-  private void show() {
+  AlertDialog createDialog() {
     Builder builder =
         new Builder(mA)
             .setTitle(R.string.advanced_settings_menu_item)
@@ -84,20 +94,7 @@ class AdvancedSettings {
     } else {
       dialog = builder.create();
     }
-
-    new AlertDialogFragment(dialog).show(mA, "ADVANCED_SETTINGS", false);
-
-    mB.daemonUidListArrow.setOnClickListener(v -> mB.daemonUidList.performClick());
-    mB.daemonContextListArrow.setOnClickListener(v -> mB.daemonContextList.performClick());
-    mB.useHiddenApis.setChecked(useHiddenAPIs);
-    mB.dexTmpDir.setChecked(dexInTmpDir);
-    mB.adbPort.setText(adbPort);
-    mB.adbPort.addTextChangedListener(new PortNumberWatcher());
-    mB.useSocket.setChecked(useSocket);
-    mB.daemonUidList.setSelection(uidSelectedPos);
-    mB.daemonContextList.setSelection(contextSelectedPos);
-    mB.suExePath.setText(suExePath);
-    mB.suExePath.addTextChangedListener(new SuPathWatcher());
+    return dialog;
   }
 
   private static final int MIN_PORT = 1;
@@ -207,9 +204,9 @@ class AdvancedSettings {
             .setTitle(R.string.hidden_apis)
             .setMessage(R.string.hidden_apis_confirmation)
             .create();
-    new AlertDialogFragment(dialog)
-        .setOnDismissListener(d -> restartDaemon(doRestartDaemon[0], switchToAdb))
-        .show(mA, "HIDDEN_APIS_CONFIRM", false);
+
+    AlertDialogFragment.show(mA, dialog, "HIDDEN_APIS_CONFIRM")
+        .setOnDismissListener(d -> restartDaemon(doRestartDaemon[0], switchToAdb));
   }
 
   private void switchToAdb(boolean restartDaemon) {
@@ -288,9 +285,5 @@ class AdvancedSettings {
 
     @Override
     public void afterTextChanged(Editable s) {}
-  }
-
-  static void showDialog(MainActivity mainActivity) {
-    new AdvancedSettings(mainActivity).show();
   }
 }

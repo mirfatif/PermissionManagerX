@@ -51,7 +51,6 @@ import org.xmlpull.v1.XmlSerializer;
 public class BackupRestore {
 
   private static final String TAG = "BackupRestore";
-  private static final String TAG_BACKUP_RESTORE = "BACKUP_RESTORE";
 
   private final MySettings mMySettings = MySettings.getInstance();
 
@@ -81,54 +80,43 @@ public class BackupRestore {
   private final String SEPARATOR = ",";
 
   private final MainActivity mA;
-
-  private boolean mSkipUninstalledApps = false;
-
-  @SuppressWarnings("UnusedDeclaration")
-  public BackupRestore() {
-    mA = null;
-  }
-
-  BackupRestore(MainActivity activity) {
-    mA = activity;
-  }
-
   private ActivityResultLauncher<String> mBackupLauncher;
   private ActivityResultLauncher<String[]> mRestoreLauncher;
 
-  void onCreated() {
-    if (mA == null) {
-      return;
-    }
-    // registerForActivityResult() must be called before onStart() is called
-    ActivityResultCallback<Uri> backupCallback =
-        uri -> Utils.runInBg(() -> doBackupRestoreInBg(true, uri));
-    mBackupLauncher =
-        mA.registerForActivityResult(new ActivityResultContracts.CreateDocument(), backupCallback);
+  public BackupRestore(MainActivity activity) {
+    mA = activity;
+    if (mA != null) {
+      // registerForActivityResult() must be called before onStart() is called
+      ActivityResultCallback<Uri> backupCallback =
+          uri -> Utils.runInBg(() -> doBackupRestoreInBg(true, uri));
+      mBackupLauncher =
+          mA.registerForActivityResult(
+              new ActivityResultContracts.CreateDocument(), backupCallback);
 
-    ActivityResultCallback<Uri> restoreCallback =
-        uri -> Utils.runInBg(() -> doBackupRestoreInBg(false, uri));
-    mRestoreLauncher =
-        mA.registerForActivityResult(new ActivityResultContracts.OpenDocument(), restoreCallback);
+      ActivityResultCallback<Uri> restoreCallback =
+          uri -> Utils.runInBg(() -> doBackupRestoreInBg(false, uri));
+      mRestoreLauncher =
+          mA.registerForActivityResult(new ActivityResultContracts.OpenDocument(), restoreCallback);
+    }
   }
 
-  void doBackupRestore() {
+  private boolean mSkipUninstalledApps = false;
+
+  AlertDialog createDialog() {
     if (mA == null) {
-      return;
+      return null;
     }
     BackupRestoreDialogBinding b = BackupRestoreDialogBinding.inflate(mA.getLayoutInflater());
 
     CheckBox checkbox = b.skipUninstalledPackages;
     checkbox.setOnClickListener(v -> mSkipUninstalledApps = checkbox.isChecked());
 
-    AlertDialog dialog =
-        new Builder(mA)
-            .setPositiveButton(R.string.backup, (d, which) -> doBackupRestore(true))
-            .setNegativeButton(R.string.restore, (d, which) -> doBackupRestore(false))
-            .setTitle(getString(R.string.backup) + " / " + getString(R.string.restore))
-            .setView(b.getRoot())
-            .create();
-    new AlertDialogFragment(dialog).show(mA, TAG_BACKUP_RESTORE, false);
+    return new Builder(mA)
+        .setPositiveButton(R.string.backup, (d, which) -> doBackupRestore(true))
+        .setNegativeButton(R.string.restore, (d, which) -> doBackupRestore(false))
+        .setTitle(getString(R.string.backup) + " / " + getString(R.string.restore))
+        .setView(b.getRoot())
+        .create();
   }
 
   private void doBackupRestore(boolean isBackup) {
@@ -201,11 +189,15 @@ public class BackupRestore {
       Object value = entry.getValue();
       String type;
 
-      if (value instanceof Boolean) type = BOOLEAN;
-      else if (value instanceof Float) type = FLOAT;
-      else if (value instanceof Integer) type = INT;
-      else if (value instanceof Long) type = LONG;
-      else if (value instanceof Set) {
+      if (value instanceof Boolean) {
+        type = BOOLEAN;
+      } else if (value instanceof Float) {
+        type = FLOAT;
+      } else if (value instanceof Integer) {
+        type = INT;
+      } else if (value instanceof Long) {
+        type = LONG;
+      } else if (value instanceof Set) {
         type = SET;
         StringBuilder stringBuilder = new StringBuilder();
         for (Object object : (Set<?>) value) {
@@ -216,8 +208,9 @@ public class BackupRestore {
           stringBuilder.append(object.toString());
         }
         value = stringBuilder;
-      } else if (value instanceof String) type = STRING;
-      else {
+      } else if (value instanceof String) {
+        type = STRING;
+      } else {
         Log.e(TAG, "Unknown preference type: " + value.toString());
         invalidPrefs++;
         continue;
@@ -409,16 +402,26 @@ public class BackupRestore {
       xmlParser.setInput(inputStream, null);
       while (true) {
         int eventType = xmlParser.next(); // get the next parsing event
-        if (eventType == XmlPullParser.END_DOCUMENT) break;
+        if (eventType == XmlPullParser.END_DOCUMENT) {
+          break;
+        }
 
         String tagName = xmlParser.getName();
-        if (eventType == XmlPullParser.START_TAG && tagName.equals(ROOT)) rootTagFound = true;
-        if (eventType == XmlPullParser.START_TAG && tagName.equals(mainTag)) mainTagFound = true;
+        if (eventType == XmlPullParser.START_TAG && tagName.equals(ROOT)) {
+          rootTagFound = true;
+        }
+        if (eventType == XmlPullParser.START_TAG && tagName.equals(mainTag)) {
+          mainTagFound = true;
+        }
 
-        if (!rootTagFound || !mainTagFound) continue;
+        if (!rootTagFound || !mainTagFound) {
+          continue;
+        }
 
         // if we reach the end of "preferences" or "permissions"
-        if (eventType == XmlPullParser.END_TAG && tagName.equals(mainTag)) break;
+        if (eventType == XmlPullParser.END_TAG && tagName.equals(mainTag)) {
+          break;
+        }
 
         // if we are at the start of "pref" or "perm"
         if (eventType == XmlPullParser.START_TAG && tagName.equals(entryTag)) {
@@ -442,9 +445,15 @@ public class BackupRestore {
     if (mPrefKeys.isEmpty()) {
       for (Field field : R.string.class.getDeclaredFields()) {
         String strName = field.getName();
-        if (!strName.startsWith("pref_")) continue;
-        if (!strName.endsWith("_key")) continue;
-        if (strName.endsWith("_enc_key")) continue;
+        if (!strName.startsWith("pref_")) {
+          continue;
+        }
+        if (!strName.endsWith("_key")) {
+          continue;
+        }
+        if (strName.endsWith("_enc_key")) {
+          continue;
+        }
 
         Integer strKeyResId =
             Utils.getStaticIntField(strName, R.string.class, TAG + ": isInvalidPrefKey");
@@ -482,7 +491,9 @@ public class BackupRestore {
       entity.state = entry.value;
       entity.permName = entry.type;
       Integer id = map.get(entity.pkgName + "_" + entity.permName);
-      if (id != null && id > 0) entity.id = id;
+      if (id != null && id > 0) {
+        entity.id = id;
+      }
       permEntities.add(entity);
     }
     mySettings.getPermDb().insertAll(permEntities.toArray(new PermissionEntity[0]));
@@ -493,7 +504,9 @@ public class BackupRestore {
   }
 
   private void showProgressBar(boolean isBackup) {
-    if (mA == null) return;
+    if (mA == null) {
+      return;
+    }
     Utils.runInFg(
         () -> {
           mA.getRoundProgressTextView()
@@ -548,7 +561,9 @@ public class BackupRestore {
   }
 
   private void showFinalDialog(boolean isBackup, SpannableStringBuilder message) {
-    if (mA == null) return;
+    if (mA == null) {
+      return;
+    }
     Builder builder =
         new Builder(mA)
             .setPositiveButton(android.R.string.ok, null)
@@ -557,15 +572,16 @@ public class BackupRestore {
 
     Utils.runInFg(
         () -> {
-          AlertDialogFragment dialog = new AlertDialogFragment(builder.create());
+          AlertDialogFragment dialog =
+              AlertDialogFragment.show(mA, builder.create(), "BACKUP_RESTORE");
           if (!isBackup) {
             dialog.setOnDismissListener(d -> mA.getMainActivityFlavor().onRestoreDone());
           }
-          dialog.show(mA, TAG_BACKUP_RESTORE, false);
         });
   }
 
   public static class BackupEntry {
+
     public String key, type, value;
   }
 }

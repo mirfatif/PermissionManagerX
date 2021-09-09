@@ -118,65 +118,82 @@ public class FilterSettingsActivity extends BaseActivity {
     if (mMySettings.isDebug()) {
       Util.debugLog(TAG, "onOptionsItemSelected: " + item.getTitle());
     }
+
     if (item.getItemId() == R.id.action_reset_defaults) {
-      // Build an AlertDialog and set listeners on buttons
-      Builder builder = new Builder(this);
-      builder.setPositiveButton(
-          R.string.yes,
-          (dialogInterface, i) -> {
-            // Clear existing values
-            Utils.runInBg(mMySettings::resetToDefaults);
-          });
-
-      builder.setNegativeButton(R.string.no, null);
-
-      // Set message, create and show the AlertDialog
-      builder.setTitle(R.string.filter_settings);
-      builder.setMessage(R.string.filter_settings_reset_confirmation);
-      new AlertDialogFragment(builder.create()).show(this, "RESET_FILTER_SETTINGS", false);
+      AlertDialogFragment.show(this, null, TAG_RESET_FILTER_SETTINGS);
       return true;
     }
 
     if (item.getItemId() == R.id.action_clear_excluded_apps) {
-      // Build an AlertDialog and set listeners on buttons
-      Builder builder = new Builder(this);
-      builder.setPositiveButton(
-          R.string.yes, (dialogInterface, i) -> mMySettings.clearExcludedAppsList());
-
-      builder.setNegativeButton(R.string.no, null);
-
-      // Set message, create and show the AlertDialog
-      builder.setTitle(R.string.filter_settings);
-      builder.setMessage(R.string.filter_settings_clear_apps_confirmation);
-      new AlertDialogFragment(builder.create()).show(this, "CLEAR_EXCLUDED_APPS", false);
+      AlertDialogFragment.show(this, null, TAG_CLEAR_EXCLUDED_APPS);
       return true;
     }
 
     if (item.getItemId() == R.id.action_clear_excluded_perms) {
-      Builder builder = new Builder(this);
-      builder.setPositiveButton(
-          R.string.yes, (dialogInterface, i) -> mMySettings.clearExcludedPermsList());
-
-      builder.setNegativeButton(R.string.no, null);
-      builder.setTitle(R.string.filter_settings);
-      builder.setMessage(R.string.filter_settings_clear_perms_confirmation);
-      new AlertDialogFragment(builder.create()).show(this, "CLEAR_EXCLUDED_PERMS", false);
+      AlertDialogFragment.show(this, null, TAG_CLEAR_EXCLUDED_PERMS);
       return true;
     }
 
     if (item.getItemId() == R.id.action_clear_extra_app_ops) {
-      AlertDialog dialog =
-          new Builder(this)
-              .setPositiveButton(
-                  R.string.yes, (dialogInterface, i) -> mMySettings.clearExtraAppOpsList())
-              .setNegativeButton(R.string.no, null)
-              .setTitle(R.string.filter_settings)
-              .setMessage(R.string.filter_settings_clear_app_ops_confirmation)
-              .create();
-      new AlertDialogFragment(dialog).show(this, "CLEAR_EXTRA_APP_OPS", false);
+      AlertDialogFragment.show(this, null, TAG_CLEAR_EXTRA_APP_OPS);
       return true;
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  private static final String CLASS = FilterSettingsActivity.class.getName();
+  private static final String TAG_RESET_FILTER_SETTINGS = CLASS + ".RESET_FILTER_SETTINGS";
+  private static final String TAG_CLEAR_EXCLUDED_APPS = CLASS + ".CLEAR_EXCLUDED_APPS";
+  private static final String TAG_CLEAR_EXCLUDED_PERMS = CLASS + ".CLEAR_EXCLUDED_PERMS";
+  private static final String TAG_CLEAR_EXTRA_APP_OPS = CLASS + ".CLEAR_EXTRA_APP_OPS";
+
+  @Override
+  public AlertDialog createDialog(String tag, AlertDialogFragment dialogFragment) {
+    if (TAG_RESET_FILTER_SETTINGS.equals(tag)) {
+      return new Builder(this)
+          .setPositiveButton(
+              R.string.yes,
+              (dialogInterface, i) -> {
+                // Clear existing values
+                Utils.runInBg(mMySettings::resetToDefaults);
+              })
+          .setNegativeButton(R.string.no, null)
+          .setTitle(R.string.filter_settings)
+          .setMessage(R.string.filter_settings_reset_confirmation)
+          .create();
+    }
+
+    if (TAG_CLEAR_EXCLUDED_APPS.equals(tag)) {
+      return new Builder(this)
+          .setPositiveButton(
+              R.string.yes, (dialogInterface, i) -> mMySettings.clearExcludedAppsList())
+          .setNegativeButton(R.string.no, null)
+          .setTitle(R.string.filter_settings)
+          .setMessage(R.string.filter_settings_clear_apps_confirmation)
+          .create();
+    }
+
+    if (TAG_CLEAR_EXCLUDED_PERMS.equals(tag)) {
+      return new Builder(this)
+          .setPositiveButton(
+              R.string.yes, (dialogInterface, i) -> mMySettings.clearExcludedPermsList())
+          .setNegativeButton(R.string.no, null)
+          .setTitle(R.string.filter_settings)
+          .setMessage(R.string.filter_settings_clear_perms_confirmation)
+          .create();
+    }
+
+    if (TAG_CLEAR_EXTRA_APP_OPS.equals(tag)) {
+      return new Builder(this)
+          .setPositiveButton(
+              R.string.yes, (dialogInterface, i) -> mMySettings.clearExtraAppOpsList())
+          .setNegativeButton(R.string.no, null)
+          .setTitle(R.string.filter_settings)
+          .setMessage(R.string.filter_settings_clear_app_ops_confirmation)
+          .create();
+    }
+
+    return super.createDialog(tag, dialogFragment);
   }
 }

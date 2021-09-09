@@ -1,5 +1,6 @@
 package com.mirfatif.permissionmanagerx.ui;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
@@ -9,14 +10,20 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.databinding.AboutPrivilegesItemBinding;
 import com.mirfatif.permissionmanagerx.ui.AboutPrivilegesAdapter.ItemViewHolder;
 import com.mirfatif.privtasks.PermStatus;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AboutPrivilegesAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
-  private final List<PermStatus> mPermStatusList;
+  private final List<PermStatus> mPermStatusList = new ArrayList<>();
 
-  public AboutPrivilegesAdapter(List<PermStatus> permStatusList) {
-    mPermStatusList = permStatusList;
+  @SuppressLint("NotifyDataSetChanged")
+  void submitList(List<PermStatus> permStatusList) {
+    synchronized (mPermStatusList) {
+      mPermStatusList.clear();
+      mPermStatusList.addAll(permStatusList);
+      notifyDataSetChanged();
+    }
   }
 
   @NonNull

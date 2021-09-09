@@ -3,8 +3,8 @@ package com.mirfatif.permissionmanagerx.ui.base;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.util.Utils;
@@ -33,11 +33,11 @@ public class BaseActivity extends AppCompatActivity {
     super.attachBaseContext(Utils.setLocale(context));
   }
 
-  @Override
-  protected void onSaveInstanceState(@NonNull Bundle outState) {
-    // We can't save state of AlertDialogFragment since AlertDialog is passed as a constructor
-    // argument. Otherwise separate AlertDialogFragment class needs to be created for every dialog.
-    AlertDialogFragment.removeAll(this);
-    super.onSaveInstanceState(outState);
+  /*
+   We use the same AlertDialogFragment to show all AlertDialogs. This method
+   is called to recreate the AlertDialog after configuration change.
+  */
+  public AlertDialog createDialog(String tag, AlertDialogFragment dialogFragment) {
+    return null;
   }
 }
