@@ -11,22 +11,8 @@ import java.util.concurrent.Future;
 
 public class ProgressFrameLayout extends FrameLayout {
 
-  public ProgressFrameLayout(Context context) {
-    super(context);
-  }
-
   public ProgressFrameLayout(Context context, AttributeSet attrs) {
     super(context, attrs);
-  }
-
-  public ProgressFrameLayout(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-  }
-
-  @SuppressWarnings("UnusedDeclaration")
-  public ProgressFrameLayout(
-      Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-    super(context, attrs, defStyleAttr, defStyleRes);
   }
 
   private final ExecutorService mVisibilityExecutor = Executors.newSingleThreadExecutor();

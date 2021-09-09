@@ -262,7 +262,7 @@ class AdvancedSettings {
       }
       int port = Integer.parseInt(s.toString().trim());
       if (port > MAX_PORT || port < MIN_PORT) {
-        mB.adbPort.setError(getString(R.string.bad_port_number));
+        mB.adbPort.setError(getString(R.string.bad_port_number), null);
       }
     }
 
@@ -278,7 +278,7 @@ class AdvancedSettings {
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
       if (!TextUtils.isEmpty(s) && !isExecutableFile(s)) {
-        mB.suExePath.setError(getString(R.string.bad_path));
+        mB.suExePath.setError(getString(R.string.bad_path), null);
       }
     }
 

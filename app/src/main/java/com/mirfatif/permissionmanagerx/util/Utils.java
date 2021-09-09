@@ -33,6 +33,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcel;
 import android.os.SystemClock;
+import android.provider.Settings.Secure;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -85,6 +86,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.security.GeneralSecurityException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -450,9 +452,24 @@ public class Utils {
 
       showToast("No Encryption");
 
-      // temp fix for https://github.com/google/tink/issues/413
-      sEncPrefs = App.getContext().getSharedPreferences("_enc_prefs2", Context.MODE_PRIVATE);
-      return sEncPrefs;
+      // Temp fix for https://github.com/google/tink/issues/413
+      return sEncPrefs = getEncPrefsInternal();
+    }
+  }
+
+  @SuppressLint("HardwareIds")
+  @SuppressWarnings("deprecation")
+  private static SharedPreferences getEncPrefsInternal() {
+    try {
+      return EncryptedSharedPreferences.create(
+          BuildConfig.APPLICATION_ID + "_enc_prefs2",
+          Secure.getString(App.getContext().getContentResolver(), Secure.ANDROID_ID),
+          App.getContext(),
+          PrefKeyEncryptionScheme.AES256_SIV,
+          PrefValueEncryptionScheme.AES256_GCM);
+    } catch (GeneralSecurityException | IOException e) {
+      e.printStackTrace();
+      throw new Error(e);
     }
   }
 

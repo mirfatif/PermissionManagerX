@@ -10,6 +10,7 @@ import static com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler.DAEMON_HAN
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
@@ -274,6 +275,14 @@ public class MainActivity extends BaseActivity {
     super.onResume();
     if (mMainActivityFlavor != null) {
       mMainActivityFlavor.onResumed();
+    }
+  }
+
+  @Override
+  public void onAttachedToWindow() {
+    super.onAttachedToWindow();
+    synchronized (WINDOW_WAITER) {
+      WINDOW_WAITER.notifyAll();
     }
   }
 
@@ -1005,19 +1014,27 @@ public class MainActivity extends BaseActivity {
     return mMainActivityFlavor.handleNavItemChecked(item);
   }
 
+  private static final Object WINDOW_WAITER = new Object();
+
   private void openDrawerForPrivileges() {
-    Utils.runInBg(
-        () -> {
-          while (getWindow() == null) {
-            SystemClock.sleep(100);
-          }
-          if (mB != null) {
-            Utils.runInFg(() -> mB.getRoot().openDrawer(GravityCompat.START));
-          }
-          float f = new Random().nextBoolean() ? 360 : -360;
-          Utils.runInBg(() -> rotateMenuItemCheckbox(R.id.action_root, f));
-          Utils.runInBg(() -> rotateMenuItemCheckbox(R.id.action_adb, -1 * f));
-        });
+    if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
+      Utils.runInBg(this::openDrawerForPrivileges);
+      return;
+    }
+
+    synchronized (WINDOW_WAITER) {
+      while (getWindow() == null) {
+        try {
+          WINDOW_WAITER.wait();
+        } catch (InterruptedException ignored) {
+        }
+      }
+    }
+
+    Utils.runInFg(() -> mB.getRoot().openDrawer(GravityCompat.START));
+    float f = new Random().nextBoolean() ? 360 : -360;
+    Utils.runInBg(() -> rotateMenuItemCheckbox(R.id.action_root, f));
+    Utils.runInBg(() -> rotateMenuItemCheckbox(R.id.action_adb, -1 * f));
   }
 
   private void rotateMenuItemCheckbox(int resId, float angle) {

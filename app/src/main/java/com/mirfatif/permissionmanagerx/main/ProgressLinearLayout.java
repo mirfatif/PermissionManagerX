@@ -10,22 +10,8 @@ import java.util.concurrent.Future;
 
 public class ProgressLinearLayout extends MyLinearLayout {
 
-  public ProgressLinearLayout(Context context) {
-    super(context);
-  }
-
   public ProgressLinearLayout(Context context, AttributeSet attrs) {
     super(context, attrs);
-  }
-
-  public ProgressLinearLayout(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-  }
-
-  @SuppressWarnings("UnusedDeclaration")
-  public ProgressLinearLayout(
-      Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-    super(context, attrs, defStyleAttr, defStyleRes);
   }
 
   private final ExecutorService mVisibilityExecutor = Executors.newSingleThreadExecutor();

@@ -208,7 +208,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_gravity="center_vertical"
-        android:background="@null"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:entries="@array/daemon_uids"
         android:gravity="end"
         android:minHeight="24dp" />
@@ -220,6 +220,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
         android:layout_gravity="center_vertical|end"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/arrow_drop_down"
         tools:ignore="ContentDescription" />
 
@@ -247,7 +248,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_gravity="center_vertical"
-        android:background="@null"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:entries="@array/daemon_contexts"
         android:gravity="end"
         android:minHeight="24dp" />
@@ -259,6 +260,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
         android:layout_gravity="center_vertical|end"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/arrow_drop_down"
         tools:ignore="ContentDescription" />
 
