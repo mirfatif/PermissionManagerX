@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil.ItemCallback;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
-import com.mirfatif.permissionmanagerx.util.Utils;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -14,8 +13,11 @@ import java.util.concurrent.Future;
 public abstract class MyListAdapter<T, VH extends RecyclerView.ViewHolder>
     extends ListAdapter<T, VH> {
 
-  protected MyListAdapter(@NonNull ItemCallback<T> diffCallback) {
+  private final ListAdapterCallback mCallback;
+
+  protected MyListAdapter(@NonNull ItemCallback<T> diffCallback, ListAdapterCallback callback) {
     super(diffCallback);
+    mCallback = callback;
   }
 
   /*
@@ -41,7 +43,7 @@ public abstract class MyListAdapter<T, VH extends RecyclerView.ViewHolder>
 
   private void submitListAndWait(List<T> list) {
     mIsCommittingList = true;
-    Utils.runInFg(() -> super.submitList(list, this::endWait));
+    mCallback.runInFg(() -> super.submitList(list, this::endWait));
 
     synchronized (mSubmitListExecutor) {
       while (mIsCommittingList) {
@@ -58,5 +60,10 @@ public abstract class MyListAdapter<T, VH extends RecyclerView.ViewHolder>
       mIsCommittingList = false;
       mSubmitListExecutor.notifyAll();
     }
+  }
+
+  public interface ListAdapterCallback {
+
+    void runInFg(Runnable task);
   }
 }

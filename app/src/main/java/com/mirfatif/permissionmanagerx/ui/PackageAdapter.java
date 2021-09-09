@@ -27,18 +27,15 @@ import com.mirfatif.permissionmanagerx.util.Utils;
 
 public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
 
-  private final PkgClickListener mPkgClickListener;
-  private final PkgLongClickListener mPkgLongClickListener;
+  private final PkgAdapterCallback mCallback;
   private final PackageManager mPackageManager;
 
   // Orange state color
   static final int ORANGE = 0xFFFFC107;
 
-  public PackageAdapter(
-      PkgClickListener pkgClickListener, PkgLongClickListener pkgLongClickListener) {
-    super(new DiffUtilItemCallBack());
-    mPkgClickListener = pkgClickListener;
-    mPkgLongClickListener = pkgLongClickListener;
+  public PackageAdapter(PkgAdapterCallback callback) {
+    super(new DiffUtilItemCallBack(), callback::runInFg);
+    mCallback = callback;
     mPackageManager = App.getContext().getPackageManager();
   }
 
@@ -99,7 +96,7 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
               int flags = PackageManager.MATCH_UNINSTALLED_PACKAGES;
               ApplicationInfo appInfo = mPackageManager.getApplicationInfo(pkg.getName(), flags);
               Drawable icon = mPackageManager.getApplicationIcon(appInfo);
-              Utils.runInFg(() -> mB.iconV.setImageDrawable(icon));
+              mCallback.runInFg(() -> mB.iconV.setImageDrawable(icon));
             } catch (NameNotFoundException ignored) {
             }
           });
@@ -146,7 +143,7 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
     public void onClick(View v) {
       int pos = getBindingAdapterPosition();
       if (pos != RecyclerView.NO_POSITION) {
-        mPkgClickListener.onClick(getItem(pos));
+        mCallback.onClick(getItem(pos));
       }
     }
 
@@ -154,7 +151,7 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
     public boolean onLongClick(View v) {
       int pos = getBindingAdapterPosition();
       if (pos != RecyclerView.NO_POSITION) {
-        mPkgLongClickListener.onLongClick(getItem(pos));
+        mCallback.onLongClick(getItem(pos));
       }
       return true;
     }
@@ -181,11 +178,12 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
     }
   }
 
-  public interface PkgClickListener {
-    void onClick(Package pkg);
-  }
+  public interface PkgAdapterCallback {
 
-  public interface PkgLongClickListener {
+    void onClick(Package pkg);
+
     void onLongClick(Package pkg);
+
+    void runInFg(Runnable task);
   }
 }

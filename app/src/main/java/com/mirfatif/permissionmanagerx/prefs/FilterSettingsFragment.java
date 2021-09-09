@@ -190,7 +190,7 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
           SETTINGS.getExcludedAppsLock();
           Set<String> excludedApps = SETTINGS.getExcludedApps();
           CharSequence[] excludedAppsLabels = SETTINGS.getExcludedAppsLabels();
-          Utils.runInFg(() -> updateExcludedAppsView(excludedApps, excludedAppsLabels));
+          Utils.runInFg(this, () -> updateExcludedAppsView(excludedApps, excludedAppsLabels));
           SETTINGS.releaseExcludedAppsLock();
         });
 
@@ -199,7 +199,7 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
         () -> {
           SETTINGS.getExcludedPermsLock();
           Set<String> excludedPerms = SETTINGS.getExcludedPerms();
-          Utils.runInFg(() -> updateExcludedPermsView(excludedPerms));
+          Utils.runInFg(this, () -> updateExcludedPermsView(excludedPerms));
           SETTINGS.releaseExcludedPermsLock();
         });
 
@@ -212,7 +212,7 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
           Set<String> extraAppOps = SETTINGS.getExtraAppOps();
 
           Utils.runInFg(
-              () -> updateExtraAppOpsView(appOpsList.toArray(new String[0]), extraAppOps));
+              this, () -> updateExtraAppOpsView(appOpsList.toArray(new String[0]), extraAppOps));
           SETTINGS.releaseExtraAppOpsLock();
         });
   }

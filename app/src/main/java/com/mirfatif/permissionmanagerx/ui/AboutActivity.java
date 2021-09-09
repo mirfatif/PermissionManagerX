@@ -141,29 +141,23 @@ public class AboutActivity extends BaseActivity {
       showDialog = true;
     }
 
-    boolean finalShowDialog = showDialog && !isFinishing();
-    Utils.runInFg(
-        () -> {
-          if (!isFinishing()) {
-            mB.checkUpdateSummary.setText(R.string.update_summary);
-          }
+    Utils.runInFg(this, () -> mB.checkUpdateSummary.setText(R.string.update_summary));
 
-          if (finalShowDialog) {
-            Builder builder =
-                new Builder(this)
-                    .setTitle(R.string.update)
-                    .setMessage(Utils.getString(messageResId) + ": " + appUpdate.getVersion())
-                    .setPositiveButton(
-                        R.string.download,
-                        (dialog, which) ->
-                            Utils.runInFg(() -> Utils.openWebUrl(this, appUpdate.getUpdateUrl())))
-                    .setNegativeButton(android.R.string.cancel, null);
-            AlertDialogFragment.show(this, builder.create(), "APP_UPDATE");
-          } else {
-            Utils.showToast(messageResId);
-          }
-          mCheckForUpdateInProgress = false;
-        });
+    if (showDialog) {
+      Builder builder =
+          new Builder(this)
+              .setTitle(R.string.update)
+              .setMessage(Utils.getString(messageResId) + ": " + appUpdate.getVersion())
+              .setPositiveButton(
+                  R.string.download,
+                  (dialog, which) -> Utils.openWebUrl(this, appUpdate.getUpdateUrl()))
+              .setNegativeButton(android.R.string.cancel, null);
+      Utils.runInFg(this, () -> AlertDialogFragment.show(this, builder.create(), "APP_UPDATE"));
+    } else {
+      Utils.showToast(messageResId);
+    }
+
+    mCheckForUpdateInProgress = false;
   }
 
   private void sendShareIntent() {
@@ -221,6 +215,7 @@ public class AboutActivity extends BaseActivity {
         int appOpsStatus = (int) obj;
 
         Utils.runInFg(
+            dialogFragment,
             () -> {
               adapter.submitList(permStatusList);
               b.opToDefModeV.setImageResource(getIcon(appOpsStatus, Commands.OP_TO_DEF_MODE_WORKS));
@@ -233,7 +228,7 @@ public class AboutActivity extends BaseActivity {
         return;
       }
     }
-    Utils.runInFg(dialogFragment::dismissAllowingStateLoss);
+    Utils.runInFg(dialogFragment, dialogFragment::dismissAllowingStateLoss);
   }
 
   private @DrawableRes int getIcon(int appOpStatus, int type) {

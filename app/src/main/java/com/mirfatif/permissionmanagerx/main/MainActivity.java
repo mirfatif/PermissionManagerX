@@ -45,8 +45,7 @@ import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.ui.HelpActivity;
 import com.mirfatif.permissionmanagerx.ui.PackageActivity;
 import com.mirfatif.permissionmanagerx.ui.PackageAdapter;
-import com.mirfatif.permissionmanagerx.ui.PackageAdapter.PkgClickListener;
-import com.mirfatif.permissionmanagerx.ui.PackageAdapter.PkgLongClickListener;
+import com.mirfatif.permissionmanagerx.ui.PackageAdapter.PkgAdapterCallback;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;
@@ -134,9 +133,9 @@ public class MainActivity extends BaseActivity {
     Future<?> checkRootAndAdbFuture =
         Utils.runInBg(
             () -> {
-              Utils.runInFg(() -> mB.rndProgTextV.setText(R.string.checking_root_access));
+              Utils.runInFg(this, () -> mB.rndProgTextV.setText(R.string.checking_root_access));
               Utils.checkRootIfEnabled();
-              Utils.runInFg(() -> mB.rndProgTextV.setText(R.string.checking_adb_access));
+              Utils.runInFg(this, () -> mB.rndProgTextV.setText(R.string.checking_adb_access));
               Utils.checkAdbIfEnabled();
             });
 
@@ -150,7 +149,7 @@ public class MainActivity extends BaseActivity {
               }
             });
 
-    mPackageAdapter = new PackageAdapter(getPkgClickListener(), getPkgLongClickListener());
+    mPackageAdapter = new PackageAdapter(new PkgAdapterCallbackImpl());
 
     // Set Adapter on RecyclerView
     mB.recyclerView.setAdapter(mPackageAdapter);
@@ -171,7 +170,7 @@ public class MainActivity extends BaseActivity {
         () -> {
           // Do not run through PackageParser unless privileged daemon is up
           if (waitForFuture(privDaemonFuture)) {
-            Utils.runInFg(this::setLiveDataObservers);
+            Utils.runInFg(this, this::setLiveDataObservers);
           }
         });
 
@@ -370,26 +369,27 @@ public class MainActivity extends BaseActivity {
     return true;
   }
 
-  private PkgClickListener getPkgClickListener() {
-    return pkg -> {
+  private class PkgAdapterCallbackImpl implements PkgAdapterCallback {
+
+    @Override
+    public void onClick(Package pkg) {
       if (SETTINGS.isDebug()) {
         Util.debugLog(TAG, "PkgClickListener: Package received: " + pkg.getLabel());
       }
       Intent intent = new Intent(App.getContext(), PackageActivity.class);
       intent.putExtra(EXTRA_PKG_POSITION, PKG_PARSER.getPackagePosition(pkg));
       startActivity(intent);
-    };
-  }
+    }
 
-  private PkgLongClickListener getPkgLongClickListener() {
-    return pkg -> {
+    @Override
+    public void onLongClick(Package pkg) {
       boolean canBeExcluded = SETTINGS.canBeExcluded(pkg);
       boolean canBeDisabled = pkg.isChangeable() && !pkg.getName().equals(getPackageName());
       if (!canBeExcluded && !canBeDisabled) {
         return;
       }
 
-      Builder builder = new Builder(this);
+      Builder builder = new Builder(MainActivity.this);
       builder.setPositiveButton(
           R.string.exclude,
           (dialogInterface, i) ->
@@ -431,8 +431,13 @@ public class MainActivity extends BaseActivity {
             dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(canBeDisabled);
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(canBeExcluded);
           });
-      AlertDialogFragment.show(this, dialog, "PKG_OPTIONS");
-    };
+      AlertDialogFragment.show(MainActivity.this, dialog, "PKG_OPTIONS");
+    }
+
+    @Override
+    public void runInFg(Runnable task) {
+      Utils.runInFg(MainActivity.this, task);
+    }
   }
 
   private void setLiveDataObservers() {
@@ -599,6 +604,7 @@ public class MainActivity extends BaseActivity {
 
   void showSnackBar(String text, int duration) {
     Utils.runInFg(
+        this,
         () -> {
           Snackbar snackBar = Snackbar.make(mB.movCont.progBarCont, text, duration);
           snackBar.setTextColor(getColor(R.color.dynamic_text_color));
@@ -765,10 +771,12 @@ public class MainActivity extends BaseActivity {
       queryText.append(pkg).append("|");
     }
 
+    SETTINGS.setDeepSearchEnabled(false);
+    SETTINGS.setCaseSensitiveSearch(true);
+
     Utils.runInFg(
+        this,
         () -> {
-          SETTINGS.setDeepSearchEnabled(false);
-          SETTINGS.setCaseSensitiveSearch(true);
           mSearchView.setIconified(false);
           mSearchView.setQuery(queryText.toString(), true);
           mSearchView.clearFocus();
@@ -788,7 +796,7 @@ public class MainActivity extends BaseActivity {
           Util.debugLog(TAG, "startPrivDaemon: daemon is dead");
         }
         if (SETTINGS.isRootGranted() || SETTINGS.isAdbConnected()) {
-          Utils.runInFg(() -> mB.rndProgTextV.setText(R.string.starting_daemon));
+          Utils.runInFg(this, () -> mB.rndProgTextV.setText(R.string.starting_daemon));
 
           Boolean res = DAEMON_HANDLER.startDaemon(preferRoot);
           if (res == null) {
@@ -799,7 +807,8 @@ public class MainActivity extends BaseActivity {
         } else {
           Log.w(TAG, "startPrivDaemon: Root access: unavailable, ADB shell: unavailable");
           if (SETTINGS.shouldRemindMissingPrivileges()) {
-            Utils.runInFg(() -> AlertDialogFragment.show(this, null, TAG_PRIVS_REQ_FOR_DAEMON));
+            Utils.runInFg(
+                this, () -> AlertDialogFragment.show(this, null, TAG_PRIVS_REQ_FOR_DAEMON));
           }
         }
       }
@@ -945,7 +954,7 @@ public class MainActivity extends BaseActivity {
           () -> {
             if (Utils.checkRoot()) {
               showSnackBar(getString(R.string.root_granted), 5000);
-              Utils.runInFg(() -> rootCheckBox.setChecked(true));
+              Utils.runInFg(this, () -> rootCheckBox.setChecked(true));
               restartPrivDaemon(true);
             } else {
               showSnackBar(getString(R.string.getting_root_fail_long), 10000);
@@ -969,12 +978,13 @@ public class MainActivity extends BaseActivity {
           () -> {
             if (Utils.checkAdb(true)) {
               showSnackBar(getString(R.string.connected_to_adb), 5000);
-              Utils.runInFg(() -> adbCheckBox.setChecked(true));
+              Utils.runInFg(this, () -> adbCheckBox.setChecked(true));
               restartPrivDaemon(false);
             } else {
-              Utils.runInFg(() -> AlertDialogFragment.show(this, null, TAG_ADB_CONNECT_FAILED));
+              Utils.runInFg(
+                  this, () -> AlertDialogFragment.show(this, null, TAG_ADB_CONNECT_FAILED));
             }
-            Utils.runInFg(() -> adbCheckBox.setEnabled(true));
+            Utils.runInFg(this, () -> adbCheckBox.setEnabled(true));
           });
       return true;
     }
@@ -1031,26 +1041,29 @@ public class MainActivity extends BaseActivity {
       }
     }
 
-    Utils.runInFg(() -> mB.getRoot().openDrawer(GravityCompat.START));
-    float f = new Random().nextBoolean() ? 360 : -360;
-    Utils.runInBg(() -> rotateMenuItemCheckbox(R.id.action_root, f));
-    Utils.runInBg(() -> rotateMenuItemCheckbox(R.id.action_adb, -1 * f));
+    float angle = new Random().nextBoolean() ? 360 : -360;
+    Utils.runInFg(
+        this,
+        () -> {
+          mB.getRoot().openDrawer(GravityCompat.START);
+          mB.navV.postDelayed(
+              () -> {
+                rotateMenuItemCheckbox(R.id.action_root, angle);
+                rotateMenuItemCheckbox(R.id.action_adb, -1 * angle);
+              },
+              1000);
+        });
   }
 
   private void rotateMenuItemCheckbox(int resId, float angle) {
-    SystemClock.sleep(1000);
-    if (mB != null) {
-      Utils.runInFg(
-          () ->
-              mB.navV
-                  .getMenu()
-                  .findItem(resId)
-                  .getActionView()
-                  .animate()
-                  .rotationBy(angle)
-                  .setDuration(1000)
-                  .start());
-    }
+    mB.navV
+        .getMenu()
+        .findItem(resId)
+        .getActionView()
+        .animate()
+        .rotationBy(angle)
+        .setDuration(1000)
+        .start();
   }
 
   //////////////////////////////////////////////////////////////////

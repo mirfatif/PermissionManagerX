@@ -61,6 +61,8 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.lifecycle.Lifecycle.State;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.preference.PreferenceManager;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.EncryptedSharedPreferences.PrefKeyEncryptionScheme;
@@ -115,6 +117,12 @@ public class Utils {
 
   public static void runInFg(Runnable runnable) {
     mMainThreadHandler.post(runnable);
+  }
+
+  public static void runInFg(LifecycleOwner lifecycleOwner, Runnable runnable) {
+    if (lifecycleOwner.getLifecycle().getCurrentState().isAtLeast(State.INITIALIZED)) {
+      runInFg(runnable);
+    }
   }
 
   private static final ExecutorService mExecutor = Executors.newCachedThreadPool();

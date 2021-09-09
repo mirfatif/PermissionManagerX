@@ -38,10 +38,7 @@ import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.Permission;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionEntity;
 import com.mirfatif.permissionmanagerx.prefs.FilterSettingsActivity;
-import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.PermClickListener;
-import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.PermClickListenerWithLoc;
-import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.PermLongClickListener;
-import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.PermSpinnerSelectListener;
+import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.PermAdapterCallback;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;
@@ -89,13 +86,7 @@ public class PackageActivity extends BaseActivity {
       actionBar.setTitle(mPackage.getLabel());
     }
 
-    mPermissionAdapter =
-        new PermissionAdapter(
-            this,
-            new SwitchToggleListener(),
-            new SpinnerSelectListener(),
-            getPermClickListener(),
-            getPermLongClickListener());
+    mPermissionAdapter = new PermissionAdapter(this, new PermAdapterCallbackImpl());
 
     // Set Adapter on RecyclerView
     mB.recyclerV.setAdapter(mPermissionAdapter);
@@ -115,7 +106,7 @@ public class PackageActivity extends BaseActivity {
 
   private boolean isPackageNull() {
     if (mPackage == null) {
-      Utils.runInFg(this::finishAfterTransition);
+      Utils.runInFg(this, this::finishAfterTransition);
       return true;
     }
     return false;
@@ -155,9 +146,9 @@ public class PackageActivity extends BaseActivity {
   @SuppressLint("NotifyDataSetChanged")
   private void updateSpinnerSelection(Integer position) {
     if (position != null) {
-      Utils.runInFg(() -> mPermissionAdapter.notifyItemChanged(position));
+      Utils.runInFg(this, () -> mPermissionAdapter.notifyItemChanged(position));
     } else {
-      Utils.runInFg(() -> mPermissionAdapter.notifyDataSetChanged());
+      Utils.runInFg(this, () -> mPermissionAdapter.notifyDataSetChanged());
     }
   }
 
@@ -167,120 +158,12 @@ public class PackageActivity extends BaseActivity {
     if (STOP_REFRESH_LOCK.isLocked()) {
       return;
     }
-    Utils.runInFg(() -> mB.refreshLayout.setRefreshing(false));
+    Utils.runInFg(this, () -> mB.refreshLayout.setRefreshing(false));
   }
 
   private void holdRefreshLock() {
     STOP_REFRESH_LOCK.lock();
-    Utils.runInFg(() -> mB.refreshLayout.setRefreshing(true));
-  }
-
-  private PermClickListenerWithLoc getPermClickListener() {
-    return (perm, yLocation) -> {
-      String permName = perm.getPermNameString();
-      String protLevel = perm.getProtLevelString();
-
-      PermDetailsDialogBinding b = PermDetailsDialogBinding.inflate(getLayoutInflater());
-
-      b.permNameV.setText(permName);
-      b.protLevelV.setText(protLevel);
-      if (perm.getDescription() != null) {
-        b.permDescV.setText(perm.getDescription());
-        b.permDescV.setVisibility(View.VISIBLE);
-      }
-
-      AlertDialog dialog = new Builder(this).setView(b.getRoot()).create();
-
-      Window dialogWindow = dialog.getWindow();
-      if (dialogWindow != null) {
-        LayoutParams layoutParams = dialogWindow.getAttributes();
-        layoutParams.gravity = Gravity.TOP;
-        layoutParams.y = yLocation;
-      }
-
-      AlertDialogFragment.show(this, dialog, "PERM_DETAILS");
-    };
-  }
-
-  private PermLongClickListener getPermLongClickListener() {
-    return permission -> {
-      String permState = getPermState(permission);
-      Builder builder = new Builder(this);
-      builder.setPositiveButton(
-          R.string.exclude,
-          (dialogInterface, i) ->
-              Utils.runInBg(
-                  () -> {
-                    SETTINGS.addPermToExcludedPerms(permission.getName());
-                    updatePackage();
-
-                    // other packages are also affected
-                    PKG_PARSER.updatePackagesList();
-                  }));
-      builder.setNegativeButton(android.R.string.cancel, null);
-
-      boolean isReferenced = permission.isReferenced() != null && permission.isReferenced();
-      builder.setNeutralButton(
-          (isReferenced ? R.string.clear_reference : R.string.set_reference),
-          (dialog, which) -> {
-            if (isReferenced) {
-              Utils.runInBg(
-                  () -> {
-                    SETTINGS.getPermDb().deletePermission(mPackage.getName(), permission.getName());
-                    PKG_PARSER.updatePermReferences(mPackage.getName(), permission.getName(), null);
-                    updatePackage();
-                    mPkgActivityFlavor.pkgRefChanged(mPackage);
-                  });
-              return;
-            }
-            PermissionEntity entity = new PermissionEntity();
-            entity.isAppOps = permission.isAppOps();
-            entity.permName = permission.getName();
-            entity.pkgName = mPackage.getName();
-            entity.state = permState;
-            Utils.runInBg(
-                () -> {
-                  int id = SETTINGS.getPermDb().getId(entity.pkgName, entity.permName);
-                  if (id > 0) {
-                    entity.id = id;
-                  }
-                  SETTINGS.getPermDb().insertAll(entity);
-                  PKG_PARSER.updatePermReferences(
-                      mPackage.getName(), permission.getName(), permState);
-                  updatePackage();
-                  mPkgActivityFlavor.pkgRefChanged(mPackage);
-                });
-          });
-
-      // Set message, create and show the AlertDialog
-      ActivityPkgPermTitleBinding b = ActivityPkgPermTitleBinding.inflate(getLayoutInflater());
-      b.getRoot().setText(permission.getName());
-      builder.setCustomTitle(b.getRoot());
-
-      String message;
-      if (permission.isExtraAppOp()) {
-        message = getString(R.string.extra_ops_cant_be_excluded);
-      } else {
-        message = getString(R.string.exclude_perm_from_list);
-      }
-      if (permission.isChangeable()) {
-        if (isReferenced) {
-          message += getString(R.string.clear_perm_state_reference, permState);
-        } else {
-          message += getString(R.string.set_perm_state_reference, permState);
-        }
-      }
-      builder.setMessage(Utils.htmlToString(message));
-
-      AlertDialog dialog = builder.create();
-      dialog.setOnShowListener(
-          d -> {
-            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(permission.isChangeable());
-            boolean canBeExcluded = SETTINGS.canBeExcluded(permission);
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(canBeExcluded);
-          });
-      AlertDialogFragment.show(this, dialog, "PERM_OPTIONS");
-    };
+    Utils.runInFg(this, () -> mB.refreshLayout.setRefreshing(true));
   }
 
   private String getPermState(Permission permission) {
@@ -320,7 +203,7 @@ public class PackageActivity extends BaseActivity {
     PKG_PARSER.updatePackage(mPackage);
     if (mPackage == null || mPackage.isRemoved()) {
       // Package is excluded due to changes made by user e.g. uninstalled or ref states changed
-      Utils.runInFg(this::finishAfterTransition);
+      Utils.runInFg(this, this::finishAfterTransition);
     } else {
       // The same Package Object is updated, but with new Permission Objects
       updatePermissionsList();
@@ -333,7 +216,7 @@ public class PackageActivity extends BaseActivity {
       mPkgActivityFlavor.sortPermsList(mPermissionsList);
     }
     submitPermsList();
-    Utils.runInFg(this::checkEmptyPermissionsList);
+    Utils.runInFg(this, this::checkEmptyPermissionsList);
     stopRefreshing();
   }
 
@@ -434,7 +317,7 @@ public class PackageActivity extends BaseActivity {
 
   private void submitList(List<Permission> permList) {
     if (mPermissionAdapter != null) {
-      Utils.runInFg(() -> mPermissionAdapter.submitList(new ArrayList<>(permList)));
+      Utils.runInFg(this, () -> mPermissionAdapter.submitList(new ArrayList<>(permList)));
     }
   }
 
@@ -654,20 +537,186 @@ public class PackageActivity extends BaseActivity {
     super.onBackPressed();
   }
 
-  private class SwitchToggleListener implements PermClickListener {
+  private static final String CLASS = PackageActivity.class.getName();
+  private static final String TAG_GRANT_ROOT_OR_ADB = CLASS + ".GRANT_ROOT_OR_ADB";
+  private static final String TAG_RESET_APP_OPS_CONFIRM = CLASS + ".RESET_APP_OPS_CONFIRM";
+  private static final String TAG_SET_REF_CONFIRM = CLASS + ".SET_REF_CONFIRM";
+  private static final String TAG_CLEAR_REF_CONFIRM = CLASS + ".CLEAR_REF_CONFIRM";
+
+  @Override
+  public AlertDialog createDialog(String tag, AlertDialogFragment dialogFragment) {
+    if (TAG_GRANT_ROOT_OR_ADB.equals(tag)) {
+      return new Builder(this)
+          .setPositiveButton(
+              android.R.string.ok,
+              (d, which) -> {
+                startActivity(
+                    new Intent(App.getContext(), MainActivity.class)
+                        .setAction(MainActivity.ACTION_SHOW_DRAWER)
+                        .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                finishAfterTransition();
+              })
+          .setNegativeButton(android.R.string.cancel, null)
+          .setTitle(R.string.privileges)
+          .setMessage(R.string.grant_root_or_adb)
+          .create();
+    }
+
+    if (TAG_RESET_APP_OPS_CONFIRM.equals(tag)) {
+      if (isPackageNull()) {
+        return null;
+      }
+      return new Builder(this)
+          .setPositiveButton(R.string.yes, (d, which) -> Utils.runInBg(this::resetAppOps))
+          .setNegativeButton(R.string.no, null)
+          .setTitle(mPackage.getLabel())
+          .setMessage(R.string.reset_app_ops_confirmation)
+          .create();
+    }
+
+    if (TAG_SET_REF_CONFIRM.equals(tag)) {
+      if (isPackageNull()) {
+        return null;
+      }
+      return new Builder(this)
+          .setPositiveButton(R.string.yes, (d, which) -> Utils.runInBg(this::setAllReferences))
+          .setNegativeButton(R.string.no, null)
+          .setTitle(mPackage.getLabel())
+          .setMessage(R.string.set_references_confirmation)
+          .create();
+    }
+
+    if (TAG_CLEAR_REF_CONFIRM.equals(tag)) {
+      if (isPackageNull()) {
+        return null;
+      }
+      return new Builder(this)
+          .setPositiveButton(R.string.yes, (d, which) -> Utils.runInBg(this::clearReferences))
+          .setNegativeButton(R.string.no, null)
+          .setTitle(mPackage.getLabel())
+          .setMessage(R.string.clear_references_confirmation)
+          .create();
+    }
+
+    return super.createDialog(tag, dialogFragment);
+  }
+
+  private class PermAdapterCallbackImpl implements PermAdapterCallback {
 
     @Override
-    public void onClick(Permission perm) {
+    public void onPermClick(Permission perm, Integer yLocation) {
+      String permName = perm.getPermNameString();
+      String protLevel = perm.getProtLevelString();
+
+      PermDetailsDialogBinding b = PermDetailsDialogBinding.inflate(getLayoutInflater());
+
+      b.permNameV.setText(permName);
+      b.protLevelV.setText(protLevel);
+      if (perm.getDescription() != null) {
+        b.permDescV.setText(perm.getDescription());
+        b.permDescV.setVisibility(View.VISIBLE);
+      }
+
+      AlertDialog dialog = new Builder(PackageActivity.this).setView(b.getRoot()).create();
+
+      Window dialogWindow = dialog.getWindow();
+      if (dialogWindow != null) {
+        LayoutParams layoutParams = dialogWindow.getAttributes();
+        layoutParams.gravity = Gravity.TOP;
+        layoutParams.y = yLocation;
+      }
+
+      AlertDialogFragment.show(PackageActivity.this, dialog, "PERM_DETAILS");
+    }
+
+    @Override
+    public void onPermLongClick(Permission perm) {
+      String permState = getPermState(perm);
+      Builder builder = new Builder(PackageActivity.this);
+      builder.setPositiveButton(
+          R.string.exclude,
+          (dialogInterface, i) ->
+              Utils.runInBg(
+                  () -> {
+                    SETTINGS.addPermToExcludedPerms(perm.getName());
+                    updatePackage();
+
+                    // other packages are also affected
+                    PKG_PARSER.updatePackagesList();
+                  }));
+      builder.setNegativeButton(android.R.string.cancel, null);
+
+      boolean isReferenced = perm.isReferenced() != null && perm.isReferenced();
+      builder.setNeutralButton(
+          (isReferenced ? R.string.clear_reference : R.string.set_reference),
+          (dialog, which) -> {
+            if (isReferenced) {
+              Utils.runInBg(
+                  () -> {
+                    SETTINGS.getPermDb().deletePermission(mPackage.getName(), perm.getName());
+                    PKG_PARSER.updatePermReferences(mPackage.getName(), perm.getName(), null);
+                    updatePackage();
+                    mPkgActivityFlavor.pkgRefChanged(mPackage);
+                  });
+              return;
+            }
+            PermissionEntity entity = new PermissionEntity();
+            entity.isAppOps = perm.isAppOps();
+            entity.permName = perm.getName();
+            entity.pkgName = mPackage.getName();
+            entity.state = permState;
+            Utils.runInBg(
+                () -> {
+                  int id = SETTINGS.getPermDb().getId(entity.pkgName, entity.permName);
+                  if (id > 0) {
+                    entity.id = id;
+                  }
+                  SETTINGS.getPermDb().insertAll(entity);
+                  PKG_PARSER.updatePermReferences(mPackage.getName(), perm.getName(), permState);
+                  updatePackage();
+                  mPkgActivityFlavor.pkgRefChanged(mPackage);
+                });
+          });
+
+      // Set message, create and show the AlertDialog
+      ActivityPkgPermTitleBinding b = ActivityPkgPermTitleBinding.inflate(getLayoutInflater());
+      b.getRoot().setText(perm.getName());
+      builder.setCustomTitle(b.getRoot());
+
+      String message;
+      if (perm.isExtraAppOp()) {
+        message = getString(R.string.extra_ops_cant_be_excluded);
+      } else {
+        message = getString(R.string.exclude_perm_from_list);
+      }
+      if (perm.isChangeable()) {
+        if (isReferenced) {
+          message += getString(R.string.clear_perm_state_reference, permState);
+        } else {
+          message += getString(R.string.set_perm_state_reference, permState);
+        }
+      }
+      builder.setMessage(Utils.htmlToString(message));
+
+      AlertDialog dialog = builder.create();
+      dialog.setOnShowListener(
+          d -> {
+            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(perm.isChangeable());
+            boolean canBeExcluded = SETTINGS.canBeExcluded(perm);
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(canBeExcluded);
+          });
+      AlertDialogFragment.show(PackageActivity.this, dialog, "PERM_OPTIONS");
+    }
+
+    @Override
+    public void onPermSwitchClick(Permission perm) {
       if (!isPackageNull() && checkPrivileges() && mPkgActivityFlavor != null) {
         mPkgActivityFlavor.onPermClick(perm);
       }
     }
-  }
-
-  private class SpinnerSelectListener implements PermSpinnerSelectListener {
 
     @Override
-    public void onSelect(Permission perm, int selectedValue) {
+    public void onSpinnerItemSelect(Permission perm, int selectedValue) {
       if (mPackage == null || mPermissionAdapter == null) {
         finishAfterTransition();
         return;
@@ -749,69 +798,10 @@ public class PackageActivity extends BaseActivity {
                 }
               });
     }
-  }
 
-  private static final String CLASS = PackageActivity.class.getName();
-  private static final String TAG_GRANT_ROOT_OR_ADB = CLASS + ".GRANT_ROOT_OR_ADB";
-  private static final String TAG_RESET_APP_OPS_CONFIRM = CLASS + ".RESET_APP_OPS_CONFIRM";
-  private static final String TAG_SET_REF_CONFIRM = CLASS + ".SET_REF_CONFIRM";
-  private static final String TAG_CLEAR_REF_CONFIRM = CLASS + ".CLEAR_REF_CONFIRM";
-
-  @Override
-  public AlertDialog createDialog(String tag, AlertDialogFragment dialogFragment) {
-    if (TAG_GRANT_ROOT_OR_ADB.equals(tag)) {
-      return new Builder(this)
-          .setPositiveButton(
-              android.R.string.ok,
-              (d, which) -> {
-                startActivity(
-                    new Intent(App.getContext(), MainActivity.class)
-                        .setAction(MainActivity.ACTION_SHOW_DRAWER)
-                        .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
-                finishAfterTransition();
-              })
-          .setNegativeButton(android.R.string.cancel, null)
-          .setTitle(R.string.privileges)
-          .setMessage(R.string.grant_root_or_adb)
-          .create();
+    @Override
+    public void runInFg(Runnable task) {
+      Utils.runInFg(PackageActivity.this, task);
     }
-
-    if (TAG_RESET_APP_OPS_CONFIRM.equals(tag)) {
-      if (isPackageNull()) {
-        return null;
-      }
-      return new Builder(this)
-          .setPositiveButton(R.string.yes, (d, which) -> Utils.runInBg(this::resetAppOps))
-          .setNegativeButton(R.string.no, null)
-          .setTitle(mPackage.getLabel())
-          .setMessage(R.string.reset_app_ops_confirmation)
-          .create();
-    }
-
-    if (TAG_SET_REF_CONFIRM.equals(tag)) {
-      if (isPackageNull()) {
-        return null;
-      }
-      return new Builder(this)
-          .setPositiveButton(R.string.yes, (d, which) -> Utils.runInBg(this::setAllReferences))
-          .setNegativeButton(R.string.no, null)
-          .setTitle(mPackage.getLabel())
-          .setMessage(R.string.set_references_confirmation)
-          .create();
-    }
-
-    if (TAG_CLEAR_REF_CONFIRM.equals(tag)) {
-      if (isPackageNull()) {
-        return null;
-      }
-      return new Builder(this)
-          .setPositiveButton(R.string.yes, (d, which) -> Utils.runInBg(this::clearReferences))
-          .setNegativeButton(R.string.no, null)
-          .setTitle(mPackage.getLabel())
-          .setMessage(R.string.clear_references_confirmation)
-          .create();
-    }
-
-    return super.createDialog(tag, dialogFragment);
   }
 }

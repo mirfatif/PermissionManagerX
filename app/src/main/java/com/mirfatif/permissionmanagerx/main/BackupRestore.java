@@ -506,6 +506,7 @@ public class BackupRestore {
       return;
     }
     Utils.runInFg(
+        mA,
         () -> {
           mA.getRoundProgressTextView()
               .setText(
@@ -521,7 +522,7 @@ public class BackupRestore {
       Log.e(TAG, (isBackup ? "Backup" : "Restore") + " failed");
       return;
     }
-    Utils.runInFg(() -> mA.getRoundProgressContainer().setVisibility(View.GONE));
+    Utils.runInFg(mA, () -> mA.getRoundProgressContainer().setVisibility(View.GONE));
     showFinalDialog(
         isBackup, new SpannableStringBuilder(getString(R.string.backup_restore_failed)));
   }
@@ -532,7 +533,7 @@ public class BackupRestore {
       Log.i(TAG, (isBackup ? "Backup" : "Restore") + " succeeded");
       return;
     }
-    Utils.runInFg(() -> mA.getRoundProgressContainer().setVisibility(View.GONE));
+    Utils.runInFg(mA, () -> mA.getRoundProgressContainer().setVisibility(View.GONE));
     if (!isBackup) {
       SETTINGS.populateExcludedAppsList(false);
       SETTINGS.populateExcludedPermsList();
@@ -568,6 +569,7 @@ public class BackupRestore {
             .setMessage(message);
 
     Utils.runInFg(
+        mA,
         () -> {
           AlertDialogFragment dialog =
               AlertDialogFragment.show(mA, builder.create(), "BACKUP_RESTORE");

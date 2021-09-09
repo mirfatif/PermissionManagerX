@@ -255,7 +255,7 @@ public enum PackageParser {
 
     // update packages list when a Package's or Permission's state is changed so that RecyclerView
     // is updated on return to MainActivity
-    Utils.runInFg(() -> mChangedPackage.setValue(pkg));
+    mChangedPackage.postValue(pkg);
 
     // In case of search, also update temporary Package and Perms lists
     if (SETTINGS.isSearching()) {
@@ -329,7 +329,7 @@ public enum PackageParser {
     if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "postLiveData: posting " + packageList.size() + " packages");
     }
-    Utils.runInFg(() -> mPackagesListLive.setValue(new ArrayList<>(packageList)));
+    mPackagesListLive.postValue(new ArrayList<>(packageList));
     packagesListUpdateTimeStamp = System.currentTimeMillis();
   }
 
@@ -361,20 +361,20 @@ public enum PackageParser {
     }
 
     if (isMax) {
-      Utils.runInFg(() -> mProgressMax.setValue(value));
+      mProgressMax.postValue(value);
       PKG_PARSER_FLAVOR.setProgress(true, value);
       return;
     }
 
     if (isFinal) {
-      Utils.runInFg(() -> mProgressNow.setValue(value));
+      mProgressNow.postValue(value);
       PKG_PARSER_FLAVOR.setProgress(false, value);
       return;
     }
 
     // set progress updates, but not too frequent
     if ((System.currentTimeMillis() - mLastProgressTimeStamp) > 100) {
-      Utils.runInFg(() -> mProgressNow.setValue(value));
+      mProgressNow.postValue(value);
       PKG_PARSER_FLAVOR.setProgress(false, value);
       mLastProgressTimeStamp = System.currentTimeMillis();
     }

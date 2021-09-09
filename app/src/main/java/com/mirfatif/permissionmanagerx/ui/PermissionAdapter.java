@@ -32,24 +32,13 @@ import java.util.List;
 
 public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder> {
 
-  private final PermClickListener mSwitchToggleListener;
-  private final PermSpinnerSelectListener mSpinnerSelectListener;
-  private final PermClickListenerWithLoc mPermClickListener;
-  private final PermLongClickListener mPermLongClickListener;
+  private final PermAdapterCallback mCallback;
   private final ArrayAdapter<String> mAppOpModesAdapter;
   private final ArrayAdapter<String> mAppOpModesBgAdapter;
 
-  PermissionAdapter(
-      Context context,
-      PermClickListener switchToggleListener,
-      PermSpinnerSelectListener spinnerSelectListener,
-      PermClickListenerWithLoc permClickListener,
-      PermLongClickListener permLongClickListener) {
-    super(new DiffUtilItemCallBack());
-    mSwitchToggleListener = switchToggleListener;
-    mSpinnerSelectListener = spinnerSelectListener;
-    mPermClickListener = permClickListener;
-    mPermLongClickListener = permLongClickListener;
+  PermissionAdapter(Context context, PermAdapterCallback callback) {
+    super(new DiffUtilItemCallBack(), callback::runInFg);
+    mCallback = callback;
 
     mAppOpModesAdapter = new AppOpModesAdapter(context, false);
     mAppOpModesBgAdapter = new AppOpModesAdapter(context, true);
@@ -167,7 +156,7 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
           mB.permStateSwitch.setOnClickListener(
               v -> {
                 mB.permStateSwitch.setChecked(perm.isGranted()); // Do not change the state here
-                mSwitchToggleListener.onClick(perm);
+                mCallback.onPermSwitchClick(perm);
               });
           mB.permStateSwitch.setVisibility(View.VISIBLE);
         }
@@ -181,7 +170,7 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
       if (pos != RecyclerView.NO_POSITION) {
         int[] location = new int[2];
         v.getLocationInWindow(location);
-        mPermClickListener.onClick(getItem(pos), location[1] - 2 * v.getHeight());
+        mCallback.onPermClick(getItem(pos), location[1] - 2 * v.getHeight());
       }
     }
 
@@ -189,7 +178,7 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
     public boolean onLongClick(View v) {
       int pos = getBindingAdapterPosition();
       if (pos != RecyclerView.NO_POSITION) {
-        mPermLongClickListener.onLongClick(getItem(pos));
+        mCallback.onPermLongClick(getItem(pos));
       }
       return true;
     }
@@ -312,7 +301,7 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
       // "position" is the AppOps mode int value here
       if (permission.getAppOpsMode() != position) {
         permission.setAppOpsMode(position);
-        mSpinnerSelectListener.onSelect(permission, position);
+        mCallback.onSpinnerItemSelect(permission, position);
       }
     }
 
@@ -332,19 +321,16 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
     }
   }
 
-  interface PermClickListener {
-    void onClick(Permission permission);
-  }
+  public interface PermAdapterCallback {
 
-  interface PermClickListenerWithLoc {
-    void onClick(Permission permission, int yLocation);
-  }
+    void onPermClick(Permission perm, Integer yLocation);
 
-  interface PermSpinnerSelectListener {
-    void onSelect(Permission permission, int selectedValue);
-  }
+    void onPermLongClick(Permission perm);
 
-  interface PermLongClickListener {
-    void onLongClick(Permission permission);
+    void onPermSwitchClick(Permission perm);
+
+    void onSpinnerItemSelect(Permission perm, int selectedValue);
+
+    void runInFg(Runnable task);
   }
 }

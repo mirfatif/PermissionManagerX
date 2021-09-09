@@ -235,6 +235,7 @@ class AdvancedSettings {
     Log.i(TAG, "Restarting daemon");
     mA.restartPrivDaemon(false);
     Utils.runInFg(
+        mA,
         () -> {
           mA.showSnackBar(getString(R.string.connected_to_adb), 5000);
           mA.setNavigationMenu(); // To check Adb CheckBox
