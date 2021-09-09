@@ -4,6 +4,7 @@ import static com.mirfatif.permissionmanagerx.parser.AppOpsParser.APP_OPS_PARSER
 import static com.mirfatif.permissionmanagerx.parser.PkgParserFlavor.PKG_PARSER_FLAVOR;
 import static com.mirfatif.permissionmanagerx.util.Utils.getString;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
@@ -244,18 +245,24 @@ public enum MySettings {
     Utils.runInBg(() -> savePref(appLaunchCountId, getIntPref(appLaunchCountId) + 1));
   }
 
+  @SuppressLint("ApplySharedPref")
   public boolean shouldAskToSendCrashReport() {
     int crashCount = getIntPref(R.string.pref_main_crash_report_count_enc_key);
     long lastTS = getLongPref(R.string.pref_main_crash_report_ts_enc_key);
     long currTime = System.currentTimeMillis();
 
-    if (crashCount >= 5 || (currTime - lastTS) >= TimeUnit.DAYS.toMillis(1)) {
-      savePref(R.string.pref_main_crash_report_ts_enc_key, currTime);
-      savePref(R.string.pref_main_crash_report_count_enc_key, 1);
-      return true;
+    Editor prefEditor = Utils.getEncPrefs().edit();
+    try {
+      if (crashCount >= 5 || (currTime - lastTS) >= TimeUnit.DAYS.toMillis(1)) {
+        prefEditor.putLong(getString(R.string.pref_main_crash_report_ts_enc_key), currTime);
+        prefEditor.putInt(getString(R.string.pref_main_crash_report_count_enc_key), 1);
+        return true;
+      }
+      prefEditor.putInt(getString(R.string.pref_main_crash_report_count_enc_key), crashCount + 1);
+    } finally {
+      prefEditor.commit();
     }
 
-    savePref(R.string.pref_main_crash_report_count_enc_key, crashCount + 1);
     return false;
   }
 
@@ -822,6 +829,7 @@ public enum MySettings {
   }
 
   private static class Pair {
+
     String packageLabel;
     String packageName;
 
