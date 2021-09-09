@@ -1064,6 +1064,14 @@ public class MainActivity extends BaseActivity {
         .start();
   }
 
+  @SuppressWarnings("UnusedDeclaration")
+  void resetDrawerIcon() {
+    ActionBar actionBar = getSupportActionBar();
+    if (actionBar != null && mDrawerToggle != null) {
+      actionBar.setHomeAsUpIndicator(mDrawerToggle.getDrawerArrowDrawable());
+    }
+  }
+
   //////////////////////////////////////////////////////////////////
   ////////////////////////// FOR SUBCLASSES ////////////////////////
   //////////////////////////////////////////////////////////////////

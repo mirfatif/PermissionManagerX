@@ -140,8 +140,8 @@
   <bool name="pref_settings_quick_scan_default">false</bool>
   <string name="pref_settings_special_search_key" translatable="false">pref_settings_special_search</string>
   <bool name="pref_settings_special_search_default">true</bool>
-  <string name="pref_settings_special_search_title" maxLength="20">Special search characters</string>
-  <string name="pref_settings_special_search_summary">Use AND (&amp;), OR (|) and NOT (!) characters
+  <string name="pref_settings_special_search_title" maxLength="20">Complex search</string>
+  <string name="pref_settings_special_search_summary">Use AND (&amp;), OR (|) and NOT (!) operators
     in search to combine queries
   </string>
   <string name="pref_settings_locale_title" maxLength="20">Application language</string>
