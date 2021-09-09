@@ -1,6 +1,8 @@
 package com.mirfatif.permissionmanagerx.prefs;
 
-import android.content.SharedPreferences;
+import static com.mirfatif.permissionmanagerx.parser.PackageParser.PKG_PARSER;
+import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
+
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -13,7 +15,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.databinding.ActivityFragmentContainerBinding;
-import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
@@ -23,7 +24,6 @@ public class FilterSettingsActivity extends BaseActivity {
 
   private static final String TAG = "FilterSettingsActivity";
 
-  private final MySettings mMySettings = MySettings.getInstance();
   private ActivityFragmentContainerBinding mB;
   private FilterSettingsFragment mFilterSettingsFrag;
 
@@ -43,7 +43,7 @@ public class FilterSettingsActivity extends BaseActivity {
 
     mB.excFiltersMasterSwitch.setVisibility(View.VISIBLE);
 
-    if (mMySettings.getExcFiltersEnabled()) {
+    if (SETTINGS.getExcFiltersEnabled()) {
       mB.excFiltersMasterSwitch.setChecked(true);
       addFrag(savedInstanceState);
     }
@@ -53,14 +53,14 @@ public class FilterSettingsActivity extends BaseActivity {
         v -> {
           if (mB.excFiltersMasterSwitch.isChecked()) {
             // This must be set before setting fragment. Or the whole settings are cleared.
-            mMySettings.setExcFiltersEnabled(mB.excFiltersMasterSwitch.isChecked());
+            SETTINGS.setExcFiltersEnabled(mB.excFiltersMasterSwitch.isChecked());
             addFrag(savedInstanceState);
           } else {
             removeFrag();
             // This must be set after removing fragment. Or the whole settings are cleared.
-            mMySettings.setExcFiltersEnabled(mB.excFiltersMasterSwitch.isChecked());
+            SETTINGS.setExcFiltersEnabled(mB.excFiltersMasterSwitch.isChecked());
           }
-          PackageParser.getInstance().updatePackagesList();
+          PKG_PARSER.updatePackagesList();
         });
   }
 
@@ -90,18 +90,16 @@ public class FilterSettingsActivity extends BaseActivity {
     if (VERSION.SDK_INT >= VERSION_CODES.P) {
       menu.setGroupDividerEnabled(true);
     }
-    menu.findItem(R.id.action_clear_excluded_apps)
-        .setEnabled(mMySettings.getExcludedAppsCount() != 0);
+    menu.findItem(R.id.action_clear_excluded_apps).setEnabled(SETTINGS.getExcludedAppsCount() != 0);
     menu.findItem(R.id.action_clear_excluded_perms)
-        .setEnabled(mMySettings.getExcludedPermsCount() != 0);
-    menu.findItem(R.id.action_clear_extra_app_ops)
-        .setEnabled(mMySettings.getExtraAppOpsCount() != 0);
+        .setEnabled(SETTINGS.getExcludedPermsCount() != 0);
+    menu.findItem(R.id.action_clear_extra_app_ops).setEnabled(SETTINGS.getExtraAppOpsCount() != 0);
     return true;
   }
 
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
-    boolean filtersEnabled = mMySettings.getExcFiltersEnabled();
+    boolean filtersEnabled = SETTINGS.getExcFiltersEnabled();
     menu.findItem(R.id.action_reset_defaults).setVisible(filtersEnabled);
     menu.findItem(R.id.action_clear_excluded_apps).setVisible(filtersEnabled);
     menu.findItem(R.id.action_clear_excluded_perms).setVisible(filtersEnabled);
@@ -109,13 +107,13 @@ public class FilterSettingsActivity extends BaseActivity {
     return true;
   }
 
-  /**
-   * After changes to preferences here, {@link #invalidateOptionsMenu()} is called after lists are
-   * updated in {@link FilterSettingsFragment#onSharedPreferenceChanged(SharedPreferences, String)}
-   */
+  /*
+   After changes to preferences here, invalidateOptionsMenu() is called after lists are
+   updated in FilterSettingsFragment#onSharedPreferenceChanged().
+  */
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    if (mMySettings.isDebug()) {
+    if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "onOptionsItemSelected: " + item.getTitle());
     }
 
@@ -156,7 +154,7 @@ public class FilterSettingsActivity extends BaseActivity {
               R.string.yes,
               (dialogInterface, i) -> {
                 // Clear existing values
-                Utils.runInBg(mMySettings::resetToDefaults);
+                Utils.runInBg(SETTINGS::resetToDefaults);
               })
           .setNegativeButton(R.string.no, null)
           .setTitle(R.string.filter_settings)
@@ -166,8 +164,7 @@ public class FilterSettingsActivity extends BaseActivity {
 
     if (TAG_CLEAR_EXCLUDED_APPS.equals(tag)) {
       return new Builder(this)
-          .setPositiveButton(
-              R.string.yes, (dialogInterface, i) -> mMySettings.clearExcludedAppsList())
+          .setPositiveButton(R.string.yes, (dialogInterface, i) -> SETTINGS.clearExcludedAppsList())
           .setNegativeButton(R.string.no, null)
           .setTitle(R.string.filter_settings)
           .setMessage(R.string.filter_settings_clear_apps_confirmation)
@@ -177,7 +174,7 @@ public class FilterSettingsActivity extends BaseActivity {
     if (TAG_CLEAR_EXCLUDED_PERMS.equals(tag)) {
       return new Builder(this)
           .setPositiveButton(
-              R.string.yes, (dialogInterface, i) -> mMySettings.clearExcludedPermsList())
+              R.string.yes, (dialogInterface, i) -> SETTINGS.clearExcludedPermsList())
           .setNegativeButton(R.string.no, null)
           .setTitle(R.string.filter_settings)
           .setMessage(R.string.filter_settings_clear_perms_confirmation)
@@ -186,8 +183,7 @@ public class FilterSettingsActivity extends BaseActivity {
 
     if (TAG_CLEAR_EXTRA_APP_OPS.equals(tag)) {
       return new Builder(this)
-          .setPositiveButton(
-              R.string.yes, (dialogInterface, i) -> mMySettings.clearExtraAppOpsList())
+          .setPositiveButton(R.string.yes, (dialogInterface, i) -> SETTINGS.clearExtraAppOpsList())
           .setNegativeButton(R.string.no, null)
           .setTitle(R.string.filter_settings)
           .setMessage(R.string.filter_settings_clear_app_ops_confirmation)

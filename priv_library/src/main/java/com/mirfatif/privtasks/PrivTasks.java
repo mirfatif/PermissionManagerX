@@ -20,8 +20,7 @@ public class PrivTasks {
 
   private static final String TAG = "PrivTaks";
 
-  private final HiddenAPIsCallbackImpl mHiddenAPIsCallbackImpl = new HiddenAPIsCallbackImpl();
-  private final HiddenAPIs mHiddenAPIs = HiddenAPIsImpl.getInstance(mHiddenAPIsCallbackImpl);
+  private final HiddenAPIsImpl mHiddenAPIs = new HiddenAPIsImpl(new HiddenAPIsCallbackImpl());
   private final PrivTasksCallback mCallback;
   private final String mAppId;
   private final int mAppUserId;
@@ -418,6 +417,11 @@ public class PrivTasks {
   //////////////////////////////////////////////////////////////////
   ///////////////////////// COMMON METHODS /////////////////////////
   //////////////////////////////////////////////////////////////////
+
+  @SuppressWarnings("UnusedDeclaration")
+  public HiddenAPIsImpl getHiddenAPIs() {
+    return mHiddenAPIs;
+  }
 
   public boolean canUseIAppOpsService() {
     return mHiddenAPIs.canUseIAppOpsService();

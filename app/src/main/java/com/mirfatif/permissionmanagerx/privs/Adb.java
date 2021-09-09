@@ -1,5 +1,7 @@
 package com.mirfatif.permissionmanagerx.privs;
 
+import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
+
 import android.util.Base64;
 import android.util.Log;
 import com.cgutman.adblib.AdbAuthenticationFailedException;
@@ -9,7 +11,6 @@ import com.cgutman.adblib.AdbCrypto;
 import com.cgutman.adblib.AdbStream;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
-import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import java.io.File;
 import java.io.IOException;
@@ -63,7 +64,7 @@ public class Adb {
         adbCrypto.saveAdbKeyPair(pvtKey, pubKey);
       }
 
-      adbSocket = new Socket("127.0.0.1", MySettings.getInstance().getAdbPort());
+      adbSocket = new Socket("127.0.0.1", SETTINGS.getAdbPort());
       adbSocket.setTcpNoDelay(true);
 
       adbConnection = AdbConnection.create(adbSocket, adbCrypto);
@@ -225,8 +226,10 @@ public class Adb {
         return;
       }
       try {
-        /** {@link AdbStream#write(String)} may append unnecessary null byte */
-        // Commands should always be flushed.
+        /*
+         AdbStream#write(String) may append unnecessary null byte.
+         Commands should always be flushed.
+        */
         adbStream.write(stringBuilder.toString().getBytes(), true);
       } catch (InterruptedException e) {
         throw new IOException(e);

@@ -1,6 +1,7 @@
 package com.mirfatif.permissionmanagerx.main;
 
 import static com.mirfatif.permissionmanagerx.main.MainActivity.TAG_DONATION;
+import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -17,7 +18,6 @@ import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.FeedbackDialogBinding;
-import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.AboutActivity;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.util.Utils;
@@ -71,7 +71,7 @@ public class FeedbackDialogFrag extends BottomSheetDialogFragment {
 
     b.neutralButton.setOnClickListener(
         v -> {
-          MySettings.getInstance().setAskForFeedbackTs(Long.MAX_VALUE);
+          SETTINGS.setAskForFeedbackTs(Long.MAX_VALUE);
           dismiss();
         });
 

@@ -1,5 +1,8 @@
 package com.mirfatif.permissionmanagerx.ui;
 
+import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
+import static com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler.DAEMON_HANDLER;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,10 +25,8 @@ import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.AboutPrivilegesDialogBinding;
 import com.mirfatif.permissionmanagerx.databinding.ActivityAboutBinding;
 import com.mirfatif.permissionmanagerx.databinding.TranslationDialogBinding;
-import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
 import com.mirfatif.permissionmanagerx.prefs.settings.SettingsActivity;
-import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.svc.LogcatService;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
@@ -37,7 +38,6 @@ import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 
 public class AboutActivity extends BaseActivity {
 
-  private final MySettings mMySettings = MySettings.getInstance();
   private ActivityAboutBinding mB;
   private ActivityResultLauncher<String> mLoggingLauncher;
 
@@ -61,7 +61,7 @@ public class AboutActivity extends BaseActivity {
     openWebUrl(mB.issues, R.string.issues_url);
     openWebUrl(mB.rating, R.string.play_store_url);
     mB.contact.setOnClickListener(v -> Utils.sendMail(this, null));
-    setLogTitle(mMySettings.isDebug() ? R.string.stop_logging : R.string.collect_logs);
+    setLogTitle(SETTINGS.isDebug() ? R.string.stop_logging : R.string.collect_logs);
     mB.logging.setOnClickListener(v -> handleLogging());
     openWebUrl(mB.privacyPolicy, R.string.privacy_policy_link);
     mB.checkUpdate.setOnClickListener(v -> checkForUpdates());
@@ -103,7 +103,7 @@ public class AboutActivity extends BaseActivity {
   }
 
   private void handleLogging() {
-    if (mMySettings.isDebug()) {
+    if (SETTINGS.isDebug()) {
       LogcatService.sendStopLogIntent();
       setLogTitle(R.string.collect_logs);
       Snackbar.make(mB.logging, R.string.logging_stopped, 5000).show();
@@ -181,7 +181,7 @@ public class AboutActivity extends BaseActivity {
 
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
-    menu.findItem(R.id.action_perm_status).setEnabled(mMySettings.isPrivDaemonAlive());
+    menu.findItem(R.id.action_perm_status).setEnabled(SETTINGS.isPrivDaemonAlive());
     menu.findItem(R.id.action_dump_daemon_heap).setVisible(BuildConfig.DEBUG);
     return true;
   }
@@ -189,12 +189,12 @@ public class AboutActivity extends BaseActivity {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == R.id.action_dump_daemon_heap) {
-      Utils.runInBg(() -> PrivDaemonHandler.getInstance().sendRequest(Commands.DUMP_HEAP));
+      Utils.runInBg(() -> DAEMON_HANDLER.sendRequest(Commands.DUMP_HEAP));
       return true;
     }
 
     if (item.getItemId() == R.id.action_perm_status) {
-      if (mMySettings.isPrivDaemonAlive()) {
+      if (SETTINGS.isPrivDaemonAlive()) {
         AlertDialogFragment.show(this, null, TAG_PERM_STATUS);
       } else {
         item.setEnabled(false);
@@ -208,8 +208,7 @@ public class AboutActivity extends BaseActivity {
       AboutPrivilegesDialogBinding b,
       AboutPrivilegesAdapter adapter,
       AlertDialogFragment dialogFragment) {
-    PrivDaemonHandler daemonHandler = PrivDaemonHandler.getInstance();
-    Object obj = daemonHandler.sendRequest(Commands.GET_PERM_STATUS);
+    Object obj = DAEMON_HANDLER.sendRequest(Commands.GET_PERM_STATUS);
 
     if (obj instanceof List<?>) {
       List<PermStatus> permStatusList = new ArrayList<>();
@@ -217,7 +216,7 @@ public class AboutActivity extends BaseActivity {
         permStatusList.add((PermStatus) item);
       }
 
-      obj = daemonHandler.sendRequest(Commands.GET_APP_OP_STATUS);
+      obj = DAEMON_HANDLER.sendRequest(Commands.GET_APP_OP_STATUS);
       if (obj instanceof Integer) {
         int appOpsStatus = (int) obj;
 
@@ -260,7 +259,7 @@ public class AboutActivity extends BaseActivity {
       AboutPrivilegesDialogBinding b = AboutPrivilegesDialogBinding.inflate(getLayoutInflater());
       AboutPrivilegesAdapter adapter = new AboutPrivilegesAdapter();
       Utils.runInBg(() -> updatePermStatusDialog(b, adapter, dialogFragment));
-      b.uidV.setText(String.valueOf(PrivDaemonHandler.getInstance().getUid()));
+      b.uidV.setText(String.valueOf(DAEMON_HANDLER.getUid()));
       b.recyclerV.setLayoutManager(new LinearLayoutManager(this));
       b.recyclerV.addItemDecoration(
           new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));

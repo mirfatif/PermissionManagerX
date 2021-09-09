@@ -1,5 +1,8 @@
 package com.mirfatif.permissionmanagerx.main;
 
+import static com.mirfatif.permissionmanagerx.parser.PackageParser.PKG_PARSER;
+import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
+
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -17,9 +20,7 @@ import androidx.appcompat.app.AlertDialog.Builder;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.BackupRestoreDialogBinding;
-import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionEntity;
-import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import java.io.ByteArrayInputStream;
@@ -51,8 +52,6 @@ import org.xmlpull.v1.XmlSerializer;
 public class BackupRestore {
 
   private static final String TAG = "BackupRestore";
-
-  private final MySettings mMySettings = MySettings.getInstance();
 
   private final String KEY = "key";
   private final String VALUE = "value";
@@ -144,12 +143,12 @@ public class BackupRestore {
     } else {
       try (InputStream inputStream =
           mA.getApplication().getContentResolver().openInputStream(uri)) {
-        /**
-         * So that not saved preferences are restored. Must be in background so that {@link
-         * PrivDaemonHandler#sendRequest(String)} in {@link AppOpsParser#buildAppOpsList()} in ADB
-         * daemon mode is not called on main thread
-         */
-        mMySettings.resetToDefaults();
+        /*
+         So that not saved preferences are restored. Must be in background so that {@link
+         PrivDaemonHandler#sendRequest(String)} in {@link AppOpsParser#buildAppOpsList()} in ADB
+         daemon mode is not called on main thread
+        */
+        SETTINGS.resetToDefaults();
         if (!restore(inputStream)) {
           failed(false);
         }
@@ -237,7 +236,7 @@ public class BackupRestore {
     }
 
     // permissions
-    List<PermissionEntity> permEntities = mMySettings.getPermDb().getAll();
+    List<PermissionEntity> permEntities = SETTINGS.getPermDb().getAll();
     int skippedApps = 0;
 
     if (mSkipUninstalledApps) {
@@ -478,9 +477,8 @@ public class BackupRestore {
   }
 
   public static void updatePermissionEntities(List<BackupEntry> permEntries) {
-    MySettings mySettings = MySettings.getInstance();
     Map<String, Integer> map = new HashMap<>();
-    for (PermissionEntity entity : mySettings.getPermDb().getAll()) {
+    for (PermissionEntity entity : SETTINGS.getPermDb().getAll()) {
       map.put(entity.pkgName + "_" + entity.permName, entity.id);
     }
 
@@ -496,7 +494,7 @@ public class BackupRestore {
       }
       permEntities.add(entity);
     }
-    mySettings.getPermDb().insertAll(permEntities.toArray(new PermissionEntity[0]));
+    SETTINGS.getPermDb().insertAll(permEntities.toArray(new PermissionEntity[0]));
   }
 
   private String getString(int resId) {
@@ -536,12 +534,11 @@ public class BackupRestore {
     }
     Utils.runInFg(() -> mA.getRoundProgressContainer().setVisibility(View.GONE));
     if (!isBackup) {
-      mMySettings.populateExcludedAppsList(false);
-      mMySettings.populateExcludedPermsList();
-      mMySettings.populateExtraAppOpsList(false);
-      PackageParser packageParser = PackageParser.getInstance();
-      packageParser.buildPermRefList();
-      packageParser.updatePackagesList();
+      SETTINGS.populateExcludedAppsList(false);
+      SETTINGS.populateExcludedPermsList();
+      SETTINGS.populateExtraAppOpsList(false);
+      PKG_PARSER.buildPermRefList();
+      PKG_PARSER.updatePackagesList();
     }
 
     String message = Utils.getQtyString(R.plurals.backup_restore_processed_prefs, prefs, prefs);

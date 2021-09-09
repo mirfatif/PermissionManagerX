@@ -1,5 +1,7 @@
 package com.mirfatif.permissionmanagerx.ui;
 
+import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,14 +15,12 @@ import androidx.webkit.WebViewClientCompat;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.ActivityHelpBinding;
-import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
 
 public class HelpActivity extends BaseActivity {
 
   private WebSettings mWebSettings;
-  private final MySettings mMySettings = MySettings.getInstance();
   private ActivityHelpBinding mB;
 
   private static final String HELP_URL = "https://mirfatif.github.io/PermissionManagerX/help/";
@@ -42,7 +42,7 @@ public class HelpActivity extends BaseActivity {
 
     mWebSettings = mB.webView.getSettings();
 
-    mFontSize = mMySettings.getIntPref(R.string.pref_help_font_size_key);
+    mFontSize = SETTINGS.getIntPref(R.string.pref_help_font_size_key);
     setFontSize();
 
     mWebSettings.setSupportZoom(false);
@@ -54,7 +54,7 @@ public class HelpActivity extends BaseActivity {
     enableJs();
     mB.webView.addJavascriptInterface(new HelpJsInterface(this), "Android");
 
-    if (mMySettings.isAppUpdated()) {
+    if (SETTINGS.isAppUpdated()) {
       mB.webView.clearCache(true);
     }
 
@@ -74,7 +74,7 @@ public class HelpActivity extends BaseActivity {
     if (mFontSize > MAX_FONT_SIZE - 2 || mFontSize < MIN_FONT_SIZE + 2) {
       invalidateOptionsMenu();
     }
-    mMySettings.savePref(R.string.pref_help_font_size_key, mFontSize);
+    SETTINGS.savePref(R.string.pref_help_font_size_key, mFontSize);
   }
 
   @Override

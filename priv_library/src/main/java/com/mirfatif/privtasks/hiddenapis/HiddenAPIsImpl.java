@@ -27,21 +27,6 @@ import java.util.List;
 
 public class HiddenAPIsImpl extends HiddenAPIs {
 
-  private static HiddenAPIsImpl mHiddenAPIs;
-
-  public static synchronized HiddenAPIsImpl getInstance(HiddenAPIsCallback callback) {
-    if (mHiddenAPIs == null) {
-      mHiddenAPIs = new HiddenAPIsImpl(callback);
-      return mHiddenAPIs;
-    }
-    return getInstance();
-  }
-
-  public static HiddenAPIsImpl getInstance() {
-    assert mHiddenAPIs != null;
-    return mHiddenAPIs;
-  }
-
   private IAppOpsService mIAppOpsService;
   private IPackageManager mIPackageManager;
   private IPermissionManager mIPermissionManager;

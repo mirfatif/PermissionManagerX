@@ -31,12 +31,12 @@ public class DaemonCmdRcvSvc extends Service {
     return Service.START_NOT_STICKY;
   }
 
-  private static long mShowMsgTs;
+  private static long sShowMsgTs;
 
   private static boolean shouldShowMsg() {
-    boolean res = System.currentTimeMillis() - mShowMsgTs > 5000;
+    boolean res = System.currentTimeMillis() - sShowMsgTs > 5000;
     if (res) {
-      mShowMsgTs = System.currentTimeMillis();
+      sShowMsgTs = System.currentTimeMillis();
     }
     return res;
   }

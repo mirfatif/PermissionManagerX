@@ -124,11 +124,11 @@ public class PrivDaemon {
         if (DEBUG) {
           Util.debugLog(TAG, "Received command: " + line);
         }
-        /**
-         * trim() is required; AdbLib, or more precisely {@link
-         * com.cgutman.adblib.AdbProtocol#generateMessage(int, int, int, byte[])}, adds some garbage
-         * with write().
-         */
+        /*
+         trim() is required; AdbLib, or more precisely
+         com.cgutman.adblib.AdbProtocol#generateMessage(int, int, int, byte[])},
+         adds some garbage with write().
+        */
         String[] args = line.trim().replaceAll("  +", " ").split(" ");
         if (args[0].equals(Commands.SHUTDOWN)) {
           break;

@@ -3,18 +3,8 @@ package com.mirfatif.permissionmanagerx.prefs;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.Permission;
 
-public class MySettingsFlavor {
-
-  private static MySettingsFlavor mMySettingsFlavor;
-
-  public static synchronized MySettingsFlavor getInstance() {
-    if (mMySettingsFlavor == null) {
-      mMySettingsFlavor = new MySettingsFlavor();
-    }
-    return mMySettingsFlavor;
-  }
-
-  private MySettingsFlavor() {}
+public enum MySettingsFlavor {
+  SETTINGS_FLAVOR;
 
   public Boolean isPkgInstallDate() {
     return null;

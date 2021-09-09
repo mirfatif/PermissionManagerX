@@ -1,11 +1,13 @@
 package com.mirfatif.permissionmanagerx.privs;
 
+import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
+
 import android.os.SystemClock;
 import android.util.Log;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
-import com.mirfatif.permissionmanagerx.prefs.MySettings;
-import com.mirfatif.permissionmanagerx.ui.MyViewModel;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,28 +24,14 @@ import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-public class NativeDaemon {
-
-  private static NativeDaemon mRootNativeDaemon, mAdbNativeDaemon;
-
-  public static NativeDaemon rootInstance() {
-    if (mRootNativeDaemon == null) {
-      mRootNativeDaemon = new NativeDaemon(false);
-    }
-    return mRootNativeDaemon;
-  }
-
-  public static NativeDaemon adbInstance() {
-    if (mAdbNativeDaemon == null) {
-      mAdbNativeDaemon = new NativeDaemon(true);
-    }
-    return mAdbNativeDaemon;
-  }
+public enum NativeDaemon {
+  ROOT_DAEMON(false),
+  ADB_DAEMON(true);
 
   private final boolean mIsAdb;
   private final String TAG;
 
-  private NativeDaemon(boolean isAdb) {
+  NativeDaemon(boolean isAdb) {
     mIsAdb = isAdb;
     if (isAdb) {
       TAG = "AdbNativeDaemon";
@@ -52,7 +40,6 @@ public class NativeDaemon {
     }
   }
 
-  private final MySettings mMySettings = MySettings.getInstance();
   public static final String PMX_BIN_PATH;
 
   static {
@@ -89,12 +76,12 @@ public class NativeDaemon {
     synchronized (READ_WRITE_LOCK) {
       if (mIsAdb) {
         startAdbDaemon(showAdbFailedToast);
-        mMySettings.setAdbConnected(mIsRunning);
+        SETTINGS.setAdbConnected(mIsRunning);
       } else {
         startRootDaemon();
-        mMySettings.setRootGranted(mIsRunning);
+        SETTINGS.setRootGranted(mIsRunning);
       }
-      MyViewModel.updateDrawer();
+      updateDrawer();
     }
   }
 
@@ -285,5 +272,15 @@ public class NativeDaemon {
       Log.i(TAG, "readMessages: restarting native daemon");
       startDaemon(false);
     }
+  }
+
+  private final MutableLiveData<Void> sDrawerChanged = new MutableLiveData<>();
+
+  private void updateDrawer() {
+    sDrawerChanged.postValue(null);
+  }
+
+  public LiveData<Void> getDrawerChanged() {
+    return sDrawerChanged;
   }
 }

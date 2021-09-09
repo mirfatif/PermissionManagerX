@@ -1,5 +1,6 @@
 package com.mirfatif.permissionmanagerx.ui;
 
+import static com.mirfatif.permissionmanagerx.parser.AppOpsParser.APP_OPS_PARSER;
 import static com.mirfatif.permissionmanagerx.util.Utils.getString;
 
 import android.content.Context;
@@ -21,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.RvItemPermBinding;
-import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
 import com.mirfatif.permissionmanagerx.parser.Permission;
 import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.ItemViewHolder;
 import com.mirfatif.permissionmanagerx.ui.base.MyListAdapter;
@@ -234,11 +234,11 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
   private ArrayAdapter<String> getAppOpModesAdapter(boolean forBg) {
     synchronized (ADAPTER_BUILD_LOCK) {
       if (mAppOpModesAdapter.isEmpty() || mAppOpModesBgAdapter.isEmpty()) {
-        for (String mode : AppOpsParser.getInstance().getAppOpsModes()) {
+        for (String mode : APP_OPS_PARSER.getAppOpsModes()) {
           String localizedMode = getLocalizedMode(mode);
           if (localizedMode != null) {
             mode = localizedMode;
-            if (mode.toLowerCase().equals(Commands.APP_OP_MODE_FG)) {
+            if (mode.equalsIgnoreCase(Commands.APP_OP_MODE_FG)) {
               mode = Utils.ellipsize(mode, 8);
             }
           } else {
@@ -254,7 +254,7 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
 
   private static class AppOpModesAdapter extends ArrayAdapter<String> {
 
-    private final List<String> appOpsModes = AppOpsParser.getInstance().getAppOpsModes();
+    private final List<String> appOpsModes = APP_OPS_PARSER.getAppOpsModes();
     private final boolean mForBg;
 
     public AppOpModesAdapter(Context context, boolean forBg) {

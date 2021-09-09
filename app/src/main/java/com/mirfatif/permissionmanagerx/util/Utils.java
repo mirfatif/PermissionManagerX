@@ -3,8 +3,12 @@ package com.mirfatif.permissionmanagerx.util;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import static android.text.style.DynamicDrawableSpan.ALIGN_BASELINE;
+import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
+import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.ADB_DAEMON;
+import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.ROOT_DAEMON;
 import static com.mirfatif.permissionmanagerx.util.UtilsFlavor.getAccentColor;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -69,7 +73,6 @@ import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.Adb;
-import com.mirfatif.permissionmanagerx.privs.NativeDaemon;
 import com.mirfatif.permissionmanagerx.svc.NotifDismissSvc;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
@@ -349,7 +352,7 @@ public class Utils {
   }
 
   public static boolean setNightTheme(Activity activity) {
-    if (!MySettings.getInstance().forceDarkMode()) {
+    if (!SETTINGS.forceDarkMode()) {
       AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
       return false;
     }
@@ -370,7 +373,7 @@ public class Utils {
   }
 
   public static Context setLocale(Context context) {
-    String lang = MySettings.getInstance().getLocale();
+    String lang = SETTINGS.getLocale();
     Locale locale;
     if (TextUtils.isEmpty(lang)) {
       locale = Resources.getSystem().getConfiguration().getLocales().get(0);
@@ -413,19 +416,19 @@ public class Utils {
     return getUserId(android.os.Process.myUid());
   }
 
-  private static SharedPreferences mEncPrefs;
+  private static SharedPreferences sEncPrefs;
   private static final Object ENC_PREFS_LOCK = new Object();
 
   @SecurityLibBug
   public static SharedPreferences getEncPrefs() {
     synchronized (ENC_PREFS_LOCK) {
-      if (mEncPrefs != null) {
-        return mEncPrefs;
+      if (sEncPrefs != null) {
+        return sEncPrefs;
       }
 
       for (int i = 0; i < 10; i++) {
         try {
-          mEncPrefs =
+          sEncPrefs =
               EncryptedSharedPreferences.create(
                   App.getContext(),
                   BuildConfig.APPLICATION_ID + "_enc_prefs",
@@ -434,7 +437,7 @@ public class Utils {
                       .build(),
                   PrefKeyEncryptionScheme.AES256_SIV,
                   PrefValueEncryptionScheme.AES256_GCM);
-          return mEncPrefs;
+          return sEncPrefs;
         } catch (Exception e) {
           if (i == 9) {
             e.printStackTrace();
@@ -447,9 +450,9 @@ public class Utils {
 
       showToast("No Encryption");
 
-      // TODO temp fix for https://github.com/google/tink/issues/413
-      mEncPrefs = App.getContext().getSharedPreferences("_enc_prefs2", Context.MODE_PRIVATE);
-      return mEncPrefs;
+      // temp fix for https://github.com/google/tink/issues/413
+      sEncPrefs = App.getContext().getSharedPreferences("_enc_prefs2", Context.MODE_PRIVATE);
+      return sEncPrefs;
     }
   }
 
@@ -468,7 +471,7 @@ public class Utils {
   }
 
   public static String getDeviceInfo() {
-    MySettings mySettings = MySettings.getInstance();
+    MySettings mySettings = SETTINGS;
     return "Version: "
         + BuildConfig.VERSION_NAME
         + (BuildConfig.GH_VERSION ? "" : " PlayStore")
@@ -629,7 +632,7 @@ public class Utils {
   private static long daemonDeadLogTs = 0;
 
   public static void logDaemonDead(String tag) {
-    if (MySettings.getInstance().isDebug() || System.currentTimeMillis() - daemonDeadLogTs > 1000) {
+    if (SETTINGS.isDebug() || System.currentTimeMillis() - daemonDeadLogTs > 1000) {
       Log.w(tag, "Privileged daemon is not running");
       daemonDeadLogTs = System.currentTimeMillis();
     }
@@ -640,7 +643,7 @@ public class Utils {
   public static void writeCrashLog(String stackTrace, boolean isDaemon) {
     synchronized (CRASH_LOG_LOCK) {
       // Be ashamed of your performance, don't ask for feedback in near future
-      MySettings.getInstance().setAskForFeedbackTs(System.currentTimeMillis());
+      SETTINGS.setAskForFeedbackTs(System.currentTimeMillis());
 
       File logFile = new File(App.getContext().getExternalFilesDir(null), "PMX_crash.log");
       boolean append = true;
@@ -665,8 +668,9 @@ public class Utils {
     }
   }
 
+  @SuppressLint("LaunchActivityFromNotification,UnspecifiedImmutableFlag")
   private static void showCrashNotification(File logFile) {
-    if (!MySettings.getInstance().shouldAskToSendCrashReport()) {
+    if (!SETTINGS.shouldAskToSendCrashReport()) {
       return;
     }
 
@@ -731,7 +735,7 @@ public class Utils {
 
   @SuppressWarnings("UnusedReturnValue")
   public static boolean checkRootIfEnabled() {
-    if (!MySettings.getInstance().isRootGranted()) {
+    if (!SETTINGS.isRootGranted()) {
       return false;
     }
     boolean res = checkRoot();
@@ -742,9 +746,8 @@ public class Utils {
   }
 
   public static boolean checkRoot() {
-    MySettings mySettings = MySettings.getInstance();
-    boolean res = NativeDaemon.rootInstance().isRunning();
-    if (mySettings.isDebug()) {
+    boolean res = ROOT_DAEMON.isRunning();
+    if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "checkRoot: getting root privileges " + (res ? "succeeded" : "failed"));
     }
     return res;
@@ -752,23 +755,22 @@ public class Utils {
 
   @SuppressWarnings("UnusedReturnValue")
   public static boolean checkAdbIfEnabled() {
-    if (MySettings.getInstance().isAdbConnected()) {
+    if (SETTINGS.isAdbConnected()) {
       return checkAdb(true);
     }
     return false;
   }
 
   public static boolean checkAdb(boolean showToastOnFailure) {
-    MySettings mySettings = MySettings.getInstance();
-    boolean res = NativeDaemon.adbInstance().isRunning(showToastOnFailure);
-    if (mySettings.isDebug()) {
+    boolean res = ADB_DAEMON.isRunning(showToastOnFailure);
+    if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "checkAdb: connecting to ADB " + (res ? "succeeded" : "failed"));
     }
     return res;
   }
 
   public static String getSu() {
-    String path = MySettings.getInstance().getSuExePath();
+    String path = SETTINGS.getSuExePath();
     return path == null ? "su" : path;
   }
 }

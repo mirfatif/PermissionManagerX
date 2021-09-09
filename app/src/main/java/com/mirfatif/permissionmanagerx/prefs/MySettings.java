@@ -1,5 +1,7 @@
 package com.mirfatif.permissionmanagerx.prefs;
 
+import static com.mirfatif.permissionmanagerx.parser.AppOpsParser.APP_OPS_PARSER;
+import static com.mirfatif.permissionmanagerx.parser.PkgParserFlavor.PKG_PARSER_FLAVOR;
 import static com.mirfatif.permissionmanagerx.util.Utils.getString;
 
 import android.content.SharedPreferences;
@@ -14,10 +16,8 @@ import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
 import com.mirfatif.permissionmanagerx.app.App;
-import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.Permission;
-import com.mirfatif.permissionmanagerx.parser.PkgParserFlavor;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDao;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDatabase;
 import com.mirfatif.permissionmanagerx.util.Utils;
@@ -34,29 +34,16 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class MySettings {
+public enum MySettings {
+  SETTINGS;
 
   private static final String TAG = "MySettings";
 
-  private static MySettings mMySettings;
-
-  public static synchronized MySettings getInstance() {
-    if (mMySettings == null) {
-      mMySettings = new MySettings();
-    }
-    return mMySettings;
-  }
-
-  private final SharedPreferences mPrefs;
+  private final SharedPreferences mPrefs = Utils.getDefPrefs();
 
   // Removed mEncPrefs and mUseHiddenAPIs initialization due to bug
   @SecurityLibBug
-  private MySettings() {
-    mPrefs = Utils.getDefPrefs();
-    mExcludedAppsPrefKey = getString(R.string.pref_filter_excluded_apps_key);
-    mExcludedPermsPrefKey = getString(R.string.pref_filter_excluded_perms_key);
-    mExtraAppOpsPrefKey = getString(R.string.pref_filter_extra_appops_key);
-  }
+  MySettings() {}
 
   private boolean mPrivDaemonAlive = false;
 
@@ -369,8 +356,7 @@ public class MySettings {
   }
 
   public boolean isQuickScanEnabled() {
-    return getBoolPref(R.string.pref_settings_quick_scan_key)
-        && PkgParserFlavor.getInstance().allowQuickScan();
+    return getBoolPref(R.string.pref_settings_quick_scan_key) && PKG_PARSER_FLAVOR.allowQuickScan();
   }
 
   public boolean shouldDoQuickScan() {
@@ -542,7 +528,7 @@ public class MySettings {
     savePref(R.string.pref_main_use_socket_enc_key, useSocket);
   }
 
-  private final String mExcludedAppsPrefKey;
+  private final String mExcludedAppsPrefKey = getString(R.string.pref_filter_excluded_apps_key);
   private Set<String> mExcludedApps;
   private CharSequence[] mExcludedAppsLabels;
 
@@ -663,7 +649,7 @@ public class MySettings {
     savePref(R.string.pref_filter_excluded_apps_key, excludedApps);
   }
 
-  private final String mExcludedPermsPrefKey;
+  private final String mExcludedPermsPrefKey = getString(R.string.pref_filter_excluded_perms_key);
   private Set<String> mExcludedPerms;
 
   public Set<String> getExcludedPerms() {
@@ -732,7 +718,7 @@ public class MySettings {
     savePref(R.string.pref_filter_excluded_perms_key, excludedPerms);
   }
 
-  private final String mExtraAppOpsPrefKey;
+  private final String mExtraAppOpsPrefKey = getString(R.string.pref_filter_extra_appops_key);
   private Set<String> mExtraAppOps;
 
   public Set<String> getExtraAppOps() {
@@ -775,7 +761,7 @@ public class MySettings {
     }
 
     // Let's remove AppOps not on this Android version
-    List<String> appOpsList = AppOpsParser.getInstance().getAppOpsList();
+    List<String> appOpsList = APP_OPS_PARSER.getAppOpsList();
     mExtraAppOps = new HashSet<>();
     for (String extraAppOp : extraAppOps) {
       // Necessarily build mExtraAppOps here even with excludeAppOpsPerms(). Otherwise on

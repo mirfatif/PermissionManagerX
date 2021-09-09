@@ -1,5 +1,8 @@
 package com.mirfatif.permissionmanagerx.prefs.settings;
 
+import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
+
+import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -14,7 +17,6 @@ import androidx.core.app.NotificationManagerCompat;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
-import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
 import java.io.BufferedReader;
@@ -37,9 +39,7 @@ public class AppUpdate {
   private String mVersion, mUpdateUrl;
 
   public Boolean check(boolean notify) {
-    MySettings mySettings = MySettings.getInstance();
-
-    if (notify && !mySettings.shouldCheckForUpdates()) {
+    if (notify && !SETTINGS.shouldCheckForUpdates()) {
       return null;
     }
 
@@ -85,7 +85,7 @@ public class AppUpdate {
         }
         if (notify) {
           showNotification();
-          mySettings.setCheckForUpdatesTs(System.currentTimeMillis());
+          SETTINGS.setCheckForUpdatesTs(System.currentTimeMillis());
         }
         return true;
       }
@@ -110,6 +110,7 @@ public class AppUpdate {
     final String CHANNEL_NAME = Utils.getString(R.string.channel_app_update);
     final int UNIQUE_ID = Utils.getInteger(R.integer.channel_app_update);
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     PendingIntent pendingIntent =
         PendingIntent.getActivity(
             App.getContext(),
