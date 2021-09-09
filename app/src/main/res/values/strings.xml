@@ -369,8 +369,11 @@
 
   <!-- HelpActivity -->
   <string name="load_internet_menu_item" maxLength="15">Load from internet</string>
+  <string name="open_browser_menu_item" maxLength="15">Open in browser</string>
   <string name="zoom_in_menu_item" maxLength="15">Zoom In</string>
   <string name="zoom_out_menu_item" maxLength="15">Zoom Out</string>
+  <string name="no_web_view" maxLength="20">No WebView</string>
+  <string name="outdated_web_view" maxLength="20">Outdated WebView</string>
 
   <!-- DaemonCmdRcvSvc: Daemon return messages -->
   <string name="daemon_listen_on_loopback_failed" maxLength="20">Daemon failed to listen on 127.0.0.1</string>

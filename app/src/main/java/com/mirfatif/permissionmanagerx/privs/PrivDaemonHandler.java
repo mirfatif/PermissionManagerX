@@ -360,14 +360,17 @@ public enum PrivDaemonHandler {
   private static final String DAEMON_PACKAGE_NAME = "com.mirfatif.privdaemon";
   private static final String DAEMON_CLASS_NAME = "PrivDaemon";
 
-  private static final String SHARED_DIR =
-      App.getContext().getExternalFilesDir(null).getAbsolutePath();
   private static final String TMP_DIR = "/data/local/tmp/";
-
   private static final String DAEMON_DEX = DAEMON_PACKAGE_NAME + ".pmx.dex";
-  private static final String SHARED_DIR_DEX_PATH =
-      new File(SHARED_DIR, DAEMON_DEX).getAbsolutePath();
-  private static final String TMP_DIR_DEX_PATH = new File(TMP_DIR, DAEMON_DEX).getAbsolutePath();
+
+  private final String SHARED_DIR_DEX_PATH;
+  private final String TMP_DIR_DEX_PATH;
+
+  {
+    String sharedDir = App.getContext().getExternalFilesDir(null).getAbsolutePath();
+    SHARED_DIR_DEX_PATH = new File(sharedDir, DAEMON_DEX).getAbsolutePath();
+    TMP_DIR_DEX_PATH = new File(TMP_DIR, DAEMON_DEX).getAbsolutePath();
+  }
 
   private final Object SHARED_DIR_LOCK = new Object();
 

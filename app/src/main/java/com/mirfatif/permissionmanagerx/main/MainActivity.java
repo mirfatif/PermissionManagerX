@@ -300,9 +300,7 @@ public class MainActivity extends BaseActivity {
           new Builder(this)
               .setPositiveButton(android.R.string.ok, (d, which) -> openDrawerForPrivileges())
               .setNeutralButton(R.string.do_not_remind, (d, which) -> SETTINGS.setPrivReminderOff())
-              .setNegativeButton(
-                  R.string.get_help,
-                  (d, which) -> startActivity(new Intent(App.getContext(), HelpActivity.class)))
+              .setNegativeButton(R.string.get_help, (d, which) -> HelpActivity.start(this))
               .setTitle(R.string.privileges)
               .setMessage(getString(R.string.grant_root_or_adb))
               .create();
@@ -1007,7 +1005,7 @@ public class MainActivity extends BaseActivity {
     }
 
     if (item.getItemId() == R.id.action_help) {
-      startActivity(new Intent(App.getContext(), HelpActivity.class));
+      HelpActivity.start(this);
       return true;
     }
 
