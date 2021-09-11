@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">Permission Manager X</string>
+  <!-- CHAR_LIMIT
+       Button: 10
+       Toast/SnackBar: 20
+       Preference title: 20
+       Single line text: 30
+       Progress: 15
+       Dialog/notification title: 15
+       Menu item: 15 -->
+  <!-- General strings -->
+  <string name="yes" maxLength="10">Sí</string>
+  <string name="no" maxLength="10">No</string>
+  <string name="save" maxLength="10">Guardar</string>
+  <string name="_default" maxLength="10">Predeterminado</string>
+  <string name="open_drawer">Abrir</string>
+  <string name="close_drawer">Cerrar</string>
+  <string name="contact" maxLength="10">Escribir Ahora</string>
+  <string name="i_will" maxLength="10">Lo haré</string>
+  <string name="rate" maxLength="10">Puntuar ahora</string>
+  <string name="do_not_remind" maxLength="10">No Recordar</string>
+  <string name="get_help" maxLength="10">Obtener Ayuda</string>
+  <string name="switch_to_adb" maxLength="10">Cambiar a ADB</string>
+  <string name="_continue" maxLength="10">¿Continuar?</string>
+  <string name="warning" maxLength="15">Advertencia</string>
+  <string name="apps">aplicaciones</string>
+  <!-- MainActivity Navigation Drawer / menu items -->
+  <string name="search_menu_item" maxLength="15">Buscar</string>
+  <string name="settings_menu_item" maxLength="15">Ajustes</string>
+  <string name="filter_menu_item" maxLength="15">Filtros de exclusión</string>
+  <string name="root_menu_item" maxLength="15">Acceso Root</string>
+  <string name="adb_menu_item" maxLength="15">Consola ADB</string>
+  <string name="dark_theme_menu_item" maxLength="15">Forzar Tema Obscuro</string>
+  <string name="backup_restore_menu_item" maxLength="15">Copia de seguridad / Restaurar</string>
+  <string name="help_menu_item" maxLength="15">Ayuda</string>
+  <string name="donate_menu_item" maxLength="15">Donar</string>
+  <string name="about_menu_item" maxLength="15">Acerca de</string>
+  <string name="advanced_settings_menu_item" maxLength="15">Ajustes Avanzados</string>
+  <string name="hidden_apis" maxLength="15">APIs Ocultas</string>
+  <string name="use_hidden_apis" maxLength="20">Usar APIs Ocultar</string>
+  <string name="dex_tmp_dir" maxLength="20">Correr Daemon desde Carpeta Temporal</string>
+  <string name="adb_only_settings" maxLength="15">Ajustes Solo-ADB</string>
+  <string name="root_only_settings" maxLength="15">Ajustes Solo-Root</string>
+  <string name="adb_listening_port" maxLength="20">Escuchar Puerto ADBD</string>
+  <string name="allow_critical_changes" maxLength="20">Permitir Cambios Críticos</string>
+  <string name="talk_to_daemon_over_socket" maxLength="20">Comunicar con Daemon sobre el Socket</string>
+  <string name="daemon_uid" maxLength="20">UID de Daemon Privilegiado</string>
+  <string name="daemon_uid_system" maxLength="5">Sistema</string>
+  <string name="daemon_uid_root" maxLength="5">Root</string>
+  <string name="daemon_uid_adb" maxLength="5">ADB</string>
+  <string name="daemon_context" maxLength="20">Contexto Daemon SELinux</string>
+  <string name="daemon_context_shell" maxLength="5">Consola</string>
+  <string name="daemon_context_default" maxLength="5">Predeterminado</string>
+  <string name="su_exe_path" maxLength="20">Ruta al Ejecutable de Superusuario</string>
+  <!-- MainActivity strings -->
+  <string name="primary_account" maxLength="15">Cuenta Primaria</string>
+  <string name="primary_profile_only">Permission Manager X puede correr únicamente en la cuenta del usuario principal /\n perfil del propietario del dispositivo.</string>
+  <string name="deep_search" maxLength="12">Búsqueda Profunda (Permisos)</string>
+  <string name="case_sensitive_search" maxLength="12">Búsqueda Sensible a Mayúsculas</string>
+  <string name="grant_root_or_adb">Concede accerso root o conecta a ADB para iniciar procesos privilegiados.</string>
+  <string name="logging_failed" maxLength="20">Registro fallido</string>
+  <string name="daemon_logging_failed" maxLength="20">Registro para daemon privilegiado fallido</string>
+  <string name="creating_packages_list" maxLength="15">Creando Lista de Aplicaciones</string>
+  <string name="reading_reference_perms" maxLength="15">Leyendo Referencias</string>
+  <string name="creating_app_ops_lists" maxLength="15">Preparando datos de AppOps</string>
+  <string name="starting_daemon" maxLength="15">Iniciando Daemon</string>
+  <string name="checking_root_access" maxLength="15">Verificando Acceso Root</string>
+  <string name="checking_adb_access" maxLength="15">Verificando Acceso ADB</string>
+  <string name="root_granted" maxLength="20">Root otorgado</string>
+  <string name="getting_root_fail" maxLength="20">Obtención de privilegios root fallido</string>
+  <string name="getting_root_fail_long" maxLength="20">Obtención de privilegios root fallido. ¿Estás rooteado?</string>
+  <string name="connected_to_adb" maxLength="20">Conectado a ADB</string>
+  <string name="adb_connect_timed_out" maxLength="20">Se acabó el tiempo de espera de conexión ADB</string>
+  <string name="adb_connect_failed" maxLength="20">Conexión ADB fallida</string>
+  <string name="adb_connect_interrupted" maxLength="20">Conexión ADB interrumpida</string>
+  <string name="adb_key_pair_failed" maxLength="20">Creación de pareja de clave ADB fallida</string>
+  <string name="adb_authentication_failed" maxLength="20">Autenticación de ADB fallida</string>
+  <string name="adb_command_fail" maxLength="20">Comando ADB fallido</string>
+  <string name="adb_connect_fail_long"><![CDATA[\n    <![CDATA[
+      Conexión a ADB fallida.
+      <ul>
+        <li>Activa <b><i>ADB Sobre Red</i></b> y regresa a conectarte.</li>
+        <li>Permite la autenticación ADB si notifica.</li>
+      </ul>
+    ]]]]><![CDATA[>\n  ]]></string>
+  <string name="daemon_failed" maxLength="20">Inicio de daemon privilegiado fallido</string>
+  <string name="backup" maxLength="10">Copia de seguridad</string>
+  <string name="restore" maxLength="10">Restaurar</string>
+  <string name="choose_backup_restore">Preferencias y referencias de permiso de creación y restauración de copias de seguridad.</string>
+  <string name="select_backup_file" maxLength="20">Selecciona archivo de copia de seguridad</string>
+  <string name="backup_in_progress" maxLength="15">Copia de Seguridad En Progreso</string>
+  <string name="restore_in_progress" maxLength="15">Restauración En Progreso</string>
+  <plurals name="backup_restore_processed_prefs">
+    <item quantity="one">%1$d preferencia procesada</item>
+    <item quantity="other">%1$d preferencias procesadas</item>
+  </plurals>
+  <plurals name="backup_restore_processed_refs">
+    <item quantity="one">Referencia de permiso %1$s y %2$d.</item>
+    <item quantity="other">Referencias de permisos %1$s y %2$d.</item>
+  </plurals>
+  <plurals name="backup_restore_invalid_prefs">
+    <item quantity="one">%1$s\n%2$d preferencia inválida omitida.</item>
+    <item quantity="other">%1$s\n%2$d preferencias inválidas omitidas.</item>
+  </plurals>
+  <plurals name="backup_restore_uninstalled_apps">
+    <item quantity="one">%1$s\n%2$d aplicación desinstalada omitida.</item>
+    <item quantity="other">%1$s\n%2$d aplicaciones desinstaladas omitidas.</item>
+  </plurals>
+  <string name="backup_restore_failed">Falló. Ocurrió algún error.</string>
+  <string name="skip_uninstalled_packages" maxLength="20">Omitir paquetes desinstalados</string>
+  <string name="privileges" maxLength="15">"Privilegios"</string>
+  <string name="hidden_apis_warning" maxLength="20">Las APIs ocultas están en la lista negra, cambiando a daemon</string>
+  <string name="hidden_apis_confirmation">Algunas ROMs permiten usar APIs ocultas del sistema. El modo daemon podría\n ser más lento. ¿Detener el uso de APIs ocultas?</string>
+  <string name="bad_port_number" maxLength="15">Número de puerto incorrecto</string>
+  <string name="bad_path" maxLength="15">Ruta incorrecta</string>
+  <string name="granting_permission_failed" maxLength="20">Otorgamiento de permisos fallido: %1$s</string>
+  <string name="love_using_app" maxLength="20">¿Te gusta Permission Manager X?</string>
+  <string name="purchase_and_rate_the_app">Puedes ayudarnos a mejorar la aplicación haciendo una pequeña donación\n o dejando una buena reseña de la aplicación para que podamos atender mejor tus necesidades.</string>
+  <string name="rate_the_app">Las buenas puntuaciones y reseñas nos ayudan a mejorar la aplicación y nos permite\n atender mejor tus necesidades.</string>
+  <string name="ask_to_provide_feedback">Lamentamos oír eso. Puedes ayudarnos a mejorar la aplicación\n contactándonos por correo electrónico o Telegram para que podamos atender mejor tus necesidades.</string>
+  <string name="thank_you" maxLength="20">Gracias</string>
+  <string name="crash_report" maxLength="15">Reporte de Error</string>
+  <string name="ask_to_report_crash_small" maxLength="30">Enviar el reporte de error al desarrollador</string>
+  <string name="ask_to_report_crash">Lo sentimos, un componente de la aplicación tuvo un problema y se cerró de golpe.\n Envía el registro al desarrollador vía correo electrónico o Telegram para que el error sea arreglado.</string>
+  <string name="send_report" maxLength="10">Enviar Reporte</string>
+  <string name="disable_pkg_warning" comment="'system' or 'framework'">Deshabilitar una aplicación de %1$s es una\n    acción peligrosa. En el peor de los casos el sistema Android podría colapsar.\n¿Seguro que quieres continuar?</string>
+  <string name="pkg_state_disabled2">%s, Deshabilitada</string>
+  <!-- PrivDaemonHandler -->
+  <string name="dex_location_changed" maxLength="20">Cambiando locación de carga de daemon</string>
+  <string name="files_not_extracted_accessible" maxLength="20">Archivos no extraídos o no accesibles</string>
+  <string name="priv_daemon_died" maxLength="20">Murió el daemon privilegiado</string>
+  <!--NativeDaemon-->
+  <string name="native_daemon_died" maxLength="20">Murió el daemon nativo</string>
+  <!-- LogcatService -->
+  <string name="logging" maxLength="15">Registrando</string>
+  <string name="logging_warning">La aplicación podría responder lento debido a los registros y el archivo de registros podría crecer\n a un tamaño muy grande. El registro es detenido automaticamente después de 5 minutos.</string>
+  <!-- Buttons-->
+  <string name="disable" maxLength="10">Deshabilitar</string>
+  <string name="enable" maxLength="10">Habilitar</string>
+  <string name="exclude" maxLength="10">Excluir</string>
+  <string name="clear_reference" maxLength="10" comment="'Clear Reference'">Limpiar Ref</string>
+  <string name="set_reference" maxLength="10" comment="'Set Reference'">Establecer Ref</string>
+  <string name="do_not_ask" maxLength="15">No preguntar de nuevo</string>
+  <!-- PackageActivity menu items -->
+  <string name="package_information_menu_item" maxLength="15" comment="'App Information'">Info de App</string>
+  <string name="reset_app_ops" maxLength="15">Reiniciar AppOps</string>
+  <string name="reset_app_ops_confirmation">¿Reiniciar todas las AppOps a sus modos por defecto?</string>
+  <string name="clear_references" maxLength="15">Limpiar Referencias</string>
+  <string name="clear_references_confirmation">¿Limpiar todas las referencias de permisos?</string>
+  <string name="set_references" maxLength="15">Establecer Referencias</string>
+  <string name="set_references_confirmation">¿Establecer todos los estados actuales de permisos como referencias?</string>
+  <!--PackageActivity Dialogs-->
+  <string name="exclude_app_from_visible_list">Excluir aplicación de la lista visible.</string>
+  <!-- PackageActivity -->
+  <string name="something_bad_happened" maxLength="20">Algo salió mal</string>
+  <string name="change_perms_warning" comment="'system' or 'framework'">Cambiar los permisos de una\n    aplicación de %1$s es una acción peligrosa. En el peor de los casos el sistema Android podría colapsar.\n ¿Seguro\n    que quieres continuar?</string>
+  <string name="system">sistema</string>
+  <string name="framework">framework</string>
+  <plurals name="uid_mode_app_ops_warning">
+    <item quantity="one">Esta es una AppOp en modo UID. Cambiarla también afectará %1$d paquete adicional.</item>
+    <item quantity="other">Esta es una AppOp en modo UID. Cambiarla también afectará otros %1$d paquetes.</item>
+  </plurals>
+  <string name="extra_ops_cant_be_excluded">AppOps extra no pueden ser excluídas de la lista visible.</string>
+  <string name="exclude_perm_from_list">Excluír permisos de la lista visible.</string>
+  <string name="set_perm_state_reference" comment="AppOps or manifest permission state"><![CDATA[<br/>Establecer estado <b>%1$s</b> como referencuia.]]></string>
+  <string comment="AppOps or manifest permission state" name="clear_perm_state_reference"><![CDATA[<br/>Limpiar estado <b>%1$s</b> como referencia.]]></string>
+  <plurals name="count_permissions_filtered_out">
+    <item quantity="one">%1$d permiso filtrado</item>
+    <item quantity="other">%1$d permisos filtrados</item>
+  </plurals>
+  <string name="requested_no_permissions">No se solicitaron permisos</string>
+  <string name="protection_level" maxLength="15">Nivel de protección:</string>
+  <string name="should_be" comment="AppOps or manifest permission state"><![CDATA[Debería ser <b>%1$s</b>]]></string>
+  <string name="daemon_not_running_as_system" maxLength="20">Daemon no está corriendo como sistema</string>
+  <string name="failed_get_system_fixed_flag" maxLength="20">Falló el obtener indicador fijo de sistema</string>
+  <string name="prot_lvl_app_ops2">%s, AppOps</string>
+  <string name="prot_lvl_uid_mode">%s, modo UID</string>
+  <string name="prot_lvl_extra">%s, Extra</string>
+  <string name="prot_lvl_development2">%s, Desarrollo</string>
+  <string name="prot_lvl_privileged2">%s, Privilegiado</string>
+  <string name="prot_lvl_fixed2">%s, Fijo</string>
+  <string name="app_op_mode_allow">Permitir</string>
+  <string name="app_op_mode_ignore">Ignorar</string>
+  <string name="app_op_mode_deny">Denegar</string>
+  <string name="app_op_mode_default">Predeterminado</string>
+  <string name="app_op_mode_foreground">Segundo plano</string>
+  <!-- FilterSettingsActivity -->
+  <string name="filter_settings" maxLength="15">Ajustes de Filtro</string>
+  <string name="excluded_apps_summary">Mantenga pulsado en un nombre de paquete para excluirlo</string>
+  <string name="excluded_perms_summary">Mantenga pulsado en un nombre de permiso para excluirlo</string>
+  <string name="extra_app_ops_summary">AppOps siempre mostrado en todas las aplicaciones</string>
+  <string name="extra_app_ops_summary_count">(Total: %1$d)</string>
+  <string name="enable_exc_filters">Habilitar Filtros</string>
+  <string name="disable_exc_filters">Deshabilitar Filtros</string>
+  <plurals name="and_others_count">
+    <item quantity="one">%1$s y %2$d adicional</item>
+    <item quantity="other">%1$s y otros %2$d</item>
+  </plurals>
+  <!-- SettingsActivity -->
+  <string name="locale_system">Sistema</string>
+  <string name="locale_en">Inglés</string>
+  <string name="locale_ru">Ruso</string>
+  <!-- PreferenceActivity menu items -->
+  <string name="filter_settings_reset_defaults_menu_item" maxLength="15">Restaurar A Predeterminado</string>
+  <string name="filter_settings_reset_confirmation">¿Reiniciar ajustes de filtro a los valores por defecto?</string>
+  <string name="filter_settings_clear_excluded_apps_menu_item" maxLength="15">Limpiar Aplicaciones Excluidas</string>
+  <string name="filter_settings_clear_apps_confirmation">¿Limpiar todas las aplicaciones excluidas?</string>
+  <string name="filter_settings_clear_excluded_perms_menu_item" maxLength="15">Limpiar Permisos Excluidos</string>
+  <string name="filter_settings_clear_perms_confirmation">¿Limpiar todos los permisos excluidos?</string>
+  <string name="filter_settings_clear_extra_app_ops_menu_item" maxLength="15">Limpiar AppOps Extra</string>
+  <string name="filter_settings_clear_app_ops_confirmation">¿Limpiar todas las (siempre mostradas) AppOps extra?</string>
+  <!-- AboutActivity -->
+  <string name="source" maxLength="15">Origen</string>
+  <string name="email" maxLength="15">Correo Electrónico</string>
+  <string name="telegram_group" maxLength="15">Grupo de Telegram</string>
+  <string name="no_email_app_installed" maxLength="20">No hay aplicación de correo instalada</string>
+  <string name="no_browser_installed" maxLength="20">"No hay navegador web instalado"</string>
+  <string name="collect_logs" maxLength="15">Recolectar Registros</string>
+  <string name="collect_logs_summary" maxLength="20">Guardar archivo de registro detallado</string>
+  <string name="report_issues" maxLength="15">Reportar Problemas</string>
+  <string name="report_issues_summary" maxLength="20">Errores, mejoras, sugerencias…</string>
+  <string name="select_log_file" maxLength="20">Seleccionar archivo para guardar registro</string>
+  <string name="stop_logging" maxLength="15">Detener Registro</string>
+  <string name="logging_stopped" maxLength="20">Registro Detenido</string>
+  <string name="app_rating" maxLength="15">Puntúame</string>
+  <string name="app_rating_summary" maxLength="20">Puntúa / reseña en Play Store</string>
+  <string name="paid_features" maxLength="15">Características de Paga</string>
+  <string name="paid_features_summary"><![CDATA[\n    <![CDATA[
+      <ul>
+        <li>Ordena aplicaciones y permisos por diferentes parámetros</li>
+        <li>Chequeo programado para notificar estados de referencia malos</li>
+        <li>Autorevocar permisos otorgados con estados ROJOS</li>
+        <li>Hacer cambios a aplicaciones y permisos críticos</li>
+        <li>Soporte a múltiples usuarios / perfiles de trabajo</li>
+        <li>Crear copias de seguridad automaticamente al hacer cambios</li>
+        <li>Sugerencias de búsqueda</li>
+        <li>Opciones de tema</li>
+        <li>Operaciones por lotes (perfiles) (próximamente)</li>
+      </ul>
+    ]]]]><![CDATA[>\n  ]]></string>
+  <string name="update" maxLength="15">Actualizar</string>
+  <string name="update_summary" maxLength="20">Verificar actualizaciones de la aplicación</string>
+  <string name="check_in_progress" maxLength="20">Verificación en progreso</string>
+  <string name="check_for_updates_failed" maxLength="20">Verificación de actualizaciones fallido</string>
+  <string name="app_is_up_to_date" maxLength="20">La aplicación está actualizada</string>
+  <string name="new_version_available" maxLength="20">Una nueva versión de la aplicación está disponible</string>
+  <string name="tap_to_download" maxLength="20">Toca para descargar</string>
+  <string name="download" maxLength="10">Descargar</string>
+  <string name="privacy_policy" maxLength="20">Política de privacidad</string>
+  <string name="translations">Traducciones</string>
+  <string name="translations_summary">¿Quieres ver la aplicación en tu lenguaje?</string>
+  <string name="language_credits"><![CDATA[\n    <![CDATA[
+      <b>Ruso</b>
+      <ul>
+        <li>Rikishi007 (rikishi0071@gmail.com)</li>
+        <li>tommynok <a href="https://crowdin.com/profile/tommynok">LINK</a></li>
+        <li>siebenbrodt <a href="https://crowdin.com/profile/siebenbrodt">LINK</a></li>
+      </ul>
+      <br/>
+	  <b>Español</b>
+      <ul>
+        <li>LuisAlfredo92 <a href="https://crowdin.com/profile/luisalfredo92">LINK</a></li>
+      </ul>
+      <br/>
+      <a href="https://crowdin.com/project/pmx"><b>Añadir mi lenguaje</b></a>
+    ]]]]><![CDATA[>\n  ]]></string>
+  <string name="share">Compartir</string>
+  <string name="share_summary">Compartir la aplicación con otros</string>
+  <string name="share_text">¡Mira esta asombrosa aplicación! %1$s</string>
+  <string name="perm_status_menu_item">Privilegios</string>
+  <string name="uid">UID:</string>
+  <string name="app_ops">AppOps</string>
+  <string name="op_to_def_mode">Op A Modo Predeterminado</string>
+  <string name="op_to_switch">Op A Switch</string>
+  <string name="op_to_name">Op A Nombre</string>
+  <string name="op_num_consistency">Consistencia de Números Op</string>
+  <string name="permissions">Permisos</string>
+  <!-- Donate -->
+  <string name="send_bitcoin">Enviar Bitcoin</string>
+  <string name="no_bitcoin_app_installed">"Aplicación de Cartera Bitcoin no encontrada"</string>
+  <string name="ask_for_bank_account">Solicitar Cuenta Bancaria</string>
+  <string name="get_paid_version_from_ps">Obtén la Versión de Paga Desde Play Store</string>
+  <!-- Notification Channels -->
+  <string name="channel_app_update">Actualizaciones de la aplicación</string>
+  <string name="channel_crash_report">Reporte de fallos</string>
+  <string name="channel_logcat_collection">Recolección de Registros</string>
+  <!-- HelpActivity -->
+  <string name="load_internet_menu_item">Cargar desde internet</string>
+  <string name="zoom_in_menu_item" maxLength="15">Acercarse</string>
+  <string name="zoom_out_menu_item" maxLength="15">Alejarse</string>
+  <!-- DaemonCmdRcvSvc: Daemon return messages -->
+  <string name="daemon_listen_on_loopback_failed" maxLength="20">Daemon falló al escuchar 127.0.0.1</string>
+  <string name="daemon_establish_connection_failed" maxLength="20">Daemon falló al establecer\n    conexión con el cliente</string>
+  <string name="daemon_wrong_args_received" maxLength="20">Argumentos erróneos</string>
+  <string name="daemon_set_app_ops_mode_failed" maxLength="20">Establecimiento del modo AppOps fallido</string>
+  <string name="daemon_reset_app_ops_failed" maxLength="20">Restablecimiento de Appops fallido</string>
+  <string name="daemon_grant_perm_failed" maxLength="20">Otorgamiento de permisos fallido</string>
+  <string name="daemon_revoke_perm_failed" maxLength="20">Revocación de permiso fallida</string>
+  <string name="daemon_enable_pkg_failed" maxLength="20">Habilitación de aplicación fallida</string>
+  <string name="daemon_disable_pkg_failed" maxLength="20">Deshabilitación de aplicación fallida</string>
+  <string name="daemon_open_app_info_failed" maxLength="20">Apertura de información de aplicación fallida</string>
+  <string name="daemon_get_perm_grp_info_list_failed" maxLength="20">Obtención de permisos de grupos fallida</string>
+  <string name="daemon_op_num_inconsistency" maxLength="20">ROM mala</string>
+  <!-- Locale -->
+  <string name="help_file_name">help.html</string>
+</resources>

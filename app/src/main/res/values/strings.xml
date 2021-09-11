@@ -148,12 +148,7 @@
   <string name="disable_pkg_warning" comment="'system' or 'framework'">Disabling a %1$s app is a
     dangerous action. In worst-case scenario Android system may crash.\nAre you sure you want to continue?
   </string>
-  <string name="pkg_state_critical">Critical</string>
-  <string name="pkg_state_framework">Framework</string>
-  <string name="pkg_state_system">System</string>
-  <string name="pkg_state_user">User</string>
-  <string name="pkg_state_disabled">Disabled</string>
-  <string name="pkg_state_disabled2">%s, Disabled</string>
+  <string name="pkg_state_disabled2" searchStr="true">%s, Disabled</string>
 
   <!-- PrivDaemonHandler -->
   <string name="dex_location_changed" maxLength="20">Switching daemon load location</string>
@@ -221,26 +216,12 @@
   <string name="should_be" comment="AppOps or manifest permission state"><![CDATA[Should be <b>%1$s</b>]]></string>
   <string name="daemon_not_running_as_system" maxLength="20">Daemon not running as system</string>
   <string name="failed_get_system_fixed_flag" maxLength="20">Failed getting system fixed flag</string>
-  <string name="prot_lvl_unknown">Unknown</string>
-  <string name="prot_lvl_normal">Normal</string>
-  <string name="prot_lvl_dangerous">Dangerous</string>
-  <string name="prot_lvl_signature">Signature</string>
-  <string name="prot_lvl_app_ops">AppOps</string>
-  <string name="prot_lvl_app_ops2">%s, AppOps</string>
-  <string name="prot_lvl_uid_mode">%s, UID mode</string>
-  <string name="prot_lvl_extra">%s, Extra</string>
-  <string name="prot_lvl_development">Development</string>
-  <string name="prot_lvl_development2">%s, Development</string>
-  <string name="prot_lvl_privileged">Privileged</string>
-  <string name="prot_lvl_privileged2">%s, Privileged</string>
-  <string name="prot_lvl_fixed">Fixed</string>
-  <string name="prot_lvl_fixed2">%s, Fixed</string>
-  <string name="search_str_uid">UID</string>
-  <string name="search_str_time">TIME</string>
-  <string name="search_str_extra">EXTRA</string>
-  <string name="search_str_red">RED</string>
-  <string name="search_str_orange">ORANGE</string>
-  <string name="search_str_green">GREEN</string>
+  <string name="prot_lvl_app_ops2" searchStr="true">%s, AppOps</string>
+  <string name="prot_lvl_uid_mode" searchStr="true">%s, UID mode</string>
+  <string name="prot_lvl_extra" searchStr="true">%s, Extra</string>
+  <string name="prot_lvl_development2" searchStr="true">%s, Development</string>
+  <string name="prot_lvl_privileged2" searchStr="true">%s, Privileged</string>
+  <string name="prot_lvl_fixed2" searchStr="true">%s, Fixed</string>
   <string name="app_op_mode_allow">Allow</string>
   <string name="app_op_mode_ignore">Ignore</string>
   <string name="app_op_mode_deny">Deny</string>
@@ -265,6 +246,7 @@
   <string name="locale_system">System</string>
   <string name="locale_en">English</string>
   <string name="locale_ru">Russian</string>
+  <string name="locale_es">Spanish</string>
 
   <!-- PreferenceActivity menu items -->
   <string name="filter_settings_reset_defaults_menu_item" maxLength="15">Reset To Defaults</string>
@@ -331,6 +313,11 @@
         <li>Rikishi007 (rikishi0071@gmail.com)</li>
         <li>tommynok <a href="https://crowdin.com/profile/tommynok">LINK</a></li>
         <li>siebenbrodt <a href="https://crowdin.com/profile/siebenbrodt">LINK</a></li>
+      </ul>
+      <br/>
+      <b>Spanish</b>
+      <ul>
+        <li>LuisAlfredo92 <a href="https://crowdin.com/profile/luisalfredo92">LINK</a></li>
       </ul>
       <br/>
       <a href="https://crowdin.com/project/pmx"><b>Add my language</b></a>

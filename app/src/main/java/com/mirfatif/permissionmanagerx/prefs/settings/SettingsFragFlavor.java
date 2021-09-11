@@ -1,6 +1,7 @@
 package com.mirfatif.permissionmanagerx.prefs.settings;
 
 import static com.mirfatif.permissionmanagerx.parser.PackageParser.PKG_PARSER;
+import static com.mirfatif.permissionmanagerx.parser.SearchConstants.CONSTANTS;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +15,6 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.main.MainActivity;
-import com.mirfatif.permissionmanagerx.parser.SearchConstants;
 import com.mirfatif.permissionmanagerx.util.Utils;
 
 @SuppressWarnings("UnusedDeclaration")
@@ -54,7 +54,7 @@ public class SettingsFragFlavor extends PreferenceFragmentCompat
       PKG_PARSER.updatePackagesList();
     } else if (key.equals(getString(R.string.pref_settings_locale_key))) {
       App.updateContext();
-      SearchConstants.recreate();
+      CONSTANTS.recreate();
       MainActivity.restart();
     }
   }

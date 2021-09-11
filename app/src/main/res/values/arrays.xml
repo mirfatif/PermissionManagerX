@@ -178,12 +178,14 @@
     <item>@string/locale_system</item>
     <item>@string/locale_en</item>
     <item>@string/locale_ru</item>
+    <item>@string/locale_es</item>
   </string-array>
 
   <string-array name="locale_codes">
     <item />
     <item>en</item>
     <item>ru</item>
+    <item>es</item>
   </string-array>
 
 </resources>

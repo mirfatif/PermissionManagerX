@@ -140,11 +140,6 @@
   <string name="disable_pkg_warning" comment="'system' or 'framework'">Заморозка приложения %1$s является
     опасным действием. Это может нанести вред вплоть до сбоя работы системы Android.\nВы уверены что хотите продолжить?
   </string>
-  <string name="pkg_state_critical">Критический</string>
-  <string name="pkg_state_framework">Фреймворк</string>
-  <string name="pkg_state_system">Система</string>
-  <string name="pkg_state_user">Пользователь</string>
-  <string name="pkg_state_disabled">Заморожено</string>
   <string name="pkg_state_disabled2">%s, заморожено</string>
   <!-- PrivDaemonHandler -->
   <string name="dex_location_changed" maxLength="20">Переключение места запуска демона</string>
@@ -198,37 +193,25 @@
   <string name="should_be" comment="AppOps or manifest permission state"><![CDATA[Должен быть <b>%1$s</b>]]></string>
   <string name="daemon_not_running_as_system" maxLength="20">Демон не запущен как системный</string>
   <string name="failed_get_system_fixed_flag" maxLength="20">Не удалось считать фиксированный системный флаг</string>
-  <string name="prot_lvl_unknown">Неизвестно</string>
-  <string name="prot_lvl_normal">Нормальный</string>
-  <string name="prot_lvl_dangerous">Опасный</string>
-  <string name="prot_lvl_signature">Подпись</string>
-  <string name="prot_lvl_app_ops">AppOps</string>
   <string name="prot_lvl_app_ops2">%s, AppOps</string>
   <string name="prot_lvl_uid_mode">%s, UID режим</string>
   <string name="prot_lvl_extra">%s, дополнительные</string>
-  <string name="prot_lvl_development">разработка</string>
-  <string name="prot_lvl_development2">%s, разработка</string>
-  <string name="prot_lvl_privileged">Привилегированный</string>
+  <string name="prot_lvl_development2">%s, Разработка</string>
   <string name="prot_lvl_privileged2">%s, привилегированный</string>
-  <string name="prot_lvl_fixed">Фиксированный</string>
   <string name="prot_lvl_fixed2">%s, фиксированный</string>
-  <string name="search_str_uid">UID</string>
-  <string name="search_str_time">ВРЕМЯ</string>
-  <string name="search_str_extra">ДОПОЛНИТЕЛЬНЫЙ</string>
-  <string name="search_str_red">КРАСНЫЙ</string>
-  <string name="search_str_orange">АПЕЛЬСИН</string>
-  <string name="search_str_green">ЗЕЛЕНЫЙ</string>
   <string name="app_op_mode_allow">Разрешить</string>
   <string name="app_op_mode_ignore">Игнорировать</string>
   <string name="app_op_mode_deny">Запретить</string>
   <string name="app_op_mode_default">По умолчанию</string>
   <string name="app_op_mode_foreground">Передний план</string>
-  <!-- PreferenceActivity -->
+  <!-- FilterSettingsActivity -->
   <string name="filter_settings" maxLength="15">Фильтр настроек</string>
   <string name="excluded_apps_summary">Долгое нажатие на имя пакета, чтобы исключить его</string>
   <string name="excluded_perms_summary">Долгое нажатие на имя разрешения, чтобы исключить его</string>
   <string name="extra_app_ops_summary">AppOps всегда показываются в каждом приложении</string>
   <string name="extra_app_ops_summary_count">(Всего: %1$d)</string>
+  <string name="enable_exc_filters">Включить фильтры</string>
+  <string name="disable_exc_filters">Отключить фильтры</string>
   <plurals name="and_others_count">
     <item quantity="one">%1$s и ещё 1</item>
     <item quantity="few">%1$s и ещё %2$d</item>
@@ -236,7 +219,7 @@
     <item quantity="other">%1$s и ещё %2$d</item>
   </plurals>
   <!-- SettingsActivity -->
-  <string name="locale_system">системного</string>
+  <string name="locale_system">Система</string>
   <string name="locale_en">Английский</string>
   <string name="locale_ru">Русский</string>
   <!-- PreferenceActivity menu items -->
@@ -264,17 +247,18 @@
   <string name="app_rating" maxLength="15">Поставить оценку</string>
   <string name="app_rating_summary" maxLength="20">Поставить оценку/оставить отзыв в Play Store</string>
   <string name="paid_features" maxLength="15">Платные функции</string>
-  <string name="paid_features_summary"><![CDATA[      <ul>
-        <li>Сортировка приложений и разрешений по различным параметрам</li>
-        <li>Проверка разрешений по расписанию и уведомление в случае их изменений</li>
-        <li>Внесение изменения в критически важные приложения и разрешения</li>
-        <li>Поддержка нескольких пользователей / рабочего профиля</li>
-        <li>Автоматический бэкап при изменениях</li>
-        <li>Подсказки поиска</li>
-        <li>Настройки темы</li>
-        <li>Пакетные операции (профили) (в ближайшее время)</li>
-      </ul>
-    ]]></string>
+  <string name="paid_features_summary"><![CDATA[<ul>
+<li>Сортировка приложений и разрешений по различным параметрам</li>
+<li>Проверка разрешений по расписанию и уведомление в случае их изменений</li>
+<li>Автоматическая отмена предоставленных разрешений с КРАСНЫМИ состояниями</li>
+<li>Отслеживание разрешений для быстрого удаления разрешений</li>
+<li>Внесение изменения в критически важные приложения и разрешения</li>
+<li>Поддержка нескольких пользователей / рабочего профиля</li>
+<li>Автоматический бэкап при изменениях</li>
+<li>Подсказки поиска</li>
+<li>Настройки темы</li>
+<li>Пакетные операции (профили) (в ближайшее время)</li>
+</ul>]]></string>
   <string name="update" maxLength="15">Обновить</string>
   <string name="update_summary" maxLength="20">Проверить обновления приложения</string>
   <string name="check_in_progress" maxLength="20">Выполняется проверка</string>
@@ -285,7 +269,7 @@
   <string name="download" maxLength="10">Скачать</string>
   <string name="privacy_policy" maxLength="20">Политика конфиденциальности</string>
   <string name="translations">Переводы</string>
-  <string name="translations_summary">Хотите приложение на своём языке?</string>
+  <string name="translations_summary">Хотите это приложение на своём языке?</string>
   <string name="language_credits"><![CDATA[      <b>Русский</b>
       <ul>
         <li>Rikishi007 (rikishi0071@gmail.com)</li>
@@ -293,11 +277,19 @@
         <li>siebenbrodt <a href="https://crowdin.com/profile/siebenbrodt">LINK</a></li>
       </ul>
       <br/>
-      <a href="https://crowdin.com/project/pmx"><b>Добавить мой язык</b></a>
+      <a href="https://crowdin.com/project/pmx"><b>Add my language</b></a>
     ]]></string>
   <string name="share">Поделиться</string>
   <string name="share_summary">Поделиться приложением с другими</string>
   <string name="share_text">Попробуйте это замечательное приложение! %1$s</string>
+  <string name="perm_status_menu_item">Привилегии</string>
+  <string name="uid">UID:</string>
+  <string name="app_ops">AppOps</string>
+  <string name="op_to_def_mode">Режим Op по умолчанию</string>
+  <string name="op_to_switch">Op к Switch</string>
+  <string name="op_to_name">Op к имени</string>
+  <string name="op_num_consistency">Последовательность номеров Op</string>
+  <string name="permissions">Разрешения</string>
   <!-- Donate -->
   <string name="send_bitcoin">Отправить биткойны</string>
   <string name="no_bitcoin_app_installed">"Не найдено приложение Биткоин-кошелька"</string>
@@ -308,6 +300,7 @@
   <string name="channel_crash_report">Отчёт о падении</string>
   <string name="channel_logcat_collection">Сбор лога</string>
   <!-- HelpActivity -->
+  <string name="load_internet_menu_item">Загрузка из интернета</string>
   <string name="zoom_in_menu_item" maxLength="15">Увеличить</string>
   <string name="zoom_out_menu_item" maxLength="15">Уменьшить</string>
   <!-- DaemonCmdRcvSvc: Daemon return messages -->
@@ -326,5 +319,5 @@
   <string name="daemon_get_perm_grp_info_list_failed" maxLength="20">Не удалось считать группы разрешений</string>
   <string name="daemon_op_num_inconsistency" maxLength="20">Потенциально неподдерживаемая прошивка</string>
   <!-- Locale -->
-  <string name="help_file_name">help.html</string>
+  <string name="help_file_name">help_ru.html</string>
 </resources>
