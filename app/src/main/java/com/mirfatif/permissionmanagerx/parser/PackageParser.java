@@ -166,7 +166,9 @@ public enum PackageParser {
 
       PKG_PARSER_FLAVOR.onPkgListCompleted();
       mIsUpdating = false;
-      Utils.runInBg(() -> DAEMON_HANDLER.sendRequest(Commands.RESET_OOS));
+      if (SETTINGS.isPrivDaemonAlive()) {
+        Utils.runInBg(() -> DAEMON_HANDLER.sendRequest(Commands.RESET_OOS));
+      }
       return true;
     }
   }
