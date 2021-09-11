@@ -5,8 +5,8 @@ android {
     buildToolsVersion buildToolsVer
 
     defaultConfig {
-        minSdkVersion minSdkVer
-        targetSdkVersion targetSdkVer
+        minSdk minSdkVer
+        targetSdk targetSdkVer
     }
 
     buildFeatures {

@@ -2,10 +2,10 @@ package com.mirfatif.privdaemon;
 
 import com.mirfatif.privtasks.PrivTasks;
 
-public class PrivDaemonFlavor {
+public class DaemonFlavor {
 
   @SuppressWarnings("UnusedDeclaration")
-  public PrivDaemonFlavor(PrivDaemon privDaemon, PrivTasks privTasks) {}
+  public DaemonFlavor(Daemon daemon, PrivTasks privTasks) {}
 
   @SuppressWarnings("UnusedDeclaration")
   public boolean handleCommand(String[] args) {

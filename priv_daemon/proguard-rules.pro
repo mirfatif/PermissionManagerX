@@ -1,19 +1,18 @@
+# Preserve the line number information for debugging stack traces.
 -keepattributes SourceFile,LineNumberTable
+
+# Keep the line number information but hide the original source file name.
 -renamesourcefileattribute SourceFile
 
-# Because of serialzation
--keep class com.mirfatif.privtasks.MyPackageOps* { *; }
--keep class com.mirfatif.privtasks.MyPackageInfo { *; }
--keep class com.mirfatif.privtasks.PermStatus { *; }
+# Move all obfuscated classes into the root package.
+-repackageclasses
+-allowaccessmodification
 
-# main method must be accessible to VM for start
+# VM entry point must be kept.
 -keep class com.mirfatif.privdaemon.PrivDaemon {
   public static void main(java.lang.String[]);
 }
 
 # Throwable names must not be obfuscated to correctly print e.toString()
--keepnames class com.mirfatif.privtasks.hiddenapis.HiddenAPIsError
--keepnames class com.mirfatif.privtasks.hiddenapis.HiddenAPIsException
-
-# Obfuscate everything else, but don't optimize (remove)
--keep, allowobfuscation class * { *; }
+-keepnames class com.mirfatif.** extends java.lang.Exception
+-keepnames class com.mirfatif.** extends java.lang.Error

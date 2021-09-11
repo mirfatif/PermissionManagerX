@@ -6,8 +6,8 @@ android {
 
     defaultConfig {
         applicationId "com.mirfatif.privdaemon"
-        minSdkVersion minSdkVer
-        targetSdkVersion targetSdkVer
+        minSdk minSdkVer
+        targetSdk targetSdkVer
     }
 
     buildFeatures {
