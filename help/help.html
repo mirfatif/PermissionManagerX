@@ -121,9 +121,11 @@
         </li>
         <li style="margin-bottom:5px"><a href="#faq" class="contents"><b>FAQs</b></a></li>
         <ul>
+            <li style="margin-bottom:5px"><a href="#faq36" class="contents">Why do I need to use PMX?</a></li>
             <li style="margin-bottom:5px"><a href="#faq1" class="contents">Why PMX requires root or ADB access?</a></li>
             <li style="margin-bottom:5px"><a href="#faq33" class="contents">My device isn't rooted. How can I use PMX?</a></li>
             <li style="margin-bottom:5px"><a href="#faq2" class="contents">How does PMX change other apps permissions?</a></li>
+            <li style="margin-bottom:5px"><a href="#faq37" class="contents">I've changed a permission but it's not working. Why?</a></li>
             <li style="margin-bottom:5px"><a href="#faq3" class="contents">Why do some permissions revert to their old state soon after changing them?</a></li>
             <li style="margin-bottom:5px"><a href="#faq34" class="contents">Do the permissions remain changed after ADB is turned off, or root is denied, or PMX is uninstalled?</a></li>
             <li style="margin-bottom:5px"><a href="#faq4" class="contents">What are hidden APIs in Advanced Settings?</a></li>
@@ -153,6 +155,7 @@
             <li style="margin-bottom:5px"><a href="#faq24" class="contents">How does PMX compare to XPrivacyLua? Can they replace each other?</a></li>
             <li style="margin-bottom:5px"><a href="#faq32" class="contents">Can PMX auto remove permissions when an app is closed, like Bouncer does?</a></li>
             <li style="margin-bottom:5px"><a href="#faq35" class="contents">Can I get notified when a new app is installed?</a></li>
+            <li style="margin-bottom:5px"><a href="#faq38" class="contents">When a new app is installed, can PMX disable its permissions by default?</a></li>
             <li style="margin-bottom:5px"><a href="#faq25" class="contents">Why PMX requires INTERNET permission?</a></li>
             <li style="margin-bottom:5px"><a href="#faq26" class="contents">How much privacy friendly PMX is?</a></li>
             <li style="margin-bottom:5px"><a href="#faq27" class="contents">Is PMX spying on me using ADB over network?</a></li>
@@ -495,6 +498,19 @@
 
     <h2 id="faq">FAQs</h2>
     <ul>
+        <li id="faq36" style="margin-bottom:10px">
+            <p><b>Why do I need to use PMX?</b></p>
+            <p>Because:</p>
+            <ul>
+                <li style="margin-bottom:10px">PMX provides all the scattered (or otherwise unavailable) permission-related <b>information</b> and <b>controls</b> on a single screen so that you can watch and control them in a comprehensive and convenient way.</li>
+                <li style="margin-bottom:10px">There's no official tool available in stock Android to change <b>AppOps</b>. Only a subset of <b>manifest permissions</b> are exposed to user in permission settings. PMX exposes all the permissions in raw form. Related: <a href="#perms_types">Manifest permissions and AppOps</a>.</li>
+                <li style="margin-bottom:10px">PMX makes it easy for you to keep track of any <b>unwanted changes</b> to permissions.</li>
+                <li style="margin-bottom:10px">Giving control on your device, PMX enables you to <b>save device resources</b> like battery and network bandwidth, and <b>protect your privacy</b>. You are not entirely left to the mercy of app and ROM developers. Read this <a href="https://www.buzzfeednews.com/article/nicolenguyen/how-apps-take-your-data-and-sell-it-without-you-even">article</a> to get an idea.</li>
+                <li style="margin-bottom:10px">PMX can <b>watch permission changes</b> in realtime, reverting them automatically when you stop using an app. Or it can perform <b>scheduled scan</b> of permissions. So you don't have to remember things.</li>
+                <li style="margin-bottom:5px">PMX makes it easy for you to <b>backup and restore</b> permissions state of installed apps so that you don't have to tweak an app's permissions again and again.</li>
+            </ul>
+            <p>Please also see <a href="#intro">What is PMX?</a></p>
+        </li>
         <li id="faq1" style="margin-bottom:10px">
             <p><b>Why PMX requires root or ADB access?</b></p>
             <p>Android won't allow a normal user app to change other apps' manifest or AppOp permissions, even its own. Only reading AppOps without root or ADB is possible provided that hidden APIs are not blacklisted on your device, which is <a href="https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces">very unlikely</a> on Android 9+.</p>
@@ -509,12 +525,16 @@
             <p><b>How does PMX change other apps permissions?</b></p>
             <p>PMX itself cannot and does not grant or revoke other apps' permissions. In fact no third party app is privileged to do that. It's the Android OS which controls apps' permissions. PMX just sends a request to the Android framework to change a permission's state. Now it's entirely up to Android how much it honors our request. Not all permissions are changeable. And if you are not able to change a permission's state using PMX, you won't be able to change it in any other way either.</p>
         </li>
+        <li id="faq37" style="margin-bottom:10px">
+            <p><b>I've changed a permission but it's not working. Why?</b></p>
+            <p>After changing a permission successfully, if you are not getting the desired results, it's the Android operating system to be blamed. Please see <a href="#faq2">How does PMX change other apps permissions?</a></p>
+        </li>
         <li id="faq3" style="margin-bottom:10px">
             <p><b>Why do some permissions revert to their old state soon after changing them?</b></p>
             <p>Usually they are AppOp permissions. Some AppOps are only used by Android for compatibility (e.g. LEGACY_STORAGE) and they don't actually control anything. If we explore their underlying working it's revealed that granting / revoking such permissions doesn't make sense.</p>
             <p>Some permissions cannot be changed if the app is targeting old Android version. Also some OEM ROMs behave weird when it comes to AppOps. We do not know exactly what changes your OEM has made to the stock AOSP code. That's why the statement on Github and Play Store: <i>"The app is tested on stock Android 7-11. Some highly customized ROMs may behave unexpectedly."</i></p>
             <p>Actually there come many more explanations if we dig every app and permission individually (which doesn't sound practical). As stated above, PMX doesn't change other apps' permissions on its own, so even if for some unknown reason Android doesn't change a permission, or reverts it back immediately, there's nothing we can do to force it because these are the limitations at Android end. Rather, I should say this is how Android works.</p>
-            <p>Related: <a href="#faq11" class="contents">What are different AppOp modes and which one should I use?</a></p>
+            <p>Related: <a href="#faq11">What are different AppOp modes and which one should I use?</a></p>
         </li>
         <li id="faq34" style="margin-bottom:10px">
             <p><b>Do the permissions remain changed after ADB is turned off, or root is denied, or PMX is uninstalled?</b></p>
@@ -558,7 +578,7 @@
             <p><b>What are different AppOp modes and which one should I use?</b></p>
             <p>Normally you should <i>Allow</i> or <i>Ignore</i>. Or you may want to allow an operation only when the app is in <i>Foreground</i> (only on Pie+). <i>Deny</i> is the intense version of <i>Ignore</i> which may crash the requesting app. <i>Default</i> is the system's default behavior which differs for different AppOps.</p>
             <p>Please note that not every AppOp mode can be possibly set on every AppOp for every app. For instance on recent Android releases CAMERA and MICROPHONE are allowed to be used by user apps only in foreground (even if set mode is <i>Allow</i>). Similarly, some AppOps can never be set to <i>Foreground</i> mode.</p>
-            <p>Related: <a href="#faq3" class="contents">Why do some permissions revert to their old state soon after changing them?</a></p>
+            <p>Related: <a href="#faq3">Why do some permissions revert to their old state soon after changing them?</a></p>
             <p>Official documentation: <a href="https://developer.android.com/reference/android/app/AppOpsManager#access-control">AppOpsManager</a>.</p>
         </li>
         <li id="faq12" style="margin-bottom:10px">
@@ -639,6 +659,11 @@
             <p><b>Can I get notified when a new app is installed?</b></p>
             <p>Yes. See <a href="#perm_watcher">Permission Watcher</a>.</p>
             <p>Since Android 8 it's not possible for background (not running) apps to get notified of the new app installed event. So we've to run a foreground service (with persistent notification) to receive this event. Or you may consider using <a href="#scheduled_checker">Scheduled Checks</a> to keep things in place.</p>
+        </li>
+        <li id="faq38" style="margin-bottom:10px">
+            <p><b>When a new app is installed, can PMX drop its permissions by default?</b></p>
+            <p>Yes. But there's nothing to drop. All the revocable manifest permissions are already revoked and stay revoked unless the user grants them explicitly. As far as AppOps are concerned, many of them don't appear until at least once used by the app e.g. VIBRATION and READ_CLIPBOARD. Many others (e.g. READ_CONTACTS) have their corresponding manifest permissions already dropped, as pointed out. So it's not predictable at the time of app installation which AppOps should be removed.</p>
+            <p>But a notification is displayed when a new app is installed (if using <a href="#perm_watcher">Permission Watcher</a>) so the user can set permissions one by one or apply a profile (upcoming feature).</p>
         </li>
         <li id="faq25" style="margin-bottom:10px">
             <p><b>Why PMX requires INTERNET permission?</b></p>

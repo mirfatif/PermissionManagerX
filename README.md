@@ -13,11 +13,18 @@ Using e<b>X</b>tended <b>Permission Manager</b>, for each installed app, on sing
 * View AppOps permissions and choose one of multiple modes
 * Set your desired reference value for every changeable permission
 
-The app evolved from a shell script to a GUI for my personal needs. After a ROM upgrade or changing device, it's a time-taking process to review all installed apps for granted permissions and revoke the unnecessary ones (after all  <b><i>privacy matters</i></b>). To come up with a solution, you can set <b>reference states</b> of permissions which can be quickly backed up and restored. Colored bars at left indicate reference states and make it quite easy to review packages and permissions at a glance.
+<b>Manifest permissions</b> are those normally called permissions e.g. Storage, Camera etc. <b>AppOps</b> (app operations) is a robust framework Android uses at back end for access control. With every Android release manifest permissions are becoming more dependent on AppOps. So it's fun to control both simultaneously and see how they relate to each other.
 
-<b>Manifest permissions</b> are those normally called permissions e.g. Storage, Camera etc. AppOps (app operations) is a robust framework Android uses at back end for access control. With every Android release manifest permissions are becoming more dependent on AppOps. So it's fun to control both simultaneously and see how they relate to each other.
+In short, AppOps provide a fine-grained control over many of the manifest permissions. Plus it provides additional controls like background execution, vibration, clipboard access etc. Just install the app to explore it yourself.
 
-In short, <b>AppOps</b> provide a fine-grained control over many of the manifest permissions. Plus it provides additional controls like background execution, vibration, clipboard access etc. Explore the app to see more. Also check <a href="https://mirfatif.github.io/PermissionManagerX/help/help.html#intro">What is PMX?</a>
+When you reinstall an app, or change your device, or upgrade your ROM, it's a time-taking process to review all installed apps for granted permissions and revoke the unnecessary ones (after all  <b><i>privacy matters</i></b>). PMX provides you the solution. Set <b>reference states</b> of permissions, which can be quickly backed up and restored, and colored bars at left make it quite easy to review packages and permissions at a glance.
+
+Confused? We are here to explain. Please start with:
+
+* <a href="https://mirfatif.github.io/PermissionManagerX/help/help.html#intro">What is PMX?</a>
+* <a href="https://mirfatif.github.io/PermissionManagerX/help/help#faq36">Why do I need to use PMX?</a>
+* <a href="https://mirfatif.github.io/PermissionManagerX/help/help#perms_types">What are manifest permissions and AppOps?</a>
+* <a href="https://mirfatif.github.io/PermissionManagerX/help/help#perm_ref">Permission References</a>
 
 ## Required Privileges / Permissions
 
@@ -49,12 +56,13 @@ In short, <b>AppOps</b> provide a fine-grained control over many of the manifest
 
 ## Third-Party Libraries
 Credits and thanks to the developers of:
-* [https://github.com/anggrayudi/android-hidden-api](https://github.com/anggrayudi/android-hidden-api)
-* [https://github.com/cgutman/AdbLib](https://github.com/cgutman/AdbLib)
-* [https://github.com/sherter/google-java-format-gradle-plugin](https://github.com/sherter/google-java-format-gradle-plugin)
-* [https://github.com/material-components/material-components-android](https://github.com/material-components/material-components-android)
-* [https://github.com/saket/Better-Link-Movement-Method](https://github.com/saket/Better-Link-Movement-Method)
-* [https://github.com/square/leakcanary](https://github.com/square/leakcanary)
+* https://github.com/androidx/androidx
+* https://github.com/anggrayudi/android-hidden-api
+* https://github.com/cgutman/AdbLib
+* https://github.com/sherter/google-java-format-gradle-plugin
+* https://github.com/material-components/material-components-android
+* https://github.com/saket/Better-Link-Movement-Method
+* https://github.com/square/leakcanary
 
 ## License [![License](https://img.shields.io/github/license/mirfatif/PermissionManagerX?label="License")](https://github.com/mirfatif/PermissionManagerX/blob/master/LICENSE)
 
