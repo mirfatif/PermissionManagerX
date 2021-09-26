@@ -140,7 +140,7 @@
   <string name="disable_pkg_warning" comment="'system' or 'framework'">Заморозка приложения %1$s является
     опасным действием. Это может нанести вред вплоть до сбоя работы системы Android.\nВы уверены что хотите продолжить?
   </string>
-  <string name="pkg_state_disabled2">%s, заморожено</string>
+  <string name="pkg_state_disabled2" searchStr="true">%s, заморожено</string>
   <!-- PrivDaemonHandler -->
   <string name="dex_location_changed" maxLength="20">Переключение места запуска демона</string>
   <string name="files_not_extracted_accessible" maxLength="20">Файлы не извлечены или недоступны</string>
@@ -193,12 +193,12 @@
   <string name="should_be" comment="AppOps or manifest permission state"><![CDATA[Должен быть <b>%1$s</b>]]></string>
   <string name="daemon_not_running_as_system" maxLength="20">Демон не запущен как системный</string>
   <string name="failed_get_system_fixed_flag" maxLength="20">Не удалось считать фиксированный системный флаг</string>
-  <string name="prot_lvl_app_ops2">%s, AppOps</string>
-  <string name="prot_lvl_uid_mode">%s, UID режим</string>
-  <string name="prot_lvl_extra">%s, дополнительные</string>
-  <string name="prot_lvl_development2">%s, Разработка</string>
-  <string name="prot_lvl_privileged2">%s, привилегированный</string>
-  <string name="prot_lvl_fixed2">%s, фиксированный</string>
+  <string name="prot_lvl_app_ops2" searchStr="true">%s, AppOps</string>
+  <string name="prot_lvl_uid_mode" searchStr="true">%s, UID режим</string>
+  <string name="prot_lvl_extra" searchStr="true">%s, дополнительные</string>
+  <string name="prot_lvl_development2" searchStr="true">%s, Разработка</string>
+  <string name="prot_lvl_privileged2" searchStr="true">%s, привилегированный</string>
+  <string name="prot_lvl_fixed2" searchStr="true">%s, фиксированный</string>
   <string name="app_op_mode_allow">Разрешить</string>
   <string name="app_op_mode_ignore">Игнорировать</string>
   <string name="app_op_mode_deny">Запретить</string>
@@ -210,8 +210,8 @@
   <string name="excluded_perms_summary">Долгое нажатие на имя разрешения, чтобы исключить его</string>
   <string name="extra_app_ops_summary">AppOps всегда показываются в каждом приложении</string>
   <string name="extra_app_ops_summary_count">(Всего: %1$d)</string>
-  <string name="enable_exc_filters">Включить фильтры</string>
-  <string name="disable_exc_filters">Отключить фильтры</string>
+  <string name="enable_exc_filters" maxLength="10">Включить фильтры</string>
+  <string name="disable_exc_filters" maxLength="10">Отключить фильтры</string>
   <plurals name="and_others_count">
     <item quantity="one">%1$s и ещё 1</item>
     <item quantity="few">%1$s и ещё %2$d</item>
@@ -222,6 +222,7 @@
   <string name="locale_system">Система</string>
   <string name="locale_en">Английский</string>
   <string name="locale_ru">Русский</string>
+  <string name="locale_es">Испанский</string>
   <!-- PreferenceActivity menu items -->
   <string name="filter_settings_reset_defaults_menu_item" maxLength="15">Сброс по умолчанию</string>
   <string name="filter_settings_reset_confirmation">Сбросить настройки фильтра к значениям по умолчанию?</string>
@@ -270,19 +271,10 @@
   <string name="privacy_policy" maxLength="20">Политика конфиденциальности</string>
   <string name="translations">Переводы</string>
   <string name="translations_summary">Хотите это приложение на своём языке?</string>
-  <string name="language_credits"><![CDATA[      <b>Русский</b>
-      <ul>
-        <li>Rikishi007 (rikishi0071@gmail.com)</li>
-        <li>tommynok <a href="https://crowdin.com/profile/tommynok">LINK</a></li>
-        <li>siebenbrodt <a href="https://crowdin.com/profile/siebenbrodt">LINK</a></li>
-      </ul>
-      <br/>
-      <a href="https://crowdin.com/project/pmx"><b>Add my language</b></a>
-    ]]></string>
   <string name="share">Поделиться</string>
   <string name="share_summary">Поделиться приложением с другими</string>
   <string name="share_text">Попробуйте это замечательное приложение! %1$s</string>
-  <string name="perm_status_menu_item">Привилегии</string>
+  <string name="perm_status_menu_item" maxLength="15">Привилегии</string>
   <string name="uid">UID:</string>
   <string name="app_ops">AppOps</string>
   <string name="op_to_def_mode">Режим Op по умолчанию</string>
@@ -300,9 +292,12 @@
   <string name="channel_crash_report">Отчёт о падении</string>
   <string name="channel_logcat_collection">Сбор лога</string>
   <!-- HelpActivity -->
-  <string name="load_internet_menu_item">Загрузка из интернета</string>
+  <string name="load_internet_menu_item" maxLength="15">Загрузка из интернета</string>
+  <string name="open_browser_menu_item" maxLength="15">Открыть в браузере</string>
   <string name="zoom_in_menu_item" maxLength="15">Увеличить</string>
   <string name="zoom_out_menu_item" maxLength="15">Уменьшить</string>
+  <string name="no_web_view" maxLength="20">WebView отсутствует</string>
+  <string name="outdated_web_view" maxLength="20">WebView устарел</string>
   <!-- DaemonCmdRcvSvc: Daemon return messages -->
   <string name="daemon_listen_on_loopback_failed" maxLength="20">Демон не смог прослушать 127.0.0.1</string>
   <string name="daemon_establish_connection_failed" maxLength="20">Демону не удалось установить
@@ -319,5 +314,5 @@
   <string name="daemon_get_perm_grp_info_list_failed" maxLength="20">Не удалось считать группы разрешений</string>
   <string name="daemon_op_num_inconsistency" maxLength="20">Потенциально неподдерживаемая прошивка</string>
   <!-- Locale -->
-  <string name="help_file_name">help_ru.html</string>
+  <string name="help_file_name">help.html</string>
 </resources>

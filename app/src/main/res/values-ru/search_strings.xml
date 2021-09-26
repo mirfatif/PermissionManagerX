@@ -1,11 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
   <string name="pkg_state_critical">Критический</string>
   <string name="pkg_state_framework">Фреймворк</string>
   <string name="pkg_state_system">Система</string>
   <string name="pkg_state_user">Пользователь</string>
   <string name="pkg_state_disabled">Заморожено</string>
-
   <string name="prot_lvl_unknown">Неизвестно</string>
   <string name="prot_lvl_normal">Нормальный</string>
   <string name="prot_lvl_dangerous">Опасный</string>
@@ -18,7 +17,6 @@
   <string name="search_str_time">ВРЕМЯ</string>
   <string name="search_str_extra">ДОПОЛНИТЕЛЬНЫЙ</string>
   <string name="search_str_red">КРАСНЫЙ</string>
-  <string name="search_str_orange">АПЕЛЬСИН</string>
+  <string name="search_str_orange">ОРАНЖЕВЫЙ</string>
   <string name="search_str_green">ЗЕЛЕНЫЙ</string>
-
 </resources>

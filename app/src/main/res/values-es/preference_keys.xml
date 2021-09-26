@@ -17,14 +17,14 @@
   <string name="pref_filter_exclude_framework_apps_title" maxLength="20">Excluir aplicaciones de framework</string>
   <string name="pref_filter_exclude_disabled_apps_title" maxLength="20">Excluir aplicaciones deshabilitadas</string>
   <string name="pref_filter_exclude_no_perms_apps_title" maxLength="20">Excluir aplicaciones sin permisos</string>
-  <string name="pref_filter_manually_exclude_apps_title">Aplicaciones manualmente excluidas</string>
-  <string name="pref_filter_excluded_apps_title">Lista de aplicaciones manualmente excluidas</string>
+  <string name="pref_filter_manually_exclude_apps_title" maxLength="20">Aplicaciones manualmente excluidas</string>
+  <string name="pref_filter_excluded_apps_title" maxLength="20">Lista de aplicaciones manualmente excluidas</string>
   <!-- PreferencesActivity permissions titles, keys and defaults -->
   <string name="pref_filter_permissions_cat_title" maxLength="20">Permisos</string>
   <string name="pref_filter_exclude_not_changeable_perms_title" maxLength="20">Excluir permisos no modificables</string>
   <string name="pref_filter_exclude_not_granted_perms_title" maxLength="20">Excluir permisos no otorgados</string>
-  <string name="pref_filter_manually_exclude_perms_title">Permisos manualmente excluidos</string>
-  <string name="pref_filter_excluded_perms_title">Lista de permisos manualmente excluidos</string>
+  <string name="pref_filter_manually_exclude_perms_title" maxLength="20">Permisos manualmente excluidos</string>
+  <string name="pref_filter_excluded_perms_title" maxLength="20">Lista de permisos manualmente excluidos</string>
   <!-- PreferencesActivity manifest permissions titles, keys and defaults -->
   <string name="pref_filter_man_permissions_cat_title" maxLength="20">Permisos de Manifiesto</string>
   <string name="pref_filter_exclude_invalid_perms_title" maxLength="20">Excluir permisos inválidos</string>
@@ -36,8 +36,8 @@
   <string name="pref_filter_app_ops_permissions_cat_title" maxLength="20">Permisos de AppOps</string>
   <string name="pref_filter_exclude_appops_perms_title" maxLength="20">Excluir AppOps</string>
   <string name="pref_filter_exclude_not_set_appops_title" maxLength="20">Excluir AppOps no establecidas (Por defecto)</string>
-  <string name="pref_filter_show_extra_app_ops_title">Mostrar AppOps adicionales, nunca excluidas</string>
-  <string name="pref_filter_extra_appops_title">Lista de AppOps adicionales</string>
+  <string name="pref_filter_show_extra_app_ops_title" maxLength="20">Mostrar AppOps adicionales, nunca excluidas</string>
+  <string name="pref_filter_extra_appops_title" maxLength="20">Lista de AppOps adicionales</string>
   <!-- SettingsActivity -->
   <string name="pref_settings_check_for_updates_title" maxLength="20">Buscar actualizaciones</string>
   <string name="pref_settings_check_for_updates_summary">Mostrar una notificación cuando una nueva versión esté
@@ -48,11 +48,11 @@
     root y ADB no fueron otorgados
   </string>
   <string name="pref_settings_quick_scan_title" maxLength="20">Realizar escaneo rápido</string>
-  <string name="pref_settings_quick_scan_summary">No escanear permsos, no mostrar referencias de estado
+  <string name="pref_settings_quick_scan_summary">No escanear permisos, no mostrar referencias de estado
     de las aplicaciones y conteo de permisos
   </string>
-  <string name="pref_settings_special_search_title" maxLength="20">Caracteres de búsqueda especiales</string>
-  <string name="pref_settings_special_search_summary">Usar los caracteres Y (&amp;), O (|) y NO (!)
+  <string name="pref_settings_special_search_title" maxLength="20">Búsqueda compleja</string>
+  <string name="pref_settings_special_search_summary">Usar los operadores Y (&amp;), O (|) y NO (!)
     en la búsqueda para combinar consultas
   </string>
   <string name="pref_settings_locale_title" maxLength="20">Lenguaje de la aplicación</string>

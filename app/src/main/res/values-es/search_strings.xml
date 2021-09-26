@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
   <string name="pkg_state_critical">Crítica</string>
   <string name="pkg_state_framework">Framework</string>
   <string name="pkg_state_system">Sistema</string>
   <string name="pkg_state_user">Usuario</string>
   <string name="pkg_state_disabled">Deshabilitada</string>
-
   <string name="prot_lvl_unknown">Desconocido</string>
   <string name="prot_lvl_normal">Normal</string>
   <string name="prot_lvl_dangerous">Peligroso</string>
@@ -21,5 +19,4 @@
   <string name="search_str_red">ROJO</string>
   <string name="search_str_orange">NARANJA</string>
   <string name="search_str_green">VERDE</string>
-
 </resources>
