@@ -21,7 +21,7 @@ import android.permission.IPermissionManager;
 import android.provider.Settings;
 import com.android.internal.app.IAppOpsService;
 import com.mirfatif.privtasks.Commands;
-import com.mirfatif.privtasks.MyPackageOps;
+import com.mirfatif.privtasks.ser.MyPackageOps;
 import java.util.ArrayList;
 import java.util.List;
 

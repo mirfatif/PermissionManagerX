@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.databinding.AboutPrivilegesItemBinding;
 import com.mirfatif.permissionmanagerx.ui.AboutPrivilegesAdapter.ItemViewHolder;
-import com.mirfatif.privtasks.PermStatus;
+import com.mirfatif.privtasks.ser.PermStatus;
 import java.util.ArrayList;
 import java.util.List;
 

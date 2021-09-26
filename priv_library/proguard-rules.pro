@@ -1,8 +1,8 @@
 # All Serializable classes must be retained.
-#-keep, allowobfuscation class com.mirfatif.privtasks.* implements java.io.Serializable { *; }
+#-keep, allowobfuscation class com.mirfatif.privtasks.ser.* implements java.io.Serializable { *; }
 
 # Required for de-Serialization, must not be obfuscated.
-#-keepclassmembers class com.mirfatif.privtasks.* implements java.io.Serializable {
+#-keepclassmembers class com.mirfatif.privtasks.ser.* implements java.io.Serializable {
 #    static final long serialVersionUID;
 #}
 
@@ -10,7 +10,7 @@
 # Proguard produces bigger APK.
 # So either do not use -repackageclasses, or do not use -applymapping
 # i.e. do not obfuscate Serializable and its fields / methods.
--keep class com.mirfatif.privtasks.* implements java.io.Serializable { *; }
+-keep class com.mirfatif.privtasks.ser.* implements java.io.Serializable { *; }
 
 -dontwarn android.app.ActivityManagerNative
 -dontwarn android.app.AppOpsManager$OpEntry

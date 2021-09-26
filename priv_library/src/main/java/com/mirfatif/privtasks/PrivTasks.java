@@ -12,6 +12,8 @@ import com.mirfatif.privtasks.hiddenapis.HiddenAPIs.HiddenAPIsCallback;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIsError;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIsException;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIsImpl;
+import com.mirfatif.privtasks.ser.MyPackageOps;
+import com.mirfatif.privtasks.ser.PermStatus;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

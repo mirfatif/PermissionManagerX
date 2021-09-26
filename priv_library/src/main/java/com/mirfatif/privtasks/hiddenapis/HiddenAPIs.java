@@ -23,7 +23,7 @@ import com.mirfatif.annotation.HiddenMethod.MType;
 import com.mirfatif.annotation.NonDaemonOnly;
 import com.mirfatif.annotation.Privileged;
 import com.mirfatif.annotation.Throws;
-import com.mirfatif.privtasks.MyPackageOps;
+import com.mirfatif.privtasks.ser.MyPackageOps;
 import java.util.List;
 
 public abstract class HiddenAPIs {

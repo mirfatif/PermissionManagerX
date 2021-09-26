@@ -31,7 +31,7 @@ import com.mirfatif.permissionmanagerx.svc.LogcatService;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;
-import com.mirfatif.privtasks.PermStatus;
+import com.mirfatif.privtasks.ser.PermStatus;
 import java.util.ArrayList;
 import java.util.List;
 import me.saket.bettermovementmethod.BetterLinkMovementMethod;
