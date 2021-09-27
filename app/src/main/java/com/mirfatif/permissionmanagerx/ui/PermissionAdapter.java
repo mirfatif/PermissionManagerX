@@ -1,5 +1,6 @@
 package com.mirfatif.permissionmanagerx.ui;
 
+import static com.mirfatif.permissionmanagerx.parser.AppOpsParser.APP_OPS_PARSER;
 import static com.mirfatif.permissionmanagerx.util.Utils.getString;
 
 import android.content.Context;
@@ -21,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.RvItemPermBinding;
-import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
 import com.mirfatif.permissionmanagerx.parser.Permission;
 import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.ItemViewHolder;
 import com.mirfatif.permissionmanagerx.ui.base.MyListAdapter;
@@ -32,24 +32,13 @@ import java.util.List;
 
 public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder> {
 
-  private final PermClickListener mSwitchToggleListener;
-  private final PermSpinnerSelectListener mSpinnerSelectListener;
-  private final PermClickListenerWithLoc mPermClickListener;
-  private final PermLongClickListener mPermLongClickListener;
+  private final PermAdapterCallback mCallback;
   private final ArrayAdapter<String> mAppOpModesAdapter;
   private final ArrayAdapter<String> mAppOpModesBgAdapter;
 
-  PermissionAdapter(
-      Context context,
-      PermClickListener switchToggleListener,
-      PermSpinnerSelectListener spinnerSelectListener,
-      PermClickListenerWithLoc permClickListener,
-      PermLongClickListener permLongClickListener) {
-    super(new DiffUtilItemCallBack());
-    mSwitchToggleListener = switchToggleListener;
-    mSpinnerSelectListener = spinnerSelectListener;
-    mPermClickListener = permClickListener;
-    mPermLongClickListener = permLongClickListener;
+  PermissionAdapter(Context context, PermAdapterCallback callback) {
+    super(new DiffUtilItemCallBack(), callback::runInFg);
+    mCallback = callback;
 
     mAppOpModesAdapter = new AppOpModesAdapter(context, false);
     mAppOpModesBgAdapter = new AppOpModesAdapter(context, true);
@@ -167,7 +156,7 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
           mB.permStateSwitch.setOnClickListener(
               v -> {
                 mB.permStateSwitch.setChecked(perm.isGranted()); // Do not change the state here
-                mSwitchToggleListener.onClick(perm);
+                mCallback.onPermSwitchClick(perm);
               });
           mB.permStateSwitch.setVisibility(View.VISIBLE);
         }
@@ -181,7 +170,7 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
       if (pos != RecyclerView.NO_POSITION) {
         int[] location = new int[2];
         v.getLocationInWindow(location);
-        mPermClickListener.onClick(getItem(pos), location[1] - 2 * v.getHeight());
+        mCallback.onPermClick(getItem(pos), location[1] - 2 * v.getHeight());
       }
     }
 
@@ -189,7 +178,7 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
     public boolean onLongClick(View v) {
       int pos = getBindingAdapterPosition();
       if (pos != RecyclerView.NO_POSITION) {
-        mPermLongClickListener.onLongClick(getItem(pos));
+        mCallback.onPermLongClick(getItem(pos));
       }
       return true;
     }
@@ -234,11 +223,11 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
   private ArrayAdapter<String> getAppOpModesAdapter(boolean forBg) {
     synchronized (ADAPTER_BUILD_LOCK) {
       if (mAppOpModesAdapter.isEmpty() || mAppOpModesBgAdapter.isEmpty()) {
-        for (String mode : AppOpsParser.getInstance().getAppOpsModes()) {
+        for (String mode : APP_OPS_PARSER.getAppOpsModes()) {
           String localizedMode = getLocalizedMode(mode);
           if (localizedMode != null) {
             mode = localizedMode;
-            if (mode.toLowerCase().equals(Commands.APP_OP_MODE_FG)) {
+            if (mode.equalsIgnoreCase(Commands.APP_OP_MODE_FG)) {
               mode = Utils.ellipsize(mode, 8);
             }
           } else {
@@ -254,7 +243,7 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
 
   private static class AppOpModesAdapter extends ArrayAdapter<String> {
 
-    private final List<String> appOpsModes = AppOpsParser.getInstance().getAppOpsModes();
+    private final List<String> appOpsModes = APP_OPS_PARSER.getAppOpsModes();
     private final boolean mForBg;
 
     public AppOpModesAdapter(Context context, boolean forBg) {
@@ -312,7 +301,7 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
       // "position" is the AppOps mode int value here
       if (permission.getAppOpsMode() != position) {
         permission.setAppOpsMode(position);
-        mSpinnerSelectListener.onSelect(permission, position);
+        mCallback.onSpinnerItemSelect(permission, position);
       }
     }
 
@@ -332,19 +321,16 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
     }
   }
 
-  interface PermClickListener {
-    void onClick(Permission permission);
-  }
+  public interface PermAdapterCallback {
 
-  interface PermClickListenerWithLoc {
-    void onClick(Permission permission, int yLocation);
-  }
+    void onPermClick(Permission perm, Integer yLocation);
 
-  interface PermSpinnerSelectListener {
-    void onSelect(Permission permission, int selectedValue);
-  }
+    void onPermLongClick(Permission perm);
 
-  interface PermLongClickListener {
-    void onLongClick(Permission permission);
+    void onPermSwitchClick(Permission perm);
+
+    void onSpinnerItemSelect(Permission perm, int selectedValue);
+
+    void runInFg(Runnable task);
   }
 }

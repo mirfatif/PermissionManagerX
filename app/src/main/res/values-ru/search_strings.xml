@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="pkg_state_critical">Критический</string>
+  <string name="pkg_state_framework">Фреймворк</string>
+  <string name="pkg_state_system">Система</string>
+  <string name="pkg_state_user">Пользователь</string>
+  <string name="pkg_state_disabled">Заморожено</string>
+  <string name="prot_lvl_unknown">Неизвестно</string>
+  <string name="prot_lvl_normal">Нормальный</string>
+  <string name="prot_lvl_dangerous">Опасный</string>
+  <string name="prot_lvl_signature">Подпись</string>
+  <string name="prot_lvl_app_ops">AppOps</string>
+  <string name="prot_lvl_development">Разработка</string>
+  <string name="prot_lvl_privileged">Привилегированный</string>
+  <string name="prot_lvl_fixed">Фиксированный</string>
+  <string name="search_str_uid">UID</string>
+  <string name="search_str_time">ВРЕМЯ</string>
+  <string name="search_str_extra">ДОПОЛНИТЕЛЬНЫЙ</string>
+  <string name="search_str_red">КРАСНЫЙ</string>
+  <string name="search_str_orange">ОРАНЖЕВЫЙ</string>
+  <string name="search_str_green">ЗЕЛЕНЫЙ</string>
+</resources>

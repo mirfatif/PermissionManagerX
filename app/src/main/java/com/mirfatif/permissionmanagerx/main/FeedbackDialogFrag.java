@@ -1,6 +1,8 @@
 package com.mirfatif.permissionmanagerx.main;
 
-import android.app.Activity;
+import static com.mirfatif.permissionmanagerx.main.MainActivity.TAG_DONATION;
+import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -16,8 +18,8 @@ import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.FeedbackDialogBinding;
-import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.AboutActivity;
+import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.util.Utils;
 
 public class FeedbackDialogFrag extends BottomSheetDialogFragment {
@@ -32,12 +34,12 @@ public class FeedbackDialogFrag extends BottomSheetDialogFragment {
     return frag;
   }
 
-  private Activity mActivity;
+  private MainActivity mA;
 
   @Override
   public void onAttach(@NonNull Context context) {
     super.onAttach(context);
-    mActivity = getActivity();
+    mA = (MainActivity) getActivity();
   }
 
   @NonNull
@@ -69,7 +71,7 @@ public class FeedbackDialogFrag extends BottomSheetDialogFragment {
 
     b.neutralButton.setOnClickListener(
         v -> {
-          MySettings.getInstance().setAskForFeedbackTs(Long.MAX_VALUE);
+          SETTINGS.setAskForFeedbackTs(Long.MAX_VALUE);
           dismiss();
         });
 
@@ -78,12 +80,9 @@ public class FeedbackDialogFrag extends BottomSheetDialogFragment {
           dismiss();
           if (isYes) {
             if (BuildConfig.GH_VERSION && !BuildConfig.AMAZ_VERSION) {
-              // We are sure this is the MainActivity
-              if (mActivity instanceof MainActivity) {
-                Donate.showDialog((MainActivity) mActivity);
-              }
+              AlertDialogFragment.show(mA, null, TAG_DONATION);
             } else {
-              Utils.openWebUrl(mActivity, Utils.getString(R.string.play_store_url));
+              Utils.openWebUrl(mA, Utils.getString(R.string.play_store_url));
             }
           } else {
             startActivity(new Intent(App.getContext(), AboutActivity.class));

@@ -9,18 +9,8 @@ import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
 
 public class MyDrawerLayout extends DrawerLayout {
 
-  public MyDrawerLayout(@NonNull Context context) {
-    super(context);
-    UtilsFlavor.onCreateLayout(this);
-  }
-
   public MyDrawerLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
-    UtilsFlavor.onCreateLayout(this);
-  }
-
-  public MyDrawerLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyle) {
-    super(context, attrs, defStyle);
     UtilsFlavor.onCreateLayout(this);
   }
 }

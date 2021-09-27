@@ -1,7 +1,11 @@
 package com.mirfatif.permissionmanagerx.ui;
 
+import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
+
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,17 +14,18 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import androidx.annotation.NonNull;
 import androidx.webkit.WebViewClientCompat;
+import androidx.webkit.WebViewCompat;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.ActivityHelpBinding;
-import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HelpActivity extends BaseActivity {
 
   private WebSettings mWebSettings;
-  private final MySettings mMySettings = MySettings.getInstance();
   private ActivityHelpBinding mB;
 
   private static final String HELP_URL = "https://mirfatif.github.io/PermissionManagerX/help/";
@@ -33,6 +38,7 @@ public class HelpActivity extends BaseActivity {
     if (Utils.setNightTheme(this)) {
       return;
     }
+
     mB = ActivityHelpBinding.inflate(getLayoutInflater());
     setContentView(mB.getRoot());
 
@@ -42,23 +48,23 @@ public class HelpActivity extends BaseActivity {
 
     mWebSettings = mB.webView.getSettings();
 
-    mFontSize = mMySettings.getIntPref(R.string.pref_help_font_size_key);
+    mFontSize = SETTINGS.getIntPref(R.string.pref_help_font_size_key);
     setFontSize();
 
     mWebSettings.setSupportZoom(false);
     mWebSettings.setBlockNetworkLoads(false);
     mWebSettings.setBlockNetworkImage(false);
     mWebSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-
     mB.webView.setWebViewClient(new MyWebViewClient());
+
     enableJs();
     mB.webView.addJavascriptInterface(new HelpJsInterface(this), "Android");
 
-    if (mMySettings.isAppUpdated()) {
+    if (SETTINGS.isAppUpdated()) {
       mB.webView.clearCache(true);
     }
 
-    mB.webView.loadUrl(HELP_URL + Utils.getString(R.string.help_file_name));
+    mB.webView.loadUrl(getLocalizedHelpUrl());
   }
 
   @SuppressLint("SetJavaScriptEnabled")
@@ -74,7 +80,7 @@ public class HelpActivity extends BaseActivity {
     if (mFontSize > MAX_FONT_SIZE - 2 || mFontSize < MIN_FONT_SIZE + 2) {
       invalidateOptionsMenu();
     }
-    mMySettings.savePref(R.string.pref_help_font_size_key, mFontSize);
+    SETTINGS.savePref(R.string.pref_help_font_size_key, mFontSize);
   }
 
   @Override
@@ -98,6 +104,11 @@ public class HelpActivity extends BaseActivity {
     if (item.getItemId() == R.id.action_help_reload) {
       mB.webView.clearCache(true);
       mB.webView.reload();
+      return true;
+    }
+    if (item.getItemId() == R.id.action_open_browser) {
+      Utils.openWebUrl(this, getLocalizedHelpUrl());
+      finish();
       return true;
     }
     if (item.getItemId() == R.id.action_zoom_in) {
@@ -128,5 +139,45 @@ public class HelpActivity extends BaseActivity {
       }
       return super.shouldOverrideUrlLoading(view, request);
     }
+  }
+
+  private static String getLocalizedHelpUrl() {
+    return HELP_URL + Utils.getString(R.string.help_file_name);
+  }
+
+  private static final List<String> WEB_VIEW_PKGS = new ArrayList<>();
+
+  static {
+    WEB_VIEW_PKGS.add("com.android.webview");
+    WEB_VIEW_PKGS.add("com.google.android.webview");
+    WEB_VIEW_PKGS.add("com.android.chrome");
+  }
+
+  public static void start(Activity activity) {
+    // PackageManager.FEATURE_WEBVIEW is always true even if WebView is disabled.
+    PackageInfo pkgInfo = WebViewCompat.getCurrentWebViewPackage(activity);
+    if (pkgInfo == null) {
+      Utils.showToast(R.string.no_web_view);
+      Utils.openWebUrl(activity, getLocalizedHelpUrl());
+      return;
+    }
+
+    /*
+     Workaround for https://bugs.chromium.org/p/chromium/issues/detail?id=925887.
+     A sensible way is to use framework WebViewClient, not WebViewClientCompat.
+    */
+    if (WEB_VIEW_PKGS.contains(pkgInfo.packageName)) {
+      try {
+        int ver = Integer.parseInt(pkgInfo.versionName.split("\\.")[0]);
+        if (ver < 73) {
+          Utils.showToast(R.string.outdated_web_view);
+          Utils.openWebUrl(activity, getLocalizedHelpUrl());
+          return;
+        }
+      } catch (NumberFormatException ignored) {
+      }
+    }
+
+    activity.startActivity(new Intent(activity, HelpActivity.class));
   }
 }

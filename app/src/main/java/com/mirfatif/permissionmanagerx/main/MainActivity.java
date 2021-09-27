@@ -1,8 +1,16 @@
 package com.mirfatif.permissionmanagerx.main;
 
+import static com.mirfatif.permissionmanagerx.parser.PackageParser.PKG_PARSER;
+import static com.mirfatif.permissionmanagerx.prefs.MySettings.PERM_GET_APP_OPS_STATS;
+import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
+import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.ADB_DAEMON;
+import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.ROOT_DAEMON;
+import static com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler.DAEMON_HANDLER;
+
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
@@ -20,7 +28,6 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.SearchView.OnQueryTextListener;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuCompat;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.snackbar.Snackbar;
@@ -31,19 +38,14 @@ import com.mirfatif.permissionmanagerx.databinding.ActivityMainPkgDialogBinding;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.prefs.FilterSettingsActivity;
-import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
 import com.mirfatif.permissionmanagerx.prefs.settings.SettingsActivity;
-import com.mirfatif.permissionmanagerx.privs.NativeDaemon;
-import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.ui.AboutActivity;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.ui.HelpActivity;
-import com.mirfatif.permissionmanagerx.ui.MyViewModel;
 import com.mirfatif.permissionmanagerx.ui.PackageActivity;
 import com.mirfatif.permissionmanagerx.ui.PackageAdapter;
-import com.mirfatif.permissionmanagerx.ui.PackageAdapter.PkgClickListener;
-import com.mirfatif.permissionmanagerx.ui.PackageAdapter.PkgLongClickListener;
+import com.mirfatif.permissionmanagerx.ui.PackageAdapter.PkgAdapterCallback;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;
@@ -63,18 +65,10 @@ public class MainActivity extends BaseActivity {
   public static final String ACTION_SEARCH_PACKAGES = "com.mirfatif.pmx.ACTION_SEARCH_PACKAGES";
   public static final String EXTRA_SEARCH_STRINGS = "com.mirfatif.pmx.SEARCH_STRINGS";
 
-  public static final String APP_OPS_PERM = "android.permission.GET_APP_OPS_STATS";
-  public static final String TAG_GRANT_ROOT_OR_ADB = "GRANT_ROOT_OR_ADB";
-
-  private final MySettings mMySettings = MySettings.getInstance();
-  private final PackageParser mPackageParser = PackageParser.getInstance();
-  private final PrivDaemonHandler mPrivDaemonHandler = PrivDaemonHandler.getInstance();
-
   private MainActivityFlavor mMainActivityFlavor;
   private BackupRestore mBackupRestore;
 
   private ActivityMainBinding mB;
-  private MyViewModel mMyViewModel;
 
   private LinearLayoutManager mLayoutManager;
   private SearchView mSearchView;
@@ -103,10 +97,6 @@ public class MainActivity extends BaseActivity {
     mMainActivityFlavor = new MainActivityFlavor(this);
     mBackupRestore = new BackupRestore(this);
 
-    // Create ViewModel instance and associate with current Activity. ViewModel holds
-    // instances of other classes which must be retained irrespective of lifecycle of Activities
-    mMyViewModel = new ViewModelProvider(this).get(MyViewModel.class);
-
     // to show drawer icon
     ActionBar actionBar = getSupportActionBar();
     if (actionBar != null) {
@@ -133,19 +123,19 @@ public class MainActivity extends BaseActivity {
 
     mB.refreshLayout.setOnRefreshListener(
         () -> {
-          if (mMySettings.isSearching()) {
+          if (SETTINGS.isSearching()) {
             handleSearchQuery();
           } else {
-            mPackageParser.updatePackagesList();
+            PKG_PARSER.updatePackagesList();
           }
         });
 
     Future<?> checkRootAndAdbFuture =
         Utils.runInBg(
             () -> {
-              Utils.runInFg(() -> mB.rndProgTextV.setText(R.string.checking_root_access));
+              Utils.runInFg(this, () -> mB.rndProgTextV.setText(R.string.checking_root_access));
               Utils.checkRootIfEnabled();
-              Utils.runInFg(() -> mB.rndProgTextV.setText(R.string.checking_adb_access));
+              Utils.runInFg(this, () -> mB.rndProgTextV.setText(R.string.checking_adb_access));
               Utils.checkAdbIfEnabled();
             });
 
@@ -159,7 +149,7 @@ public class MainActivity extends BaseActivity {
               }
             });
 
-    mPackageAdapter = new PackageAdapter(getPkgClickListener(), getPkgLongClickListener());
+    mPackageAdapter = new PackageAdapter(new PkgAdapterCallbackImpl());
 
     // Set Adapter on RecyclerView
     mB.recyclerView.setAdapter(mPackageAdapter);
@@ -180,7 +170,7 @@ public class MainActivity extends BaseActivity {
         () -> {
           // Do not run through PackageParser unless privileged daemon is up
           if (waitForFuture(privDaemonFuture)) {
-            Utils.runInFg(this::setLiveDataObservers);
+            Utils.runInFg(this, this::setLiveDataObservers);
           }
         });
 
@@ -188,16 +178,15 @@ public class MainActivity extends BaseActivity {
     if (mSearchView != null) {
       collapseSearchView();
     } else {
-      mMySettings.setQueryText(null);
+      SETTINGS.setQueryText(null);
     }
 
     // Increment app launch count
     if (Intent.ACTION_MAIN.equals(getIntent().getAction())) {
-      mMySettings.plusAppLaunchCount();
+      SETTINGS.plusAppLaunchCount();
     }
 
     mMainActivityFlavor.onCreated();
-    mBackupRestore.onCreated();
 
     Utils.runInBg(() -> new AppUpdate().check(true));
   }
@@ -210,6 +199,14 @@ public class MainActivity extends BaseActivity {
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
+    if (Utils.getUserId() != 0) {
+      /*
+       Do not show menu if secondary user. onCreate is not completed,
+       so tapping on menu items may crash.
+      */
+      return false;
+    }
+
     getMenuInflater().inflate(R.menu.main_search, menu);
     MenuCompat.setGroupDividerEnabled(menu, true);
 
@@ -238,7 +235,7 @@ public class MainActivity extends BaseActivity {
   // Required for navigation drawer tap to work
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    if (mMySettings.isDebug()) {
+    if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "onOptionsItemSelected: " + item.getTitle());
     }
     boolean res = false;
@@ -251,35 +248,25 @@ public class MainActivity extends BaseActivity {
   @Override
   public void onBackPressed() {
     if (mB != null && mB.getRoot().isDrawerOpen(GravityCompat.START)) {
-      if (mMySettings.isDebug()) {
+      if (SETTINGS.isDebug()) {
         Util.debugLog(TAG, "onBackPressed: closing drawer");
       }
       mB.getRoot().closeDrawer(GravityCompat.START, true);
       return;
     }
     if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
-      if (mMySettings.isDebug()) {
+      if (SETTINGS.isDebug()) {
         Util.debugLog(TAG, "onBackPressed: collapsing searchView");
       }
       collapseSearchView();
       return;
     }
-    // TODO https://issuetracker.google.com/issues/139738913
+    // https://issuetracker.google.com/issues/139738913
     if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
       finishAfterTransition();
     } else {
       super.onBackPressed();
     }
-  }
-
-  @Override
-  protected void onSaveInstanceState(@NonNull Bundle outState) {
-
-    // We can't save state of AlertDialogFragment since AlertDialog is passed as a constructor
-    // argument. Otherwise separate AlertDialogFragment class needs to be created for every dialog.
-    AlertDialogFragment.removeAll(this);
-
-    super.onSaveInstanceState(outState);
   }
 
   @Override
@@ -291,11 +278,66 @@ public class MainActivity extends BaseActivity {
   }
 
   @Override
-  protected void onDestroy() {
-    if (mMainActivityFlavor != null) {
-      mMainActivityFlavor.onDestroyed();
+  public void onAttachedToWindow() {
+    super.onAttachedToWindow();
+    synchronized (WINDOW_WAITER) {
+      WINDOW_WAITER.notifyAll();
     }
-    super.onDestroy();
+  }
+
+  private static final String CLASS = MainActivity.class.getName();
+  private static final String TAG_ADVANCED_SETTINGS = CLASS + ".ADVANCED_SETTINGS";
+  private static final String TAG_PRIVS_REQ_FOR_DAEMON = CLASS + ".PRIVS_REQ_FOR_DAEMON";
+  private static final String TAG_GRANT_ROOT_OR_ADB = CLASS + ".GRANT_ROOT_OR_ADB";
+  private static final String TAG_ADB_CONNECT_FAILED = CLASS + ".ADB_CONNECT_FAILED";
+  private static final String TAG_BACKUP_RESTORE = CLASS + ".TAG_BACKUP_RESTORE";
+  static final String TAG_DONATION = CLASS + ".TAG_DONATION";
+
+  @Override
+  public AlertDialog createDialog(String tag, AlertDialogFragment dialogFragment) {
+    if (TAG_PRIVS_REQ_FOR_DAEMON.equals(tag)) {
+      AlertDialog dialog =
+          new Builder(this)
+              .setPositiveButton(android.R.string.ok, (d, which) -> openDrawerForPrivileges())
+              .setNeutralButton(R.string.do_not_remind, (d, which) -> SETTINGS.setPrivReminderOff())
+              .setNegativeButton(R.string.get_help, (d, which) -> HelpActivity.start(this))
+              .setTitle(R.string.privileges)
+              .setMessage(getString(R.string.grant_root_or_adb))
+              .create();
+      Utils.removeButtonPadding(dialog);
+      return dialog;
+    }
+
+    if (TAG_GRANT_ROOT_OR_ADB.equals(tag)) {
+      return new Builder(this)
+          .setPositiveButton(android.R.string.ok, (d, which) -> openDrawerForPrivileges())
+          .setNegativeButton(android.R.string.cancel, null)
+          .setTitle(R.string.privileges)
+          .setMessage(R.string.grant_root_or_adb)
+          .create();
+    }
+
+    if (TAG_ADB_CONNECT_FAILED.equals(tag)) {
+      return new Builder(this)
+          .setPositiveButton(android.R.string.ok, null)
+          .setTitle(R.string.privileges)
+          .setMessage(Utils.htmlToString(R.string.adb_connect_fail_long))
+          .create();
+    }
+
+    if (TAG_BACKUP_RESTORE.equals(tag)) {
+      return mBackupRestore.createDialog();
+    }
+
+    if (TAG_ADVANCED_SETTINGS.equals(tag)) {
+      return new AdvancedSettings(this).createDialog();
+    }
+
+    if (TAG_DONATION.equals(tag)) {
+      return new Donate(this).createDialog();
+    }
+
+    return super.createDialog(tag, dialogFragment);
   }
 
   //////////////////////////////////////////////////////////////////
@@ -312,39 +354,47 @@ public class MainActivity extends BaseActivity {
     if (Utils.getUserId() == 0) {
       return false;
     }
+
     Builder builder =
         new Builder(this)
             .setPositiveButton(android.R.string.ok, null)
             .setTitle(R.string.primary_account)
             .setMessage(R.string.primary_profile_only);
-    new AlertDialogFragment(builder.create())
-        .setOnDismissListener(d -> finishAfterTransition())
-        .show(this, "PRIMARY_PROFILE", false);
+    AlertDialogFragment.show(this, builder.create(), "PRIMARY_PROFILE")
+        .setOnDismissListener(d -> finishAfterTransition());
+
     Utils.getDefPrefs().edit().putBoolean("PRIMARY_USER", false).apply(); // Trigger auto-backup
     return true;
   }
 
-  private PkgClickListener getPkgClickListener() {
-    return pkg -> {
-      if (mMySettings.isDebug()) {
+  private class PkgAdapterCallbackImpl implements PkgAdapterCallback {
+
+    @Override
+    public void onClick(Package pkg) {
+      if (SETTINGS.isDebug()) {
         Util.debugLog(TAG, "PkgClickListener: Package received: " + pkg.getLabel());
       }
       Intent intent = new Intent(App.getContext(), PackageActivity.class);
-      intent.putExtra(EXTRA_PKG_POSITION, mPackageParser.getPackagePosition(pkg));
+      intent.putExtra(EXTRA_PKG_POSITION, PKG_PARSER.getPackagePosition(pkg));
       startActivity(intent);
-    };
-  }
+    }
 
-  private PkgLongClickListener getPkgLongClickListener() {
-    return pkg -> {
-      Builder builder = new Builder(this);
+    @Override
+    public void onLongClick(Package pkg) {
+      boolean canBeExcluded = SETTINGS.canBeExcluded(pkg);
+      boolean canBeDisabled = pkg.isChangeable() && !pkg.getName().equals(getPackageName());
+      if (!canBeExcluded && !canBeDisabled) {
+        return;
+      }
+
+      Builder builder = new Builder(MainActivity.this);
       builder.setPositiveButton(
           R.string.exclude,
           (dialogInterface, i) ->
               Utils.runInBg(
                   () -> {
-                    mMySettings.addPkgToExcludedApps(pkg.getName());
-                    mPackageParser.removePackage(pkg);
+                    SETTINGS.addPkgToExcludedApps(pkg.getName());
+                    PKG_PARSER.removePackage(pkg);
                   }));
 
       builder.setNegativeButton(android.R.string.cancel, null);
@@ -354,14 +404,17 @@ public class MainActivity extends BaseActivity {
           (dialog, which) -> setPackageEnabledState(pkg));
 
       String message;
-      boolean enabled = true;
-      if (!pkg.isChangeable() || pkg.getName().equals(getPackageName())) {
-        message = getString(R.string.exclude_app_from_visible_list);
-        enabled = false;
-      } else if (pkg.isEnabled()) {
-        message = getString(R.string.disable_app_or_exclude_from_visible_list);
+      if (canBeDisabled) {
+        if (pkg.isEnabled()) {
+          message = getString(R.string.disable_app);
+        } else {
+          message = getString(R.string.enable_app);
+        }
+        if (canBeExcluded) {
+          message = getString(R.string.exclude_from_visible_list, message);
+        }
       } else {
-        message = getString(R.string.enable_app_or_exclude_from_visible_list);
+        message = getString(R.string.exclude_app_from_visible_list);
       }
 
       ActivityMainPkgDialogBinding b = ActivityMainPkgDialogBinding.inflate(getLayoutInflater());
@@ -371,18 +424,25 @@ public class MainActivity extends BaseActivity {
 
       // Set message, create and show the AlertDialog
       AlertDialog dialog = builder.setTitle(pkg.getLabel()).setView(b.getRoot()).create();
-      boolean finalEnabled = enabled;
       dialog.setOnShowListener(
-          d -> dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(finalEnabled));
-      new AlertDialogFragment(dialog).show(this, "PKG_OPTIONS", false);
-    };
+          d -> {
+            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(canBeDisabled);
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(canBeExcluded);
+          });
+      AlertDialogFragment.show(MainActivity.this, dialog, "PKG_OPTIONS");
+    }
+
+    @Override
+    public void runInFg(Runnable task) {
+      Utils.runInFg(MainActivity.this, task);
+    }
   }
 
   private void setLiveDataObservers() {
-    mMyViewModel.getProgressMax().observe(this, this::setMaxProgress);
-    mMyViewModel.getProgressNow().observe(this, this::setNowProgress);
-    mMyViewModel.getPackagesListLive().observe(this, this::packagesListReceived);
-    mMyViewModel.getChangedPackage().observe(this, this::packageChanged);
+    PKG_PARSER.getProgressMax().observe(this, this::setMaxProgress);
+    PKG_PARSER.getProgressNow().observe(this, this::setNowProgress);
+    PKG_PARSER.getPackagesListLive().observe(this, this::packagesListReceived);
+    PKG_PARSER.getChangedPackage().observe(this, this::packageChanged);
   }
 
   private void setMaxProgress(Integer progressMax) {
@@ -396,7 +456,7 @@ public class MainActivity extends BaseActivity {
         mB.movCont.progMaxV.setText("");
         mB.movCont.progBarCont.setVisibility(View.VISIBLE);
       }
-      progressTextView.setText(mPackageParser.getProgressTextResId(progressMax));
+      progressTextView.setText(PKG_PARSER.getProgressTextResId(progressMax));
       return;
     }
 
@@ -431,7 +491,7 @@ public class MainActivity extends BaseActivity {
 
     if (progressNow == PackageParser.PKG_PROG_ENDS) {
       mMainActivityFlavor.onPackagesUpdated();
-      if (mMySettings.isSearching()) {
+      if (SETTINGS.isSearching()) {
         // Don't stop refreshing. We'll receive call later when search ends
         return;
       }
@@ -441,7 +501,7 @@ public class MainActivity extends BaseActivity {
         showPkgCount = false;
       }
     } else if (progressNow == PackageParser.SEARCH_ENDS) {
-      if (!mMySettings.isSearching()) {
+      if (!SETTINGS.isSearching()) {
         // Do not show pkg count when returning from search
         showPkgCount = false;
       }
@@ -454,7 +514,7 @@ public class MainActivity extends BaseActivity {
   }
 
   private void packagesListReceived(List<Package> packages) {
-    if (mMySettings.isDebug()) {
+    if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "pkgListLiveObserver: " + packages.size() + " packages received");
     }
     mVisiblePkgCount = packages.size();
@@ -463,7 +523,7 @@ public class MainActivity extends BaseActivity {
   }
 
   private void packageChanged(Package pkg) {
-    if (mMySettings.isDebug()) {
+    if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "pkgChangedLiveObserver: Package updated: " + pkg.getLabel());
     }
     int position = mPackageAdapter.getCurrentList().indexOf(pkg);
@@ -473,35 +533,28 @@ public class MainActivity extends BaseActivity {
   }
 
   /*
-  Keep on receiving new items from PackageParser unless there are at least 5 invisible items at
+   Keep on receiving new items from PackageParser unless there are at least 5 invisible items at
    the bottom.
   */
   private void setRepeatUpdates() {
     boolean rep = mPackageAdapter.getItemCount() < mLayoutManager.findLastVisibleItemPosition() + 5;
-    mPackageParser.setRepeatUpdates(rep);
-    if (mMySettings.isDebug()) {
+    PKG_PARSER.setRepeatUpdates(rep);
+    if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "setRepeatUpdates: " + rep);
     }
   }
 
   private void setPackageEnabledState(Package pkg) {
-    if (!mMySettings.isPrivDaemonAlive()) {
+    if (!SETTINGS.isPrivDaemonAlive()) {
       Utils.logDaemonDead(TAG + ": setPackageEnabledState");
-      AlertDialog dialog =
-          new Builder(this)
-              .setPositiveButton(android.R.string.ok, (d, which) -> openDrawerForPrivileges())
-              .setNegativeButton(android.R.string.cancel, null)
-              .setTitle(R.string.privileges)
-              .setMessage(R.string.grant_root_or_adb)
-              .create();
-      new AlertDialogFragment(dialog).show(this, TAG_GRANT_ROOT_OR_ADB, false);
+      AlertDialogFragment.show(this, null, TAG_GRANT_ROOT_OR_ADB);
       return;
     }
 
     boolean enabled = pkg.isEnabled();
 
     String warn = null;
-    if (enabled && mMySettings.getBoolPref(R.string.pref_main_warn_dang_change_enc_key)) {
+    if (enabled && SETTINGS.getBoolPref(R.string.pref_main_warn_dang_change_enc_key)) {
       if (pkg.isFrameworkApp()) {
         warn = getString(R.string.disable_pkg_warning, getString(R.string.framework));
       } else if (pkg.isSystemApp()) {
@@ -523,13 +576,13 @@ public class MainActivity extends BaseActivity {
             .setNeutralButton(
                 R.string.do_not_remind,
                 (d, which) -> {
-                  mMySettings.savePref(R.string.pref_main_warn_dang_change_enc_key, false);
+                  SETTINGS.savePref(R.string.pref_main_warn_dang_change_enc_key, false);
                   Utils.runInBg(() -> setPackageEnabledState(pkg, enabled));
                 })
             .setTitle(R.string.warning)
             .setMessage(Utils.breakParas(warn))
             .create();
-    new AlertDialogFragment(dialog).show(this, "PKG_DISABLE_WARNING", false);
+    AlertDialogFragment.show(this, dialog, "PKG_DISABLE_WARNING");
   }
 
   private void setPackageEnabledState(Package pkg, boolean enabled) {
@@ -540,15 +593,16 @@ public class MainActivity extends BaseActivity {
       command = Commands.ENABLE_PACKAGE + " " + command;
     }
 
-    if (mMySettings.isDebug()) {
+    if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "setPkgEnabledState: sending command: " + command);
     }
-    mPrivDaemonHandler.sendRequest(command);
-    mPackageParser.updatePackage(pkg);
+    DAEMON_HANDLER.sendRequest(command);
+    PKG_PARSER.updatePackage(pkg);
   }
 
   void showSnackBar(String text, int duration) {
     Utils.runInFg(
+        this,
         () -> {
           Snackbar snackBar = Snackbar.make(mB.movCont.progBarCont, text, duration);
           snackBar.setTextColor(getColor(R.color.dynamic_text_color));
@@ -593,7 +647,7 @@ public class MainActivity extends BaseActivity {
         new OnQueryTextListener() {
           @Override
           public boolean onQueryTextSubmit(String query) {
-            if (mMySettings.isDebug()) {
+            if (SETTINGS.isDebug()) {
               Util.debugLog(TAG, "searchQueryTextSubmitted: " + query);
             }
             handleSearchQuery();
@@ -602,7 +656,7 @@ public class MainActivity extends BaseActivity {
 
           @Override
           public boolean onQueryTextChange(String newText) {
-            if (mMySettings.isDebug()) {
+            if (SETTINGS.isDebug()) {
               Util.debugLog(TAG, "searchQueryTextChanged: " + newText);
             }
             handleSearchQuery();
@@ -613,7 +667,7 @@ public class MainActivity extends BaseActivity {
     // Clear search query when no text is entered.
     mSearchView.setOnQueryTextFocusChangeListener(
         (v, hasFocus) -> {
-          if (mMySettings.isDebug()) {
+          if (SETTINGS.isDebug()) {
             Util.debugLog(TAG, "searchViewFocused: " + hasFocus);
           }
           showSearchActionSettings();
@@ -631,8 +685,8 @@ public class MainActivity extends BaseActivity {
     mB.deepSearch.setOnCheckedChangeListener(null);
     mB.caseSensitiveSearch.setOnCheckedChangeListener(null);
 
-    mB.deepSearch.setChecked(mMySettings.isDeepSearchEnabled());
-    mB.caseSensitiveSearch.setChecked(mMySettings.isCaseSensitiveSearch());
+    mB.deepSearch.setChecked(SETTINGS.isDeepSearchEnabled());
+    mB.caseSensitiveSearch.setChecked(SETTINGS.isCaseSensitiveSearch());
 
     // For android:ellipsize="marquee" to work
     mB.deepSearch.setSelected(true);
@@ -640,18 +694,18 @@ public class MainActivity extends BaseActivity {
 
     mB.deepSearch.setOnCheckedChangeListener(
         (buttonView, isChecked) -> {
-          mMySettings.setDeepSearchEnabled(isChecked);
+          SETTINGS.setDeepSearchEnabled(isChecked);
           handleSearchQuery();
-          if (mMySettings.isDebug()) {
+          if (SETTINGS.isDebug()) {
             Util.debugLog(TAG, "setting deepSearch: " + isChecked);
           }
         });
 
     mB.caseSensitiveSearch.setOnCheckedChangeListener(
         (buttonView, isChecked) -> {
-          mMySettings.setCaseSensitiveSearch(isChecked);
+          SETTINGS.setCaseSensitiveSearch(isChecked);
           handleSearchQuery();
-          if (mMySettings.isDebug()) {
+          if (SETTINGS.isDebug()) {
             Util.debugLog(TAG, "setting caseSensitiveSearch: " + isChecked);
           }
         });
@@ -660,7 +714,7 @@ public class MainActivity extends BaseActivity {
   }
 
   private void collapseSearchView() {
-    if (mMySettings.isDebug()) {
+    if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "collapsing searchView");
     }
     mSearchView.onActionViewCollapsed();
@@ -671,26 +725,25 @@ public class MainActivity extends BaseActivity {
 
   private void handleSearchQuery() {
     CharSequence queryText = mSearchView.getQuery();
-    boolean wasSearching = mMySettings.isSearching();
+    boolean wasSearching = SETTINGS.isSearching();
 
-    /** Save {@link queryText} to {@link MySettings#mQueryText} causes memory leak. */
-    mMySettings.setQueryText(queryText == null ? null : queryText.toString());
+    /// Saving queryText to MySettings#mQueryText causes memory leak.
+    SETTINGS.setQueryText(queryText == null ? null : queryText.toString());
 
-    if (!mMySettings.isSearching() && !wasSearching) {
-      if (mMySettings.isDebug()) {
+    if (!SETTINGS.isSearching() && !wasSearching) {
+      if (SETTINGS.isDebug()) {
         Util.debugLog(TAG, "handleSearchQuery: already empty text set, returning");
       }
       return;
     }
 
-    if (mMySettings.isDebug()) {
+    if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "handleSearchQuery: text set to: " + queryText);
     }
 
-    mB.refreshLayout.setRefreshing(
-        !mMySettings.isDeepSearchEnabled() || !mMySettings.isSearching());
-    mPackageParser.newUpdateRequest();
-    mPackageParser.handleSearchQuery(null);
+    mB.refreshLayout.setRefreshing(!SETTINGS.isDeepSearchEnabled() || !SETTINGS.isSearching());
+    PKG_PARSER.newUpdateRequest();
+    PKG_PARSER.handleSearchQuery(null);
   }
 
   private static final Object SEARCH_VIEW_WAITER = new Object();
@@ -716,10 +769,12 @@ public class MainActivity extends BaseActivity {
       queryText.append(pkg).append("|");
     }
 
+    SETTINGS.setDeepSearchEnabled(false);
+    SETTINGS.setCaseSensitiveSearch(true);
+
     Utils.runInFg(
+        this,
         () -> {
-          mMySettings.setDeepSearchEnabled(false);
-          mMySettings.setCaseSensitiveSearch(true);
           mSearchView.setIconified(false);
           mSearchView.setQuery(queryText.toString(), true);
           mSearchView.clearFocus();
@@ -734,41 +789,24 @@ public class MainActivity extends BaseActivity {
 
   private void startPrivDaemon(boolean isFirstRun, boolean preferRoot) {
     synchronized (START_DAEMON_LOCK) {
-      if (!mMySettings.isPrivDaemonAlive()) {
-        if (mMySettings.isDebug()) {
+      if (!SETTINGS.isPrivDaemonAlive()) {
+        if (SETTINGS.isDebug()) {
           Util.debugLog(TAG, "startPrivDaemon: daemon is dead");
         }
-        if (mMySettings.isRootGranted() || mMySettings.isAdbConnected()) {
-          Utils.runInFg(() -> mB.rndProgTextV.setText(R.string.starting_daemon));
+        if (SETTINGS.isRootGranted() || SETTINGS.isAdbConnected()) {
+          Utils.runInFg(this, () -> mB.rndProgTextV.setText(R.string.starting_daemon));
 
-          Boolean res = mPrivDaemonHandler.startDaemon(preferRoot);
+          Boolean res = DAEMON_HANDLER.startDaemon(preferRoot);
           if (res == null) {
             showSnackBar(getString(R.string.daemon_logging_failed), 10000);
-          } else if (!res) {
+          } else if (!res && !SETTINGS.isPrivDaemonAlive()) {
             showSnackBar(getString(R.string.daemon_failed), 10000);
           }
         } else {
           Log.w(TAG, "startPrivDaemon: Root access: unavailable, ADB shell: unavailable");
-
-          if (mMySettings.shouldRemindMissingPrivileges()) {
-            Builder builder =
-                new Builder(this)
-                    .setPositiveButton(
-                        android.R.string.ok, (dialog, which) -> openDrawerForPrivileges())
-                    .setNeutralButton(
-                        R.string.do_not_remind, (d, which) -> mMySettings.setPrivReminderOff())
-                    .setNegativeButton(
-                        R.string.get_help,
-                        (dialog, which) ->
-                            startActivity(new Intent(App.getContext(), HelpActivity.class)))
-                    .setTitle(R.string.privileges)
-                    .setMessage(getString(R.string.grant_root_or_adb));
+          if (SETTINGS.shouldRemindMissingPrivileges()) {
             Utils.runInFg(
-                () -> {
-                  AlertDialog dialog = builder.create();
-                  Utils.removeButtonPadding(dialog);
-                  new AlertDialogFragment(dialog).show(this, TAG_GRANT_ROOT_OR_ADB, false);
-                });
+                this, () -> AlertDialogFragment.show(this, null, TAG_PRIVS_REQ_FOR_DAEMON));
           }
         }
       }
@@ -777,10 +815,10 @@ public class MainActivity extends BaseActivity {
       checkAppOpsPerm();
 
       // If have gained privileges
-      if (mMySettings.isPrivDaemonAlive() || mMySettings.isAppOpsGranted()) {
+      if (SETTINGS.isPrivDaemonAlive() || SETTINGS.isAppOpsGranted()) {
         // If observers are set, update packages list.
         if (!isFirstRun) {
-          mPackageParser.updatePackagesList();
+          PKG_PARSER.updatePackagesList();
         }
       }
 
@@ -791,8 +829,8 @@ public class MainActivity extends BaseActivity {
   void restartPrivDaemon(boolean preferRoot) {
     Utils.runInBg(
         () -> {
-          if (mMySettings.isPrivDaemonAlive()) {
-            mPrivDaemonHandler.sendRequest(Commands.SHUTDOWN);
+          if (SETTINGS.isPrivDaemonAlive()) {
+            DAEMON_HANDLER.sendRequest(Commands.SHUTDOWN);
             SystemClock.sleep(1000); // Let the previous processes cleanup
           }
           startPrivDaemon(false, preferRoot);
@@ -800,24 +838,25 @@ public class MainActivity extends BaseActivity {
   }
 
   private void checkAppOpsPerm() {
-    if (!mMySettings.isAppOpsGranted() && mMySettings.isPrivDaemonAlive()) {
+    if (!SETTINGS.isAppOpsGranted() && SETTINGS.isPrivDaemonAlive()) {
       String command =
           Commands.GRANT_PERMISSION
               + " "
               + getPackageName()
               + " "
-              + APP_OPS_PERM
+              + PERM_GET_APP_OPS_STATS
               + " "
               + Utils.getUserId();
 
-      if (mMySettings.isDebug()) {
+      if (SETTINGS.isDebug()) {
         Util.debugLog(TAG, "checkAppOpsPerm: sending command: " + command);
       }
-      mPrivDaemonHandler.sendRequest(command);
+      DAEMON_HANDLER.sendRequest(command);
 
-      if (!mMySettings.isAppOpsGranted()) {
-        Log.e(TAG, "checkAppOpsPerm: granting " + APP_OPS_PERM + " failed");
-        showSnackBar(Utils.getString(R.string.granting_permission_failed, APP_OPS_PERM), 10000);
+      if (!SETTINGS.isAppOpsGranted()) {
+        Log.e(TAG, "checkAppOpsPerm: granting " + PERM_GET_APP_OPS_STATS + " failed");
+        String text = getString(R.string.granting_permission_failed, PERM_GET_APP_OPS_STATS);
+        showSnackBar(text, 10000);
       }
     }
   }
@@ -827,11 +866,12 @@ public class MainActivity extends BaseActivity {
   //////////////////////////////////////////////////////////////////
 
   private void setDrawerLiveObserver() {
-    mMyViewModel.getDrawerChanged().observe(this, res -> setBoxesChecked());
+    ROOT_DAEMON.getDrawerChanged().observe(this, res -> setBoxesChecked());
+    ADB_DAEMON.getDrawerChanged().observe(this, res -> setBoxesChecked());
   }
 
   void setNavigationMenu() {
-    if (mMySettings.isDebug()) {
+    if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "setNavigationMenu() called");
     }
 
@@ -842,6 +882,8 @@ public class MainActivity extends BaseActivity {
         .getMenu()
         .findItem(R.id.action_donate)
         .setVisible(mMainActivityFlavor.getDonateVisibility());
+
+    mMainActivityFlavor.setNavMenu(mB.navV.getMenu());
   }
 
   private void setBoxesChecked() {
@@ -850,11 +892,11 @@ public class MainActivity extends BaseActivity {
     }
     Menu menu = mB.navV.getMenu();
     ((CheckBox) menu.findItem(R.id.action_root).getActionView())
-        .setChecked(mMySettings.isRootGranted());
+        .setChecked(SETTINGS.isRootGranted());
     ((CheckBox) menu.findItem(R.id.action_adb).getActionView())
-        .setChecked(mMySettings.isAdbConnected());
+        .setChecked(SETTINGS.isAdbConnected());
     ((CheckBox) menu.findItem(R.id.action_dark_theme).getActionView())
-        .setChecked(mMySettings.forceDarkMode());
+        .setChecked(SETTINGS.forceDarkMode());
   }
 
   private void setCheckBoxListeners() {
@@ -869,7 +911,7 @@ public class MainActivity extends BaseActivity {
   }
 
   private boolean handleNavigationItemSelected(MenuItem item) {
-    if (mMySettings.isDebug()) {
+    if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "handleNavigationItemSelected: " + item.getTitle());
     }
     View view = item.getActionView();
@@ -881,7 +923,7 @@ public class MainActivity extends BaseActivity {
   }
 
   private boolean handleNavigationItemChecked(MenuItem item) {
-    if (mMySettings.isDebug()) {
+    if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "handleNavigationItemChecked: " + item.getTitle());
     }
     mB.getRoot().closeDrawer(GravityCompat.START, true);
@@ -899,8 +941,8 @@ public class MainActivity extends BaseActivity {
     if (item.getItemId() == R.id.action_root) {
       CheckBox rootCheckBox = (CheckBox) item.getActionView();
       if (!rootCheckBox.isChecked()) {
-        mMySettings.setRootGranted(false);
-        NativeDaemon.rootInstance().stopDaemon();
+        SETTINGS.setRootGranted(false);
+        ROOT_DAEMON.stopDaemon();
         return true;
       }
 
@@ -910,7 +952,7 @@ public class MainActivity extends BaseActivity {
           () -> {
             if (Utils.checkRoot()) {
               showSnackBar(getString(R.string.root_granted), 5000);
-              Utils.runInFg(() -> rootCheckBox.setChecked(true));
+              Utils.runInFg(this, () -> rootCheckBox.setChecked(true));
               restartPrivDaemon(true);
             } else {
               showSnackBar(getString(R.string.getting_root_fail_long), 10000);
@@ -922,8 +964,8 @@ public class MainActivity extends BaseActivity {
     if (item.getItemId() == R.id.action_adb) {
       CheckBox adbCheckBox = (CheckBox) item.getActionView();
       if (!adbCheckBox.isChecked()) {
-        mMySettings.setAdbConnected(false);
-        NativeDaemon.adbInstance().stopDaemon();
+        SETTINGS.setAdbConnected(false);
+        ADB_DAEMON.stopDaemon();
         return true;
       }
 
@@ -934,48 +976,41 @@ public class MainActivity extends BaseActivity {
           () -> {
             if (Utils.checkAdb(true)) {
               showSnackBar(getString(R.string.connected_to_adb), 5000);
-              Utils.runInFg(() -> adbCheckBox.setChecked(true));
+              Utils.runInFg(this, () -> adbCheckBox.setChecked(true));
               restartPrivDaemon(false);
             } else {
-              Builder builder =
-                  new Builder(this)
-                      .setPositiveButton(android.R.string.ok, null)
-                      .setTitle(R.string.privileges)
-                      .setMessage(Utils.htmlToString(R.string.adb_connect_fail_long));
               Utils.runInFg(
-                  () ->
-                      new AlertDialogFragment(builder.create())
-                          .show(this, "ADB_CONNECT_FAILED", false));
+                  this, () -> AlertDialogFragment.show(this, null, TAG_ADB_CONNECT_FAILED));
             }
-            Utils.runInFg(() -> adbCheckBox.setEnabled(true));
+            Utils.runInFg(this, () -> adbCheckBox.setEnabled(true));
           });
       return true;
     }
 
     if (item.getItemId() == R.id.action_advanced_settings) {
-      AdvancedSettings.showDialog(this);
+      AlertDialogFragment.show(this, null, TAG_ADVANCED_SETTINGS);
       return true;
     }
 
     if (item.getItemId() == R.id.action_dark_theme) {
       CheckBox darkCheckBox = (CheckBox) item.getActionView();
-      mMySettings.setForceDarkMode(darkCheckBox.isChecked());
+      SETTINGS.setForceDarkMode(darkCheckBox.isChecked());
       Utils.setNightTheme(this);
       return true;
     }
 
     if (item.getItemId() == R.id.action_backup_restore) {
-      mBackupRestore.doBackupRestore();
+      AlertDialogFragment.show(this, null, TAG_BACKUP_RESTORE);
       return true;
     }
 
     if (item.getItemId() == R.id.action_help) {
-      startActivity(new Intent(App.getContext(), HelpActivity.class));
+      HelpActivity.start(this);
       return true;
     }
 
     if (item.getItemId() == R.id.action_donate) {
-      Donate.showDialog(this);
+      AlertDialogFragment.show(this, null, TAG_DONATION);
       return true;
     }
 
@@ -984,37 +1019,56 @@ public class MainActivity extends BaseActivity {
       return true;
     }
 
-    return false;
+    return mMainActivityFlavor.handleNavItemChecked(item);
   }
 
+  private static final Object WINDOW_WAITER = new Object();
+
   private void openDrawerForPrivileges() {
-    Utils.runInBg(
+    if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
+      Utils.runInBg(this::openDrawerForPrivileges);
+      return;
+    }
+
+    synchronized (WINDOW_WAITER) {
+      while (getWindow() == null) {
+        try {
+          WINDOW_WAITER.wait();
+        } catch (InterruptedException ignored) {
+        }
+      }
+    }
+
+    float angle = new Random().nextBoolean() ? 360 : -360;
+    Utils.runInFg(
+        this,
         () -> {
-          while (getWindow() == null) {
-            SystemClock.sleep(100);
-          }
-          if (mB != null) {
-            Utils.runInFg(() -> mB.getRoot().openDrawer(GravityCompat.START));
-          }
-          float f = new Random().nextBoolean() ? 360 : -360;
-          Utils.runInBg(() -> rotateMenuItemCheckbox(R.id.action_root, f));
-          Utils.runInBg(() -> rotateMenuItemCheckbox(R.id.action_adb, -1 * f));
+          mB.getRoot().openDrawer(GravityCompat.START);
+          mB.navV.postDelayed(
+              () -> {
+                rotateMenuItemCheckbox(R.id.action_root, angle);
+                rotateMenuItemCheckbox(R.id.action_adb, -1 * angle);
+              },
+              1000);
         });
   }
 
   private void rotateMenuItemCheckbox(int resId, float angle) {
-    SystemClock.sleep(1000);
-    if (mB != null) {
-      Utils.runInFg(
-          () ->
-              mB.navV
-                  .getMenu()
-                  .findItem(resId)
-                  .getActionView()
-                  .animate()
-                  .rotationBy(angle)
-                  .setDuration(1000)
-                  .start());
+    mB.navV
+        .getMenu()
+        .findItem(resId)
+        .getActionView()
+        .animate()
+        .rotationBy(angle)
+        .setDuration(1000)
+        .start();
+  }
+
+  @SuppressWarnings("UnusedDeclaration")
+  void resetDrawerIcon() {
+    ActionBar actionBar = getSupportActionBar();
+    if (actionBar != null && mDrawerToggle != null) {
+      actionBar.setHomeAsUpIndicator(mDrawerToggle.getDrawerArrowDrawable());
     }
   }
 

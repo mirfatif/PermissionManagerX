@@ -34,6 +34,7 @@ public interface IActivityManager {
       throws RemoteException;
 
   // O+
+  @SuppressWarnings("UnusedDeclaration")
   ComponentName startService(
       IApplicationThread caller,
       Intent service,
@@ -43,6 +44,7 @@ public interface IActivityManager {
       int userId)
       throws RemoteException;
 
+  @SuppressWarnings("UnusedDeclaration")
   ComponentName startService(
       IApplicationThread caller,
       Intent service,
@@ -50,6 +52,8 @@ public interface IActivityManager {
       String callingPackage,
       int userId)
       throws RemoteException;
+
+  int checkPermission(String permission, int pid, int uid) throws RemoteException;
 
   abstract class Stub {
 

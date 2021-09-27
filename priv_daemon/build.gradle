@@ -1,19 +1,20 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion compileSdkVer
+    compileSdk compileSdkVer
     buildToolsVersion buildToolsVer
 
     defaultConfig {
         applicationId "com.mirfatif.privdaemon"
-        minSdkVersion minSdkVer
-        targetSdkVersion targetSdkVer
-        versionCode 1
-        versionName "1.0"
+        minSdk minSdkVer
+        targetSdk targetSdkVer
     }
+
     buildFeatures {
         buildConfig = false
+        resValues = false
     }
+
     buildTypes {
         debug {
             multiDexEnabled false
@@ -25,10 +26,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     dependenciesInfo {
         includeInApk false
     }

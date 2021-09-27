@@ -9,19 +9,8 @@ import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
 
 public class MyCoordinatorLayout extends CoordinatorLayout {
 
-  public MyCoordinatorLayout(@NonNull Context context) {
-    super(context);
-    UtilsFlavor.onCreateLayout(this);
-  }
-
   public MyCoordinatorLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
-    UtilsFlavor.onCreateLayout(this);
-  }
-
-  public MyCoordinatorLayout(
-      @NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
     UtilsFlavor.onCreateLayout(this);
   }
 }

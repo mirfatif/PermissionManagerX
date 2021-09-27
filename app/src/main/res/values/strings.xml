@@ -148,12 +148,7 @@
   <string name="disable_pkg_warning" comment="'system' or 'framework'">Disabling a %1$s app is a
     dangerous action. In worst-case scenario Android system may crash.\nAre you sure you want to continue?
   </string>
-  <string name="pkg_state_critical">Critical</string>
-  <string name="pkg_state_framework">Framework</string>
-  <string name="pkg_state_system">System</string>
-  <string name="pkg_state_user">User</string>
-  <string name="pkg_state_disabled">Disabled</string>
-  <string name="pkg_state_disabled2">%s, Disabled</string>
+  <string name="pkg_state_disabled2" searchStr="true">%s, Disabled</string>
 
   <!-- PrivDaemonHandler -->
   <string name="dex_location_changed" maxLength="20">Switching daemon load location</string>
@@ -188,8 +183,9 @@
 
   <!--PackageActivity Dialogs-->
   <string name="exclude_app_from_visible_list">Exclude app from visible list.</string>
-  <string name="enable_app_or_exclude_from_visible_list">Enable app or exclude from visible list.</string>
-  <string name="disable_app_or_exclude_from_visible_list">Disable app or exclude from visible list.</string>
+  <string name="enable_app">Enable app.</string>
+  <string name="disable_app">Disable app.</string>
+  <string name="exclude_from_visible_list">%s Exclude from visible list.</string>
 
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">Something went wrong</string>
@@ -220,26 +216,12 @@
   <string name="should_be" comment="AppOps or manifest permission state"><![CDATA[Should be <b>%1$s</b>]]></string>
   <string name="daemon_not_running_as_system" maxLength="20">Daemon not running as system</string>
   <string name="failed_get_system_fixed_flag" maxLength="20">Failed getting system fixed flag</string>
-  <string name="prot_lvl_unknown">Unknown</string>
-  <string name="prot_lvl_normal">Normal</string>
-  <string name="prot_lvl_dangerous">Dangerous</string>
-  <string name="prot_lvl_signature">Signature</string>
-  <string name="prot_lvl_app_ops">AppOps</string>
-  <string name="prot_lvl_app_ops2">%s, AppOps</string>
-  <string name="prot_lvl_uid_mode">%s, UID mode</string>
-  <string name="prot_lvl_extra">%s, Extra</string>
-  <string name="prot_lvl_development">Development</string>
-  <string name="prot_lvl_development2">%s, Development</string>
-  <string name="prot_lvl_privileged">Privileged</string>
-  <string name="prot_lvl_privileged2">%s, Privileged</string>
-  <string name="prot_lvl_fixed">Fixed</string>
-  <string name="prot_lvl_fixed2">%s, Fixed</string>
-  <string name="search_str_uid">UID</string>
-  <string name="search_str_time">TIME</string>
-  <string name="search_str_extra">EXTRA</string>
-  <string name="search_str_red">RED</string>
-  <string name="search_str_orange">ORANGE</string>
-  <string name="search_str_green">GREEN</string>
+  <string name="prot_lvl_app_ops2" searchStr="true">%s, AppOps</string>
+  <string name="prot_lvl_uid_mode" searchStr="true">%s, UID mode</string>
+  <string name="prot_lvl_extra" searchStr="true">%s, Extra</string>
+  <string name="prot_lvl_development2" searchStr="true">%s, Development</string>
+  <string name="prot_lvl_privileged2" searchStr="true">%s, Privileged</string>
+  <string name="prot_lvl_fixed2" searchStr="true">%s, Fixed</string>
   <string name="app_op_mode_allow">Allow</string>
   <string name="app_op_mode_ignore">Ignore</string>
   <string name="app_op_mode_deny">Deny</string>
@@ -252,6 +234,8 @@
   <string name="excluded_perms_summary">Long press on a permission name to exclude it</string>
   <string name="extra_app_ops_summary">AppOps always shown in every app</string>
   <string name="extra_app_ops_summary_count">(Total: %1$d)</string>
+  <string name="enable_exc_filters" maxLength="10">Enable Filters</string>
+  <string name="disable_exc_filters" maxLength="10">Disable Filters</string>
 
   <plurals name="and_others_count">
     <item quantity="one">%1$s and %2$d other</item>
@@ -262,6 +246,7 @@
   <string name="locale_system">System</string>
   <string name="locale_en">English</string>
   <string name="locale_ru">Russian</string>
+  <string name="locale_es">Spanish</string>
 
   <!-- PreferenceActivity menu items -->
   <string name="filter_settings_reset_defaults_menu_item" maxLength="15">Reset To Defaults</string>
@@ -297,8 +282,9 @@
     <![CDATA[
       <ul>
         <li>Sort apps and permissions by different parameters</li>
-        <li>Scheduled check to notify bad reference states</li>
+        <li>Scheduled Check to notify bad reference states</li>
         <li>Auto revoke granted permissions with RED states</li>
+        <li>Permission Watcher to remove permissions quickly</li>
         <li>Make changes to critical apps and permissions</li>
         <li>Multiple users / work profile support</li>
         <li>Auto create backup file on changes</li>
@@ -329,12 +315,26 @@
         <li>siebenbrodt <a href="https://crowdin.com/profile/siebenbrodt">LINK</a></li>
       </ul>
       <br/>
+      <b>Spanish</b>
+      <ul>
+        <li>LuisAlfredo92 <a href="https://crowdin.com/profile/luisalfredo92">LINK</a></li>
+      </ul>
+      <br/>
       <a href="https://crowdin.com/project/pmx"><b>Add my language</b></a>
     ]]>
   </string>
   <string name="share">Share</string>
   <string name="share_summary">Share the app with others</string>
   <string name="share_text">Check out this amazing app! %1$s</string>
+  <string name="dump_daemon_heap_menu_item" translatable="false" maxLength="15">Dump Heap</string>
+  <string name="perm_status_menu_item" maxLength="15">Privileges</string>
+  <string name="uid">UID:</string>
+  <string name="app_ops">AppOps</string>
+  <string name="op_to_def_mode">Op To Default Mode</string>
+  <string name="op_to_switch">Op To Switch</string>
+  <string name="op_to_name">Op To Name</string>
+  <string name="op_num_consistency">Op Numbers Consistency</string>
+  <string name="permissions">Permissions</string>
 
   <!-- Donate -->
   <string name="send_bitcoin">Send Bitcoin</string>
@@ -356,8 +356,11 @@
 
   <!-- HelpActivity -->
   <string name="load_internet_menu_item" maxLength="15">Load from internet</string>
+  <string name="open_browser_menu_item" maxLength="15">Open in browser</string>
   <string name="zoom_in_menu_item" maxLength="15">Zoom In</string>
   <string name="zoom_out_menu_item" maxLength="15">Zoom Out</string>
+  <string name="no_web_view" maxLength="20">No WebView</string>
+  <string name="outdated_web_view" maxLength="20">Outdated WebView</string>
 
   <!-- DaemonCmdRcvSvc: Daemon return messages -->
   <string name="daemon_listen_on_loopback_failed" maxLength="20">Daemon failed to listen on 127.0.0.1</string>
@@ -372,12 +375,8 @@
   <string name="daemon_enable_pkg_failed" maxLength="20">Enabling app failed</string>
   <string name="daemon_disable_pkg_failed" maxLength="20">Disabling app failed</string>
   <string name="daemon_open_app_info_failed" maxLength="20">Opening app info failed</string>
-  <string name="daemon_get_pkg_info_failed" maxLength="20">Getting app info failed</string>
-  <string name="daemon_get_installed_pkgs_failed" maxLength="20">Getting apps list failed</string>
-  <string name="daemon_get_users_failed" maxLength="20">Getting users list failed</string>
   <string name="daemon_get_perm_grp_info_list_failed" maxLength="20">Getting permission groups failed</string>
   <string name="daemon_op_num_inconsistency" maxLength="20">Bad ROM</string>
-  <string name="daemon_set_perm_flags_failed" maxLength="20">Setting permission flags failed</string>
 
   <!-- Locale -->
   <string name="help_file_name">help.html</string>

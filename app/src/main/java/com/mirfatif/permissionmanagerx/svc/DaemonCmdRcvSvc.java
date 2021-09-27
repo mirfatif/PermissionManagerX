@@ -24,17 +24,19 @@ public class DaemonCmdRcvSvc extends Service {
   public int onStartCommand(Intent intent, int flags, int startId) {
     String action = intent.getAction();
     if (action != null && CODE_WORD.equals(intent.getStringExtra(Commands.CODE_WORD))) {
-      Utils.runInBg(() -> showDaemonMsg(action));
+      if (!DaemonCmdRcvSvcFlavor.handleCmd(action)) {
+        Utils.runInBg(() -> showDaemonMsg(action));
+      }
     }
     return Service.START_NOT_STICKY;
   }
 
-  private static long mShowMsgTs;
+  private static long sShowMsgTs;
 
   private static boolean shouldShowMsg() {
-    boolean res = System.currentTimeMillis() - mShowMsgTs > 5000;
+    boolean res = System.currentTimeMillis() - sShowMsgTs > 5000;
     if (res) {
-      mShowMsgTs = System.currentTimeMillis();
+      sShowMsgTs = System.currentTimeMillis();
     }
     return res;
   }
@@ -66,9 +68,6 @@ public class DaemonCmdRcvSvc extends Service {
       case Commands.REVOKE_PERM_FAILED:
         Utils.showToast(R.string.daemon_revoke_perm_failed);
         break;
-      case Commands.SET_PERM_FLAGS_FAILED:
-        Utils.showToast(R.string.daemon_set_perm_flags_failed);
-        break;
       case Commands.ENABLE_PKG_FAILED:
         Utils.showToast(R.string.daemon_enable_pkg_failed);
         break;
@@ -77,15 +76,6 @@ public class DaemonCmdRcvSvc extends Service {
         break;
       case Commands.OPEN_APP_INFO_FAILED:
         Utils.showToast(R.string.daemon_open_app_info_failed);
-        break;
-      case Commands.GET_PKG_INFO_FAILED:
-        Utils.showToast(R.string.daemon_get_pkg_info_failed);
-        break;
-      case Commands.GET_INSTALLED_PKGS_FAILED:
-        Utils.showToast(R.string.daemon_get_installed_pkgs_failed);
-        break;
-      case Commands.GET_USERS_FAILED:
-        Utils.showToast(R.string.daemon_get_users_failed);
         break;
       case Commands.GET_PERM_GRP_INFO_LIST_FAILED:
         Utils.showToast(R.string.daemon_get_perm_grp_info_list_failed);

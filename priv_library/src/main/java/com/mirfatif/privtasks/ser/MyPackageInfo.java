@@ -1,4 +1,4 @@
-package com.mirfatif.privtasks;
+package com.mirfatif.privtasks.ser;
 
 import java.io.Serializable;
 

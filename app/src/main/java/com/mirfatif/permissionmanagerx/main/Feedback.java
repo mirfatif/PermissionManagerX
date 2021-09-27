@@ -1,15 +1,15 @@
 package com.mirfatif.permissionmanagerx.main;
 
-import android.os.SystemClock;
+import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
+
 import android.view.View;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams;
 import com.google.android.material.behavior.SwipeDismissBehavior;
 import com.google.android.material.behavior.SwipeDismissBehavior.OnDismissListener;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.databinding.ActivityMainBinding;
-import com.mirfatif.permissionmanagerx.prefs.MySettings;
-import com.mirfatif.permissionmanagerx.util.Utils;
 
 class Feedback {
 
@@ -26,7 +26,7 @@ class Feedback {
   private boolean mFeedbackSwiped = false;
 
   void askForFeedback() {
-    if (!mFeedbackSwiped && MySettings.getInstance().shouldAskForFeedback()) {
+    if (!mFeedbackSwiped && SETTINGS.shouldAskForFeedback()) {
       mB.movCont.feedbackCont.setVisibility(View.VISIBLE);
     }
 
@@ -41,14 +41,8 @@ class Feedback {
     dismissBehavior.setListener(new FeedbackDismissListener());
     ((LayoutParams) mB.movCont.feedbackCont.getLayoutParams()).setBehavior(dismissBehavior);
 
-    Utils.runInBg(
-        () -> {
-          SystemClock.sleep(1000);
-          Utils.runInFg(
-              () ->
-                  mB.movCont.feedbackCont.startAnimation(
-                      AnimationUtils.loadAnimation(mA, R.anim.shake)));
-        });
+    Animation anim = AnimationUtils.loadAnimation(mA, R.anim.shake);
+    mB.movCont.feedbackCont.postDelayed(() -> mB.movCont.feedbackCont.startAnimation(anim), 1000);
   }
 
   private void showDialog(boolean isYes) {

@@ -8,6 +8,7 @@
     app:defaultValue="@bool/pref_settings_check_for_updates_default"
     app:iconSpaceReserved="false"
     app:key="@string/pref_settings_check_for_updates_key"
+    app:singleLineTitle="false"
     app:summary="@string/pref_settings_check_for_updates_summary"
     app:title="@string/pref_settings_check_for_updates_title" />
 
@@ -17,6 +18,7 @@
     app:defaultValue="@bool/pref_settings_privileges_reminder_default"
     app:iconSpaceReserved="false"
     app:key="@string/pref_settings_privileges_reminder_key"
+    app:singleLineTitle="false"
     app:summary="@string/pref_settings_privileges_reminder_summary"
     app:title="@string/pref_settings_privileges_reminder_title" />
 
@@ -26,6 +28,7 @@
     app:defaultValue="@bool/pref_settings_quick_scan_default"
     app:iconSpaceReserved="false"
     app:key="@string/pref_settings_quick_scan_key"
+    app:singleLineTitle="false"
     app:summary="@string/pref_settings_quick_scan_summary"
     app:title="@string/pref_settings_quick_scan_title" />
 
@@ -35,6 +38,7 @@
     app:defaultValue="@bool/pref_settings_special_search_default"
     app:iconSpaceReserved="false"
     app:key="@string/pref_settings_special_search_key"
+    app:singleLineTitle="false"
     app:summary="@string/pref_settings_special_search_summary"
     app:title="@string/pref_settings_special_search_title" />
 
@@ -46,6 +50,7 @@
     app:entryValues="@array/locale_codes"
     app:iconSpaceReserved="false"
     app:key="@string/pref_settings_locale_key"
+    app:singleLineTitle="false"
     app:title="@string/pref_settings_locale_title" />
 
 </PreferenceScreen>

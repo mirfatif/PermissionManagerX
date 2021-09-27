@@ -1,9 +1,10 @@
 package com.mirfatif.permissionmanagerx.main;
 
+import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import com.mirfatif.permissionmanagerx.BuildConfig;
-import com.mirfatif.permissionmanagerx.prefs.MySettings;
 
 public class MainActivityFlavor {
 
@@ -11,7 +12,6 @@ public class MainActivityFlavor {
   private final MainActivity mA;
 
   private final Feedback mFeedback;
-  private final MySettings mMySettings = MySettings.getInstance();
 
   MainActivityFlavor(MainActivity activity) {
     mA = activity;
@@ -24,8 +24,6 @@ public class MainActivityFlavor {
   void onResumed() {
     mFeedback.askForFeedback();
   }
-
-  void onDestroyed() {}
 
   @SuppressWarnings("UnusedDeclaration")
   void onCreateOptionsMenu(Menu menu) {}
@@ -40,12 +38,20 @@ public class MainActivityFlavor {
     return false;
   }
 
+  @SuppressWarnings("UnusedDeclaration")
+  public void setNavMenu(Menu menu) {}
+
+  @SuppressWarnings("UnusedDeclaration")
+  public boolean handleNavItemChecked(MenuItem item) {
+    return false;
+  }
+
   boolean getDonateVisibility() {
     return !BuildConfig.AMAZ_VERSION;
   }
 
   void onPackagesUpdated() {
-    mMySettings.setMayAskForFeedback();
+    SETTINGS.setMayAskForFeedback();
     mFeedback.askForFeedback();
   }
 

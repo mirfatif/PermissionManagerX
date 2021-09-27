@@ -1,7 +1,10 @@
 package com.mirfatif.permissionmanagerx.prefs;
 
+import static com.mirfatif.permissionmanagerx.parser.AppOpsParser.APP_OPS_PARSER;
+import static com.mirfatif.permissionmanagerx.parser.PkgParserFlavor.PKG_PARSER_FLAVOR;
 import static com.mirfatif.permissionmanagerx.util.Utils.getString;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
@@ -14,8 +17,8 @@ import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
 import com.mirfatif.permissionmanagerx.app.App;
-import com.mirfatif.permissionmanagerx.main.MainActivity;
-import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
+import com.mirfatif.permissionmanagerx.parser.Package;
+import com.mirfatif.permissionmanagerx.parser.Permission;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDao;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDatabase;
 import com.mirfatif.permissionmanagerx.util.Utils;
@@ -32,29 +35,16 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class MySettings {
+public enum MySettings {
+  SETTINGS;
 
   private static final String TAG = "MySettings";
 
-  private static MySettings mMySettings;
-
-  public static synchronized MySettings getInstance() {
-    if (mMySettings == null) {
-      mMySettings = new MySettings();
-    }
-    return mMySettings;
-  }
-
-  private final SharedPreferences mPrefs;
+  private final SharedPreferences mPrefs = Utils.getDefPrefs();
 
   // Removed mEncPrefs and mUseHiddenAPIs initialization due to bug
   @SecurityLibBug
-  private MySettings() {
-    mPrefs = Utils.getDefPrefs();
-    mExcludedAppsPrefKey = getString(R.string.pref_filter_excluded_apps_key);
-    mExcludedPermsPrefKey = getString(R.string.pref_filter_excluded_perms_key);
-    mExtraAppOpsPrefKey = getString(R.string.pref_filter_extra_appops_key);
-  }
+  MySettings() {}
 
   private boolean mPrivDaemonAlive = false;
 
@@ -255,18 +245,24 @@ public class MySettings {
     Utils.runInBg(() -> savePref(appLaunchCountId, getIntPref(appLaunchCountId) + 1));
   }
 
+  @SuppressLint("ApplySharedPref")
   public boolean shouldAskToSendCrashReport() {
     int crashCount = getIntPref(R.string.pref_main_crash_report_count_enc_key);
     long lastTS = getLongPref(R.string.pref_main_crash_report_ts_enc_key);
     long currTime = System.currentTimeMillis();
 
-    if (crashCount >= 5 || (currTime - lastTS) >= TimeUnit.DAYS.toMillis(1)) {
-      savePref(R.string.pref_main_crash_report_ts_enc_key, currTime);
-      savePref(R.string.pref_main_crash_report_count_enc_key, 1);
-      return true;
+    Editor prefEditor = Utils.getEncPrefs().edit();
+    try {
+      if (crashCount >= 5 || (currTime - lastTS) >= TimeUnit.DAYS.toMillis(1)) {
+        prefEditor.putLong(getString(R.string.pref_main_crash_report_ts_enc_key), currTime);
+        prefEditor.putInt(getString(R.string.pref_main_crash_report_count_enc_key), 1);
+        return true;
+      }
+      prefEditor.putInt(getString(R.string.pref_main_crash_report_count_enc_key), crashCount + 1);
+    } finally {
+      prefEditor.commit();
     }
 
-    savePref(R.string.pref_main_crash_report_count_enc_key, crashCount + 1);
     return false;
   }
 
@@ -367,7 +363,7 @@ public class MySettings {
   }
 
   public boolean isQuickScanEnabled() {
-    return getBoolPref(R.string.pref_settings_quick_scan_key);
+    return getBoolPref(R.string.pref_settings_quick_scan_key) && PKG_PARSER_FLAVOR.allowQuickScan();
   }
 
   public boolean shouldDoQuickScan() {
@@ -404,29 +400,38 @@ public class MySettings {
     return mCriticalApps.contains(packageName);
   }
 
+  // Exclusion filters master switch
+  public boolean getExcFiltersEnabled() {
+    return getBoolPref(R.string.pref_filter_master_switch_key);
+  }
+
+  public void setExcFiltersEnabled(boolean enabled) {
+    savePref(R.string.pref_filter_master_switch_key, enabled);
+  }
+
   // apps
   public boolean excludeNoIconApps() {
-    return getBoolPref(R.string.pref_filter_exclude_no_icon_apps_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_no_icon_apps_key);
   }
 
   public boolean excludeUserApps() {
-    return getBoolPref(R.string.pref_filter_exclude_user_apps_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_user_apps_key);
   }
 
   public boolean excludeSystemApps() {
-    return getBoolPref(R.string.pref_filter_exclude_system_apps_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_system_apps_key);
   }
 
   public boolean excludeFrameworkApps() {
-    return getBoolPref(R.string.pref_filter_exclude_framework_apps_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_framework_apps_key);
   }
 
   public boolean excludeDisabledApps() {
-    return getBoolPref(R.string.pref_filter_exclude_disabled_apps_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_disabled_apps_key);
   }
 
   public boolean excludeNoPermissionsApps() {
-    return getBoolPref(R.string.pref_filter_exclude_no_perms_apps_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_no_perms_apps_key);
   }
 
   public boolean shouldExcludeNoPermApps() {
@@ -434,60 +439,64 @@ public class MySettings {
   }
 
   public boolean showExtraAppOps() {
-    return getBoolPref(R.string.pref_filter_show_extra_app_ops_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_show_extra_app_ops_key);
   }
 
   // permissions
   public boolean excludeInvalidPermissions() {
-    return getBoolPref(R.string.pref_filter_exclude_invalid_perms_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_invalid_perms_key);
   }
 
   public boolean excludeNotChangeablePerms() {
-    return getBoolPref(R.string.pref_filter_exclude_not_changeable_perms_key);
+    return getExcFiltersEnabled()
+        && getBoolPref(R.string.pref_filter_exclude_not_changeable_perms_key);
   }
 
   public boolean excludeNotGrantedPerms() {
-    return getBoolPref(R.string.pref_filter_exclude_not_granted_perms_key);
+    return getExcFiltersEnabled()
+        && getBoolPref(R.string.pref_filter_exclude_not_granted_perms_key);
   }
 
   public boolean manuallyExcludePerms() {
-    return getBoolPref(R.string.pref_filter_manually_exclude_perms_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_manually_exclude_perms_key);
   }
 
   public boolean excludeNormalPerms() {
-    return getBoolPref(R.string.pref_filter_exclude_normal_perms_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_normal_perms_key);
   }
 
   public boolean excludeDangerousPerms() {
-    return getBoolPref(R.string.pref_filter_exclude_dangerous_perms_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_dangerous_perms_key);
   }
 
   public boolean excludeSignaturePerms() {
-    return getBoolPref(R.string.pref_filter_exclude_signature_perms_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_signature_perms_key);
   }
 
   public boolean excludePrivilegedPerms() {
-    return getBoolPref(R.string.pref_filter_exclude_privileged_perms_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_privileged_perms_key);
   }
 
   public boolean excludeAppOpsPerms() {
-    return getBoolPref(R.string.pref_filter_exclude_appops_perms_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_appops_perms_key);
   }
 
   public boolean excludeNotSetAppOps() {
-    return getBoolPref(R.string.pref_filter_exclude_not_set_appops_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_not_set_appops_key);
   }
 
   public boolean manuallyExcludeApps() {
-    return getBoolPref(R.string.pref_filter_manually_exclude_apps_key);
+    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_manually_exclude_apps_key);
   }
 
   public boolean canReadAppOps() {
     return canUseHiddenAPIs() || mPrivDaemonAlive;
   }
 
+  public static final String PERM_GET_APP_OPS_STATS = "android.permission.GET_APP_OPS_STATS";
+
   public boolean isAppOpsGranted() {
-    return App.getContext().checkSelfPermission(MainActivity.APP_OPS_PERM)
+    return App.getContext().checkSelfPermission(PERM_GET_APP_OPS_STATS)
         == PackageManager.PERMISSION_GRANTED;
   }
 
@@ -526,7 +535,7 @@ public class MySettings {
     savePref(R.string.pref_main_use_socket_enc_key, useSocket);
   }
 
-  private final String mExcludedAppsPrefKey;
+  private final String mExcludedAppsPrefKey = getString(R.string.pref_filter_excluded_apps_key);
   private Set<String> mExcludedApps;
   private CharSequence[] mExcludedAppsLabels;
 
@@ -548,8 +557,14 @@ public class MySettings {
     return getExcludedApps().size();
   }
 
+  // getExcludedApps() must be called at least once from bg thread so that to avoid
+  // blocking UI later in canBeExcluded().
   public boolean isPkgExcluded(String packageName) {
-    return manuallyExcludeApps() && getExcludedApps().contains(packageName);
+    return getExcludedApps().contains(packageName) && manuallyExcludeApps();
+  }
+
+  public boolean canBeExcluded(Package pkg) {
+    return getExcFiltersEnabled() && !getExcludedApps().contains(pkg.getName());
   }
 
   private final ReentrantLock EXCLUDED_APPS_LOCK = new ReentrantLock();
@@ -641,7 +656,7 @@ public class MySettings {
     savePref(R.string.pref_filter_excluded_apps_key, excludedApps);
   }
 
-  private final String mExcludedPermsPrefKey;
+  private final String mExcludedPermsPrefKey = getString(R.string.pref_filter_excluded_perms_key);
   private Set<String> mExcludedPerms;
 
   public Set<String> getExcludedPerms() {
@@ -655,8 +670,16 @@ public class MySettings {
     return getExcludedPerms().size();
   }
 
+  // getExcludedPerms() must be called at least once from bg thread so that to avoid
+  // blocking UI later in canBeExcluded().
   public boolean isPermExcluded(String permissionName) {
-    return manuallyExcludePerms() && getExcludedPerms().contains(permissionName);
+    return getExcludedPerms().contains(permissionName) && manuallyExcludePerms();
+  }
+
+  public boolean canBeExcluded(Permission perm) {
+    return getExcFiltersEnabled()
+        && !getExcludedPerms().contains(perm.getName())
+        && !perm.isExtraAppOp();
   }
 
   private final ReentrantLock EXCLUDED_PERMS_LOCK = new ReentrantLock();
@@ -702,7 +725,7 @@ public class MySettings {
     savePref(R.string.pref_filter_excluded_perms_key, excludedPerms);
   }
 
-  private final String mExtraAppOpsPrefKey;
+  private final String mExtraAppOpsPrefKey = getString(R.string.pref_filter_extra_appops_key);
   private Set<String> mExtraAppOps;
 
   public Set<String> getExtraAppOps() {
@@ -745,7 +768,7 @@ public class MySettings {
     }
 
     // Let's remove AppOps not on this Android version
-    List<String> appOpsList = AppOpsParser.getInstance().getAppOpsList();
+    List<String> appOpsList = APP_OPS_PARSER.getAppOpsList();
     mExtraAppOps = new HashSet<>();
     for (String extraAppOp : extraAppOps) {
       // Necessarily build mExtraAppOps here even with excludeAppOpsPerms(). Otherwise on
@@ -806,6 +829,7 @@ public class MySettings {
   }
 
   private static class Pair {
+
     String packageLabel;
     String packageName;
 

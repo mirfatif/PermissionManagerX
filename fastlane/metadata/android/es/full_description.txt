@@ -1,0 +1,23 @@
+Usando e<b>X</b>tended <b>Permission Manager</b>, para cada aplicación instalara, en una sola pantalla, tú podrás:
+
+<ul>
+    <li>View, grant or revoke manifest permissions</li>
+    <li>View AppOps permissions and choose one of multiple modes</li>
+    <li>Set your desired reference value for every changeable permission</li>
+</ul>
+
+<b>Los permisos de manifiesto</b> son esos normalmente llamados permisos p. ej. Almacenamiento, Cámara, etc. <b>AppOps</b> (app operations) is a robust framework Android uses at back end for access control. Con cada lanzamiento de Android los permisos de manifiesto se están volviendo más dependientes de las AppOps. Así que es divertido controlar ambas simultáneamente y ver cómo están relacionan entre sí.
+
+In short, AppOps provide a fine-grained control over many of the manifest permissions. Además, provee controles adicionales como ejecución en segundo plano, vibración, acceso al portapapeles, etc. Just install the app to explore it yourself.
+
+When you reinstall an app, or change your device, or upgrade your ROM, it's a time-taking process to review all installed apps for granted permissions and revoke the unnecessary ones (after all  <b><i>privacy matters</i></b>). PMX provides you the solution. Set <b>reference states</b> of permissions, which can be quickly backed up and restored, and colored bars at left make it quite easy to review packages and permissions at a glance.
+
+Confused? We are here to explain. Please start with: 
+
+<ul>
+    <li><a href="https://mirfatif.github.io/PermissionManagerX/help/help.html#intro">What is PMX?</a></li>
+    <li><a href="https://mirfatif.github.io/PermissionManagerX/help/help#faq36">Why do I need to use PMX?</a></li>
+    <li><a href="https://mirfatif.github.io/PermissionManagerX/help/help#perms_types">What are manifest permissions and AppOps?</a></li>
+    <li><a href="https://mirfatif.github.io/PermissionManagerX/help/help#perm_ref">Permission References</a></li>
+</ul>
+

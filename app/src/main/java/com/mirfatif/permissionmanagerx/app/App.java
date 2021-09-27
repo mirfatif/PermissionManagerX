@@ -1,5 +1,6 @@
 package com.mirfatif.permissionmanagerx.app;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
@@ -14,13 +15,15 @@ public class App extends Application {
 
   private static final String TAG = "App";
 
-  private static Context mContext;
+  @SuppressLint("StaticFieldLeak")
+  private static Context sContext;
+
   private Thread.UncaughtExceptionHandler defaultExceptionHandler;
 
   @Override
   public void onCreate() {
     super.onCreate();
-    mContext = getApplicationContext();
+    sContext = getApplicationContext();
     updateContext();
     defaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 
@@ -45,15 +48,15 @@ public class App extends Application {
   }
 
   public static void updateContext() {
-    mContext = Utils.setLocale(mContext);
+    sContext = Utils.setLocale(sContext);
   }
 
   public static Context getContext() {
-    return mContext;
+    return sContext;
   }
 
   public static Resources getRes() {
-    return mContext.getResources();
+    return sContext.getResources();
   }
 
   // To avoid delays later

@@ -1,14 +1,14 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion compileSdkVer
+    compileSdk compileSdkVer
     buildToolsVersion buildToolsVer
 
     defaultConfig {
-        minSdkVersion minSdkVer
-        targetSdkVersion targetSdkVer
-        versionCode 1
-        versionName "1.0"
+        minSdk minSdkVer
+        targetSdk targetSdkVer
+
+        consumerProguardFiles 'proguard-rules.pro'
     }
 
     buildFeatures {

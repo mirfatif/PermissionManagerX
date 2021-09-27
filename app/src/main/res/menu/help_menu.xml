@@ -19,4 +19,9 @@
     android:title="@string/load_internet_menu_item"
     app:showAsAction="never" />
 
+  <item
+    android:id="@+id/action_open_browser"
+    android:title="@string/open_browser_menu_item"
+    app:showAsAction="never" />
+
 </menu>

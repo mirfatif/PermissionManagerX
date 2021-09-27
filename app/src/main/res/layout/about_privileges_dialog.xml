@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:paddingTop="16dp"
+  android:paddingBottom="16dp"
+  android:paddingStart="4dp"
+  android:paddingEnd="4dp"
+  android:scrollbars="vertical">
+
+  <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingStart="20dp"
+      android:paddingEnd="20dp"
+      android:gravity="center_horizontal"
+      android:orientation="horizontal">
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/uid"
+        android:textColor="@color/dynamic_text_color"
+        android:textSize="16sp" />
+
+      <TextView
+        android:id="@+id/uid_v"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:textColor="@color/dynamic_text_color"
+        android:textSize="16sp" />
+
+    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+
+    <TextView
+      android:textStyle="bold"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="24dp"
+      android:layout_marginBottom="8dp"
+      android:layout_marginStart="20dp"
+      android:layout_marginEnd="20dp"
+      android:text="@string/permissions"
+      android:textColor="?attr/accentColor"
+      android:textSize="18sp" />
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:background="#80808080" />
+
+    <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/recycler_v"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" />
+
+    <TextView
+      android:textStyle="bold"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="24dp"
+      android:layout_marginBottom="8dp"
+      android:layout_marginStart="20dp"
+      android:layout_marginEnd="20dp"
+      android:text="@string/app_ops"
+      android:textColor="?attr/accentColor"
+      android:textSize="18sp" />
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_marginBottom="4dp"
+      android:background="#80808080" />
+
+    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingStart="20dp"
+      android:paddingEnd="20dp"
+      android:orientation="horizontal">
+
+      <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginEnd="8dp"
+        android:layout_gravity="center_vertical"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/op_to_def_mode"
+        android:textColor="@color/dynamic_text_color"
+        android:textSize="16sp" />
+
+      <ImageView
+        android:id="@+id/op_to_def_mode_v"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        tools:ignore="ContentDescription" />
+
+    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_marginTop="4dp"
+      android:layout_marginBottom="4dp"
+      android:background="#80808080" />
+
+    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingStart="20dp"
+      android:paddingEnd="20dp"
+      android:orientation="horizontal">
+
+      <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginEnd="8dp"
+        android:layout_gravity="center_vertical"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/op_to_switch"
+        android:textColor="@color/dynamic_text_color"
+        android:textSize="16sp" />
+
+      <ImageView
+        android:id="@+id/op_to_sw_v"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        tools:ignore="ContentDescription" />
+
+    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_marginTop="4dp"
+      android:layout_marginBottom="4dp"
+      android:background="#80808080" />
+
+    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingStart="20dp"
+      android:paddingEnd="20dp"
+      android:orientation="horizontal">
+
+      <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginEnd="8dp"
+        android:layout_gravity="center_vertical"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/op_to_name"
+        android:textColor="@color/dynamic_text_color"
+        android:textSize="16sp" />
+
+      <ImageView
+        android:id="@+id/op_to_name_v"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        tools:ignore="ContentDescription" />
+
+    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_marginTop="4dp"
+      android:layout_marginBottom="4dp"
+      android:background="#80808080" />
+
+    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingStart="20dp"
+      android:paddingEnd="20dp"
+      android:orientation="horizontal">
+
+      <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginEnd="8dp"
+        android:layout_gravity="center_vertical"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/op_num_consistency"
+        android:textColor="@color/dynamic_text_color"
+        android:textSize="16sp" />
+
+      <ImageView
+        android:id="@+id/op_num_consistent_v"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        tools:ignore="ContentDescription" />
+
+    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_marginTop="4dp"
+      android:layout_marginBottom="4dp"
+      android:background="#80808080" />
+
+  </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+</androidx.core.widget.NestedScrollView>

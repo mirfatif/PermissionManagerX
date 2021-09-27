@@ -45,6 +45,8 @@
   <bool name="pref_main_warn_dang_change_enc_default">true</bool>
 
   <!-- PreferencesActivity packages titles, keys and defaults -->
+  <string name="pref_filter_master_switch_key" translatable="false">pref_filter_master_switch</string>
+  <bool name="pref_filter_master_switch_default">true</bool>
   <string name="pref_filter_packages_cat_title" maxLength="20">Packages</string>
   <string name="pref_filter_exclude_no_icon_apps_key" translatable="false">pref_filter_exclude_no_icon_apps</string>
   <bool name="pref_filter_exclude_no_icon_apps_default">true</bool>
@@ -138,8 +140,8 @@
   <bool name="pref_settings_quick_scan_default">false</bool>
   <string name="pref_settings_special_search_key" translatable="false">pref_settings_special_search</string>
   <bool name="pref_settings_special_search_default">true</bool>
-  <string name="pref_settings_special_search_title" maxLength="20">Special search characters</string>
-  <string name="pref_settings_special_search_summary">Use AND (&amp;), OR (|) and NOT (!) characters
+  <string name="pref_settings_special_search_title" maxLength="20">Complex search</string>
+  <string name="pref_settings_special_search_summary">Use AND (&amp;), OR (|) and NOT (!) operators
     in search to combine queries
   </string>
   <string name="pref_settings_locale_title" maxLength="20">Application language</string>

@@ -30,11 +30,12 @@ public class Commands {
   public static final String GET_SYSTEM_FIXED_FLAG = "GET_SYSTEM_FIXED_FLAG";
   public static final String GET_POLICY_FIXED_FLAG = "GET_POLICY_FIXED_FLAG";
   public static final String GET_PERMISSION_FLAGS = "GET_PERMISSION_FLAGS";
-  public static final String GET_INSTALLED_PKGS = "GET_INSTALLED_PKGS";
-  public static final String GET_PKG_INFO = "GET_PKG_INFO";
   public static final String OPEN_APP_INFO = "OPEN_APP_INFO";
-  public static final String GET_USERS = "GET_USERS";
-  public static final String SET_PERM_FLAGS = "SET_PERM_FLAGS";
+  public static final String GET_PERM_STATUS = "GET_PERM_STATUS";
+  public static final String GET_APP_OP_STATUS = "GET_APP_OP_STATUS";
+
+  public static final String DUMP_HEAP = "DUMP_HEAP";
+  public static final String RESET_OOS = "RESET_OOS";
 
   // From daemon to app
   public static final String CMD_RCV_SVC = "com.mirfatif.permissionmanagerx.svc.DaemonCmdRcvSvc";
@@ -51,13 +52,10 @@ public class Commands {
   public static final String ENABLE_PKG_FAILED = "ENABLE_PKG_FAILED";
   public static final String DISABLE_PKG_FAILED = "DISABLE_PKG_FAILED";
   public static final String OPEN_APP_INFO_FAILED = "OPEN_APP_INFO_FAILED";
-  public static final String GET_PKG_INFO_FAILED = "GET_PKG_INFO_FAILED";
-  public static final String GET_INSTALLED_PKGS_FAILED = "GET_INSTALLED_PKGS_FAILED";
-  public static final String GET_USERS_FAILED = "GET_USERS_FAILED";
+
   public static final String GET_PERM_GRP_INFO_LIST_FAILED = "GET_PERM_GRP_INFO_LIST_FAILED";
   public static final String OP_NUM_INCONSISTENCY = "OP_NUM_INCONSISTENCY";
   public static final String OP_TO_DEF_MODE_NOT_FOUND = "OP_TO_DEF_MODE_NOT_FOUND";
-  public static final String SET_PERM_FLAGS_FAILED = "SET_PERM_FLAGS_FAILED";
 
   // AppOp modes
   public static final String APP_OP_MODE_ALLOW = "allow";
@@ -65,4 +63,10 @@ public class Commands {
   public static final String APP_OP_MODE_DENY = "deny";
   public static final String APP_OP_MODE_DEFAULT = "default";
   public static final String APP_OP_MODE_FG = "foreground";
+
+  // AppOps working status
+  public static final int OP_TO_DEF_MODE_WORKS = 1;
+  public static final int OP_TO_SWITCH_WORKS = 1 << 1;
+  public static final int OP_TO_NAME_WORKS = 1 << 2;
+  public static final int OP_NUM_CONSISTENT = 1 << 3;
 }

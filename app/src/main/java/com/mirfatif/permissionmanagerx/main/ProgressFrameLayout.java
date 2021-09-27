@@ -4,33 +4,15 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
-import com.mirfatif.permissionmanagerx.util.Utils;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class ProgressFrameLayout extends FrameLayout {
-
-  public ProgressFrameLayout(Context context) {
-    super(context);
-  }
 
   public ProgressFrameLayout(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
-  public ProgressFrameLayout(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-  }
-
-  @SuppressWarnings("UnusedDeclaration")
-  public ProgressFrameLayout(
-      Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-    super(context, attrs, defStyleAttr, defStyleRes);
-  }
-
-  private final ExecutorService mVisibilityExecutor = Executors.newSingleThreadExecutor();
-  private Future<?> mVisibilityFuture;
+  private Runnable mVisibilityTask;
+  private long mLastCall;
 
   // setVisibility() on RoundProgressBarContainer is called from multiple places.
   // Too quick calls cause progress bar to hang. Here we rate limit it.
@@ -42,28 +24,19 @@ public class ProgressFrameLayout extends FrameLayout {
       }
       return;
     }
-    if (mVisibilityFuture != null && !mVisibilityFuture.isDone()) {
-      mVisibilityFuture.cancel(true);
+
+    removeCallbacks(mVisibilityTask);
+    mVisibilityTask =
+        () -> {
+          mLastCall = System.currentTimeMillis();
+          super.setVisibility(visibility);
+        };
+    long sleepTime = 1000 + mLastCall - System.currentTimeMillis();
+    if (sleepTime > 10) {
+      postDelayed(mVisibilityTask, sleepTime);
+    } else {
+      mVisibilityTask.run();
     }
-    mVisibilityFuture = mVisibilityExecutor.submit(() -> setVisibilityInBg(visibility));
-  }
-
-  private long lastCall;
-
-  private void setVisibilityInBg(int visibility) {
-    long sleepTime = 1000 + lastCall - System.currentTimeMillis();
-    if (sleepTime > 0) {
-      try {
-        synchronized (mVisibilityExecutor) {
-          mVisibilityExecutor.wait(sleepTime);
-        }
-      } catch (InterruptedException e) {
-        return; // We've got a new call
-      }
-    }
-
-    lastCall = System.currentTimeMillis();
-    Utils.runInFg(() -> super.setVisibility(visibility));
   }
 
   private boolean mKeepVisible = false;

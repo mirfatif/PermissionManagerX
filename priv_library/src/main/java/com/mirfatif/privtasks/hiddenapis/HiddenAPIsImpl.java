@@ -11,13 +11,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.IPackageManager;
-import android.content.pm.PackageInfo;
 import android.content.pm.ParceledListSlice;
-import android.content.pm.UserInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.os.IUserManager;
-import android.os.IUserManager.Stub;
 import android.os.Process;
 import android.os.RemoteException;
 import android.os.ServiceManager;
@@ -25,7 +21,7 @@ import android.permission.IPermissionManager;
 import android.provider.Settings;
 import com.android.internal.app.IAppOpsService;
 import com.mirfatif.privtasks.Commands;
-import com.mirfatif.privtasks.MyPackageOps;
+import com.mirfatif.privtasks.ser.MyPackageOps;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +30,6 @@ public class HiddenAPIsImpl extends HiddenAPIs {
   private IAppOpsService mIAppOpsService;
   private IPackageManager mIPackageManager;
   private IPermissionManager mIPermissionManager;
-  private IUserManager mIUserManager;
   private IActivityManager mIActivityManager;
 
   public HiddenAPIsImpl(HiddenAPIsCallback callback) {
@@ -59,12 +54,6 @@ public class HiddenAPIsImpl extends HiddenAPIs {
       } catch (NoSuchMethodError e) {
         e.printStackTrace();
       }
-    }
-
-    try {
-      mIUserManager = Stub.asInterface(ServiceManager.getService(Context.USER_SERVICE));
-    } catch (NoSuchMethodError e) {
-      e.printStackTrace();
     }
 
     try {
@@ -336,17 +325,11 @@ public class HiddenAPIsImpl extends HiddenAPIs {
     }
   }
 
-  public void updatePermFlags(String pkg, String perm, int flags, int flagValues, int userId)
-      throws HiddenAPIsException {
+  @Override
+  public int checkPermission(String perm, int pid, int uid) throws HiddenAPIsException {
     try {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        mIPermissionManager.updatePermissionFlags(perm, pkg, flags, flagValues, true, userId);
-      } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
-        mIPackageManager.updatePermissionFlags(perm, pkg, flags, flagValues, true, userId);
-      } else {
-        mIPackageManager.updatePermissionFlags(perm, pkg, flags, flagValues, userId);
-      }
-    } catch (RemoteException | SecurityException e) {
+      return mIActivityManager.checkPermission(perm, pid, uid);
+    } catch (RemoteException e) {
       throw new HiddenAPIsException(e);
     }
   }
@@ -359,24 +342,6 @@ public class HiddenAPIsImpl extends HiddenAPIs {
       String pkg, int state, int flags, int userId, String callingPkg) throws HiddenAPIsException {
     try {
       mIPackageManager.setApplicationEnabledSetting(pkg, state, flags, userId, callingPkg);
-    } catch (RemoteException | SecurityException e) {
-      throw new HiddenAPIsException(e);
-    }
-  }
-
-  @Override
-  public List<?> getInstalledPackages(int flags, int userId) throws HiddenAPIsException {
-    try {
-      return mIPackageManager.getInstalledPackages(flags, userId).getList();
-    } catch (RemoteException | SecurityException e) {
-      throw new HiddenAPIsException(e);
-    }
-  }
-
-  @Override
-  public PackageInfo getPkgInfo(String pkgName, int flags, int userId) throws HiddenAPIsException {
-    try {
-      return mIPackageManager.getPackageInfo(pkgName, flags, userId);
     } catch (RemoteException | SecurityException e) {
       throw new HiddenAPIsException(e);
     }
@@ -408,6 +373,7 @@ public class HiddenAPIsImpl extends HiddenAPIs {
     }
   }
 
+  @Override
   public void sendRequest(String command, String appId, int userId, String codeWord)
       throws HiddenAPIsException {
     Intent intent = new Intent(command).setClassName(appId, CMD_RCV_SVC);
@@ -426,38 +392,8 @@ public class HiddenAPIsImpl extends HiddenAPIs {
     }
 
     if (cn == null || !cn.getPackageName().equals(appId)) {
-      throw new HiddenAPIsException("Could not start DaemonToastSvc");
+      throw new HiddenAPIsException("Could not start " + CMD_RCV_SVC);
     }
-  }
-
-  private boolean isQPlus = true;
-
-  public List<String> getUsers() throws HiddenAPIsException {
-    if (mIUserManager == null) {
-      throw new HiddenAPIsException("Could not initialize mIUserManager");
-    }
-    List<UserInfo> userInfoList;
-    try {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && isQPlus) {
-        userInfoList = mIUserManager.getUsers(false, false, false);
-      } else {
-        userInfoList = mIUserManager.getUsers(false);
-      }
-    } catch (RemoteException | SecurityException e) {
-      throw new HiddenAPIsException(e);
-    } catch (NoSuchMethodError e) {
-      if (isQPlus) {
-        mCallback.logError("getUsers: " + e.toString());
-        isQPlus = false;
-        return getUsers();
-      }
-      throw new HiddenAPIsException(e);
-    }
-    List<String> userIds = new ArrayList<>();
-    for (UserInfo userInfo : userInfoList) {
-      userIds.add(userInfo.id + "|" + (userInfo.name != null ? userInfo.name : ""));
-    }
-    return userIds;
   }
 
   //////////////////////////////////////////////////////////////////
@@ -473,5 +409,25 @@ public class HiddenAPIsImpl extends HiddenAPIs {
       return mIPermissionManager != null;
     }
     return mIPackageManager != null;
+  }
+
+  @SuppressWarnings("UnusedDeclaration")
+  IAppOpsService getIAppOpsService() {
+    return mIAppOpsService;
+  }
+
+  @SuppressWarnings("UnusedDeclaration")
+  IPackageManager getIPkgManager() {
+    return mIPackageManager;
+  }
+
+  @SuppressWarnings("UnusedDeclaration")
+  IPermissionManager getIPermManager() {
+    return mIPermissionManager;
+  }
+
+  @SuppressWarnings("UnusedDeclaration")
+  IActivityManager getIActivityManager() {
+    return mIActivityManager;
   }
 }

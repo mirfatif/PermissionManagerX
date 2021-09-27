@@ -9,19 +9,8 @@ import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
 
 public class MyNavigationView extends NavigationView {
 
-  public MyNavigationView(@NonNull Context context) {
-    super(context);
-    UtilsFlavor.onCreateLayout(this);
-  }
-
   public MyNavigationView(@NonNull Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
-    UtilsFlavor.onCreateLayout(this);
-  }
-
-  public MyNavigationView(
-      @NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
     UtilsFlavor.onCreateLayout(this);
   }
 }

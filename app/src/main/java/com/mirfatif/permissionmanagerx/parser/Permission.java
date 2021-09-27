@@ -1,14 +1,14 @@
 package com.mirfatif.permissionmanagerx.parser;
 
 import static com.mirfatif.permissionmanagerx.parser.SearchConstants.CONSTANTS;
+import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
+import static com.mirfatif.permissionmanagerx.prefs.MySettingsFlavor.SETTINGS_FLAVOR;
+import static com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler.DAEMON_HANDLER;
 import static com.mirfatif.permissionmanagerx.util.Utils.getString;
 
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.prefs.MySettings;
-import com.mirfatif.permissionmanagerx.prefs.MySettingsFlavor;
-import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
@@ -17,9 +17,6 @@ import java.util.concurrent.TimeUnit;
 public class Permission {
 
   private static final String TAG = "Permission";
-
-  private final MySettings mMySettings = MySettings.getInstance();
-  private final MySettingsFlavor mMySettingsFlavor = MySettingsFlavor.getInstance();
 
   public static final String PROTECTION_UNKNOWN = "PROTECTION_UNKNOWN";
   public static final String PROTECTION_DANGEROUS = "PROTECTION_DANGEROUS";
@@ -246,8 +243,8 @@ public class Permission {
   }
 
   private boolean _isChangeable() {
-    boolean allowCriticChanges = MySettingsFlavor.getInstance().allowCriticalChanges();
-    if ((mIsFrameworkApp && !allowCriticChanges) || mMySettings.isCriticalApp(mPackageName)) {
+    boolean allowCriticChanges = SETTINGS_FLAVOR.allowCriticalChanges();
+    if ((mIsFrameworkApp && !allowCriticChanges) || SETTINGS.isCriticalApp(mPackageName)) {
       return false;
     }
     if (mIsAppOps) {
@@ -257,8 +254,7 @@ public class Permission {
       return (mProtectionLevel.equals(PROTECTION_DANGEROUS) || mIsDevelopment)
           && (!mIsSystemApp || !mIsPrivileged || allowCriticChanges)
           && !mIsPolicyFixed
-          && (!mIsSystemFixed
-              || (allowCriticChanges && PrivDaemonHandler.getInstance().isSystemUid()));
+          && (!mIsSystemFixed || (allowCriticChanges && DAEMON_HANDLER.isSystemUid()));
     }
   }
 
@@ -278,20 +274,20 @@ public class Permission {
     switch (mProtectionLevel) {
       case PROTECTION_UNKNOWN:
       default:
-        return getString(R.string.prot_lvl_unknown);
+        return CONSTANTS.SEARCH_PROT_UNKNOWN;
       case PROTECTION_NORMAL:
-        return getString(R.string.prot_lvl_normal);
+        return CONSTANTS.SEARCH_PROT_NORMAL;
       case PROTECTION_DANGEROUS:
-        return getString(R.string.prot_lvl_dangerous);
+        return CONSTANTS.SEARCH_PROT_DANGEROUS;
       case PROTECTION_SIGNATURE:
-        return getString(R.string.prot_lvl_signature);
+        return CONSTANTS.SEARCH_PROT_SIGNATURE;
       case APP_OPS:
-        return getString(R.string.prot_lvl_app_ops);
+        return CONSTANTS.SEARCH_APP_OPS;
     }
   }
 
   public String getProtLevelString() {
-    String protectionLevel = getLocalizedProtectionLevel();
+    String protectionLevel = getLocalizedProtectionLevel().replaceFirst("^:", "");
 
     if (mIsAppOps) {
       if (mIsPerUid) {
@@ -317,9 +313,9 @@ public class Permission {
     return protectionLevel;
   }
 
-  public boolean contains(Package pkg, String queryText) {
-    if (!mMySettings.isSpecialSearch()) {
-      return _contains(pkg, queryText);
+  public boolean contains(Package pkg, String queryText, boolean caseSensitive) {
+    if (!SETTINGS.isSpecialSearch()) {
+      return _contains(pkg, queryText, caseSensitive);
     }
 
     boolean isEmpty = true;
@@ -328,42 +324,43 @@ public class Permission {
         continue;
       }
       isEmpty = false;
-      if (contains_(pkg, str)) {
+      if (contains_(pkg, str, caseSensitive)) {
         return true;
       }
     }
     return isEmpty;
   }
 
-  private boolean contains_(Package pkg, String queryText) {
+  private boolean contains_(Package pkg, String queryText, boolean caseSensitive) {
     for (String str : queryText.split("&")) {
       if (TextUtils.isEmpty(str)) {
         continue;
       }
-      if (!_contains(pkg, str)) {
+      if (!_contains(pkg, str, caseSensitive)) {
         return false;
       }
     }
     return true;
   }
 
-  private boolean _contains(Package pkg, String queryText) {
+  private boolean _contains(Package pkg, String queryText, boolean caseSensitive) {
     boolean contains = true;
-    if (mMySettings.isSpecialSearch() && queryText.startsWith("!")) {
+    if (SETTINGS.isSpecialSearch() && queryText.startsWith("!")) {
       queryText = queryText.replaceAll("^!", "");
       contains = false;
     }
 
-    Boolean handled = mMySettingsFlavor.handleSearchQuery(queryText, pkg, this);
-    if (handled != null) {
-      if (handled) {
-        return contains;
-      } else {
-        return !contains;
-      }
+    Boolean handled = SETTINGS_FLAVOR.handleSearchQuery(queryText, pkg, this);
+    if (Boolean.TRUE.equals(handled)) {
+      return contains;
+    } else if (Boolean.FALSE.equals(handled)) {
+      return !contains;
     }
 
-    queryText = queryText.toUpperCase();
+    caseSensitive = caseSensitive && SETTINGS.isCaseSensitiveSearch();
+    if (!caseSensitive) {
+      queryText = queryText.toUpperCase();
+    }
 
     for (String field :
         new String[] {
@@ -380,7 +377,10 @@ public class Permission {
           getAppOpsAccessTime() != null ? CONSTANTS.SEARCH_TIME : "",
           (mIsExtraAppOp ? CONSTANTS.SEARCH_EXTRA : "")
         }) {
-      if (field.toUpperCase().contains(queryText)) {
+      if (!caseSensitive) {
+        field = field.toUpperCase();
+      }
+      if (field.contains(queryText)) {
         return contains;
       }
     }
@@ -440,10 +440,10 @@ public class Permission {
             + pkgName
             + " "
             + mode;
-    if (MySettings.getInstance().isDebug()) {
+    if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "setAppOpsMode: sending command: " + command);
     }
-    PrivDaemonHandler.getInstance().sendRequest(command);
+    DAEMON_HANDLER.sendRequest(command);
   }
 
   public static void setPermission(Package pkg, Permission perm) {
@@ -454,9 +454,9 @@ public class Permission {
       command = Commands.GRANT_PERMISSION + " " + command;
     }
 
-    if (MySettings.getInstance().isDebug()) {
+    if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "setPermission: sending command: " + command);
     }
-    PrivDaemonHandler.getInstance().sendRequest(command);
+    DAEMON_HANDLER.sendRequest(command);
   }
 }

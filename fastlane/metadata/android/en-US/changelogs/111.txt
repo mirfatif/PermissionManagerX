@@ -1,0 +1,13 @@
+Added daemon privileges and AppOps bugs menu item in About
+Made search in permissions case sensitive
+Improved long press dialog Exclude button logic
+Added exclusion filters master switch
+Improved R8 rules to reduce app size and better optimization
+Improved touch ripples
+Updated README, help and fastlane descriptions
+Do reset() on OOS to avoid OOM
+Improved dialog handling after orientation change
+Replaced singletons with enums, removed ViewModel
+Made on-UI calls from background Lifecycle aware
+Fixed crash and improved WebView
+Added Spanish translation and updated translations

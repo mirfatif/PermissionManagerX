@@ -1,5 +1,9 @@
 package com.mirfatif.permissionmanagerx.svc;
 
+import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
+import static com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler.DAEMON_HANDLER;
+
+import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -19,9 +23,7 @@ import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.main.MainActivity;
-import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.Adb;
-import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
 import com.mirfatif.privtasks.Commands;
@@ -39,9 +41,6 @@ public class LogcatService extends Service {
   private static final String TAG = "LogcatService";
 
   public static final String ACTION_START_LOG = BuildConfig.APPLICATION_ID + ".START_LOGCAT";
-
-  private final MySettings mMySettings = MySettings.getInstance();
-  private final PrivDaemonHandler mDaemonHandler = PrivDaemonHandler.getInstance();
 
   @Override
   public IBinder onBind(Intent intent) {
@@ -70,6 +69,12 @@ public class LogcatService extends Service {
     return Service.START_NOT_STICKY;
   }
 
+  @Override
+  public void onDestroy() {
+    stopLoggingAndSvc();
+    super.onDestroy();
+  }
+
   private CountDownTimer mTimer;
   private NotificationManagerCompat mNotificationManager;
   private Builder mNotificationBuilder;
@@ -86,6 +91,7 @@ public class LogcatService extends Service {
       mNotificationManager.createNotificationChannel(channel);
     }
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     PendingIntent stopIntent =
         PendingIntent.getService(
             App.getContext(),
@@ -145,22 +151,22 @@ public class LogcatService extends Service {
 
   private void stopLogging(boolean sendCmd) {
     synchronized (LOG_WRITER_LOCK) {
-      if (!mMySettings.isDebug()) {
+      if (!SETTINGS.isDebug()) {
         return;
       }
-      mMySettings.setDebugLog(false);
-      if (mLogcatWriter != null) {
-        mLogcatWriter.close();
+      SETTINGS.setDebugLog(false);
+      if (sLogcatWriter != null) {
+        sLogcatWriter.close();
       }
-      mLogcatWriter = null;
+      sLogcatWriter = null;
 
       if (!sendCmd) {
         return;
       }
 
-      if (mMySettings.isPrivDaemonAlive()) {
+      if (SETTINGS.isPrivDaemonAlive()) {
         // Stop daemon logging
-        mDaemonHandler.sendRequest(Commands.STOP_LOGGING);
+        DAEMON_HANDLER.sendRequest(Commands.STOP_LOGGING);
       }
       // Stop app logging
       Log.i(TAG, "stopLogging: please " + Commands.STOP_LOGGING);
@@ -168,8 +174,7 @@ public class LogcatService extends Service {
   }
 
   public static void sendStopLogIntent() {
-    // Intent without start action would stop the service and logging.
-    App.getContext().startService(new Intent(App.getContext(), LogcatService.class));
+    App.getContext().stopService(new Intent(App.getContext(), LogcatService.class));
   }
 
   private void startTimer() {
@@ -192,19 +197,19 @@ public class LogcatService extends Service {
     try {
       OutputStream outStream =
           getApplication().getContentResolver().openOutputStream(logFile, "rw");
-      mLogcatWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outStream)));
+      sLogcatWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outStream)));
     } catch (IOException e) {
       e.printStackTrace();
       stopSvcAndShowFailed();
       return;
     }
 
-    mMySettings.setDebugLog(true);
+    SETTINGS.setDebugLog(true);
     writeToLogFile(Utils.getDeviceInfo());
 
-    if (mMySettings.isPrivDaemonAlive()) {
+    if (SETTINGS.isPrivDaemonAlive()) {
       // We'll start it in MainActivity to log all of the start messages.
-      mDaemonHandler.sendRequest(Commands.SHUTDOWN);
+      DAEMON_HANDLER.sendRequest(Commands.SHUTDOWN);
     }
 
     Utils.runCommand(TAG + ": doLogging", "logcat", "-c");
@@ -262,34 +267,34 @@ public class LogcatService extends Service {
     }
   }
 
-  private static PrintWriter mLogcatWriter;
+  private static PrintWriter sLogcatWriter;
   private static final Object LOG_WRITER_LOCK = new Object();
-  private static int mLinesWritten;
+  private static int sLinesWritten;
 
   private static void writeToLogFile(String line) {
     synchronized (LOG_WRITER_LOCK) {
-      if (mLogcatWriter == null) {
+      if (sLogcatWriter == null) {
         return;
       }
-      if (!MySettings.getInstance().isDebug()) {
+      if (!SETTINGS.isDebug()) {
         return;
       }
-      mLogcatWriter.println(line);
+      sLogcatWriter.println(line);
 
       // Let's be flash friendly
-      mLinesWritten++;
-      if (mLinesWritten >= 100) {
-        mLogcatWriter.flush();
-        mLinesWritten = 0;
+      sLinesWritten++;
+      if (sLinesWritten >= 100) {
+        sLogcatWriter.flush();
+        sLinesWritten = 0;
       }
     }
   }
 
   public static void appCrashed() {
     synchronized (LOG_WRITER_LOCK) {
-      if (mLogcatWriter != null) {
+      if (sLogcatWriter != null) {
         SystemClock.sleep(1000);
-        mLogcatWriter.flush();
+        sLogcatWriter.flush();
       }
     }
   }
