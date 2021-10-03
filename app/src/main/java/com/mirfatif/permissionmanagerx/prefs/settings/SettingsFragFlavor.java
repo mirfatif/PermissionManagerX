@@ -53,7 +53,7 @@ public class SettingsFragFlavor extends PreferenceFragmentCompat
     if (key.equals(getString(R.string.pref_settings_quick_scan_key))) {
       PKG_PARSER.updatePackagesList();
     } else if (key.equals(getString(R.string.pref_settings_locale_key))) {
-      App.updateContext();
+      App.setLocale();
       CONSTANTS.recreate();
       MainActivity.restart();
     }

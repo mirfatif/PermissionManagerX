@@ -383,17 +383,34 @@ public class Utils {
   }
 
   public static Context setLocale(Context context) {
-    String lang = SETTINGS.getLocale();
-    Locale locale;
-    if (TextUtils.isEmpty(lang)) {
-      locale = Resources.getSystem().getConfiguration().getLocales().get(0);
-    } else {
-      locale = new Locale(lang);
-    }
+    Locale locale = getLocale();
     Locale.setDefault(locale);
-    Configuration config = context.getResources().getConfiguration();
+    Configuration config = setLocale(context.getResources().getConfiguration(), locale);
+    /*
+     Context#createConfigurationContext() is difficult to handle. A lot of things
+     are relying on the Application's Context object.
+    */
+    context.getResources().updateConfiguration(config, context.getResources().getDisplayMetrics());
+    return context;
+  }
+
+  public static Configuration setLocale(Configuration config) {
+    return setLocale(config, getLocale());
+  }
+
+  private static Configuration setLocale(Configuration config, Locale locale) {
+    config = new Configuration(config);
     config.setLocale(locale);
-    return context.createConfigurationContext(config);
+    return config;
+  }
+
+  private static Locale getLocale() {
+    String lang = SETTINGS.getLocale();
+    if (TextUtils.isEmpty(lang)) {
+      return Resources.getSystem().getConfiguration().getLocales().get(0);
+    } else {
+      return new Locale(lang);
+    }
   }
 
   public static void cleanStreams(Process process, Adb adb, String tag) {

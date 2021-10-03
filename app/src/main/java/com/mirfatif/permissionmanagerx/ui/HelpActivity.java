@@ -40,6 +40,14 @@ public class HelpActivity extends BaseActivity {
     }
 
     mB = ActivityHelpBinding.inflate(getLayoutInflater());
+
+    /*
+     WebView resets App's configuration when loaded for the first time.
+     https://stackoverflow.com/questions/40398528
+    */
+    App.setLocale();
+    Utils.setLocale(getBaseContext());
+
     setContentView(mB.getRoot());
 
     if (getSupportActionBar() != null) {
