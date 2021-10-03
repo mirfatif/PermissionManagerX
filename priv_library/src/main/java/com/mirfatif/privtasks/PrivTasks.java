@@ -120,6 +120,8 @@ public class PrivTasks {
     return opToSwitchList;
   }
 
+  public static final String UNKNOWN_OP = "UNKNOWN";
+
   public List<String> buildOpToNameList() throws HiddenAPIsError {
     Integer opNum = getNumOps();
     if (opNum == null) {
@@ -129,11 +131,17 @@ public class PrivTasks {
     boolean failed = false;
     for (int i = 0; i < opNum; i++) {
       if (failed) {
-        appOpsList.add("UNKNOWN");
+        appOpsList.add(UNKNOWN_OP);
         continue;
       }
       try {
-        appOpsList.add(mHiddenAPIs.opToName(i));
+        String opName = mHiddenAPIs.opToName(i);
+        if ("NONE".equals(opName)
+            || "deprecated".equals(opName)
+            || (opName.startsWith("Unknown(") && opName.endsWith(")"))) {
+          opName = UNKNOWN_OP;
+        }
+        appOpsList.add(opName);
       } catch (HiddenAPIsException e) {
         if (e.getCause() instanceof ArrayIndexOutOfBoundsException) {
           // OEM you are shit!
