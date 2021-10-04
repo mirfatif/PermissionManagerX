@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="pkg_state_critical">الحرجة</string>
+  <string name="pkg_state_framework">الإطار البرمجي</string>
+  <string name="pkg_state_system">النظام</string>
+  <string name="pkg_state_user">المستخدم</string>
+  <string name="pkg_state_disabled">معطل</string>
+  <string name="prot_lvl_unknown">غير معروف</string>
+  <string name="prot_lvl_normal">عادي</string>
+  <string name="prot_lvl_dangerous">خطير</string>
+  <string name="prot_lvl_signature">التوقيع</string>
+  <string name="prot_lvl_app_ops">خيارات التطبيق</string>
+  <string name="prot_lvl_development">التطوير</string>
+  <string name="prot_lvl_privileged">امتياز</string>
+  <string name="prot_lvl_fixed">ثابت</string>
+  <string name="search_str_uid">المعرف الفريد</string>
+  <string name="search_str_time">الوقت</string>
+  <string name="search_str_extra">المزيد</string>
+  <string name="search_str_red">أحمر</string>
+  <string name="search_str_orange">برتقالي</string>
+  <string name="search_str_green">اخضر</string>
+</resources>

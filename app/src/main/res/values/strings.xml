@@ -247,6 +247,7 @@
   <string name="locale_en">English</string>
   <string name="locale_ru">Russian</string>
   <string name="locale_es">Spanish</string>
+  <string name="locale_ar">Arabic</string>
 
   <!-- PreferenceActivity menu items -->
   <string name="filter_settings_reset_defaults_menu_item" maxLength="15">Reset To Defaults</string>
@@ -318,6 +319,11 @@
       <b>Spanish</b>
       <ul>
         <li>LuisAlfredo92 <a href="https://crowdin.com/profile/luisalfredo92">LINK</a></li>
+      </ul>
+      <br/>
+      <b>Arabic</b>
+      <ul>
+        <li>Rex_sa <a href="https://crowdin.com/profile/rex07">LINK</a></li>
       </ul>
       <br/>
       <a href="https://crowdin.com/project/pmx"><b>Add my language</b></a>

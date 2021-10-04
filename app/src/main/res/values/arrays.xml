@@ -179,6 +179,7 @@
     <item>@string/locale_en</item>
     <item>@string/locale_ru</item>
     <item>@string/locale_es</item>
+    <item>@string/locale_ar</item>
   </string-array>
 
   <string-array name="locale_codes">
@@ -186,6 +187,7 @@
     <item>en</item>
     <item>ru</item>
     <item>es</item>
+    <item>ar</item>
   </string-array>
 
 </resources>

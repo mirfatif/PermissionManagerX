@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">مدير الصلاحيّات x</string>
+  <!-- CHAR_LIMIT
+       Button: 10
+       Toast/SnackBar: 20
+       Preference title: 20
+       Single line text: 30
+       Progress: 15
+       Dialog/notification title: 15
+       Menu item: 15 -->
+  <!-- General strings -->
+  <string name="yes" maxLength="10">نعم</string>
+  <string name="no" maxLength="10">لا</string>
+  <string name="save" maxLength="10">حفظ</string>
+  <string name="_default" maxLength="10">الافتراضي</string>
+  <string name="open_drawer">فتح</string>
+  <string name="close_drawer">إغلاق</string>
+  <string name="contact" maxLength="10">اكتب الآن</string>
+  <string name="i_will" maxLength="10">سأفعل</string>
+  <string name="rate" maxLength="10">تقييم الآن</string>
+  <string name="do_not_remind" maxLength="10">عدم التذكير</string>
+  <string name="get_help" maxLength="10">احصل على مساعدة</string>
+  <string name="switch_to_adb" maxLength="10">التبديل إلى ADB</string>
+  <string name="_continue" maxLength="10">متابعة؟</string>
+  <string name="warning" maxLength="15">تحذير</string>
+  <!-- MainActivity Navigation Drawer / menu items -->
+  <string name="search_menu_item" maxLength="15">بحث</string>
+  <string name="settings_menu_item" maxLength="15">الاعدادات</string>
+  <string name="filter_menu_item" maxLength="15">مرشحات الاستبعاد</string>
+  <string name="root_menu_item" maxLength="15">الوصول إلى الجذر</string>
+  <string name="adb_menu_item" maxLength="15">صدفة ADB</string>
+  <string name="dark_theme_menu_item" maxLength="15">إجبار السمة المظلمة</string>
+  <string name="backup_restore_menu_item" maxLength="15">النسخ الاحتياطي/الاستعادة</string>
+  <string name="help_menu_item" maxLength="15">تعليمات</string>
+  <string name="donate_menu_item" maxLength="15">تبرّع</string>
+  <string name="about_menu_item" maxLength="15">حول البرنامج</string>
+  <string name="advanced_settings_menu_item" maxLength="15">إعدادات متقدمة</string>
+  <string name="hidden_apis" maxLength="15">المخفية APIs</string>
+  <string name="use_hidden_apis" maxLength="20">استخدام APIs المخفية</string>
+  <string name="dex_tmp_dir" maxLength="20">تشغيل دايمون من Temp Dir</string>
+  <string name="adb_only_settings" maxLength="15">إعدادات ADB-فقط</string>
+  <string name="root_only_settings" maxLength="15">إعدادات الروت فقط</string>
+  <string name="adb_listening_port" maxLength="20">أضف منفذ الاستماع</string>
+  <string name="allow_critical_changes" maxLength="20">السماح بالتغييرات الحرجة</string>
+  <string name="talk_to_daemon_over_socket" maxLength="20">تحدث إلى دايمون عبر المقبس</string>
+  <string name="daemon_uid" maxLength="20">معرف دايمون المميز</string>
+  <string name="daemon_uid_system" maxLength="5">النظام</string>
+  <string name="daemon_uid_root" maxLength="5">الجذر</string>
+  <string name="daemon_uid_adb" maxLength="5">ADB</string>
+  <string name="daemon_context_shell" maxLength="5">صدفة</string>
+  <string name="daemon_context_default" maxLength="5">الافتراضي</string>
+  <string name="su_exe_path" maxLength="20">مسار المستخدم الخارق التنفيذي</string>
+  <!-- MainActivity strings -->
+  <string name="primary_account" maxLength="15">الحساب الرئيسي</string>
+  <string name="primary_profile_only">مدير الأذونات X يمكن تشغيله فقط في حساب المستخدم الرئيسي /
+    ملف تعريف مالك الجهاز.
+  </string>
+  <string name="deep_search" maxLength="12">البحث العميق (الأذونات)</string>
+  <string name="case_sensitive_search" maxLength="12">بحث حساس لحالة الاحرف</string>
+  <string name="grant_root_or_adb">منح صلاحيات الجذر أو الاتصال بـ ADB لبدء عملية مميزة.</string>
+  <string name="logging_failed" maxLength="20">فشل التسجيل</string>
+  <string name="creating_packages_list" maxLength="15">إنشاء قائمة التطبيقات</string>
+  <string name="reading_reference_perms" maxLength="15">المراجع المتعلقة بالقراءة</string>
+  <string name="creating_app_ops_lists" maxLength="15">إعداد بيانات التطبيقات</string>
+  <string name="starting_daemon" maxLength="15">بدء تشغيل دايمون</string>
+  <string name="checking_root_access" maxLength="15">التحقق من صلاحيات الجذر</string>
+  <string name="checking_adb_access" maxLength="15">التحقق من الوصول إلى ADB</string>
+  <string name="root_granted" maxLength="20">تم منح الروت</string>
+  <string name="getting_root_fail" maxLength="20">فشل الحصول على امتيازات الجذر</string>
+  <string name="getting_root_fail_long" maxLength="20">فشل الحصول على امتيازات الجذر. هل أنت متجذر؟</string>
+  <string name="connected_to_adb" maxLength="20">متصل بـ ADB</string>
+  <string name="adb_connect_timed_out" maxLength="20">انتهت مهلة اتصال ADB</string>
+  <string name="adb_connect_failed" maxLength="20">فشل اتصال ADB</string>
+  <string name="adb_connect_interrupted" maxLength="20">انقطع اتصال ADB</string>
+  <string name="adb_key_pair_failed" maxLength="20">فشل إنشاء مفتاح الاقتران لـ ADB</string>
+  <string name="adb_authentication_failed" maxLength="20">فشل مصادقة ADB</string>
+  <string name="adb_command_fail" maxLength="20">فشلت أوامر ADB</string>
+  <string name="adb_connect_fail_long"><![CDATA[      فشل الاتصال بـ ADB.
+      <ul>
+        <li>تمكين <b><i>ADB فوق الشبكة</i></b> والعودة إلى الاتصال.</li>
+        <li>السماح بالمصادقة ADB إذا طلب منها ذلك.</li>
+      </ul>
+    ]]></string>
+  <string name="backup" maxLength="10">النسخ الاحتياطي</string>
+  <string name="restore" maxLength="10">إستعادة</string>
+  <string name="choose_backup_restore">النسخ الاحتياطي أو استعادة التفضيلات ومراجع الأذونات.</string>
+  <string name="select_backup_file" maxLength="20">حدد ملف النسخ الاحتياطي</string>
+  <string name="backup_in_progress" maxLength="15">النسخ الاحتياطي قيد التقدم</string>
+  <string name="restore_in_progress" maxLength="15">الاستعادة قيد التقدم</string>
+  <!-- PrivDaemonHandler -->
+  <!--NativeDaemon-->
+  <!-- LogcatService -->
+  <!-- Buttons-->
+  <!-- PackageActivity menu items -->
+  <!--PackageActivity Dialogs-->
+  <!-- PackageActivity -->
+  <string name="app_op_mode_default">الافتراضي</string>
+  <!-- FilterSettingsActivity -->
+  <!-- SettingsActivity -->
+  <string name="locale_system">النظام</string>
+  <!-- PreferenceActivity menu items -->
+  <!-- AboutActivity -->
+  <string name="report_issues" maxLength="15">بلغ عن خطأ</string>
+  <string name="report_issues_summary" maxLength="20">الأخطاء والتحسينات والاقتراحات…</string>
+  <string name="select_log_file" maxLength="20">حدد ملف لحفظ السجل</string>
+  <string name="stop_logging" maxLength="15">أيقاف التسجيل</string>
+  <string name="permissions">الأذونات</string>
+  <!-- Donate -->
+  <!-- Notification Channels -->
+  <!-- HelpActivity -->
+  <!-- DaemonCmdRcvSvc: Daemon return messages -->
+  <string name="daemon_revoke_perm_failed" maxLength="20">فشل في إلغاء الإذن</string>
+  <string name="daemon_enable_pkg_failed" maxLength="20">فشل تمكين التطبيق</string>
+  <string name="daemon_disable_pkg_failed" maxLength="20">فشل تعطيل التطبيق</string>
+  <string name="daemon_open_app_info_failed" maxLength="20">فشل في فتح معلومات التطبيق</string>
+  <string name="daemon_get_perm_grp_info_list_failed" maxLength="20">فشل الحصول على مجموعات الصلاحيات</string>
+  <string name="daemon_op_num_inconsistency" maxLength="20">الروم سيء</string>
+  <!-- Locale -->
+  <string name="help_file_name">help.html</string>
+</resources>

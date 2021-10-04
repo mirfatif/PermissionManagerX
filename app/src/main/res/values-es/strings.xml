@@ -38,7 +38,7 @@
   <string name="about_menu_item" maxLength="15">Acerca de</string>
   <string name="advanced_settings_menu_item" maxLength="15">Ajustes Avanzados</string>
   <string name="hidden_apis" maxLength="15">APIs Ocultas</string>
-  <string name="use_hidden_apis" maxLength="20">Usar APIs Ocultar</string>
+  <string name="use_hidden_apis" maxLength="20">Usar APIs Ocultas</string>
   <string name="dex_tmp_dir" maxLength="20">Correr Daemon desde Carpeta Temporal</string>
   <string name="adb_only_settings" maxLength="15">Ajustes Solo-ADB</string>
   <string name="root_only_settings" maxLength="15">Ajustes Solo-Root</string>

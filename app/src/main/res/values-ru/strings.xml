@@ -167,6 +167,9 @@
   <string name="set_references_confirmation">Установить все текущие состояния разрешений в качестве целевых?</string>
   <!--PackageActivity Dialogs-->
   <string name="exclude_app_from_visible_list">Исключить приложение из списка отображаемых.</string>
+  <string name="enable_app">Разморозка приложения</string>
+  <string name="disable_app">Заморозка приложения</string>
+  <string name="exclude_from_visible_list">%s Исключение приложения из списка видимых.</string>
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">Что-то пошло не так</string>
   <string name="change_perms_warning" comment="'system' or 'framework'">Изменение разрешений %1$s приложения — потенциально опасное действие вплоть до сбоя системы Android.\nВы уверены, что хотите продолжить?</string>
@@ -271,6 +274,20 @@
   <string name="privacy_policy" maxLength="20">Политика конфиденциальности</string>
   <string name="translations">Переводы</string>
   <string name="translations_summary">Хотите это приложение на своём языке?</string>
+  <string name="language_credits"><![CDATA[      <b>Русский</b>
+      <ul>
+        <li>Rikishi007 (rikishi0071@gmail.com)</li>
+        <li>tommynok <a href="https://crowdin.com/profile/tommynok">ССЫЛКА</a></li>
+        <li>siebenbrodt <a href="https://crowdin.com/profile/siebenbrodt">LINK</a></li>
+      </ul>
+      <br/>
+      <b>Spanish</b>
+      <ul>
+        <li>LuisAlfredo92 <a href="https://crowdin.com/profile/luisalfredo92">ССЫЛКА</a></li>
+      </ul>
+      <br/>
+      <a href="https://crowdin.com/project/pmx"><b>Добавить мой язык</b></a>
+    ]]></string>
   <string name="share">Поделиться</string>
   <string name="share_summary">Поделиться приложением с другими</string>
   <string name="share_text">Попробуйте это замечательное приложение! %1$s</string>
