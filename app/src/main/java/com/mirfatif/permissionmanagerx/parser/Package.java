@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import com.mirfatif.permissionmanagerx.app.App;
 import java.io.File;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -151,13 +152,14 @@ public class Package {
     if (SETTINGS.isQuickScanEnabled()) {
       return String.valueOf(getUid());
     }
+    NumberFormat nf = NumberFormat.getIntegerInstance();
     if (SETTINGS.isDeepSearching()) {
-      mLastPermCount = mSearchPermCount + "/" + getTotalPermCount();
+      mLastPermCount = nf.format(mSearchPermCount) + "/" + nf.format(getTotalPermCount());
     } else {
-      mLastPermCount = mPermCount + "/" + getTotalPermCount();
+      mLastPermCount = nf.format(mPermCount) + "/" + nf.format(getTotalPermCount());
     }
     if (!SETTINGS.excludeAppOpsPerms()) {
-      mLastPermCount += " | " + getAppOpsCount();
+      mLastPermCount += " | " + getAppOpsCount(nf);
     }
     return mLastPermCount;
   }
@@ -200,11 +202,11 @@ public class Package {
     mSearchAppOpsCount = count;
   }
 
-  private String getAppOpsCount() {
+  private String getAppOpsCount(NumberFormat nf) {
     if (SETTINGS.isDeepSearching()) {
-      return mSearchAppOpsCount + "/" + getTotalAppOpsCount();
+      return nf.format(mSearchAppOpsCount) + "/" + nf.format(getTotalAppOpsCount());
     } else {
-      return mAppOpsCount + "/" + getTotalAppOpsCount();
+      return nf.format(mAppOpsCount) + "/" + nf.format(getTotalAppOpsCount());
     }
   }
 

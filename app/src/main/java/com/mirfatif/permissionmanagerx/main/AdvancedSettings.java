@@ -109,7 +109,12 @@ class AdvancedSettings {
 
     String newPort = mB.adbPort.getText() == null ? null : mB.adbPort.getText().toString().trim();
     if (newPort != null && !TextUtils.isEmpty(newPort) && !adbPort.equals(newPort)) {
-      int port = Integer.parseInt(newPort);
+      int port;
+      try {
+        port = Integer.parseInt(newPort);
+      } catch (NumberFormatException ignored) {
+        port = -1;
+      }
       if (port > MAX_PORT || port < MIN_PORT) {
         Utils.showToast(R.string.bad_port_number);
       } else {
@@ -261,7 +266,12 @@ class AdvancedSettings {
       if (TextUtils.isEmpty(s)) {
         return;
       }
-      int port = Integer.parseInt(s.toString().trim());
+      int port;
+      try {
+        port = Integer.parseInt(s.toString().trim());
+      } catch (NumberFormatException ignored) {
+        port = -1;
+      }
       if (port > MAX_PORT || port < MIN_PORT) {
         mB.adbPort.setError(getString(R.string.bad_port_number), null);
       }

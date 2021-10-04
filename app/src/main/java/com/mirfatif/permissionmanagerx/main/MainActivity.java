@@ -6,6 +6,7 @@ import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
 import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.ADB_DAEMON;
 import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.ROOT_DAEMON;
 import static com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler.DAEMON_HANDLER;
+import static com.mirfatif.permissionmanagerx.util.Utils.getQtyString;
 
 import android.content.Intent;
 import android.os.Build;
@@ -50,6 +51,7 @@ import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -460,11 +462,12 @@ public class MainActivity extends BaseActivity {
       return;
     }
 
+    NumberFormat nf = NumberFormat.getIntegerInstance();
     mB.movCont.progBar.setIndeterminate(false);
     mB.movCont.progBar.setProgress(0);
-    mB.movCont.progNowV.setText("0");
+    mB.movCont.progNowV.setText(nf.format(0));
     mB.movCont.progBar.setMax(progressMax);
-    mB.movCont.progMaxV.setText(String.valueOf(progressMax));
+    mB.movCont.progMaxV.setText(nf.format(progressMax));
     mB.rndProgCont.setVisibility(View.GONE);
     mB.movCont.progBarCont.setVisibility(View.VISIBLE);
   }
@@ -480,7 +483,7 @@ public class MainActivity extends BaseActivity {
     }
     if (progress >= 0) {
       mB.movCont.progBar.setProgress(progress, true);
-      mB.movCont.progNowV.setText(String.valueOf(progress));
+      mB.movCont.progNowV.setText(NumberFormat.getIntegerInstance().format(progress));
     }
     if (progressNow >= 0) {
       return;
@@ -509,7 +512,7 @@ public class MainActivity extends BaseActivity {
 
     mB.refreshLayout.setRefreshing(false);
     if (showPkgCount) {
-      showSnackBar(mVisiblePkgCount + " " + getString(R.string.apps), 5000);
+      showSnackBar(getQtyString(R.plurals.apps_count, mVisiblePkgCount, mVisiblePkgCount), 5000);
     }
   }
 

@@ -690,10 +690,22 @@ public class PackageActivity extends BaseActivity {
         message = getString(R.string.exclude_perm_from_list);
       }
       if (perm.isChangeable()) {
-        if (isReferenced) {
-          message += getString(R.string.clear_perm_state_reference, permState);
+        String permStateStr;
+        if (perm.isAppOps()) {
+          permStateStr = PermissionAdapter.getLocalizedMode(permState);
+          if (permStateStr == null) {
+            permStateStr = permState;
+          }
+        } else if (permState.equals(Permission.GRANTED)) {
+          permStateStr = getString(R.string.perm_mode_granted);
         } else {
-          message += getString(R.string.set_perm_state_reference, permState);
+          permStateStr = getString(R.string.perm_mode_revoked);
+        }
+
+        if (isReferenced) {
+          message += getString(R.string.clear_perm_state_reference, permStateStr);
+        } else {
+          message += getString(R.string.set_perm_state_reference, permStateStr);
         }
       }
       builder.setMessage(Utils.htmlToString(message));

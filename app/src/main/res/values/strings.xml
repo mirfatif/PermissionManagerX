@@ -25,7 +25,10 @@
   <string name="switch_to_adb" maxLength="10">Switch to ADB</string>
   <string name="_continue" maxLength="10">Continue?</string>
   <string name="warning" maxLength="15">Warning</string>
-  <string name="apps">apps</string>
+  <plurals name="apps_count">
+    <item quantity="one">%d app</item>
+    <item quantity="other">%d apps</item>
+  </plurals>
 
   <!-- MainActivity Navigation Drawer / menu items -->
   <string name="search_menu_item" maxLength="15">Search</string>
@@ -227,6 +230,8 @@
   <string name="app_op_mode_deny">Deny</string>
   <string name="app_op_mode_default">Default</string>
   <string name="app_op_mode_foreground">Foreground</string>
+  <string name="perm_mode_granted">Granted</string>
+  <string name="perm_mode_revoked">Revoked</string>
 
   <!-- FilterSettingsActivity -->
   <string name="filter_settings" maxLength="15">Filter Settings</string>

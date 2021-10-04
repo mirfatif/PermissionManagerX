@@ -24,7 +24,6 @@
   <string name="switch_to_adb" maxLength="10">Cambiar a ADB</string>
   <string name="_continue" maxLength="10">¿Continuar?</string>
   <string name="warning" maxLength="15">Advertencia</string>
-  <string name="apps">aplicaciones</string>
   <!-- MainActivity Navigation Drawer / menu items -->
   <string name="search_menu_item" maxLength="15">Buscar</string>
   <string name="settings_menu_item" maxLength="15">Ajustes</string>

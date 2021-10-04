@@ -42,7 +42,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="1dp"
         android:ellipsize="end"
-        android:maxLines="1" />
+        android:maxLines="1"
+        android:textAlignment="viewStart" />
 
       <TextView
         android:id="@+id/prot_level_v"
@@ -51,19 +52,22 @@
         android:layout_margin="1dp"
         android:ellipsize="end"
         android:maxLines="1"
+        android:textAlignment="viewStart"
         app:autoSizeTextType="uniform" />
 
       <TextView
         android:id="@+id/app_ops_time_v"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="1dp" />
+        android:layout_margin="1dp"
+        android:textAlignment="viewStart" />
 
       <TextView
         android:id="@+id/app_ops_ref_state_v"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="1dp" />
+        android:layout_margin="1dp"
+        android:textAlignment="viewStart" />
 
     </LinearLayout>
 
@@ -96,6 +100,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="1dp"
         android:text="@string/_default"
+        android:textAlignment="center"
         android:textSize="10sp"
         tools:ignore="SmallSp" />
 
