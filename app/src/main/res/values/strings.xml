@@ -312,28 +312,7 @@
   <string name="privacy_policy_link" translatable="false">https://mirfatif.github.io/PermissionManagerX/privacy_policy.html</string>
   <string name="translations">Translations</string>
   <string name="translations_summary">Want to see the app in your language?</string>
-  <string name="language_credits">
-    <![CDATA[
-      <b>Russian</b>
-      <ul>
-        <li>Rikishi007 (rikishi0071@gmail.com)</li>
-        <li>tommynok <a href="https://crowdin.com/profile/tommynok">LINK</a></li>
-        <li>siebenbrodt <a href="https://crowdin.com/profile/siebenbrodt">LINK</a></li>
-      </ul>
-      <br/>
-      <b>Spanish</b>
-      <ul>
-        <li>LuisAlfredo92 <a href="https://crowdin.com/profile/luisalfredo92">LINK</a></li>
-      </ul>
-      <br/>
-      <b>Arabic</b>
-      <ul>
-        <li>Rex_sa <a href="https://crowdin.com/profile/rex07">LINK</a></li>
-      </ul>
-      <br/>
-      <a href="https://crowdin.com/project/pmx"><b>Add my language</b></a>
-    ]]>
-  </string>
+  <string name="add_my_language" translatable="false"><![CDATA[<a href="https://crowdin.com/project/pmx">Add my language</a>]]></string>
   <string name="share">Share</string>
   <string name="share_summary">Share the app with others</string>
   <string name="share_text">Check out this amazing app! %1$s</string>

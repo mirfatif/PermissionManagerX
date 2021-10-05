@@ -175,19 +175,63 @@
   </string-array>
 
   <string-array name="locales">
-    <item>@string/locale_system</item>
-    <item>@string/locale_en</item>
-    <item>@string/locale_ru</item>
-    <item>@string/locale_es</item>
-    <item>@string/locale_ar</item>
+    <item order="0">@string/locale_system</item>
+    <item order="1">@string/locale_en</item>
+    <item order="2">@string/locale_ru</item>
+    <item order="3">@string/locale_es</item>
+    <item order="4">@string/locale_ar</item>
   </string-array>
 
   <string-array name="locale_codes">
-    <item />
-    <item>en</item>
-    <item>ru</item>
-    <item>es</item>
-    <item>ar</item>
+    <item order="0" />
+    <item order="1">en</item>
+    <item order="2">ru</item>
+    <item order="3">es</item>
+    <item order="4">ar</item>
+  </string-array>
+
+  <array name="locale_contributor_name_arrays">
+    <item order="0">0</item>
+    <item order="1">0</item>
+    <item order="2">@array/locale_contributor_names_ru</item>
+    <item order="3">@array/locale_contributor_names_es</item>
+    <item order="4">@array/locale_contributor_names_ar</item>
+  </array>
+
+  <array name="locale_contributor_link_arrays">
+    <item order="0">0</item>
+    <item order="1">0</item>
+    <item order="2">@array/locale_contributor_links_ru</item>
+    <item order="3">@array/locale_contributor_links_es</item>
+    <item order="4">@array/locale_contributor_links_ar</item>
+  </array>
+
+  <string-array name="locale_contributor_names_ru">
+    <item order="0">Rikishi007</item>
+    <item order="1">tommynok</item>
+    <item order="2">siebenbrodt</item>
+  </string-array>
+
+  <string-array name="locale_contributor_links_ru">
+    <item order="0">rikishi0071@gmail.com</item>
+    <item order="1">https://crowdin.com/profile/tommynok</item>
+    <item order="2">https://crowdin.com/profile/siebenbrodt</item>
+  </string-array>
+
+  <string-array name="locale_contributor_names_es">
+    <item order="0">LuisAlfredo92</item>
+  </string-array>
+
+  <string-array name="locale_contributor_links_es">
+    <item order="0">https://crowdin.com/profile/luisalfredo92</item>
+  </string-array>
+
+  <string-array name="locale_contributor_names_ar">
+    <item order="0">Rex_sa</item>
+  </string-array>
+
+  <string-array name="locale_contributor_links_ar">
+    <item order="0">https://crowdin.com/profile/rex07</item>
   </string-array>
 
 </resources>

@@ -252,20 +252,6 @@
   <string name="privacy_policy" maxLength="20">Política de privacidad</string>
   <string name="translations">Traducciones</string>
   <string name="translations_summary">¿Quieres ver la aplicación en tu lenguaje?</string>
-  <string name="language_credits"><![CDATA[      <b>Ruso</b>
-      <ul>
-        <li>Rikishi007 (rikishi0071@gmail.com)</li>
-        <li>tommynok <a href="https://crowdin.com/profile/tommynok">ENLACE</a></li>
-        <li>siebenbrodt <a href="https://crowdin.com/profile/siebenbrodt">ENLACE</a></li>
-      </ul>
-      <br/>
-      <b>Spanish</b>
-      <ul>
-        <li>LuisAlfredo92 <a href="https://crowdin.com/profile/luisalfredo92">ENLACE</a></li>
-      </ul>
-      <br/>
-      <a href="https://crowdin.com/project/pmx"><b>Añadir mi lenguaje</b></a>
-    ]]></string>
   <string name="share">Compartir</string>
   <string name="share_summary">Compartir la aplicación con otros</string>
   <string name="share_text">¡Mira esta asombrosa aplicación! %1$s</string>

@@ -273,20 +273,6 @@
   <string name="privacy_policy" maxLength="20">Политика конфиденциальности</string>
   <string name="translations">Переводы</string>
   <string name="translations_summary">Хотите это приложение на своём языке?</string>
-  <string name="language_credits"><![CDATA[      <b>Русский</b>
-      <ul>
-        <li>Rikishi007 (rikishi0071@gmail.com)</li>
-        <li>tommynok <a href="https://crowdin.com/profile/tommynok">ССЫЛКА</a></li>
-        <li>siebenbrodt <a href="https://crowdin.com/profile/siebenbrodt">LINK</a></li>
-      </ul>
-      <br/>
-      <b>Spanish</b>
-      <ul>
-        <li>LuisAlfredo92 <a href="https://crowdin.com/profile/luisalfredo92">ССЫЛКА</a></li>
-      </ul>
-      <br/>
-      <a href="https://crowdin.com/project/pmx"><b>Добавить мой язык</b></a>
-    ]]></string>
   <string name="share">Поделиться</string>
   <string name="share_summary">Поделиться приложением с другими</string>
   <string name="share_text">Попробуйте это замечательное приложение! %1$s</string>
