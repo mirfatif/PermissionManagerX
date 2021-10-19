@@ -256,7 +256,7 @@
         <li>
             <p>Last line shows <b>count</b> of visible out of total manifest permissions and AppOps permissions. Invisible permissions are those excluded in <i>Exclusion Filters</i>.</p>
             <p>In case of quick scan this line shows package <b>UID</b>.</p>
-            <p>If sorted by install or update time, this line also show date at the right side.</p>
+            <p>If sorted by install or update time, this line also shows date on the right side.</p>
         </li>
     </ul>
 
@@ -324,18 +324,18 @@
             <p><b><i>Foo&amp;!Bar&amp!Baz</i></b></p>
         </li>
     </ul>
-    <p>Play Store version also shows search suggestions (if set in preferences) to ease the search process.</p>
+    <p>Pro version also shows search suggestions (if set in preferences) to ease the search process.</p>
 
     <hr>
 
-    <h2 id="scheduled_checker">Scheduled Checker (Play Store only)</h2>
+    <h2 id="scheduled_checker">Scheduled Checker (Pro only)</h2>
     <p>Do you want to keep track of any unwanted changes to the permissions for all the installed apps? <i>Scheduled Check</i> can do this for you at regular intervals (in minutes, hour or days).</p>
     <p>Set <a href="#perm_ref">Permission References</a> to <i>GREEN</i> and leave the rest to PMX. If any permission is found changed (with <i>RED</i> state) or when a new app is found installed (with <i>ORANGE</i> state permissions), PMX reminds you that something needs your attention.</p>
     <p>Additionally, if configured in preferences, Scheduled Check can auto-revoke granted permissions with an informatory notification.</p>
 
     <hr>
 
-    <h2 id="perm_watcher">Permission Watcher (Play Store only)</h2>
+    <h2 id="perm_watcher">Permission Watcher (Pro only)</h2>
     <p>Some apps do not work without having a certain permission granted. But you want to grant the permission for the time only when you are using the app, and revoke the permission as soon as you leave the app.</p>
     <p>Permission Watcher does exactly this. As soon as you leave the app, or after the set time has passed, it revokes an app's permissions (manifest and AppOp) on its own, or asks you to do so, depending on the preferences you've set.</p>
     <img class="small" src="perm_watcher.gif">
@@ -466,16 +466,18 @@
 
     <h2 id="versions">PMX Versions</h2>
     <p>PMX is available in two variants: <b>Paid</b> and <b>Free</b>.</p>
-    <p>Paid version is released on <b>Play Store</b>. Free version is released on <b>GitHub</b> (and some other sources including F-Droid). Latest APKs for both variants are also posted in the Telegram support group.</p>
+    <p>Paid version is available in two variants: <b>Play Store</b> and <b>Pro</b>.</p>
+    <p>Paid version is released on <b>Play Store</b> and <a href="https://t.me/mirfatifApps">Telegram Channel</a>. Free version is released on <b>GitHub</b> (and some other sources including F-Droid). Latest APKs for both variants are also posted in the Telegram channel.</p>
     <p>There's no free version on Play Store.</p>
-    <p>Either Free or the Paid version can be installed on a device, not both at the same time (both have the same package name). Free version must be uninstalled before installing the Paid one, and vice versa.</p>
-    <p>Free version available on <a href="https://android.izzysoft.de/repo/apk/com.mirfatif.permissionmanagerx">IzzySoft</a> is the same as released on <a href="https://github.com/mirfatif/PermissionManagerX/releases/latest">Github</a> and posted in the Telegram group. But the one available on official <a href="https://f-droid.org/packages/com.mirfatif.permissionmanagerx">F-Droid repo</a> has different signatures. So it cannot be installed over the former two, and vice versa.</p>
-    <p>In between the major releases some test (<b>beta</b>) releases are also published in the Telegram group only.</p>
-    <p>You can update the <b>paid</b> version to the latest stable release either from Play Store or by installing the APK file posted in the Telegram group with <b>-ps</b> in the file name. Sometimes Google team may take up to 24 hours before the update is live in Play Store.</p>
-    <p>You can update the <b>free</b> version to the latest stable release either from GitHub (or F-Droid; from wherever you installed it) or by installing the APK file posted in the Telegram group without <b>-ps</b> in the file name.</p>
-    <p>Paid version installed by merely downloading the <b>-ps.apk</b> file from the Telegram group won't work if you haven't purchased the app on Play Store.</p>
+    <p>Pro version can be installed along with any other version on a device. But no other two versions can be installed together (due to same package name). One must be uninstalled before installing the other one.</p>
+    <p>Free version available on <a href="https://android.izzysoft.de/repo/apk/com.mirfatif.permissionmanagerx">IzzySoft</a> is the same as released on <a href="https://github.com/mirfatif/PermissionManagerX/releases/latest">Github</a> and posted in the Telegram channel. But the one available on official <a href="https://f-droid.org/packages/com.mirfatif.permissionmanagerx">F-Droid repo</a> has different signatures. So it cannot be installed over the former two, and vice versa.</p>
+    <p>In between the major releases some test (<b>beta</b>) releases are also published in the Telegram channel only.</p>
+    <p>You can update the <b>Play Store</b> version to the latest stable release either from Play Store or by installing the APK file posted in the Telegram channel with <b>-ps</b> in the file name. Sometimes Google team may take up to 24 hours before the update is live in Play Store.</p>
+    <p>You can update the <b>Pro</b> version to the latest release by installing the APK file from the Telegram channel with <b>-pro</b> in the file name.</p>
+    <p>You can update the <b>Free</b> version to the latest stable release either from GitHub (or F-Droid; from wherever you installed it) or by installing the APK file posted in the Telegram channel without <b>-ps</b> / <b>-pro</b> in the file name.</p>
+    <p>Paid version installed by merely downloading the <b>-ps.apk</b> or <b>-pro.apk</b> file from the Telegram channel won't work if you haven't purchased the app.</p>
     <p>Once a new version is available for update, PMX app - when launched - shows a notification to download the update (provided that you've enabled the update check in settings). Play Store app also shows update notification according to your settings.</p>
-    <p>If you've already downloaded and installed the latest release from the Telegram group, you won't get update notification in the app and Play Store won't show update available.</p>
+    <p>If you've already downloaded and installed the latest release from the Telegram channel, you won't get update notification in the app and Play Store won't show update available.</p>
     <p>Free version is completely <b>open-source and free</b>. Source code is available on GitHub. Anyone can view and download the code and build the app. We respect users' privacy, so there's nothing hidden, there are no back-doors, no trackers, no ads. And we don't collect users' data and information for any kind of analytics, profiling or for the sole purpose of selling. Even submitting a crash report is also at user's discretion, though highly recommended.</p>
     <p>One can purchase the paid version just to make a donation and/or to use the paid-only features. Other methods of making a donation are available in the Free version under <b>Donate</b> section. Developers can also <b>support the app development</b> by contributing to the source code e.g. by fixing a bug or adding a feature. Users can help us make the app better by testing the beta releases, reporting any crashes or glitches, suggesting improvements and new features, or translating the app to their native language.</p>
 
@@ -491,6 +493,7 @@
         <li>Auto create backup file on changes</li>
         <li>Search suggestions</li>
         <li>Theming options</li>
+        <li>Permission Summary View (upcoming)</li>
         <li>Batch operations (profiles) (upcoming)</li>
     </ul>
 
@@ -604,7 +607,7 @@
         </li>
         <li id="faq17" style="margin-bottom:10px">
             <p><b>How can I change <i>System-Fixed</i> permissions, <i>Signature</i>|<i>Privileged</i> permissions, or the permissions of framework apps?</b></p>
-            <p>In Play Store version you can "<b>Allow Critical Changes</b>" in <b>Advanced Settings</b> to make changes to the permissions with the <i>System-Fixed</i> flag, protection level <i>Signature</i>|<i>Privileged</i>, or those of framework app. But it's not recommended to play with the System and Framework apps. You can brick your device.</p>
+            <p>In Paid version you can "<b>Allow Critical Changes</b>" in <b>Advanced Settings</b> to make changes to the permissions with the <i>System-Fixed</i> flag, protection level <i>Signature</i>|<i>Privileged</i>, or those of framework app. But it's not recommended to play with the System and Framework apps. You can brick your device.</p>
         </li>
         <li id="faq18" style="margin-bottom:10px">
             <p><b>What is <i>UID mode</i> in AppOp permissions?</b></p>
@@ -631,7 +634,7 @@
         </li>
         <li id="faq22" style="margin-bottom:10px">
             <p><b>How to use the app in work profile / multi-user environment?</b></p>
-            <p>Play Store version supports work profiles and multiple users. Select a user from drop-down menu.</p>
+            <p>Paid version supports work profiles and multiple users. Select a user from drop-down menu.</p>
         </li>
         <li id="faq23" style="margin-bottom:10px">
             <p><b>How can I translate PMX to my language?</b></p>
