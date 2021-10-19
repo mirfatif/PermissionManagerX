@@ -1,20 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:paddingTop="16dp"
-  android:paddingBottom="16dp"
-  android:paddingStart="4dp"
-  android:paddingEnd="4dp"
-  android:scrollbars="vertical">
+  android:orientation="vertical">
+
+  <View
+    android:layout_width="20dp"
+    android:layout_height="6dp"
+    android:layout_margin="12dp"
+    android:layout_gravity="center_horizontal"
+    android:background="@drawable/hinge" />
 
   <TextView
-    android:id="@+id/lang_credits_v"
+    android:textStyle="bold"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
+    android:text="@string/translations"
+    android:textAlignment="center"
     android:textColor="@color/dynamic_text_color"
-    android:textSize="16sp" />
+    android:textSize="18sp" />
 
-</androidx.core.widget.NestedScrollView>
+  <androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp"
+    android:scrollbars="vertical">
+
+    <TextView
+      android:id="@+id/lang_credits_v"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingStart="20dp"
+      android:paddingEnd="20dp"
+      android:textColor="@color/dynamic_text_color"
+      android:textSize="16sp" />
+
+  </androidx.core.widget.NestedScrollView>
+
+  <Button
+    android:id="@+id/add_my_lang"
+    style="@style/Widget.AppCompat.Button"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
+    android:background="@drawable/button_bg"
+    android:text="@string/add_my_language"
+    android:textColor="?attr/accentColor" />
+
+</com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>

@@ -4,7 +4,6 @@ import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
 import static com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler.DAEMON_HANDLER;
 
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -25,7 +24,6 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.AboutPrivilegesDialogBinding;
 import com.mirfatif.permissionmanagerx.databinding.ActivityAboutBinding;
-import com.mirfatif.permissionmanagerx.databinding.TranslationDialogBinding;
 import com.mirfatif.permissionmanagerx.main.FeedbackDialogFrag;
 import com.mirfatif.permissionmanagerx.main.FeedbackDialogFrag.FeedbackType;
 import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
@@ -37,7 +35,6 @@ import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.ser.PermStatus;
 import java.util.ArrayList;
 import java.util.List;
-import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 
 public class AboutActivity extends BaseActivity {
 
@@ -69,7 +66,7 @@ public class AboutActivity extends BaseActivity {
     mB.logging.setOnClickListener(v -> handleLogging());
     openWebUrl(mB.privacyPolicy, R.string.privacy_policy_link);
     mB.checkUpdate.setOnClickListener(v -> checkForUpdates());
-    mB.translate.setOnClickListener(v -> AlertDialogFragment.show(this, null, TAG_LOCALE));
+    mB.translate.setOnClickListener(v -> TransCreditsDialogFrag.show(getSupportFragmentManager()));
     mB.shareApp.setOnClickListener(v -> sendShareIntent());
 
     mB.paidFeaturesSummary.setText(Utils.htmlToString(R.string.paid_features_summary));
@@ -164,45 +161,6 @@ public class AboutActivity extends BaseActivity {
     mCheckForUpdateInProgress = false;
   }
 
-  private String createTransCreditsHtmlString() {
-    TypedArray names = App.getRes().obtainTypedArray(R.array.locale_contributor_name_arrays);
-    TypedArray links = App.getRes().obtainTypedArray(R.array.locale_contributor_link_arrays);
-    String[] locales = App.getRes().getStringArray(R.array.locales);
-    StringBuilder string = new StringBuilder();
-
-    for (int i = 0; i < names.length(); i++) {
-      int nameArrayResId = names.getResourceId(i, 0);
-      int linkArrayResId = links.getResourceId(i, 0);
-      if (nameArrayResId == 0 || linkArrayResId == 0) {
-        continue;
-      }
-
-      if (string.length() != 0) {
-        string.append("<br/>");
-      }
-      string.append("<b>").append(locales[i]).append("</b><ul>");
-
-      String[] nameArray = App.getRes().getStringArray(nameArrayResId);
-      String[] linkArray = App.getRes().getStringArray(linkArrayResId);
-      for (int n = 0; n < nameArray.length; n++) {
-        string.append("<li>").append(nameArray[n]).append(" ");
-        String link = linkArray[n];
-        if (link.startsWith("http://") || link.startsWith("https://")) {
-          string.append("<a href=\"").append(link).append("\">LINK</a>");
-        } else {
-          string.append("(").append(link).append(")");
-        }
-        string.append("</li>");
-      }
-      string.append("</ul>");
-    }
-
-    names.recycle();
-    links.recycle();
-
-    return string.append("<br/>").append(getString(R.string.add_my_language)).toString();
-  }
-
   private void sendShareIntent() {
     Intent intent = new Intent(Intent.ACTION_SEND).setType("text/plain");
     intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
@@ -287,20 +245,10 @@ public class AboutActivity extends BaseActivity {
   }
 
   private static final String CLASS = SettingsActivity.class.getName();
-  private static final String TAG_LOCALE = CLASS + ".LOCALE";
   private static final String TAG_PERM_STATUS = CLASS + ".PERM_STATUS";
 
   @Override
   public AlertDialog createDialog(String tag, AlertDialogFragment dialogFragment) {
-    if (TAG_LOCALE.equals(tag)) {
-      TranslationDialogBinding b = TranslationDialogBinding.inflate(getLayoutInflater());
-      b.langCreditsV.setText(Utils.htmlToString(createTransCreditsHtmlString()));
-      BetterLinkMovementMethod method = BetterLinkMovementMethod.newInstance();
-      method.setOnLinkClickListener((tv, url) -> Utils.openWebUrl(this, url));
-      b.langCreditsV.setMovementMethod(method);
-      return new Builder(this).setTitle(R.string.translations).setView(b.getRoot()).create();
-    }
-
     if (TAG_PERM_STATUS.equals(tag)) {
       AboutPrivilegesDialogBinding b = AboutPrivilegesDialogBinding.inflate(getLayoutInflater());
       AboutPrivilegesAdapter adapter = new AboutPrivilegesAdapter();

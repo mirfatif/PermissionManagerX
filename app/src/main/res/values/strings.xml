@@ -173,6 +173,7 @@
   <string name="telegram_group_link" translatable="false">https://t.me/PermissionManagerX</string>
   <string name="bmc_url" translatable="false">https://www.buymeacoffee.com/mirfatif</string>
   <string name="xda_url" translatable="false">https://forum.xda-developers.com/t/app-7-0-permission-manager-x-manage-appops-and-manifest-permissions.4187657</string>
+  <string name="translation_link" translatable="false">https://crowdin.com/project/pmx</string>
 
   <!-- PrivDaemonHandler -->
   <string name="dex_location_changed" maxLength="20">Switching daemon load location</string>
@@ -329,7 +330,7 @@
   <string name="privacy_policy" maxLength="20">Privacy Policy</string>
   <string name="translations">Translations</string>
   <string name="translations_summary">Want to see the app in your language?</string>
-  <string name="add_my_language" translatable="false"><![CDATA[<a href="https://crowdin.com/project/pmx">Add my language</a>]]></string>
+  <string name="add_my_language" translatable="false">Add My Language</string>
   <string name="share">Share</string>
   <string name="share_summary">Share the app with others</string>
   <string name="share_text">Check out this amazing app! %1$s</string>
