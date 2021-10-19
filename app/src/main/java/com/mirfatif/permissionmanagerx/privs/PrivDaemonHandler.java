@@ -96,7 +96,13 @@ public enum PrivDaemonHandler {
 
     String daemonContext = SETTINGS.getDaemonContext();
 
-    String vmName = DAEMON_PACKAGE_NAME + ".pmx" + (BuildConfig.DEBUG ? ".debug" : "");
+    String vmName = DAEMON_PACKAGE_NAME + ".pmx";
+    if (Utils.isProVersion()) {
+      vmName += ".pro";
+    }
+    if (BuildConfig.DEBUG) {
+      vmName += ".debug";
+    }
     String vmClass = DAEMON_PACKAGE_NAME + "." + DAEMON_CLASS_NAME;
     String vmCmd = "app_process / --nice-name=" + vmName + " " + vmClass;
     if (mPreferRoot || ADB_DAEMON.isRoot()) {

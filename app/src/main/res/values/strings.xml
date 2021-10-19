@@ -1,6 +1,4 @@
 <resources>
-  <string name="app_name">Permission Manager X</string>
-
   <!-- CHAR_LIMIT
        Button: 10
        Toast/SnackBar: 20

@@ -12,7 +12,7 @@ android {
         versionName "v1.11"
 
         // BuildType-independent and Flavor-independent BuildConfig.APPLICATION_ID
-        buildConfigField "String", "APP_ID", '"' + applicationId + '"'
+        buildConfigField "String", "APP_ID", '"com.mirfatif.permissionmanagerx"'
     }
 
     buildTypes {
