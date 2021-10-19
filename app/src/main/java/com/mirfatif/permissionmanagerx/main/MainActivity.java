@@ -293,7 +293,7 @@ public class MainActivity extends BaseActivity {
   private static final String TAG_GRANT_ROOT_OR_ADB = CLASS + ".GRANT_ROOT_OR_ADB";
   private static final String TAG_ADB_CONNECT_FAILED = CLASS + ".ADB_CONNECT_FAILED";
   private static final String TAG_BACKUP_RESTORE = CLASS + ".TAG_BACKUP_RESTORE";
-  static final String TAG_DONATION = CLASS + ".TAG_DONATION";
+  public static final String TAG_DONATION = CLASS + ".TAG_DONATION";
 
   @Override
   public AlertDialog createDialog(String tag, AlertDialogFragment dialogFragment) {
@@ -881,10 +881,8 @@ public class MainActivity extends BaseActivity {
     mB.navV.invalidate(); // If recreating
     setBoxesChecked();
     setCheckBoxListeners();
-    mB.navV
-        .getMenu()
-        .findItem(R.id.action_donate)
-        .setVisible(mMainActivityFlavor.getDonateVisibility());
+    boolean showDonate = !Utils.isPsVersion() && !Utils.isAmazVersion();
+    mB.navV.getMenu().findItem(R.id.action_donate).setVisible(showDonate);
 
     mMainActivityFlavor.setNavMenu(mB.navV.getMenu());
   }

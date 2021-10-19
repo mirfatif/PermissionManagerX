@@ -13,21 +13,23 @@ android {
 
         // BuildType-independent and Flavor-independent BuildConfig.APPLICATION_ID
         buildConfigField "String", "APP_ID", '"' + applicationId + '"'
-
-        def br = "git rev-parse --abbrev-ref HEAD".execute().text.trim()
-        buildConfigField "boolean", "GH_VERSION", (br != "ps" && br != "ps-dev") ? "true" : "false"
-        buildConfigField "boolean", "AMAZ_VERSION", (br == "amaz") ? "true" : "false"
     }
 
     buildTypes {
+        // Flavor-specific
+        String flavor = ""
+
         release {
+            versionNameSuffix flavor
+
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
         debug {
             applicationIdSuffix ".debug"
-            versionNameSuffix "-debug"
+            versionNameSuffix flavor  + "-debug"
         }
     }
 

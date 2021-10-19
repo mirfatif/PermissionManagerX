@@ -34,8 +34,6 @@ public class AppUpdate {
 
   private static final String CHECK_URL =
       "https://api.github.com/repos/mirfatif/PermissionManagerX/releases/latest";
-  private static final String DOWNLOAD_URL =
-      "https://github.com/mirfatif/PermissionManagerX/releases/latest";
   private static final String VERSION_TAG = "tag_name";
 
   private String mVersion, mUpdateUrl;
@@ -59,10 +57,10 @@ public class AppUpdate {
         return false;
       } else {
         Log.i(TAG, "New update is available: " + mVersion);
-        if (!BuildConfig.GH_VERSION) {
+        if (Utils.isPsVersion()) {
           mUpdateUrl = Utils.getString(R.string.play_store_url);
         } else {
-          mUpdateUrl = DOWNLOAD_URL;
+          mUpdateUrl = Utils.getString(R.string.telegram_channel);
         }
         if (notify) {
           showNotification();
@@ -87,7 +85,7 @@ public class AppUpdate {
     int version = Integer.parseInt(mVersion.substring(1, 5).replace(".", ""));
     if (version > BuildConfig.VERSION_CODE && !mVersion.equals(BuildConfig.VERSION_NAME)) {
       Log.i(TAG, "New beta update is available: " + mVersion);
-      mUpdateUrl = Utils.getString(R.string.telegram_link);
+      mUpdateUrl = Utils.getString(R.string.telegram_group_link);
       return true;
     }
     return false;

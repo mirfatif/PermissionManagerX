@@ -1,5 +1,8 @@
 package com.mirfatif.permissionmanagerx.main;
 
+import static com.mirfatif.permissionmanagerx.util.Utils.getString;
+import static com.mirfatif.permissionmanagerx.util.Utils.isProVersion;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -21,14 +24,24 @@ class Donate {
     mB = DonateAlertDialogBinding.inflate(mA.getLayoutInflater());
 
     setButtonClickListener(mB.bitcoinButton, mB.bitcoinContainer);
-    setButtonClickListener(mB.bankAccountButton, mB.bankAccountButton2);
+    setButtonClickListener(mB.bmcButton, mB.bmcButton2);
+    setButtonClickListener(mB.bankAccountButton, mB.bankAccountContainer);
+    setButtonClickListener(mB.proButton, mB.proButton2);
     setButtonClickListener(mB.playStoreButton, mB.playStoreButton2);
 
     mB.bitcoinButton2.setOnClickListener(v -> handleBitcoinClick());
-    String psLink = Utils.getString(R.string.play_store_url);
+    mB.bmcButton2.setOnClickListener(v -> Utils.openWebUrl(mA, getString(R.string.bmc_url)));
+    String psLink = getString(R.string.play_store_url);
     mB.playStoreButton2.setOnClickListener(v -> Utils.openWebUrl(mA, psLink));
-    String text = Utils.getString(R.string.bank_account_request);
+    String text = getString(R.string.bank_account_request);
     mB.bankAccountButton2.setOnClickListener(v -> Utils.sendMail(mA, text));
+    mB.proButton2.setOnClickListener(
+        v -> Utils.openWebUrl(mA, getString(R.string.purchase_pro_url)));
+
+    if (isProVersion()) {
+      mB.proButton.setVisibility(View.GONE);
+      mB.playStoreButton.setVisibility(View.GONE);
+    }
   }
 
   AlertDialog createDialog() {
@@ -37,7 +50,9 @@ class Donate {
 
   private void hideAll() {
     mB.bitcoinContainer.setVisibility(View.GONE);
-    mB.bankAccountButton2.setVisibility(View.GONE);
+    mB.bankAccountContainer.setVisibility(View.GONE);
+    mB.bmcButton2.setVisibility(View.GONE);
+    mB.proButton2.setVisibility(View.GONE);
     mB.playStoreButton2.setVisibility(View.GONE);
   }
 
@@ -51,7 +66,7 @@ class Donate {
 
   private void handleBitcoinClick() {
     Intent intent = new Intent(Intent.ACTION_VIEW);
-    intent.setData(Uri.parse("bitcoin:" + Utils.getString(R.string.bitcoin_address)));
+    intent.setData(Uri.parse("bitcoin:" + getString(R.string.bitcoin_address)));
     if (App.getContext()
         .getPackageManager()
         .queryIntentActivities(intent, PackageManager.MATCH_ALL)

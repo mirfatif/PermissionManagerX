@@ -516,7 +516,6 @@ public class Utils {
     MySettings mySettings = SETTINGS;
     return "Version: "
         + BuildConfig.VERSION_NAME
-        + (BuildConfig.GH_VERSION ? "" : " PlayStore")
         + "\nSDK: "
         + SDK_INT
         + "\nROM: "
@@ -665,6 +664,21 @@ public class Utils {
     if (resId != 0) {
       showToast(getString(resId, args));
     }
+  }
+
+  @SuppressWarnings("ConstantConditions")
+  public static boolean isPsVersion() {
+    return BuildConfig.VERSION_NAME.contains("-ps");
+  }
+
+  @SuppressWarnings("ConstantConditions")
+  public static boolean isProVersion() {
+    return BuildConfig.VERSION_NAME.contains("-pro");
+  }
+
+  @SuppressWarnings("ConstantConditions")
+  public static boolean isAmazVersion() {
+    return BuildConfig.VERSION_NAME.contains("-amaz");
   }
 
   //////////////////////////////////////////////////////////////////

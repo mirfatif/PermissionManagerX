@@ -9,4 +9,7 @@
   <color name="dynamicTransparent">#B3FFFFFF</color>
   <color name="dynamicForeground">#ECECEC</color>
   <color name="dynamic_text_color">@android:color/black</color>
+
+  <color name="buttonBg">#4DCCCCCC</color>
+  <color name="buttonRipple">#80808080</color>
 </resources>

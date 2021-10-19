@@ -26,6 +26,8 @@ import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.AboutPrivilegesDialogBinding;
 import com.mirfatif.permissionmanagerx.databinding.ActivityAboutBinding;
 import com.mirfatif.permissionmanagerx.databinding.TranslationDialogBinding;
+import com.mirfatif.permissionmanagerx.main.FeedbackDialogFrag;
+import com.mirfatif.permissionmanagerx.main.FeedbackDialogFrag.FeedbackType;
 import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
 import com.mirfatif.permissionmanagerx.prefs.settings.SettingsActivity;
 import com.mirfatif.permissionmanagerx.svc.LogcatService;
@@ -57,10 +59,11 @@ public class AboutActivity extends BaseActivity {
     }
 
     mB.version.setText(BuildConfig.VERSION_NAME);
-    openWebUrl(mB.telegram, R.string.telegram_link);
+    openWebUrl(mB.telegram, R.string.telegram_group_link);
     openWebUrl(mB.sourceCode, R.string.source_url);
     openWebUrl(mB.issues, R.string.issues_url);
-    openWebUrl(mB.rating, R.string.play_store_url);
+    mB.rating.setOnClickListener(
+        v -> FeedbackDialogFrag.show(FeedbackType.RATE, getSupportFragmentManager()));
     mB.contact.setOnClickListener(v -> Utils.sendMail(this, null));
     setLogTitle(SETTINGS.isDebug() ? R.string.stop_logging : R.string.collect_logs);
     mB.logging.setOnClickListener(v -> handleLogging());
@@ -203,7 +206,15 @@ public class AboutActivity extends BaseActivity {
   private void sendShareIntent() {
     Intent intent = new Intent(Intent.ACTION_SEND).setType("text/plain");
     intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
-    String text = getString(R.string.share_text, getString(R.string.play_store_url));
+    String url;
+    if (Utils.isPsVersion()) {
+      url = getString(R.string.play_store_url);
+    } else if (Utils.isProVersion()) {
+      url = getString(R.string.purchase_pro_url);
+    } else {
+      url = getString(R.string.source_url);
+    }
+    String text = getString(R.string.share_text, url);
     startActivity(Intent.createChooser(intent.putExtra(Intent.EXTRA_TEXT, text), null));
   }
 

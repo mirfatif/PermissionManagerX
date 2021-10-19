@@ -10,6 +10,7 @@ import com.google.android.material.behavior.SwipeDismissBehavior;
 import com.google.android.material.behavior.SwipeDismissBehavior.OnDismissListener;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.databinding.ActivityMainBinding;
+import com.mirfatif.permissionmanagerx.main.FeedbackDialogFrag.FeedbackType;
 
 class Feedback {
 
@@ -46,7 +47,8 @@ class Feedback {
   }
 
   private void showDialog(boolean isYes) {
-    FeedbackDialogFrag.newInstance(isYes).show(mA.getSupportFragmentManager(), "FEEDBACK_RATING");
+    FeedbackType type = isYes ? FeedbackType.POSITIVE : FeedbackType.NEGATIVE;
+    FeedbackDialogFrag.show(type, mA.getSupportFragmentManager());
     mB.movCont.feedbackCont.setVisibility(View.GONE);
   }
 

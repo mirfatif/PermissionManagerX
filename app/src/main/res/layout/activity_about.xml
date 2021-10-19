@@ -95,7 +95,7 @@
 
           <TextView
             style="@style/aboutActivityItemSummary"
-            android:text="@string/telegram_link" />
+            android:text="@string/telegram_group_link" />
 
         </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
       </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>

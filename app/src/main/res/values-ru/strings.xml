@@ -17,8 +17,6 @@
   <string name="open_drawer">Открыть</string>
   <string name="close_drawer">Закрыть</string>
   <string name="contact" maxLength="10">Написать сейчас</string>
-  <string name="i_will" maxLength="10">Я буду</string>
-  <string name="rate" maxLength="10">Оценить сейчас</string>
   <string name="do_not_remind" maxLength="10">Не напоминать</string>
   <string name="get_help" maxLength="10">Справка</string>
   <string name="switch_to_adb" maxLength="10">Переключиться на ADB</string>
@@ -295,7 +293,6 @@
   <string name="send_bitcoin">Отправить биткойны</string>
   <string name="no_bitcoin_app_installed">"Не найдено приложение Биткоин-кошелька"</string>
   <string name="ask_for_bank_account">Запросить банковский счёт</string>
-  <string name="get_paid_version_from_ps">Получить платную версию в Play Store</string>
   <!-- Notification Channels -->
   <string name="channel_app_update">Обновления приложения</string>
   <string name="channel_crash_report">Отчёт о падении</string>

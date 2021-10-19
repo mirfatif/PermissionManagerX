@@ -17,9 +17,6 @@
   <string name="_default" maxLength="10">Default</string>
   <string name="open_drawer">Open</string>
   <string name="close_drawer">Close</string>
-  <string name="contact" maxLength="10">Write Now</string>
-  <string name="i_will" maxLength="10">I Will</string>
-  <string name="rate" maxLength="10">Rate now</string>
   <string name="do_not_remind" maxLength="10">Don\'t Remind</string>
   <string name="get_help" maxLength="10">Get Help</string>
   <string name="switch_to_adb" maxLength="10">Switch to ADB</string>
@@ -130,18 +127,7 @@
   <string name="bad_port_number" maxLength="15">Bad port number</string>
   <string name="bad_path" maxLength="15">Bad path</string>
   <string name="granting_permission_failed" maxLength="20">Granting permission failed: %1$s</string>
-  <string name="love_using_app" maxLength="20">Liking Permission Manager X?</string>
-  <string name="purchase_and_rate_the_app">You can help us improve the app by making a small donation
-    or leaving a good app review so that we are able to better serve your needs.
-  </string>
-  <string name="rate_the_app">Good ratings and reviews help us improve the app and we are able to
-    better serve your needs.
-  </string>
-  <string name="ask_to_provide_feedback">Sorry to hear that. You can help improve the app by
-    contacting us via email or Telegram so that we are able to better serve your needs.
-  </string>
-  <string name="thank_you" maxLength="20">Thank you</string>
-  <string name="play_store_url" translatable="false">https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx</string>
+
   <string name="crash_report" maxLength="15">Crash Report</string>
   <string name="ask_to_report_crash_small" maxLength="30">Send crash report to the developer</string>
   <string name="ask_to_report_crash">Sorry, a component of the app had a problem and crashed.
@@ -152,6 +138,41 @@
     dangerous action. In worst-case scenario Android system may crash.\nAre you sure you want to continue?
   </string>
   <string name="pkg_state_disabled2" searchStr="true">%s, Disabled</string>
+
+  <!-- Feedback -->
+  <string name="love_using_app" maxLength="20">Liking Permission Manager X?</string>
+  <string name="purchase_and_rate_the_app">You can help us improve the app by making a small donation
+    or leaving a good app review so that we are able to better serve your needs.
+  </string>
+  <string name="rate_the_app">Good ratings and reviews help us improve the app and we are able to
+    better serve your needs.
+  </string>
+  <string name="ask_to_provide_feedback">Sorry to hear that. You can help improve the app by
+    contacting us via email or Telegram so that we are able to better serve your needs.
+  </string>
+  <string name="contact" maxLength="10">Write Now</string>
+  <string name="contact_on_telegram" maxLength="10">Write a Message on Telegram</string>
+  <string name="contact_on_email" maxLength="10">Write an Email</string>
+  <string name="rate_now" maxLength="10">Rate Now</string>
+  <string name="how_do_i" maxLength="10">How do I?</string>
+  <string name="purchase_donate" maxLength="10">Purchase / Donate</string>
+  <string name="rate_on_ps" maxLength="10">Rate on Play Store</string>
+  <string name="purchase_pro" maxLength="10">Purchase Pro</string>
+  <string name="star_on_github" maxLength="10">Star on GitHub</string>
+  <string name="review_on_xda" maxLength="10">Write a Review on XDA</string>
+  <string name="thank_you" maxLength="20">Thank you</string>
+
+  <!-- Links -->
+  <string name="source_url" translatable="false">https://github.com/mirfatif/PermissionManagerX</string>
+  <string name="issues_url" translatable="false">https://github.com/mirfatif/PermissionManagerX/issues</string>
+  <string name="purchase_pro_url" translatable="false">https://mirfatif.github.io/mirfatif/getpro</string>
+  <string name="privacy_policy_link" translatable="false">https://mirfatif.github.io/PermissionManagerX/privacy_policy.html</string>
+  <string name="play_store_url" translatable="false">https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx</string>
+  <string name="telegram_mirfatif" translatable="false">https://t.me/mirfatif</string>
+  <string name="telegram_channel" translatable="false">https://t.me/mirfatifApps</string>
+  <string name="telegram_group_link" translatable="false">https://t.me/PermissionManagerX</string>
+  <string name="bmc_url" translatable="false">https://www.buymeacoffee.com/mirfatif</string>
+  <string name="xda_url" translatable="false">https://forum.xda-developers.com/t/app-7-0-permission-manager-x-manage-appops-and-manifest-permissions.4187657</string>
 
   <!-- PrivDaemonHandler -->
   <string name="dex_location_changed" maxLength="20">Switching daemon load location</string>
@@ -266,23 +287,20 @@
 
   <!-- AboutActivity -->
   <string name="source" maxLength="15">Source</string>
-  <string name="source_url" translatable="false">https://github.com/mirfatif/PermissionManagerX</string>
   <string name="email" maxLength="15">Email</string>
   <string name="email_address" translatable="false">mirfatif@gmail.com</string>
   <string name="telegram_group" maxLength="15">Telegram Group</string>
-  <string name="telegram_link" translatable="false">https://t.me/PermissionManagerX</string>
   <string name="no_email_app_installed" maxLength="20">No email app installed</string>
   <string name="no_browser_installed" maxLength="20">"No web browser app installed"</string>
   <string name="collect_logs" maxLength="15">Collect Logs</string>
   <string name="collect_logs_summary" maxLength="20">Save highly verbose log to file</string>
   <string name="report_issues" maxLength="15">Report Issues</string>
   <string name="report_issues_summary" maxLength="20">Bugs, improvements, suggestions…</string>
-  <string name="issues_url" translatable="false">https://github.com/mirfatif/PermissionManagerX/issues</string>
   <string name="select_log_file" maxLength="20">Select file to save log</string>
   <string name="stop_logging" maxLength="15">Stop Logging</string>
   <string name="logging_stopped" maxLength="20">Logging stopped</string>
   <string name="app_rating" maxLength="15">Rate Me</string>
-  <string name="app_rating_summary" maxLength="20">Rating / review on Play Store</string>
+  <string name="app_rating_summary" maxLength="20">Rating, reviewing, starring…</string>
   <string name="paid_features" maxLength="15">Paid Features</string>
   <string name="paid_features_summary">
     <![CDATA[
@@ -309,7 +327,6 @@
   <string name="tap_to_download" maxLength="20">Tap to download</string>
   <string name="download" maxLength="10">Download</string>
   <string name="privacy_policy" maxLength="20">Privacy Policy</string>
-  <string name="privacy_policy_link" translatable="false">https://mirfatif.github.io/PermissionManagerX/privacy_policy.html</string>
   <string name="translations">Translations</string>
   <string name="translations_summary">Want to see the app in your language?</string>
   <string name="add_my_language" translatable="false"><![CDATA[<a href="https://crowdin.com/project/pmx">Add my language</a>]]></string>
@@ -331,10 +348,12 @@
   <string name="bitcoin_address" translatable="false">18ijfsv5fcDKQ6CTe4wycKxZMmti4oUXjW</string>
   <string name="no_bitcoin_app_installed">"Bitcoin Wallet app not found"</string>
   <string name="ask_for_bank_account">Ask For Bank Account</string>
+  <string name="buy_me_a_coffee">Buy Me A Coffee</string>
   <string name="bank_account_request" translatable="false">Hello,\n\nI need your IBAN and SWIFT/BIC
     to make a donation.
   </string>
-  <string name="get_paid_version_from_ps">Get Paid Version From Play Store</string>
+  <string name="get_pro_version">Get Pro Version</string>
+  <string name="get_ps_version">Get Play Store Version</string>
 
   <!-- Notification Channels -->
   <string name="channel_app_update">App Updates</string>

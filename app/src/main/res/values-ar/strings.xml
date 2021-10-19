@@ -17,8 +17,6 @@
   <string name="open_drawer">فتح</string>
   <string name="close_drawer">إغلاق</string>
   <string name="contact" maxLength="10">اكتب الآن</string>
-  <string name="i_will" maxLength="10">سأفعل</string>
-  <string name="rate" maxLength="10">تقييم الآن</string>
   <string name="do_not_remind" maxLength="10">عدم التذكير</string>
   <string name="get_help" maxLength="10">احصل على مساعدة</string>
   <string name="switch_to_adb" maxLength="10">التبديل إلى ADB</string>
@@ -321,7 +319,6 @@
   <string name="send_bitcoin">إرسال بيتكوين</string>
   <string name="no_bitcoin_app_installed">"لم يتم العثور على تطبيق محفظة البيتكوين"</string>
   <string name="ask_for_bank_account">اسأل عن حساب مصرفي</string>
-  <string name="get_paid_version_from_ps">الحصول على الإصدار المدفوع من متجر Play</string>
   <!-- Notification Channels -->
   <string name="channel_app_update">تحديثات التطبيق</string>
   <string name="channel_crash_report">تقرير الأعطال</string>

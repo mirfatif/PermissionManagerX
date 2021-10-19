@@ -17,8 +17,6 @@
   <string name="open_drawer">Abrir</string>
   <string name="close_drawer">Cerrar</string>
   <string name="contact" maxLength="10">Escribir Ahora</string>
-  <string name="i_will" maxLength="10">Lo haré</string>
-  <string name="rate" maxLength="10">Puntuar ahora</string>
   <string name="do_not_remind" maxLength="10">No Recordar</string>
   <string name="get_help" maxLength="10">Obtener Ayuda</string>
   <string name="switch_to_adb" maxLength="10">Cambiar a ADB</string>
@@ -271,7 +269,6 @@
   <string name="send_bitcoin">Enviar Bitcoin</string>
   <string name="no_bitcoin_app_installed">"Aplicación de Cartera Bitcoin no encontrada"</string>
   <string name="ask_for_bank_account">Solicitar Cuenta Bancaria</string>
-  <string name="get_paid_version_from_ps">Obtén la Versión de Paga Desde Play Store</string>
   <!-- Notification Channels -->
   <string name="channel_app_update">Actualizaciones de la aplicación</string>
   <string name="channel_crash_report">Reporte de fallos</string>

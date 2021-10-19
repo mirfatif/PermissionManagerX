@@ -4,4 +4,6 @@
   <color name="dynamicTransparent">#B3000000</color>
   <color name="dynamicForeground">@android:color/black</color>
   <color name="dynamic_text_color">@android:color/white</color>
+
+  <color name="buttonBg">#4D1A1A1A</color>
 </resources>
