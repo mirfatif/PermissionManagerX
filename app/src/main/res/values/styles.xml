@@ -51,7 +51,7 @@
   </style>
 
   <style name="myBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
-    <item name="android:background">@drawable/bottom_sheet_background</item>
+    <item name="android:background">@drawable/bottom_sheet_bg_flavor</item>
   </style>
 
   <!--Common styles-->

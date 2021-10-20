@@ -6,8 +6,6 @@ import static com.mirfatif.permissionmanagerx.util.Utils.isProVersion;
 import static com.mirfatif.permissionmanagerx.util.Utils.isPsVersion;
 import static com.mirfatif.permissionmanagerx.util.Utils.openWebUrl;
 
-import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,17 +13,15 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.databinding.FeedbackDialogBinding;
 import com.mirfatif.permissionmanagerx.databinding.RateDonateDialogBinding;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
+import com.mirfatif.permissionmanagerx.ui.BottomSheetDialogFrag;
 import com.mirfatif.permissionmanagerx.util.Utils;
 
-public class FeedbackDialogFrag extends BottomSheetDialogFragment {
+public class FeedbackDialogFrag extends BottomSheetDialogFrag {
 
   private static final String FEEDBACK_TYPE = "FEEDBACK_TYPE";
 
@@ -43,28 +39,6 @@ public class FeedbackDialogFrag extends BottomSheetDialogFragment {
     args.putString(FEEDBACK_TYPE, type.name());
     frag.setArguments(args);
     frag.show(fm, "FEEDBACK_RATING");
-  }
-
-  // Required for correct Buttons background/text color.
-  @Override
-  public int getTheme() {
-    return R.style.Theme_Design_BottomSheetDialog;
-  }
-
-  private FragmentActivity mA;
-
-  @Override
-  public void onAttach(@NonNull Context context) {
-    super.onAttach(context);
-    mA = getActivity();
-  }
-
-  @NonNull
-  @Override
-  public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-    BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
-    dialog.setDismissWithAnimation(true);
-    return dialog;
   }
 
   @Nullable
@@ -190,15 +164,5 @@ public class FeedbackDialogFrag extends BottomSheetDialogFragment {
       Utils.showToast(R.string.thank_you);
       dismiss();
     }
-  }
-
-  @Override
-  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-
-    // Replace the default white background with the custom on which has round corners and
-    // background color set.
-    // Another option is to override the bottomSheetDialog theme in style.xml
-    ((View) view.getParent()).setBackgroundResource(R.drawable.bottom_sheet_background);
   }
 }

@@ -288,7 +288,6 @@ public class MainActivity extends BaseActivity {
   }
 
   private static final String CLASS = MainActivity.class.getName();
-  private static final String TAG_ADVANCED_SETTINGS = CLASS + ".ADVANCED_SETTINGS";
   private static final String TAG_PRIVS_REQ_FOR_DAEMON = CLASS + ".PRIVS_REQ_FOR_DAEMON";
   private static final String TAG_GRANT_ROOT_OR_ADB = CLASS + ".GRANT_ROOT_OR_ADB";
   private static final String TAG_ADB_CONNECT_FAILED = CLASS + ".ADB_CONNECT_FAILED";
@@ -329,10 +328,6 @@ public class MainActivity extends BaseActivity {
 
     if (TAG_BACKUP_RESTORE.equals(tag)) {
       return mBackupRestore.createDialog();
-    }
-
-    if (TAG_ADVANCED_SETTINGS.equals(tag)) {
-      return new AdvancedSettings(this).createDialog();
     }
 
     if (TAG_DONATION.equals(tag)) {
@@ -989,7 +984,7 @@ public class MainActivity extends BaseActivity {
     }
 
     if (item.getItemId() == R.id.action_advanced_settings) {
-      AlertDialogFragment.show(this, null, TAG_ADVANCED_SETTINGS);
+      AdvSettingsDialogFrag.show(getSupportFragmentManager());
       return true;
     }
 
