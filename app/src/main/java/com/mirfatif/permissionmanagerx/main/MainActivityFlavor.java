@@ -4,7 +4,6 @@ import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
 
 import android.view.Menu;
 import android.view.MenuItem;
-import com.mirfatif.permissionmanagerx.BuildConfig;
 
 public class MainActivityFlavor {
 
@@ -44,10 +43,6 @@ public class MainActivityFlavor {
   @SuppressWarnings("UnusedDeclaration")
   public boolean handleNavItemChecked(MenuItem item) {
     return false;
-  }
-
-  boolean getDonateVisibility() {
-    return !BuildConfig.AMAZ_VERSION;
   }
 
   void onPackagesUpdated() {

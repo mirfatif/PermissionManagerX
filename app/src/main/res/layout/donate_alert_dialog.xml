@@ -26,42 +26,68 @@
       android:layout_gravity="center_horizontal">
 
       <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/bitcoin_button"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:id="@+id/bmc_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_margin="4dp"
-        android:src="@drawable/bitcoin"
+        android:src="@drawable/bmc"
         app:backgroundTint="?attr/accentColor"
         app:borderWidth="4dp"
         app:elevation="4dp"
-        app:fabCustomSize="56dp"
-        app:maxImageSize="36dp"
+        app:fabCustomSize="48dp"
+        app:maxImageSize="32dp"
         tools:ignore="ContentDescription" />
 
       <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/bank_account_button"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_margin="4dp"
         android:src="@drawable/dollar"
         app:backgroundTint="?attr/accentColor"
         app:borderWidth="4dp"
         app:elevation="4dp"
-        app:fabCustomSize="56dp"
+        app:fabCustomSize="48dp"
+        app:maxImageSize="36dp"
+        tools:ignore="ContentDescription" />
+
+      <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/bitcoin_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:src="@drawable/bitcoin"
+        app:backgroundTint="?attr/accentColor"
+        app:borderWidth="4dp"
+        app:elevation="4dp"
+        app:fabCustomSize="48dp"
+        app:maxImageSize="36dp"
+        tools:ignore="ContentDescription" />
+
+      <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/pro_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:src="@drawable/paid"
+        app:backgroundTint="?attr/accentColor"
+        app:borderWidth="4dp"
+        app:elevation="4dp"
+        app:fabCustomSize="48dp"
         app:maxImageSize="36dp"
         tools:ignore="ContentDescription" />
 
       <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/play_store_button"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_margin="4dp"
         android:src="@drawable/play_store"
         app:backgroundTint="?attr/accentColor"
         app:borderWidth="4dp"
         app:elevation="4dp"
-        app:fabCustomSize="56dp"
-        app:maxImageSize="36dp"
+        app:fabCustomSize="48dp"
+        app:maxImageSize="32dp"
         tools:ignore="ContentDescription" />
 
     </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
@@ -100,18 +126,50 @@
 
     </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
-    <Button
-      android:id="@+id/bank_account_button2"
+    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      android:id="@+id/bank_account_container"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="@string/ask_for_bank_account"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:visibility="gone">
+
+      <Button
+        android:id="@+id/bank_account_button2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/ask_for_bank_account" />
+
+      <ImageView
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/bank_account_qr_code"
+        tools:ignore="ContentDescription" />
+
+    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+
+    <Button
+      android:id="@+id/bmc_button2"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/buy_me_a_coffee"
+      android:visibility="gone" />
+
+    <Button
+      android:id="@+id/pro_button2"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/get_pro_version"
       android:visibility="gone" />
 
     <Button
       android:id="@+id/play_store_button2"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="@string/get_paid_version_from_ps"
+      android:text="@string/get_ps_version"
       android:visibility="gone" />
 
   </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>

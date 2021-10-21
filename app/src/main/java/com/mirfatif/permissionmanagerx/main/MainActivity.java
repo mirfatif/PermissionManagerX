@@ -6,6 +6,7 @@ import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
 import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.ADB_DAEMON;
 import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.ROOT_DAEMON;
 import static com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler.DAEMON_HANDLER;
+import static com.mirfatif.permissionmanagerx.util.Utils.getQtyString;
 
 import android.content.Intent;
 import android.os.Build;
@@ -50,6 +51,7 @@ import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -286,12 +288,11 @@ public class MainActivity extends BaseActivity {
   }
 
   private static final String CLASS = MainActivity.class.getName();
-  private static final String TAG_ADVANCED_SETTINGS = CLASS + ".ADVANCED_SETTINGS";
   private static final String TAG_PRIVS_REQ_FOR_DAEMON = CLASS + ".PRIVS_REQ_FOR_DAEMON";
   private static final String TAG_GRANT_ROOT_OR_ADB = CLASS + ".GRANT_ROOT_OR_ADB";
   private static final String TAG_ADB_CONNECT_FAILED = CLASS + ".ADB_CONNECT_FAILED";
   private static final String TAG_BACKUP_RESTORE = CLASS + ".TAG_BACKUP_RESTORE";
-  static final String TAG_DONATION = CLASS + ".TAG_DONATION";
+  public static final String TAG_DONATION = CLASS + ".TAG_DONATION";
 
   @Override
   public AlertDialog createDialog(String tag, AlertDialogFragment dialogFragment) {
@@ -327,10 +328,6 @@ public class MainActivity extends BaseActivity {
 
     if (TAG_BACKUP_RESTORE.equals(tag)) {
       return mBackupRestore.createDialog();
-    }
-
-    if (TAG_ADVANCED_SETTINGS.equals(tag)) {
-      return new AdvancedSettings(this).createDialog();
     }
 
     if (TAG_DONATION.equals(tag)) {
@@ -460,11 +457,12 @@ public class MainActivity extends BaseActivity {
       return;
     }
 
+    NumberFormat nf = NumberFormat.getIntegerInstance();
     mB.movCont.progBar.setIndeterminate(false);
     mB.movCont.progBar.setProgress(0);
-    mB.movCont.progNowV.setText("0");
+    mB.movCont.progNowV.setText(nf.format(0));
     mB.movCont.progBar.setMax(progressMax);
-    mB.movCont.progMaxV.setText(String.valueOf(progressMax));
+    mB.movCont.progMaxV.setText(nf.format(progressMax));
     mB.rndProgCont.setVisibility(View.GONE);
     mB.movCont.progBarCont.setVisibility(View.VISIBLE);
   }
@@ -480,7 +478,7 @@ public class MainActivity extends BaseActivity {
     }
     if (progress >= 0) {
       mB.movCont.progBar.setProgress(progress, true);
-      mB.movCont.progNowV.setText(String.valueOf(progress));
+      mB.movCont.progNowV.setText(NumberFormat.getIntegerInstance().format(progress));
     }
     if (progressNow >= 0) {
       return;
@@ -509,7 +507,7 @@ public class MainActivity extends BaseActivity {
 
     mB.refreshLayout.setRefreshing(false);
     if (showPkgCount) {
-      showSnackBar(mVisiblePkgCount + " " + getString(R.string.apps), 5000);
+      showSnackBar(getQtyString(R.plurals.apps_count, mVisiblePkgCount, mVisiblePkgCount), 5000);
     }
   }
 
@@ -878,10 +876,8 @@ public class MainActivity extends BaseActivity {
     mB.navV.invalidate(); // If recreating
     setBoxesChecked();
     setCheckBoxListeners();
-    mB.navV
-        .getMenu()
-        .findItem(R.id.action_donate)
-        .setVisible(mMainActivityFlavor.getDonateVisibility());
+    boolean showDonate = !Utils.isPsVersion() && !Utils.isAmazVersion();
+    mB.navV.getMenu().findItem(R.id.action_donate).setVisible(showDonate);
 
     mMainActivityFlavor.setNavMenu(mB.navV.getMenu());
   }
@@ -988,7 +984,7 @@ public class MainActivity extends BaseActivity {
     }
 
     if (item.getItemId() == R.id.action_advanced_settings) {
-      AlertDialogFragment.show(this, null, TAG_ADVANCED_SETTINGS);
+      AdvSettingsDialogFrag.show(getSupportFragmentManager());
       return true;
     }
 

@@ -7,7 +7,7 @@
   android:orientation="vertical">
 
   <View
-    android:layout_width="16dp"
+    android:layout_width="20dp"
     android:layout_height="6dp"
     android:layout_gravity="center_horizontal"
     android:background="@drawable/hinge" />
@@ -38,6 +38,7 @@
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/do_not_ask"
         android:textColor="?attr/accentColor" />
 
       <!--Expander-->

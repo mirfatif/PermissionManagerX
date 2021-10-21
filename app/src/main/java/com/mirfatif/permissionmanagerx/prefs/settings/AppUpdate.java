@@ -31,11 +31,11 @@ import org.json.JSONObject;
 public class AppUpdate {
 
   private static final String TAG = "AppUpdate";
+
   private static final String CHECK_URL =
       "https://api.github.com/repos/mirfatif/PermissionManagerX/releases/latest";
-  private static final String DOWNLOAD_URL =
-      "https://github.com/mirfatif/PermissionManagerX/releases/latest";
   private static final String VERSION_TAG = "tag_name";
+
   private String mVersion, mUpdateUrl;
 
   public Boolean check(boolean notify) {
@@ -43,45 +43,24 @@ public class AppUpdate {
       return null;
     }
 
-    HttpURLConnection connection = null;
-    InputStream inputStream = null;
     try {
-      connection = (HttpURLConnection) new URL(CHECK_URL).openConnection();
-      connection.setConnectTimeout(60000);
-      connection.setReadTimeout(60000);
-      connection.setUseCaches(false);
+      String data = getData(CHECK_URL);
 
-      int status = connection.getResponseCode();
-      if (status != HttpURLConnection.HTTP_OK) {
-        Log.e(
-            TAG,
-            "Response code:"
-                + connection.getResponseCode()
-                + ", msg: "
-                + connection.getResponseMessage());
-        return null;
-      }
-
-      inputStream = connection.getInputStream();
-      BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-      StringBuilder builder = new StringBuilder();
-      String line;
-      while ((line = reader.readLine()) != null) {
-        builder.append(line);
-      }
-
-      mVersion = new JSONObject(builder.toString()).getString(VERSION_TAG);
+      mVersion = new JSONObject(data).getString(VERSION_TAG);
       // Convert tag name to version code (v1.01-beta to 101)
       int version = Integer.parseInt(mVersion.substring(1, 5).replace(".", ""));
       if (version <= BuildConfig.VERSION_CODE) {
+        if (!notify && isBetaVersionAvailable()) {
+          return true;
+        }
         Log.i(TAG, "App is up-to-date");
         return false;
       } else {
         Log.i(TAG, "New update is available: " + mVersion);
-        if (!BuildConfig.GH_VERSION) {
+        if (Utils.isPsVersion()) {
           mUpdateUrl = Utils.getString(R.string.play_store_url);
         } else {
-          mUpdateUrl = DOWNLOAD_URL;
+          mUpdateUrl = Utils.getString(R.string.telegram_channel);
         }
         if (notify) {
           showNotification();
@@ -92,6 +71,52 @@ public class AppUpdate {
     } catch (IOException | JSONException | NumberFormatException e) {
       Log.e(TAG, e.toString());
       return null;
+    }
+  }
+
+  private static final String BETA_CHECK_URL =
+      "https://mirfatif.github.io/mirfatif/pmx_version.json";
+  private static final String BETA_VERSION_TAG = "message";
+
+  private boolean isBetaVersionAvailable() throws IOException, JSONException {
+    String data = getData(BETA_CHECK_URL);
+    mVersion = new JSONObject(data).getString(BETA_VERSION_TAG);
+    // Convert beta version name to version code (v1.12-beta2 to 112)
+    int version = Integer.parseInt(mVersion.substring(1, 5).replace(".", ""));
+    if (version > BuildConfig.VERSION_CODE && !mVersion.equals(BuildConfig.VERSION_NAME)) {
+      Log.i(TAG, "New beta update is available: " + mVersion);
+      mUpdateUrl = Utils.getString(R.string.telegram_group_link);
+      return true;
+    }
+    return false;
+  }
+
+  private String getData(String url) throws IOException {
+    HttpURLConnection connection = null;
+    InputStream inputStream = null;
+    try {
+      connection = (HttpURLConnection) new URL(url).openConnection();
+      connection.setConnectTimeout(60000);
+      connection.setReadTimeout(60000);
+      connection.setUseCaches(false);
+
+      int status = connection.getResponseCode();
+      if (status != HttpURLConnection.HTTP_OK) {
+        throw new IOException(
+            "Response code:"
+                + connection.getResponseCode()
+                + ", msg: "
+                + connection.getResponseMessage());
+      }
+
+      inputStream = connection.getInputStream();
+      BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+      StringBuilder builder = new StringBuilder();
+      String line;
+      while ((line = reader.readLine()) != null) {
+        builder.append(line);
+      }
+      return builder.toString();
     } finally {
       try {
         if (inputStream != null) {

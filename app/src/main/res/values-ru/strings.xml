@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Permission Manager X</string>
   <!-- CHAR_LIMIT
        Button: 10
        Toast/SnackBar: 20
@@ -17,14 +16,17 @@
   <string name="open_drawer">Открыть</string>
   <string name="close_drawer">Закрыть</string>
   <string name="contact" maxLength="10">Написать сейчас</string>
-  <string name="i_will" maxLength="10">Я буду</string>
-  <string name="rate" maxLength="10">Оценить сейчас</string>
   <string name="do_not_remind" maxLength="10">Не напоминать</string>
   <string name="get_help" maxLength="10">Справка</string>
   <string name="switch_to_adb" maxLength="10">Переключиться на ADB</string>
   <string name="_continue" maxLength="10">Продолжить?</string>
   <string name="warning" maxLength="15">Предупреждение</string>
-  <string name="apps">приложения</string>
+  <plurals name="apps_count">
+    <item quantity="one">%d приложение</item>
+    <item quantity="few">%d приложения</item>
+    <item quantity="many">%d приложений</item>
+    <item quantity="other">%d приложений</item>
+  </plurals>
   <!-- MainActivity Navigation Drawer / menu items -->
   <string name="search_menu_item" maxLength="15">Поиск</string>
   <string name="settings_menu_item" maxLength="15">Настройки</string>
@@ -167,6 +169,9 @@
   <string name="set_references_confirmation">Установить все текущие состояния разрешений в качестве целевых?</string>
   <!--PackageActivity Dialogs-->
   <string name="exclude_app_from_visible_list">Исключить приложение из списка отображаемых.</string>
+  <string name="enable_app">Разморозка приложения</string>
+  <string name="disable_app">Заморозка приложения</string>
+  <string name="exclude_from_visible_list">%s Исключение приложения из списка видимых.</string>
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">Что-то пошло не так</string>
   <string name="change_perms_warning" comment="'system' or 'framework'">Изменение разрешений %1$s приложения — потенциально опасное действие вплоть до сбоя системы Android.\nВы уверены, что хотите продолжить?</string>
@@ -223,6 +228,7 @@
   <string name="locale_en">Английский</string>
   <string name="locale_ru">Русский</string>
   <string name="locale_es">Испанский</string>
+  <string name="locale_ar">Арабский</string>
   <!-- PreferenceActivity menu items -->
   <string name="filter_settings_reset_defaults_menu_item" maxLength="15">Сброс по умолчанию</string>
   <string name="filter_settings_reset_confirmation">Сбросить настройки фильтра к значениям по умолчанию?</string>
@@ -286,7 +292,6 @@
   <string name="send_bitcoin">Отправить биткойны</string>
   <string name="no_bitcoin_app_installed">"Не найдено приложение Биткоин-кошелька"</string>
   <string name="ask_for_bank_account">Запросить банковский счёт</string>
-  <string name="get_paid_version_from_ps">Получить платную версию в Play Store</string>
   <!-- Notification Channels -->
   <string name="channel_app_update">Обновления приложения</string>
   <string name="channel_crash_report">Отчёт о падении</string>
@@ -314,5 +319,5 @@
   <string name="daemon_get_perm_grp_info_list_failed" maxLength="20">Не удалось считать группы разрешений</string>
   <string name="daemon_op_num_inconsistency" maxLength="20">Потенциально неподдерживаемая прошивка</string>
   <!-- Locale -->
-  <string name="help_file_name">help.html</string>
+  <string name="help_file_name">help_ru.html</string>
 </resources>

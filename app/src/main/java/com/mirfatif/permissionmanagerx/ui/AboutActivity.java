@@ -24,7 +24,8 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.AboutPrivilegesDialogBinding;
 import com.mirfatif.permissionmanagerx.databinding.ActivityAboutBinding;
-import com.mirfatif.permissionmanagerx.databinding.TranslationDialogBinding;
+import com.mirfatif.permissionmanagerx.main.FeedbackDialogFrag;
+import com.mirfatif.permissionmanagerx.main.FeedbackDialogFrag.FeedbackType;
 import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
 import com.mirfatif.permissionmanagerx.prefs.settings.SettingsActivity;
 import com.mirfatif.permissionmanagerx.svc.LogcatService;
@@ -34,7 +35,6 @@ import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.ser.PermStatus;
 import java.util.ArrayList;
 import java.util.List;
-import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 
 public class AboutActivity extends BaseActivity {
 
@@ -56,16 +56,17 @@ public class AboutActivity extends BaseActivity {
     }
 
     mB.version.setText(BuildConfig.VERSION_NAME);
-    openWebUrl(mB.telegram, R.string.telegram_link);
+    openWebUrl(mB.telegram, R.string.telegram_group_link);
     openWebUrl(mB.sourceCode, R.string.source_url);
     openWebUrl(mB.issues, R.string.issues_url);
-    openWebUrl(mB.rating, R.string.play_store_url);
+    mB.rating.setOnClickListener(
+        v -> FeedbackDialogFrag.show(FeedbackType.RATE, getSupportFragmentManager()));
     mB.contact.setOnClickListener(v -> Utils.sendMail(this, null));
     setLogTitle(SETTINGS.isDebug() ? R.string.stop_logging : R.string.collect_logs);
     mB.logging.setOnClickListener(v -> handleLogging());
     openWebUrl(mB.privacyPolicy, R.string.privacy_policy_link);
     mB.checkUpdate.setOnClickListener(v -> checkForUpdates());
-    mB.translate.setOnClickListener(v -> AlertDialogFragment.show(this, null, TAG_LOCALE));
+    mB.translate.setOnClickListener(v -> TransCreditsDialogFrag.show(getSupportFragmentManager()));
     mB.shareApp.setOnClickListener(v -> sendShareIntent());
 
     mB.paidFeaturesSummary.setText(Utils.htmlToString(R.string.paid_features_summary));
@@ -163,7 +164,15 @@ public class AboutActivity extends BaseActivity {
   private void sendShareIntent() {
     Intent intent = new Intent(Intent.ACTION_SEND).setType("text/plain");
     intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
-    String text = getString(R.string.share_text, getString(R.string.play_store_url));
+    String url;
+    if (Utils.isPsVersion()) {
+      url = getString(R.string.play_store_url);
+    } else if (Utils.isProVersion()) {
+      url = getString(R.string.purchase_pro_url);
+    } else {
+      url = getString(R.string.source_url);
+    }
+    String text = getString(R.string.share_text, url);
     startActivity(Intent.createChooser(intent.putExtra(Intent.EXTRA_TEXT, text), null));
   }
 
@@ -236,20 +245,10 @@ public class AboutActivity extends BaseActivity {
   }
 
   private static final String CLASS = SettingsActivity.class.getName();
-  static final String TAG_LOCALE = CLASS + ".LOCALE";
   private static final String TAG_PERM_STATUS = CLASS + ".PERM_STATUS";
 
   @Override
   public AlertDialog createDialog(String tag, AlertDialogFragment dialogFragment) {
-    if (TAG_LOCALE.equals(tag)) {
-      TranslationDialogBinding b = TranslationDialogBinding.inflate(getLayoutInflater());
-      b.langCreditsV.setText(Utils.htmlToString(R.string.language_credits));
-      BetterLinkMovementMethod method = BetterLinkMovementMethod.newInstance();
-      method.setOnLinkClickListener((tv, url) -> Utils.openWebUrl(this, url));
-      b.langCreditsV.setMovementMethod(method);
-      return new Builder(this).setTitle(R.string.translations).setView(b.getRoot()).create();
-    }
-
     if (TAG_PERM_STATUS.equals(tag)) {
       AboutPrivilegesDialogBinding b = AboutPrivilegesDialogBinding.inflate(getLayoutInflater());
       AboutPrivilegesAdapter adapter = new AboutPrivilegesAdapter();

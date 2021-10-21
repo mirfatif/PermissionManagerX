@@ -53,12 +53,12 @@ public class FilterSettingsActivity extends BaseActivity {
         v -> {
           if (mB.excFiltersMasterSwitch.isChecked()) {
             // This must be set before setting fragment. Or the whole settings are cleared.
-            SETTINGS.setExcFiltersEnabled(mB.excFiltersMasterSwitch.isChecked());
+            SETTINGS.setExcFiltersEnabled(true);
             addFrag(savedInstanceState);
           } else {
             removeFrag();
             // This must be set after removing fragment. Or the whole settings are cleared.
-            SETTINGS.setExcFiltersEnabled(mB.excFiltersMasterSwitch.isChecked());
+            SETTINGS.setExcFiltersEnabled(false);
           }
           PKG_PARSER.updatePackagesList();
         });

@@ -6,32 +6,44 @@ import static com.mirfatif.permissionmanagerx.util.Utils.UID_ROOT;
 import static com.mirfatif.permissionmanagerx.util.Utils.UID_SHELL;
 import static com.mirfatif.permissionmanagerx.util.Utils.UID_SYSTEM;
 
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
+import androidx.fragment.app.FragmentManager;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.AdvSettingsDialogBinding;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
+import com.mirfatif.permissionmanagerx.ui.BottomSheetDialogFrag;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-class AdvancedSettings {
+public class AdvSettingsDialogFrag extends BottomSheetDialogFrag {
 
-  private static final String TAG = "AdvancedSettings";
+  private static final String TAG = "AdvSettingsDialogFrag";
 
-  private final MainActivity mA;
-  private final AdvancedSettingsFlavor mAdvancedSettingsFlavor;
+  public static void show(FragmentManager fm) {
+    AdvSettingsDialogFrag frag = new AdvSettingsDialogFrag();
+    frag.show(fm, "ADVANCED_SETTINGS");
+  }
 
-  private final List<String> spinnerUids, spinnerContexts;
-  private final int uidSelectedPos, contextSelectedPos;
+  private AdvSettingsDialogBinding mB;
+  private AdvancedSettingsFlavor mAdvancedSettingsFlavor;
+
+  private List<String> spinnerUids, spinnerContexts;
+  private int uidSelectedPos, contextSelectedPos;
 
   private final boolean useHiddenAPIs = SETTINGS.useHiddenAPIs();
   private final boolean dexInTmpDir = SETTINGS.dexInTmpDir();
@@ -39,11 +51,13 @@ class AdvancedSettings {
   private final boolean useSocket = SETTINGS.useSocket();
   private final String suExePath = SETTINGS.getSuExePath();
 
-  private final AdvSettingsDialogBinding mB;
-
-  AdvancedSettings(MainActivity activity) {
-    mA = activity;
-    mB = AdvSettingsDialogBinding.inflate(mA.getLayoutInflater());
+  @Nullable
+  @Override
+  public View onCreateView(
+      @NonNull LayoutInflater inflater,
+      @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    mB = AdvSettingsDialogBinding.inflate(mA.getLayoutInflater(), container, container != null);
 
     spinnerUids = Arrays.asList(mA.getResources().getStringArray(R.array.daemon_uids));
     spinnerContexts = Arrays.asList(mA.getResources().getStringArray(R.array.daemon_contexts));
@@ -62,7 +76,7 @@ class AdvancedSettings {
     }
     contextSelectedPos = spinnerContexts.indexOf(getString(contextResId));
 
-    mAdvancedSettingsFlavor = new AdvancedSettingsFlavor(mA, mB);
+    mAdvancedSettingsFlavor = new AdvancedSettingsFlavor((MainActivity) mA, mB);
 
     mB.daemonUidListArrow.setOnClickListener(v -> mB.daemonUidList.performClick());
     mB.daemonContextListArrow.setOnClickListener(v -> mB.daemonContextList.performClick());
@@ -75,26 +89,24 @@ class AdvancedSettings {
     mB.daemonContextList.setSelection(contextSelectedPos);
     mB.suExePath.setText(suExePath);
     mB.suExePath.addTextChangedListener(new SuPathWatcher());
-  }
 
-  AlertDialog createDialog() {
-    Builder builder =
-        new Builder(mA)
-            .setTitle(R.string.advanced_settings_menu_item)
-            .setView(mB.getRoot())
-            .setPositiveButton(R.string.save, (d, which) -> saveSettings())
-            .setNegativeButton(android.R.string.cancel, null);
+    mB.posButton.setOnClickListener(
+        v -> {
+          saveSettings();
+          dismiss();
+        });
 
-    AlertDialog dialog;
+    mB.negButton.setOnClickListener(v -> dismiss());
     if (SETTINGS.isRootGranted() && !SETTINGS.isAdbConnected()) {
-      builder.setNeutralButton(
-          R.string.switch_to_adb, (d, w) -> Utils.runInBg(() -> switchToAdb(false)));
-      dialog = builder.create();
-      Utils.removeButtonPadding(dialog);
-    } else {
-      dialog = builder.create();
+      mB.neutralButton.setVisibility(View.VISIBLE);
+      mB.neutralButton.setOnClickListener(
+          v -> {
+            Utils.runInBg(() -> switchToAdb(false));
+            dismiss();
+          });
     }
-    return dialog;
+
+    return mB.getRoot();
   }
 
   private static final int MIN_PORT = 1;
@@ -109,7 +121,12 @@ class AdvancedSettings {
 
     String newPort = mB.adbPort.getText() == null ? null : mB.adbPort.getText().toString().trim();
     if (newPort != null && !TextUtils.isEmpty(newPort) && !adbPort.equals(newPort)) {
-      int port = Integer.parseInt(newPort);
+      int port;
+      try {
+        port = Integer.parseInt(newPort);
+      } catch (NumberFormatException ignored) {
+        port = -1;
+      }
       if (port > MAX_PORT || port < MIN_PORT) {
         Utils.showToast(R.string.bad_port_number);
       } else {
@@ -177,7 +194,7 @@ class AdvancedSettings {
     if (SETTINGS.isRootGranted() && switchToAdb) {
       Utils.runInBg(() -> switchToAdb(restartDaemon));
     } else if (restartDaemon) {
-      mA.restartPrivDaemon(!switchToAdb);
+      ((MainActivity) mA).restartPrivDaemon(!switchToAdb);
     }
   }
 
@@ -233,17 +250,13 @@ class AdvancedSettings {
 
   private void restartDaemonWithAdb() {
     Log.i(TAG, "Restarting daemon");
-    mA.restartPrivDaemon(false);
+    ((MainActivity) mA).restartPrivDaemon(false);
     Utils.runInFg(
         mA,
         () -> {
-          mA.showSnackBar(getString(R.string.connected_to_adb), 5000);
-          mA.setNavigationMenu(); // To check Adb CheckBox
+          ((MainActivity) mA).showSnackBar(getString(R.string.connected_to_adb), 5000);
+          ((MainActivity) mA).setNavigationMenu(); // To check Adb CheckBox
         });
-  }
-
-  private String getString(int resId) {
-    return App.getContext().getString(resId);
   }
 
   @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -253,6 +266,7 @@ class AdvancedSettings {
   }
 
   private class PortNumberWatcher implements TextWatcher {
+
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -261,7 +275,12 @@ class AdvancedSettings {
       if (TextUtils.isEmpty(s)) {
         return;
       }
-      int port = Integer.parseInt(s.toString().trim());
+      int port;
+      try {
+        port = Integer.parseInt(s.toString().trim());
+      } catch (NumberFormatException ignored) {
+        port = -1;
+      }
       if (port > MAX_PORT || port < MIN_PORT) {
         mB.adbPort.setError(getString(R.string.bad_port_number), null);
       }

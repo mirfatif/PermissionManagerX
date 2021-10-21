@@ -1,10 +1,15 @@
-# PermissionManagerX [![Download](https://img.shields.io/github/v/release/mirfatif/PermissionManagerX?label="Download")](https://github.com/mirfatif/PermissionManagerX/releases/latest)
+# PermissionManagerX
 eXtended Permission Manager for Android - view and set Manifest Permissions and AppOps
 
 <a href="https://f-droid.org/packages/com.mirfatif.permissionmanagerx"><img alt="Get it on F-Droid" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" height="100"></a>
-<a href="https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="100"></a>
-<a href="https://apt.izzysoft.de/fdroid/index/apk/com.mirfatif.permissionmanagerx"><img alt="Get it on F-Droid" src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="100"></a>
-<a href="https://amzn.to/2Ij50j4"><img alt="Available at Amazon AppStore" src="https://user-images.githubusercontent.com/33040459/98554253-56c9d600-22c2-11eb-83ba-bd24fb1263ae.png" height="100"></a>
+<a href="https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="100"></a>  
+<a href="https://apt.izzysoft.de/fdroid/index/apk/com.mirfatif.permissionmanagerx"><img alt="Get it on IzzyOnDroid" src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="100"></a>
+<a href="https://amzn.to/2Ij50j4"><img alt="Available at Amazon AppStore" src="https://user-images.githubusercontent.com/33040459/98554253-56c9d600-22c2-11eb-83ba-bd24fb1263ae.png" height="100"></a>  
+<a href="https://mirfatif.github.io/mirfatif/getpro"><img alt="Get Pro Features" src="https://user-images.githubusercontent.com/33040459/137955720-51f667ab-ea09-4b1d-9626-0b857e5f1673.png" height="100"></a>
+
+[![Github](https://img.shields.io/github/v/release/mirfatif/PermissionManagerX?label="Github")](https://github.com/mirfatif/PermissionManagerX/releases/latest) [![F-Droid](https://img.shields.io/f-droid/v/com.mirfatif.permissionmanagerx.svg?label="F-Droid")](https://f-droid.org/packages/com.mirfatif.permissionmanagerx) [![IzzyOnDroid](https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx)](https://apt.izzysoft.de/fdroid/index/apk/com.mirfatif.permissionmanagerx) [![Telegram](https://img.shields.io/endpoint?url=https://mirfatif.github.io/mirfatif/pmx_version.json)](https://t.me/mirfatifApps)
+
+<sup>* Join Telegram support group to get instant updates and test beta releases.</sup>
 
 ## Features
 Using e<b>X</b>tended <b>Permission Manager</b>, for each installed app, on single screen, you can:
@@ -37,7 +42,11 @@ Confused? We are here to explain. Please start with:
 
 ## Privacy Policy
 
-[https://mirfatif.github.io/PermissionManagerX/privacy_policy.html](https://mirfatif.github.io/PermissionManagerX/privacy_policy.html)
+[Privacy Policy](https://mirfatif.github.io/PermissionManagerX/privacy_policy.html)
+
+## Paid Features
+
+[Paid Features](https://mirfatif.github.io/PermissionManagerX/help/help#paid_features)
 
 ## Screenshots
 
@@ -56,13 +65,13 @@ Confused? We are here to explain. Please start with:
 
 ## Third-Party Libraries
 Credits and thanks to the developers of:
-* https://github.com/androidx/androidx
-* https://github.com/anggrayudi/android-hidden-api
-* https://github.com/cgutman/AdbLib
-* https://github.com/sherter/google-java-format-gradle-plugin
-* https://github.com/material-components/material-components-android
-* https://github.com/saket/Better-Link-Movement-Method
-* https://github.com/square/leakcanary
+* [Android Jetpack](https://github.com/androidx/androidx)
+* [Android Hidden APIs](https://github.com/anggrayudi/android-hidden-api)
+* [AdbLib](https://github.com/cgutman/AdbLib)
+* [Sherter's GoogleJavaFormat](https://github.com/sherter/google-java-format-gradle-plugin)
+* [Material Components for Android](https://github.com/material-components/material-components-android)
+* [BetterLinkMovementMethod](https://github.com/saket/Better-Link-Movement-Method)
+* [LeakCanary](https://github.com/square/leakcanary)
 
 ## License [![License](https://img.shields.io/github/license/mirfatif/PermissionManagerX?label="License")](https://github.com/mirfatif/PermissionManagerX/blob/master/LICENSE)
 
@@ -81,11 +90,21 @@ You **CANNOT** use and distribute the app icon in anyway, except for **Permissio
     You should have received a copy of the Affero GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-## Need help?
+## Need Help?
 
-See guide and FAQs: [https://mirfatif.github.io/PermissionManagerX/help/help.html](https://mirfatif.github.io/PermissionManagerX/help/help.html)
+See [Guide and FAQs](https://mirfatif.github.io/PermissionManagerX/help/help.html).
 
-## Contact Us
+## Want To Support Us?
 
-**Telegram:** [https://t.me/PermissionManagerX](https://t.me/PermissionManagerX)  
-**Email:** [mirfatif@gmail.com](mailto:mirfatif@gmail.com)
+|<a href="https://www.buymeacoffee.com/mirfatif"><img src="https://cdn.buymeacoffee.com/buttons/default-white.png" alt="Buy Me A Coffee" height="45" width="170"></a>|&nbsp;&nbsp;<a href="http://mirfatif.github.io/mirfatif/bitcoin_redirect"><img src="http://mirfatif.github.io/mirfatif/logos/btc_button.png" alt="Donate Bitcoin" height="37" width="150"/></a>&nbsp;&nbsp;|
+|-|-|
+
+&nbsp;&nbsp;&nbsp;(`bitcoin:18ijfsv5fcDKQ6CTe4wycKxZMmti4oUXjW`)
+
+## Want To Reach Us?
+
+<table>
+    <td>&nbsp;<a href="https://t.me/PermissionManagerX"><img src="https://github.com/mirfatif/mirfatif/blob/main/logos/telegram.png" height="25"> Telegram</img></a>&nbsp;</td>
+    <td><a href="https://forum.xda-developers.com/t/app-7-0-permission-manager-x-manage-appops-and-manifest-permissions.4187657"><img src="https://github.com/mirfatif/mirfatif/blob/main/logos/xda.png" height="23" width="21"> XDA Thread</img></a></td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="mailto:mirfatif@gmail.com"><img src="https://github.com/mirfatif/mirfatif/blob/main/logos/email.png" height="22" width="25"> Email</img></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</table>

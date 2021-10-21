@@ -1,8 +1,10 @@
 package com.mirfatif.permissionmanagerx.ui.base;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MenuItem;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +33,16 @@ public class BaseActivity extends AppCompatActivity {
   @Override
   protected void attachBaseContext(Context context) {
     super.attachBaseContext(Utils.setLocale(context));
+  }
+
+  @Override
+  public void onConfigurationChanged(@NonNull Configuration newConfig) {
+    super.onConfigurationChanged(Utils.setLocale(newConfig));
+  }
+
+  @Override
+  public void applyOverrideConfiguration(Configuration overrideConfiguration) {
+    super.applyOverrideConfiguration(Utils.setLocale(overrideConfiguration));
   }
 
   /*

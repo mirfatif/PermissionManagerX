@@ -10,8 +10,13 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.SystemClock;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.style.MetricAffectingSpan;
 import android.util.Log;
+import androidx.annotation.NonNull;
 import androidx.room.Room;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
@@ -612,14 +617,21 @@ public enum MySettings {
         continue;
       }
       if (packageLabel.equals(packageName)) {
-        excludedAppsPairList.add(new Pair(packageLabel, packageName));
+        excludedAppsPairList.add(new Pair(new SpannableString(packageLabel), packageName));
       } else {
-        excludedAppsPairList.add(new Pair(packageLabel + "\n(" + packageName + ")", packageName));
+
+        SpannableString string = new SpannableString(packageLabel + "\n" + packageName);
+        string.setSpan(
+            new SmallTextSpan(),
+            packageLabel.length(),
+            string.length(),
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        excludedAppsPairList.add(new Pair(string, packageName));
       }
     }
 
     // List can be sorted now
-    excludedAppsPairList.sort(Comparator.comparing(o -> o.packageLabel.toUpperCase()));
+    excludedAppsPairList.sort(Comparator.comparing(o -> o.packageLabel.toString().toUpperCase()));
 
     // Separate the pair elements to sorted ordered lists.
     CharSequence[] excludedAppsLabels = new CharSequence[excludedAppsPairList.size()];
@@ -639,6 +651,19 @@ public enum MySettings {
       mPrefs.edit().putStringSet(mExcludedAppsPrefKey, new HashSet<>(mExcludedApps)).apply();
     }
     releaseExcludedAppsLock();
+  }
+
+  private static class SmallTextSpan extends MetricAffectingSpan {
+
+    @Override
+    public void updateDrawState(TextPaint tp) {
+      tp.setTextSize(tp.getTextSize() * 4 / 5);
+    }
+
+    @Override
+    public void updateMeasureState(@NonNull TextPaint textPaint) {
+      updateDrawState(textPaint);
+    }
   }
 
   public void clearExcludedAppsList() {
@@ -830,10 +855,10 @@ public enum MySettings {
 
   private static class Pair {
 
-    String packageLabel;
+    SpannableString packageLabel;
     String packageName;
 
-    Pair(String packageLabel, String packageName) {
+    Pair(SpannableString packageLabel, String packageName) {
       this.packageLabel = packageLabel;
       this.packageName = packageName;
     }

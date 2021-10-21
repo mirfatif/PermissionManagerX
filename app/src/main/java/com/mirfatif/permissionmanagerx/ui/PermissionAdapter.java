@@ -202,7 +202,7 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
     return ColorUtils.blendARGB(mOrigTextColor, Color.RED, 0.75f);
   }
 
-  private String getLocalizedMode(String appOpMode) {
+  static String getLocalizedMode(String appOpMode) {
     switch (appOpMode.toLowerCase()) {
       case Commands.APP_OP_MODE_ALLOW:
         return getString(R.string.app_op_mode_allow);

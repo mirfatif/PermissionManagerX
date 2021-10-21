@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Permission Manager X</string>
   <!-- CHAR_LIMIT
        Button: 10
        Toast/SnackBar: 20
@@ -17,14 +16,15 @@
   <string name="open_drawer">Abrir</string>
   <string name="close_drawer">Cerrar</string>
   <string name="contact" maxLength="10">Escribir Ahora</string>
-  <string name="i_will" maxLength="10">Lo haré</string>
-  <string name="rate" maxLength="10">Puntuar ahora</string>
   <string name="do_not_remind" maxLength="10">No Recordar</string>
   <string name="get_help" maxLength="10">Obtener Ayuda</string>
   <string name="switch_to_adb" maxLength="10">Cambiar a ADB</string>
   <string name="_continue" maxLength="10">¿Continuar?</string>
   <string name="warning" maxLength="15">Advertencia</string>
-  <string name="apps">aplicaciones</string>
+  <plurals name="apps_count">
+    <item quantity="one">%d app</item>
+    <item quantity="other">%d apps</item>
+  </plurals>
   <!-- MainActivity Navigation Drawer / menu items -->
   <string name="search_menu_item" maxLength="15">Buscar</string>
   <string name="settings_menu_item" maxLength="15">Ajustes</string>
@@ -38,7 +38,7 @@
   <string name="about_menu_item" maxLength="15">Acerca de</string>
   <string name="advanced_settings_menu_item" maxLength="15">Ajustes Avanzados</string>
   <string name="hidden_apis" maxLength="15">APIs Ocultas</string>
-  <string name="use_hidden_apis" maxLength="20">Usar APIs Ocultar</string>
+  <string name="use_hidden_apis" maxLength="20">Usar APIs Ocultas</string>
   <string name="dex_tmp_dir" maxLength="20">Correr Daemon desde Carpeta Temporal</string>
   <string name="adb_only_settings" maxLength="15">Ajustes Solo-ADB</string>
   <string name="root_only_settings" maxLength="15">Ajustes Solo-Root</string>
@@ -253,20 +253,6 @@
   <string name="privacy_policy" maxLength="20">Política de privacidad</string>
   <string name="translations">Traducciones</string>
   <string name="translations_summary">¿Quieres ver la aplicación en tu lenguaje?</string>
-  <string name="language_credits"><![CDATA[      <b>Ruso</b>
-      <ul>
-        <li>Rikishi007 (rikishi0071@gmail.com)</li>
-        <li>tommynok <a href="https://crowdin.com/profile/tommynok">ENLACE</a></li>
-        <li>siebenbrodt <a href="https://crowdin.com/profile/siebenbrodt">ENLACE</a></li>
-      </ul>
-      <br/>
-      <b>Spanish</b>
-      <ul>
-        <li>LuisAlfredo92 <a href="https://crowdin.com/profile/luisalfredo92">ENLACE</a></li>
-      </ul>
-      <br/>
-      <a href="https://crowdin.com/project/pmx"><b>Añadir mi lenguaje</b></a>
-    ]]></string>
   <string name="share">Compartir</string>
   <string name="share_summary">Compartir la aplicación con otros</string>
   <string name="share_text">¡Mira esta asombrosa aplicación! %1$s</string>
@@ -282,7 +268,6 @@
   <string name="send_bitcoin">Enviar Bitcoin</string>
   <string name="no_bitcoin_app_installed">"Aplicación de Cartera Bitcoin no encontrada"</string>
   <string name="ask_for_bank_account">Solicitar Cuenta Bancaria</string>
-  <string name="get_paid_version_from_ps">Obtén la Versión de Paga Desde Play Store</string>
   <!-- Notification Channels -->
   <string name="channel_app_update">Actualizaciones de la aplicación</string>
   <string name="channel_crash_report">Reporte de fallos</string>

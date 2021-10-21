@@ -3,8 +3,10 @@ package com.mirfatif.permissionmanagerx.app;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.util.Log;
+import androidx.annotation.NonNull;
 import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
 import com.mirfatif.permissionmanagerx.svc.LogcatService;
 import com.mirfatif.permissionmanagerx.util.Utils;
@@ -24,7 +26,7 @@ public class App extends Application {
   public void onCreate() {
     super.onCreate();
     sContext = getApplicationContext();
-    updateContext();
+    setLocale();
     defaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 
     Thread.setDefaultUncaughtExceptionHandler(
@@ -47,8 +49,13 @@ public class App extends Application {
     Utils.runInBg(this::getEncPrefs);
   }
 
-  public static void updateContext() {
-    sContext = Utils.setLocale(sContext);
+  @Override
+  public void onConfigurationChanged(@NonNull Configuration newConfig) {
+    super.onConfigurationChanged(Utils.setLocale(newConfig));
+  }
+
+  public static void setLocale() {
+    Utils.setLocale(sContext);
   }
 
   public static Context getContext() {

@@ -7,7 +7,12 @@ import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.style.MetricAffectingSpan;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.preference.CheckBoxPreference;
@@ -16,6 +21,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.util.Utils;
+import com.mirfatif.privtasks.PrivTasks;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -209,12 +215,36 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
           SETTINGS.getExtraAppOpsLock();
           List<String> appOpsList = new ArrayList<>(APP_OPS_PARSER.getAppOpsList());
           appOpsList.sort(Comparator.comparing(String::toUpperCase));
+          CharSequence[] appOpsArray = new CharSequence[appOpsList.size()];
+          for (int i = 0; i < appOpsArray.length; i++) {
+            String extraAppOp = appOpsList.get(i);
+            if (PrivTasks.UNKNOWN_OP.equals(extraAppOp)) {
+              SpannableString string = new SpannableString(extraAppOp);
+              string.setSpan(
+                  new RedTextSpan(), 0, string.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+              appOpsArray[i] = string;
+            } else {
+              appOpsArray[i] = extraAppOp;
+            }
+          }
           Set<String> extraAppOps = SETTINGS.getExtraAppOps();
 
-          Utils.runInFg(
-              this, () -> updateExtraAppOpsView(appOpsList.toArray(new String[0]), extraAppOps));
+          Utils.runInFg(this, () -> updateExtraAppOpsView(appOpsArray, extraAppOps));
           SETTINGS.releaseExtraAppOpsLock();
         });
+  }
+
+  private static class RedTextSpan extends MetricAffectingSpan {
+
+    @Override
+    public void updateDrawState(TextPaint tp) {
+      tp.setColor(Color.RED);
+    }
+
+    @Override
+    public void updateMeasureState(@NonNull TextPaint textPaint) {
+      updateDrawState(textPaint);
+    }
   }
 
   private void updateExcludedAppsView(
@@ -232,7 +262,9 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     } else {
       String message = excludedApps[0].toString();
       int count = appCount - 1;
-      message = Utils.getQtyString(R.plurals.and_others_count, count, message, count);
+      if (count > 0) {
+        message = Utils.getQtyString(R.plurals.and_others_count, count, message, count);
+      }
       excludedAppsListView.setSummary(message);
     }
     excludedAppsListView.setEnabled(manuallyExcludeAppsView.isChecked() && appCount != 0);
@@ -252,7 +284,9 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     } else {
       String message = excludedPerms[0].toString();
       int count = permCount - 1;
-      message = Utils.getQtyString(R.plurals.and_others_count, count, message, count);
+      if (count > 0) {
+        message = Utils.getQtyString(R.plurals.and_others_count, count, message, count);
+      }
       excludedPermsListView.setSummary(message);
     }
     excludedPermsListView.setEnabled(manuallyExcludePermsView.isChecked() && permCount != 0);
@@ -286,9 +320,12 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
       extraAppOpsCount--;
       // Without providing context, getString() crashes with: "Fragment ... not attached to a
       // context" on rotation. getActivity() may also return null.
-      extraAppOpsListView.setSummary(
-          Utils.getQtyString(
-              R.plurals.and_others_count, extraAppOpsCount, message, extraAppOpsCount));
+      if (extraAppOpsCount > 0) {
+        message =
+            Utils.getQtyString(
+                R.plurals.and_others_count, extraAppOpsCount, message, extraAppOpsCount);
+      }
+      extraAppOpsListView.setSummary(message);
     }
     extraAppOpsListView.setEnabled(showExtraAppOpsView.isChecked() && appOpsCount != 0);
   }

@@ -37,11 +37,12 @@
       <TextView
         android:id="@+id/pkg_label_v"
         android:textStyle="bold"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="1dp"
         android:ellipsize="end"
-        android:maxLines="1" />
+        android:maxLines="1"
+        android:textAlignment="viewStart" />
 
       <TextView
         android:id="@+id/pkg_name_v"
@@ -49,7 +50,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="1dp"
         android:ellipsize="end"
-        android:maxLines="1" />
+        android:maxLines="1"
+        android:textAlignment="viewStart" />
 
       <TextView
         android:id="@+id/pkg_state_v"
@@ -58,6 +60,7 @@
         android:layout_margin="1dp"
         android:ellipsize="end"
         android:maxLines="1"
+        android:textAlignment="viewStart"
         app:autoSizeTextType="uniform" />
 
       <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
@@ -70,12 +73,14 @@
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_weight="1"
-          android:layout_marginEnd="1dp" />
+          android:layout_marginEnd="1dp"
+          android:textAlignment="viewStart" />
 
         <TextView
           android:id="@+id/date_v"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:textAlignment="viewStart"
           android:textSize="12sp" />
 
       </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
