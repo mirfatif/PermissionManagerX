@@ -58,8 +58,7 @@
   <!-- MainActivity strings -->
   <string name="primary_account" maxLength="15">Primary Account</string>
   <string name="primary_profile_only">Permission Manager X can run only in primary user account /
-    device owner profile.
-  </string>
+    device owner profile.</string>
   <string name="deep_search" maxLength="12">Deep Search (Permissions)</string>
   <string name="case_sensitive_search" maxLength="12">Case Sensitive Search</string>
   <string name="grant_root_or_adb">Grant root access or connect to ADB to start privileged process.</string>
@@ -120,8 +119,7 @@
   <string name="privileges" maxLength="15">"Privileges"</string>
   <string name="hidden_apis_warning" maxLength="20">Hidden APIs are blacklisted, switching to daemon</string>
   <string name="hidden_apis_confirmation">Some ROMs allow using system\'s hidden APIs. Daemon mode might
-    be slower. Stop using hidden APIs?
-  </string>
+    be slower. Stop using hidden APIs?</string>
   <string name="bad_port_number" maxLength="15">Bad port number</string>
   <string name="bad_path" maxLength="15">Bad path</string>
   <string name="granting_permission_failed" maxLength="20">Granting permission failed: %1$s</string>
@@ -129,25 +127,21 @@
   <string name="crash_report" maxLength="15">Crash Report</string>
   <string name="ask_to_report_crash_small" maxLength="30">Send crash report to the developer</string>
   <string name="ask_to_report_crash">Sorry, a component of the app had a problem and crashed.
-    Send the log file to the developer through email or Telegram so that the bug can be fixed.
-  </string>
+    Send the log file to the developer through email or Telegram so that the bug can be fixed.</string>
   <string name="send_report" maxLength="10">Send Report</string>
   <string name="disable_pkg_warning" comment="'system' or 'framework'">Disabling a %1$s app is a
-    dangerous action. In worst-case scenario Android system may crash.\nAre you sure you want to continue?
-  </string>
+    dangerous action. In worst-case scenario Android system may crash.\nAre you sure you want to
+    continue?</string>
   <string name="pkg_state_disabled2" searchStr="true">%s, Disabled</string>
 
   <!-- Feedback -->
   <string name="love_using_app" maxLength="20">Liking Permission Manager X?</string>
   <string name="purchase_and_rate_the_app">You can help us improve the app by making a small donation
-    or leaving a good app review so that we are able to better serve your needs.
-  </string>
+    or leaving a good app review so that we are able to better serve your needs.</string>
   <string name="rate_the_app">Good ratings and reviews help us improve the app and we are able to
-    better serve your needs.
-  </string>
+    better serve your needs.</string>
   <string name="ask_to_provide_feedback">Sorry to hear that. You can help improve the app by
-    contacting us via email or Telegram so that we are able to better serve your needs.
-  </string>
+    contacting us via email or Telegram so that we are able to better serve your needs.</string>
   <string name="contact" maxLength="10">Write Now</string>
   <string name="contact_on_telegram" maxLength="10">Write a Message on Telegram</string>
   <string name="contact_on_email" maxLength="10">Write an Email</string>
@@ -155,7 +149,6 @@
   <string name="how_do_i" maxLength="10">How do I?</string>
   <string name="purchase_donate" maxLength="10">Purchase / Donate</string>
   <string name="rate_on_ps" maxLength="10">Rate on Play Store</string>
-  <string name="purchase_pro" maxLength="10">Purchase Pro</string>
   <string name="star_on_github" maxLength="10">Star on GitHub</string>
   <string name="review_on_xda" maxLength="10">Write a Review on XDA</string>
   <string name="thank_you" maxLength="20">Thank you</string>
@@ -185,8 +178,7 @@
   <!-- LogcatService -->
   <string name="logging" maxLength="15">Logging</string>
   <string name="logging_warning">App may respond slow due to log collection and log file may grow
-    up to very large size. Logging is auto-stopped after 5 minutes.
-  </string>
+    up to very large size. Logging is auto-stopped after 5 minutes.</string>
 
   <!-- Buttons-->
   <string name="exclude" maxLength="10">Exclude</string>
@@ -215,8 +207,7 @@
   <string name="something_bad_happened" maxLength="20">Something went wrong</string>
   <string name="change_perms_warning" comment="'system' or 'framework'">Changing permissions of a
     %1$s app is a dangerous action. In worst-case scenario Android system may crash.\nAre you sure
-    you want to continue?
-  </string>
+    you want to continue?</string>
   <string name="system">system</string>
   <string name="framework">framework</string>
 
@@ -351,8 +342,7 @@
   <string name="ask_for_bank_account">Ask For Bank Account</string>
   <string name="buy_me_a_coffee">Buy Me A Coffee</string>
   <string name="bank_account_request" translatable="false">Hello,\n\nI need your IBAN and SWIFT/BIC
-    to make a donation.
-  </string>
+    to make a donation.</string>
   <string name="get_pro_version">Get Pro Version</string>
   <string name="get_ps_version">Get Play Store Version</string>
 
@@ -375,8 +365,7 @@
   <!-- DaemonCmdRcvSvc: Daemon return messages -->
   <string name="daemon_listen_on_loopback_failed" maxLength="20">Daemon failed to listen on 127.0.0.1</string>
   <string name="daemon_establish_connection_failed" maxLength="20">Daemon failed to establish
-    connection with client
-  </string>
+    connection with client</string>
   <string name="daemon_wrong_args_received" maxLength="20">Wrong arguments</string>
   <string name="daemon_set_app_ops_mode_failed" maxLength="20">Setting AppOps mode failed</string>
   <string name="daemon_reset_app_ops_failed" maxLength="20">Resetting AppOps failed</string>
