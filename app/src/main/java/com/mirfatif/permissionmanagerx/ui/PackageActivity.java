@@ -7,7 +7,6 @@ import static com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler.DAEMON_HAN
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -335,11 +334,6 @@ public class PackageActivity extends BaseActivity {
       Util.debugLog(TAG, "onOptionsItemSelected: " + item.getTitle());
     }
 
-    if (item.getItemId() == R.id.action_information) {
-      openAppInfo();
-      return true;
-    }
-
     if (item.getItemId() == R.id.action_reset_app_ops && checkPrivileges()) {
       if (!isPackageNull()) {
         AlertDialogFragment.show(this, null, TAG_RESET_APP_OPS_CONFIRM);
@@ -366,26 +360,6 @@ public class PackageActivity extends BaseActivity {
       res = mPkgActivityFlavor.onOptionsItemSelected(item);
     }
     return res || super.onOptionsItemSelected(item);
-  }
-
-  private void openAppInfo() {
-    if (isPackageNull()) {
-      return;
-    }
-    int pkgUserId = Utils.getUserId(mPackage.getUid());
-    if (Utils.getUserId() == pkgUserId) {
-      startActivity(
-          new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-              .setData(Uri.parse("package:" + mPackage.getName())));
-    } else if (SETTINGS.isPrivDaemonAlive()) {
-      String cmd = Commands.OPEN_APP_INFO + " " + mPackage.getName() + " " + pkgUserId;
-
-      if (SETTINGS.isDebug()) {
-        Util.debugLog(TAG, "openAppInfo: sending command: " + cmd);
-      }
-
-      Utils.runInBg(() -> DAEMON_HANDLER.sendRequest(cmd));
-    }
   }
 
   private void resetAppOps() {

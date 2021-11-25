@@ -172,6 +172,7 @@
   <string name="bmc_url" translatable="false">https://www.buymeacoffee.com/mirfatif</string>
   <string name="xda_url" translatable="false">https://forum.xda-developers.com/t/app-7-0-permission-manager-x-manage-appops-and-manifest-permissions.4187657</string>
   <string name="translation_link" translatable="false">https://crowdin.com/project/pmx</string>
+  <string name="wrun_url" translatable="false">https://github.com/mirfatif/WhatsRunning</string>
 
   <!-- PrivDaemonHandler -->
   <string name="dex_location_changed" maxLength="20">Switching daemon load location</string>
@@ -188,15 +189,12 @@
   </string>
 
   <!-- Buttons-->
-  <string name="disable" maxLength="10">Disable</string>
-  <string name="enable" maxLength="10">Enable</string>
   <string name="exclude" maxLength="10">Exclude</string>
   <string name="clear_reference" maxLength="10" comment="'Clear Reference'">Clear Ref</string>
   <string name="set_reference" maxLength="10" comment="'Set Reference'">Set Ref</string>
   <string name="do_not_ask" maxLength="15">Don\'t ask again</string>
 
   <!-- PackageActivity menu items -->
-  <string name="package_information_menu_item" maxLength="15" comment="'App Information'">App Info</string>
   <string name="reset_app_ops" maxLength="15">Reset AppOps</string>
   <string name="reset_app_ops_confirmation">Reset all AppOps to default modes?</string>
   <string name="clear_references" maxLength="15">Clear References</string>
@@ -204,11 +202,14 @@
   <string name="set_references" maxLength="15">Set References</string>
   <string name="set_references_confirmation">Set all current permission states as references?</string>
 
-  <!--PackageActivity Dialogs-->
-  <string name="exclude_app_from_visible_list">Exclude app from visible list.</string>
-  <string name="enable_app">Enable app.</string>
-  <string name="disable_app">Disable app.</string>
-  <string name="exclude_from_visible_list">%s Exclude from visible list.</string>
+  <!-- MainActivity Dialogs -->
+  <string name="exclude_app_from_visible_list" maxLength="15">Hide app from list</string>
+  <string name="enable_app" maxLength="15">Enable app</string>
+  <string name="disable_app" maxLength="15">Disable app</string>
+  <string name="open_pkg_info" maxLength="15">Open app info</string>
+  <string name="find_pkg_process" maxLength="15">Find app process</string>
+  <string name="install" maxLength="10">Install</string>
+  <string name="wrun_not_installed" maxLength="20">WhatsRunning not installed</string>
 
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">Something went wrong</string>

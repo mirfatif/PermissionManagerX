@@ -35,7 +35,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.ActivityMainBinding;
-import com.mirfatif.permissionmanagerx.databinding.ActivityMainPkgDialogBinding;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.prefs.FilterSettingsActivity;
@@ -284,7 +283,7 @@ public class MainActivity extends BaseActivity {
 
   private static final String CLASS = MainActivity.class.getName();
   private static final String TAG_PRIVS_REQ_FOR_DAEMON = CLASS + ".PRIVS_REQ_FOR_DAEMON";
-  private static final String TAG_GRANT_ROOT_OR_ADB = CLASS + ".GRANT_ROOT_OR_ADB";
+  static final String TAG_GRANT_ROOT_OR_ADB = CLASS + ".GRANT_ROOT_OR_ADB";
   private static final String TAG_ADB_CONNECT_FAILED = CLASS + ".ADB_CONNECT_FAILED";
   private static final String TAG_BACKUP_RESTORE = CLASS + ".TAG_BACKUP_RESTORE";
   public static final String TAG_DONATION = CLASS + ".TAG_DONATION";
@@ -373,55 +372,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onLongClick(Package pkg) {
-      boolean canBeExcluded = SETTINGS.canBeExcluded(pkg);
-      boolean canBeDisabled = pkg.isChangeable() && !pkg.getName().equals(getPackageName());
-      if (!canBeExcluded && !canBeDisabled) {
-        return;
-      }
-
-      Builder builder = new Builder(MainActivity.this);
-      builder.setPositiveButton(
-          R.string.exclude,
-          (dialogInterface, i) ->
-              Utils.runInBg(
-                  () -> {
-                    SETTINGS.addPkgToExcludedApps(pkg.getName());
-                    PKG_PARSER.removePackage(pkg);
-                  }));
-
-      builder.setNegativeButton(android.R.string.cancel, null);
-
-      builder.setNeutralButton(
-          pkg.isEnabled() ? R.string.disable : R.string.enable,
-          (dialog, which) -> setPackageEnabledState(pkg));
-
-      String message;
-      if (canBeDisabled) {
-        if (pkg.isEnabled()) {
-          message = getString(R.string.disable_app);
-        } else {
-          message = getString(R.string.enable_app);
-        }
-        if (canBeExcluded) {
-          message = getString(R.string.exclude_from_visible_list, message);
-        }
-      } else {
-        message = getString(R.string.exclude_app_from_visible_list);
-      }
-
-      ActivityMainPkgDialogBinding b = ActivityMainPkgDialogBinding.inflate(getLayoutInflater());
-
-      b.pkgNameV.setText(pkg.getName());
-      b.msgV.setText(message);
-
-      // Set message, create and show the AlertDialog
-      AlertDialog dialog = builder.setTitle(pkg.getLabel()).setView(b.getRoot()).create();
-      dialog.setOnShowListener(
-          d -> {
-            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(canBeDisabled);
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(canBeExcluded);
-          });
-      AlertDialogFragment.show(MainActivity.this, dialog, "PKG_OPTIONS");
+      new LongPressDialogFrag(pkg).show(getSupportFragmentManager(), "PKG_OPTIONS");
     }
 
     @Override
@@ -546,62 +497,6 @@ public class MainActivity extends BaseActivity {
     if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "setRepeatUpdates: " + rep);
     }
-  }
-
-  private void setPackageEnabledState(Package pkg) {
-    if (!SETTINGS.isPrivDaemonAlive()) {
-      Utils.logDaemonDead(TAG + ": setPackageEnabledState");
-      AlertDialogFragment.show(this, null, TAG_GRANT_ROOT_OR_ADB);
-      return;
-    }
-
-    boolean enabled = pkg.isEnabled();
-
-    String warn = null;
-    if (enabled && SETTINGS.getBoolPref(R.string.pref_main_warn_dang_change_enc_key)) {
-      if (pkg.isFrameworkApp()) {
-        warn = getString(R.string.disable_pkg_warning, getString(R.string.framework));
-      } else if (pkg.isSystemApp()) {
-        warn = getString(R.string.disable_pkg_warning, getString(R.string.system));
-      }
-    }
-
-    if (warn == null) {
-      Utils.runInBg(() -> setPackageEnabledState(pkg, enabled));
-      return;
-    }
-
-    AlertDialog dialog =
-        new Builder(this)
-            .setPositiveButton(
-                R.string.yes,
-                (d, which) -> Utils.runInBg(() -> setPackageEnabledState(pkg, enabled)))
-            .setNegativeButton(R.string.no, null)
-            .setNeutralButton(
-                R.string.do_not_remind,
-                (d, which) -> {
-                  SETTINGS.savePref(R.string.pref_main_warn_dang_change_enc_key, false);
-                  Utils.runInBg(() -> setPackageEnabledState(pkg, enabled));
-                })
-            .setTitle(R.string.warning)
-            .setMessage(Utils.breakParas(warn))
-            .create();
-    AlertDialogFragment.show(this, dialog, "PKG_DISABLE_WARNING");
-  }
-
-  private void setPackageEnabledState(Package pkg, boolean enabled) {
-    String command = pkg.getName() + " " + Utils.getUserId(pkg.getUid());
-    if (enabled) {
-      command = Commands.DISABLE_PACKAGE + " " + command;
-    } else {
-      command = Commands.ENABLE_PACKAGE + " " + command;
-    }
-
-    if (SETTINGS.isDebug()) {
-      Util.debugLog(TAG, "setPkgEnabledState: sending command: " + command);
-    }
-    DAEMON_HANDLER.sendRequest(command);
-    PKG_PARSER.updatePackage(pkg);
   }
 
   void showSnackBar(String text, int duration) {
