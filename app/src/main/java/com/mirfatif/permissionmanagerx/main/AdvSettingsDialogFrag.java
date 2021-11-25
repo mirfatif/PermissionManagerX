@@ -194,7 +194,7 @@ public class AdvSettingsDialogFrag extends BottomSheetDialogFrag {
     if (SETTINGS.isRootGranted() && switchToAdb) {
       Utils.runInBg(() -> switchToAdb(restartDaemon));
     } else if (restartDaemon) {
-      ((MainActivity) mA).restartPrivDaemon(!switchToAdb);
+      ((MainActivity) mA).restartPrivDaemon(!switchToAdb, true);
     }
   }
 
@@ -250,7 +250,7 @@ public class AdvSettingsDialogFrag extends BottomSheetDialogFrag {
 
   private void restartDaemonWithAdb() {
     Log.i(TAG, "Restarting daemon");
-    ((MainActivity) mA).restartPrivDaemon(false);
+    ((MainActivity) mA).restartPrivDaemon(false, true);
     Utils.runInFg(
         mA,
         () -> {

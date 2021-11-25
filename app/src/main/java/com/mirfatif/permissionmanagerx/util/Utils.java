@@ -131,6 +131,10 @@ public class Utils {
     return mExecutor.submit(runnable);
   }
 
+  public static boolean isMainThread() {
+    return Thread.currentThread() == Looper.getMainLooper().getThread();
+  }
+
   public static void runCommand(String tag, String... cmd) {
     Process process = runCommand(tag, true, cmd);
     if (process == null) {
@@ -549,13 +553,14 @@ public class Utils {
   }
 
   // With longer button text, unnecessary bottom padding is added to dialog.
-  public static void removeButtonPadding(AlertDialog dialog) {
+  public static AlertDialog removeButtonPadding(AlertDialog dialog) {
     dialog.setOnShowListener(
         d -> {
           Button b = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
           int padding = dpToPx(4);
           b.setPadding(b.getPaddingLeft(), padding, padding, padding);
         });
+    return dialog;
   }
 
   public static Spanned htmlToString(int resId) {

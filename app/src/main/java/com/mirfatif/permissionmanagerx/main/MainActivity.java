@@ -11,7 +11,6 @@ import static com.mirfatif.permissionmanagerx.util.Utils.getQtyString;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
@@ -54,8 +53,6 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 public class MainActivity extends BaseActivity {
 
@@ -129,24 +126,10 @@ public class MainActivity extends BaseActivity {
           }
         });
 
-    Future<?> checkRootAndAdbFuture =
-        Utils.runInBg(
-            () -> {
-              Utils.runInFg(this, () -> mB.rndProgTextV.setText(R.string.checking_root_access));
-              Utils.checkRootIfEnabled();
-              Utils.runInFg(this, () -> mB.rndProgTextV.setText(R.string.checking_adb_access));
-              Utils.checkAdbIfEnabled();
-            });
+    String action = getIntent().getAction();
 
-    Future<?> privDaemonFuture =
-        Utils.runInBg(
-            () -> {
-              // We need root or ADB to start daemon
-              if (waitForFuture(checkRootAndAdbFuture)) {
-                // Check if we can read AppOps, even if daemon is alive
-                startPrivDaemon(true, true);
-              }
-            });
+    // Check if we can read AppOps, even if daemon is alive
+    Utils.runInBg(() -> startPrivDaemon(true, true, !ACTION_SHOW_DRAWER.equals(action)));
 
     mPackageAdapter = new PackageAdapter(new PkgAdapterCallbackImpl());
 
@@ -165,14 +148,6 @@ public class MainActivity extends BaseActivity {
     mB.recyclerView.setOnScrollChangeListener(
         (v, scrollX, scrollY, oldScrollX, oldScrollY) -> setRepeatUpdates());
 
-    Utils.runInBg(
-        () -> {
-          // Do not run through PackageParser unless privileged daemon is up
-          if (waitForFuture(privDaemonFuture)) {
-            Utils.runInFg(this, this::setLiveDataObservers);
-          }
-        });
-
     // Clear search query on activity refresh
     if (mSearchView != null) {
       collapseSearchView();
@@ -181,7 +156,7 @@ public class MainActivity extends BaseActivity {
     }
 
     // Increment app launch count
-    if (Intent.ACTION_MAIN.equals(getIntent().getAction())) {
+    if (Intent.ACTION_MAIN.equals(action)) {
       SETTINGS.plusAppLaunchCount();
     }
 
@@ -283,33 +258,27 @@ public class MainActivity extends BaseActivity {
 
   private static final String CLASS = MainActivity.class.getName();
   private static final String TAG_PRIVS_REQ_FOR_DAEMON = CLASS + ".PRIVS_REQ_FOR_DAEMON";
-  static final String TAG_GRANT_ROOT_OR_ADB = CLASS + ".GRANT_ROOT_OR_ADB";
+  private static final String TAG_GRANT_ROOT_OR_ADB = CLASS + ".GRANT_ROOT_OR_ADB";
   private static final String TAG_ADB_CONNECT_FAILED = CLASS + ".ADB_CONNECT_FAILED";
   private static final String TAG_BACKUP_RESTORE = CLASS + ".TAG_BACKUP_RESTORE";
   public static final String TAG_DONATION = CLASS + ".TAG_DONATION";
 
   @Override
   public AlertDialog createDialog(String tag, AlertDialogFragment dialogFragment) {
-    if (TAG_PRIVS_REQ_FOR_DAEMON.equals(tag)) {
-      AlertDialog dialog =
+    if (TAG_PRIVS_REQ_FOR_DAEMON.equals(tag) || TAG_GRANT_ROOT_OR_ADB.equals(tag)) {
+      Builder builder =
           new Builder(this)
               .setPositiveButton(android.R.string.ok, (d, which) -> openDrawerForPrivileges())
-              .setNeutralButton(R.string.do_not_remind, (d, which) -> SETTINGS.setPrivReminderOff())
-              .setNegativeButton(R.string.get_help, (d, which) -> HelpActivity.start(this))
               .setTitle(R.string.privileges)
-              .setMessage(getString(R.string.grant_root_or_adb))
-              .create();
-      Utils.removeButtonPadding(dialog);
-      return dialog;
-    }
-
-    if (TAG_GRANT_ROOT_OR_ADB.equals(tag)) {
-      return new Builder(this)
-          .setPositiveButton(android.R.string.ok, (d, which) -> openDrawerForPrivileges())
-          .setNegativeButton(android.R.string.cancel, null)
-          .setTitle(R.string.privileges)
-          .setMessage(R.string.grant_root_or_adb)
-          .create();
+              .setMessage(getString(R.string.grant_root_or_adb));
+      if (TAG_GRANT_ROOT_OR_ADB.equals(tag)) {
+        builder.setNegativeButton(android.R.string.cancel, null);
+      } else {
+        builder
+            .setNeutralButton(R.string.do_not_remind, (d, which) -> SETTINGS.setPrivReminderOff())
+            .setNegativeButton(R.string.get_help, (d, which) -> HelpActivity.start(this));
+      }
+      return Utils.removeButtonPadding(builder.create());
     }
 
     if (TAG_ADB_CONNECT_FAILED.equals(tag)) {
@@ -381,11 +350,23 @@ public class MainActivity extends BaseActivity {
     }
   }
 
-  private void setLiveDataObservers() {
+  private boolean mObserversSet = false;
+
+  private synchronized void setLiveDataObservers(boolean updateList) {
+    if (mObserversSet) {
+      if (updateList) {
+        // Observers are already set, just update the package list.
+        PKG_PARSER.updatePackagesList();
+      }
+      return;
+    }
+
     PKG_PARSER.getProgressMax().observe(this, this::setMaxProgress);
     PKG_PARSER.getProgressNow().observe(this, this::setNowProgress);
     PKG_PARSER.getPackagesListLive().observe(this, this::packagesListReceived);
     PKG_PARSER.getChangedPackage().observe(this, this::packageChanged);
+
+    mObserversSet = true;
   }
 
   private void setMaxProgress(Integer progressMax) {
@@ -508,19 +489,6 @@ public class MainActivity extends BaseActivity {
           snackBar.getView().setBackgroundColor(getColor(R.color.dynamicBackground));
           snackBar.show();
         });
-  }
-
-  private boolean waitForFuture(Future<?> future) {
-    if (future == null) {
-      return false;
-    }
-    try {
-      future.get();
-      return true;
-    } catch (ExecutionException | InterruptedException e) {
-      e.printStackTrace();
-      return false;
-    }
   }
 
   // If called from PackageActivity or WR
@@ -651,7 +619,12 @@ public class MainActivity extends BaseActivity {
 
   private static final Object START_DAEMON_LOCK = new Object();
 
-  private void startPrivDaemon(boolean isFirstRun, boolean preferRoot) {
+  private void startPrivDaemon(boolean isFirstRun, boolean preferRoot, boolean showDialog) {
+    // We need root or ADB to start daemon.
+    if (isFirstRun) {
+      checkRootAdb();
+    }
+
     synchronized (START_DAEMON_LOCK) {
       if (!SETTINGS.isPrivDaemonAlive()) {
         if (SETTINGS.isDebug()) {
@@ -668,9 +641,18 @@ public class MainActivity extends BaseActivity {
           }
         } else {
           Log.w(TAG, "startPrivDaemon: Root access: unavailable, ADB shell: unavailable");
-          if (SETTINGS.shouldRemindMissingPrivileges()) {
-            Utils.runInFg(
-                this, () -> AlertDialogFragment.show(this, null, TAG_PRIVS_REQ_FOR_DAEMON));
+
+          if (showDialog) {
+            String tag = null;
+            if (!isFirstRun) {
+              tag = TAG_GRANT_ROOT_OR_ADB;
+            } else if (SETTINGS.shouldRemindMissingPrivileges()) {
+              tag = TAG_PRIVS_REQ_FOR_DAEMON;
+            }
+            if (tag != null) {
+              String finalTag = tag;
+              Utils.runInFg(this, () -> AlertDialogFragment.show(this, null, finalTag));
+            }
           }
         }
       }
@@ -678,27 +660,37 @@ public class MainActivity extends BaseActivity {
       // Get GET_APP_OPS_STATS permission if daemon is up
       checkAppOpsPerm();
 
-      // If have gained privileges
+      /*
+       Do not run through PackageParser unless privileged daemon
+       is up or at least we have AppOps permission granted.
+      */
       if (SETTINGS.isPrivDaemonAlive() || SETTINGS.isAppOpsGranted()) {
-        // If observers are set, update packages list.
-        if (!isFirstRun) {
-          PKG_PARSER.updatePackagesList();
-        }
+        // Set observers and/or update package list.
+        Utils.runInFg(this, () -> setLiveDataObservers(!isFirstRun));
       }
 
       mMainActivityFlavor.onPrivDaemonStarted();
     }
   }
 
-  void restartPrivDaemon(boolean preferRoot) {
-    Utils.runInBg(
-        () -> {
-          if (SETTINGS.isPrivDaemonAlive()) {
-            DAEMON_HANDLER.sendRequest(Commands.SHUTDOWN);
-            SystemClock.sleep(1000); // Let the previous processes cleanup
-          }
-          startPrivDaemon(false, preferRoot);
-        });
+  void restartPrivDaemon(boolean preferRoot, boolean showDialog) {
+    if (Utils.isMainThread()) {
+      Utils.runInBg(() -> restartPrivDaemon(preferRoot, showDialog));
+      return;
+    }
+
+    if (SETTINGS.isPrivDaemonAlive()) {
+      DAEMON_HANDLER.sendRequest(Commands.SHUTDOWN);
+      SystemClock.sleep(1000); // Let the previous processes cleanup
+    }
+    startPrivDaemon(false, preferRoot, showDialog);
+  }
+
+  private void checkRootAdb() {
+    Utils.runInFg(this, () -> mB.rndProgTextV.setText(R.string.checking_root_access));
+    Utils.checkRootIfEnabled();
+    Utils.runInFg(this, () -> mB.rndProgTextV.setText(R.string.checking_adb_access));
+    Utils.checkAdbIfEnabled();
   }
 
   private void checkAppOpsPerm() {
@@ -805,6 +797,7 @@ public class MainActivity extends BaseActivity {
       if (!rootCheckBox.isChecked()) {
         SETTINGS.setRootGranted(false);
         ROOT_DAEMON.stopDaemon();
+        restartPrivDaemon(true, false);
         return true;
       }
 
@@ -815,7 +808,7 @@ public class MainActivity extends BaseActivity {
             if (Utils.checkRoot()) {
               showSnackBar(getString(R.string.root_granted), 5000);
               Utils.runInFg(this, () -> rootCheckBox.setChecked(true));
-              restartPrivDaemon(true);
+              restartPrivDaemon(true, true);
             } else {
               showSnackBar(getString(R.string.getting_root_fail_long), 10000);
             }
@@ -828,6 +821,7 @@ public class MainActivity extends BaseActivity {
       if (!adbCheckBox.isChecked()) {
         SETTINGS.setAdbConnected(false);
         ADB_DAEMON.stopDaemon();
+        restartPrivDaemon(true, false);
         return true;
       }
 
@@ -839,7 +833,7 @@ public class MainActivity extends BaseActivity {
             if (Utils.checkAdb(true)) {
               showSnackBar(getString(R.string.connected_to_adb), 5000);
               Utils.runInFg(this, () -> adbCheckBox.setChecked(true));
-              restartPrivDaemon(false);
+              restartPrivDaemon(false, true);
             } else {
               Utils.runInFg(
                   this, () -> AlertDialogFragment.show(this, null, TAG_ADB_CONNECT_FAILED));
@@ -887,7 +881,7 @@ public class MainActivity extends BaseActivity {
   private static final Object WINDOW_WAITER = new Object();
 
   private void openDrawerForPrivileges() {
-    if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
+    if (Utils.isMainThread()) {
       Utils.runInBg(this::openDrawerForPrivileges);
       return;
     }

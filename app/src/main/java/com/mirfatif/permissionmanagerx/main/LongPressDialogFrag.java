@@ -1,6 +1,5 @@
 package com.mirfatif.permissionmanagerx.main;
 
-import static com.mirfatif.permissionmanagerx.main.MainActivity.TAG_GRANT_ROOT_OR_ADB;
 import static com.mirfatif.permissionmanagerx.parser.PackageParser.PKG_PARSER;
 import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
 import static com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler.DAEMON_HANDLER;
@@ -113,7 +112,7 @@ public class LongPressDialogFrag extends BottomSheetDialogFrag {
     }
     if (!SETTINGS.isPrivDaemonAlive()) {
       Utils.logDaemonDead(TAG + ": setPackageEnabledState");
-      AlertDialogFragment.show(mA, null, TAG_GRANT_ROOT_OR_ADB);
+      ((MainActivity) mA).restartPrivDaemon(true, true);
       return;
     }
 
@@ -184,7 +183,7 @@ public class LongPressDialogFrag extends BottomSheetDialogFrag {
       Utils.runInBg(() -> DAEMON_HANDLER.sendRequest(cmd));
     } else {
       Utils.logDaemonDead(TAG + ": openAppInfo");
-      AlertDialogFragment.show(mA, null, TAG_GRANT_ROOT_OR_ADB);
+      ((MainActivity) mA).restartPrivDaemon(true, true);
     }
   }
 
