@@ -62,10 +62,8 @@ public class MainActivity extends BaseActivity {
 
   private static final String TAG = "MainActivity";
 
-  public static final String ACTION_SHOW_DRAWER = "com.mirfatif.pmx.ACTION_SHOW_DRAWER";
-  public static final String EXTRA_PKG_POSITION = "com.mirfatif.pmx.PKG_POSITION";
-  public static final String ACTION_SEARCH_PACKAGES = "com.mirfatif.pmx.ACTION_SEARCH_PACKAGES";
-  public static final String EXTRA_SEARCH_STRINGS = "com.mirfatif.pmx.SEARCH_STRINGS";
+  public static final String ACTION_SHOW_DRAWER = "com.mirfatif.pmx.action.SHOW_DRAWER";
+  public static final String EXTRA_PKG_POSITION = "com.mirfatif.pmx.extra.PKG_POSITION";
 
   private MainActivityFlavor mMainActivityFlavor;
   private BackupRestore mBackupRestore;
@@ -213,11 +211,8 @@ public class MainActivity extends BaseActivity {
     MenuCompat.setGroupDividerEnabled(menu, true);
 
     MenuItem searchMenuItem = menu.findItem(R.id.action_search);
-    synchronized (SEARCH_VIEW_WAITER) {
-      mSearchView = (SearchView) searchMenuItem.getActionView();
-      setUpSearchView();
-      SEARCH_VIEW_WAITER.notifyAll();
-    }
+    mSearchView = (SearchView) searchMenuItem.getActionView();
+    setUpSearchView();
 
     if (mMainActivityFlavor != null) {
       mMainActivityFlavor.onCreateOptionsMenu(menu);
@@ -467,11 +462,11 @@ public class MainActivity extends BaseActivity {
     mB.movCont.progBarCont.setVisibility(View.VISIBLE);
   }
 
-  // Keep track of received packages, mPackageAdapter.getItemCount() given wrong value.
-  // In PackageParser, Packages LiveList must be updated before updating ProgressBars.
-  private int mVisiblePkgCount;
-
   private void setNowProgress(Integer progressNow) {
+    if (progressNow == null) {
+      return;
+    }
+
     int progress = progressNow;
     if (progress < 0 && mB.movCont.progBar.getMax() > 0) {
       progress = mB.movCont.progBar.getMax();
@@ -505,17 +500,28 @@ public class MainActivity extends BaseActivity {
       }
     }
 
+    /*
+     mPackageAdapter.getItemCount() gives wrong value.
+     In PackageParser, Packages LiveList must be updated before updating ProgressBars.
+    */
+    int size = PKG_PARSER.getPackageListSize();
+
     mB.refreshLayout.setRefreshing(false);
-    if (showPkgCount) {
-      showSnackBar(getQtyString(R.plurals.apps_count, mVisiblePkgCount, mVisiblePkgCount), 5000);
+    if (showPkgCount || size == 0) {
+      showSnackBar(getQtyString(R.plurals.apps_count, size, size), 5000);
     }
+
+    /*
+     Invalidate progress value so that on next
+     Activity#onCreate(), the last value is ignored.
+    */
+    PKG_PARSER.unsetProgress();
   }
 
   private void packagesListReceived(List<Package> packages) {
     if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "pkgListLiveObserver: " + packages.size() + " packages received");
     }
-    mVisiblePkgCount = packages.size();
     mPackageAdapter.submitList(new ArrayList<>(packages));
     setRepeatUpdates();
   }
@@ -628,8 +634,8 @@ public class MainActivity extends BaseActivity {
     if (action != null) {
       if (action.equals(ACTION_SHOW_DRAWER)) {
         openDrawerForPrivileges();
-      } else if (action.equals(ACTION_SEARCH_PACKAGES)) {
-        Utils.runInBg(() -> doSearch(intent));
+      } else if (mMainActivityFlavor != null) {
+        mMainActivityFlavor.handleIntentActions(intent);
       }
     }
   }
@@ -742,41 +748,6 @@ public class MainActivity extends BaseActivity {
     mB.refreshLayout.setRefreshing(!SETTINGS.isDeepSearchEnabled() || !SETTINGS.isSearching());
     PKG_PARSER.newUpdateRequest();
     PKG_PARSER.handleSearchQuery(null);
-  }
-
-  private static final Object SEARCH_VIEW_WAITER = new Object();
-
-  // Do search if called from PackageActivity or WR
-  private void doSearch(Intent intent) {
-    String[] pkgArray = intent.getStringArrayExtra(EXTRA_SEARCH_STRINGS);
-    if (pkgArray == null) {
-      return;
-    }
-
-    synchronized (SEARCH_VIEW_WAITER) {
-      while (mSearchView == null) {
-        try {
-          SEARCH_VIEW_WAITER.wait();
-        } catch (InterruptedException ignored) {
-        }
-      }
-    }
-
-    StringBuilder queryText = new StringBuilder();
-    for (String pkg : pkgArray) {
-      queryText.append(pkg).append("|");
-    }
-
-    SETTINGS.setDeepSearchEnabled(false);
-    SETTINGS.setCaseSensitiveSearch(true);
-
-    Utils.runInFg(
-        this,
-        () -> {
-          mSearchView.setIconified(false);
-          mSearchView.setQuery(queryText.toString(), true);
-          mSearchView.clearFocus();
-        });
   }
 
   //////////////////////////////////////////////////////////////////

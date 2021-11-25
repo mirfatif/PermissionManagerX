@@ -45,6 +45,10 @@ public enum PkgParserFlavor {
     return false;
   }
 
+  public boolean shouldFilterOut() {
+    return true;
+  }
+
   @SuppressWarnings("UnusedDeclaration")
   public boolean isFilteredOut(Package pkg) {
     return false;

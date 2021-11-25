@@ -29,10 +29,6 @@
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
-      <intent-filter>
-        <action android:name="com.mirfatif.pmx.ACTION_SEARCH_PACKAGES" />
-        <category android:name="android.intent.category.DEFAULT" />
-      </intent-filter>
     </activity>
 
     <activity

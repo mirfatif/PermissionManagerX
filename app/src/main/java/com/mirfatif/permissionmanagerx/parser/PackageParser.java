@@ -89,7 +89,7 @@ public enum PackageParser {
   private boolean mIsUpdating;
   private final Object UPDATE_PKG_BG_LOCK = new Object();
 
-  boolean updatePackagesListInBg(boolean isBgDeepScan, boolean quickScan) {
+  private boolean updatePackagesListInBg(boolean isBgDeepScan, boolean quickScan) {
     Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
     synchronized (UPDATE_PKG_BG_LOCK) {
       long startTime = System.currentTimeMillis();
@@ -147,7 +147,11 @@ public enum PackageParser {
 
       PKG_PARSER_FLAVOR.sortPkgListAgain(packageList);
 
-      // finally update complete list and complete progress
+      /*
+       Finally update complete list and complete progress.
+       Packages LiveList must be updated before updating ProgressBars. List
+       size might get queried on final progress status in MainActivity.
+      */
       submitLiveData(packageList, true);
       setProgress(PKG_PROG_ENDS, false, true, isBgDeepScan);
 
@@ -169,6 +173,7 @@ public enum PackageParser {
       if (SETTINGS.isPrivDaemonAlive()) {
         Utils.runInBg(() -> DAEMON_HANDLER.sendRequest(Commands.RESET_OOS));
       }
+
       return true;
     }
   }
@@ -214,7 +219,15 @@ public enum PackageParser {
 
   @SuppressWarnings("UnusedDeclaration")
   List<Package> getPackageList() {
-    return mPackagesList;
+    synchronized (mPackagesList) {
+      return new ArrayList<>(mPackagesList);
+    }
+  }
+
+  public int getPackageListSize() {
+    synchronized (mPackagesList) {
+      return mPackagesList.size();
+    }
   }
 
   public Package getPackage(int position) {
@@ -289,6 +302,10 @@ public enum PackageParser {
   //////////////////////////////////////////////////////////////////
   ///////////////////////// LIVE UPDATES ///////////////////////////
   //////////////////////////////////////////////////////////////////
+
+  public void unsetProgress() {
+    Utils.runInBg(() -> mProgressNow.postValue(null));
+  }
 
   public LiveData<List<Package>> getPackagesListLive() {
     updatePackagesList(); // update list on app (re)launch
@@ -420,34 +437,39 @@ public enum PackageParser {
   @SuppressWarnings("SameParameterValue")
   boolean isPkgUpdated(
       PackageInfo packageInfo, Package pkg, boolean quickScan, boolean applyFilter) {
-    if (applyFilter && PKG_PARSER_FLAVOR.isFilteredOut(packageInfo, pkg)) {
-      return false;
+    boolean shouldFilterOut = true;
+    if (applyFilter) {
+      if (PKG_PARSER_FLAVOR.isFilteredOut(packageInfo, pkg)) {
+        return false;
+      } else {
+        shouldFilterOut = PKG_PARSER_FLAVOR.shouldFilterOut();
+      }
     }
 
-    if (isFilteredOutPkgName(packageInfo.packageName)) {
+    if (shouldFilterOut && isFilteredOutPkgName(packageInfo.packageName)) {
       return false;
     }
 
     boolean isSystemApp = isSystemApp(packageInfo);
-    if (isFilteredOutSystemPkg(isSystemApp)) {
+    if (shouldFilterOut && isFilteredOutSystemPkg(isSystemApp)) {
       return false;
     }
 
     boolean isFrameworkApp = isFrameworkApp(packageInfo);
-    if (isFilteredOutFrameworkPkg(isFrameworkApp)) {
+    if (shouldFilterOut && isFilteredOutFrameworkPkg(isFrameworkApp)) {
       return false;
     }
-    if (isFilteredOutUserPkg(isFrameworkApp, isSystemApp)) {
+    if (shouldFilterOut && isFilteredOutUserPkg(isFrameworkApp, isSystemApp)) {
       return false;
     }
 
     ApplicationInfo appInfo = packageInfo.applicationInfo;
     boolean isEnabled = appInfo.enabled;
-    if (isFilteredOutDisabledPkg(!isEnabled)) {
+    if (shouldFilterOut && isFilteredOutDisabledPkg(!isEnabled)) {
       return false;
     }
 
-    if (isFilteredOutNoIconPkg(appInfo.icon == 0)) {
+    if (shouldFilterOut && isFilteredOutNoIconPkg(appInfo.icon == 0)) {
       return false;
     }
 
@@ -461,7 +483,7 @@ public enum PackageParser {
       permissionsList = getPermissionsList(packageInfo, pkg);
 
       // Exclude packages with no manifest permissions and no AppOps (excluding extra)
-      if (isFilteredOutNoPermPkg(pkg)) {
+      if (shouldFilterOut && isFilteredOutNoPermPkg(pkg)) {
         return false;
       }
 
@@ -494,7 +516,7 @@ public enum PackageParser {
         packageInfo.firstInstallTime,
         new File(appInfo.sourceDir).lastModified());
 
-    if (applyFilter && PKG_PARSER_FLAVOR.isFilteredOut(pkg)) {
+    if (shouldFilterOut && applyFilter && PKG_PARSER_FLAVOR.isFilteredOut(pkg)) {
       return false;
     }
 

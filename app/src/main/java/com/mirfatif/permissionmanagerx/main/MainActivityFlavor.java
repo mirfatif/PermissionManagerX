@@ -2,6 +2,7 @@ package com.mirfatif.permissionmanagerx.main;
 
 import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
 
+import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -53,4 +54,6 @@ public class MainActivityFlavor {
   void onRestoreDone() {}
 
   void onPrivDaemonStarted() {}
+
+  public void handleIntentActions(@SuppressWarnings("UnusedDeclaration") Intent intent) {}
 }
