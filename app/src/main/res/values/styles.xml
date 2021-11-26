@@ -90,4 +90,11 @@
     <item name="android:textAlignment">viewStart</item>
   </style>
 
+  <style name="ListSeparatorDim">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">1dp</item>
+    <item name="android:alpha">0.25</item>
+    <item name="android:background">?attr/colorControlNormal</item>
+  </style>
+
 </resources>
