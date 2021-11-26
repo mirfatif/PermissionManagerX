@@ -7,6 +7,7 @@ import static com.mirfatif.permissionmanagerx.util.Utils.isPsVersion;
 import static com.mirfatif.permissionmanagerx.util.Utils.openWebUrl;
 
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,7 +19,7 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.databinding.FeedbackDialogBinding;
 import com.mirfatif.permissionmanagerx.databinding.RateDonateDialogBinding;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
-import com.mirfatif.permissionmanagerx.ui.BottomSheetDialogFrag;
+import com.mirfatif.permissionmanagerx.ui.base.BottomSheetDialogFrag;
 import com.mirfatif.permissionmanagerx.util.Utils;
 
 public class FeedbackDialogFrag extends BottomSheetDialogFrag {
@@ -81,7 +82,7 @@ public class FeedbackDialogFrag extends BottomSheetDialogFrag {
 
     b.neutralButton.setOnClickListener(
         v -> {
-          SETTINGS.setAskForFeedbackTs(Long.MAX_VALUE);
+          SETTINGS.setAskForFeedbackTs(System.currentTimeMillis() + DateUtils.WEEK_IN_MILLIS * 25);
           dismiss();
         });
 

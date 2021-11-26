@@ -78,6 +78,7 @@ public class LogcatService extends Service {
   private CountDownTimer mTimer;
   private NotificationManagerCompat mNotificationManager;
   private Builder mNotificationBuilder;
+  private final Object NOTIF_BUILDER_LOCK = new Object();
 
   private void startSvc() {
     final String CHANNEL_ID = "channel_logcat_collection";
@@ -99,19 +100,21 @@ public class LogcatService extends Service {
             new Intent(App.getContext(), LogcatService.class),
             PendingIntent.FLAG_UPDATE_CURRENT);
 
-    mNotificationBuilder = new Builder(App.getContext(), CHANNEL_ID);
-    mNotificationBuilder
-        .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
-        .setPriority(NotificationCompat.PRIORITY_HIGH)
-        .setOnlyAlertOnce(true)
-        .setSmallIcon(R.drawable.notification_icon)
-        .setContentTitle(Utils.getString(R.string.logging))
-        .setColor(UtilsFlavor.getAccentColor())
-        .setStyle(
-            new NotificationCompat.BigTextStyle().bigText(getString(R.string.logging_warning)))
-        .addAction(0, getString(R.string.stop_logging), stopIntent);
+    synchronized (NOTIF_BUILDER_LOCK) {
+      mNotificationBuilder = new Builder(App.getContext(), CHANNEL_ID);
+      mNotificationBuilder
+          .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
+          .setPriority(NotificationCompat.PRIORITY_HIGH)
+          .setOnlyAlertOnce(true)
+          .setSmallIcon(R.drawable.notification_icon)
+          .setContentTitle(Utils.getString(R.string.logging))
+          .setColor(UtilsFlavor.getAccentColor())
+          .setStyle(
+              new NotificationCompat.BigTextStyle().bigText(getString(R.string.logging_warning)))
+          .addAction(0, getString(R.string.stop_logging), stopIntent);
 
-    startForeground(getUniqueId(), mNotificationBuilder.build());
+      startForeground(getUniqueId(), mNotificationBuilder.build());
+    }
   }
 
   private int getUniqueId() {
@@ -121,17 +124,22 @@ public class LogcatService extends Service {
   private static final int TIMEOUT_SEC = 5 * 60;
 
   private void setNotificationProgress(int now) {
-    if (mNotificationManager == null || mNotificationBuilder == null) {
-      return;
+    synchronized (NOTIF_BUILDER_LOCK) {
+      if (mNotificationManager == null || mNotificationBuilder == null) {
+        return;
+      }
+      int min = now / 60;
+      String text = String.format(Locale.getDefault(), "%02d:%02d", min, now - min * 60);
+      mNotificationBuilder.setProgress(TIMEOUT_SEC, now, false);
+      mNotificationBuilder.setContentText(text);
+      mNotificationManager.notify(getUniqueId(), mNotificationBuilder.build());
     }
-    int min = now / 60;
-    String text = String.format(Locale.getDefault(), "%02d:%02d", min, now - min * 60);
-    mNotificationBuilder.setProgress(TIMEOUT_SEC, now, false);
-    mNotificationBuilder.setContentText(text);
-    mNotificationManager.notify(getUniqueId(), mNotificationBuilder.build());
   }
 
   private void stopSvc() {
+    synchronized (NOTIF_BUILDER_LOCK) {
+      mNotificationBuilder = null;
+    }
     stopSelf();
     if (mTimer != null) {
       mTimer.cancel();
@@ -206,6 +214,7 @@ public class LogcatService extends Service {
 
     SETTINGS.setDebugLog(true);
     writeToLogFile(Utils.getDeviceInfo());
+    writeToLogFile("=====================================");
 
     if (SETTINGS.isPrivDaemonAlive()) {
       // We'll start it in MainActivity to log all of the start messages.

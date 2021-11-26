@@ -10,6 +10,8 @@ import static com.mirfatif.permissionmanagerx.util.UtilsFlavor.getAccentColor;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningAppProcessInfo;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -684,6 +686,18 @@ public class Utils {
   @SuppressWarnings("ConstantConditions")
   public static boolean isAmazVersion() {
     return BuildConfig.VERSION_NAME.contains("-amaz");
+  }
+
+  public static boolean isAppVisible() {
+    ActivityManager am =
+        (ActivityManager) App.getContext().getSystemService(Context.ACTIVITY_SERVICE);
+    for (RunningAppProcessInfo info : am.getRunningAppProcesses()) {
+      if (info.pid == android.os.Process.myPid()
+          && info.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+        return true;
+      }
+    }
+    return false;
   }
 
   //////////////////////////////////////////////////////////////////

@@ -24,7 +24,7 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.databinding.AdvSettingsDialogBinding;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
-import com.mirfatif.permissionmanagerx.ui.BottomSheetDialogFrag;
+import com.mirfatif.permissionmanagerx.ui.base.BottomSheetDialogFrag;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import java.io.File;
 import java.util.Arrays;
@@ -255,7 +255,7 @@ public class AdvSettingsDialogFrag extends BottomSheetDialogFrag {
         mA,
         () -> {
           ((MainActivity) mA).showSnackBar(getString(R.string.connected_to_adb), 5000);
-          ((MainActivity) mA).setNavigationMenu(); // To check Adb CheckBox
+          ((MainActivity) mA).setBoxesChecked();
         });
   }
 

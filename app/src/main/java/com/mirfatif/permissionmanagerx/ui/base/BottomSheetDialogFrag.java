@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx.ui;
+package com.mirfatif.permissionmanagerx.ui.base;
 
 import android.app.Dialog;
 import android.content.Context;

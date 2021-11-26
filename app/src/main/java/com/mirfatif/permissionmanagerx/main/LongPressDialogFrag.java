@@ -22,7 +22,7 @@ import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.ActivityMainPkgDialogBinding;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
-import com.mirfatif.permissionmanagerx.ui.BottomSheetDialogFrag;
+import com.mirfatif.permissionmanagerx.ui.base.BottomSheetDialogFrag;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;

@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentManager;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.TranslationDialogBinding;
+import com.mirfatif.permissionmanagerx.ui.base.BottomSheetDialogFrag;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 

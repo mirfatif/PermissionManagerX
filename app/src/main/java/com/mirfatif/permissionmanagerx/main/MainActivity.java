@@ -726,7 +726,7 @@ public class MainActivity extends BaseActivity {
     ADB_DAEMON.getDrawerChanged().observe(this, res -> setBoxesChecked());
   }
 
-  void setNavigationMenu() {
+  private void setNavigationMenu() {
     if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "setNavigationMenu() called");
     }
@@ -740,7 +740,7 @@ public class MainActivity extends BaseActivity {
     mMainActivityFlavor.setNavMenu(mB.navV.getMenu());
   }
 
-  private void setBoxesChecked() {
+  void setBoxesChecked() {
     if (mB == null) {
       return;
     }
