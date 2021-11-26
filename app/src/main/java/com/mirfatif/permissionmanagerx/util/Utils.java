@@ -1,5 +1,7 @@
 package com.mirfatif.permissionmanagerx.util;
 
+import static android.app.PendingIntent.FLAG_IMMUTABLE;
+import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import static android.text.style.DynamicDrawableSpan.ALIGN_BASELINE;
@@ -743,7 +745,7 @@ public class Utils {
     }
   }
 
-  @SuppressLint("LaunchActivityFromNotification,UnspecifiedImmutableFlag")
+  @SuppressLint("LaunchActivityFromNotification")
   private static void showCrashNotification(File logFile) {
     if (!SETTINGS.shouldAskToSendCrashReport()) {
       return;
@@ -773,8 +775,7 @@ public class Utils {
         .putExtra(NotifDismissSvc.EXTRA_NOTIF_ID, UNIQUE_ID);
 
     PendingIntent pendingIntent =
-        PendingIntent.getService(
-            App.getContext(), UNIQUE_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.getService(App.getContext(), UNIQUE_ID, intent, PI_FLAGS);
 
     NotificationManagerCompat notificationManager =
         NotificationManagerCompat.from(App.getContext());
@@ -803,6 +804,8 @@ public class Utils {
 
     notificationManager.notify(UNIQUE_ID, notificationBuilder.build());
   }
+
+  public static final int PI_FLAGS = FLAG_UPDATE_CURRENT | FLAG_IMMUTABLE;
 
   //////////////////////////////////////////////////////////////////
   /////////////////////////// PRIVILEGES ///////////////////////////

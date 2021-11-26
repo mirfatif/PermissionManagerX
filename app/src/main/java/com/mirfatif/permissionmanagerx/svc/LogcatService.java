@@ -2,8 +2,8 @@ package com.mirfatif.permissionmanagerx.svc;
 
 import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
 import static com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler.DAEMON_HANDLER;
+import static com.mirfatif.permissionmanagerx.util.Utils.PI_FLAGS;
 
-import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -92,13 +92,12 @@ public class LogcatService extends Service {
       mNotificationManager.createNotificationChannel(channel);
     }
 
-    @SuppressLint("UnspecifiedImmutableFlag")
     PendingIntent stopIntent =
         PendingIntent.getService(
             App.getContext(),
             getUniqueId(),
             new Intent(App.getContext(), LogcatService.class),
-            PendingIntent.FLAG_UPDATE_CURRENT);
+            PI_FLAGS);
 
     synchronized (NOTIF_BUILDER_LOCK) {
       mNotificationBuilder = new Builder(App.getContext(), CHANNEL_ID);

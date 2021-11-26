@@ -1,9 +1,9 @@
 package com.mirfatif.permissionmanagerx.prefs.settings;
 
 import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
+import static com.mirfatif.permissionmanagerx.util.Utils.PI_FLAGS;
 import static com.mirfatif.permissionmanagerx.util.Utils.getString;
 
-import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -136,13 +136,12 @@ public class AppUpdate {
     final String CHANNEL_NAME = getString(R.string.channel_app_update);
     final int UNIQUE_ID = Utils.getInteger(R.integer.channel_app_update);
 
-    @SuppressLint("UnspecifiedImmutableFlag")
     PendingIntent pendingIntent =
         PendingIntent.getActivity(
             App.getContext(),
             UNIQUE_ID,
             new Intent(Intent.ACTION_VIEW, Uri.parse(mUpdateUrl)),
-            PendingIntent.FLAG_UPDATE_CURRENT);
+            PI_FLAGS);
 
     NotificationManagerCompat mNotificationManager =
         NotificationManagerCompat.from(App.getContext());
