@@ -84,7 +84,8 @@
   <com.mirfatif.permissionmanagerx.main.ProgressFrameLayout
     android:id="@+id/rnd_prog_cont"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/selectableItemBackground">
 
     <ProgressBar
       style="@style/Widget.AppCompat.ProgressBar"
