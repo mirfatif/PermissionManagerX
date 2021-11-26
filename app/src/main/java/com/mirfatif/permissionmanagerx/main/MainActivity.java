@@ -8,9 +8,12 @@ import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.ROOT_DAEMON;
 import static com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler.DAEMON_HANDLER;
 import static com.mirfatif.permissionmanagerx.util.Utils.getQtyString;
 
+import android.animation.Animator;
+import android.animation.Animator.AnimatorListener;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
@@ -53,6 +56,8 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MainActivity extends BaseActivity {
 
@@ -793,52 +798,21 @@ public class MainActivity extends BaseActivity {
     }
 
     if (item.getItemId() == R.id.action_root) {
-      CheckBox rootCheckBox = (CheckBox) item.getActionView();
-      if (!rootCheckBox.isChecked()) {
-        SETTINGS.setRootGranted(false);
-        ROOT_DAEMON.stopDaemon();
-        restartPrivDaemon(true, false);
-        return true;
-      }
-
-      rootCheckBox.setChecked(false);
-
       Utils.runInBg(
           () -> {
-            if (Utils.checkRoot()) {
-              showSnackBar(getString(R.string.root_granted), 5000);
-              Utils.runInFg(this, () -> rootCheckBox.setChecked(true));
-              restartPrivDaemon(true, true);
-            } else {
-              showSnackBar(getString(R.string.getting_root_fail_long), 10000);
-            }
+            ROOT_ANIM_LOCK.lock();
+            handleRootCheckBox((CheckBox) item.getActionView());
+            ROOT_ANIM_LOCK.unlock();
           });
       return true;
     }
 
     if (item.getItemId() == R.id.action_adb) {
-      CheckBox adbCheckBox = (CheckBox) item.getActionView();
-      if (!adbCheckBox.isChecked()) {
-        SETTINGS.setAdbConnected(false);
-        ADB_DAEMON.stopDaemon();
-        restartPrivDaemon(true, false);
-        return true;
-      }
-
-      adbCheckBox.setChecked(false);
-      adbCheckBox.setEnabled(false);
-
       Utils.runInBg(
           () -> {
-            if (Utils.checkAdb(true)) {
-              showSnackBar(getString(R.string.connected_to_adb), 5000);
-              Utils.runInFg(this, () -> adbCheckBox.setChecked(true));
-              restartPrivDaemon(false, true);
-            } else {
-              Utils.runInFg(
-                  this, () -> AlertDialogFragment.show(this, null, TAG_ADB_CONNECT_FAILED));
-            }
-            Utils.runInFg(this, () -> adbCheckBox.setEnabled(true));
+            ADB_ANIM_LOCK.lock();
+            handleAdbCheckBox((CheckBox) item.getActionView());
+            ADB_ANIM_LOCK.unlock();
           });
       return true;
     }
@@ -878,6 +852,70 @@ public class MainActivity extends BaseActivity {
     return mMainActivityFlavor.handleNavItemChecked(item);
   }
 
+  private void handleRootCheckBox(CheckBox checkBox) {
+    AtomicBoolean done = new AtomicBoolean(false);
+    Utils.runInFg(
+            this,
+            () -> {
+              if (!checkBox.isChecked()) {
+                SETTINGS.setRootGranted(false);
+                ROOT_DAEMON.stopDaemon();
+                restartPrivDaemon(true, false);
+                done.set(true);
+              }
+            })
+        .waitForMe();
+
+    if (done.get()) {
+      return;
+    }
+
+    if (Utils.checkRoot()) {
+      showSnackBar(getString(R.string.root_granted), 5000);
+      restartPrivDaemon(true, true);
+    } else {
+      showSnackBar(getString(R.string.getting_root_fail_long), 10000);
+      Utils.runInFg(this, () -> checkBox.setChecked(false)).waitForMe();
+    }
+  }
+
+  private void handleAdbCheckBox(CheckBox checkBox) {
+    AtomicBoolean done = new AtomicBoolean(false);
+    Utils.runInFg(
+            this,
+            () -> {
+              if (!checkBox.isChecked()) {
+                SETTINGS.setAdbConnected(false);
+                ADB_DAEMON.stopDaemon();
+                restartPrivDaemon(true, false);
+                done.set(true);
+              } else {
+                checkBox.setEnabled(false);
+              }
+            })
+        .waitForMe();
+
+    if (done.get()) {
+      return;
+    }
+
+    boolean res = Utils.checkAdb(true);
+
+    Utils.runInFg(
+            this,
+            () -> {
+              if (res) {
+                showSnackBar(getString(R.string.connected_to_adb), 5000);
+                restartPrivDaemon(false, true);
+              } else {
+                AlertDialogFragment.show(this, null, TAG_ADB_CONNECT_FAILED);
+                checkBox.setChecked(false);
+              }
+              checkBox.setEnabled(true);
+            })
+        .waitForMe();
+  }
+
   private static final Object WINDOW_WAITER = new Object();
 
   private void openDrawerForPrivileges() {
@@ -900,24 +938,53 @@ public class MainActivity extends BaseActivity {
         this,
         () -> {
           mB.getRoot().openDrawer(GravityCompat.START);
-          mB.navV.postDelayed(
-              () -> {
-                rotateMenuItemCheckbox(R.id.action_root, angle);
-                rotateMenuItemCheckbox(R.id.action_adb, -1 * angle);
-              },
-              1000);
+          Menu menu = mB.navV.getMenu();
+          rotateMenuItemCheckbox(menu, R.id.action_root, angle, ROOT_ANIM_LOCK);
+          rotateMenuItemCheckbox(menu, R.id.action_adb, -1 * angle, ADB_ANIM_LOCK);
         });
   }
 
-  private void rotateMenuItemCheckbox(int resId, float angle) {
-    mB.navV
-        .getMenu()
-        .findItem(resId)
-        .getActionView()
-        .animate()
-        .rotationBy(angle)
-        .setDuration(1000)
-        .start();
+  // getChecked() and setChecked() cannot be called while CheckBox is animating.
+  private final ReentrantLock ROOT_ANIM_LOCK = new ReentrantLock();
+  private final ReentrantLock ADB_ANIM_LOCK = new ReentrantLock();
+
+  private void rotateMenuItemCheckbox(Menu menu, int resId, float angle, ReentrantLock lock) {
+    CheckBox v = (CheckBox) menu.findItem(resId).getActionView();
+    v.postDelayed(
+        () -> {
+          if (!v.isChecked() && !lock.isHeldByCurrentThread() && lock.tryLock()) {
+            v.animate()
+                .rotationBy(angle)
+                .setDuration(1000)
+                .setListener(new AnimListener(lock))
+                .start();
+          }
+        },
+        1000);
+  }
+
+  private static class AnimListener implements AnimatorListener {
+
+    private final ReentrantLock mLock;
+
+    AnimListener(ReentrantLock lock) {
+      mLock = lock;
+    }
+
+    @Override
+    public void onAnimationStart(Animator animation) {}
+
+    @Override
+    public void onAnimationEnd(Animator animation) {
+      // Unlocking immediately still throws Exception.
+      new Handler().postDelayed(mLock::unlock, 2000);
+    }
+
+    @Override
+    public void onAnimationCancel(Animator animation) {}
+
+    @Override
+    public void onAnimationRepeat(Animator animation) {}
   }
 
   @SuppressWarnings("UnusedDeclaration")

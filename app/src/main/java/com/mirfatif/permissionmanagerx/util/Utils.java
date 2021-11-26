@@ -99,9 +99,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -119,14 +121,17 @@ public class Utils {
 
   private static final Handler mMainThreadHandler = new Handler(Looper.getMainLooper());
 
-  public static void runInFg(Runnable runnable) {
-    mMainThreadHandler.post(runnable);
+  public static Waiter runInFg(Runnable runnable) {
+    Waiter waiter = new Waiter(runnable);
+    mMainThreadHandler.post(waiter);
+    return waiter;
   }
 
-  public static void runInFg(LifecycleOwner lifecycleOwner, Runnable runnable) {
-    if (lifecycleOwner.getLifecycle().getCurrentState().isAtLeast(State.INITIALIZED)) {
-      runInFg(runnable);
+  public static Waiter runInFg(LifecycleOwner lifecycleOwner, Runnable runnable) {
+    if (isAlive(lifecycleOwner)) {
+      return runInFg(runnable);
     }
+    return new Waiter();
   }
 
   private static final ExecutorService mExecutor = Executors.newCachedThreadPool();
@@ -135,8 +140,46 @@ public class Utils {
     return mExecutor.submit(runnable);
   }
 
+  public static class Waiter extends FutureTask<Void> {
+
+    public Waiter(Runnable runnable) {
+      super(runnable, null);
+    }
+
+    private boolean mIsEmpty = false;
+
+    public Waiter() {
+      super(() -> {}, null);
+      mIsEmpty = true;
+    }
+
+    @SuppressWarnings("UnusedReturnValue")
+    public boolean waitForMe() {
+      if (mIsEmpty) {
+        return false;
+      }
+
+      if (isMainThread()) {
+        Log.e(TAG, "Waiter: waitForMe() called on main thread");
+        return false;
+      }
+
+      try {
+        super.get();
+        return true;
+      } catch (ExecutionException | InterruptedException e) {
+        Log.e(TAG, e.toString());
+        return false;
+      }
+    }
+  }
+
   public static boolean isMainThread() {
     return Thread.currentThread() == Looper.getMainLooper().getThread();
+  }
+
+  public static boolean isAlive(LifecycleOwner lifecycleOwner) {
+    return lifecycleOwner.getLifecycle().getCurrentState().isAtLeast(State.INITIALIZED);
   }
 
   public static void runCommand(String tag, String... cmd) {
