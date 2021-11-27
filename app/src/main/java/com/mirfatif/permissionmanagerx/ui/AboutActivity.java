@@ -6,6 +6,7 @@ import static com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler.DAEMON_HAN
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -69,7 +70,7 @@ public class AboutActivity extends BaseActivity {
     mB.translate.setOnClickListener(v -> TransCreditsDialogFrag.show(getSupportFragmentManager()));
     mB.shareApp.setOnClickListener(v -> sendShareIntent());
 
-    mB.paidFeaturesSummary.setText(Utils.htmlToString(R.string.paid_features_summary));
+    mB.paidFeaturesSummary.setText(createPaidFeaturesString());
 
     mB.paidFeatures.setOnClickListener(
         v -> {
@@ -166,6 +167,47 @@ public class AboutActivity extends BaseActivity {
     intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
     String text = getString(R.string.share_text, getString(R.string.source_url));
     startActivity(Intent.createChooser(intent.putExtra(Intent.EXTRA_TEXT, text), null));
+  }
+
+  private Spanned createPaidFeaturesString() {
+    String string =
+        "<ul>"
+            + "<li>"
+            + getString(R.string.paid_features1)
+            + "</li>"
+            + "<li>"
+            + getString(R.string.paid_features2)
+            + "</li>"
+            + "<li>"
+            + getString(R.string.paid_features3)
+            + "</li>"
+            + "<li>"
+            + getString(R.string.paid_features4)
+            + "</li>"
+            + "<li>"
+            + getString(R.string.paid_features5)
+            + "</li>"
+            + "<li>"
+            + getString(R.string.paid_features6)
+            + "</li>"
+            + "<li>"
+            + getString(R.string.paid_features7)
+            + "</li>"
+            + "<li>"
+            + getString(R.string.paid_features8)
+            + "</li>"
+            + "<li>"
+            + getString(R.string.paid_features9)
+            + "</li>"
+            + "<li>"
+            + getString(R.string.paid_features10)
+            + "</li>"
+            + "<li>"
+            + getString(R.string.paid_features11)
+            + "</li>"
+            + "</ul>";
+
+    return Utils.htmlToString(string);
   }
 
   @Override

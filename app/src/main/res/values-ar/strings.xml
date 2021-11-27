@@ -62,8 +62,6 @@
   <string name="primary_profile_only">مدير الأذونات X يمكن تشغيله فقط في حساب المستخدم الرئيسي /
     ملف تعريف مالك الجهاز.
   </string>
-  <string name="deep_search" maxLength="12">البحث العميق (الأذونات)</string>
-  <string name="case_sensitive_search" maxLength="12">بحث حساس لحالة الاحرف</string>
   <string name="grant_root_or_adb">منح صلاحيات الجذر أو الاتصال بـ ADB لبدء عملية مميزة.</string>
   <string name="logging_failed" maxLength="20">فشل التسجيل</string>
   <string name="daemon_logging_failed" maxLength="20">فشل في بناء سجل الاخطاء لـ Didemon المتميز</string>
@@ -170,14 +168,11 @@
     حتى حجم كبير جدا. يتم إيقاف التسجيل تلقائياً بعد 5 دقائق.
   </string>
   <!-- Buttons-->
-  <string name="disable" maxLength="10">تعطيل</string>
-  <string name="enable" maxLength="10">تمكين</string>
   <string name="exclude" maxLength="10">استبعاد</string>
   <string name="clear_reference" maxLength="10" comment="'Clear Reference'">مسح المرجع</string>
   <string name="set_reference" maxLength="10" comment="'Set Reference'">تعيين المرجع</string>
   <string name="do_not_ask" maxLength="15">لا تسأل مجددا</string>
   <!-- PackageActivity menu items -->
-  <string name="package_information_menu_item" maxLength="15" comment="'App Information'">معلومات التطبيق</string>
   <string name="reset_app_ops" maxLength="15">اعادة تعيين الاذونات</string>
   <string name="reset_app_ops_confirmation">إعادة تعيين كافة الاذونات إلى الوضع الافتراضي؟</string>
   <string name="clear_references" maxLength="15">مسح المراجع</string>
@@ -188,7 +183,6 @@
   <string name="exclude_app_from_visible_list">استبعاد التطبيق من القائمة المرئية.</string>
   <string name="enable_app">تمكين التطبيق.</string>
   <string name="disable_app">تعطيل التطبيق.</string>
-  <string name="exclude_from_visible_list">%s استبعاد من القائمة المرئية.</string>
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">لقد حدث خطأ ما</string>
   <string name="change_perms_warning" comment="'system' or 'framework'">تغيير أذونات تطبيق
@@ -279,19 +273,9 @@
   <string name="logging_stopped" maxLength="20">تم إيقاف التسجيل</string>
   <string name="app_rating" maxLength="15">قيّمني</string>
   <string name="app_rating_summary" maxLength="20">تقييم / مراجعة على متجر Play</string>
+
   <string name="paid_features" maxLength="15">الميزات المدفوعة</string>
-  <string name="paid_features_summary"><![CDATA[<ul>
-         <li> فرز التطبيقات والأذونات حسب معلمات مختلفة </ 1>
-         <li> فحص مجدول لإخطار حالات المراجع التالفة </ 1>
-         <li> إبطال تلقائي للأذونات الممنوحة مع حالات RED </li>
-         <li> إذن مراقب لإزالة الأذونات بسرعة </ 1>
-         <li> إجراء تغييرات على التطبيقات والأذونات المهمة </ 1>
-         <li> عدة مستخدمين / دعم الملف الشخصي للعمل </ 1>
-         <li> إنشاء ملف النسخ الاحتياطي تلقائيًا عند التغييرات </ 1>
-         <li> اقتراحات البحث </ 1>
-         <li> خيارات الصياغة </ 1>
-         <li> عمليات مجمعة (ملفات شخصية) (قادمة) </ 1>
-       </ul>    ]]></string>
+
   <string name="update" maxLength="15">تحديث</string>
   <string name="update_summary" maxLength="20">تحقق تحديثات التطبيق</string>
   <string name="check_in_progress" maxLength="20">تحقق من التقدم</string>

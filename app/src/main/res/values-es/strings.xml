@@ -56,8 +56,6 @@
   <!-- MainActivity strings -->
   <string name="primary_account" maxLength="15">Cuenta Primaria</string>
   <string name="primary_profile_only">Permission Manager X puede correr únicamente en la cuenta del usuario principal /\n perfil del propietario del dispositivo.</string>
-  <string name="deep_search" maxLength="12">Búsqueda Profunda (Permisos)</string>
-  <string name="case_sensitive_search" maxLength="12">Búsqueda Sensible a Mayúsculas</string>
   <string name="grant_root_or_adb">Concede acceso root o conecta a ADB para iniciar procesos privilegiados.</string>
   <string name="logging_failed" maxLength="20">Registro fallido</string>
   <string name="daemon_logging_failed" maxLength="20">Registro para daemon privilegiado fallido</string>
@@ -136,14 +134,11 @@
   <string name="logging" maxLength="15">Registrando</string>
   <string name="logging_warning">La aplicación podría responder lento debido a los registros y el archivo de registros podría crecer\n a un tamaño muy grande. El registro es detenido automaticamente después de 5 minutos.</string>
   <!-- Buttons-->
-  <string name="disable" maxLength="10">Deshabilitar</string>
-  <string name="enable" maxLength="10">Habilitar</string>
   <string name="exclude" maxLength="10">Excluir</string>
   <string name="clear_reference" maxLength="10" comment="'Clear Reference'">Limpiar Ref</string>
   <string name="set_reference" maxLength="10" comment="'Set Reference'">Establecer Ref</string>
   <string name="do_not_ask" maxLength="15">No preguntar de nuevo</string>
   <!-- PackageActivity menu items -->
-  <string name="package_information_menu_item" maxLength="15" comment="'App Information'">Info de App</string>
   <string name="reset_app_ops" maxLength="15">Reiniciar AppOps</string>
   <string name="reset_app_ops_confirmation">¿Reiniciar todas las AppOps a sus modos por defecto?</string>
   <string name="clear_references" maxLength="15">Limpiar Referencias</string>
@@ -154,7 +149,6 @@
   <string name="exclude_app_from_visible_list">Excluir aplicación de la lista visible.</string>
   <string name="enable_app">Habilitar app.</string>
   <string name="disable_app">Deshabilitar app.</string>
-  <string name="exclude_from_visible_list">%s Excluir de la lista visible.</string>
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">Algo salió mal</string>
   <string name="change_perms_warning" comment="'system' or 'framework'">Cambiar los permisos de una\n    aplicación de %1$s es una acción peligrosa. En el peor de los casos el sistema Android podría colapsar.\n ¿Seguro\n    que quieres continuar?</string>
@@ -229,19 +223,9 @@
   <string name="logging_stopped" maxLength="20">Registro Detenido</string>
   <string name="app_rating" maxLength="15">Puntúame</string>
   <string name="app_rating_summary" maxLength="20">Puntúa / reseña en Play Store</string>
+
   <string name="paid_features" maxLength="15">Características de Paga</string>
-  <string name="paid_features_summary"><![CDATA[      <ul>
-        <li>Ordena aplicaciones y permisos por diferentes parámetros</li>
-        <li>Chequeo programado para notificar estados de referencia malos</li>
-        <li>Auto revocar permisos otorgados con estados ROJOS</li>
-        <li>Hacer cambios a aplicaciones y permisos críticos</li>
-        <li>Soporte a múltiples usuarios / perfiles de trabajo</li>
-        <li>Crear copias de seguridad automáticamente al hacer cambios</li>
-        <li>Sugerencias de búsqueda</li>
-        <li>Opciones de tema</li>
-        <li>Operaciones por lotes (perfiles) (próximamente)</li>
-      </ul>
-    ]]></string>
+
   <string name="update" maxLength="15">Actualizar</string>
   <string name="update_summary" maxLength="20">Verificar actualizaciones de la aplicación</string>
   <string name="check_in_progress" maxLength="20">Verificación en progreso</string>

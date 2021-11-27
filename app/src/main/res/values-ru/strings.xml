@@ -60,8 +60,6 @@
   <string name="primary_profile_only">Permission Manager X может работать только в основном аккаунте /
     профиле владельца устройства.
   </string>
-  <string name="deep_search" maxLength="12">Глубокий поиск (Разрешения)</string>
-  <string name="case_sensitive_search" maxLength="12">Поиск с учётом регистра</string>
   <string name="grant_root_or_adb">Предоставьте root-доступ или подключитесь к ADB для запуска привилегированного процесса.</string>
   <string name="logging_failed" maxLength="20">Сбой логирования</string>
   <string name="daemon_logging_failed" maxLength="20">Сбой логирования для привилегированного демона</string>
@@ -153,14 +151,11 @@
   <string name="logging" maxLength="15">Логирование</string>
   <string name="logging_warning">Из-за сбора лога приложение может реагировать медленно, а файл лога может вырасти до очень большого размера. Логирование автоматически отключается через 5 минут.</string>
   <!-- Buttons-->
-  <string name="disable" maxLength="10">Заморозить</string>
-  <string name="enable" maxLength="10">Разморозить</string>
   <string name="exclude" maxLength="10">Исключить</string>
   <string name="clear_reference" maxLength="10" comment="'Clear Reference'">Очистить целевое</string>
   <string name="set_reference" maxLength="10" comment="'Set Reference'">Установить целевым</string>
   <string name="do_not_ask" maxLength="15">Не спрашивать снова</string>
   <!-- PackageActivity menu items -->
-  <string name="package_information_menu_item" maxLength="15" comment="'App Information'">Информация о приложении</string>
   <string name="reset_app_ops" maxLength="15">Сбросить AppOps</string>
   <string name="reset_app_ops_confirmation">Сбросить все AppOps к значениям по умолчанию?</string>
   <string name="clear_references" maxLength="15">Очистить целевые значения</string>
@@ -171,7 +166,6 @@
   <string name="exclude_app_from_visible_list">Исключить приложение из списка отображаемых.</string>
   <string name="enable_app">Разморозка приложения</string>
   <string name="disable_app">Заморозка приложения</string>
-  <string name="exclude_from_visible_list">%s Исключение приложения из списка видимых.</string>
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">Что-то пошло не так</string>
   <string name="change_perms_warning" comment="'system' or 'framework'">Изменение разрешений %1$s приложения — потенциально опасное действие вплоть до сбоя системы Android.\nВы уверены, что хотите продолжить?</string>
@@ -253,19 +247,9 @@
   <string name="logging_stopped" maxLength="20">Логирование остановлено</string>
   <string name="app_rating" maxLength="15">Поставить оценку</string>
   <string name="app_rating_summary" maxLength="20">Поставить оценку/оставить отзыв в Play Store</string>
+
   <string name="paid_features" maxLength="15">Платные функции</string>
-  <string name="paid_features_summary"><![CDATA[<ul>
-<li>Сортировка приложений и разрешений по различным параметрам</li>
-<li>Проверка разрешений по расписанию и уведомление в случае их изменений</li>
-<li>Автоматическая отмена предоставленных разрешений с КРАСНЫМИ состояниями</li>
-<li>Отслеживание разрешений для быстрого удаления разрешений</li>
-<li>Внесение изменения в критически важные приложения и разрешения</li>
-<li>Поддержка нескольких пользователей / рабочего профиля</li>
-<li>Автоматический бэкап при изменениях</li>
-<li>Подсказки поиска</li>
-<li>Настройки темы</li>
-<li>Пакетные операции (профили) (в ближайшее время)</li>
-</ul>]]></string>
+
   <string name="update" maxLength="15">Обновить</string>
   <string name="update_summary" maxLength="20">Проверить обновления приложения</string>
   <string name="check_in_progress" maxLength="20">Выполняется проверка</string>

@@ -290,24 +290,20 @@
   <string name="logging_stopped" maxLength="20">Logging stopped</string>
   <string name="app_rating" maxLength="15">Rate Me</string>
   <string name="app_rating_summary" maxLength="20">Rating, reviewing, starring…</string>
+
   <string name="paid_features" maxLength="15">Paid Features</string>
-  <string name="paid_features_summary">
-    <![CDATA[
-      <ul>
-        <li>Sort apps and permissions by different parameters</li>
-        <li>Scheduled Check to notify bad reference states</li>
-        <li>Auto revoke granted permissions with RED states</li>
-        <li>Permission Watcher to remove permissions quickly</li>
-        <li>Make changes to critical apps and permissions</li>
-        <li>Multiple users / work profile support</li>
-        <li>Auto create backup file on changes</li>
-        <li>Search suggestions</li>
-        <li>Theming options</li>
-        <li>Permission Summary View (upcoming)</li>
-        <li>Batch operations (profiles) (upcoming)</li>
-      </ul>
-    ]]>
-  </string>
+  <string name="paid_features1">Sort apps and permissions by different parameters</string>
+  <string name="paid_features2">Scheduled Check to notify bad reference states</string>
+  <string name="paid_features3">Auto revoke granted permissions with RED states</string>
+  <string name="paid_features4">Permission Watcher to remove permissions quickly</string>
+  <string name="paid_features5">Make changes to critical apps and permissions</string>
+  <string name="paid_features6">Multiple users / work profile support</string>
+  <string name="paid_features7">Auto create backup file on changes</string>
+  <string name="paid_features8">Search suggestions</string>
+  <string name="paid_features9">Theming options</string>
+  <string name="paid_features10">Permission Summary View (upcoming)</string>
+  <string name="paid_features11">Batch operations (profiles) (upcoming)</string>
+
   <string name="update" maxLength="15">Update</string>
   <string name="update_summary" maxLength="20">Check for app updates</string>
   <string name="check_in_progress" maxLength="20">Check in progress</string>
