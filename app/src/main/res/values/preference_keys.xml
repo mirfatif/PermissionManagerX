@@ -25,10 +25,17 @@
   <bool name="pref_main_daemon_tmp_dir_default">true</bool>
   <string name="pref_main_app_launch_count_enc_key" translatable="false">pref_main_app_launch_count_enc</string>
   <integer name="pref_main_app_launch_count_enc_default">0</integer>
+
   <string name="pref_main_deep_search_enc_key" translatable="false">pref_main_deep_search_enc</string>
   <bool name="pref_main_deep_search_enc_default">false</bool>
+  <string name="pref_main_deep_search_enc_title" maxLength="20">Deep search</string>
+  <string name="pref_main_deep_search_enc_summary">Do search in permissions list instead of apps list</string>
+
   <string name="pref_main_case_sensitive_search_enc_key" translatable="false">pref_main_case_sensitive_search_enc</string>
   <bool name="pref_main_case_sensitive_search_enc_default">false</bool>
+  <string name="pref_main_case_sensitive_search_enc_title" maxLength="20">Case sensitive</string>
+  <string name="pref_main_case_sensitive_search_enc_summary">Match string only with the same case</string>
+
   <string name="pref_main_dark_theme_key" translatable="false">pref_main_dark_theme</string>
   <bool name="pref_main_dark_theme_default">true</bool>
   <string name="pref_main_use_hidden_apis_enc_key" translatable="false">pref_main_use_hidden_apis_enc</string>

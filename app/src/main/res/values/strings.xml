@@ -59,8 +59,6 @@
   <string name="primary_account" maxLength="15">Primary Account</string>
   <string name="primary_profile_only">Permission Manager X can run only in primary user account /
     device owner profile.</string>
-  <string name="deep_search" maxLength="12">Deep Search (Permissions)</string>
-  <string name="case_sensitive_search" maxLength="12">Case Sensitive Search</string>
   <string name="grant_root_or_adb">Grant root access or connect to ADB to start privileged process.</string>
   <string name="logging_failed" maxLength="20">Logging failed</string>
   <string name="daemon_logging_failed" maxLength="20">Logging for privileged daemon failed</string>

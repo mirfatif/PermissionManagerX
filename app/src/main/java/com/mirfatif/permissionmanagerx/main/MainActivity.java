@@ -11,6 +11,7 @@ import static com.mirfatif.permissionmanagerx.util.Utils.getQtyString;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +28,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.SearchView.OnQueryTextListener;
 import androidx.core.view.GravityCompat;
@@ -42,6 +44,7 @@ import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.prefs.FilterSettingsActivity;
 import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
 import com.mirfatif.permissionmanagerx.prefs.settings.SettingsActivity;
+import com.mirfatif.permissionmanagerx.prefs.settings.SettingsFragSearch;
 import com.mirfatif.permissionmanagerx.ui.AboutActivity;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.ui.HelpActivity;
@@ -94,6 +97,17 @@ public class MainActivity extends BaseActivity {
 
     mB = ActivityMainBinding.inflate(getLayoutInflater());
     setContentView(mB.getRoot());
+
+    /*
+     Check null to avoid IllegalStateException on rotation.
+     https://issuetracker.google.com/issues/137173772
+    */
+    if (savedInstanceState == null) {
+      getSupportFragmentManager()
+          .beginTransaction()
+          .replace(R.id.search_settings_frag, new SettingsFragSearch())
+          .commit();
+    }
 
     mMainActivityFlavor = new MainActivityFlavor(this);
     mBackupRestore = new BackupRestore(this);
@@ -165,7 +179,7 @@ public class MainActivity extends BaseActivity {
       SETTINGS.plusAppLaunchCount();
     }
 
-    mMainActivityFlavor.onCreated();
+    mMainActivityFlavor.onCreated(savedInstanceState);
 
     Utils.runInBg(() -> new AppUpdate().check(true));
   }
@@ -214,6 +228,18 @@ public class MainActivity extends BaseActivity {
     if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "onOptionsItemSelected: " + item.getTitle());
     }
+
+    if (item.getItemId() == android.R.id.home) {
+      if (!mSearchView.isIconified()) {
+        if (mB.searchSettingsContainer.getVisibility() == View.VISIBLE) {
+          mB.searchSettingsContainer.setVisibility(View.GONE);
+        } else {
+          mB.searchSettingsContainer.setVisibility(View.VISIBLE);
+        }
+        return true;
+      }
+    }
+
     boolean res = false;
     if (mMainActivityFlavor != null) {
       res = mMainActivityFlavor.onOptionsItemSelected(item);
@@ -542,7 +568,15 @@ public class MainActivity extends BaseActivity {
           if (SETTINGS.isDebug()) {
             Util.debugLog(TAG, "searchViewFocused: " + hasFocus);
           }
-          showSearchActionSettings();
+
+          ActionBar actionBar = getSupportActionBar();
+          if (actionBar != null) {
+            Drawable icon = AppCompatResources.getDrawable(this, R.drawable.search_settings);
+            if (icon != null) {
+              actionBar.setHomeAsUpIndicator(icon);
+            }
+          }
+
           mB.getRoot().closeDrawer(GravityCompat.START, true);
           if (!hasFocus && TextUtils.isEmpty(mSearchView.getQuery())) {
             collapseSearchView();
@@ -553,38 +587,6 @@ public class MainActivity extends BaseActivity {
     mSearchView.setMaxWidth(Integer.MAX_VALUE); // Hide package name
   }
 
-  private void showSearchActionSettings() {
-    mB.deepSearch.setOnCheckedChangeListener(null);
-    mB.caseSensitiveSearch.setOnCheckedChangeListener(null);
-
-    mB.deepSearch.setChecked(SETTINGS.isDeepSearchEnabled());
-    mB.caseSensitiveSearch.setChecked(SETTINGS.isCaseSensitiveSearch());
-
-    // For android:ellipsize="marquee" to work
-    mB.deepSearch.setSelected(true);
-    mB.caseSensitiveSearch.setSelected(true);
-
-    mB.deepSearch.setOnCheckedChangeListener(
-        (buttonView, isChecked) -> {
-          SETTINGS.setDeepSearchEnabled(isChecked);
-          handleSearchQuery();
-          if (SETTINGS.isDebug()) {
-            Util.debugLog(TAG, "setting deepSearch: " + isChecked);
-          }
-        });
-
-    mB.caseSensitiveSearch.setOnCheckedChangeListener(
-        (buttonView, isChecked) -> {
-          SETTINGS.setCaseSensitiveSearch(isChecked);
-          handleSearchQuery();
-          if (SETTINGS.isDebug()) {
-            Util.debugLog(TAG, "setting caseSensitiveSearch: " + isChecked);
-          }
-        });
-
-    mB.searchSettingsContainer.setVisibility(View.VISIBLE);
-  }
-
   private void collapseSearchView() {
     if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "collapsing searchView");
@@ -592,10 +594,15 @@ public class MainActivity extends BaseActivity {
     mSearchView.onActionViewCollapsed();
     mSearchView.setQuery(null, false);
     handleSearchQuery(); // mSearchView.setQuery(null, true) does not work
-    mB.searchSettingsContainer.setVisibility(View.GONE);
+
+    if (mMainActivityFlavor != null) {
+      mMainActivityFlavor.resetDrawerIcon();
+    }
   }
 
   private void handleSearchQuery() {
+    mB.searchSettingsContainer.setVisibility(View.GONE);
+
     CharSequence queryText = mSearchView.getQuery();
     boolean wasSearching = SETTINGS.isSearching();
 
@@ -987,14 +994,6 @@ public class MainActivity extends BaseActivity {
     public void onAnimationRepeat(Animator animation) {}
   }
 
-  @SuppressWarnings("UnusedDeclaration")
-  void resetDrawerIcon() {
-    ActionBar actionBar = getSupportActionBar();
-    if (actionBar != null && mDrawerToggle != null) {
-      actionBar.setHomeAsUpIndicator(mDrawerToggle.getDrawerArrowDrawable());
-    }
-  }
-
   //////////////////////////////////////////////////////////////////
   ////////////////////////// FOR SUBCLASSES ////////////////////////
   //////////////////////////////////////////////////////////////////
@@ -1018,5 +1017,9 @@ public class MainActivity extends BaseActivity {
 
   MainActivityFlavor getMainActivityFlavor() {
     return mMainActivityFlavor;
+  }
+
+  ActionBarDrawerToggle getDrawerToggle() {
+    return mDrawerToggle;
   }
 }

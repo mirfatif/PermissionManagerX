@@ -359,10 +359,6 @@ public enum MySettings {
     return getBoolPref(R.string.pref_main_case_sensitive_search_enc_key);
   }
 
-  public void setCaseSensitiveSearch(boolean isSensitive) {
-    savePref(R.string.pref_main_case_sensitive_search_enc_key, isSensitive);
-  }
-
   public boolean isSpecialSearch() {
     return getBoolPref(R.string.pref_settings_special_search_key);
   }

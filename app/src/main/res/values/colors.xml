@@ -2,6 +2,7 @@
 <resources>
   <color name="green">#007F7F</color>
   <color name="greenTrans">#1A007F7F</color>
+  <color name="greenTransHigh">#0D007F7F</color>
 
   <color name="disabledStateColor">#7F7F7F</color>
 

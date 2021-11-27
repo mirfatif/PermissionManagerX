@@ -5,6 +5,7 @@
     <!--Define custom attributes unique to the theme-->
     <item name="accentColor">@color/green</item>
     <item name="accentTransColor">@color/greenTrans</item>
+    <item name="accentTransHighColor">@color/greenTransHigh</item>
 
     <!--Preference Group Titles, Dialog Button Text-->
     <item name="colorAccent">?attr/accentColor</item>
