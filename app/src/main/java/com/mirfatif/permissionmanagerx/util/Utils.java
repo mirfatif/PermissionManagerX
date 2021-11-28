@@ -95,7 +95,6 @@ import java.io.StringWriter;
 import java.security.GeneralSecurityException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -312,14 +311,11 @@ public class Utils {
   }
 
   public static boolean openWebUrl(Activity activity, String url) {
-    List<ResolveInfo> customTabsServices =
-        App.getContext()
-            .getPackageManager()
-            .queryIntentServices(
-                new Intent(CustomTabsService.ACTION_CUSTOM_TABS_CONNECTION),
-                PackageManager.MATCH_ALL);
+    PackageManager pm = App.getContext().getPackageManager();
+    Intent intent = new Intent(CustomTabsService.ACTION_CUSTOM_TABS_CONNECTION);
+    ResolveInfo customTabSvc = pm.resolveService(intent, PackageManager.MATCH_ALL);
 
-    if (customTabsServices.isEmpty()) {
+    if (customTabSvc == null) {
       try {
         activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
       } catch (ActivityNotFoundException e) {

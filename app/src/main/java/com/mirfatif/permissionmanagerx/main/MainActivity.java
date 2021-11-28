@@ -679,6 +679,8 @@ public class MainActivity extends BaseActivity {
       if (SETTINGS.isPrivDaemonAlive() || SETTINGS.isAppOpsGranted()) {
         // Set observers and/or update package list.
         Utils.runInFg(this, () -> setLiveDataObservers(!isFirstRun));
+      } else if (isFirstRun) {
+        Utils.runInFg(this, () -> mB.rndProgTextV.setText(R.string.missing_privileges));
       }
 
       mMainActivityFlavor.onPrivDaemonStarted();

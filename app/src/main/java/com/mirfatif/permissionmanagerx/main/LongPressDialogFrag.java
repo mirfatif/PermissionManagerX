@@ -7,6 +7,7 @@ import static com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler.DAEMON_HAN
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -55,6 +56,12 @@ public class LongPressDialogFrag extends BottomSheetDialogFrag {
     ActivityMainPkgDialogBinding b =
         ActivityMainPkgDialogBinding.inflate(inflater, container, container != null);
 
+    b.pkgLabelV.setText(mPkg.getLabel());
+    if (!mPkg.getLabel().equals(mPkg.getName())) {
+      b.pkgNameV.setText(mPkg.getName());
+      b.pkgNameV.setVisibility(View.VISIBLE);
+    }
+
     boolean canBeExcluded = SETTINGS.canBeExcluded(mPkg);
     boolean canBeDisabled =
         mPkg.isChangeable() && !mPkg.getName().equals(App.getContext().getPackageName());
@@ -88,11 +95,17 @@ public class LongPressDialogFrag extends BottomSheetDialogFrag {
           openAppInfo();
         });
 
-    b.findPkgProc.setOnClickListener(
-        v -> {
-          dismissAllowingStateLoss();
-          openAppProc();
-        });
+    PackageManager pm = App.getContext().getPackageManager();
+    Intent intent = new Intent(WRUN_ACTION_SEARCH_PKG);
+
+    if (pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+      b.findPkgProc.setVisibility(View.VISIBLE);
+      b.findPkgProc.setOnClickListener(
+          v -> {
+            dismissAllowingStateLoss();
+            openAppProc();
+          });
+    }
 
     return b.getRoot();
   }

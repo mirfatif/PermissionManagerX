@@ -62,12 +62,15 @@
   <string name="grant_root_or_adb">Grant root access or connect to ADB to start privileged process.</string>
   <string name="logging_failed" maxLength="20">Logging failed</string>
   <string name="daemon_logging_failed" maxLength="20">Logging for privileged daemon failed</string>
+
   <string name="creating_packages_list" maxLength="15">Creating Apps List</string>
   <string name="reading_reference_perms" maxLength="15">Reading References</string>
   <string name="creating_app_ops_lists" maxLength="15">Preparing AppOps Data</string>
   <string name="starting_daemon" maxLength="15">Starting Daemon</string>
   <string name="checking_root_access" maxLength="15">Checking Root Access</string>
   <string name="checking_adb_access" maxLength="15">Checking ADB Access</string>
+  <string name="missing_privileges" maxLength="15">Missing Privileges</string>
+
   <string name="root_granted" maxLength="20">Root granted</string>
   <string name="getting_root_fail" maxLength="20">Getting root privileges failed</string>
   <string name="getting_root_fail_long" maxLength="20">Getting root privileges failed. Are you rooted?</string>
