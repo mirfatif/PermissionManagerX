@@ -1,7 +1,5 @@
 package com.mirfatif.privtasks.hiddenapis;
 
-import static com.mirfatif.privtasks.Commands.CMD_RCV_SVC;
-
 import android.app.ActivityManagerNative;
 import android.app.AppOpsManager;
 import android.app.AppOpsManager.OpEntry;
@@ -374,9 +372,10 @@ public class HiddenAPIsImpl extends HiddenAPIs {
   }
 
   @Override
-  public void sendRequest(String command, String appId, int userId, String codeWord)
+  public void sendRequest(
+      String command, String appId, String cmdRcvSvc, int userId, String codeWord)
       throws HiddenAPIsException {
-    Intent intent = new Intent(command).setClassName(appId, CMD_RCV_SVC);
+    Intent intent = new Intent(command).setClassName(appId, cmdRcvSvc);
     intent.putExtra(Commands.CODE_WORD, codeWord);
     ComponentName cn;
     try {
@@ -392,7 +391,7 @@ public class HiddenAPIsImpl extends HiddenAPIs {
     }
 
     if (cn == null || !cn.getPackageName().equals(appId)) {
-      throw new HiddenAPIsException("Could not start " + CMD_RCV_SVC);
+      throw new HiddenAPIsException("Could not start " + cmdRcvSvc);
     }
   }
 

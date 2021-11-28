@@ -24,13 +24,15 @@ public class PrivTasks {
 
   private final HiddenAPIsImpl mHiddenAPIs = new HiddenAPIsImpl(new HiddenAPIsCallbackImpl());
   private final PrivTasksCallback mCallback;
-  private final String mAppId;
+  private final String mAppId, mCmdRcvSvc;
   private final int mAppUserId;
   private final boolean mIsDaemon;
 
-  public PrivTasks(PrivTasksCallback callback, String appId, int appUserId, boolean isDaemon) {
+  public PrivTasks(
+      PrivTasksCallback callback, String appId, String cmdRcvSvc, int appUserId, boolean isDaemon) {
     mCallback = callback;
     mAppId = appId;
+    mCmdRcvSvc = cmdRcvSvc;
     mAppUserId = appUserId;
     mIsDaemon = isDaemon;
   }
@@ -364,7 +366,7 @@ public class PrivTasks {
   // Must be called only when the app is in foreground or a fg service is running.
   public void sendRequest(String command, String codeWord) {
     try {
-      mHiddenAPIs.sendRequest(command, mAppId, mAppUserId, codeWord);
+      mHiddenAPIs.sendRequest(command, mAppId, mCmdRcvSvc, mAppUserId, codeWord);
     } catch (HiddenAPIsException e) {
       e.printStackTrace();
     }

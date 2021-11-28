@@ -38,7 +38,6 @@ public class Commands {
   public static final String RESET_OOS = "RESET_OOS";
 
   // From daemon to app
-  public static final String CMD_RCV_SVC = "com.mirfatif.permissionmanagerx.svc.DaemonCmdRcvSvc";
   public static final String CODE_WORD = "CODE_WORD";
 
   public static final String LISTEN_ON_LOOPBACK_FAILED = "LISTEN_ON_LOOPBACK_FAILED";

@@ -284,7 +284,8 @@ public abstract class HiddenAPIs {
   @DaemonOnly
   @Privileged
   @Throws(name = "SecurityException")
-  public abstract void sendRequest(String command, String appId, int userId, String codeWord)
+  public abstract void sendRequest(
+      String command, String appId, String cmdRcvSvc, int userId, String codeWord)
       throws HiddenAPIsException;
 
   //////////////////////////////////////////////////////////////////

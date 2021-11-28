@@ -58,9 +58,10 @@ class Daemon {
     boolean useSocket = Boolean.parseBoolean(params[1]);
     int appUserId = Integer.parseInt(params[2]);
     mAppId = params[3];
-    mCodeWord = params[4];
+    String cmdRcvSvc = params[4];
+    mCodeWord = params[5];
 
-    mPrivTasks = new PrivTasks(new PrivTasksCallbackImpl(), mAppId, appUserId, true);
+    mPrivTasks = new PrivTasks(new PrivTasksCallbackImpl(), mAppId, cmdRcvSvc, appUserId, true);
     mDaemonFlavor = new DaemonFlavor(this, mPrivTasks);
 
     for (int pid : mPrivTasks.getPidsForCommands(new String[] {TAG})) {

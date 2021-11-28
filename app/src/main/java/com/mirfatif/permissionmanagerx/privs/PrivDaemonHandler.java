@@ -164,6 +164,8 @@ public enum PrivDaemonHandler {
             + " "
             + BuildConfig.APPLICATION_ID
             + " "
+            + DaemonCmdRcvSvc.class.getName()
+            + " "
             + DaemonCmdRcvSvc.CODE_WORD;
 
     // Daemon waits and reads parameters from STDIN

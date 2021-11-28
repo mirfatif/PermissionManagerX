@@ -28,7 +28,11 @@ public enum AppOpsParser {
 
   private final PrivTasks mPrivTasks =
       new PrivTasks(
-          new PrivTasksCallbackImpl(), BuildConfig.APPLICATION_ID, Utils.getUserId(), false);
+          new PrivTasksCallbackImpl(),
+          BuildConfig.APPLICATION_ID,
+          DaemonCmdRcvSvc.class.getName(),
+          Utils.getUserId(),
+          false);
 
   AppOpsParser() {
     if (!mPrivTasks.canUseIAppOpsService()) {
