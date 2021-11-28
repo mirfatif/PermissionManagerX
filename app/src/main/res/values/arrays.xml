@@ -27,6 +27,7 @@
     <item>com.android.calllogbackup</item>
     <item>com.android.camera2</item>
     <item>com.android.camera</item>
+    <item>com.android.cameraextensions</item>
     <item>com.android.captiveportallogin</item>
     <item>com.android.carrierconfig</item>
     <item>com.android.carrierdefaultapp</item>
@@ -57,6 +58,7 @@
     <item>com.android.hotspot2</item>
     <item>com.android.hotspot2.osulogin</item>
     <item>com.android.htmlviewer</item>
+    <item>com.android.imsserviceentitlement</item>
     <item>com.android.incallui</item>
     <item>com.android.inputdevices</item>
     <item>com.android.inputmethod.latin</item>
@@ -94,6 +96,7 @@
     <item>com.android.providers.downloads.ui</item>
     <item>com.android.providers.media</item>
     <item>com.android.providers.media.module</item>
+    <item>com.android.providers.partnerbookmarks</item>
     <item>com.android.providers.settings</item>
     <item>com.android.providers.telephony</item>
     <item>com.android.providers.userdictionary</item>
@@ -109,6 +112,7 @@
     <item>com.android.shell</item>
     <item>com.android.simappdialog</item>
     <item>com.android.smspush</item>
+    <item>com.android.soundpicker</item>
     <item>com.android.statementservice</item>
     <item>com.android.stk</item>
     <item>com.android.storagemanager</item>
