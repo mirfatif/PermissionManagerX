@@ -143,16 +143,18 @@
     better serve your needs.</string>
   <string name="ask_to_provide_feedback">Sorry to hear that. You can help improve the app by
     contacting us via email or Telegram so that we are able to better serve your needs.</string>
-  <string name="contact" maxLength="10">Write Now</string>
-  <string name="contact_on_telegram" maxLength="10">Write a Message on Telegram</string>
-  <string name="contact_on_email" maxLength="10">Write an Email</string>
-  <string name="rate_now" maxLength="10">Rate Now</string>
-  <string name="how_do_i" maxLength="10">How do I?</string>
-  <string name="purchase_donate" maxLength="10">Purchase / Donate</string>
-  <string name="rate_on_ps" maxLength="10">Rate on Play Store</string>
-  <string name="star_on_github" maxLength="10">Star on GitHub</string>
-  <string name="review_on_xda" maxLength="10">Write a Review on XDA</string>
   <string name="thank_you" maxLength="20">Thank you</string>
+
+  <string name="contact" maxLength="15">Write Now</string>
+  <string name="contact_on_telegram" maxLength="15">Write a Message on Telegram</string>
+  <string name="contact_on_email" maxLength="15">Write an Email</string>
+  <string name="rate_now" maxLength="15">Rate Now</string>
+  <string name="how_do_i" maxLength="15">How do I?</string>
+  <string name="purchase_donate" maxLength="15">Purchase / Donate</string>
+  <string name="rate_on_ps" maxLength="15">Rate on Play Store</string>
+  <string name="star_on_github" maxLength="15">Star on GitHub</string>
+  <string name="review_on_xda" maxLength="15">Write a Review on XDA</string>
+  <string name="do_not_ask" maxLength="15">Don\'t ask again</string>
 
   <!-- Links -->
   <string name="source_url" translatable="false">https://github.com/mirfatif/PermissionManagerX</string>
@@ -180,12 +182,6 @@
   <string name="logging" maxLength="15">Logging</string>
   <string name="logging_warning">App may respond slow due to log collection and log file may grow
     up to very large size. Logging is auto-stopped after 5 minutes.</string>
-
-  <!-- Buttons-->
-  <string name="exclude" maxLength="10">Exclude</string>
-  <string name="clear_reference" maxLength="10" comment="'Clear Reference'">Clear Ref</string>
-  <string name="set_reference" maxLength="10" comment="'Set Reference'">Set Ref</string>
-  <string name="do_not_ask" maxLength="15">Don\'t ask again</string>
 
   <!-- PackageActivity menu items -->
   <string name="reset_app_ops" maxLength="15">Reset AppOps</string>
@@ -217,10 +213,11 @@
     <item quantity="other">This is a UID mode AppOp. Changing it also affects %1$d other packages.</item>
   </plurals>
 
-  <string name="extra_ops_cant_be_excluded">Extra AppOps cannot be excluded from visible list.</string>
-  <string name="exclude_perm_from_list">Exclude permission from visible list.</string>
-  <string name="set_perm_state_reference" comment="AppOps or manifest permission state"><![CDATA[<br/>Set <b>%1$s</b> state as reference.]]></string>
-  <string comment="AppOps or manifest permission state" name="clear_perm_state_reference"><![CDATA[<br/>Clear <b>%1$s</b> state as reference.]]></string>
+  <string name="exclude_perm_from_list">Hide Permission From List</string>
+  <string name="set_perm_state_reference" maxLength="10"><![CDATA[Set <b><i>%1$s</i></b> As Reference]]></string>
+  <string name="set_reference" maxLength="15">Set Reference</string>
+  <string name="clear_reference" maxLength="15">Clear Reference</string>
+  <string name="no_action_available" maxLength="20">No action available</string>
 
   <plurals name="count_permissions_filtered_out">
     <item quantity="one">%1$d permission filtered out</item>

@@ -19,70 +19,35 @@
     android:orientation="vertical">
 
     <TextView
-      android:id="@+id/pkg_label_v"
+      android:id="@+id/perm_name_v"
       android:textStyle="bold"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="center_horizontal"
-      android:ellipsize="end"
-      android:maxLines="1"
-      android:textColor="@color/dynamic_text_color"
-      android:textSize="18sp"
-      app:autoSizeMinTextSize="10sp"
-      app:autoSizeTextType="uniform" />
-
-    <TextView
-      android:id="@+id/pkg_name_v"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
       android:layout_marginBottom="16dp"
       android:layout_gravity="center_horizontal"
       android:ellipsize="end"
       android:maxLines="1"
       android:textColor="@color/dynamic_text_color"
-      android:textSize="16sp"
-      android:visibility="gone"
+      android:textSize="18sp"
       app:autoSizeMinTextSize="8sp"
       app:autoSizeTextType="uniform" />
 
     <Button
-      android:id="@+id/exclude_pkg"
+      android:id="@+id/exclude_perm"
       style="@style/Widget.AppCompat.Button"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="@drawable/button_bg"
-      android:text="@string/exclude_app_from_visible_list"
-      android:textColor="?attr/accentColor"
-      android:visibility="gone" />
+      android:text="@string/exclude_perm_from_list"
+      android:textColor="@color/button_spinner_color" />
 
     <Button
-      android:id="@+id/disable_pkg"
+      android:id="@+id/ref_button"
       style="@style/Widget.AppCompat.Button"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="@drawable/button_bg"
-      android:textColor="?attr/accentColor"
-      android:visibility="gone" />
-
-    <Button
-      android:id="@+id/open_pkg_info"
-      style="@style/Widget.AppCompat.Button"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="@drawable/button_bg"
-      android:text="@string/open_pkg_info"
-      android:textColor="?attr/accentColor" />
-
-    <Button
-      android:id="@+id/find_pkg_proc"
-      style="@style/Widget.AppCompat.Button"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="@drawable/button_bg"
-      android:text="@string/find_pkg_process"
-      android:textColor="?attr/accentColor"
-      android:visibility="gone" />
+      android:textColor="@color/button_spinner_color" />
 
   </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>

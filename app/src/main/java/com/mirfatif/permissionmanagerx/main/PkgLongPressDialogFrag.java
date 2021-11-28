@@ -20,7 +20,7 @@ import androidx.appcompat.app.AlertDialog.Builder;
 import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
-import com.mirfatif.permissionmanagerx.databinding.ActivityMainPkgDialogBinding;
+import com.mirfatif.permissionmanagerx.databinding.PkgLongPressDialogBinding;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.ui.base.BottomSheetDialogFrag;
@@ -28,17 +28,17 @@ import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
 
-public class LongPressDialogFrag extends BottomSheetDialogFrag {
+public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
 
-  private static final String TAG = "LongPressDialogFrag";
+  private static final String TAG = "PkgLongPressDialogFrag";
 
   private final Package mPkg;
 
-  LongPressDialogFrag(Package pkg) {
+  PkgLongPressDialogFrag(Package pkg) {
     mPkg = pkg;
   }
 
-  public LongPressDialogFrag() {
+  public PkgLongPressDialogFrag() {
     mPkg = null;
   }
 
@@ -53,8 +53,8 @@ public class LongPressDialogFrag extends BottomSheetDialogFrag {
       return null;
     }
 
-    ActivityMainPkgDialogBinding b =
-        ActivityMainPkgDialogBinding.inflate(inflater, container, container != null);
+    PkgLongPressDialogBinding b =
+        PkgLongPressDialogBinding.inflate(inflater, container, container != null);
 
     b.pkgLabelV.setText(mPkg.getLabel());
     if (!mPkg.getLabel().equals(mPkg.getName())) {
@@ -62,12 +62,7 @@ public class LongPressDialogFrag extends BottomSheetDialogFrag {
       b.pkgNameV.setVisibility(View.VISIBLE);
     }
 
-    boolean canBeExcluded = SETTINGS.canBeExcluded(mPkg);
-    boolean canBeDisabled =
-        mPkg.isChangeable() && !mPkg.getName().equals(App.getContext().getPackageName());
-
-    if (canBeExcluded) {
-      b.excludePkg.setVisibility(View.VISIBLE);
+    if (SETTINGS.canBeExcluded(mPkg)) {
       b.excludePkg.setOnClickListener(
           v -> {
             dismissAllowingStateLoss();
@@ -77,16 +72,19 @@ public class LongPressDialogFrag extends BottomSheetDialogFrag {
                   PKG_PARSER.removePackage(mPkg);
                 });
           });
+    } else {
+      b.excludePkg.setEnabled(false);
     }
 
-    if (canBeDisabled) {
-      b.disablePkg.setVisibility(View.VISIBLE);
-      b.disablePkg.setText(mPkg.isEnabled() ? R.string.disable_app : R.string.enable_app);
+    b.disablePkg.setText(mPkg.isEnabled() ? R.string.disable_app : R.string.enable_app);
+    if (mPkg.isChangeable() && !mPkg.getName().equals(App.getContext().getPackageName())) {
       b.disablePkg.setOnClickListener(
           v -> {
             dismissAllowingStateLoss();
             setPackageEnabledState();
           });
+    } else {
+      b.disablePkg.setEnabled(false);
     }
 
     b.openPkgInfo.setOnClickListener(

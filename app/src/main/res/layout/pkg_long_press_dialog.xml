@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:padding="8dp"
+  android:orientation="vertical">
+
+  <View
+    android:layout_width="20dp"
+    android:layout_height="6dp"
+    android:layout_gravity="center_horizontal"
+    android:background="@drawable/hinge" />
+
+  <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="24dp"
+    android:orientation="vertical">
+
+    <TextView
+      android:id="@+id/pkg_label_v"
+      android:textStyle="bold"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:ellipsize="end"
+      android:maxLines="1"
+      android:textColor="@color/dynamic_text_color"
+      android:textSize="18sp"
+      app:autoSizeMinTextSize="10sp"
+      app:autoSizeTextType="uniform" />
+
+    <TextView
+      android:id="@+id/pkg_name_v"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:layout_marginBottom="16dp"
+      android:layout_gravity="center_horizontal"
+      android:ellipsize="end"
+      android:maxLines="1"
+      android:textColor="@color/dynamic_text_color"
+      android:textSize="16sp"
+      android:visibility="gone"
+      app:autoSizeMinTextSize="8sp"
+      app:autoSizeTextType="uniform" />
+
+    <Button
+      android:id="@+id/exclude_pkg"
+      style="@style/Widget.AppCompat.Button"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/button_bg"
+      android:text="@string/exclude_app_from_visible_list"
+      android:textColor="@color/button_spinner_color" />
+
+    <Button
+      android:id="@+id/disable_pkg"
+      style="@style/Widget.AppCompat.Button"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/button_bg"
+      android:textColor="@color/button_spinner_color" />
+
+    <Button
+      android:id="@+id/open_pkg_info"
+      style="@style/Widget.AppCompat.Button"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/button_bg"
+      android:text="@string/open_pkg_info"
+      android:textColor="?attr/accentColor" />
+
+    <Button
+      android:id="@+id/find_pkg_proc"
+      style="@style/Widget.AppCompat.Button"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/button_bg"
+      android:text="@string/find_pkg_process"
+      android:textColor="?attr/accentColor"
+      android:visibility="gone" />
+
+  </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+</com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>

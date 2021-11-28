@@ -368,7 +368,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onLongClick(Package pkg) {
-      new LongPressDialogFrag(pkg).show(getSupportFragmentManager(), "PKG_OPTIONS");
+      new PkgLongPressDialogFrag(pkg).show(getSupportFragmentManager(), "PKG_OPTIONS");
     }
 
     @Override

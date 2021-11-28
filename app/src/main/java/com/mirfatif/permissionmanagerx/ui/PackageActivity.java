@@ -28,14 +28,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.ActivityPackageBinding;
-import com.mirfatif.permissionmanagerx.databinding.ActivityPkgPermTitleBinding;
 import com.mirfatif.permissionmanagerx.databinding.PermDetailsDialogBinding;
 import com.mirfatif.permissionmanagerx.main.BackupRestore;
 import com.mirfatif.permissionmanagerx.main.BackupRestore.BackupEntry;
 import com.mirfatif.permissionmanagerx.main.MainActivity;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.Permission;
-import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionEntity;
 import com.mirfatif.permissionmanagerx.prefs.FilterSettingsActivity;
 import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.PermAdapterCallback;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
@@ -165,7 +163,7 @@ public class PackageActivity extends BaseActivity {
     Utils.runInFg(this, () -> mB.refreshLayout.setRefreshing(true));
   }
 
-  private String getPermState(Permission permission) {
+  String getPermState(Permission permission) {
     return permission.isAppOps()
         ? APP_OPS_PARSER.getAppOpsModes().get(permission.getAppOpsMode())
         : (permission.isGranted() ? Permission.GRANTED : Permission.REVOKED);
@@ -605,93 +603,7 @@ public class PackageActivity extends BaseActivity {
 
     @Override
     public void onPermLongClick(Permission perm) {
-      String permState = getPermState(perm);
-      Builder builder = new Builder(PackageActivity.this);
-      builder.setPositiveButton(
-          R.string.exclude,
-          (dialogInterface, i) ->
-              Utils.runInBg(
-                  () -> {
-                    SETTINGS.addPermToExcludedPerms(perm.getName());
-                    updatePackage();
-
-                    // other packages are also affected
-                    PKG_PARSER.updatePackagesList();
-                  }));
-      builder.setNegativeButton(android.R.string.cancel, null);
-
-      boolean isReferenced = perm.isReferenced() != null && perm.isReferenced();
-      builder.setNeutralButton(
-          (isReferenced ? R.string.clear_reference : R.string.set_reference),
-          (dialog, which) -> {
-            if (isReferenced) {
-              Utils.runInBg(
-                  () -> {
-                    SETTINGS.getPermDb().deletePermission(mPackage.getName(), perm.getName());
-                    PKG_PARSER.updatePermReferences(mPackage.getName(), perm.getName(), null);
-                    updatePackage();
-                    mPkgActivityFlavor.pkgRefChanged(mPackage);
-                  });
-              return;
-            }
-            PermissionEntity entity = new PermissionEntity();
-            entity.isAppOps = perm.isAppOps();
-            entity.permName = perm.getName();
-            entity.pkgName = mPackage.getName();
-            entity.state = permState;
-            Utils.runInBg(
-                () -> {
-                  int id = SETTINGS.getPermDb().getId(entity.pkgName, entity.permName);
-                  if (id > 0) {
-                    entity.id = id;
-                  }
-                  SETTINGS.getPermDb().insertAll(entity);
-                  PKG_PARSER.updatePermReferences(mPackage.getName(), perm.getName(), permState);
-                  updatePackage();
-                  mPkgActivityFlavor.pkgRefChanged(mPackage);
-                });
-          });
-
-      // Set message, create and show the AlertDialog
-      ActivityPkgPermTitleBinding b = ActivityPkgPermTitleBinding.inflate(getLayoutInflater());
-      b.getRoot().setText(perm.getName());
-      builder.setCustomTitle(b.getRoot());
-
-      String message;
-      if (perm.isExtraAppOp()) {
-        message = getString(R.string.extra_ops_cant_be_excluded);
-      } else {
-        message = getString(R.string.exclude_perm_from_list);
-      }
-      if (perm.isChangeable()) {
-        String permStateStr;
-        if (perm.isAppOps()) {
-          permStateStr = PermissionAdapter.getLocalizedMode(permState);
-          if (permStateStr == null) {
-            permStateStr = permState;
-          }
-        } else if (permState.equals(Permission.GRANTED)) {
-          permStateStr = getString(R.string.perm_mode_granted);
-        } else {
-          permStateStr = getString(R.string.perm_mode_revoked);
-        }
-
-        if (isReferenced) {
-          message += getString(R.string.clear_perm_state_reference, permStateStr);
-        } else {
-          message += getString(R.string.set_perm_state_reference, permStateStr);
-        }
-      }
-      builder.setMessage(Utils.htmlToString(message));
-
-      AlertDialog dialog = builder.create();
-      dialog.setOnShowListener(
-          d -> {
-            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(perm.isChangeable());
-            boolean canBeExcluded = SETTINGS.canBeExcluded(perm);
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(canBeExcluded);
-          });
-      AlertDialogFragment.show(PackageActivity.this, dialog, "PERM_OPTIONS");
+      PermLongPressDialogFrag.show(perm, mPackage, mPkgActivityFlavor, getSupportFragmentManager());
     }
 
     @Override

@@ -28,7 +28,7 @@
 
   <style name="mySpinnerItemStyle">
     <item name="android:textStyle">bold</item>
-    <item name="android:textColor">@color/spinner_color</item>
+    <item name="android:textColor">@color/button_spinner_color</item>
   </style>
 
   <style name="myAlertDialogTheme" parent="ThemeOverlay.AppCompat.Dialog.Alert">
