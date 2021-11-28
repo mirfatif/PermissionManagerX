@@ -2,19 +2,19 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
   <CheckBoxPreference
-    app:defaultValue="@bool/pref_main_deep_search_enc_default"
+    app:defaultValue="@bool/pref_main_deep_search_default"
     app:iconSpaceReserved="false"
-    app:key="@string/pref_main_deep_search_enc_key"
+    app:key="@string/pref_main_deep_search_key"
     app:singleLineTitle="false"
-    app:summary="@string/pref_main_deep_search_enc_summary"
-    app:title="@string/pref_main_deep_search_enc_title" />
+    app:summary="@string/pref_main_deep_search_summary"
+    app:title="@string/pref_main_deep_search_title" />
 
   <CheckBoxPreference
-    app:defaultValue="@bool/pref_main_case_sensitive_search_enc_default"
+    app:defaultValue="@bool/pref_main_case_sensitive_search_default"
     app:iconSpaceReserved="false"
-    app:key="@string/pref_main_case_sensitive_search_enc_key"
+    app:key="@string/pref_main_case_sensitive_search_key"
     app:singleLineTitle="false"
-    app:summary="@string/pref_main_case_sensitive_search_enc_summary"
-    app:title="@string/pref_main_case_sensitive_search_enc_title" />
+    app:summary="@string/pref_main_case_sensitive_search_summary"
+    app:title="@string/pref_main_case_sensitive_search_title" />
 
 </PreferenceScreen>

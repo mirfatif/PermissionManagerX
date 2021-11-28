@@ -98,17 +98,6 @@ public class MainActivity extends BaseActivity {
     mB = ActivityMainBinding.inflate(getLayoutInflater());
     setContentView(mB.getRoot());
 
-    /*
-     Check null to avoid IllegalStateException on rotation.
-     https://issuetracker.google.com/issues/137173772
-    */
-    if (savedInstanceState == null) {
-      getSupportFragmentManager()
-          .beginTransaction()
-          .replace(R.id.search_settings_frag, new SettingsFragSearch())
-          .commit();
-    }
-
     mMainActivityFlavor = new MainActivityFlavor(this);
     mBackupRestore = new BackupRestore(this);
 
@@ -179,7 +168,7 @@ public class MainActivity extends BaseActivity {
       SETTINGS.plusAppLaunchCount();
     }
 
-    mMainActivityFlavor.onCreated(savedInstanceState);
+    mMainActivityFlavor.onCreated();
 
     Utils.runInBg(() -> new AppUpdate().check(true));
   }
@@ -235,6 +224,13 @@ public class MainActivity extends BaseActivity {
           mB.searchSettingsContainer.setVisibility(View.GONE);
         } else {
           mB.searchSettingsContainer.setVisibility(View.VISIBLE);
+          getSupportFragmentManager()
+              .beginTransaction()
+              .replace(R.id.search_settings_frag, new SettingsFragSearch())
+              .commit();
+          if (mMainActivityFlavor != null) {
+            mMainActivityFlavor.onSearchSettingsExpanded();
+          }
         }
         return true;
       }
@@ -467,7 +463,7 @@ public class MainActivity extends BaseActivity {
      mPackageAdapter.getItemCount() gives wrong value.
      In PackageParser, Packages LiveList must be updated before updating ProgressBars.
     */
-    int size = PKG_PARSER.getPackageListSize();
+    int size = PKG_PARSER.getPkgCount();
 
     mB.refreshLayout.setRefreshing(false);
     if (showPkgCount || size == 0) {
@@ -622,7 +618,7 @@ public class MainActivity extends BaseActivity {
 
     mB.refreshLayout.setRefreshing(!SETTINGS.isDeepSearchEnabled() || !SETTINGS.isSearching());
     PKG_PARSER.newUpdateRequest();
-    PKG_PARSER.handleSearchQuery(null);
+    PKG_PARSER.handleSearchQuery();
   }
 
   //////////////////////////////////////////////////////////////////

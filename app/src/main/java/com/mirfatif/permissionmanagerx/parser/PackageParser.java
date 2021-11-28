@@ -227,10 +227,10 @@ public enum PackageParser {
     }
   }
 
-  public int getPackageListSize() {
-    synchronized (mPackagesList) {
-      return mPackagesList.size();
-    }
+  private int mPkgCount;
+
+  public int getPkgCount() {
+    return mPkgCount;
   }
 
   public Package getPackage(int position) {
@@ -352,6 +352,7 @@ public enum PackageParser {
       Util.debugLog(TAG, "postLiveData: posting " + packageList.size() + " packages");
     }
     mPackagesListLive.postValue(new ArrayList<>(packageList));
+    mPkgCount = packageList.size();
     packagesListUpdateTimeStamp = System.currentTimeMillis();
   }
 
@@ -1154,10 +1155,14 @@ public enum PackageParser {
   private final ExecutorService mSearchQueryExecutor = Executors.newSingleThreadExecutor();
   private Future<?> mSearchQueryFuture;
 
-  public void handleSearchQuery(Boolean isFinal) {
+  public void handleSearchQuery() {
+    handleSearchQuery(null);
+  }
+
+  private void handleSearchQuery(Boolean isFinal) {
     synchronized (mSearchQueryExecutor) {
       if (mSearchQueryFuture != null && !mSearchQueryFuture.isDone()) {
-        if (isFinal != null && !isFinal) {
+        if (Boolean.FALSE.equals(isFinal)) {
           return;
         }
         if (SETTINGS.isDebug()) {

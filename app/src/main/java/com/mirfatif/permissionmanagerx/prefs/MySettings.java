@@ -348,15 +348,15 @@ public enum MySettings {
   }
 
   public boolean isDeepSearchEnabled() {
-    return getBoolPref(R.string.pref_main_deep_search_enc_key);
+    return getBoolPref(R.string.pref_main_deep_search_key);
   }
 
   public void setDeepSearchEnabled(boolean enabled) {
-    savePref(R.string.pref_main_deep_search_enc_key, enabled);
+    savePref(R.string.pref_main_deep_search_key, enabled);
   }
 
   public boolean isCaseSensitiveSearch() {
-    return getBoolPref(R.string.pref_main_case_sensitive_search_enc_key);
+    return getBoolPref(R.string.pref_main_case_sensitive_search_key);
   }
 
   public boolean isSpecialSearch() {

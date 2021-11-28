@@ -3,13 +3,12 @@ package com.mirfatif.permissionmanagerx.main;
 import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 
-public class MainActivityFlavor {
+class MainActivityFlavor {
 
   @SuppressWarnings("FieldCanBeLocal")
   private final MainActivity mA;
@@ -21,8 +20,7 @@ public class MainActivityFlavor {
     mFeedback = new Feedback(mA);
   }
 
-  @SuppressWarnings("UnusedDeclaration")
-  void onCreated(Bundle savedInstanceState) {}
+  void onCreated() {}
 
   void onResumed() {
     mFeedback.askForFeedback();
@@ -42,10 +40,10 @@ public class MainActivityFlavor {
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  public void setNavMenu(Menu menu) {}
+  void setNavMenu(Menu menu) {}
 
   @SuppressWarnings("UnusedDeclaration")
-  public boolean handleNavItemChecked(MenuItem item) {
+  boolean handleNavItemChecked(MenuItem item) {
     return false;
   }
 
@@ -58,7 +56,7 @@ public class MainActivityFlavor {
 
   void onPrivDaemonStarted() {}
 
-  public void handleIntentActions(@SuppressWarnings("UnusedDeclaration") Intent intent) {}
+  void handleIntentActions(@SuppressWarnings("UnusedDeclaration") Intent intent) {}
 
   void resetDrawerIcon() {
     ActionBar actionBar = mA.getSupportActionBar();
@@ -67,4 +65,6 @@ public class MainActivityFlavor {
       actionBar.setHomeAsUpIndicator(drawerToggle.getDrawerArrowDrawable());
     }
   }
+
+  void onSearchSettingsExpanded() {}
 }
