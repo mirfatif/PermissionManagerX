@@ -22,6 +22,7 @@ public class Permission {
   public static final String PROTECTION_DANGEROUS = "PROTECTION_DANGEROUS";
   public static final String PROTECTION_NORMAL = "PROTECTION_NORMAL";
   public static final String PROTECTION_SIGNATURE = "PROTECTION_SIGNATURE";
+  public static final String PROTECTION_INTERNAL = "PROTECTION_INTERNAL";
 
   public static final String GRANTED = "GRANTED";
   public static final String REVOKED = "REVOKED";
@@ -250,7 +251,13 @@ public class Permission {
     if (mIsAppOps) {
       return mDependsOn == null;
     } else {
-      // BasePermission.java#enforceDeclaredUsedAndRuntimeOrDevelopment()
+      /*
+       Role permissions (if not Dangerous and Development; with protection level: INTERNAL) can
+       only be changed by the PermissionController package.
+       Soft/Hard restricted permissions (if Dangerous or Development) might also not be changeable.
+       https://cs.android.com/android/platform/superproject/+/android-12.0.0_r1:frameworks/base/services/core/java/com/android/server/pm/permission/PermissionManagerService.java;l=1429
+       https://android.googlesource.com/platform/frameworks/base/+/b9893a600ea8c047cebb6a4a352322916ba8eaca
+      */
       return (mProtectionLevel.equals(PROTECTION_DANGEROUS) || mIsDevelopment)
           && (!mIsSystemApp || !mIsPrivileged || allowCriticChanges)
           && !mIsPolicyFixed
@@ -281,6 +288,8 @@ public class Permission {
         return CONSTANTS.SEARCH_PROT_DANGEROUS;
       case PROTECTION_SIGNATURE:
         return CONSTANTS.SEARCH_PROT_SIGNATURE;
+      case PROTECTION_INTERNAL:
+        return CONSTANTS.SEARCH_PROT_INTERNAL;
       case APP_OPS:
         return CONSTANTS.SEARCH_APP_OPS;
     }

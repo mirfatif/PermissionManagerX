@@ -33,6 +33,7 @@ public enum SearchConstants {
   public String SEARCH_PROT_NORMAL;
   public String SEARCH_PROT_DANGEROUS;
   public String SEARCH_PROT_SIGNATURE;
+  public String SEARCH_PROT_INTERNAL;
 
   public void recreate() {
     SEARCH_CRITICAL = ":" + getString(R.string.pkg_state_critical);
@@ -56,5 +57,6 @@ public enum SearchConstants {
     SEARCH_PROT_NORMAL = ":" + getString(R.string.prot_lvl_normal);
     SEARCH_PROT_DANGEROUS = ":" + getString(R.string.prot_lvl_dangerous);
     SEARCH_PROT_SIGNATURE = ":" + getString(R.string.prot_lvl_signature);
+    SEARCH_PROT_INTERNAL = ":" + getString(R.string.prot_lvl_internal);
   }
 }

@@ -1,5 +1,6 @@
 package com.mirfatif.permissionmanagerx.parser;
 
+import static android.content.pm.PermissionInfo.PROTECTION_INTERNAL;
 import static com.mirfatif.permissionmanagerx.parser.AppOpsParser.APP_OPS_PARSER;
 import static com.mirfatif.permissionmanagerx.parser.PkgParserFlavor.PKG_PARSER_FLAVOR;
 import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
@@ -14,6 +15,8 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.PermissionInfo;
 import android.content.pm.Signature;
 import android.os.Build;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -770,10 +773,14 @@ public enum PackageParser {
         protection = Permission.PROTECTION_SIGNATURE;
       } else if (protectionLevel == PROTECTION_SIGNATURE_OR_SYSTEM) {
         protection = Permission.PROTECTION_SIGNATURE;
+      } else if (VERSION.SDK_INT >= VERSION_CODES.S && protectionLevel == PROTECTION_INTERNAL) {
+        protection = Permission.PROTECTION_INTERNAL;
       } else {
         Log.e(
             TAG,
             "createPermission: protection level for "
+                + packageInfo.packageName
+                + ": "
                 + permissionInfo.name
                 + ": "
                 + protectionLevel);
