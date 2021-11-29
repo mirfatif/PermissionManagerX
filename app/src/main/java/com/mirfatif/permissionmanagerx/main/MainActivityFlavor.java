@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.fragment.app.FragmentManager;
 
 class MainActivityFlavor {
 
@@ -66,5 +67,7 @@ class MainActivityFlavor {
     }
   }
 
-  void onSearchSettingsExpanded() {}
+  public int hideSearchSettings(@SuppressWarnings("UnusedDeclaration") FragmentManager fm) {
+    return 0;
+  }
 }

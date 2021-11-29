@@ -649,7 +649,7 @@ public enum MySettings {
     releaseExcludedAppsLock();
   }
 
-  private static class SmallTextSpan extends MetricAffectingSpan {
+  public static class SmallTextSpan extends MetricAffectingSpan {
 
     @Override
     public void updateDrawState(TextPaint tp) {

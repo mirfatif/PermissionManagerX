@@ -10,33 +10,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
-      android:id="@+id/search_settings_container"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      android:visibility="gone">
-
-      <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:alpha="0.5"
-        android:background="?attr/accentColor" />
-
-      <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/search_settings_frag"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/accentTransHighColor" />
-
-      <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/search_settings_frag_ps"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/accentTransHighColor" />
-
-    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
-
     <View
       android:layout_width="match_parent"
       android:layout_height="1dp"
@@ -107,6 +80,31 @@
       android:textColor="@color/dynamic_text_color" />
 
   </com.mirfatif.permissionmanagerx.main.ProgressFrameLayout>
+
+  <FrameLayout
+    android:id="@+id/search_settings_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="1dp"
+    android:background="#80000000"
+    android:visibility="gone">
+
+    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/search_settings_bg_flavor">
+
+      <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/search_settings_frag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:padding="2dp" />
+
+    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+
+  </FrameLayout>
 
   <com.mirfatif.permissionmanagerx.ui.base.MyNavigationView
     android:id="@+id/nav_v"

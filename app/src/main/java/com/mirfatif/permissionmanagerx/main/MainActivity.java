@@ -43,8 +43,8 @@ import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.prefs.FilterSettingsActivity;
 import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
+import com.mirfatif.permissionmanagerx.prefs.settings.SearchSettingsFrag;
 import com.mirfatif.permissionmanagerx.prefs.settings.SettingsActivity;
-import com.mirfatif.permissionmanagerx.prefs.settings.SettingsFragSearch;
 import com.mirfatif.permissionmanagerx.ui.AboutActivity;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.ui.HelpActivity;
@@ -163,6 +163,8 @@ public class MainActivity extends BaseActivity {
       SETTINGS.setQueryText(null);
     }
 
+    mB.searchSettingsContainer.setOnClickListener(v -> hideSearchSettings());
+
     // Increment app launch count
     if (Intent.ACTION_MAIN.equals(action)) {
       SETTINGS.plusAppLaunchCount();
@@ -221,16 +223,13 @@ public class MainActivity extends BaseActivity {
     if (item.getItemId() == android.R.id.home) {
       if (!mSearchView.isIconified()) {
         if (mB.searchSettingsContainer.getVisibility() == View.VISIBLE) {
-          mB.searchSettingsContainer.setVisibility(View.GONE);
+          hideSearchSettings();
         } else {
           mB.searchSettingsContainer.setVisibility(View.VISIBLE);
           getSupportFragmentManager()
               .beginTransaction()
-              .replace(R.id.search_settings_frag, new SettingsFragSearch())
+              .replace(R.id.search_settings_frag, new SearchSettingsFrag())
               .commit();
-          if (mMainActivityFlavor != null) {
-            mMainActivityFlavor.onSearchSettingsExpanded();
-          }
         }
         return true;
       }
@@ -596,8 +595,23 @@ public class MainActivity extends BaseActivity {
     }
   }
 
+  private void hideSearchSettings() {
+    int delay = 0;
+    if (mMainActivityFlavor != null) {
+      delay = mMainActivityFlavor.hideSearchSettings(getSupportFragmentManager());
+    }
+    mB.searchSettingsContainer.postDelayed(
+        () -> mB.searchSettingsContainer.setVisibility(View.GONE), delay);
+  }
+
   private void handleSearchQuery() {
-    mB.searchSettingsContainer.setVisibility(View.GONE);
+    handleSearchQuery(true);
+  }
+
+  public void handleSearchQuery(boolean hideSettings) {
+    if (hideSettings) {
+      hideSearchSettings();
+    }
 
     CharSequence queryText = mSearchView.getQuery();
     boolean wasSearching = SETTINGS.isSearching();
@@ -1009,7 +1023,7 @@ public class MainActivity extends BaseActivity {
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  SearchView getSearchView() {
+  public SearchView getSearchView() {
     return mSearchView;
   }
 

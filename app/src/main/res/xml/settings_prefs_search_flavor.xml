@@ -17,4 +17,12 @@
     app:summary="@string/pref_main_case_sensitive_search_summary"
     app:title="@string/pref_main_case_sensitive_search_title" />
 
+  <CheckBoxPreference
+    app:defaultValue="@bool/pref_settings_special_search_default"
+    app:iconSpaceReserved="false"
+    app:key="@string/pref_settings_special_search_key"
+    app:singleLineTitle="false"
+    app:summary="@string/pref_settings_special_search_summary"
+    app:title="@string/pref_settings_special_search_title" />
+
 </PreferenceScreen>
