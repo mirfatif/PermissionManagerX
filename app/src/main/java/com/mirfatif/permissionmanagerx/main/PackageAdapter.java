@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.DiffUtil;
@@ -24,6 +25,8 @@ import com.mirfatif.permissionmanagerx.main.PackageAdapter.ItemViewHolder;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.ui.base.MyListAdapter;
 import com.mirfatif.permissionmanagerx.util.Utils;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
 
@@ -54,6 +57,18 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
   @Override
   public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
     holder.bind(position);
+  }
+
+  private final Object ICON_SETTER_LOCK = new Object();
+  private ExecutorService ICON_SETTER = Executors.newCachedThreadPool();
+
+  void onDestroyed() {
+    synchronized (ICON_SETTER_LOCK) {
+      if (ICON_SETTER != null) {
+        ICON_SETTER.shutdownNow();
+        ICON_SETTER = null;
+      }
+    }
   }
 
   // Store and recycle items as they are scrolled off screen
@@ -90,16 +105,11 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
         mB.refIndicationV.setVisibility(View.GONE);
       }
 
-      Utils.runInBg(
-          () -> {
-            try {
-              int flags = PackageManager.MATCH_UNINSTALLED_PACKAGES;
-              ApplicationInfo appInfo = mPackageManager.getApplicationInfo(pkg.getName(), flags);
-              Drawable icon = mPackageManager.getApplicationIcon(appInfo);
-              mCallback.runInFg(() -> mB.iconV.setImageDrawable(icon));
-            } catch (NameNotFoundException ignored) {
-            }
-          });
+      synchronized (ICON_SETTER_LOCK) {
+        if (ICON_SETTER != null) {
+          ICON_SETTER.submit(() -> setIcon(pkg, mB.iconV));
+        }
+      }
 
       mB.pkgLabelV.setText(pkg.getLabel());
       mB.pkgNameV.setText(pkg.getFormattedName());
@@ -154,6 +164,16 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
         mCallback.onLongClick(getItem(pos));
       }
       return true;
+    }
+  }
+
+  private void setIcon(Package pkg, ImageView view) {
+    try {
+      int flags = PackageManager.MATCH_UNINSTALLED_PACKAGES;
+      ApplicationInfo appInfo = mPackageManager.getApplicationInfo(pkg.getName(), flags);
+      Drawable icon = mPackageManager.getApplicationIcon(appInfo);
+      mCallback.runInFg(() -> view.setImageDrawable(icon));
+    } catch (NameNotFoundException ignored) {
     }
   }
 

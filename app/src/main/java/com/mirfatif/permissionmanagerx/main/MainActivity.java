@@ -274,6 +274,14 @@ public class MainActivity extends BaseActivity {
   }
 
   @Override
+  protected void onDestroy() {
+    if (mPackageAdapter != null) {
+      mPackageAdapter.onDestroyed();
+    }
+    super.onDestroy();
+  }
+
+  @Override
   public void onAttachedToWindow() {
     super.onAttachedToWindow();
     synchronized (WINDOW_WAITER) {
