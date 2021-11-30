@@ -202,10 +202,7 @@ public class Utils {
 
   public static Process runCommand(String tag, boolean redirectStdErr, String... cmd) {
     File binDir = new File(App.getContext().getFilesDir(), "bin");
-    File cwd = App.getContext().getExternalFilesDir(null);
-
     ProcessBuilder processBuilder = new ProcessBuilder(cmd);
-    processBuilder.directory(cwd);
     Map<String, String> env = processBuilder.environment();
     env.put("PATH", binDir + ":" + env.get("PATH"));
     processBuilder.redirectErrorStream(redirectStdErr);

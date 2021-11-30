@@ -69,7 +69,7 @@ public enum NativeDaemon {
 
   private synchronized void startDaemon(boolean showAdbFailedToast) {
     if (mIsRunning) {
-      Log.e(TAG, "startDaemon: daemon already running");
+      Log.w(TAG, "startDaemon: daemon already running");
       return;
     }
 

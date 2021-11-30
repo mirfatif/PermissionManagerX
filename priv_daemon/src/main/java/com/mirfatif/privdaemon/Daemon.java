@@ -132,11 +132,17 @@ class Daemon {
         */
         String[] args = line.trim().replaceAll("  +", " ").split(" ");
         if (args[0].equals(Commands.SHUTDOWN)) {
+          Log.i(TAG, "Shutting down");
           break;
         } else {
           handleCommand(args);
         }
       }
+
+      if (line == null) {
+        Log.i(TAG, "InputStream closed, going down");
+      }
+
       if (client != null) {
         if (DEBUG) {
           Log.d(TAG, "Closing client socket");
