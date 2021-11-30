@@ -291,7 +291,9 @@ public class HiddenAPIsImpl extends HiddenAPIs {
   public int getPermissionFlags(String permName, String pkgName, int userId)
       throws HiddenAPIsException {
     try {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        return mIPermissionManager.getPermissionFlags(pkgName, permName, userId);
+      } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.R) {
         return mIPermissionManager.getPermissionFlags(permName, pkgName, userId);
       } else {
         return mIPackageManager.getPermissionFlags(permName, pkgName, userId);
