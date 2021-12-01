@@ -1,5 +1,7 @@
 package com.mirfatif.permissionmanagerx.privs;
 
+import static com.mirfatif.permissionmanagerx.BuildConfig.APPLICATION_ID;
+import static com.mirfatif.permissionmanagerx.BuildConfig.APP_ID;
 import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
 import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.ADB_DAEMON;
 import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.PMX_BIN_PATH;
@@ -10,7 +12,6 @@ import static com.mirfatif.permissionmanagerx.util.Utils.UID_SYSTEM;
 
 import android.os.SystemClock;
 import android.util.Log;
-import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
@@ -96,15 +97,8 @@ public enum PrivDaemonHandler {
 
     String daemonContext = SETTINGS.getDaemonContext();
 
-    String vmName = DAEMON_PACKAGE_NAME + ".pmx";
-    if (Utils.isProVersion()) {
-      vmName += ".pro";
-    }
-    if (BuildConfig.DEBUG) {
-      vmName += ".debug";
-    }
     String vmClass = DAEMON_PACKAGE_NAME + "." + DAEMON_CLASS_NAME;
-    String vmCmd = "app_process / --nice-name=" + vmName + " " + vmClass;
+    String vmCmd = "app_process / --nice-name=" + VM_NAME + " " + vmClass;
     if (mPreferRoot || ADB_DAEMON.isRoot()) {
       vmCmd =
           PMX_BIN_PATH
@@ -162,7 +156,7 @@ public enum PrivDaemonHandler {
             + " "
             + Utils.getUserId()
             + " "
-            + BuildConfig.APPLICATION_ID
+            + APPLICATION_ID
             + " "
             + DaemonCmdRcvSvc.class.getName()
             + " "
@@ -306,13 +300,7 @@ public enum PrivDaemonHandler {
   private Object sendRequest(String request, boolean isPrivDaemonAlive) {
     synchronized (SEND_REQ_LOCK) {
       if (!isPrivDaemonAlive) {
-        String str;
-        if (SETTINGS.isDebug()) {
-          str = request;
-        } else {
-          str = Utils.ellipsize(request, 200);
-        }
-        Log.e(TAG, "sendRequest: " + str + ": Privileged daemon is dead");
+        Log.e(TAG, "sendRequest: " + truncateRequest(request) + ": Privileged daemon is dead");
         return null;
       }
 
@@ -337,11 +325,19 @@ public enum PrivDaemonHandler {
       } catch (IOException | ClassNotFoundException e) {
         e.printStackTrace();
 
-        Log.e(TAG, "sendRequest: restarting privileged daemon");
+        Log.e(TAG, "sendRequest: " + truncateRequest(request) + ": restarting privileged daemon");
         mCmdWriter.println(Commands.SHUTDOWN);
 
         return null;
       }
+    }
+  }
+
+  private String truncateRequest(String request) {
+    if (SETTINGS.isDebug()) {
+      return request;
+    } else {
+      return Utils.ellipsize(request, 200);
     }
   }
 
@@ -369,25 +365,29 @@ public enum PrivDaemonHandler {
   private static final String DAEMON_CLASS_NAME = "PrivDaemon";
 
   private static final String TMP_DIR = "/data/local/tmp/";
-  private static final String DAEMON_DEX = DAEMON_PACKAGE_NAME + ".pmx.dex";
+  private static final String ASSETS_DEX_FILE = DAEMON_PACKAGE_NAME + ".pmx.dex";
 
-  private final String SHARED_DIR_DEX_PATH;
-  private final String TMP_DIR_DEX_PATH;
+  private static final String VM_NAME;
 
-  {
+  private static final String SHARED_DIR_DEX_PATH;
+  private static final String TMP_DIR_DEX_PATH;
+
+  static {
+    VM_NAME = APPLICATION_ID.replace(APP_ID, DAEMON_PACKAGE_NAME + ".pmx");
+    String dex = VM_NAME + ".dex";
     String sharedDir = App.getContext().getExternalFilesDir(null).getAbsolutePath();
-    SHARED_DIR_DEX_PATH = new File(sharedDir, DAEMON_DEX).getAbsolutePath();
-    TMP_DIR_DEX_PATH = new File(TMP_DIR, DAEMON_DEX).getAbsolutePath();
+    SHARED_DIR_DEX_PATH = new File(sharedDir, dex).getAbsolutePath();
+    TMP_DIR_DEX_PATH = new File(TMP_DIR, dex).getAbsolutePath();
   }
 
   private final Object SHARED_DIR_LOCK = new Object();
 
   private void extractToSharedDir() {
     synchronized (SHARED_DIR_LOCK) {
-      try (InputStream inStream = App.getContext().getAssets().open(DAEMON_DEX);
+      try (InputStream inStream = App.getContext().getAssets().open(ASSETS_DEX_FILE);
           OutputStream outStream = new FileOutputStream(SHARED_DIR_DEX_PATH)) {
         if (!Utils.copyStream(inStream, outStream)) {
-          Log.e(TAG, "extractToSharedDir: extracting " + DAEMON_DEX + " failed");
+          Log.e(TAG, "extractToSharedDir: extracting " + ASSETS_DEX_FILE + " failed");
         } else {
           outStream.flush();
           Log.i(TAG, "extractToSharedDir: extracted file successfully");
@@ -411,15 +411,15 @@ public enum PrivDaemonHandler {
         return;
       }
 
-      try (InputStream inStream1 = App.getContext().getAssets().open(DAEMON_DEX);
-          InputStream inStream2 = App.getContext().getAssets().open(DAEMON_DEX)) {
+      try (InputStream inStream1 = App.getContext().getAssets().open(ASSETS_DEX_FILE);
+          InputStream inStream2 = App.getContext().getAssets().open(ASSETS_DEX_FILE)) {
         int size = 0;
         while (inStream1.read() != -1) {
           size++;
         }
 
         if (!daemon.copyStream(size, TMP_DIR_DEX_PATH, inStream2)) {
-          Log.e(TAG, "extractToTmpDir: extracting " + DAEMON_DEX + " failed");
+          Log.e(TAG, "extractToTmpDir: extracting " + ASSETS_DEX_FILE + " failed");
           return;
         }
         if (daemon.isRoot()) {
