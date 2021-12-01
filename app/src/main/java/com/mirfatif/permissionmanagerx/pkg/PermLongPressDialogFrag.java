@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx.ui;
+package com.mirfatif.permissionmanagerx.pkg;
 
 import static com.mirfatif.permissionmanagerx.parser.PackageParser.PKG_PARSER;
 import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;

@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx.ui;
+package com.mirfatif.permissionmanagerx.about;
 
 import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
 import static com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler.DAEMON_HANDLER;
@@ -30,6 +30,7 @@ import com.mirfatif.permissionmanagerx.main.FeedbackDialogFrag.FeedbackType;
 import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
 import com.mirfatif.permissionmanagerx.prefs.settings.SettingsActivity;
 import com.mirfatif.permissionmanagerx.svc.LogcatService;
+import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;

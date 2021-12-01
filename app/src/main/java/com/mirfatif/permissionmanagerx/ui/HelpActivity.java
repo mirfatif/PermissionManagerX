@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.webkit.WebViewClientCompat;
 import androidx.webkit.WebViewCompat;
 import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.about.AboutActivity;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.ActivityHelpBinding;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;

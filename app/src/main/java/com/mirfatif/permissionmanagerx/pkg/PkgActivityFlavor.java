@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx.ui;
+package com.mirfatif.permissionmanagerx.pkg;
 
 import android.view.Menu;
 import android.view.MenuItem;

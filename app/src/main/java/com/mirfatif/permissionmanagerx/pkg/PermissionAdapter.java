@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx.ui;
+package com.mirfatif.permissionmanagerx.pkg;
 
 import static com.mirfatif.permissionmanagerx.parser.AppOpsParser.APP_OPS_PARSER;
 import static com.mirfatif.permissionmanagerx.util.Utils.getString;
@@ -22,8 +22,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.RvItemPermBinding;
+import com.mirfatif.permissionmanagerx.main.PackageAdapter;
 import com.mirfatif.permissionmanagerx.parser.Permission;
-import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.ItemViewHolder;
+import com.mirfatif.permissionmanagerx.pkg.PermissionAdapter.ItemViewHolder;
 import com.mirfatif.permissionmanagerx.ui.base.MyListAdapter;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;

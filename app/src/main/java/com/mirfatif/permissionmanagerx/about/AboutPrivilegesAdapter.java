@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx.ui;
+package com.mirfatif.permissionmanagerx.about;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
@@ -7,8 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.about.AboutPrivilegesAdapter.ItemViewHolder;
 import com.mirfatif.permissionmanagerx.databinding.AboutPrivilegesItemBinding;
-import com.mirfatif.permissionmanagerx.ui.AboutPrivilegesAdapter.ItemViewHolder;
 import com.mirfatif.privtasks.ser.PermStatus;
 import java.util.ArrayList;
 import java.util.List;

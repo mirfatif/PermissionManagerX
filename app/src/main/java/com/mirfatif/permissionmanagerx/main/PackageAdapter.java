@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx.ui;
+package com.mirfatif.permissionmanagerx.main;
 
 import static com.mirfatif.permissionmanagerx.util.Utils.getString;
 
@@ -20,8 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.RvItemPkgBinding;
+import com.mirfatif.permissionmanagerx.main.PackageAdapter.ItemViewHolder;
 import com.mirfatif.permissionmanagerx.parser.Package;
-import com.mirfatif.permissionmanagerx.ui.PackageAdapter.ItemViewHolder;
 import com.mirfatif.permissionmanagerx.ui.base.MyListAdapter;
 import com.mirfatif.permissionmanagerx.util.Utils;
 
@@ -31,7 +31,7 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
   private final PackageManager mPackageManager;
 
   // Orange state color
-  static final int ORANGE = 0xFFFFC107;
+  public static final int ORANGE = App.getContext().getColor(R.color.orangeState);
 
   public PackageAdapter(PkgAdapterCallback callback) {
     super(new DiffUtilItemCallBack(), callback::runInFg);

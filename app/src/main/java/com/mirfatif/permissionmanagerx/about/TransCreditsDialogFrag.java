@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx.ui;
+package com.mirfatif.permissionmanagerx.about;
 
 import static com.mirfatif.permissionmanagerx.util.Utils.openWebUrl;
 

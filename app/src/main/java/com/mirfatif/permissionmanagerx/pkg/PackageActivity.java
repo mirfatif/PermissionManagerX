@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx.ui;
+package com.mirfatif.permissionmanagerx.pkg;
 
 import static com.mirfatif.permissionmanagerx.parser.AppOpsParser.APP_OPS_PARSER;
 import static com.mirfatif.permissionmanagerx.parser.PackageParser.PKG_PARSER;
@@ -34,8 +34,9 @@ import com.mirfatif.permissionmanagerx.main.BackupRestore.BackupEntry;
 import com.mirfatif.permissionmanagerx.main.MainActivity;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.Permission;
+import com.mirfatif.permissionmanagerx.pkg.PermissionAdapter.PermAdapterCallback;
 import com.mirfatif.permissionmanagerx.prefs.FilterSettingsActivity;
-import com.mirfatif.permissionmanagerx.ui.PermissionAdapter.PermAdapterCallback;
+import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;
