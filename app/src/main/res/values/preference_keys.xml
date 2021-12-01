@@ -127,26 +127,22 @@
 
   <!-- SettingsActivity -->
   <string name="pref_settings_check_for_updates_title" maxLength="20">Check for updates</string>
-  <string name="pref_settings_check_for_updates_summary">Show a notification when a new version is
-    available</string>
+  <string name="pref_settings_check_for_updates_summary">Show a notification when a new version is available</string>
   <string name="pref_settings_check_for_updates_key" translatable="false">pref_settings_check_for_updates</string>
   <bool name="pref_settings_check_for_updates_default">true</bool>
   <string name="pref_settings_check_for_updates_ts_enc_key" translatable="false">pref_settings_check_for_updates_ts_enc</string>
   <string name="pref_settings_privileges_reminder_title" maxLength="20">Remind missing privileges</string>
-  <string name="pref_settings_privileges_reminder_summary">Show a dialog on app start if root and ADB
-    privileges are not granted</string>
+  <string name="pref_settings_privileges_reminder_summary">Show a dialog on app start if root and ADB privileges are not granted</string>
   <string name="pref_settings_privileges_reminder_key" translatable="false">pref_settings_privileges_reminder</string>
   <bool name="pref_settings_privileges_reminder_default">true</bool>
   <string name="pref_settings_quick_scan_title" maxLength="20">Perform quick scan</string>
-  <string name="pref_settings_quick_scan_summary">Don\'t scan permissions, and don\'t show app\'s
-    reference state and permission count</string>
+  <string name="pref_settings_quick_scan_summary">Don\'t scan permissions, and don\'t show app\'s reference state and permission count</string>
   <string name="pref_settings_quick_scan_key" translatable="false">pref_settings_quick_scan</string>
   <bool name="pref_settings_quick_scan_default">false</bool>
   <string name="pref_settings_special_search_key" translatable="false">pref_settings_special_search</string>
   <bool name="pref_settings_special_search_default">true</bool>
   <string name="pref_settings_special_search_title" maxLength="20">Complex search</string>
-  <string name="pref_settings_special_search_summary">Use AND (&amp;), OR (|) and NOT (!) operators
-    in search to combine queries</string>
+  <string name="pref_settings_special_search_summary">Use AND (&amp;), OR (|) and NOT (!) operators in search to combine queries</string>
   <string name="pref_settings_locale_title" maxLength="20">Application language</string>
   <string name="pref_settings_locale_key" translatable="false">pref_settings_locale</string>
   <string name="pref_settings_locale_default" translatable="false" />

@@ -40,21 +40,9 @@
   <string name="pref_filter_extra_appops_title" maxLength="20">المزيد من قائمة اذونات التطبيقات</string>
   <!-- SettingsActivity -->
   <string name="pref_settings_check_for_updates_title" maxLength="20">التحقق من وجود تحديثات</string>
-  <string name="pref_settings_check_for_updates_summary">إظهار إشعار عندما يتوفر إصدار جديد
-
-  </string>
   <string name="pref_settings_privileges_reminder_title" maxLength="20">التذكير بالامتيازات المفقودة</string>
-  <string name="pref_settings_privileges_reminder_summary">إظهار مربع حوار عند بدء التطبيق إذا لم يتم منح امتيازات الجذر و ADB
-
-  </string>
   <string name="pref_settings_quick_scan_title" maxLength="20">إجراء فحص سريع</string>
-  <string name="pref_settings_quick_scan_summary">لا تفحص الأذونات، ولا تظهر حالة مرجع التطبيق
-    وعدد الأذونات
-  </string>
   <string name="pref_settings_special_search_title" maxLength="20">بحث معقد</string>
-  <string name="pref_settings_special_search_summary">استخدم المعلمات و (&amp;) أو (&lt;unk&gt;) و لا (!)
-    في البحث عن الجمع بين الاستفسارات
-  </string>
   <string name="pref_settings_locale_title" maxLength="20">لغة التطبيق</string>
   <!-- HelpActivity -->
   <!-- PackageActivity -->

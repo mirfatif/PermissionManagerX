@@ -57,8 +57,7 @@
 
   <!-- MainActivity strings -->
   <string name="primary_account" maxLength="15">Primary Account</string>
-  <string name="primary_profile_only">Permission Manager X can run only in primary user account /
-    device owner profile.</string>
+  <string name="primary_profile_only">Permission Manager X can run only in primary user account / device owner profile.</string>
   <string name="grant_root_or_adb">Grant root access or connect to ADB to start privileged process.</string>
   <string name="logging_failed" maxLength="20">Logging failed</string>
   <string name="daemon_logging_failed" maxLength="20">Logging for privileged daemon failed</string>
@@ -81,15 +80,7 @@
   <string name="adb_key_pair_failed" maxLength="20">Creating ADB key pair failed</string>
   <string name="adb_authentication_failed" maxLength="20">ADB authentication failed</string>
   <string name="adb_command_fail" maxLength="20">ADB command failed</string>
-  <string name="adb_connect_fail_long">
-    <![CDATA[
-      Connecting to ADB failed.
-      <ul>
-        <li>Enable <b><i>ADB Over Network</i></b> and come back to connect.</li>
-        <li>Allow ADB authentication if prompted.</li>
-      </ul>
-    ]]>
-  </string>
+  <string name="adb_connect_fail_long"><![CDATA[Connecting to ADB failed.<ul><li>Enable <b><i>ADB Over Network</i></b> and come back to connect.</li><li>Allow ADB authentication if prompted.</li></ul>]]></string>
   <string name="daemon_failed" maxLength="20">Starting privileged daemon failed</string>
   <string name="backup" maxLength="10">Backup</string>
   <string name="restore" maxLength="10">Restore</string>
@@ -119,30 +110,23 @@
   <string name="skip_uninstalled_packages" maxLength="20">Skip uninstalled packages</string>
   <string name="privileges" maxLength="15">"Privileges"</string>
   <string name="hidden_apis_warning" maxLength="20">Hidden APIs are blacklisted, switching to daemon</string>
-  <string name="hidden_apis_confirmation">Some ROMs allow using system\'s hidden APIs. Daemon mode might
-    be slower. Stop using hidden APIs?</string>
+  <string name="hidden_apis_confirmation">Some ROMs allow using system\'s hidden APIs. Daemon mode might be slower. Stop using hidden APIs?</string>
   <string name="bad_port_number" maxLength="15">Bad port number</string>
   <string name="bad_path" maxLength="15">Bad path</string>
   <string name="granting_permission_failed" maxLength="20">Granting permission failed: %1$s</string>
 
   <string name="crash_report" maxLength="15">Crash Report</string>
   <string name="ask_to_report_crash_small" maxLength="30">Send crash report to the developer</string>
-  <string name="ask_to_report_crash">Sorry, a component of the app had a problem and crashed.
-    Send the log file to the developer through email or Telegram so that the bug can be fixed.</string>
+  <string name="ask_to_report_crash">Sorry, a component of the app had a problem and crashed. Send the log file to the developer through email or Telegram so that the bug can be fixed.</string>
   <string name="send_report" maxLength="10">Send Report</string>
-  <string name="disable_pkg_warning" comment="'system' or 'framework'">Disabling a %1$s app is a
-    dangerous action. In worst-case scenario Android system may crash.\nAre you sure you want to
-    continue?</string>
+  <string name="disable_pkg_warning" comment="'system' or 'framework'">Disabling a %1$s app is a dangerous action. In worst-case scenario Android system may crash.\nAre you sure you want to continue?</string>
   <string name="pkg_state_disabled2" searchStr="true">%s, Disabled</string>
 
   <!-- Feedback -->
   <string name="love_using_app" maxLength="20">Liking Permission Manager X?</string>
-  <string name="purchase_and_rate_the_app">You can help us improve the app by making a small donation
-    or leaving a good app review so that we are able to better serve your needs.</string>
-  <string name="rate_the_app">Good ratings and reviews help us improve the app and we are able to
-    better serve your needs.</string>
-  <string name="ask_to_provide_feedback">Sorry to hear that. You can help improve the app by
-    contacting us via email or Telegram so that we are able to better serve your needs.</string>
+  <string name="purchase_and_rate_the_app">You can help us improve the app by making a small donation or leaving a good app review so that we are able to better serve your needs.</string>
+  <string name="rate_the_app">Good ratings and reviews help us improve the app and we are able to better serve your needs.</string>
+  <string name="ask_to_provide_feedback">Sorry to hear that. You can help improve the app by contacting us via email or Telegram so that we are able to better serve your needs.</string>
   <string name="thank_you" maxLength="20">Thank you</string>
 
   <string name="contact" maxLength="15">Write Now</string>
@@ -180,8 +164,7 @@
 
   <!-- LogcatService -->
   <string name="logging" maxLength="15">Logging</string>
-  <string name="logging_warning">App may respond slow due to log collection and log file may grow
-    up to very large size. Logging is auto-stopped after 5 minutes.</string>
+  <string name="logging_warning">App may respond slow due to log collection and log file may grow up to very large size. Logging is auto-stopped after 5 minutes.</string>
 
   <!-- PackageActivity menu items -->
   <string name="reset_app_ops" maxLength="15">Reset AppOps</string>
@@ -202,9 +185,7 @@
 
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">Something went wrong</string>
-  <string name="change_perms_warning" comment="'system' or 'framework'">Changing permissions of a
-    %1$s app is a dangerous action. In worst-case scenario Android system may crash.\nAre you sure
-    you want to continue?</string>
+  <string name="change_perms_warning" comment="'system' or 'framework'">Changing permissions of a %1$s app is a dangerous action. In worst-case scenario Android system may crash.\nAre you sure you want to continue?</string>
   <string name="system">system</string>
   <string name="framework">framework</string>
 
@@ -335,8 +316,7 @@
   <string name="no_bitcoin_app_installed">"Bitcoin Wallet app not found"</string>
   <string name="ask_for_bank_account">Ask For Bank Account</string>
   <string name="buy_me_a_coffee">Buy Me A Coffee</string>
-  <string name="bank_account_request" translatable="false">Hello,\n\nI need your IBAN and SWIFT/BIC
-    to make a donation.</string>
+  <string name="bank_account_request" translatable="false">Hello,\n\nI need your IBAN and SWIFT/BIC to make a donation.</string>
   <string name="get_pro_version">Get Pro Version</string>
   <string name="get_ps_version">Get Play Store Version</string>
 
@@ -358,8 +338,7 @@
 
   <!-- DaemonCmdRcvSvc: Daemon return messages -->
   <string name="daemon_listen_on_loopback_failed" maxLength="20">Daemon failed to listen on 127.0.0.1</string>
-  <string name="daemon_establish_connection_failed" maxLength="20">Daemon failed to establish
-    connection with client</string>
+  <string name="daemon_establish_connection_failed" maxLength="20">Daemon failed to establish connection with client</string>
   <string name="daemon_wrong_args_received" maxLength="20">Wrong arguments</string>
   <string name="daemon_set_app_ops_mode_failed" maxLength="20">Setting AppOps mode failed</string>
   <string name="daemon_reset_app_ops_failed" maxLength="20">Resetting AppOps failed</string>

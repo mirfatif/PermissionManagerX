@@ -40,20 +40,9 @@
   <string name="pref_filter_extra_appops_title" maxLength="20">Список дополнительных AppOps</string>
   <!-- SettingsActivity -->
   <string name="pref_settings_check_for_updates_title" maxLength="20">Проверка обновлений</string>
-  <string name="pref_settings_check_for_updates_summary">Показывать уведомление, когда доступна
-    новая версия
-  </string>
   <string name="pref_settings_privileges_reminder_title" maxLength="20">Напоминать об отсутствии root-прав</string>
-  <string name="pref_settings_privileges_reminder_summary">Показать диалог при запуске приложения, если права root и ADB
-    не предоставлены
-  </string>
   <string name="pref_settings_quick_scan_title" maxLength="20">Быстрое сканирование</string>
-  <string name="pref_settings_quick_scan_summary">Не сканировать разрешения и не показывать
-     индикатор и количество разрешений
-  </string>
   <string name="pref_settings_special_search_title" maxLength="20">Комплексный поиск</string>
-  <string name="pref_settings_special_search_summary">Используйте символы И (&amp;), ИЛИ (|) и НЕ (!) для уточнения поиска
-  </string>
   <string name="pref_settings_locale_title" maxLength="20">Язык приложения</string>
   <!-- HelpActivity -->
   <!-- PackageActivity -->

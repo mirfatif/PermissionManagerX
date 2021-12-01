@@ -15,7 +15,6 @@
   <string name="_default" maxLength="10">الافتراضي</string>
   <string name="open_drawer">فتح</string>
   <string name="close_drawer">إغلاق</string>
-  <string name="contact" maxLength="10">اكتب الآن</string>
   <string name="do_not_remind" maxLength="10">عدم التذكير</string>
   <string name="get_help" maxLength="10">احصل على مساعدة</string>
   <string name="switch_to_adb" maxLength="10">التبديل إلى ADB</string>
@@ -59,9 +58,7 @@
   <string name="su_exe_path" maxLength="20">مسار المستخدم الخارق التنفيذي</string>
   <!-- MainActivity strings -->
   <string name="primary_account" maxLength="15">الحساب الرئيسي</string>
-  <string name="primary_profile_only">مدير الأذونات X يمكن تشغيله فقط في حساب المستخدم الرئيسي /
-    ملف تعريف مالك الجهاز.
-  </string>
+  <string name="primary_profile_only">مدير الأذونات X يمكن تشغيله فقط في حساب المستخدم الرئيسي / ملف تعريف مالك الجهاز.</string>
   <string name="grant_root_or_adb">منح صلاحيات الجذر أو الاتصال بـ ADB لبدء عملية مميزة.</string>
   <string name="logging_failed" maxLength="20">فشل التسجيل</string>
   <string name="daemon_logging_failed" maxLength="20">فشل في بناء سجل الاخطاء لـ Didemon المتميز</string>
@@ -81,12 +78,6 @@
   <string name="adb_key_pair_failed" maxLength="20">فشل إنشاء مفتاح الاقتران لـ ADB</string>
   <string name="adb_authentication_failed" maxLength="20">فشل مصادقة ADB</string>
   <string name="adb_command_fail" maxLength="20">فشلت أوامر ADB</string>
-  <string name="adb_connect_fail_long"><![CDATA[      فشل الاتصال بـ ADB.
-      <ul>
-        <li>تمكين <b><i>ADB فوق الشبكة</i></b> والعودة إلى الاتصال.</li>
-        <li>السماح بالمصادقة ADB إذا طلب منها ذلك.</li>
-      </ul>
-    ]]></string>
   <string name="daemon_failed" maxLength="20">فشل بدء العمل daemon المميز</string>
   <string name="backup" maxLength="10">النسخ الاحتياطي</string>
   <string name="restore" maxLength="10">إستعادة</string>
@@ -130,32 +121,33 @@
   <string name="skip_uninstalled_packages" maxLength="20">تخطي الحزم الغير مثبتة</string>
   <string name="privileges" maxLength="15">"الامتيازات"</string>
   <string name="hidden_apis_warning" maxLength="20">واجهة برمجة التطبيقات المخفية مدرجة في القائمة السوداء، قم بالتبديل إلى daemon</string>
-  <string name="hidden_apis_confirmation">بعض الرومات تسمح باستخدام API المخفية للنظام. قد يكون وضع daemon
-    أبطأ. إيقاف استخدام API المخفية؟
-  </string>
+  <string name="hidden_apis_confirmation">بعض الرومات تسمح باستخدام API المخفية للنظام. قد يكون وضع daemon أبطأ. إيقاف استخدام API المخفية؟</string>
   <string name="bad_port_number" maxLength="15">رقم المنفذ خاطئ</string>
   <string name="bad_path" maxLength="15">مسار خاطئ</string>
   <string name="granting_permission_failed" maxLength="20">فشل منح الإذن: %1$s</string>
-  <string name="love_using_app" maxLength="20">هل أعجبني مدير الأذونات X؟</string>
-  <string name="purchase_and_rate_the_app">يمكنك مساعدتنا على تحسين التطبيق عن طريق تبرع صغير
-    أو ترك مراجعة جيدة للتطبيق بحيث نتمكن من تلبية احتياجاتك بشكل أفضل.  </string>
-  <string name="rate_the_app">التقييمات الجيدة والمراجعات تساعدنا على تحسين التطبيق ونحن قادرون على
-    خدمة احتياجاتك بشكل أفضل.
-  </string>
-  <string name="ask_to_provide_feedback">نأسف لسماع ذلك. يمكنك المساعدة في تحسين التطبيق عن طريق
-    الاتصال بنا عبر البريد الإلكتروني أو تيليجرام حتى نتمكن من خدمة احتياجاتك بشكل أفضل.
-  </string>
-  <string name="thank_you" maxLength="20">شكرا لك</string>
   <string name="crash_report" maxLength="15">تقرير الأعطال</string>
   <string name="ask_to_report_crash_small" maxLength="30">إرسال تقرير الأعطال إلى المطور</string>
-  <string name="ask_to_report_crash">عذراً، كان هناك مشكلة في التطبيق او أحد مكوناته تعطل.
-    إرسال ملف السجل إلى المطور من خلال البريد الإلكتروني أو تيليجرام بحيث يمكن إصلاح الخطأ.
-  </string>
+  <string name="ask_to_report_crash">عذراً، كان هناك مشكلة في التطبيق او أحد مكوناته تعطل. إرسال ملف السجل إلى المطور من خلال البريد الإلكتروني أو تيليجرام بحيث يمكن إصلاح الخطأ.</string>
   <string name="send_report" maxLength="10">إرسال التقرير</string>
-  <string name="disable_pkg_warning" comment="'system' or 'framework'">تعطيل تطبيق %1$s هو
-    إجراء خطير. في أسوأ سيناريو نظام أندرويد قد يتعطل.\nهل أنت متأكد أنك تريد المتابعة؟
-  </string>
+  <string name="disable_pkg_warning" comment="'system' or 'framework'">تعطيل تطبيق %1$s هو إجراء خطير. في أسوأ سيناريو نظام أندرويد قد يتعطل.\nهل أنت متأكد أنك تريد المتابعة؟</string>
   <string name="pkg_state_disabled2" searchStr="true">%sمعطل</string>
+  <!-- Feedback -->
+  <string name="love_using_app" maxLength="20">هل أعجبني مدير الأذونات X؟</string>
+  <string name="purchase_and_rate_the_app">يمكنك مساعدتنا على تحسين التطبيق عن طريق تبرع صغير أو ترك مراجعة جيدة للتطبيق بحيث نتمكن من تلبية احتياجاتك بشكل أفضل.</string>
+  <string name="rate_the_app">التقييمات الجيدة والمراجعات تساعدنا على تحسين التطبيق ونحن قادرون على خدمة احتياجاتك بشكل أفضل.</string>
+  <string name="ask_to_provide_feedback">نأسف لسماع ذلك. يمكنك المساعدة في تحسين التطبيق عن طريق الاتصال بنا عبر البريد الإلكتروني أو تيليجرام حتى نتمكن من خدمة احتياجاتك بشكل أفضل.</string>
+  <string name="thank_you" maxLength="20">شكرا لك</string>
+  <string name="contact" maxLength="15">اكتب الآن</string>
+  <string name="contact_on_telegram" maxLength="15">اكتب رسالة على تيليجرام</string>
+  <string name="contact_on_email" maxLength="15">كتابة بريد إلكتروني</string>
+  <string name="rate_now" maxLength="15">قيم الآن</string>
+  <string name="how_do_i" maxLength="15">كيف يمكنني؟</string>
+  <string name="purchase_donate" maxLength="15">شراء / تبرع</string>
+  <string name="rate_on_ps" maxLength="15">التقييم على متجر Play</string>
+  <string name="star_on_github" maxLength="15">أبدأ على منصة GitHub</string>
+  <string name="review_on_xda" maxLength="15">كتابة مراجعة على XDA</string>
+  <string name="do_not_ask" maxLength="15">لا تسأل مجددا</string>
+  <!-- Links -->
   <!-- PrivDaemonHandler -->
   <string name="dex_location_changed" maxLength="20">تبديل موقع تحميل Didemon</string>
   <string name="files_not_extracted_accessible" maxLength="20">الملفات غير المستخرجة أو غير متاحة</string>
@@ -164,14 +156,7 @@
   <string name="native_daemon_died" maxLength="20">موت daemon الاصلي</string>
   <!-- LogcatService -->
   <string name="logging" maxLength="15">تسجيل</string>
-  <string name="logging_warning">قد يستجيب التطبيق ببطء بسبب جمع السجلات، وقد ينمو ملف السجل
-    حتى حجم كبير جدا. يتم إيقاف التسجيل تلقائياً بعد 5 دقائق.
-  </string>
-  <!-- Buttons-->
-  <string name="exclude" maxLength="10">استبعاد</string>
-  <string name="clear_reference" maxLength="10" comment="'Clear Reference'">مسح المرجع</string>
-  <string name="set_reference" maxLength="10" comment="'Set Reference'">تعيين المرجع</string>
-  <string name="do_not_ask" maxLength="15">لا تسأل مجددا</string>
+  <string name="logging_warning">قد يستجيب التطبيق ببطء بسبب جمع السجلات، وقد ينمو ملف السجل حتى حجم كبير جدا. يتم إيقاف التسجيل تلقائياً بعد 5 دقائق.</string>
   <!-- PackageActivity menu items -->
   <string name="reset_app_ops" maxLength="15">اعادة تعيين الاذونات</string>
   <string name="reset_app_ops_confirmation">إعادة تعيين كافة الاذونات إلى الوضع الافتراضي؟</string>
@@ -179,16 +164,10 @@
   <string name="clear_references_confirmation">مسح جميع مراجع الأذونات؟</string>
   <string name="set_references" maxLength="15">تعيين المراجع</string>
   <string name="set_references_confirmation">تعيين كافة حالات الصلاحيات الحالية كمراجع؟</string>
-  <!--PackageActivity Dialogs-->
-  <string name="exclude_app_from_visible_list">استبعاد التطبيق من القائمة المرئية.</string>
-  <string name="enable_app">تمكين التطبيق.</string>
-  <string name="disable_app">تعطيل التطبيق.</string>
+  <!-- MainActivity Dialogs -->
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">لقد حدث خطأ ما</string>
-  <string name="change_perms_warning" comment="'system' or 'framework'">تغيير أذونات تطبيق
-    %1$s إجراء خطير. في أسوأ سيناريو نظام أندرويد قد يتعطل.\nهل أنت متأكد
-    تريد المتابعة؟
-  </string>
+  <string name="change_perms_warning" comment="'system' or 'framework'">تغيير أذونات تطبيق %1$s إجراء خطير. في أسوأ سيناريو نظام أندرويد قد يتعطل.\nهل أنت متأكد تريد المتابعة؟</string>
   <string name="system">النظام</string>
   <string name="framework">الإطار البرمجي</string>
   <plurals name="uid_mode_app_ops_warning">
@@ -199,10 +178,6 @@
     <item quantity="many">هذا هو تطبيق وضع UID. تغييره يؤثر أيضا على %1$d حزمة أخرى.</item>
     <item quantity="other">هذا هو تطبيق وضع UID. تغييره يؤثر أيضًا على %1$d حزم أخرى.</item>
   </plurals>
-  <string name="extra_ops_cant_be_excluded">لا يمكن استبعاد تطبيقات إضافية من القائمة المرئية.</string>
-  <string name="exclude_perm_from_list">استبعاد الإذن من القائمة المرئية.</string>
-  <string name="set_perm_state_reference" comment="AppOps or manifest permission state"><![CDATA[<br/>تعيين <b>%1$s</b> الحالة كمرجع.]]></string>
-  <string comment="AppOps or manifest permission state" name="clear_perm_state_reference"><![CDATA[<br/>مسح <b>%1$s</b> الحالة كمرجع.]]></string>
   <plurals name="count_permissions_filtered_out">
     <item quantity="zero">تم تصفية الإذن %1$d</item>
     <item quantity="one">تم تصفية الإذن %1$d</item>
@@ -227,6 +202,8 @@
   <string name="app_op_mode_deny">رفض</string>
   <string name="app_op_mode_default">الافتراضي</string>
   <string name="app_op_mode_foreground">المقدمة</string>
+  <string name="perm_mode_granted">تم المنح</string>
+  <string name="perm_mode_revoked">ملغاة</string>
   <!-- FilterSettingsActivity -->
   <string name="filter_settings" maxLength="15">إعدادات الفرز</string>
   <string name="excluded_apps_summary">اضغط مطولاً على اسم الحزمة لاستبعاده</string>
@@ -272,10 +249,8 @@
   <string name="stop_logging" maxLength="15">أيقاف التسجيل</string>
   <string name="logging_stopped" maxLength="20">تم إيقاف التسجيل</string>
   <string name="app_rating" maxLength="15">قيّمني</string>
-  <string name="app_rating_summary" maxLength="20">تقييم / مراجعة على متجر Play</string>
-
+  <string name="app_rating_summary" maxLength="20">التقييم، المراجعة، والبدء…</string>
   <string name="paid_features" maxLength="15">الميزات المدفوعة</string>
-
   <string name="update" maxLength="15">تحديث</string>
   <string name="update_summary" maxLength="20">تحقق تحديثات التطبيق</string>
   <string name="check_in_progress" maxLength="20">تحقق من التقدم</string>
@@ -302,6 +277,9 @@
   <string name="send_bitcoin">إرسال بيتكوين</string>
   <string name="no_bitcoin_app_installed">"لم يتم العثور على تطبيق محفظة البيتكوين"</string>
   <string name="ask_for_bank_account">اسأل عن حساب مصرفي</string>
+  <string name="buy_me_a_coffee">اشتري لي قهوة</string>
+  <string name="get_pro_version">الحصول علي الإصدار الكامل</string>
+  <string name="get_ps_version">الحصول على نسخة متجر play</string>
   <!-- Notification Channels -->
   <string name="channel_app_update">تحديثات التطبيق</string>
   <string name="channel_crash_report">تقرير الأعطال</string>
@@ -315,9 +293,7 @@
   <string name="outdated_web_view" maxLength="20">عارض ويب قديم</string>
   <!-- DaemonCmdRcvSvc: Daemon return messages -->
   <string name="daemon_listen_on_loopback_failed" maxLength="20">فشل daemon في الاستماع في 127.0.0.1</string>
-  <string name="daemon_establish_connection_failed" maxLength="20">فشل daemon في إنشاء اتصال
-    مع العميل
-  </string>
+  <string name="daemon_establish_connection_failed" maxLength="20">فشل daemon في إنشاء اتصال مع العميل</string>
   <string name="daemon_wrong_args_received" maxLength="20">حجج خاطئة</string>
   <string name="daemon_set_app_ops_mode_failed" maxLength="20">فشل في إعداد وضع اذونات التطبيقات</string>
   <string name="daemon_reset_app_ops_failed" maxLength="20">فشل إعادة تعيين اذونات التطبيقات</string>

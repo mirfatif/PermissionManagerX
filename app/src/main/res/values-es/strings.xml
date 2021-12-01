@@ -15,7 +15,6 @@
   <string name="_default" maxLength="10">Predeterminado</string>
   <string name="open_drawer">Abrir</string>
   <string name="close_drawer">Cerrar</string>
-  <string name="contact" maxLength="10">Escribir Ahora</string>
   <string name="do_not_remind" maxLength="10">No Recordar</string>
   <string name="get_help" maxLength="10">Obtener Ayuda</string>
   <string name="switch_to_adb" maxLength="10">Cambiar a ADB</string>
@@ -55,7 +54,7 @@
   <string name="su_exe_path" maxLength="20">Ruta al Ejecutable de Superusuario</string>
   <!-- MainActivity strings -->
   <string name="primary_account" maxLength="15">Cuenta Primaria</string>
-  <string name="primary_profile_only">Permission Manager X puede correr únicamente en la cuenta del usuario principal /\n perfil del propietario del dispositivo.</string>
+  <string name="primary_profile_only">Permission Manager X puede correr únicamente en la cuenta del usuario principal / perfil del propietario del dispositivo.</string>
   <string name="grant_root_or_adb">Concede acceso root o conecta a ADB para iniciar procesos privilegiados.</string>
   <string name="logging_failed" maxLength="20">Registro fallido</string>
   <string name="daemon_logging_failed" maxLength="20">Registro para daemon privilegiado fallido</string>
@@ -75,13 +74,6 @@
   <string name="adb_key_pair_failed" maxLength="20">Creación de pareja de clave ADB fallida</string>
   <string name="adb_authentication_failed" maxLength="20">Autenticación de ADB fallida</string>
   <string name="adb_command_fail" maxLength="20">Comando ADB fallido</string>
-  <string name="adb_connect_fail_long"><![CDATA[\n    <![CDATA[
-      Conexión a ADB fallida.
-      <ul>
-        <li>Activa <b><i>ADB Sobre Red</i></b> y regresa a conectarte.</li>
-        <li>Permite la autenticación ADB si notifica.</li>
-      </ul>
-    ]]]]><![CDATA[>\n  ]]></string>
   <string name="daemon_failed" maxLength="20">Inicio de daemon privilegiado fallido</string>
   <string name="backup" maxLength="10">Copia de seguridad</string>
   <string name="restore" maxLength="10">Restaurar</string>
@@ -109,21 +101,25 @@
   <string name="skip_uninstalled_packages" maxLength="20">Omitir paquetes desinstalados</string>
   <string name="privileges" maxLength="15">"Privilegios"</string>
   <string name="hidden_apis_warning" maxLength="20">Las APIs ocultas están en la lista negra, cambiando a daemon</string>
-  <string name="hidden_apis_confirmation">Algunas ROMs permiten usar APIs ocultas del sistema. El modo daemon podría\n ser más lento. ¿Detener el uso de APIs ocultas?</string>
+  <string name="hidden_apis_confirmation">Algunas ROMs permiten usar APIs ocultas del sistema. El modo daemon podría ser más lento. ¿Detener el uso de APIs ocultas?</string>
   <string name="bad_port_number" maxLength="15">Número de puerto incorrecto</string>
   <string name="bad_path" maxLength="15">Ruta incorrecta</string>
   <string name="granting_permission_failed" maxLength="20">Otorgamiento de permisos fallido: %1$s</string>
-  <string name="love_using_app" maxLength="20">¿Te gusta Permission Manager X?</string>
-  <string name="purchase_and_rate_the_app">Puedes ayudarnos a mejorar la aplicación haciendo una pequeña donación\n o dejando una buena reseña de la aplicación para que podamos atender mejor tus necesidades.</string>
-  <string name="rate_the_app">Las buenas puntuaciones y reseñas nos ayudan a mejorar la aplicación y nos permite\n atender mejor tus necesidades.</string>
-  <string name="ask_to_provide_feedback">Lamentamos oír eso. Puedes ayudarnos a mejorar la aplicación\n contactándonos por correo electrónico o Telegram para que podamos atender mejor tus necesidades.</string>
-  <string name="thank_you" maxLength="20">Gracias</string>
   <string name="crash_report" maxLength="15">Reporte de Error</string>
   <string name="ask_to_report_crash_small" maxLength="30">Enviar el reporte de error al desarrollador</string>
-  <string name="ask_to_report_crash">Lo sentimos, un componente de la aplicación tuvo un problema y se cerró de golpe.\n Envía el registro al desarrollador vía correo electrónico o Telegram para que el error sea arreglado.</string>
+  <string name="ask_to_report_crash">Lo sentimos, un componente de la aplicación tuvo un problema y se cerró de golpe. Envía el registro al desarrollador vía correo electrónico o Telegram para que el error sea arreglado.</string>
   <string name="send_report" maxLength="10">Enviar Reporte</string>
-  <string name="disable_pkg_warning" comment="'system' or 'framework'">Deshabilitar una aplicación de %1$s es una\n    acción peligrosa. En el peor de los casos el sistema Android podría colapsar.\n¿Seguro que quieres continuar?</string>
+  <string name="disable_pkg_warning" comment="'system' or 'framework'">Deshabilitar una aplicación de %1$s es una acción peligrosa. En el peor de los casos el sistema Android podría colapsar.\n¿Seguro que quieres continuar?</string>
   <string name="pkg_state_disabled2" searchStr="true">%s, Deshabilitada</string>
+  <!-- Feedback -->
+  <string name="love_using_app" maxLength="20">¿Te gusta Permission Manager X?</string>
+  <string name="purchase_and_rate_the_app">Puedes ayudarnos a mejorar la aplicación haciendo una pequeña donación o dejando una buena reseña de la aplicación para que podamos atender mejor tus necesidades.</string>
+  <string name="rate_the_app">Las buenas puntuaciones y reseñas nos ayudan a mejorar la aplicación y nos permite atender mejor tus necesidades.</string>
+  <string name="ask_to_provide_feedback">Lamentamos oír eso. Puedes ayudarnos a mejorar la aplicación contactándonos por correo electrónico o Telegram para que podamos atender mejor tus necesidades.</string>
+  <string name="thank_you" maxLength="20">Gracias</string>
+  <string name="contact" maxLength="15">Escribir Ahora</string>
+  <string name="do_not_ask" maxLength="15">No preguntar de nuevo</string>
+  <!-- Links -->
   <!-- PrivDaemonHandler -->
   <string name="dex_location_changed" maxLength="20">Cambiando locación de carga de daemon</string>
   <string name="files_not_extracted_accessible" maxLength="20">Archivos no extraídos o no accesibles</string>
@@ -132,12 +128,7 @@
   <string name="native_daemon_died" maxLength="20">Murió el daemon nativo</string>
   <!-- LogcatService -->
   <string name="logging" maxLength="15">Registrando</string>
-  <string name="logging_warning">La aplicación podría responder lento debido a los registros y el archivo de registros podría crecer\n a un tamaño muy grande. El registro es detenido automaticamente después de 5 minutos.</string>
-  <!-- Buttons-->
-  <string name="exclude" maxLength="10">Excluir</string>
-  <string name="clear_reference" maxLength="10" comment="'Clear Reference'">Limpiar Ref</string>
-  <string name="set_reference" maxLength="10" comment="'Set Reference'">Establecer Ref</string>
-  <string name="do_not_ask" maxLength="15">No preguntar de nuevo</string>
+  <string name="logging_warning">La aplicación podría responder lento debido a los registros y el archivo de registros podría crecer a un tamaño muy grande. El registro es detenido automaticamente después de 5 minutos.</string>
   <!-- PackageActivity menu items -->
   <string name="reset_app_ops" maxLength="15">Reiniciar AppOps</string>
   <string name="reset_app_ops_confirmation">¿Reiniciar todas las AppOps a sus modos por defecto?</string>
@@ -145,23 +136,16 @@
   <string name="clear_references_confirmation">¿Limpiar todas las referencias de permisos?</string>
   <string name="set_references" maxLength="15">Establecer Referencias</string>
   <string name="set_references_confirmation">¿Establecer todos los estados actuales de permisos como referencias?</string>
-  <!--PackageActivity Dialogs-->
-  <string name="exclude_app_from_visible_list">Excluir aplicación de la lista visible.</string>
-  <string name="enable_app">Habilitar app.</string>
-  <string name="disable_app">Deshabilitar app.</string>
+  <!-- MainActivity Dialogs -->
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">Algo salió mal</string>
-  <string name="change_perms_warning" comment="'system' or 'framework'">Cambiar los permisos de una\n    aplicación de %1$s es una acción peligrosa. En el peor de los casos el sistema Android podría colapsar.\n ¿Seguro\n    que quieres continuar?</string>
+  <string name="change_perms_warning" comment="'system' or 'framework'">Cambiar los permisos de una aplicación de %1$s es una acción peligrosa. En el peor de los casos el sistema Android podría colapsar.\n¿Seguro que quieres continuar?</string>
   <string name="system">sistema</string>
   <string name="framework">framework</string>
   <plurals name="uid_mode_app_ops_warning">
     <item quantity="one">Esta es una AppOp en modo UID. Cambiarla también afectará %1$d paquete adicional.</item>
     <item quantity="other">Esta es una AppOp en modo UID. Cambiarla también afectará otros %1$d paquetes.</item>
   </plurals>
-  <string name="extra_ops_cant_be_excluded">AppOps extra no pueden ser excluídas de la lista visible.</string>
-  <string name="exclude_perm_from_list">Excluír permisos de la lista visible.</string>
-  <string name="set_perm_state_reference" comment="AppOps or manifest permission state"><![CDATA[<br/>Establecer estado <b>%1$s</b> como referencuia.]]></string>
-  <string comment="AppOps or manifest permission state" name="clear_perm_state_reference"><![CDATA[<br/>Limpiar estado <b>%1$s</b> como referencia.]]></string>
   <plurals name="count_permissions_filtered_out">
     <item quantity="one">%1$d permiso filtrado</item>
     <item quantity="other">%1$d permisos filtrados</item>
@@ -222,10 +206,7 @@
   <string name="stop_logging" maxLength="15">Detener Registro</string>
   <string name="logging_stopped" maxLength="20">Registro Detenido</string>
   <string name="app_rating" maxLength="15">Puntúame</string>
-  <string name="app_rating_summary" maxLength="20">Puntúa / reseña en Play Store</string>
-
   <string name="paid_features" maxLength="15">Características de Paga</string>
-
   <string name="update" maxLength="15">Actualizar</string>
   <string name="update_summary" maxLength="20">Verificar actualizaciones de la aplicación</string>
   <string name="check_in_progress" maxLength="20">Verificación en progreso</string>
@@ -265,7 +246,7 @@
   <string name="outdated_web_view" maxLength="20">WebView Obsoleto</string>
   <!-- DaemonCmdRcvSvc: Daemon return messages -->
   <string name="daemon_listen_on_loopback_failed" maxLength="20">Daemon falló al escuchar 127.0.0.1</string>
-  <string name="daemon_establish_connection_failed" maxLength="20">Daemon falló al establecer\n    conexión con el cliente</string>
+  <string name="daemon_establish_connection_failed" maxLength="20">Daemon falló al establecer conexión con el cliente</string>
   <string name="daemon_wrong_args_received" maxLength="20">Argumentos erróneos</string>
   <string name="daemon_set_app_ops_mode_failed" maxLength="20">Establecimiento del modo AppOps fallido</string>
   <string name="daemon_reset_app_ops_failed" maxLength="20">Restablecimiento de Appops fallido</string>
