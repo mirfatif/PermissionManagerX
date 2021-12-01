@@ -761,8 +761,8 @@ public enum PackageParser {
     try {
       PermissionInfo permissionInfo = mPackageManager.getPermissionInfo(perm, 0);
 
-      int protectionLevel = permissionInfo.protectionLevel & PermissionInfo.PROTECTION_MASK_BASE;
-      int protectionFlags = permissionInfo.protectionLevel & ~PermissionInfo.PROTECTION_MASK_BASE;
+      int protectionLevel = getProtLevel(permissionInfo) & PI_PROTECTION_MASK_BASE;
+      int protectionFlags = getProtLevel(permissionInfo) & ~PI_PROTECTION_MASK_BASE;
       @SuppressWarnings("deprecation")
       int PROTECTION_SIGNATURE_OR_SYSTEM = PermissionInfo.PROTECTION_SIGNATURE_OR_SYSTEM;
 
@@ -1107,9 +1107,14 @@ public enum PackageParser {
   }
 
   public static final int PM_GET_SIGNATURES = PackageManager.GET_SIGNATURES;
+  public static final int PI_PROTECTION_MASK_BASE = PermissionInfo.PROTECTION_MASK_BASE;
 
-  private Signature[] getPackageSignatures(PackageInfo packageInfo) {
+  public static Signature[] getPackageSignatures(PackageInfo packageInfo) {
     return packageInfo.signatures;
+  }
+
+  public static int getProtLevel(PermissionInfo permInfo) {
+    return permInfo.protectionLevel;
   }
 
   private Integer getIconResId(String perm, String group) {

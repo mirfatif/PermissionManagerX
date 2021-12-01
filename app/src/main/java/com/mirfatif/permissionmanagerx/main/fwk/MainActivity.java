@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
@@ -1009,7 +1010,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onAnimationEnd(Animator animation) {
       // Unlocking immediately still throws Exception.
-      new Handler().postDelayed(mLock::unlock, 2000);
+      new Handler(Looper.myLooper()).postDelayed(mLock::unlock, 2000);
     }
 
     @Override
