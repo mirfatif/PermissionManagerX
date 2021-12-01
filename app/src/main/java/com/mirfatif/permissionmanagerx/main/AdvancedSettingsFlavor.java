@@ -1,6 +1,7 @@
 package com.mirfatif.permissionmanagerx.main;
 
 import com.mirfatif.permissionmanagerx.databinding.AdvSettingsDialogBinding;
+import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
 
 public class AdvancedSettingsFlavor {
 

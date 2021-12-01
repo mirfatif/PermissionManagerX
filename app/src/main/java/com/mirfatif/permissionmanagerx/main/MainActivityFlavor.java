@@ -8,58 +8,59 @@ import android.view.MenuItem;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.fragment.app.FragmentManager;
+import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
 
-class MainActivityFlavor {
+public class MainActivityFlavor {
 
   @SuppressWarnings("FieldCanBeLocal")
   private final MainActivity mA;
 
   private final Feedback mFeedback;
 
-  MainActivityFlavor(MainActivity activity) {
+  public MainActivityFlavor(MainActivity activity) {
     mA = activity;
     mFeedback = new Feedback(mA);
   }
 
-  void onCreated() {}
+  public void onCreated() {}
 
-  void onResumed() {
+  public void onResumed() {
     mFeedback.askForFeedback();
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  void onCreateOptionsMenu(Menu menu) {}
+  public void onCreateOptionsMenu(Menu menu) {}
 
   @SuppressWarnings("UnusedDeclaration")
-  boolean onPrepareOptionsMenu(Menu menu) {
+  public boolean onPrepareOptionsMenu(Menu menu) {
     return false;
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  boolean onOptionsItemSelected(MenuItem item) {
+  public boolean onOptionsItemSelected(MenuItem item) {
     return false;
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  void setNavMenu(Menu menu) {}
+  public void setNavMenu(Menu menu) {}
 
   @SuppressWarnings("UnusedDeclaration")
-  boolean handleNavItemChecked(MenuItem item) {
+  public boolean handleNavItemChecked(MenuItem item) {
     return false;
   }
 
-  void onPackagesUpdated() {
+  public void onPackagesUpdated() {
     SETTINGS.setMayAskForFeedback();
     mFeedback.askForFeedback();
   }
 
   void onRestoreDone() {}
 
-  void onPrivDaemonStarted() {}
+  public void onPrivDaemonStarted() {}
 
-  void handleIntentActions(@SuppressWarnings("UnusedDeclaration") Intent intent) {}
+  public void handleIntentActions(@SuppressWarnings("UnusedDeclaration") Intent intent) {}
 
-  void resetDrawerIcon() {
+  public void resetDrawerIcon() {
     ActionBar actionBar = mA.getSupportActionBar();
     ActionBarDrawerToggle drawerToggle;
     if (actionBar != null && (drawerToggle = mA.getDrawerToggle()) != null) {

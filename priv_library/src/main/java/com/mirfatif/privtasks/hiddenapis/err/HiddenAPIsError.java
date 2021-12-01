@@ -1,4 +1,4 @@
-package com.mirfatif.privtasks.hiddenapis;
+package com.mirfatif.privtasks.hiddenapis.err;
 
 /*
  Wrapper to send consistent Errors to calling PrivTasks class from different implementations

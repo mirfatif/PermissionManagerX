@@ -4,6 +4,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.Permission;
+import com.mirfatif.permissionmanagerx.pkg.fwk.PackageActivity;
 import java.util.Comparator;
 import java.util.List;
 
@@ -31,12 +32,12 @@ public class PkgActivityFlavor {
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  boolean beforePermChange(Package mPackage, Permission permission, boolean isSystemFixed) {
+  public boolean beforePermChange(Package mPackage, Permission permission, boolean isSystemFixed) {
     return true;
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  void afterPermChange(Package mPackage, Permission permission, boolean isSystemFixed) {}
+  public void afterPermChange(Package mPackage, Permission permission, boolean isSystemFixed) {}
 
   public void onPermClick(Permission perm) {
     mA.onPermSwitchToggle(perm);

@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx.main;
+package com.mirfatif.permissionmanagerx.main.fwk;
 
 import static com.mirfatif.permissionmanagerx.parser.PackageParser.PKG_PARSER;
 import static com.mirfatif.permissionmanagerx.prefs.MySettings.PERM_GET_APP_OPS_STATS;
@@ -40,11 +40,17 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.about.AboutActivity;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.ActivityMainBinding;
+import com.mirfatif.permissionmanagerx.main.AdvSettingsDialogFrag;
+import com.mirfatif.permissionmanagerx.main.BackupRestore;
+import com.mirfatif.permissionmanagerx.main.Donate;
+import com.mirfatif.permissionmanagerx.main.MainActivityFlavor;
+import com.mirfatif.permissionmanagerx.main.PackageAdapter;
 import com.mirfatif.permissionmanagerx.main.PackageAdapter.PkgAdapterCallback;
+import com.mirfatif.permissionmanagerx.main.PkgLongPressDialogFrag;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
-import com.mirfatif.permissionmanagerx.pkg.PackageActivity;
-import com.mirfatif.permissionmanagerx.prefs.FilterSettingsActivity;
+import com.mirfatif.permissionmanagerx.pkg.fwk.PackageActivity;
+import com.mirfatif.permissionmanagerx.prefs.fwk.FilterSettingsActivity;
 import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
 import com.mirfatif.permissionmanagerx.prefs.settings.SearchSettingsFrag;
 import com.mirfatif.permissionmanagerx.prefs.settings.SettingsActivity;
@@ -513,7 +519,7 @@ public class MainActivity extends BaseActivity {
     }
   }
 
-  void showSnackBar(String text, int duration) {
+  public void showSnackBar(String text, int duration) {
     Utils.runInFg(
         this,
         () -> {
@@ -704,7 +710,7 @@ public class MainActivity extends BaseActivity {
     }
   }
 
-  void restartPrivDaemon(boolean preferRoot, boolean showDialog) {
+  public void restartPrivDaemon(boolean preferRoot, boolean showDialog) {
     if (Utils.isMainThread()) {
       Utils.runInBg(() -> restartPrivDaemon(preferRoot, showDialog));
       return;
@@ -771,7 +777,7 @@ public class MainActivity extends BaseActivity {
     mMainActivityFlavor.setNavMenu(mB.navV.getMenu());
   }
 
-  void setBoxesChecked() {
+  public void setBoxesChecked() {
     if (mB == null) {
       return;
     }
@@ -1017,15 +1023,15 @@ public class MainActivity extends BaseActivity {
   ////////////////////////// FOR SUBCLASSES ////////////////////////
   //////////////////////////////////////////////////////////////////
 
-  ActivityMainBinding getRootView() {
+  public ActivityMainBinding getRootView() {
     return mB;
   }
 
-  ProgressFrameLayout getRoundProgressContainer() {
+  public ProgressFrameLayout getRoundProgressContainer() {
     return mB.rndProgCont;
   }
 
-  TextView getRoundProgressTextView() {
+  public TextView getRoundProgressTextView() {
     return mB.rndProgTextV;
   }
 
@@ -1034,11 +1040,11 @@ public class MainActivity extends BaseActivity {
     return mSearchView;
   }
 
-  MainActivityFlavor getMainActivityFlavor() {
+  public MainActivityFlavor getMainActivityFlavor() {
     return mMainActivityFlavor;
   }
 
-  ActionBarDrawerToggle getDrawerToggle() {
+  public ActionBarDrawerToggle getDrawerToggle() {
     return mDrawerToggle;
   }
 }

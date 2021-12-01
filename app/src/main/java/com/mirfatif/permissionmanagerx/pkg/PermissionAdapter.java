@@ -37,7 +37,7 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
   private final ArrayAdapter<String> mAppOpModesAdapter;
   private final ArrayAdapter<String> mAppOpModesBgAdapter;
 
-  PermissionAdapter(Context context, PermAdapterCallback callback) {
+  public PermissionAdapter(Context context, PermAdapterCallback callback) {
     super(new DiffUtilItemCallBack(), callback::runInFg);
     mCallback = callback;
 

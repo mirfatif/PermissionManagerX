@@ -28,7 +28,7 @@ import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIs;
-import com.mirfatif.privtasks.hiddenapis.HiddenAPIsError;
+import com.mirfatif.privtasks.hiddenapis.err.HiddenAPIsError;
 import com.mirfatif.privtasks.ser.MyPackageOps;
 import java.io.File;
 import java.util.ArrayList;

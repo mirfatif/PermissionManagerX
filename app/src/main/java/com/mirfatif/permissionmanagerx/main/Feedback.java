@@ -11,6 +11,7 @@ import com.google.android.material.behavior.SwipeDismissBehavior.OnDismissListen
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.databinding.ActivityMainBinding;
 import com.mirfatif.permissionmanagerx.main.FeedbackDialogFrag.FeedbackType;
+import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
 
 class Feedback {
 

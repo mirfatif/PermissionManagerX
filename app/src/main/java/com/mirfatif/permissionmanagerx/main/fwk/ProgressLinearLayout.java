@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx.main;
+package com.mirfatif.permissionmanagerx.main.fwk;
 
 import android.content.Context;
 import android.util.AttributeSet;

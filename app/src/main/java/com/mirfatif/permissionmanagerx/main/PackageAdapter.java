@@ -62,7 +62,7 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
   private final Object ICON_SETTER_LOCK = new Object();
   private ExecutorService ICON_SETTER = Executors.newCachedThreadPool();
 
-  void onDestroyed() {
+  public void onDestroyed() {
     synchronized (ICON_SETTER_LOCK) {
       if (ICON_SETTER != null) {
         ICON_SETTER.shutdownNow();

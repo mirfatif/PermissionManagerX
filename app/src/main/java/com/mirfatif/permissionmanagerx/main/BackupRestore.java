@@ -20,6 +20,7 @@ import androidx.appcompat.app.AlertDialog.Builder;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.BackupRestoreDialogBinding;
+import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionEntity;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.util.Utils;
@@ -101,7 +102,7 @@ public class BackupRestore {
 
   private boolean mSkipUninstalledApps = false;
 
-  AlertDialog createDialog() {
+  public AlertDialog createDialog() {
     if (mA == null) {
       return null;
     }

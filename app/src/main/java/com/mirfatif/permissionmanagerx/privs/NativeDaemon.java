@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.privs.err.AdbException;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import java.io.BufferedReader;
 import java.io.File;

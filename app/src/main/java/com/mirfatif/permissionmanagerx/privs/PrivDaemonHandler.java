@@ -15,6 +15,7 @@ import android.util.Log;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.privs.err.AdbException;
 import com.mirfatif.permissionmanagerx.svc.DaemonCmdRcvSvc;
 import com.mirfatif.permissionmanagerx.svc.LogcatService;
 import com.mirfatif.permissionmanagerx.util.Utils;

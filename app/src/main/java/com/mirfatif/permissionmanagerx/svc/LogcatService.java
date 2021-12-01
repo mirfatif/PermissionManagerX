@@ -22,7 +22,7 @@ import androidx.core.app.NotificationManagerCompat;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
-import com.mirfatif.permissionmanagerx.main.MainActivity;
+import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
 import com.mirfatif.permissionmanagerx.privs.Adb;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.permissionmanagerx.util.UtilsFlavor;

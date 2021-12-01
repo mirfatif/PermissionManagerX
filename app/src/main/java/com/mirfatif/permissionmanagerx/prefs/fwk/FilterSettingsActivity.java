@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx.prefs;
+package com.mirfatif.permissionmanagerx.prefs.fwk;
 
 import static com.mirfatif.permissionmanagerx.parser.PackageParser.PKG_PARSER;
 import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.databinding.ActivityFragmentContainerBinding;
+import com.mirfatif.permissionmanagerx.prefs.FilterSettingsFragment;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;

@@ -21,6 +21,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.PkgLongPressDialogBinding;
+import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.ui.base.BottomSheetDialogFrag;
@@ -34,7 +35,7 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
 
   private final Package mPkg;
 
-  PkgLongPressDialogFrag(Package pkg) {
+  public PkgLongPressDialogFrag(Package pkg) {
     mPkg = pkg;
   }
 

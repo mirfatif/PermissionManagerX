@@ -14,7 +14,7 @@ import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.PrivTasks;
 import com.mirfatif.privtasks.PrivTasks.PrivTasksCallback;
 import com.mirfatif.privtasks.Util;
-import com.mirfatif.privtasks.hiddenapis.HiddenAPIsError;
+import com.mirfatif.privtasks.hiddenapis.err.HiddenAPIsError;
 import com.mirfatif.privtasks.ser.MyPackageOps;
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -20,6 +20,7 @@ import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.prefs.fwk.FilterSettingsActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.PrivTasks;
 import java.util.ArrayList;
@@ -309,14 +310,14 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     int extraAppOpsCount = extraAppOps.size();
 
     // Set summary
+    String message;
     if (extraAppOpsCount == 0 || appOpsCount == 0) {
-      String message = getString(R.string.extra_app_ops_summary);
+      message = getString(R.string.extra_app_ops_summary);
       if (appOpsCount != 0) {
         message += " " + getString(R.string.extra_app_ops_summary_count, appOpsCount);
       }
-      extraAppOpsListView.setSummary(message);
     } else {
-      String message = (String) extraAppOps.toArray()[0];
+      message = (String) extraAppOps.toArray()[0];
       extraAppOpsCount--;
       // Without providing context, getString() crashes with: "Fragment ... not attached to a
       // context" on rotation. getActivity() may also return null.
@@ -325,8 +326,8 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
             Utils.getQtyString(
                 R.plurals.and_others_count, extraAppOpsCount, message, extraAppOpsCount);
       }
-      extraAppOpsListView.setSummary(message);
     }
+    extraAppOpsListView.setSummary(message);
     extraAppOpsListView.setEnabled(showExtraAppOpsView.isChecked() && appOpsCount != 0);
   }
 

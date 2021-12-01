@@ -1,6 +1,6 @@
 package com.mirfatif.permissionmanagerx.main;
 
-import static com.mirfatif.permissionmanagerx.main.MainActivity.TAG_DONATION;
+import static com.mirfatif.permissionmanagerx.main.fwk.MainActivity.TAG_DONATION;
 import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
 import static com.mirfatif.permissionmanagerx.util.Utils.isProVersion;
 import static com.mirfatif.permissionmanagerx.util.Utils.isPsVersion;

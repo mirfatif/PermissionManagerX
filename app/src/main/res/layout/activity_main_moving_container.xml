@@ -10,7 +10,7 @@
     android:layout_height="1dp"
     android:background="?attr/accentTransColor" />
 
-  <com.mirfatif.permissionmanagerx.main.ProgressLinearLayout
+  <com.mirfatif.permissionmanagerx.main.fwk.ProgressLinearLayout
     android:id="@+id/prog_bar_cont"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
       android:layout_height="1dp"
       android:background="@color/dynamicForeground" />
 
-  </com.mirfatif.permissionmanagerx.main.ProgressLinearLayout>
+  </com.mirfatif.permissionmanagerx.main.fwk.ProgressLinearLayout>
 
   <com.mirfatif.permissionmanagerx.ui.base.MyCoordinatorLayout
     android:layout_width="match_parent"

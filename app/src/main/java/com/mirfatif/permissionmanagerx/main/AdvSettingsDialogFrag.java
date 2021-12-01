@@ -22,6 +22,7 @@ import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.fragment.app.FragmentManager;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.databinding.AdvSettingsDialogBinding;
+import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.ui.base.BottomSheetDialogFrag;

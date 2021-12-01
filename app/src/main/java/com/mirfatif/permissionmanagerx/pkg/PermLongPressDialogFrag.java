@@ -17,6 +17,7 @@ import com.mirfatif.permissionmanagerx.databinding.PermLongPressDialogBinding;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.Permission;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionEntity;
+import com.mirfatif.permissionmanagerx.pkg.fwk.PackageActivity;
 import com.mirfatif.permissionmanagerx.ui.base.BottomSheetDialogFrag;
 import com.mirfatif.permissionmanagerx.util.Utils;
 
@@ -147,7 +148,7 @@ public class PermLongPressDialogFrag extends BottomSheetDialogFrag {
     mPkgActivityFlavor.pkgRefChanged(mPkg);
   }
 
-  static void show(
+  public static void show(
       Permission perm, Package pkg, PkgActivityFlavor pkgActivityFlavor, FragmentManager fm) {
     if (!SETTINGS.canBeExcluded(perm) && !perm.isChangeable()) {
       Utils.showToast(R.string.no_action_available);

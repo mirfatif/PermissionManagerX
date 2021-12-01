@@ -24,7 +24,7 @@
 
     <activity
       android:exported="true"
-      android:name=".main.MainActivity">
+      android:name=".main.fwk.MainActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
@@ -32,20 +32,20 @@
     </activity>
 
     <activity
-      android:name=".pkg.PackageActivity"
-      android:parentActivityName=".main.MainActivity"/>
+      android:name=".pkg.fwk.PackageActivity"
+      android:parentActivityName=".main.fwk.MainActivity"/>
     <activity
       android:name=".prefs.settings.SettingsActivity"
-      android:parentActivityName=".main.MainActivity"/>
+      android:parentActivityName=".main.fwk.MainActivity"/>
     <activity
-      android:name=".prefs.FilterSettingsActivity"
-      android:parentActivityName=".main.MainActivity"/>
+      android:name=".prefs.fwk.FilterSettingsActivity"
+      android:parentActivityName=".main.fwk.MainActivity"/>
     <activity
       android:name=".about.AboutActivity"
-      android:parentActivityName=".main.MainActivity"/>
+      android:parentActivityName=".main.fwk.MainActivity"/>
     <activity
       android:name=".ui.HelpActivity"
-      android:parentActivityName=".main.MainActivity"/>
+      android:parentActivityName=".main.fwk.MainActivity"/>
 
     <service android:name=".svc.LogcatService" />
     <service android:name=".svc.NotifDismissSvc" />

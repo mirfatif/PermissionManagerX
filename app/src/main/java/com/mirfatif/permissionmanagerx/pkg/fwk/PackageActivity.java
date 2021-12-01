@@ -1,4 +1,4 @@
-package com.mirfatif.permissionmanagerx.pkg;
+package com.mirfatif.permissionmanagerx.pkg.fwk;
 
 import static com.mirfatif.permissionmanagerx.parser.AppOpsParser.APP_OPS_PARSER;
 import static com.mirfatif.permissionmanagerx.parser.PackageParser.PKG_PARSER;
@@ -31,11 +31,14 @@ import com.mirfatif.permissionmanagerx.databinding.ActivityPackageBinding;
 import com.mirfatif.permissionmanagerx.databinding.PermDetailsDialogBinding;
 import com.mirfatif.permissionmanagerx.main.BackupRestore;
 import com.mirfatif.permissionmanagerx.main.BackupRestore.BackupEntry;
-import com.mirfatif.permissionmanagerx.main.MainActivity;
+import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.Permission;
+import com.mirfatif.permissionmanagerx.pkg.PermLongPressDialogFrag;
+import com.mirfatif.permissionmanagerx.pkg.PermissionAdapter;
 import com.mirfatif.permissionmanagerx.pkg.PermissionAdapter.PermAdapterCallback;
-import com.mirfatif.permissionmanagerx.prefs.FilterSettingsActivity;
+import com.mirfatif.permissionmanagerx.pkg.PkgActivityFlavor;
+import com.mirfatif.permissionmanagerx.prefs.fwk.FilterSettingsActivity;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
@@ -164,7 +167,7 @@ public class PackageActivity extends BaseActivity {
     Utils.runInFg(this, () -> mB.refreshLayout.setRefreshing(true));
   }
 
-  String getPermState(Permission permission) {
+  public String getPermState(Permission permission) {
     return permission.isAppOps()
         ? APP_OPS_PARSER.getAppOpsModes().get(permission.getAppOpsMode())
         : (permission.isGranted() ? Permission.GRANTED : Permission.REVOKED);
@@ -194,7 +197,7 @@ public class PackageActivity extends BaseActivity {
     invalidateOptionsMenu();
   }
 
-  void updatePackage() {
+  public void updatePackage() {
     if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "updatePackage() called");
     }
@@ -417,7 +420,7 @@ public class PackageActivity extends BaseActivity {
     mPkgActivityFlavor.pkgRefChanged(mPackage);
   }
 
-  void onPermSwitchToggle(Permission perm) {
+  public void onPermSwitchToggle(Permission perm) {
     String warn = null;
     if (SETTINGS.getBoolPref(R.string.pref_package_warn_dang_change_enc_key)) {
       if (mPackage.isFrameworkApp()) {

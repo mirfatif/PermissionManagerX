@@ -1,7 +1,7 @@
 package com.mirfatif.permissionmanagerx.prefs.settings;
 
 import androidx.preference.Preference;
-import com.mirfatif.permissionmanagerx.main.MainActivity;
+import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
 
 public class SearchSettingsFragFlavor {
 

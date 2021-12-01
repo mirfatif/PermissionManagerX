@@ -12,14 +12,15 @@ import androidx.appcompat.app.AlertDialog.Builder;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.DonateAlertDialogBinding;
+import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
 
-class Donate {
+public class Donate {
 
   private final MainActivity mA;
   private final DonateAlertDialogBinding mB;
 
-  Donate(MainActivity activity) {
+  public Donate(MainActivity activity) {
     mA = activity;
     mB = DonateAlertDialogBinding.inflate(mA.getLayoutInflater());
 
@@ -44,7 +45,7 @@ class Donate {
     }
   }
 
-  AlertDialog createDialog() {
+  public AlertDialog createDialog() {
     return new Builder(mA).setTitle(R.string.donate_menu_item).setView(mB.getRoot()).create();
   }
 
