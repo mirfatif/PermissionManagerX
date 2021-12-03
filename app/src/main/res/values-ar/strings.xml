@@ -68,6 +68,7 @@
   <string name="starting_daemon" maxLength="15">بدء تشغيل دايمون</string>
   <string name="checking_root_access" maxLength="15">التحقق من صلاحيات الجذر</string>
   <string name="checking_adb_access" maxLength="15">التحقق من الوصول إلى ADB</string>
+  <string name="missing_privileges">امتيازات مفقودة</string>
   <string name="root_granted" maxLength="20">تم منح الروت</string>
   <string name="getting_root_fail" maxLength="20">فشل الحصول على امتيازات الجذر</string>
   <string name="getting_root_fail_long" maxLength="20">فشل الحصول على امتيازات الجذر. هل أنت متجذر؟</string>
@@ -78,6 +79,7 @@
   <string name="adb_key_pair_failed" maxLength="20">فشل إنشاء مفتاح الاقتران لـ ADB</string>
   <string name="adb_authentication_failed" maxLength="20">فشل مصادقة ADB</string>
   <string name="adb_command_fail" maxLength="20">فشلت أوامر ADB</string>
+  <string name="adb_connect_fail_long"><![CDATA[فشل الاتصال بـ ADB.<ul><li>تمكين <b><i>ADB عبر الشبكة</i></b> والعودة إلى الاتصال.</li><li>السماح بالمصادقة ADB في حالة مطالبة.</li></ul>]]></string>
   <string name="daemon_failed" maxLength="20">فشل بدء العمل daemon المميز</string>
   <string name="backup" maxLength="10">النسخ الاحتياطي</string>
   <string name="restore" maxLength="10">إستعادة</string>
@@ -165,6 +167,9 @@
   <string name="set_references" maxLength="15">تعيين المراجع</string>
   <string name="set_references_confirmation">تعيين كافة حالات الصلاحيات الحالية كمراجع؟</string>
   <!-- MainActivity Dialogs -->
+  <string name="enable_app">تمكين التطبيق</string>
+  <string name="disable_app">تعطيل التطبيق</string>
+  <string name="install">تثبيت</string>
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">لقد حدث خطأ ما</string>
   <string name="change_perms_warning" comment="'system' or 'framework'">تغيير أذونات تطبيق %1$s إجراء خطير. في أسوأ سيناريو نظام أندرويد قد يتعطل.\nهل أنت متأكد تريد المتابعة؟</string>
@@ -178,6 +183,10 @@
     <item quantity="many">هذا هو تطبيق وضع UID. تغييره يؤثر أيضا على %1$d حزمة أخرى.</item>
     <item quantity="other">هذا هو تطبيق وضع UID. تغييره يؤثر أيضًا على %1$d حزم أخرى.</item>
   </plurals>
+  <string name="exclude_perm_from_list">إخفاء الصلاحيّة من القائمة</string>
+  <string name="set_reference">تعيين مرجع</string>
+  <string name="clear_reference">مسح المرجع</string>
+  <string name="no_action_available">لا يوجد إجراء متاح</string>
   <plurals name="count_permissions_filtered_out">
     <item quantity="zero">تم تصفية الإذن %1$d</item>
     <item quantity="one">تم تصفية الإذن %1$d</item>
@@ -251,6 +260,17 @@
   <string name="app_rating" maxLength="15">قيّمني</string>
   <string name="app_rating_summary" maxLength="20">التقييم، المراجعة، والبدء…</string>
   <string name="paid_features" maxLength="15">الميزات المدفوعة</string>
+  <string name="paid_features1">فرز التطبيقات والأذونات حسب عوامل مختلفة</string>
+  <string name="paid_features2">الفحوصات المجدولة لإشعار الحالات المرجعية السيئة</string>
+  <string name="paid_features3">الإلغاء التلقائي للصلاحيات الممنوحة مع حالات RED</string>
+  <string name="paid_features4">مراقب الأذونات لإزالة الأذونات بسرعة</string>
+  <string name="paid_features5">إجراء تغييرات على التطبيقات والأذونات الحرجة</string>
+  <string name="paid_features6">مستخدمين متعددين / دعم الملف الشخصي للعمل</string>
+  <string name="paid_features7">إنشاء ملف النسخ الاحتياطي التلقائي عند التغييرات</string>
+  <string name="paid_features8">اقتراحات البحث</string>
+  <string name="paid_features9">خيارات الموضوع</string>
+  <string name="paid_features10">عرض ملخص الإذن (قادم)</string>
+  <string name="paid_features11">عمليات الدفعات (الملفات الشخصية) (قادمة)</string>
   <string name="update" maxLength="15">تحديث</string>
   <string name="update_summary" maxLength="20">تحقق تحديثات التطبيق</string>
   <string name="check_in_progress" maxLength="20">تحقق من التقدم</string>
@@ -293,7 +313,7 @@
   <string name="outdated_web_view" maxLength="20">عارض ويب قديم</string>
   <!-- DaemonCmdRcvSvc: Daemon return messages -->
   <string name="daemon_listen_on_loopback_failed" maxLength="20">فشل daemon في الاستماع في 127.0.0.1</string>
-  <string name="daemon_establish_connection_failed" maxLength="20">فشل daemon في إنشاء اتصال مع العميل</string>
+  <string name="daemon_establish_connection_failed">فشل daemon في إنشاء اتصال مع العميل</string>
   <string name="daemon_wrong_args_received" maxLength="20">حجج خاطئة</string>
   <string name="daemon_set_app_ops_mode_failed" maxLength="20">فشل في إعداد وضع اذونات التطبيقات</string>
   <string name="daemon_reset_app_ops_failed" maxLength="20">فشل إعادة تعيين اذونات التطبيقات</string>

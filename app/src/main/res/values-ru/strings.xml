@@ -66,6 +66,7 @@
   <string name="starting_daemon" maxLength="15">Запуск демона</string>
   <string name="checking_root_access" maxLength="15">Проверка root-доступа</string>
   <string name="checking_adb_access" maxLength="15">Проверка доступа ADB</string>
+  <string name="missing_privileges">Отсутствуют привилегии</string>
   <string name="root_granted" maxLength="20">Root предоставлен</string>
   <string name="getting_root_fail" maxLength="20">Сбой получения root-прав</string>
   <string name="getting_root_fail_long" maxLength="20">Не удалось получить root-права. У вас есть root-доступ?</string>
@@ -76,6 +77,7 @@
   <string name="adb_key_pair_failed" maxLength="20">Сбой создания пары ключей ADB</string>
   <string name="adb_authentication_failed" maxLength="20">Сбой аутентификации ADB</string>
   <string name="adb_command_fail" maxLength="20">Сбой выполнения команды ADB</string>
+  <string name="adb_connect_fail_long"><![CDATA[Сбой подключения к ADB.<ul><li>Включите <b><i>ADB через сеть</i></b> и вернитесь к подключению.</li><li>Разрешите аутентификацию ADB, если будет предложено.</li></ul>]]></string>
   <string name="daemon_failed" maxLength="20">Не удалось запустить привилегированный демон</string>
   <string name="backup" maxLength="10">Бэкап</string>
   <string name="restore" maxLength="10">Восстановление</string>
@@ -155,6 +157,13 @@
   <string name="set_references" maxLength="15">Установить целевые значения</string>
   <string name="set_references_confirmation">Установить все текущие состояния разрешений в качестве целевых?</string>
   <!-- MainActivity Dialogs -->
+  <string name="exclude_app_from_visible_list">Скрыть приложение из списка</string>
+  <string name="enable_app">Разморозка приложения</string>
+  <string name="disable_app">Заморозка приложения</string>
+  <string name="open_pkg_info">Открыть сведения о приложении</string>
+  <string name="find_pkg_process">Найти процесс приложения</string>
+  <string name="install">Установить</string>
+  <string name="wrun_not_installed">WhatsRunning не установлено</string>
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">Что-то пошло не так</string>
   <string name="change_perms_warning" comment="'system' or 'framework'">Изменение разрешений %1$s приложения — потенциально опасное действие вплоть до сбоя системы Android.\nВы уверены, что хотите продолжить?</string>
@@ -166,6 +175,11 @@
     <item quantity="many">Это разрешение в режиме UID. Его изменение затронет работу %1$d других пакетов.</item>
     <item quantity="other">Это разрешение в режиме UID. Его изменение затронет работу %1$d других пакетов.</item>
   </plurals>
+  <string name="exclude_perm_from_list">Скрыть разрешения из списка</string>
+  <string name="set_perm_state_reference"><![CDATA[Установить <b><i>%1$s</i></b> как целевое значение]]></string>
+  <string name="set_reference">Установить целевые значения</string>
+  <string name="clear_reference">Очистить целевые значения</string>
+  <string name="no_action_available">Действия недоступны</string>
   <plurals name="count_permissions_filtered_out">
     <item quantity="one">Отфильтровано %1$d разрешение</item>
     <item quantity="few">Отфильтровано %1$d разрешения</item>
@@ -236,7 +250,9 @@
   <string name="app_rating_summary" maxLength="20">Оценки, отзывы, \"звезды\" на Github…</string>
   <string name="paid_features" maxLength="15">Платные функции</string>
   <string name="paid_features1">Сортировка приложений и разрешений по различным параметрам</string>
+  <string name="paid_features2">Проверка разрешений по расписанию и уведомление в случае их изменений</string>
   <string name="paid_features3">Автоматическая отмена разрешений с КРАСНЫМИ состояниями</string>
+  <string name="paid_features4">Отслеживание разрешений для быстрого удаления нежелательных разрешений</string>
   <string name="paid_features5">Внесение изменений в критически важные приложения и разрешения</string>
   <string name="paid_features6">Поддержка нескольких пользователей/рабочего профиля</string>
   <string name="paid_features7">Автоматический бэкап при изменениях</string>
@@ -286,7 +302,7 @@
   <string name="outdated_web_view" maxLength="20">WebView устарел</string>
   <!-- DaemonCmdRcvSvc: Daemon return messages -->
   <string name="daemon_listen_on_loopback_failed" maxLength="20">Демон не смог прослушать 127.0.0.1</string>
-  <string name="daemon_establish_connection_failed" maxLength="20">Демону не удалось установить связь с клиентом</string>
+  <string name="daemon_establish_connection_failed">Демону не удалось установить связь с клиентом</string>
   <string name="daemon_wrong_args_received" maxLength="20">Неверные значения</string>
   <string name="daemon_set_app_ops_mode_failed" maxLength="20">Сбой установки режима AppOps</string>
   <string name="daemon_reset_app_ops_failed" maxLength="20">Сбой сброса AppOps</string>

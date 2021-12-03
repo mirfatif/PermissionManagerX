@@ -137,6 +137,8 @@
   <string name="set_references" maxLength="15">Establecer Referencias</string>
   <string name="set_references_confirmation">¿Establecer todos los estados actuales de permisos como referencias?</string>
   <!-- MainActivity Dialogs -->
+  <string name="enable_app">Habilitar app</string>
+  <string name="disable_app">Deshabilitar app</string>
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">Algo salió mal</string>
   <string name="change_perms_warning" comment="'system' or 'framework'">Cambiar los permisos de una aplicación de %1$s es una acción peligrosa. En el peor de los casos el sistema Android podría colapsar.\n¿Seguro que quieres continuar?</string>
@@ -246,7 +248,7 @@
   <string name="outdated_web_view" maxLength="20">WebView Obsoleto</string>
   <!-- DaemonCmdRcvSvc: Daemon return messages -->
   <string name="daemon_listen_on_loopback_failed" maxLength="20">Daemon falló al escuchar 127.0.0.1</string>
-  <string name="daemon_establish_connection_failed" maxLength="20">Daemon falló al establecer conexión con el cliente</string>
+  <string name="daemon_establish_connection_failed">Daemon falló al establecer conexión con el cliente</string>
   <string name="daemon_wrong_args_received" maxLength="20">Argumentos erróneos</string>
   <string name="daemon_set_app_ops_mode_failed" maxLength="20">Establecimiento del modo AppOps fallido</string>
   <string name="daemon_reset_app_ops_failed" maxLength="20">Restablecimiento de Appops fallido</string>
