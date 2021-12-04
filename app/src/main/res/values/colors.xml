@@ -16,4 +16,7 @@
 
   <color name="orangeState">#FFFFC107</color>
 
+  <!-- On Android 9- attr color doesn't work at some places. -->
+  <color name="colorControlNormal">#919191</color>
+
 </resources>
