@@ -32,6 +32,7 @@ import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.SearchView.OnQueryTextListener;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -75,6 +76,9 @@ public class MainActivity extends BaseActivity {
   public static final String ACTION_SHOW_DRAWER = "com.mirfatif.pmx.action.SHOW_DRAWER";
   public static final String EXTRA_PKG_POSITION = "com.mirfatif.pmx.extra.PKG_POSITION";
 
+  public static final String EXTRA_CRASH_NOTIF_ID =
+      MainActivity.class.getName() + ".extra.CRASH_NOTIF_ID";
+
   private MainActivityFlavor mMainActivityFlavor;
   private BackupRestore mBackupRestore;
 
@@ -100,6 +104,8 @@ public class MainActivity extends BaseActivity {
     if (isSecondaryUser()) {
       return;
     }
+
+    sendCrashReport();
 
     mB = ActivityMainBinding.inflate(getLayoutInflater());
     setContentView(mB.getRoot());
@@ -365,6 +371,18 @@ public class MainActivity extends BaseActivity {
 
     Utils.getDefPrefs().edit().putBoolean("PRIMARY_USER", false).apply(); // Trigger auto-backup
     return true;
+  }
+
+  private void sendCrashReport() {
+    Intent intent = getIntent();
+    int id = intent.getIntExtra(EXTRA_CRASH_NOTIF_ID, 0);
+    if (id != 0) {
+      NotificationManagerCompat.from(App.getContext()).cancel(id);
+      intent.removeExtra(EXTRA_CRASH_NOTIF_ID);
+      intent = new Intent(intent);
+      intent.setComponent(null);
+      startActivity(intent);
+    }
   }
 
   private class PkgAdapterCallbackImpl implements PkgAdapterCallback {

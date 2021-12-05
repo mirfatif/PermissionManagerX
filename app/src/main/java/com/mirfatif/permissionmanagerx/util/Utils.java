@@ -78,9 +78,9 @@ import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.Adb;
-import com.mirfatif.permissionmanagerx.svc.NotifDismissSvc;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
 import java.io.BufferedReader;
@@ -781,7 +781,6 @@ public class Utils {
     }
   }
 
-  @SuppressLint("LaunchActivityFromNotification")
   private static void showCrashNotification(File logFile) {
     if (!SETTINGS.shouldAskToSendCrashReport()) {
       return;
@@ -806,12 +805,11 @@ public class Utils {
 
     // Adding extra information to dismiss notification after the action is tapped
     intent
-        .setClass(App.getContext(), NotifDismissSvc.class)
-        .putExtra(NotifDismissSvc.EXTRA_INTENT_TYPE, NotifDismissSvc.INTENT_TYPE_ACTIVITY)
-        .putExtra(NotifDismissSvc.EXTRA_NOTIF_ID, UNIQUE_ID);
+        .setClass(App.getContext(), MainActivity.class)
+        .putExtra(MainActivity.EXTRA_CRASH_NOTIF_ID, UNIQUE_ID);
 
     PendingIntent pendingIntent =
-        PendingIntent.getService(App.getContext(), UNIQUE_ID, intent, PI_FLAGS);
+        PendingIntent.getActivity(App.getContext(), UNIQUE_ID, intent, PI_FLAGS);
 
     NotificationManagerCompat notificationManager =
         NotificationManagerCompat.from(App.getContext());
