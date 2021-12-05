@@ -71,4 +71,6 @@ public class MainActivityFlavor {
   public int hideSearchSettings(@SuppressWarnings("UnusedDeclaration") FragmentManager fm) {
     return 0;
   }
+
+  public void onBackPressed() {}
 }

@@ -270,6 +270,11 @@ public class MainActivity extends BaseActivity {
       collapseSearchView();
       return;
     }
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && mMainActivityFlavor != null) {
+      mMainActivityFlavor.onBackPressed();
+    }
+
     // https://issuetracker.google.com/issues/139738913
     if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
       finishAfterTransition();
