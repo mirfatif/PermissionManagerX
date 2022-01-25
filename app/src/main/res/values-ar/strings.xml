@@ -34,7 +34,6 @@
   <string name="filter_menu_item" maxLength="15">مرشحات الاستبعاد</string>
   <string name="root_menu_item" maxLength="15">الوصول إلى الجذر</string>
   <string name="adb_menu_item" maxLength="15">صدفة ADB</string>
-  <string name="dark_theme_menu_item" maxLength="15">إجبار السمة المظلمة</string>
   <string name="backup_restore_menu_item" maxLength="15">النسخ الاحتياطي/الاستعادة</string>
   <string name="help_menu_item" maxLength="15">تعليمات</string>
   <string name="donate_menu_item" maxLength="15">تبرّع</string>
@@ -235,6 +234,11 @@
   <string name="locale_ru">الروسية</string>
   <string name="locale_es">الإسبانية</string>
   <string name="locale_ar">العربية</string>
+
+  <string name="theme_color_green">أخضر</string>
+  <string name="theme_color_blue">أزرق</string>
+  <string name="theme_color_pink">وردي</string>
+  <string name="theme_color_gray">رمادي</string>
   <!-- PreferenceActivity menu items -->
   <string name="filter_settings_reset_defaults_menu_item" maxLength="15">إعادة الضبط إلى الافتراضي</string>
   <string name="filter_settings_reset_confirmation">إعادة تعيين إعدادات الفلتر إلى القيم الافتراضية؟</string>

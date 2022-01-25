@@ -30,8 +30,7 @@
   <string name="settings_menu_item" maxLength="15">Settings</string>
   <string name="filter_menu_item" maxLength="15">Exclusion Filters</string>
   <string name="root_menu_item" maxLength="15">Root Access</string>
-  <string name="adb_menu_item" maxLength="15">ADB Shell</string>
-  <string name="dark_theme_menu_item" maxLength="15">Force Dark Theme</string>
+  <string name="adb_menu_item" maxLength="15">ADB Access</string>
   <string name="backup_restore_menu_item" maxLength="15">Backup / Restore</string>
   <string name="help_menu_item" maxLength="15">Help</string>
   <string name="donate_menu_item" maxLength="15">Donate</string>
@@ -244,6 +243,11 @@
   <string name="locale_ru">Russian</string>
   <string name="locale_es">Spanish</string>
   <string name="locale_ar">Arabic</string>
+
+  <string name="theme_color_green">Green</string>
+  <string name="theme_color_blue">Blue</string>
+  <string name="theme_color_pink">Pink</string>
+  <string name="theme_color_gray">Gray</string>
 
   <!-- PreferenceActivity menu items -->
   <string name="filter_settings_reset_defaults_menu_item" maxLength="15">Reset To Defaults</string>

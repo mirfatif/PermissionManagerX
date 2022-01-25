@@ -238,4 +238,18 @@
     <item order="0">https://crowdin.com/profile/rex07</item>
   </string-array>
 
+  <string-array name="theme_colors">
+    <item>@string/theme_color_green</item>
+    <item>@string/theme_color_blue</item>
+    <item>@string/theme_color_pink</item>
+    <item>@string/theme_color_gray</item>
+  </string-array>
+
+  <string-array name="theme_color_values">
+    <item>@string/theme_color_green_val</item>
+    <item>@string/theme_color_blue_val</item>
+    <item>@string/theme_color_pink_val</item>
+    <item>@string/theme_color_gray_val</item>
+  </string-array>
+
 </resources>

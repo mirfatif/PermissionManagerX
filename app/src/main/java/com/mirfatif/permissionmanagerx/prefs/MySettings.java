@@ -1,7 +1,6 @@
 package com.mirfatif.permissionmanagerx.prefs;
 
 import static com.mirfatif.permissionmanagerx.parser.AppOpsParser.APP_OPS_PARSER;
-import static com.mirfatif.permissionmanagerx.parser.PkgParserFlavor.PKG_PARSER_FLAVOR;
 import static com.mirfatif.permissionmanagerx.util.Utils.getString;
 
 import android.annotation.SuppressLint;
@@ -17,6 +16,7 @@ import android.text.TextUtils;
 import android.text.style.MetricAffectingSpan;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
@@ -26,6 +26,7 @@ import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.Permission;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDao;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDatabase;
+import com.mirfatif.permissionmanagerx.util.LiveEvent;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Util;
 import java.io.File;
@@ -364,7 +365,9 @@ public enum MySettings {
   }
 
   public boolean isQuickScanEnabled() {
-    return getBoolPref(R.string.pref_settings_quick_scan_key) && PKG_PARSER_FLAVOR.allowQuickScan();
+    return false;
+    // TODO return getBoolPref(R.string.pref_settings_quick_scan_key) &&
+    // PKG_PARSER_FLAVOR.allowQuickScan();
   }
 
   public boolean shouldDoQuickScan() {
@@ -381,6 +384,7 @@ public enum MySettings {
 
   public void setRootGranted(boolean granted) {
     savePref(R.string.pref_main_root_granted_enc_key, granted);
+    drawerPrefChanged();
   }
 
   public boolean isAdbConnected() {
@@ -389,6 +393,7 @@ public enum MySettings {
 
   public void setAdbConnected(boolean connected) {
     savePref(R.string.pref_main_adb_connected_enc_key, connected);
+    drawerPrefChanged();
   }
 
   private List<String> mCriticalApps;
@@ -521,11 +526,7 @@ public enum MySettings {
   }
 
   public boolean forceDarkMode() {
-    return getBoolPref(R.string.pref_main_dark_theme_key);
-  }
-
-  public void setForceDarkMode(boolean force) {
-    savePref(R.string.pref_main_dark_theme_key, force);
+    return getBoolPref(R.string.pref_settings_dark_theme_key);
   }
 
   public boolean useSocket() {
@@ -858,5 +859,24 @@ public enum MySettings {
       this.packageLabel = packageLabel;
       this.packageName = packageName;
     }
+  }
+
+  ///////////////////////////////////////////////////////////////////
+
+  public static final int PREF_DRAWER_CHANGED = 0;
+  public static final int PREF_UI_CHANGED = 1;
+
+  private final LiveEvent<Integer> mPrefsWatcher = new LiveEvent<>();
+
+  public LiveData<Integer> getPrefsChanged() {
+    return mPrefsWatcher;
+  }
+
+  private void drawerPrefChanged() {
+    Utils.runInBg(() -> mPrefsWatcher.postValue(PREF_DRAWER_CHANGED));
+  }
+
+  public void recreateMainActivity() {
+    Utils.runInBg(() -> mPrefsWatcher.postValue(PREF_UI_CHANGED));
   }
 }

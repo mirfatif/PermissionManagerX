@@ -10,6 +10,7 @@ import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.ADB_DAEMON;
 import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.ROOT_DAEMON;
 import static com.mirfatif.permissionmanagerx.util.UtilsFlavor.getAccentColor;
 
+import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -51,6 +52,7 @@ import android.text.style.TextAppearanceSpan;
 import android.text.style.URLSpan;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.AttrRes;
@@ -357,6 +359,38 @@ public class Utils {
         getBgColor(activity), isNightMode(activity) ? Color.WHITE : Color.BLACK, 0.05f);
   }
 
+  public static void onCreateLayout(ViewGroup view) {
+    LayoutTransition transition = new LayoutTransition();
+    transition.enableTransitionType(LayoutTransition.CHANGING);
+    view.setLayoutTransition(transition);
+  }
+
+  public static boolean isNightMode(Activity activity) {
+    int uiMode = activity.getResources().getConfiguration().uiMode;
+    return (uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+  }
+
+  public static boolean setNightTheme(Activity activity) {
+    if (!SETTINGS.forceDarkMode()) {
+      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+      return false;
+    }
+
+    // Dark Mode applied on whole device
+    if (Utils.isNightMode(activity)) {
+      return false;
+    }
+
+    // Dark Mode already applied in app
+    int defMode = AppCompatDelegate.getDefaultNightMode();
+    if (defMode == AppCompatDelegate.MODE_NIGHT_YES) {
+      return false;
+    }
+
+    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+    return true;
+  }
+
   public static TextAppearanceSpan getHighlight(@ColorInt int colorInt) {
     return new TextAppearanceSpan(
         null,
@@ -413,32 +447,6 @@ public class Utils {
     } catch (ActivityNotFoundException e) {
       showToast(R.string.no_email_app_installed);
     }
-  }
-
-  public static boolean isNightMode(Activity activity) {
-    int uiMode = activity.getResources().getConfiguration().uiMode;
-    return (uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
-  }
-
-  public static boolean setNightTheme(Activity activity) {
-    if (!SETTINGS.forceDarkMode()) {
-      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-      return false;
-    }
-
-    // Dark Mode applied on whole device
-    if (Utils.isNightMode(activity)) {
-      return false;
-    }
-
-    // Dark Mode already applied in app
-    int defMode = AppCompatDelegate.getDefaultNightMode();
-    if (defMode == AppCompatDelegate.MODE_NIGHT_YES) {
-      return false;
-    }
-
-    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-    return true;
   }
 
   public static Context setLocale(Context context) {
@@ -736,11 +744,16 @@ public class Utils {
     return BuildConfig.VERSION_NAME.contains("-pro");
   }
 
+  public static boolean isFreeVersion() {
+    return !isPsVersion() && !isProVersion();
+  }
+
   @SuppressWarnings("ConstantConditions")
   public static boolean isAmazVersion() {
     return BuildConfig.VERSION_NAME.contains("-amaz");
   }
 
+  @SuppressWarnings("UnusedDeclaration")
   public static boolean isAppVisible() {
     ActivityManager am =
         (ActivityManager) App.getContext().getSystemService(Context.ACTIVITY_SERVICE);

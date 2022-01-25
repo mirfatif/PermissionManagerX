@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
 
 // https://stackoverflow.com/questions/33217241
 @Keep
@@ -30,7 +29,8 @@ public class MoveUpwardBehavior extends CoordinatorLayout.Behavior<View> {
 
     float translationY = Math.min(0, dependency.getTranslationY() - dependency.getHeight());
 
-    UtilsFlavor.onSnackBarMoved(child.findViewById(R.id.mov_cont));
+    // Cancel if animation from MoveUpwardBehavior#onDependentViewRemoved() is in progress.
+    child.findViewById(R.id.mov_cont).animate().cancel();
 
     // Move the container up and down with SnackBar.
     child.findViewById(R.id.mov_cont).setTranslationY(translationY);
@@ -44,6 +44,6 @@ public class MoveUpwardBehavior extends CoordinatorLayout.Behavior<View> {
     super.onDependentViewRemoved(parent, child, dependency);
 
     // Move the container down.
-    UtilsFlavor.onSnackBarSwiped(child.findViewById(R.id.mov_cont));
+    child.findViewById(R.id.mov_cont).animate().translationY(0).start();
   }
 }

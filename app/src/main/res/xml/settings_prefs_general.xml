@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <PreferenceCategory />
+
+  <SwitchPreferenceCompat
+    app:defaultValue="@bool/pref_settings_check_for_updates_default"
+    app:icon="@drawable/update"
+    app:key="@string/pref_settings_check_for_updates_key"
+    app:singleLineTitle="false"
+    app:summary="@string/pref_settings_check_for_updates_summary"
+    app:title="@string/pref_settings_check_for_updates_title" />
+
+  <PreferenceCategory />
+
+  <SwitchPreferenceCompat
+    app:defaultValue="@bool/pref_settings_privileges_reminder_default"
+    app:icon="@drawable/permission"
+    app:key="@string/pref_settings_privileges_reminder_key"
+    app:singleLineTitle="false"
+    app:summary="@string/pref_settings_privileges_reminder_summary"
+    app:title="@string/pref_settings_privileges_reminder_title" />
+
+  <PreferenceCategory />
+
+  <SwitchPreferenceCompat
+    app:defaultValue="@bool/pref_settings_quick_scan_default"
+    app:icon="@drawable/quick_scan"
+    app:key="@string/pref_settings_quick_scan_key"
+    app:singleLineTitle="false"
+    app:summary="@string/pref_settings_quick_scan_summary"
+    app:title="@string/pref_settings_quick_scan_title" />
+
+  <PreferenceCategory />
+
+  <ListPreference
+    app:defaultValue="@string/pref_settings_locale_default"
+    app:entries="@array/locales"
+    app:entryValues="@array/locale_codes"
+    app:icon="@drawable/locale"
+    app:key="@string/pref_settings_locale_key"
+    app:singleLineTitle="false"
+    app:title="@string/pref_settings_locale_title" />
+
+</PreferenceScreen>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <ListPreference
+    app:defaultValue="@string/pref_settings_theme_color_default"
+    app:enabled="false"
+    app:entries="@array/theme_colors"
+    app:entryValues="@array/theme_color_values"
+    app:icon="@drawable/color"
+    app:key="@string/pref_settings_theme_color_key"
+    app:singleLineTitle="false"
+    app:title="@string/pref_settings_theme_color_title" />
+
+  <SwitchPreferenceCompat
+    app:defaultValue="@bool/pref_settings_dark_theme_default"
+    app:icon="@drawable/dark_mode"
+    app:key="@string/pref_settings_dark_theme_key"
+    app:singleLineTitle="false"
+    app:summary="@string/pref_settings_dark_theme_summary"
+    app:title="@string/pref_settings_dark_theme_title" />
+
+</PreferenceScreen>

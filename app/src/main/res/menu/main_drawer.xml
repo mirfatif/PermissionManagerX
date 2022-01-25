@@ -47,12 +47,6 @@
 
   <group android:id="@+id/group3">
     <item
-      android:id="@+id/action_dark_theme"
-      app:actionViewClass="android.widget.CheckBox"
-      android:title="@string/dark_theme_menu_item"
-      android:icon="@drawable/theme"/>
-
-    <item
       android:id="@+id/action_backup_restore"
       android:title="@string/backup_restore_menu_item"
       android:icon="@drawable/backup_restore"/>

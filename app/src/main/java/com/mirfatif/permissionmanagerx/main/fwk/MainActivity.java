@@ -53,6 +53,7 @@ import com.mirfatif.permissionmanagerx.main.PkgLongPressDialogFrag;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.pkg.fwk.PackageActivity;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.fwk.FilterSettingsActivity;
 import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
 import com.mirfatif.permissionmanagerx.prefs.settings.SearchSettingsFrag;
@@ -138,8 +139,9 @@ public class MainActivity extends BaseActivity {
           }
           return super.onOptionsItemSelected(item);
         });
-    setDrawerLiveObserver();
     setNavigationMenu();
+
+    SETTINGS.getPrefsChanged().observe(this, this::onPrefChanged);
 
     mB.refreshLayout.setOnRefreshListener(
         () -> {
@@ -359,12 +361,6 @@ public class MainActivity extends BaseActivity {
   ///////////////////////////// GENERAL ////////////////////////////
   //////////////////////////////////////////////////////////////////
 
-  public static void restart() {
-    Intent intent = new Intent(App.getContext(), MainActivity.class);
-    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-    App.getContext().startActivity(intent);
-  }
-
   private boolean isSecondaryUser() {
     if (Utils.getUserId() == 0) {
       return false;
@@ -544,6 +540,19 @@ public class MainActivity extends BaseActivity {
     PKG_PARSER.setRepeatUpdates(rep);
     if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "setRepeatUpdates: " + rep);
+    }
+  }
+
+  private void onPrefChanged(Integer pref) {
+    switch (pref) {
+      case MySettings.PREF_DRAWER_CHANGED:
+        setBoxesChecked();
+        break;
+      case MySettings.PREF_UI_CHANGED:
+        recreate();
+        break;
+      default:
+        break;
     }
   }
 
@@ -786,11 +795,6 @@ public class MainActivity extends BaseActivity {
   //////////////////////// NAVIGATION DRAWER ///////////////////////
   //////////////////////////////////////////////////////////////////
 
-  private void setDrawerLiveObserver() {
-    ROOT_DAEMON.getDrawerChanged().observe(this, res -> setBoxesChecked());
-    ADB_DAEMON.getDrawerChanged().observe(this, res -> setBoxesChecked());
-  }
-
   private void setNavigationMenu() {
     if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "setNavigationMenu() called");
@@ -814,8 +818,6 @@ public class MainActivity extends BaseActivity {
         .setChecked(SETTINGS.isRootGranted());
     ((CheckBox) menu.findItem(R.id.action_adb).getActionView())
         .setChecked(SETTINGS.isAdbConnected());
-    ((CheckBox) menu.findItem(R.id.action_dark_theme).getActionView())
-        .setChecked(SETTINGS.forceDarkMode());
   }
 
   private void setCheckBoxListeners() {
@@ -823,7 +825,7 @@ public class MainActivity extends BaseActivity {
       return;
     }
     Menu menu = mB.navV.getMenu();
-    for (int id : new int[] {R.id.action_root, R.id.action_adb, R.id.action_dark_theme}) {
+    for (int id : new int[] {R.id.action_root, R.id.action_adb}) {
       MenuItem menuItem = menu.findItem(id);
       menuItem.getActionView().setOnClickListener(v -> handleNavigationItemChecked(menuItem));
     }
@@ -879,13 +881,6 @@ public class MainActivity extends BaseActivity {
 
     if (item.getItemId() == R.id.action_advanced_settings) {
       AdvSettingsDialogFrag.show(getSupportFragmentManager());
-      return true;
-    }
-
-    if (item.getItemId() == R.id.action_dark_theme) {
-      CheckBox darkCheckBox = (CheckBox) item.getActionView();
-      SETTINGS.setForceDarkMode(darkCheckBox.isChecked());
-      Utils.setNightTheme(this);
       return true;
     }
 

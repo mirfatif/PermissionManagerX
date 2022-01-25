@@ -30,7 +30,6 @@
   <string name="filter_menu_item" maxLength="15">Filtros de exclusión</string>
   <string name="root_menu_item" maxLength="15">Acceso Root</string>
   <string name="adb_menu_item" maxLength="15">Consola ADB</string>
-  <string name="dark_theme_menu_item" maxLength="15">Forzar Tema Obscuro</string>
   <string name="backup_restore_menu_item" maxLength="15">Respaldar / Restaurar</string>
   <string name="help_menu_item" maxLength="15">Ayuda</string>
   <string name="donate_menu_item" maxLength="15">Donar</string>
@@ -185,6 +184,10 @@
   <string name="locale_en">Inglés</string>
   <string name="locale_ru">Ruso</string>
   <string name="locale_es">Español</string>
+  <string name="theme_color_green">Verde</string>
+  <string name="theme_color_blue">Azul</string>
+  <string name="theme_color_pink">Rosa</string>
+  <string name="theme_color_gray">Gris</string>
   <!-- PreferenceActivity menu items -->
   <string name="filter_settings_reset_defaults_menu_item" maxLength="15">Restaurar A Predeterminado</string>
   <string name="filter_settings_reset_confirmation">¿Reiniciar ajustes de filtro a los valores por defecto?</string>

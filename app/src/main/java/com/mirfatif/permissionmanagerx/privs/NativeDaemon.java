@@ -4,8 +4,6 @@ import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
 
 import android.os.SystemClock;
 import android.util.Log;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.privs.err.AdbException;
@@ -82,7 +80,6 @@ public enum NativeDaemon {
         startRootDaemon();
         SETTINGS.setRootGranted(mIsRunning);
       }
-      updateDrawer();
     }
   }
 
@@ -273,15 +270,5 @@ public enum NativeDaemon {
       Log.i(TAG, "readMessages: restarting native daemon");
       startDaemon(false);
     }
-  }
-
-  private final MutableLiveData<Void> sDrawerChanged = new MutableLiveData<>();
-
-  private void updateDrawer() {
-    sDrawerChanged.postValue(null);
-  }
-
-  public LiveData<Void> getDrawerChanged() {
-    return sDrawerChanged;
   }
 }

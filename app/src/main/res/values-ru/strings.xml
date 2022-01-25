@@ -32,7 +32,6 @@
   <string name="filter_menu_item" maxLength="15">Фильтры исключения</string>
   <string name="root_menu_item" maxLength="15">Root доступ</string>
   <string name="adb_menu_item" maxLength="15">Оболочка ADB</string>
-  <string name="dark_theme_menu_item" maxLength="15">Принудительно тёмная тема</string>
   <string name="backup_restore_menu_item" maxLength="15">Бэкап / восстановление</string>
   <string name="help_menu_item" maxLength="15">Справка</string>
   <string name="donate_menu_item" maxLength="15">Пожертвование</string>
@@ -224,6 +223,10 @@
   <string name="locale_ru">Русский</string>
   <string name="locale_es">Испанский</string>
   <string name="locale_ar">Арабский</string>
+  <string name="theme_color_green">Зелёный</string>
+  <string name="theme_color_blue">Синий</string>
+  <string name="theme_color_pink">Розовый</string>
+  <string name="theme_color_gray">Серый</string>
   <!-- PreferenceActivity menu items -->
   <string name="filter_settings_reset_defaults_menu_item" maxLength="15">Сброс по умолчанию</string>
   <string name="filter_settings_reset_confirmation">Сбросить настройки фильтра к значениям по умолчанию?</string>
