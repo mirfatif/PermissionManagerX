@@ -6,7 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.MultiSelectListPreferenceDialogFragmentCompat;
-import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
+import com.mirfatif.permissionmanagerx.util.Utils;
 
 public class MultiSelectListPrefDialogFrag extends MultiSelectListPreferenceDialogFragmentCompat {
 
@@ -30,7 +30,7 @@ public class MultiSelectListPrefDialogFrag extends MultiSelectListPreferenceDial
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
     Dialog dialog = super.onCreateDialog(savedInstanceState);
-    UtilsFlavor.onCreateDialog(dialog, mA);
+    Utils.onCreateDialog(dialog, mA);
     return dialog;
   }
 }

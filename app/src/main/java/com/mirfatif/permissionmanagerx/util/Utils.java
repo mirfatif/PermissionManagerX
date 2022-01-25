@@ -15,6 +15,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
+import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -53,6 +54,7 @@ import android.text.style.URLSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.AttrRes;
@@ -84,6 +86,7 @@ import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.Adb;
+import com.mirfatif.permissionmanagerx.ui.base.DialogBg;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
 import java.io.BufferedReader;
@@ -363,6 +366,22 @@ public class Utils {
     LayoutTransition transition = new LayoutTransition();
     transition.enableTransitionType(LayoutTransition.CHANGING);
     view.setLayoutTransition(transition);
+  }
+
+  public static void onCreateDialog(Dialog dialog, Activity activity) {
+    Window window = dialog.getWindow();
+    if (window == null) {
+      return;
+    }
+
+    window.setBackgroundDrawable(new DialogBg(activity, true));
+
+    /*
+     May also directly use a custom style:
+       new Builder(this, R.style.myAlertDialogThemeWithAnimation)
+    */
+    window.setWindowAnimations(android.R.style.Animation_Dialog);
+    // Or: window.getAttributes().windowAnimations = android.R.style.Animation_Dialog
   }
 
   public static boolean isNightMode(Activity activity) {

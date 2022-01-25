@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.preference.ListPreference;
 import androidx.preference.ListPreferenceDialogFragmentCompat;
 import androidx.preference.Preference;
+import com.mirfatif.permissionmanagerx.util.Utils;
 
 public class ListPrefDialogFrag extends ListPreferenceDialogFragmentCompat {
 
@@ -33,7 +34,7 @@ public class ListPrefDialogFrag extends ListPreferenceDialogFragmentCompat {
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
     Dialog dialog = super.onCreateDialog(savedInstanceState);
-    // TODO Utils.onCreateDialog(dialog, mA);
+    Utils.onCreateDialog(dialog, mA);
     return dialog;
   }
 

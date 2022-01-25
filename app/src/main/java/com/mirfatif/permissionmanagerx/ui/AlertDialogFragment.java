@@ -17,7 +17,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle.State;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
-import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
+import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Util;
 
 public class AlertDialogFragment extends AppCompatDialogFragment {
@@ -52,7 +52,7 @@ public class AlertDialogFragment extends AppCompatDialogFragment {
         return new Builder(mA).create();
       }
     }
-    UtilsFlavor.onCreateDialog(mAlertDialog, mA);
+    Utils.onCreateDialog(mAlertDialog, mA);
     return mAlertDialog;
   }
 
