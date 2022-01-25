@@ -1,121 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <View
-    android:layout_width="match_parent"
-    android:layout_height="1dp"
-    android:background="?attr/accentTransColor" />
+  <data>
+    <variable
+      name="data"
+      type="com.mirfatif.permissionmanagerx.main.fwk.MainActivity.Data" />
+  </data>
 
-  <com.mirfatif.permissionmanagerx.main.fwk.ProgressLinearLayout
-    android:id="@+id/prog_bar_cont"
+  <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:visibility="gone">
-
-    <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="@color/dynamicBackground"
-      android:orientation="horizontal">
-
-      <TextView
-        android:id="@+id/prog_now_v"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="@color/dynamic_text_color" />
-
-      <ProgressBar
-        android:id="@+id/prog_bar"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_margin="8dp"
-        android:indeterminateBehavior="cycle"
-        android:indeterminateTint="?attr/accentColor"
-        android:progressTint="?attr/accentColor" />
-
-      <TextView
-        android:id="@+id/prog_max_v"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:textColor="@color/dynamic_text_color" />
-
-    </LinearLayout>
+    android:orientation="vertical">
 
     <View
-      android:layout_width="match_parent"
-      android:layout_height="1dp"
-      android:background="@color/dynamicForeground" />
+      style="@style/ListSeparator"
+      android:background="?attr/accentTransColor" />
 
-  </com.mirfatif.permissionmanagerx.main.fwk.ProgressLinearLayout>
-
-  <com.mirfatif.permissionmanagerx.ui.base.MyCoordinatorLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
-      android:id="@+id/feedback_cont"
+    <com.mirfatif.permissionmanagerx.main.fwk.ProgressLinearLayout
+      android:id="@+id/prog_bar_cont"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"
       android:visibility="gone">
 
-      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:background="@color/dynamicBackground"
-        android:gravity="center"
+        android:background="@{data.progBgColor}"
         android:orientation="horizontal">
 
         <TextView
+          android:id="@+id/prog_now_v"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="8dp"
+          android:ellipsize="end"
+          android:maxLines="1"
+          android:textColor="@color/sharpText" />
+
+        <ProgressBar
+          android:id="@+id/prog_bar"
+          style="@style/Widget.AppCompat.ProgressBar.Horizontal"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_weight="1"
           android:layout_margin="8dp"
-          android:gravity="center_vertical"
-          android:maxLines="1"
-          android:text="@string/love_using_app"
-          android:textColor="@color/dynamic_text_color"
-          android:textSize="16sp"
-          app:autoSizeTextType="uniform" />
+          android:paddingTop="2dp"
+          android:indeterminateBehavior="cycle"
+          android:indeterminateTint="?attr/accentColor"
+          android:progressTint="?attr/accentColor" />
 
-        <Button
-          android:id="@+id/liking_app_no_button"
-          style="@style/Widget.AppCompat.Button.Borderless"
+        <TextView
+          android:id="@+id/prog_max_v"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:minWidth="72dp"
-          android:text="@string/no"
-          android:textColor="?attr/accentColor" />
+          android:layout_margin="8dp"
+          android:textColor="@color/sharpText" />
 
-        <Button
-          android:id="@+id/liking_app_yes_button"
-          style="@style/Widget.AppCompat.Button.Borderless"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:minWidth="72dp"
-          android:text="@string/yes"
-          android:textColor="?attr/accentColor" />
-
-      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+      </LinearLayout>
 
       <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/dynamicForeground" />
+        style="@style/ListSeparator"
+        android:background="@{data.progBgSeparatorColor}" />
 
-    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
-  </com.mirfatif.permissionmanagerx.ui.base.MyCoordinatorLayout>
-</com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+    </com.mirfatif.permissionmanagerx.main.fwk.ProgressLinearLayout>
+
+    <com.mirfatif.permissionmanagerx.ui.base.MyCoordinatorLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
+      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+        android:id="@+id/feedback_cont"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:paddingStart="8dp"
+          android:paddingEnd="8dp"
+          android:background="@{data.progBgColor}"
+          android:gravity="center"
+          android:orientation="horizontal">
+
+          <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="@string/love_using_app"
+            android:textColor="@color/sharpText"
+            android:textSize="16sp"
+            app:autoSizeTextType="uniform" />
+
+          <Button
+            android:id="@+id/liking_app_no_button"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="72dp"
+            android:text="@string/no"
+            android:textColor="?attr/accentColor" />
+
+          <Button
+            android:id="@+id/liking_app_yes_button"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="72dp"
+            android:text="@string/yes"
+            android:textColor="?attr/accentColor" />
+
+        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+
+        <View
+          style="@style/ListSeparator"
+          android:background="@{data.progBgSeparatorColor}" />
+
+      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+    </com.mirfatif.permissionmanagerx.ui.base.MyCoordinatorLayout>
+  </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+
+</layout>

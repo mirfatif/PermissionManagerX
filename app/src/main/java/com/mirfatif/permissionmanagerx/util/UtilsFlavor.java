@@ -13,7 +13,7 @@ public class UtilsFlavor {
   private UtilsFlavor() {}
 
   @SuppressWarnings("UnusedDeclaration")
-  public static void onCreateDialog(Dialog dialog) {}
+  public static void onCreateDialog(Dialog dialog, Activity activity) {}
 
   @SuppressWarnings("UnusedDeclaration")
   public static void onCreateStart(Activity activity) {}

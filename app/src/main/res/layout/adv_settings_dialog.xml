@@ -68,7 +68,7 @@
           android:layout_weight="1"
           android:layout_gravity="center_vertical"
           android:text="@string/allow_critical_changes"
-          android:textColor="@color/dynamic_text_color"
+          android:textColor="@color/sharpText"
           android:textSize="16sp" />
 
         <CheckBox
@@ -94,7 +94,7 @@
           android:layout_weight="1"
           android:layout_gravity="center_vertical"
           android:text="@string/use_hidden_apis"
-          android:textColor="@color/dynamic_text_color"
+          android:textColor="@color/sharpText"
           android:textSize="16sp" />
 
         <CheckBox
@@ -120,7 +120,7 @@
           android:layout_weight="1"
           android:layout_gravity="center_vertical"
           android:text="@string/dex_tmp_dir"
-          android:textColor="@color/dynamic_text_color"
+          android:textColor="@color/sharpText"
           android:textSize="16sp" />
 
         <CheckBox
@@ -159,7 +159,7 @@
           android:layout_weight="1"
           android:layout_gravity="center_vertical"
           android:text="@string/adb_listening_port"
-          android:textColor="@color/dynamic_text_color"
+          android:textColor="@color/sharpText"
           android:textSize="16sp" />
 
         <EditText
@@ -204,7 +204,7 @@
           android:layout_weight="1"
           android:layout_gravity="center_vertical"
           android:text="@string/talk_to_daemon_over_socket"
-          android:textColor="@color/dynamic_text_color"
+          android:textColor="@color/sharpText"
           android:textSize="16sp" />
 
         <CheckBox
@@ -230,7 +230,7 @@
           android:layout_weight="1"
           android:layout_gravity="center_vertical"
           android:text="@string/daemon_uid"
-          android:textColor="@color/dynamic_text_color"
+          android:textColor="@color/sharpText"
           android:textSize="16sp" />
 
         <androidx.appcompat.widget.AppCompatSpinner
@@ -269,7 +269,7 @@
           android:layout_weight="1"
           android:layout_gravity="center_vertical"
           android:text="@string/daemon_context"
-          android:textColor="@color/dynamic_text_color"
+          android:textColor="@color/sharpText"
           android:textSize="16sp" />
 
         <androidx.appcompat.widget.AppCompatSpinner
@@ -310,7 +310,7 @@
           android:ellipsize="end"
           android:maxLines="1"
           android:text="@string/su_exe_path"
-          android:textColor="@color/dynamic_text_color"
+          android:textColor="@color/sharpText"
           android:textSize="16sp" />
 
         <EditText

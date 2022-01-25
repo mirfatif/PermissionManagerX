@@ -52,7 +52,7 @@ public class AlertDialogFragment extends AppCompatDialogFragment {
         return new Builder(mA).create();
       }
     }
-    UtilsFlavor.onCreateDialog(mAlertDialog);
+    UtilsFlavor.onCreateDialog(mAlertDialog, mA);
     return mAlertDialog;
   }
 

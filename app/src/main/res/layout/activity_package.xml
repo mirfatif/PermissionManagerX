@@ -5,9 +5,8 @@
   android:orientation="vertical">
 
   <View
-    android:layout_width="match_parent"
-    android:background="?attr/accentColor"
-    android:layout_height="1dp" />
+    style="@style/ListSeparator"
+    android:background="?attr/accentColor" />
 
   <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
     android:layout_width="match_parent"
@@ -26,12 +25,12 @@
       android:textSize="20sp"
       android:textStyle="italic" />
 
-    <Button
+    <com.mirfatif.permissionmanagerx.ui.base.CustomButton
       android:id="@+id/settings_button"
-      android:visibility="gone"
+      style="@style/CustomButton"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/filter_settings" />
+      android:text="@string/filter_settings"
+      android:visibility="gone" />
 
   </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 

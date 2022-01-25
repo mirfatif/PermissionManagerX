@@ -54,8 +54,7 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
       return null;
     }
 
-    PkgLongPressDialogBinding b =
-        PkgLongPressDialogBinding.inflate(inflater, container, container != null);
+    PkgLongPressDialogBinding b = PkgLongPressDialogBinding.inflate(mA.getLayoutInflater());
 
     b.pkgLabelV.setText(mPkg.getLabel());
     if (!mPkg.getLabel().equals(mPkg.getName())) {
@@ -217,8 +216,8 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
       Snackbar sb =
           Snackbar.make(
               ((MainActivity) mA).getRootView().recyclerView, R.string.wrun_not_installed, 10000);
-      sb.setTextColor(mA.getColor(R.color.dynamic_text_color));
-      sb.getView().setBackgroundColor(mA.getColor(R.color.dynamicBackground));
+      sb.setTextColor(mA.getColor(R.color.sharpText));
+      sb.getView().setBackgroundColor(Utils.getSharpBgColor(mA));
       sb.setAction(R.string.install, v -> Utils.openWebUrl(mA, getString(R.string.wrun_url)));
       sb.show();
     }

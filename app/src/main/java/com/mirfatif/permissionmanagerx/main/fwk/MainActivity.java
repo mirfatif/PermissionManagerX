@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -108,7 +109,10 @@ public class MainActivity extends BaseActivity {
     sendCrashReport();
 
     mB = ActivityMainBinding.inflate(getLayoutInflater());
+    mB.movCont.setData(new Data());
     setContentView(mB.getRoot());
+
+    mB.roundProgBar.setBackground(new RoundProgBg(this));
 
     mMainActivityFlavor = new MainActivityFlavor(this);
     mBackupRestore = new BackupRestore(this);
@@ -548,8 +552,8 @@ public class MainActivity extends BaseActivity {
         this,
         () -> {
           Snackbar snackBar = Snackbar.make(mB.movCont.progBarCont, text, duration);
-          snackBar.setTextColor(getColor(R.color.dynamic_text_color));
-          snackBar.getView().setBackgroundColor(getColor(R.color.dynamicBackground));
+          snackBar.setTextColor(getColor(R.color.sharpText));
+          snackBar.getView().setBackgroundColor(Utils.getSharpBgColor(this));
           snackBar.show();
         });
   }
@@ -1041,6 +1045,16 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onAnimationRepeat(Animator animation) {}
+  }
+
+  public class Data {
+
+    public final @ColorInt int progBgColor, progBgSeparatorColor;
+
+    private Data() {
+      progBgColor = Utils.getSharpBgColor(MainActivity.this);
+      progBgSeparatorColor = Utils.getDimBgColor(MainActivity.this);
+    }
   }
 
   //////////////////////////////////////////////////////////////////

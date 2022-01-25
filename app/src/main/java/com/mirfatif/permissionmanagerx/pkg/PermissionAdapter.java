@@ -280,7 +280,7 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
           TextView tView = view.findViewById(android.R.id.text1);
           // Check null to avoid broken behavior on different Android versions.
           if (tView != null) {
-            tView.setTextColor(App.getContext().getColor(R.color.disabledStateColor));
+            tView.setTextColor(App.getContext().getColor(R.color.colorControlNormal));
           }
         }
       }
@@ -311,6 +311,7 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
   }
 
   private static class DiffUtilItemCallBack extends DiffUtil.ItemCallback<Permission> {
+
     @Override
     public boolean areItemsTheSame(@NonNull Permission oldItem, @NonNull Permission newItem) {
       return oldItem.getName().equals(newItem.getName());

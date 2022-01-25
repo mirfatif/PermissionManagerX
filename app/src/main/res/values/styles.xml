@@ -19,57 +19,47 @@
     <!--Action Bar-->
     <item name="colorPrimary">?attr/accentTransColor</item>
 
-    <item name="android:spinnerItemStyle">@style/mySpinnerItemStyle</item>
+    <item name="android:spinnerItemStyle">@style/SpinnerItemStyle</item>
     <!--<item name="alertDialogTheme">@style/myAlertDialogTheme</item>-->
-
-    <!--Overriding the dialog's parent's background resource in onViewCreated() is more simple-->
-    <!--<item name="bottomSheetDialogTheme">@style/myBottomSheetDialogTheme</item>-->
   </style>
 
-  <style name="mySpinnerItemStyle">
+  <style name="SpinnerItemStyle">
     <item name="android:textStyle">bold</item>
-    <item name="android:textColor">@color/button_spinner_color</item>
+    <item name="android:textColor">@color/button_spinner_text</item>
   </style>
 
-  <style name="myAlertDialogTheme" parent="ThemeOverlay.AppCompat.Dialog.Alert">
-    <item name="buttonBarButtonStyle">@style/myAlertDialogButtonStyle</item>
-    <item name="android:windowTitleStyle">@style/myAlertDialogTitleStyle</item>
+  <style name="AlertDialogTheme" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+    <item name="buttonBarButtonStyle">@style/AlertDialogButtonStyle</item>
+    <item name="android:windowTitleStyle">@style/AlertDialogTitleStyle</item>
   </style>
 
   <!--Overrides disabled button color too-->
-  <style name="myAlertDialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+  <style name="AlertDialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
     <item name="android:textColor">?attr/accentColor</item>
   </style>
 
   <!--Does not work-->
-  <style name="myAlertDialogTitleStyle" parent="@style/TextAppearance.AppCompat.Title">
+  <style name="AlertDialogTitleStyle" parent="@style/TextAppearance.AppCompat.Title">
     <item name="maxLines">1</item>
     <item name="autoSizeTextType">uniform</item>
   </style>
 
-  <style name="myBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
-    <item name="bottomSheetStyle">@style/myBottomSheetStyle</item>
-  </style>
+  <!--============== About Activity ==============-->
 
-  <style name="myBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
-    <item name="android:background">@drawable/bottom_sheet_bg_flavor</item>
-  </style>
-
-  <!--Common styles-->
-  <style name="aboutActivityItemContainer">
+  <style name="AboutActivityItemContainer">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:background">?android:attr/selectableItemBackground</item>
   </style>
 
-  <style name="aboutActivityIconImg">
+  <style name="AboutActivityIconImg">
     <item name="android:layout_width">24dp</item>
     <item name="android:layout_height">24dp</item>
     <item name="android:layout_gravity">center</item>
     <item name="android:layout_marginEnd">8dp</item>
   </style>
 
-  <style name="aboutActivityItemTextBox">
+  <style name="AboutActivityItemTextBox">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:paddingTop">8dp</item>
@@ -77,28 +67,39 @@
     <item name="android:orientation">vertical</item>
   </style>
 
-  <style name="aboutActivityItemTitle">
+  <style name="AboutActivityItemTitle">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:textStyle">bold</item>
     <item name="android:textSize">16sp</item>
   </style>
 
-  <style name="aboutActivityItemSummary">
+  <style name="AboutActivityItemSummary">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_marginTop">2dp</item>
     <item name="android:textAlignment">viewStart</item>
   </style>
 
+  <!--============== Common Styles ==============-->
+
   <style name="BgColorControlNormal">
     <item name="android:background">@color/colorControlNormal</item>
   </style>
 
-  <style name="ListSeparatorDim" parent="BgColorControlNormal">
+  <style name="ListSeparator" parent="BgColorControlNormal">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">1dp</item>
+  </style>
+
+  <style name="ListSeparatorDim" parent="ListSeparator">
     <item name="android:alpha">0.25</item>
+  </style>
+
+  <style name="CustomButton" parent="Widget.AppCompat.Button">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textColor">@color/button_spinner_text</item>
   </style>
 
 </resources>

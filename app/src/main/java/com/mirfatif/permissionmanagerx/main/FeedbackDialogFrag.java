@@ -51,17 +51,16 @@ public class FeedbackDialogFrag extends BottomSheetDialogFrag {
 
     FeedbackType type = FeedbackType.valueOf(requireArguments().getString(FEEDBACK_TYPE));
     if (type == FeedbackType.POSITIVE) {
-      return getFeedbackView(container, true);
+      return getFeedbackView(true);
     }
     if (type == FeedbackType.NEGATIVE) {
-      return getFeedbackView(container, false);
+      return getFeedbackView(false);
     }
-    return getButtonsView(container, type);
+    return getButtonsView(type);
   }
 
-  private View getFeedbackView(ViewGroup parent, boolean isYes) {
-    FeedbackDialogBinding b =
-        FeedbackDialogBinding.inflate(getLayoutInflater(), parent, parent != null);
+  private View getFeedbackView(boolean isYes) {
+    FeedbackDialogBinding b = FeedbackDialogBinding.inflate(mA.getLayoutInflater());
     int msgResId, buttonResId;
 
     if (isYes) {
@@ -98,12 +97,11 @@ public class FeedbackDialogFrag extends BottomSheetDialogFrag {
     return b.getRoot();
   }
 
-  private View getButtonsView(ViewGroup parent, FeedbackType type) {
+  private View getButtonsView(FeedbackType type) {
     int b1 = 0, b2 = 0, b3 = 0;
     ButtonListener l1 = null, l2 = null, l3 = null;
 
-    RateDonateDialogBinding b =
-        RateDonateDialogBinding.inflate(getLayoutInflater(), parent, parent != null);
+    RateDonateDialogBinding b = RateDonateDialogBinding.inflate(mA.getLayoutInflater());
 
     if (type == FeedbackType.CONTACT) {
       b1 = R.string.contact_on_telegram;

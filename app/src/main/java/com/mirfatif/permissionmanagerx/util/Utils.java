@@ -65,6 +65,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.ColorUtils;
 import androidx.lifecycle.Lifecycle.State;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.preference.PreferenceManager;
@@ -340,6 +341,20 @@ public class Utils {
   // Doesn't work with Application or Service context
   public static @ColorInt int getColor(Activity activity, @AttrRes int colorAttrResId) {
     return MaterialColors.getColor(activity, colorAttrResId, Color.TRANSPARENT);
+  }
+
+  public static @ColorInt int getBgColor(Activity activity) {
+    return getColor(activity, android.R.attr.windowBackground);
+  }
+
+  public static @ColorInt int getSharpBgColor(Activity activity) {
+    return ColorUtils.blendARGB(
+        getBgColor(activity), isNightMode(activity) ? Color.BLACK : Color.WHITE, 0.05f);
+  }
+
+  public static @ColorInt int getDimBgColor(Activity activity) {
+    return ColorUtils.blendARGB(
+        getBgColor(activity), isNightMode(activity) ? Color.WHITE : Color.BLACK, 0.05f);
   }
 
   public static TextAppearanceSpan getHighlight(@ColorInt int colorInt) {

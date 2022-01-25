@@ -27,27 +27,21 @@
       android:layout_gravity="center_horizontal"
       android:ellipsize="end"
       android:maxLines="1"
-      android:textColor="@color/dynamic_text_color"
+      android:textColor="@color/sharpText"
       android:textSize="18sp"
       app:autoSizeMinTextSize="8sp"
       app:autoSizeTextType="uniform" />
 
-    <Button
+    <com.mirfatif.permissionmanagerx.ui.base.CustomButton
       android:id="@+id/exclude_perm"
-      style="@style/Widget.AppCompat.Button"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="@drawable/button_bg"
-      android:text="@string/exclude_perm_from_list"
-      android:textColor="@color/button_spinner_color" />
+      style="@style/CustomButton"
+      android:layout_marginTop="16dp"
+      android:text="@string/exclude_perm_from_list" />
 
-    <Button
+    <com.mirfatif.permissionmanagerx.ui.base.CustomButton
       android:id="@+id/ref_button"
-      style="@style/Widget.AppCompat.Button"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="@drawable/button_bg"
-      android:textColor="@color/button_spinner_color" />
+      style="@style/CustomButton"
+      android:layout_marginTop="8dp" />
 
   </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>

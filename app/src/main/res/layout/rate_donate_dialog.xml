@@ -17,29 +17,19 @@
     android:padding="24dp"
     android:orientation="vertical">
 
-    <Button
+    <com.mirfatif.permissionmanagerx.ui.base.CustomButton
       android:id="@+id/button1"
-      style="@style/Widget.AppCompat.Button"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="@drawable/button_bg"
-      android:textColor="?attr/accentColor" />
+      style="@style/CustomButton" />
 
-    <Button
+    <com.mirfatif.permissionmanagerx.ui.base.CustomButton
       android:id="@+id/button2"
-      style="@style/Widget.AppCompat.Button"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="@drawable/button_bg"
-      android:textColor="?attr/accentColor" />
+      style="@style/CustomButton"
+      android:layout_marginTop="8dp" />
 
-    <Button
+    <com.mirfatif.permissionmanagerx.ui.base.CustomButton
       android:id="@+id/button3"
-      style="@style/Widget.AppCompat.Button"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="@drawable/button_bg"
-      android:textColor="?attr/accentColor" />
+      style="@style/CustomButton"
+      android:layout_marginTop="8dp" />
 
   </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>

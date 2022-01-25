@@ -4,19 +4,15 @@
   <color name="greenTrans">#1A007F7F</color>
   <color name="greenTransHigh">#0D007F7F</color>
 
-  <color name="disabledStateColor">#7F7F7F</color>
-
-  <color name="dynamicBackground">@android:color/white</color>
-  <color name="dynamicTransparent">#B3FFFFFF</color>
-  <color name="dynamicForeground">#ECECEC</color>
-  <color name="dynamic_text_color">@android:color/black</color>
-
-  <color name="buttonBg">#4DCCCCCC</color>
-  <color name="buttonRipple">#80808080</color>
+  <color name="sharpText">@android:color/black</color>
 
   <color name="orangeState">#FFFFC107</color>
 
+  <color name="searchSettingsBg">#80000000</color>
+
   <!-- On Android 9- attr color doesn't work at some places. -->
   <color name="colorControlNormal">#919191</color>
+
+  <color name="colorControlNormalA50">#80919191</color>
 
 </resources>

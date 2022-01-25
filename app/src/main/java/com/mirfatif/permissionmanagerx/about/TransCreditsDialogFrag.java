@@ -31,8 +31,7 @@ public class TransCreditsDialogFrag extends BottomSheetDialogFrag {
       @NonNull LayoutInflater inflater,
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    TranslationDialogBinding b =
-        TranslationDialogBinding.inflate(inflater, container, container != null);
+    TranslationDialogBinding b = TranslationDialogBinding.inflate(mA.getLayoutInflater());
     b.langCreditsV.setText(createTransCreditsString());
     BetterLinkMovementMethod method = BetterLinkMovementMethod.newInstance();
     method.setOnLinkClickListener((tv, url) -> openWebUrl(mA, url));

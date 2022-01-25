@@ -26,7 +26,7 @@
       android:layout_gravity="center_horizontal"
       android:ellipsize="end"
       android:maxLines="1"
-      android:textColor="@color/dynamic_text_color"
+      android:textColor="@color/sharpText"
       android:textSize="18sp"
       app:autoSizeMinTextSize="10sp"
       app:autoSizeTextType="uniform" />
@@ -40,46 +40,34 @@
       android:layout_gravity="center_horizontal"
       android:ellipsize="end"
       android:maxLines="1"
-      android:textColor="@color/dynamic_text_color"
+      android:textColor="@color/sharpText"
       android:textSize="16sp"
       android:visibility="gone"
       app:autoSizeMinTextSize="8sp"
       app:autoSizeTextType="uniform" />
 
-    <Button
+    <com.mirfatif.permissionmanagerx.ui.base.CustomButton
       android:id="@+id/exclude_pkg"
-      style="@style/Widget.AppCompat.Button"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="@drawable/button_bg"
-      android:text="@string/exclude_app_from_visible_list"
-      android:textColor="@color/button_spinner_color" />
+      style="@style/CustomButton"
+      android:layout_marginTop="16dp"
+      android:text="@string/exclude_app_from_visible_list" />
 
-    <Button
+    <com.mirfatif.permissionmanagerx.ui.base.CustomButton
       android:id="@+id/disable_pkg"
-      style="@style/Widget.AppCompat.Button"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="@drawable/button_bg"
-      android:textColor="@color/button_spinner_color" />
+      style="@style/CustomButton"
+      android:layout_marginTop="8dp" />
 
-    <Button
+    <com.mirfatif.permissionmanagerx.ui.base.CustomButton
       android:id="@+id/open_pkg_info"
-      style="@style/Widget.AppCompat.Button"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="@drawable/button_bg"
-      android:text="@string/open_pkg_info"
-      android:textColor="?attr/accentColor" />
+      style="@style/CustomButton"
+      android:layout_marginTop="8dp"
+      android:text="@string/open_pkg_info" />
 
-    <Button
+    <com.mirfatif.permissionmanagerx.ui.base.CustomButton
       android:id="@+id/find_pkg_proc"
-      style="@style/Widget.AppCompat.Button"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="@drawable/button_bg"
+      style="@style/CustomButton"
+      android:layout_marginTop="8dp"
       android:text="@string/find_pkg_process"
-      android:textColor="?attr/accentColor"
       android:visibility="gone" />
 
   </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>

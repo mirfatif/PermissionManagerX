@@ -2,12 +2,10 @@ package com.mirfatif.permissionmanagerx.ui.base;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -44,12 +42,21 @@ public class BottomSheetDialogFrag extends BottomSheetDialogFragment {
     super.onViewCreated(view, savedInstanceState);
     /*
      Replace the default white background with the custom one.
+
      Another option is to override the bottomSheetDialog theme in style.xml
-     With setBackgroundResource() background color is not set, so first create drawable.
+       <style name="BottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+         <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
+       </style>
+
+       <style name="BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+         <item name="android:background">@drawable/bottom_sheet_bg</item>
+       </style>
+     In theme:
+       <item name="bottomSheetDialogTheme">@style/BottomSheetDialogTheme</item>
+
+     With setBackgroundResource() background color is not set.
     */
-    int resId = R.drawable.bottom_sheet_bg_flavor;
-    Drawable bg = ResourcesCompat.getDrawable(mA.getResources(), resId, mA.getTheme());
-    ((View) view.getParent()).setBackground(bg);
+    ((View) view.getParent()).setBackground(new DialogBg(true, mA));
   }
 
   // Required for correct Buttons background/text color.

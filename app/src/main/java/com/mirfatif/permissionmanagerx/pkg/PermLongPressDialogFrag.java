@@ -56,8 +56,7 @@ public class PermLongPressDialogFrag extends BottomSheetDialogFrag {
       return null;
     }
 
-    PermLongPressDialogBinding b =
-        PermLongPressDialogBinding.inflate(inflater, container, container != null);
+    PermLongPressDialogBinding b = PermLongPressDialogBinding.inflate(mA.getLayoutInflater());
 
     b.permNameV.setText(mPerm.getName());
 

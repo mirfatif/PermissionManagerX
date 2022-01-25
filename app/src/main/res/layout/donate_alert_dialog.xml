@@ -100,7 +100,7 @@
       android:orientation="vertical"
       android:visibility="gone">
 
-      <Button
+      <com.mirfatif.permissionmanagerx.ui.base.CustomButton
         android:id="@+id/bitcoin_button2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -134,7 +134,7 @@
       android:orientation="vertical"
       android:visibility="gone">
 
-      <Button
+      <com.mirfatif.permissionmanagerx.ui.base.CustomButton
         android:id="@+id/bank_account_button2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -151,21 +151,21 @@
 
     </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
-    <Button
+    <com.mirfatif.permissionmanagerx.ui.base.CustomButton
       android:id="@+id/bmc_button2"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="@string/buy_me_a_coffee"
       android:visibility="gone" />
 
-    <Button
+    <com.mirfatif.permissionmanagerx.ui.base.CustomButton
       android:id="@+id/pro_button2"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="@string/get_pro_version"
       android:visibility="gone" />
 
-    <Button
+    <com.mirfatif.permissionmanagerx.ui.base.CustomButton
       android:id="@+id/play_store_button2"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
