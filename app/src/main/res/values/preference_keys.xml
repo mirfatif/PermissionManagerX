@@ -160,6 +160,14 @@
   <string name="pref_settings_dark_theme_key" translatable="false">pref_settings_dark_theme</string>
   <bool name="pref_settings_dark_theme_default">true</bool>
 
+  <string name="pref_settings_search_suggestions_count_title" maxLength="20">Max suggestions: %d</string>
+  <string name="pref_settings_search_suggestions_count_summary">Suggest package, permissions, special keywords etc.</string>
+  <string name="pref_settings_search_suggestions_count_key" translatable="false">pref_settings_search_suggestions_count</string>
+  <integer name="pref_settings_search_suggestions_count_default">5</integer>
+  <string name="pref_settings_search_keywords_key" maxLength="20" translatable="false">pref_settings_search_keywords</string>
+  <string name="pref_settings_search_keywords_title" maxLength="20">Search keywords</string>
+  <string name="pref_settings_search_keywords_summary">Keywords with special meaning</string>
+
   <!-- HelpActivity -->
   <string name="pref_help_font_size_key" translatable="false">pref_help_font_size</string>
   <integer name="pref_help_font_size_default">14</integer>

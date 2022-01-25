@@ -25,4 +25,19 @@
     app:summary="@string/pref_settings_special_search_summary"
     app:title="@string/pref_settings_special_search_title" />
 
+  <com.mirfatif.permissionmanagerx.prefs.settings.NumPickerPrefFlavor
+    app:defaultValue="@integer/pref_settings_search_suggestions_count_default"
+    app:enabled="false"
+    app:iconSpaceReserved="false"
+    app:key="@string/pref_settings_search_suggestions_count_key"
+    app:singleLineTitle="false"
+    app:summary="@string/pref_settings_search_suggestions_count_summary" />
+
+  <Preference
+    app:enabled="false"
+    app:iconSpaceReserved="false"
+    app:key="@string/pref_settings_search_keywords_key"
+    app:summary="@string/pref_settings_search_keywords_summary"
+    app:title="@string/pref_settings_search_keywords_title" />
+
 </PreferenceScreen>

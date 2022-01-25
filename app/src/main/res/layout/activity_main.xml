@@ -91,7 +91,7 @@
     <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:background="@drawable/search_settings_bg_flavor">
+      android:background="@drawable/search_settings_bg">
 
       <androidx.fragment.app.FragmentContainerView
         android:id="@+id/search_settings_frag"

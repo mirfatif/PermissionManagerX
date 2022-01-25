@@ -43,7 +43,7 @@ public class SearchSettingsFrag extends PreferenceFragmentCompat
 
   @Override
   public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-    setPreferencesFromResource(R.xml.settings_prefs_search_flavor, rootKey);
+    setPreferencesFromResource(R.xml.settings_prefs_search, rootKey);
     mSettingsFlavor.onCreatePreferences(mA);
   }
 

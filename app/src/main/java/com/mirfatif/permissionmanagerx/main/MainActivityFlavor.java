@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.fragment.app.FragmentManager;
 import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
 
 public class MainActivityFlavor {
@@ -66,10 +65,6 @@ public class MainActivityFlavor {
     if (actionBar != null && (drawerToggle = mA.getDrawerToggle()) != null) {
       actionBar.setHomeAsUpIndicator(drawerToggle.getDrawerArrowDrawable());
     }
-  }
-
-  public int hideSearchSettings(@SuppressWarnings("UnusedDeclaration") FragmentManager fm) {
-    return 0;
   }
 
   public void onBackPressed() {}

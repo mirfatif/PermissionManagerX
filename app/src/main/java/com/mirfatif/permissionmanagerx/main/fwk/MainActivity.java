@@ -36,6 +36,8 @@ import androidx.appcompat.widget.SearchView.OnQueryTextListener;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.snackbar.Snackbar;
@@ -647,8 +649,12 @@ public class MainActivity extends BaseActivity {
 
   private void hideSearchSettings() {
     int delay = 0;
-    if (mMainActivityFlavor != null) {
-      delay = mMainActivityFlavor.hideSearchSettings(getSupportFragmentManager());
+    FragmentManager fm = getSupportFragmentManager();
+    Fragment frag = fm.findFragmentById(R.id.search_settings_frag);
+    if (frag != null) {
+      // To enable expansion animation for next time.
+      fm.beginTransaction().remove(frag).commit();
+      delay = 50;
     }
     mB.searchSettingsContainer.postDelayed(
         () -> mB.searchSettingsContainer.setVisibility(View.GONE), delay);
