@@ -68,4 +68,8 @@ public class MainActivityFlavor {
   }
 
   public void onBackPressed() {}
+
+  public void onRootStopped() {}
+
+  public void onAdbStopped() {}
 }
