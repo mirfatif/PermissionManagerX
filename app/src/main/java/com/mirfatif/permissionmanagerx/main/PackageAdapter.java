@@ -59,17 +59,7 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
     holder.bind(position);
   }
 
-  private final Object ICON_SETTER_LOCK = new Object();
-  private ExecutorService ICON_SETTER = Executors.newCachedThreadPool();
-
-  public void onDestroyed() {
-    synchronized (ICON_SETTER_LOCK) {
-      if (ICON_SETTER != null) {
-        ICON_SETTER.shutdownNow();
-        ICON_SETTER = null;
-      }
-    }
-  }
+  private final ExecutorService ICON_SETTER = Executors.newCachedThreadPool();
 
   // Store and recycle items as they are scrolled off screen
   class ItemViewHolder extends RecyclerView.ViewHolder
@@ -105,11 +95,7 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
         mB.refIndicationV.setVisibility(View.GONE);
       }
 
-      synchronized (ICON_SETTER_LOCK) {
-        if (ICON_SETTER != null) {
-          ICON_SETTER.submit(() -> setIcon(pkg, mB.iconV));
-        }
-      }
+      ICON_SETTER.submit(() -> setIcon(pkg, mB.iconV));
 
       mB.pkgLabelV.setText(pkg.getLabel());
       mB.pkgNameV.setText(pkg.getFormattedName());

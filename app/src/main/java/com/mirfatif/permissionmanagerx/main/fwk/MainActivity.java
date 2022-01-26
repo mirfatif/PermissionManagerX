@@ -304,10 +304,12 @@ public class MainActivity extends BaseActivity {
     mExited = false;
   }
 
+  private final Object ON_DESTROY_LOCK = new Object();
+
   @Override
   protected void onDestroy() {
-    if (mPackageAdapter != null) {
-      mPackageAdapter.onDestroyed();
+    synchronized (ON_DESTROY_LOCK) {
+      mPackageAdapter = null;
     }
     super.onDestroy();
   }
@@ -524,7 +526,11 @@ public class MainActivity extends BaseActivity {
     if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "pkgListLiveObserver: " + packages.size() + " packages received");
     }
-    mPackageAdapter.submitList(new ArrayList<>(packages));
+    synchronized (ON_DESTROY_LOCK) {
+      if (mPackageAdapter != null) {
+        mPackageAdapter.submitList(new ArrayList<>(packages));
+      }
+    }
     setRepeatUpdates();
   }
 
@@ -532,9 +538,13 @@ public class MainActivity extends BaseActivity {
     if (SETTINGS.isDebug()) {
       Util.debugLog(TAG, "pkgChangedLiveObserver: Package updated: " + pkg.getLabel());
     }
-    int position = mPackageAdapter.getCurrentList().indexOf(pkg);
-    if (position != -1) {
-      mPackageAdapter.notifyItemChanged(position);
+    synchronized (ON_DESTROY_LOCK) {
+      if (mPackageAdapter != null) {
+        int position = mPackageAdapter.getCurrentList().indexOf(pkg);
+        if (position != -1) {
+          mPackageAdapter.notifyItemChanged(position);
+        }
+      }
     }
   }
 
@@ -543,10 +553,15 @@ public class MainActivity extends BaseActivity {
    the bottom.
   */
   private void setRepeatUpdates() {
-    boolean rep = mPackageAdapter.getItemCount() < mLayoutManager.findLastVisibleItemPosition() + 5;
-    PKG_PARSER.setRepeatUpdates(rep);
-    if (SETTINGS.isDebug()) {
-      Util.debugLog(TAG, "setRepeatUpdates: " + rep);
+    synchronized (ON_DESTROY_LOCK) {
+      if (mPackageAdapter != null) {
+        boolean rep =
+            mPackageAdapter.getItemCount() < mLayoutManager.findLastVisibleItemPosition() + 5;
+        PKG_PARSER.setRepeatUpdates(rep);
+        if (SETTINGS.isDebug()) {
+          Util.debugLog(TAG, "setRepeatUpdates: " + rep);
+        }
+      }
     }
   }
 
