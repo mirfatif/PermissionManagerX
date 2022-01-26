@@ -26,6 +26,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.annot.ToDo;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.ActivityPackageBinding;
 import com.mirfatif.permissionmanagerx.databinding.PermDetailsDialogBinding;
@@ -618,6 +619,7 @@ public class PackageActivity extends BaseActivity {
     }
 
     @Override
+    @ToDo(what = "Move getPackagesForUid() to daemon")
     public void onSpinnerItemSelect(Permission perm, int selectedValue) {
       if (mPackage == null || mPermissionAdapter == null) {
         finishAfterTransition();
@@ -644,7 +646,13 @@ public class PackageActivity extends BaseActivity {
 
       int affectedPkgCount = 0;
       if (uidMode) {
-        affectedPkgCount = getPackageManager().getPackagesForUid(mPackage.getUid()).length;
+        try {
+          affectedPkgCount = getPackageManager().getPackagesForUid(mPackage.getUid()).length;
+        } catch (SecurityException ignored) {
+          Utils.showToast(R.string.failed_get_affected_pkg_count);
+          updateSpinnerSelectionInBg(pos);
+          return;
+        }
       }
 
       if (warn == null && (!uidMode || affectedPkgCount <= 1)) {

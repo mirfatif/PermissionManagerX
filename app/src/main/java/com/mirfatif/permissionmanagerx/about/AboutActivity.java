@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.AboutPrivilegesDialogBinding;
 import com.mirfatif.permissionmanagerx.databinding.ActivityAboutBinding;
 import com.mirfatif.permissionmanagerx.main.FeedbackDialogFrag;
@@ -82,17 +81,7 @@ public class AboutActivity extends BaseActivity {
           }
         });
 
-    ActivityResultCallback<Uri> callback =
-        logFile -> {
-          if (logFile != null) {
-            startService(
-                new Intent(
-                    LogcatService.ACTION_START_LOG,
-                    logFile,
-                    App.getContext(),
-                    LogcatService.class));
-          }
-        };
+    ActivityResultCallback<Uri> callback = LogcatService::start;
     // registerForActivityResult() must be called before onStart() is called
     mLoggingLauncher = registerForActivityResult(new CreateDocument(), callback);
   }

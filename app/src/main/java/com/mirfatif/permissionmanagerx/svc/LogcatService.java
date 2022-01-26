@@ -40,7 +40,7 @@ public class LogcatService extends Service {
 
   private static final String TAG = "LogcatService";
 
-  public static final String ACTION_START_LOG = BuildConfig.APPLICATION_ID + ".START_LOGCAT";
+  private static final String ACTION_START_LOG = BuildConfig.APPLICATION_ID + ".START_LOGCAT";
 
   @Override
   public IBinder onBind(Intent intent) {
@@ -233,7 +233,10 @@ public class LogcatService extends Service {
 
     Intent intent = new Intent(App.getContext(), MainActivity.class);
     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-    Utils.runInFg(() -> startActivity(intent));
+    // On Android 12+ startActivity() works from Service only if the app is in foreground.
+    if (VERSION.SDK_INT < VERSION_CODES.S || Utils.isAppVisible()) {
+      Utils.runInFg(() -> startActivity(intent));
+    }
   }
 
   @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -305,5 +308,14 @@ public class LogcatService extends Service {
         sLogcatWriter.flush();
       }
     }
+  }
+
+  public static void start(Uri logFile) {
+    if (logFile == null || !Utils.isAppVisible()) {
+      return;
+    }
+
+    App.getContext()
+        .startService(new Intent(ACTION_START_LOG, logFile, App.getContext(), LogcatService.class));
   }
 }

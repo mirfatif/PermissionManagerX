@@ -184,6 +184,8 @@
 
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">Something went wrong</string>
+  <string name="failed_get_affected_pkg_count" maxLength="20">Failed to get affected package count</string>
+
   <string name="change_perms_warning" comment="'system' or 'framework'">Changing permissions of a %1$s app is a dangerous action. In worst-case scenario Android system may crash.\nAre you sure you want to continue?</string>
   <string name="system">system</string>
   <string name="framework">framework</string>
@@ -264,8 +266,6 @@
   <string name="email" maxLength="15">Email</string>
   <string name="email_address" translatable="false">mirfatif@gmail.com</string>
   <string name="telegram_group" maxLength="15">Telegram Group</string>
-  <string name="no_email_app_installed" maxLength="20">No email app installed</string>
-  <string name="no_browser_installed" maxLength="20">"No web browser app installed"</string>
   <string name="collect_logs" maxLength="15">Collect Logs</string>
   <string name="collect_logs_summary" maxLength="20">Save highly verbose log to file</string>
   <string name="report_issues" maxLength="15">Report Issues</string>
@@ -313,6 +313,11 @@
   <string name="op_to_name">Op To Name</string>
   <string name="op_num_consistency">Op Numbers Consistency</string>
   <string name="permissions">Permissions</string>
+
+  <!-- ActivityNotFoundException -->
+  <string name="no_email_app_installed" maxLength="20">No email app installed</string>
+  <string name="no_browser_installed" maxLength="20">"No web browser app installed"</string>
+  <string name="no_file_picker_installed" maxLength="20">"No file picker app installed"</string>
 
   <!-- Donate -->
   <string name="send_bitcoin">Send Bitcoin</string>

@@ -21,6 +21,7 @@ import androidx.room.Room;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
+import com.mirfatif.permissionmanagerx.annot.ToDo;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.Permission;
@@ -259,7 +260,7 @@ public enum MySettings {
 
     Editor prefEditor = Utils.getEncPrefs().edit();
     try {
-      if (crashCount >= 5 || (currTime - lastTS) >= TimeUnit.DAYS.toMillis(1)) {
+      if (crashCount >= 2 || (currTime - lastTS) >= TimeUnit.DAYS.toMillis(1)) {
         prefEditor.putLong(getString(R.string.pref_main_crash_report_ts_enc_key), currTime);
         prefEditor.putInt(getString(R.string.pref_main_crash_report_count_enc_key), 1);
         return true;
@@ -364,10 +365,10 @@ public enum MySettings {
     return getBoolPref(R.string.pref_settings_special_search_key);
   }
 
+  @ToDo(what = "Remove quick scan")
   public boolean isQuickScanEnabled() {
     return false;
-    // TODO return getBoolPref(R.string.pref_settings_quick_scan_key) &&
-    // PKG_PARSER_FLAVOR.allowQuickScan();
+    // getBoolPref(R.string.pref_settings_quick_scan_key) && PKG_PARSER_FLAVOR.allowQuickScan();
   }
 
   public boolean shouldDoQuickScan() {

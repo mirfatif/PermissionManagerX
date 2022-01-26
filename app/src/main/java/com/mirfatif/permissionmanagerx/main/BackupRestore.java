@@ -3,6 +3,7 @@ package com.mirfatif.permissionmanagerx.main;
 import static com.mirfatif.permissionmanagerx.parser.PackageParser.PKG_PARSER;
 import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
 
+import android.content.ActivityNotFoundException;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -121,10 +122,14 @@ public class BackupRestore {
 
   private void doBackupRestore(boolean isBackup) {
     Utils.showToast(R.string.select_backup_file);
-    if (isBackup) {
-      mBackupLauncher.launch("PermissionManagerX_" + Utils.getCurrDateTime(false) + ".xml");
-    } else {
-      mRestoreLauncher.launch(new String[] {"text/xml"});
+    try {
+      if (isBackup) {
+        mBackupLauncher.launch("PermissionManagerX_" + Utils.getCurrDateTime(false) + ".xml");
+      } else {
+        mRestoreLauncher.launch(new String[] {"text/xml"});
+      }
+    } catch (ActivityNotFoundException ignored) {
+      Utils.showToast(R.string.no_file_picker_installed);
     }
   }
 
