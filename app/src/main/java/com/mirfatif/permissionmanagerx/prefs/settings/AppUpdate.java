@@ -86,7 +86,7 @@ public class AppUpdate {
     int version = Integer.parseInt(mVersion.substring(1, 5).replace(".", ""));
     if (version > BuildConfig.VERSION_CODE && !mVersion.equals(BuildConfig.VERSION_NAME)) {
       Log.i(TAG, "New beta update is available: " + mVersion);
-      mUpdateUrl = getString(R.string.telegram_group_link);
+      mUpdateUrl = getString(R.string.source_url);
       return true;
     }
     return false;

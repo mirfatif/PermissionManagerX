@@ -17,12 +17,15 @@
   <group android:id="@+id/group1.5">
     <item
       android:id="@+id/action_sched_check"
-      android:title="@null"
       android:visible="false" />
 
     <item
       android:id="@+id/action_perm_watcher"
-      android:title="@null"
+      android:visible="false" />
+
+    <item
+      android:id="@+id/action_perm_summary"
+      android:enabled="false"
       android:visible="false" />
   </group>
 
@@ -50,6 +53,11 @@
       android:id="@+id/action_backup_restore"
       android:title="@string/backup_restore_menu_item"
       android:icon="@drawable/backup_restore"/>
+
+    <item
+      android:id="@+id/action_perm_profiles"
+      android:enabled="false"
+      android:visible="false" />
   </group>
 
   <group android:id="@+id/group4">

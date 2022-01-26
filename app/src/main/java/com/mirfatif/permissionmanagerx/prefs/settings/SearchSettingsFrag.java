@@ -61,8 +61,7 @@ public class SearchSettingsFrag extends PreferenceFragmentCompat
   public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     if (getString(R.string.pref_main_deep_search_key).equals(key)
         || getString(R.string.pref_main_case_sensitive_search_key).equals(key)
-        || getString(R.string.pref_settings_special_search_key).equals(key)
-        || mSettingsFlavor.onSharedPreferenceChanged(key)) {
+        || getString(R.string.pref_settings_special_search_key).equals(key)) {
       mA.handleSearchQuery(false);
     }
   }

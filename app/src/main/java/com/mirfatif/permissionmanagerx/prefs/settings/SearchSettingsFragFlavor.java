@@ -19,11 +19,7 @@ public class SearchSettingsFragFlavor {
     Preference pref =
         mPrefFrag.findPreference(getString(R.string.pref_settings_search_suggestions_count_key));
     Objects.requireNonNull(pref)
-        .setTitle(getString(R.string.pref_settings_search_suggestions_count_title, 0));
-  }
-
-  boolean onSharedPreferenceChanged(@SuppressWarnings("UnusedDeclaration") String key) {
-    return false;
+        .setTitle(getString(R.string.pref_settings_search_suggestions_count_title2, 0));
   }
 
   public boolean onDisplayPreferenceDialog(
