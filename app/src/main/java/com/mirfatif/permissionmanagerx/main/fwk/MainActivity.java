@@ -279,8 +279,11 @@ public class MainActivity extends BaseActivity {
       return;
     }
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && mMainActivityFlavor != null) {
-      mMainActivityFlavor.onBackPressed();
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+      mExited = true;
+      if (mMainActivityFlavor != null) {
+        mMainActivityFlavor.onBackPressed();
+      }
     }
 
     // https://issuetracker.google.com/issues/139738913
@@ -291,12 +294,18 @@ public class MainActivity extends BaseActivity {
     }
   }
 
+  private boolean mExited = false;
+
   @Override
   protected void onResume() {
     super.onResume();
     if (mMainActivityFlavor != null) {
       mMainActivityFlavor.onResumed();
     }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && mExited) {
+      PKG_PARSER.updatePackagesList();
+    }
+    mExited = false;
   }
 
   @Override

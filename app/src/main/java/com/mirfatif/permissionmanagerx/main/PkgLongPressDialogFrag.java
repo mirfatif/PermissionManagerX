@@ -19,6 +19,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.annot.ToDo;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.PkgLongPressDialogBinding;
 import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
@@ -45,6 +46,7 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
 
   @Nullable
   @Override
+  @ToDo(what = "Hide WhatsRunning install button only in F-Droid version")
   public View onCreateView(
       @NonNull LayoutInflater inflater,
       @Nullable ViewGroup container,
@@ -96,7 +98,8 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
     PackageManager pm = App.getContext().getPackageManager();
     Intent intent = new Intent(WRUN_ACTION_SEARCH_PKG);
 
-    if (pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+    if (!Utils.isFreeVersion()
+        || pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
       b.findPkgProc.setVisibility(View.VISIBLE);
       b.findPkgProc.setOnClickListener(
           v -> {
@@ -132,9 +135,9 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
     String warn = null;
     if (enabled && SETTINGS.getBoolPref(R.string.pref_main_warn_dang_change_enc_key)) {
       if (mPkg.isFrameworkApp()) {
-        warn = getString(R.string.disable_pkg_warning, getString(R.string.framework));
+        warn = Utils.getString(R.string.disable_pkg_warning, Utils.getString(R.string.framework));
       } else if (mPkg.isSystemApp()) {
-        warn = getString(R.string.disable_pkg_warning, getString(R.string.system));
+        warn = Utils.getString(R.string.disable_pkg_warning, Utils.getString(R.string.system));
       }
     }
 
@@ -218,7 +221,7 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
               ((MainActivity) mA).getRootView().recyclerView, R.string.wrun_not_installed, 10000);
       sb.setTextColor(mA.getColor(R.color.sharpText));
       sb.getView().setBackgroundColor(Utils.getSharpBgColor(mA));
-      sb.setAction(R.string.install, v -> Utils.openWebUrl(mA, getString(R.string.wrun_url)));
+      sb.setAction(R.string.install, v -> Utils.openWebUrl(mA, Utils.getString(R.string.wrun_url)));
       sb.show();
     }
   }
