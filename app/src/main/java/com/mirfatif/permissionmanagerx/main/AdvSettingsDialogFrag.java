@@ -1,7 +1,6 @@
 package com.mirfatif.permissionmanagerx.main;
 
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
-import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.ROOT_DAEMON;
+import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.INSTANCE_R;
 import static com.mirfatif.permissionmanagerx.util.Utils.UID_ROOT;
 import static com.mirfatif.permissionmanagerx.util.Utils.UID_SHELL;
 import static com.mirfatif.permissionmanagerx.util.Utils.UID_SYSTEM;
@@ -46,11 +45,11 @@ public class AdvSettingsDialogFrag extends BottomSheetDialogFrag {
   private List<String> spinnerUids, spinnerContexts;
   private int uidSelectedPos, contextSelectedPos;
 
-  private final boolean useHiddenAPIs = SETTINGS.useHiddenAPIs();
-  private final boolean dexInTmpDir = SETTINGS.dexInTmpDir();
-  private final String adbPort = String.valueOf(SETTINGS.getAdbPort());
-  private final boolean useSocket = SETTINGS.useSocket();
-  private final String suExePath = SETTINGS.getSuExePath();
+  private final boolean useHiddenAPIs = MySettings.INSTANCE.useHiddenAPIs();
+  private final boolean dexInTmpDir = MySettings.INSTANCE.dexInTmpDir();
+  private final String adbPort = String.valueOf(MySettings.INSTANCE.getAdbPort());
+  private final boolean useSocket = MySettings.INSTANCE.useSocket();
+  private final String suExePath = MySettings.INSTANCE.getSuExePath();
 
   @Nullable
   @Override
@@ -64,15 +63,15 @@ public class AdvSettingsDialogFrag extends BottomSheetDialogFrag {
     spinnerContexts = Arrays.asList(mA.getResources().getStringArray(R.array.daemon_contexts));
 
     int uidResId = R.string.daemon_uid_system;
-    if (SETTINGS.getDaemonUid() == UID_ROOT) {
+    if (MySettings.INSTANCE.getDaemonUid() == UID_ROOT) {
       uidResId = R.string.daemon_uid_root;
-    } else if (SETTINGS.getDaemonUid() == UID_SHELL) {
+    } else if (MySettings.INSTANCE.getDaemonUid() == UID_SHELL) {
       uidResId = R.string.daemon_uid_adb;
     }
     uidSelectedPos = spinnerUids.indexOf(getString(uidResId));
 
     int contextResId = R.string.daemon_context_shell;
-    if (SETTINGS.getDaemonContext().equals(MySettings.CONTEXT_DEFAULT)) {
+    if (MySettings.INSTANCE.getDaemonContext().equals(MySettings.CONTEXT_DEFAULT)) {
       contextResId = R.string.daemon_context_default;
     }
     contextSelectedPos = spinnerContexts.indexOf(getString(contextResId));
@@ -98,7 +97,7 @@ public class AdvSettingsDialogFrag extends BottomSheetDialogFrag {
         });
 
     mB.negButton.setOnClickListener(v -> dismiss());
-    if (SETTINGS.isRootGranted() && !SETTINGS.isAdbConnected()) {
+    if (MySettings.INSTANCE.isRootGranted() && !MySettings.INSTANCE.isAdbConnected()) {
       mB.neutralButton.setVisibility(View.VISIBLE);
       mB.neutralButton.setOnClickListener(
           v -> {
@@ -116,7 +115,7 @@ public class AdvSettingsDialogFrag extends BottomSheetDialogFrag {
   private void saveSettings() {
     boolean restartDaemon = false, switchToAdb = false;
     if (dexInTmpDir != mB.dexTmpDir.isChecked()) {
-      SETTINGS.setDexInTmpDir(mB.dexTmpDir.isChecked());
+      MySettings.INSTANCE.setDexInTmpDir(mB.dexTmpDir.isChecked());
       restartDaemon = true;
     }
 
@@ -131,14 +130,14 @@ public class AdvSettingsDialogFrag extends BottomSheetDialogFrag {
       if (port > MAX_PORT || port < MIN_PORT) {
         Utils.showToast(R.string.bad_port_number);
       } else {
-        SETTINGS.setAdbPort(port);
+        MySettings.INSTANCE.setAdbPort(port);
         restartDaemon = true;
         switchToAdb = true;
       }
     }
 
     if (useSocket != mB.useSocket.isChecked()) {
-      SETTINGS.setUseSocket(mB.useSocket.isChecked());
+      MySettings.INSTANCE.setUseSocket(mB.useSocket.isChecked());
       restartDaemon = true;
     }
 
@@ -151,7 +150,7 @@ public class AdvSettingsDialogFrag extends BottomSheetDialogFrag {
       } else if (newSelection.equals(getString(R.string.daemon_uid_adb))) {
         uid = UID_SHELL;
       }
-      SETTINGS.setDaemonUid(uid);
+      MySettings.INSTANCE.setDaemonUid(uid);
       restartDaemon = true;
     }
 
@@ -162,7 +161,7 @@ public class AdvSettingsDialogFrag extends BottomSheetDialogFrag {
       if (newSelection.equals(getString(R.string.daemon_context_default))) {
         context = MySettings.CONTEXT_DEFAULT;
       }
-      SETTINGS.setDaemonContext(context);
+      MySettings.INSTANCE.setDaemonContext(context);
       restartDaemon = true;
     }
 
@@ -170,14 +169,14 @@ public class AdvSettingsDialogFrag extends BottomSheetDialogFrag {
         mB.suExePath.getText() == null ? null : mB.suExePath.getText().toString().trim();
     if (TextUtils.isEmpty(suExePathNew)) {
       if (!TextUtils.isEmpty(suExePath)) {
-        SETTINGS.setSuExePath(null);
+        MySettings.INSTANCE.setSuExePath(null);
         restartDaemon = true;
       }
     } else if (suExePathNew != null && !suExePathNew.equals(suExePath)) {
       if (!isExecutableFile(suExePathNew)) {
         Utils.showToast(R.string.bad_path);
       } else {
-        SETTINGS.setSuExePath(suExePathNew);
+        MySettings.INSTANCE.setSuExePath(suExePathNew);
         restartDaemon = true;
       }
     }
@@ -192,7 +191,7 @@ public class AdvSettingsDialogFrag extends BottomSheetDialogFrag {
   }
 
   private void restartDaemon(boolean restartDaemon, boolean switchToAdb) {
-    if (SETTINGS.isRootGranted() && switchToAdb) {
+    if (MySettings.INSTANCE.isRootGranted() && switchToAdb) {
       Utils.runInBg(() -> switchToAdb(restartDaemon));
     } else if (restartDaemon) {
       ((MainActivity) mA).restartPrivDaemon(!switchToAdb, true);
@@ -202,7 +201,7 @@ public class AdvSettingsDialogFrag extends BottomSheetDialogFrag {
   private void saveHiddenAPIsSettings(
       boolean useHiddenAPIs, boolean restartDaemon, boolean switchToAdb) {
     if (useHiddenAPIs) {
-      SETTINGS.setUseHiddenAPIs(true);
+      MySettings.INSTANCE.setUseHiddenAPIs(true);
 
       // Restart daemon to make sure that read AppOps permission is granted
       restartDaemon(true, switchToAdb);
@@ -215,7 +214,7 @@ public class AdvSettingsDialogFrag extends BottomSheetDialogFrag {
             .setPositiveButton(
                 R.string.yes,
                 (d, which) -> {
-                  SETTINGS.setUseHiddenAPIs(false);
+                  MySettings.INSTANCE.setUseHiddenAPIs(false);
                   doRestartDaemon[0] = true; // Start daemon if not running
                 })
             .setNegativeButton(R.string.no, null)
@@ -234,12 +233,12 @@ public class AdvSettingsDialogFrag extends BottomSheetDialogFrag {
     }
 
     Log.i(TAG, "Sending ADB switch commands");
-    ROOT_DAEMON.sendCommand("run settings put global adb_enabled 0");
-    ROOT_DAEMON.sendCommand("run stop adbd");
-    ROOT_DAEMON.sendCommand("run setprop service.adb.tcp.port " + SETTINGS.getAdbPort());
+    INSTANCE_R.sendCommand("run settings put global adb_enabled 0");
+    INSTANCE_R.sendCommand("run stop adbd");
+    INSTANCE_R.sendCommand("run setprop service.adb.tcp.port " + MySettings.INSTANCE.getAdbPort());
     SystemClock.sleep(2000);
-    ROOT_DAEMON.sendCommand("run settings put global adb_enabled 1");
-    ROOT_DAEMON.sendCommand("run start adbd");
+    INSTANCE_R.sendCommand("run settings put global adb_enabled 1");
+    INSTANCE_R.sendCommand("run start adbd");
     SystemClock.sleep(5000);
 
     if (Utils.checkAdb(true)) {

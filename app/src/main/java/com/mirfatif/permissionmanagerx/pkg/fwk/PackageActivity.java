@@ -1,10 +1,5 @@
 package com.mirfatif.permissionmanagerx.pkg.fwk;
 
-import static com.mirfatif.permissionmanagerx.parser.AppOpsParser.APP_OPS_PARSER;
-import static com.mirfatif.permissionmanagerx.parser.PackageParser.PKG_PARSER;
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
-import static com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler.DAEMON_HANDLER;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build.VERSION;
@@ -32,13 +27,17 @@ import com.mirfatif.permissionmanagerx.databinding.PermDetailsDialogBinding;
 import com.mirfatif.permissionmanagerx.main.BackupRestore;
 import com.mirfatif.permissionmanagerx.main.BackupRestore.BackupEntry;
 import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
+import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
 import com.mirfatif.permissionmanagerx.parser.Package;
+import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.parser.Permission;
 import com.mirfatif.permissionmanagerx.pkg.PermLongPressDialogFrag;
 import com.mirfatif.permissionmanagerx.pkg.PermissionAdapter;
 import com.mirfatif.permissionmanagerx.pkg.PermissionAdapter.PermAdapterCallback;
 import com.mirfatif.permissionmanagerx.pkg.PkgActivityFlavor;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.fwk.FilterSettingsActivity;
+import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
@@ -74,7 +73,7 @@ public class PackageActivity extends BaseActivity {
     mPkgActivityFlavor = new PkgActivityFlavor(this);
 
     int position = getIntent().getIntExtra(MainActivity.EXTRA_PKG_POSITION, -1);
-    if (position == -1 || (mPackage = PKG_PARSER.getPackage(position)) == null) {
+    if (position == -1 || (mPackage = PackageParser.INSTANCE.getPackage(position)) == null) {
       Utils.showToast(R.string.something_bad_happened);
       finishAfterTransition();
       return;
@@ -169,7 +168,7 @@ public class PackageActivity extends BaseActivity {
 
   public String getPermState(Permission permission) {
     return permission.isAppOps()
-        ? APP_OPS_PARSER.getAppOpsModes().get(permission.getAppOpsMode())
+        ? AppOpsParser.INSTANCE.getAppOpsModes().get(permission.getAppOpsMode())
         : (permission.isGranted() ? Permission.GRANTED : Permission.REVOKED);
   }
 
@@ -198,10 +197,10 @@ public class PackageActivity extends BaseActivity {
   }
 
   public void updatePackage() {
-    if (SETTINGS.isDebug()) {
+    if (MySettings.INSTANCE.isDebug()) {
       Util.debugLog(TAG, "updatePackage() called");
     }
-    PKG_PARSER.updatePackage(mPackage);
+    PackageParser.INSTANCE.updatePackage(mPackage);
     if (mPackage == null || mPackage.isRemoved()) {
       // Package is excluded due to changes made by user e.g. uninstalled or ref states changed
       Utils.runInFg(this, this::finishAfterTransition);
@@ -230,7 +229,7 @@ public class PackageActivity extends BaseActivity {
       menu.setGroupDividerEnabled(true);
     }
 
-    menu.findItem(R.id.action_reset_app_ops).setVisible(!SETTINGS.excludeAppOpsPerms());
+    menu.findItem(R.id.action_reset_app_ops).setVisible(!MySettings.INSTANCE.excludeAppOpsPerms());
 
     MenuItem searchMenuItem = menu.findItem(R.id.action_search);
     mSearchView = (SearchView) searchMenuItem.getActionView();
@@ -332,7 +331,7 @@ public class PackageActivity extends BaseActivity {
 
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    if (SETTINGS.isDebug()) {
+    if (MySettings.INSTANCE.isDebug()) {
       Util.debugLog(TAG, "onOptionsItemSelected: " + item.getTitle());
     }
 
@@ -375,10 +374,10 @@ public class PackageActivity extends BaseActivity {
             + Utils.getUserId(mPackage.getUid())
             + " "
             + mPackage.getName();
-    if (SETTINGS.isDebug()) {
+    if (MySettings.INSTANCE.isDebug()) {
       Util.debugLog(TAG, "resetAppOps: sending command: " + cmd);
     }
-    DAEMON_HANDLER.sendRequest(cmd);
+    PrivDaemonHandler.INSTANCE.sendRequest(cmd);
     updatePackage();
     updateSpinnerSelection(true, null);
   }
@@ -401,7 +400,8 @@ public class PackageActivity extends BaseActivity {
       backupEntry.type = permission.getName();
       permEntries.add(backupEntry);
 
-      PKG_PARSER.updatePermReferences(mPackage.getName(), permission.getName(), permState);
+      PackageParser.INSTANCE.updatePermReferences(
+          mPackage.getName(), permission.getName(), permState);
     }
     BackupRestore.updatePermissionEntities(permEntries);
     updatePackage();
@@ -412,9 +412,9 @@ public class PackageActivity extends BaseActivity {
     if (isPackageNull()) {
       return;
     }
-    SETTINGS.getPermDb().deletePackage(mPackage.getName());
+    MySettings.INSTANCE.getPermDb().deletePackage(mPackage.getName());
     for (Permission permission : mPermissionsList) {
-      PKG_PARSER.updatePermReferences(mPackage.getName(), permission.getName(), null);
+      PackageParser.INSTANCE.updatePermReferences(mPackage.getName(), permission.getName(), null);
     }
     updatePackage();
     mPkgActivityFlavor.pkgRefChanged(mPackage);
@@ -422,7 +422,7 @@ public class PackageActivity extends BaseActivity {
 
   public void onPermSwitchToggle(Permission perm) {
     String warn = null;
-    if (SETTINGS.getBoolPref(R.string.pref_package_warn_dang_change_enc_key)) {
+    if (MySettings.INSTANCE.getBoolPref(R.string.pref_package_warn_dang_change_enc_key)) {
       if (mPackage.isFrameworkApp()) {
         warn = getString(R.string.change_perms_warning, getString(R.string.framework));
       } else if (mPackage.isSystemApp()) {
@@ -468,7 +468,7 @@ public class PackageActivity extends BaseActivity {
   }
 
   private boolean checkPrivileges() {
-    if (SETTINGS.isPrivDaemonAlive()) {
+    if (MySettings.INSTANCE.isPrivDaemonAlive()) {
       return true;
     }
     AlertDialogFragment.show(this, null, TAG_GRANT_ROOT_OR_ADB);
@@ -476,7 +476,7 @@ public class PackageActivity extends BaseActivity {
   }
 
   private void doNotRemindDangAction() {
-    SETTINGS.savePref(R.string.pref_package_warn_dang_change_enc_key, false);
+    MySettings.INSTANCE.savePref(R.string.pref_package_warn_dang_change_enc_key, false);
   }
 
   // update package when coming back after changing FilterSettings
@@ -639,7 +639,7 @@ public class PackageActivity extends BaseActivity {
             if (uidMode) {
               if (Utils.getUserId(mPackage.getUid()) != 0 && VERSION.SDK_INT >= VERSION_CODES.S) {
                 Object count =
-                    DAEMON_HANDLER.sendRequest(
+                    PrivDaemonHandler.INSTANCE.sendRequest(
                         Commands.GET_PKG_COUNT_FOR_UID + " " + mPackage.getUid());
                 if (count instanceof Integer) {
                   affectedPkgCount = (int) count;
@@ -672,7 +672,7 @@ public class PackageActivity extends BaseActivity {
       }
 
       String warn = null;
-      if (SETTINGS.getBoolPref(R.string.pref_package_warn_dang_change_enc_key)) {
+      if (MySettings.INSTANCE.getBoolPref(R.string.pref_package_warn_dang_change_enc_key)) {
         if (mPackage.isFrameworkApp()) {
           warn = getString(R.string.change_perms_warning, getString(R.string.framework));
         } else if (mPackage.isSystemApp()) {

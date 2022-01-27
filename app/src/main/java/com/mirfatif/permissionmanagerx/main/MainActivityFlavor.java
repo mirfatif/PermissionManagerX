@@ -1,13 +1,12 @@
 package com.mirfatif.permissionmanagerx.main;
 
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
-
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 
 public class MainActivityFlavor {
 
@@ -49,7 +48,7 @@ public class MainActivityFlavor {
   }
 
   public void onPackagesUpdated() {
-    SETTINGS.setMayAskForFeedback();
+    MySettings.INSTANCE.setMayAskForFeedback();
     mFeedback.askForFeedback();
   }
 

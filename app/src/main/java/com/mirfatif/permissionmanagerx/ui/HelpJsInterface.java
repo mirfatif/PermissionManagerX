@@ -1,11 +1,10 @@
 package com.mirfatif.permissionmanagerx.ui;
 
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
-
 import android.app.Activity;
 import android.graphics.Color;
 import android.webkit.JavascriptInterface;
 import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.util.Utils;
 
 public class HelpJsInterface {
@@ -13,7 +12,7 @@ public class HelpJsInterface {
   private final String mBgColor, mTextColor, mLinkColor;
 
   HelpJsInterface(Activity act) {
-    boolean isNightMode = SETTINGS.forceDarkMode() || Utils.isNightMode(act);
+    boolean isNightMode = MySettings.INSTANCE.forceDarkMode() || Utils.isNightMode(act);
     mBgColor = Utils.colorIntToRGB(Utils.getColor(act, android.R.attr.colorBackground), false);
     mTextColor = Utils.colorIntToRGB(isNightMode ? Color.WHITE : Color.BLACK, false);
     mLinkColor = Utils.colorIntToRGB(Utils.getColor(act, R.attr.accentColor), false);
@@ -65,7 +64,7 @@ public class HelpJsInterface {
   private static final float DEFAULT_IMG_WIDTH = 200f;
 
   private int calcImgMaxWidth() {
-    float fontSize = SETTINGS.getIntPref(R.string.pref_help_font_size_key);
+    float fontSize = MySettings.INSTANCE.getIntPref(R.string.pref_help_font_size_key);
     return Utils.dpToPx(DEFAULT_IMG_WIDTH * fontSize / DEFAULT_FONT_SIZE);
   }
 }

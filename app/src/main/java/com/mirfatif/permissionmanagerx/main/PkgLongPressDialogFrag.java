@@ -1,9 +1,5 @@
 package com.mirfatif.permissionmanagerx.main;
 
-import static com.mirfatif.permissionmanagerx.parser.PackageParser.PKG_PARSER;
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
-import static com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler.DAEMON_HANDLER;
-
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -24,6 +20,9 @@ import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.PkgLongPressDialogBinding;
 import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
 import com.mirfatif.permissionmanagerx.parser.Package;
+import com.mirfatif.permissionmanagerx.parser.PackageParser;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.ui.base.BottomSheetDialogFrag;
 import com.mirfatif.permissionmanagerx.util.Utils;
@@ -64,14 +63,14 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
       b.pkgNameV.setVisibility(View.VISIBLE);
     }
 
-    if (SETTINGS.canBeExcluded(mPkg)) {
+    if (MySettings.INSTANCE.canBeExcluded(mPkg)) {
       b.excludePkg.setOnClickListener(
           v -> {
             dismissAllowingStateLoss();
             Utils.runInBg(
                 () -> {
-                  SETTINGS.addPkgToExcludedApps(mPkg.getName());
-                  PKG_PARSER.removePackage(mPkg);
+                  MySettings.INSTANCE.addPkgToExcludedApps(mPkg.getName());
+                  PackageParser.INSTANCE.removePackage(mPkg);
                 });
           });
     } else {
@@ -124,7 +123,7 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
     if (mPkg == null) {
       return;
     }
-    if (!SETTINGS.isPrivDaemonAlive()) {
+    if (!MySettings.INSTANCE.isPrivDaemonAlive()) {
       Utils.logDaemonDead(TAG + ": setPackageEnabledState");
       ((MainActivity) mA).restartPrivDaemon(true, true);
       return;
@@ -133,7 +132,7 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
     boolean enabled = mPkg.isEnabled();
 
     String warn = null;
-    if (enabled && SETTINGS.getBoolPref(R.string.pref_main_warn_dang_change_enc_key)) {
+    if (enabled && MySettings.INSTANCE.getBoolPref(R.string.pref_main_warn_dang_change_enc_key)) {
       if (mPkg.isFrameworkApp()) {
         warn = Utils.getString(R.string.disable_pkg_warning, Utils.getString(R.string.framework));
       } else if (mPkg.isSystemApp()) {
@@ -154,7 +153,7 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
             .setNeutralButton(
                 R.string.do_not_remind,
                 (d, which) -> {
-                  SETTINGS.savePref(R.string.pref_main_warn_dang_change_enc_key, false);
+                  MySettings.INSTANCE.savePref(R.string.pref_main_warn_dang_change_enc_key, false);
                   Utils.runInBg(() -> setPackageEnabledState(mPkg, true));
                 })
             .setTitle(R.string.warning)
@@ -171,11 +170,11 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
       command = Commands.ENABLE_PACKAGE + " " + command;
     }
 
-    if (SETTINGS.isDebug()) {
+    if (MySettings.INSTANCE.isDebug()) {
       Util.debugLog(TAG, "setPkgEnabledState: sending command: " + command);
     }
-    DAEMON_HANDLER.sendRequest(command);
-    PKG_PARSER.updatePackage(pkg);
+    PrivDaemonHandler.INSTANCE.sendRequest(command);
+    PackageParser.INSTANCE.updatePackage(pkg);
   }
 
   private void openAppInfo() {
@@ -187,14 +186,14 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
       startActivity(
           new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
               .setData(Uri.parse("package:" + mPkg.getName())));
-    } else if (SETTINGS.isPrivDaemonAlive()) {
+    } else if (MySettings.INSTANCE.isPrivDaemonAlive()) {
       String cmd = Commands.OPEN_APP_INFO + " " + mPkg.getName() + " " + pkgUserId;
 
-      if (SETTINGS.isDebug()) {
+      if (MySettings.INSTANCE.isDebug()) {
         Util.debugLog(TAG, "openAppInfo: sending command: " + cmd);
       }
 
-      Utils.runInBg(() -> DAEMON_HANDLER.sendRequest(cmd));
+      Utils.runInBg(() -> PrivDaemonHandler.INSTANCE.sendRequest(cmd));
     } else {
       Utils.logDaemonDead(TAG + ": openAppInfo");
       ((MainActivity) mA).restartPrivDaemon(true, true);

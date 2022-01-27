@@ -5,9 +5,6 @@ import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import static android.text.style.DynamicDrawableSpan.ALIGN_BASELINE;
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
-import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.ADB_DAEMON;
-import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.ROOT_DAEMON;
 import static com.mirfatif.permissionmanagerx.util.UtilsFlavor.getAccentColor;
 
 import android.animation.LayoutTransition;
@@ -86,6 +83,7 @@ import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.Adb;
+import com.mirfatif.permissionmanagerx.privs.NativeDaemon;
 import com.mirfatif.permissionmanagerx.ui.base.DialogBg;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
@@ -390,7 +388,7 @@ public class Utils {
   }
 
   public static boolean setNightTheme(Activity activity) {
-    if (!SETTINGS.forceDarkMode()) {
+    if (!MySettings.INSTANCE.forceDarkMode()) {
       AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
       return false;
     }
@@ -491,7 +489,7 @@ public class Utils {
   }
 
   private static Locale getLocale() {
-    String lang = SETTINGS.getLocale();
+    String lang = MySettings.INSTANCE.getLocale();
     if (TextUtils.isEmpty(lang)) {
       return Resources.getSystem().getConfiguration().getLocales().get(0);
     } else {
@@ -599,7 +597,7 @@ public class Utils {
   }
 
   public static String getDeviceInfo() {
-    MySettings mySettings = SETTINGS;
+    MySettings mySettings = MySettings.INSTANCE;
     return "Version: "
         + BuildConfig.VERSION_NAME
         + "\nSDK: "
@@ -792,7 +790,7 @@ public class Utils {
   private static long daemonDeadLogTs = 0;
 
   public static void logDaemonDead(String tag) {
-    if (SETTINGS.isDebug() || System.currentTimeMillis() - daemonDeadLogTs > 1000) {
+    if (MySettings.INSTANCE.isDebug() || System.currentTimeMillis() - daemonDeadLogTs > 1000) {
       Log.w(tag, "Privileged daemon is not running");
       daemonDeadLogTs = System.currentTimeMillis();
     }
@@ -803,7 +801,7 @@ public class Utils {
   public static void writeCrashLog(String stackTrace, boolean isDaemon) {
     synchronized (CRASH_LOG_LOCK) {
       // Be ashamed of your performance, don't ask for feedback in near future
-      SETTINGS.setAskForFeedbackTs(System.currentTimeMillis());
+      MySettings.INSTANCE.setAskForFeedbackTs(System.currentTimeMillis());
 
       File logFile = new File(App.getContext().getExternalFilesDir(null), "PMX_crash.log");
       boolean append = true;
@@ -829,7 +827,7 @@ public class Utils {
   }
 
   private static void showCrashNotification(File logFile) {
-    if (!SETTINGS.shouldAskToSendCrashReport()) {
+    if (!MySettings.INSTANCE.shouldAskToSendCrashReport()) {
       return;
     }
 
@@ -894,7 +892,7 @@ public class Utils {
 
   @SuppressWarnings("UnusedReturnValue")
   public static boolean checkRootIfEnabled() {
-    if (!SETTINGS.isRootGranted()) {
+    if (!MySettings.INSTANCE.isRootGranted()) {
       return false;
     }
     boolean res = checkRoot();
@@ -905,8 +903,8 @@ public class Utils {
   }
 
   public static boolean checkRoot() {
-    boolean res = ROOT_DAEMON.isRunning();
-    if (SETTINGS.isDebug()) {
+    boolean res = NativeDaemon.INSTANCE_R.isRunning();
+    if (MySettings.INSTANCE.isDebug()) {
       Util.debugLog(TAG, "checkRoot: getting root privileges " + (res ? "succeeded" : "failed"));
     }
     return res;
@@ -914,22 +912,22 @@ public class Utils {
 
   @SuppressWarnings("UnusedReturnValue")
   public static boolean checkAdbIfEnabled() {
-    if (SETTINGS.isAdbConnected()) {
+    if (MySettings.INSTANCE.isAdbConnected()) {
       return checkAdb(true);
     }
     return false;
   }
 
   public static boolean checkAdb(boolean showToastOnFailure) {
-    boolean res = ADB_DAEMON.isRunning(showToastOnFailure);
-    if (SETTINGS.isDebug()) {
+    boolean res = NativeDaemon.INSTANCE_A.isRunning(showToastOnFailure);
+    if (MySettings.INSTANCE.isDebug()) {
       Util.debugLog(TAG, "checkAdb: connecting to ADB " + (res ? "succeeded" : "failed"));
     }
     return res;
   }
 
   public static String getSu() {
-    String path = SETTINGS.getSuExePath();
+    String path = MySettings.INSTANCE.getSuExePath();
     return path == null ? "su" : path;
   }
 }

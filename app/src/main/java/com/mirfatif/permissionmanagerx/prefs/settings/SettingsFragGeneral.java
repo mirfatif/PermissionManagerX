@@ -1,9 +1,5 @@
 package com.mirfatif.permissionmanagerx.prefs.settings;
 
-import static com.mirfatif.permissionmanagerx.parser.PackageParser.PKG_PARSER;
-import static com.mirfatif.permissionmanagerx.parser.SearchConstants.CONSTANTS;
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -15,6 +11,9 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.parser.PackageParser;
+import com.mirfatif.permissionmanagerx.parser.SearchConstants;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.util.Utils;
 
 @SuppressWarnings("UnusedDeclaration")
@@ -61,12 +60,12 @@ public class SettingsFragGeneral extends PreferenceFragmentCompat
   @Override
   public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     if (key.equals(getString(R.string.pref_settings_quick_scan_key))) {
-      PKG_PARSER.updatePackagesList();
+      PackageParser.INSTANCE.updatePackagesList();
     } else if (key.equals(getString(R.string.pref_settings_locale_key))) {
       App.setLocale();
-      CONSTANTS.recreate();
+      SearchConstants.INSTANCE.recreate();
       mA.recreate();
-      SETTINGS.recreateMainActivity();
+      MySettings.INSTANCE.recreateMainActivity();
     }
   }
 }

@@ -1,7 +1,5 @@
 package com.mirfatif.permissionmanagerx.main;
 
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
-
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -12,6 +10,7 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.databinding.ActivityMainBinding;
 import com.mirfatif.permissionmanagerx.main.FeedbackDialogFrag.FeedbackType;
 import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 
 class Feedback {
 
@@ -28,7 +27,7 @@ class Feedback {
   private boolean mFeedbackSwiped = false;
 
   void askForFeedback() {
-    if (!mFeedbackSwiped && SETTINGS.shouldAskForFeedback()) {
+    if (!mFeedbackSwiped && MySettings.INSTANCE.shouldAskForFeedback()) {
       mB.movCont.feedbackCont.setVisibility(View.VISIBLE);
     }
 
@@ -48,7 +47,7 @@ class Feedback {
   }
 
   private void showDialog(boolean isYes) {
-    FeedbackType type = isYes ? FeedbackType.POSITIVE : FeedbackType.NEGATIVE;
+    @FeedbackType int type = isYes ? FeedbackType.POSITIVE : FeedbackType.NEGATIVE;
     FeedbackDialogFrag.show(type, mA.getSupportFragmentManager());
     mB.movCont.feedbackCont.setVisibility(View.GONE);
   }

@@ -1,11 +1,6 @@
 package com.mirfatif.permissionmanagerx.main.fwk;
 
-import static com.mirfatif.permissionmanagerx.parser.PackageParser.PKG_PARSER;
 import static com.mirfatif.permissionmanagerx.prefs.MySettings.PERM_GET_APP_OPS_STATS;
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
-import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.ADB_DAEMON;
-import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.ROOT_DAEMON;
-import static com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler.DAEMON_HANDLER;
 import static com.mirfatif.permissionmanagerx.util.Utils.getQtyString;
 
 import android.content.Intent;
@@ -56,6 +51,8 @@ import com.mirfatif.permissionmanagerx.prefs.fwk.FilterSettingsActivity;
 import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
 import com.mirfatif.permissionmanagerx.prefs.settings.SearchSettingsFrag;
 import com.mirfatif.permissionmanagerx.prefs.settings.SettingsActivity;
+import com.mirfatif.permissionmanagerx.privs.NativeDaemon;
+import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.ui.HelpActivity;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
@@ -139,14 +136,14 @@ public class MainActivity extends BaseActivity {
         });
     setNavigationMenu();
 
-    SETTINGS.getPrefsChanged().observe(this, this::onPrefChanged);
+    MySettings.INSTANCE.getPrefsChanged().observe(this, this::onPrefChanged);
 
     mB.refreshLayout.setOnRefreshListener(
         () -> {
-          if (SETTINGS.isSearching()) {
+          if (MySettings.INSTANCE.isSearching()) {
             handleSearchQuery();
           } else {
-            PKG_PARSER.updatePackagesList();
+            PackageParser.INSTANCE.updatePackagesList();
           }
         });
 
@@ -176,14 +173,14 @@ public class MainActivity extends BaseActivity {
     if (mSearchView != null) {
       collapseSearchView();
     } else {
-      SETTINGS.setQueryText(null);
+      MySettings.INSTANCE.setQueryText(null);
     }
 
     mB.searchSettingsContainer.setOnClickListener(v -> hideSearchSettings());
 
     // Increment app launch count
     if (Intent.ACTION_MAIN.equals(action)) {
-      SETTINGS.plusAppLaunchCount();
+      MySettings.INSTANCE.plusAppLaunchCount();
     }
 
     mMainActivityFlavor.onCreated();
@@ -232,7 +229,7 @@ public class MainActivity extends BaseActivity {
   // Required for navigation drawer tap to work
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    if (SETTINGS.isDebug()) {
+    if (MySettings.INSTANCE.isDebug()) {
       Util.debugLog(TAG, "onOptionsItemSelected: " + item.getTitle());
     }
 
@@ -261,14 +258,14 @@ public class MainActivity extends BaseActivity {
   @Override
   public void onBackPressed() {
     if (mB != null && mB.getRoot().isDrawerOpen(GravityCompat.START)) {
-      if (SETTINGS.isDebug()) {
+      if (MySettings.INSTANCE.isDebug()) {
         Util.debugLog(TAG, "onBackPressed: closing drawer");
       }
       mB.getRoot().closeDrawer(GravityCompat.START, true);
       return;
     }
     if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
-      if (SETTINGS.isDebug()) {
+      if (MySettings.INSTANCE.isDebug()) {
         Util.debugLog(TAG, "onBackPressed: collapsing searchView");
       }
       collapseSearchView();
@@ -299,7 +296,7 @@ public class MainActivity extends BaseActivity {
       mMainActivityFlavor.onResumed();
     }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && mExited) {
-      PKG_PARSER.updatePackagesList();
+      PackageParser.INSTANCE.updatePackagesList();
     }
     mExited = false;
   }
@@ -341,7 +338,8 @@ public class MainActivity extends BaseActivity {
         builder.setNegativeButton(android.R.string.cancel, null);
       } else {
         builder
-            .setNeutralButton(R.string.do_not_remind, (d, which) -> SETTINGS.setPrivReminderOff())
+            .setNeutralButton(
+                R.string.do_not_remind, (d, which) -> MySettings.INSTANCE.setPrivReminderOff())
             .setNegativeButton(R.string.get_help, (d, which) -> HelpActivity.start(this));
       }
       return Utils.removeButtonPadding(builder.create());
@@ -403,11 +401,11 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onClick(Package pkg) {
-      if (SETTINGS.isDebug()) {
+      if (MySettings.INSTANCE.isDebug()) {
         Util.debugLog(TAG, "PkgClickListener: Package received: " + pkg.getLabel());
       }
       Intent intent = new Intent(App.getContext(), PackageActivity.class);
-      intent.putExtra(EXTRA_PKG_POSITION, PKG_PARSER.getPackagePosition(pkg));
+      intent.putExtra(EXTRA_PKG_POSITION, PackageParser.INSTANCE.getPackagePosition(pkg));
       startActivity(intent);
     }
 
@@ -428,15 +426,15 @@ public class MainActivity extends BaseActivity {
     if (mObserversSet) {
       if (updateList) {
         // Observers are already set, just update the package list.
-        PKG_PARSER.updatePackagesList();
+        PackageParser.INSTANCE.updatePackagesList();
       }
       return;
     }
 
-    PKG_PARSER.getProgressMax().observe(this, this::setMaxProgress);
-    PKG_PARSER.getProgressNow().observe(this, this::setNowProgress);
-    PKG_PARSER.getPackagesListLive().observe(this, this::packagesListReceived);
-    PKG_PARSER.getChangedPackage().observe(this, this::packageChanged);
+    PackageParser.INSTANCE.getProgressMax().observe(this, this::setMaxProgress);
+    PackageParser.INSTANCE.getProgressNow().observe(this, this::setNowProgress);
+    PackageParser.INSTANCE.getPackagesListLive().observe(this, this::packagesListReceived);
+    PackageParser.INSTANCE.getChangedPackage().observe(this, this::packageChanged);
 
     mObserversSet = true;
   }
@@ -452,7 +450,7 @@ public class MainActivity extends BaseActivity {
         mB.movCont.progMaxV.setText("");
         mB.movCont.progBarCont.setVisibility(View.VISIBLE);
       }
-      progressTextView.setText(PKG_PARSER.getProgressTextResId(progressMax));
+      progressTextView.setText(PackageParser.INSTANCE.getProgressTextResId(progressMax));
       return;
     }
 
@@ -488,7 +486,7 @@ public class MainActivity extends BaseActivity {
 
     if (progressNow == PackageParser.PKG_PROG_ENDS) {
       mMainActivityFlavor.onPackagesUpdated();
-      if (SETTINGS.isSearching()) {
+      if (MySettings.INSTANCE.isSearching()) {
         // Don't stop refreshing. We'll receive call later when search ends
         return;
       }
@@ -498,7 +496,7 @@ public class MainActivity extends BaseActivity {
         showPkgCount = false;
       }
     } else if (progressNow == PackageParser.SEARCH_ENDS) {
-      if (!SETTINGS.isSearching()) {
+      if (!MySettings.INSTANCE.isSearching()) {
         // Do not show pkg count when returning from search
         showPkgCount = false;
       }
@@ -508,7 +506,7 @@ public class MainActivity extends BaseActivity {
      mPackageAdapter.getItemCount() gives wrong value.
      In PackageParser, Packages LiveList must be updated before updating ProgressBars.
     */
-    int size = PKG_PARSER.getPkgCount();
+    int size = PackageParser.INSTANCE.getPkgCount();
 
     mB.refreshLayout.setRefreshing(false);
     if (showPkgCount || size == 0) {
@@ -519,11 +517,11 @@ public class MainActivity extends BaseActivity {
      Invalidate progress value so that on next
      Activity#onCreate(), the last value is ignored.
     */
-    PKG_PARSER.unsetProgress();
+    PackageParser.INSTANCE.unsetProgress();
   }
 
   private void packagesListReceived(List<Package> packages) {
-    if (SETTINGS.isDebug()) {
+    if (MySettings.INSTANCE.isDebug()) {
       Util.debugLog(TAG, "pkgListLiveObserver: " + packages.size() + " packages received");
     }
     synchronized (ON_DESTROY_LOCK) {
@@ -535,7 +533,7 @@ public class MainActivity extends BaseActivity {
   }
 
   private void packageChanged(Package pkg) {
-    if (SETTINGS.isDebug()) {
+    if (MySettings.INSTANCE.isDebug()) {
       Util.debugLog(TAG, "pkgChangedLiveObserver: Package updated: " + pkg.getLabel());
     }
     synchronized (ON_DESTROY_LOCK) {
@@ -557,8 +555,8 @@ public class MainActivity extends BaseActivity {
       if (mPackageAdapter != null) {
         boolean rep =
             mPackageAdapter.getItemCount() < mLayoutManager.findLastVisibleItemPosition() + 5;
-        PKG_PARSER.setRepeatUpdates(rep);
-        if (SETTINGS.isDebug()) {
+        PackageParser.INSTANCE.setRepeatUpdates(rep);
+        if (MySettings.INSTANCE.isDebug()) {
           Util.debugLog(TAG, "setRepeatUpdates: " + rep);
         }
       }
@@ -612,7 +610,7 @@ public class MainActivity extends BaseActivity {
         new OnQueryTextListener() {
           @Override
           public boolean onQueryTextSubmit(String query) {
-            if (SETTINGS.isDebug()) {
+            if (MySettings.INSTANCE.isDebug()) {
               Util.debugLog(TAG, "searchQueryTextSubmitted: " + query);
             }
             handleSearchQuery();
@@ -621,7 +619,7 @@ public class MainActivity extends BaseActivity {
 
           @Override
           public boolean onQueryTextChange(String newText) {
-            if (SETTINGS.isDebug()) {
+            if (MySettings.INSTANCE.isDebug()) {
               Util.debugLog(TAG, "searchQueryTextChanged: " + newText);
             }
             handleSearchQuery();
@@ -632,7 +630,7 @@ public class MainActivity extends BaseActivity {
     // Clear search query when no text is entered.
     mSearchView.setOnQueryTextFocusChangeListener(
         (v, hasFocus) -> {
-          if (SETTINGS.isDebug()) {
+          if (MySettings.INSTANCE.isDebug()) {
             Util.debugLog(TAG, "searchViewFocused: " + hasFocus);
           }
 
@@ -655,7 +653,7 @@ public class MainActivity extends BaseActivity {
   }
 
   private void collapseSearchView() {
-    if (SETTINGS.isDebug()) {
+    if (MySettings.INSTANCE.isDebug()) {
       Util.debugLog(TAG, "collapsing searchView");
     }
     mSearchView.onActionViewCollapsed();
@@ -690,25 +688,26 @@ public class MainActivity extends BaseActivity {
     }
 
     CharSequence queryText = mSearchView.getQuery();
-    boolean wasSearching = SETTINGS.isSearching();
+    boolean wasSearching = MySettings.INSTANCE.isSearching();
 
     /// Saving queryText to MySettings#mQueryText causes memory leak.
-    SETTINGS.setQueryText(queryText == null ? null : queryText.toString());
+    MySettings.INSTANCE.setQueryText(queryText == null ? null : queryText.toString());
 
-    if (!SETTINGS.isSearching() && !wasSearching) {
-      if (SETTINGS.isDebug()) {
+    if (!MySettings.INSTANCE.isSearching() && !wasSearching) {
+      if (MySettings.INSTANCE.isDebug()) {
         Util.debugLog(TAG, "handleSearchQuery: already empty text set, returning");
       }
       return;
     }
 
-    if (SETTINGS.isDebug()) {
+    if (MySettings.INSTANCE.isDebug()) {
       Util.debugLog(TAG, "handleSearchQuery: text set to: " + queryText);
     }
 
-    mB.refreshLayout.setRefreshing(!SETTINGS.isDeepSearchEnabled() || !SETTINGS.isSearching());
-    PKG_PARSER.newUpdateRequest();
-    PKG_PARSER.handleSearchQuery();
+    mB.refreshLayout.setRefreshing(
+        !MySettings.INSTANCE.isDeepSearchEnabled() || !MySettings.INSTANCE.isSearching());
+    PackageParser.INSTANCE.newUpdateRequest();
+    PackageParser.INSTANCE.handleSearchQuery();
   }
 
   //////////////////////////////////////////////////////////////////
@@ -724,17 +723,17 @@ public class MainActivity extends BaseActivity {
     }
 
     synchronized (START_DAEMON_LOCK) {
-      if (!SETTINGS.isPrivDaemonAlive()) {
-        if (SETTINGS.isDebug()) {
+      if (!MySettings.INSTANCE.isPrivDaemonAlive()) {
+        if (MySettings.INSTANCE.isDebug()) {
           Util.debugLog(TAG, "startPrivDaemon: daemon is dead");
         }
-        if (SETTINGS.isRootGranted() || SETTINGS.isAdbConnected()) {
+        if (MySettings.INSTANCE.isRootGranted() || MySettings.INSTANCE.isAdbConnected()) {
           Utils.runInFg(this, () -> mB.rndProgTextV.setText(R.string.starting_daemon));
 
-          Boolean res = DAEMON_HANDLER.startDaemon(preferRoot);
+          Boolean res = PrivDaemonHandler.INSTANCE.startDaemon(preferRoot);
           if (res == null) {
             showSnackBar(getString(R.string.daemon_logging_failed), 10000);
-          } else if (!res && !SETTINGS.isPrivDaemonAlive()) {
+          } else if (!res && !MySettings.INSTANCE.isPrivDaemonAlive()) {
             showSnackBar(getString(R.string.daemon_failed), 10000);
           }
         } else {
@@ -744,7 +743,7 @@ public class MainActivity extends BaseActivity {
             String tag = null;
             if (!isFirstRun) {
               tag = TAG_GRANT_ROOT_OR_ADB;
-            } else if (SETTINGS.shouldRemindMissingPrivileges()) {
+            } else if (MySettings.INSTANCE.shouldRemindMissingPrivileges()) {
               tag = TAG_PRIVS_REQ_FOR_DAEMON;
             }
             if (tag != null) {
@@ -762,7 +761,7 @@ public class MainActivity extends BaseActivity {
        Do not run through PackageParser unless privileged daemon
        is up or at least we have AppOps permission granted.
       */
-      if (SETTINGS.isPrivDaemonAlive() || SETTINGS.isAppOpsGranted()) {
+      if (MySettings.INSTANCE.isPrivDaemonAlive() || MySettings.INSTANCE.isAppOpsGranted()) {
         // Set observers and/or update package list.
         Utils.runInFg(this, () -> setLiveDataObservers(!isFirstRun));
       } else if (isFirstRun) {
@@ -779,8 +778,8 @@ public class MainActivity extends BaseActivity {
       return;
     }
 
-    if (SETTINGS.isPrivDaemonAlive()) {
-      DAEMON_HANDLER.sendRequest(Commands.SHUTDOWN);
+    if (MySettings.INSTANCE.isPrivDaemonAlive()) {
+      PrivDaemonHandler.INSTANCE.sendRequest(Commands.SHUTDOWN);
       SystemClock.sleep(1000); // Let the previous processes cleanup
     }
     startPrivDaemon(false, preferRoot, showDialog);
@@ -794,7 +793,7 @@ public class MainActivity extends BaseActivity {
   }
 
   private void checkAppOpsPerm() {
-    if (!SETTINGS.isAppOpsGranted() && SETTINGS.isPrivDaemonAlive()) {
+    if (!MySettings.INSTANCE.isAppOpsGranted() && MySettings.INSTANCE.isPrivDaemonAlive()) {
       String command =
           Commands.GRANT_PERMISSION
               + " "
@@ -804,12 +803,12 @@ public class MainActivity extends BaseActivity {
               + " "
               + Utils.getUserId();
 
-      if (SETTINGS.isDebug()) {
+      if (MySettings.INSTANCE.isDebug()) {
         Util.debugLog(TAG, "checkAppOpsPerm: sending command: " + command);
       }
-      DAEMON_HANDLER.sendRequest(command);
+      PrivDaemonHandler.INSTANCE.sendRequest(command);
 
-      if (!SETTINGS.isAppOpsGranted()) {
+      if (!MySettings.INSTANCE.isAppOpsGranted()) {
         Log.e(TAG, "checkAppOpsPerm: granting " + PERM_GET_APP_OPS_STATS + " failed");
         String text = getString(R.string.granting_permission_failed, PERM_GET_APP_OPS_STATS);
         showSnackBar(text, 10000);
@@ -822,7 +821,7 @@ public class MainActivity extends BaseActivity {
   //////////////////////////////////////////////////////////////////
 
   private void setNavigationMenu() {
-    if (SETTINGS.isDebug()) {
+    if (MySettings.INSTANCE.isDebug()) {
       Util.debugLog(TAG, "setNavigationMenu() called");
     }
 
@@ -841,9 +840,9 @@ public class MainActivity extends BaseActivity {
     }
     Menu menu = mB.navV.getMenu();
     ((CheckBox) menu.findItem(R.id.action_root).getActionView())
-        .setChecked(SETTINGS.isRootGranted());
+        .setChecked(MySettings.INSTANCE.isRootGranted());
     ((CheckBox) menu.findItem(R.id.action_adb).getActionView())
-        .setChecked(SETTINGS.isAdbConnected());
+        .setChecked(MySettings.INSTANCE.isAdbConnected());
   }
 
   private void setCheckBoxListeners() {
@@ -858,7 +857,7 @@ public class MainActivity extends BaseActivity {
   }
 
   private boolean handleNavigationItemSelected(MenuItem item) {
-    if (SETTINGS.isDebug()) {
+    if (MySettings.INSTANCE.isDebug()) {
       Util.debugLog(TAG, "handleNavigationItemSelected: " + item.getTitle());
     }
     View view = item.getActionView();
@@ -870,7 +869,7 @@ public class MainActivity extends BaseActivity {
   }
 
   private boolean handleNavigationItemChecked(MenuItem item) {
-    if (SETTINGS.isDebug()) {
+    if (MySettings.INSTANCE.isDebug()) {
       Util.debugLog(TAG, "handleNavigationItemChecked: " + item.getTitle());
     }
     mB.getRoot().closeDrawer(GravityCompat.START, true);
@@ -939,8 +938,8 @@ public class MainActivity extends BaseActivity {
             this,
             () -> {
               if (!checkBox.isChecked()) {
-                SETTINGS.setRootGranted(false);
-                ROOT_DAEMON.stopDaemon();
+                MySettings.INSTANCE.setRootGranted(false);
+                NativeDaemon.INSTANCE_R.stopDaemon();
                 restartPrivDaemon(true, false);
                 if (mMainActivityFlavor != null) {
                   mMainActivityFlavor.onRootStopped();
@@ -969,8 +968,8 @@ public class MainActivity extends BaseActivity {
             this,
             () -> {
               if (!checkBox.isChecked()) {
-                SETTINGS.setAdbConnected(false);
-                ADB_DAEMON.stopDaemon();
+                MySettings.INSTANCE.setAdbConnected(false);
+                NativeDaemon.INSTANCE_A.stopDaemon();
                 restartPrivDaemon(true, false);
                 if (mMainActivityFlavor != null) {
                   mMainActivityFlavor.onAdbStopped();

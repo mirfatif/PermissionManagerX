@@ -1,7 +1,5 @@
 package com.mirfatif.permissionmanagerx.prefs.settings;
 
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -12,6 +10,7 @@ import androidx.preference.ListPreference.SimpleSummaryProvider;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.util.Utils;
 
 @SuppressWarnings("UnusedDeclaration")
@@ -61,7 +60,7 @@ public class SettingsFragTheme extends PreferenceFragmentCompat
     if (key.equals(getString(R.string.pref_settings_theme_color_key))
         || key.equals(getString(R.string.pref_settings_dark_theme_key))) {
       mA.recreate();
-      SETTINGS.recreateMainActivity();
+      MySettings.INSTANCE.recreateMainActivity();
     }
   }
 }

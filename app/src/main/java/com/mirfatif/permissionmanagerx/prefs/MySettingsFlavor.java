@@ -4,7 +4,7 @@ import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.Permission;
 
 public enum MySettingsFlavor {
-  SETTINGS_FLAVOR;
+  INSTANCE;
 
   public Boolean isPkgInstallDate() {
     return null;

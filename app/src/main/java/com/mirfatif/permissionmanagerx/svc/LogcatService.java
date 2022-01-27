@@ -1,7 +1,5 @@
 package com.mirfatif.permissionmanagerx.svc;
 
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
-import static com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler.DAEMON_HANDLER;
 import static com.mirfatif.permissionmanagerx.util.Utils.PI_FLAGS;
 
 import android.app.NotificationChannel;
@@ -23,7 +21,9 @@ import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.Adb;
+import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
 import com.mirfatif.privtasks.Commands;
@@ -158,10 +158,10 @@ public class LogcatService extends Service {
 
   private void stopLogging(boolean sendCmd) {
     synchronized (LOG_WRITER_LOCK) {
-      if (!SETTINGS.isDebug()) {
+      if (!MySettings.INSTANCE.isDebug()) {
         return;
       }
-      SETTINGS.setDebugLog(false);
+      MySettings.INSTANCE.setDebugLog(false);
       if (sLogcatWriter != null) {
         sLogcatWriter.close();
       }
@@ -171,9 +171,9 @@ public class LogcatService extends Service {
         return;
       }
 
-      if (SETTINGS.isPrivDaemonAlive()) {
+      if (MySettings.INSTANCE.isPrivDaemonAlive()) {
         // Stop daemon logging
-        DAEMON_HANDLER.sendRequest(Commands.STOP_LOGGING);
+        PrivDaemonHandler.INSTANCE.sendRequest(Commands.STOP_LOGGING);
       }
       // Stop app logging
       Log.i(TAG, "stopLogging: please " + Commands.STOP_LOGGING);
@@ -211,13 +211,13 @@ public class LogcatService extends Service {
       return;
     }
 
-    SETTINGS.setDebugLog(true);
+    MySettings.INSTANCE.setDebugLog(true);
     writeToLogFile(Utils.getDeviceInfo());
     writeToLogFile("=====================================");
 
-    if (SETTINGS.isPrivDaemonAlive()) {
+    if (MySettings.INSTANCE.isPrivDaemonAlive()) {
       // We'll start it in MainActivity to log all of the start messages.
-      DAEMON_HANDLER.sendRequest(Commands.SHUTDOWN);
+      PrivDaemonHandler.INSTANCE.sendRequest(Commands.SHUTDOWN);
     }
 
     Utils.runCommand(TAG + ": doLogging", "logcat", "-c");
@@ -287,7 +287,7 @@ public class LogcatService extends Service {
       if (sLogcatWriter == null) {
         return;
       }
-      if (!SETTINGS.isDebug()) {
+      if (!MySettings.INSTANCE.isDebug()) {
         return;
       }
       sLogcatWriter.println(line);

@@ -1,7 +1,5 @@
 package com.mirfatif.permissionmanagerx.ui;
 
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle.State;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Util;
@@ -83,7 +82,7 @@ public class AlertDialogFragment extends AppCompatDialogFragment {
         manager.beginTransaction().remove(fragment).commitNowAllowingStateLoss();
       }
 
-      if (SETTINGS.isDebug()) {
+      if (MySettings.INSTANCE.isDebug()) {
         Util.debugLog(TAG, "Showing " + tag);
       }
 

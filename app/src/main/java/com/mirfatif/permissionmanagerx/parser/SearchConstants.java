@@ -5,7 +5,7 @@ import static com.mirfatif.permissionmanagerx.util.Utils.getString;
 import com.mirfatif.permissionmanagerx.R;
 
 public enum SearchConstants {
-  CONSTANTS;
+  INSTANCE;
 
   SearchConstants() {
     recreate();

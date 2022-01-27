@@ -1,6 +1,5 @@
 package com.mirfatif.permissionmanagerx.prefs.settings;
 
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
 import static com.mirfatif.permissionmanagerx.util.Utils.PI_FLAGS;
 import static com.mirfatif.permissionmanagerx.util.Utils.getString;
 
@@ -18,6 +17,7 @@ import androidx.core.app.NotificationManagerCompat;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
 import java.io.BufferedReader;
@@ -40,7 +40,7 @@ public class AppUpdate {
   private String mVersion, mUpdateUrl;
 
   public Boolean check(boolean notify) {
-    if (notify && !SETTINGS.shouldCheckForUpdates()) {
+    if (notify && !MySettings.INSTANCE.shouldCheckForUpdates()) {
       return null;
     }
 
@@ -65,7 +65,7 @@ public class AppUpdate {
         }
         if (notify) {
           showNotification();
-          SETTINGS.setCheckForUpdatesTs(System.currentTimeMillis());
+          MySettings.INSTANCE.setCheckForUpdatesTs(System.currentTimeMillis());
         }
         return true;
       }

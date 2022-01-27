@@ -1,6 +1,5 @@
 package com.mirfatif.permissionmanagerx.prefs;
 
-import static com.mirfatif.permissionmanagerx.parser.AppOpsParser.APP_OPS_PARSER;
 import static com.mirfatif.permissionmanagerx.util.Utils.getString;
 
 import android.annotation.SuppressLint;
@@ -23,6 +22,7 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
 import com.mirfatif.permissionmanagerx.annot.ToDo;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.Permission;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDao;
@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 public enum MySettings {
-  SETTINGS;
+  INSTANCE;
 
   private static final String TAG = "MySettings";
 
@@ -791,7 +791,7 @@ public enum MySettings {
     }
 
     // Let's remove AppOps not on this Android version
-    List<String> appOpsList = APP_OPS_PARSER.getAppOpsList();
+    List<String> appOpsList = AppOpsParser.INSTANCE.getAppOpsList();
     mExtraAppOps = new HashSet<>();
     for (String extraAppOp : extraAppOps) {
       // Necessarily build mExtraAppOps here even with excludeAppOpsPerms(). Otherwise on

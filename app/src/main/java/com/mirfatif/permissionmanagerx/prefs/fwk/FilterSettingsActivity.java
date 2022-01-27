@@ -1,8 +1,5 @@
 package com.mirfatif.permissionmanagerx.prefs.fwk;
 
-import static com.mirfatif.permissionmanagerx.parser.PackageParser.PKG_PARSER;
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
-
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -15,7 +12,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.databinding.ActivityFragmentContainerBinding;
+import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.prefs.FilterSettingsFragment;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
@@ -44,7 +43,7 @@ public class FilterSettingsActivity extends BaseActivity {
 
     mB.excFiltersMasterSwitch.setVisibility(View.VISIBLE);
 
-    if (SETTINGS.getExcFiltersEnabled()) {
+    if (MySettings.INSTANCE.getExcFiltersEnabled()) {
       mB.excFiltersMasterSwitch.setChecked(true);
       addFrag(savedInstanceState);
     }
@@ -54,14 +53,14 @@ public class FilterSettingsActivity extends BaseActivity {
         v -> {
           if (mB.excFiltersMasterSwitch.isChecked()) {
             // This must be set before setting fragment. Or the whole settings are cleared.
-            SETTINGS.setExcFiltersEnabled(true);
+            MySettings.INSTANCE.setExcFiltersEnabled(true);
             addFrag(savedInstanceState);
           } else {
             removeFrag();
             // This must be set after removing fragment. Or the whole settings are cleared.
-            SETTINGS.setExcFiltersEnabled(false);
+            MySettings.INSTANCE.setExcFiltersEnabled(false);
           }
-          PKG_PARSER.updatePackagesList();
+          PackageParser.INSTANCE.updatePackagesList();
         });
   }
 
@@ -91,16 +90,18 @@ public class FilterSettingsActivity extends BaseActivity {
     if (VERSION.SDK_INT >= VERSION_CODES.P) {
       menu.setGroupDividerEnabled(true);
     }
-    menu.findItem(R.id.action_clear_excluded_apps).setEnabled(SETTINGS.getExcludedAppsCount() != 0);
+    menu.findItem(R.id.action_clear_excluded_apps)
+        .setEnabled(MySettings.INSTANCE.getExcludedAppsCount() != 0);
     menu.findItem(R.id.action_clear_excluded_perms)
-        .setEnabled(SETTINGS.getExcludedPermsCount() != 0);
-    menu.findItem(R.id.action_clear_extra_app_ops).setEnabled(SETTINGS.getExtraAppOpsCount() != 0);
+        .setEnabled(MySettings.INSTANCE.getExcludedPermsCount() != 0);
+    menu.findItem(R.id.action_clear_extra_app_ops)
+        .setEnabled(MySettings.INSTANCE.getExtraAppOpsCount() != 0);
     return true;
   }
 
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
-    boolean filtersEnabled = SETTINGS.getExcFiltersEnabled();
+    boolean filtersEnabled = MySettings.INSTANCE.getExcFiltersEnabled();
     menu.findItem(R.id.action_reset_defaults).setVisible(filtersEnabled);
     menu.findItem(R.id.action_clear_excluded_apps).setVisible(filtersEnabled);
     menu.findItem(R.id.action_clear_excluded_perms).setVisible(filtersEnabled);
@@ -114,7 +115,7 @@ public class FilterSettingsActivity extends BaseActivity {
   */
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    if (SETTINGS.isDebug()) {
+    if (MySettings.INSTANCE.isDebug()) {
       Util.debugLog(TAG, "onOptionsItemSelected: " + item.getTitle());
     }
 
@@ -155,7 +156,7 @@ public class FilterSettingsActivity extends BaseActivity {
               R.string.yes,
               (dialogInterface, i) -> {
                 // Clear existing values
-                Utils.runInBg(SETTINGS::resetToDefaults);
+                Utils.runInBg(MySettings.INSTANCE::resetToDefaults);
               })
           .setNegativeButton(R.string.no, null)
           .setTitle(R.string.filter_settings)
@@ -165,7 +166,8 @@ public class FilterSettingsActivity extends BaseActivity {
 
     if (TAG_CLEAR_EXCLUDED_APPS.equals(tag)) {
       return new Builder(this)
-          .setPositiveButton(R.string.yes, (dialogInterface, i) -> SETTINGS.clearExcludedAppsList())
+          .setPositiveButton(
+              R.string.yes, (dialogInterface, i) -> MySettings.INSTANCE.clearExcludedAppsList())
           .setNegativeButton(R.string.no, null)
           .setTitle(R.string.filter_settings)
           .setMessage(R.string.filter_settings_clear_apps_confirmation)
@@ -175,7 +177,7 @@ public class FilterSettingsActivity extends BaseActivity {
     if (TAG_CLEAR_EXCLUDED_PERMS.equals(tag)) {
       return new Builder(this)
           .setPositiveButton(
-              R.string.yes, (dialogInterface, i) -> SETTINGS.clearExcludedPermsList())
+              R.string.yes, (dialogInterface, i) -> MySettings.INSTANCE.clearExcludedPermsList())
           .setNegativeButton(R.string.no, null)
           .setTitle(R.string.filter_settings)
           .setMessage(R.string.filter_settings_clear_perms_confirmation)
@@ -184,7 +186,8 @@ public class FilterSettingsActivity extends BaseActivity {
 
     if (TAG_CLEAR_EXTRA_APP_OPS.equals(tag)) {
       return new Builder(this)
-          .setPositiveButton(R.string.yes, (dialogInterface, i) -> SETTINGS.clearExtraAppOpsList())
+          .setPositiveButton(
+              R.string.yes, (dialogInterface, i) -> MySettings.INSTANCE.clearExtraAppOpsList())
           .setNegativeButton(R.string.no, null)
           .setTitle(R.string.filter_settings)
           .setMessage(R.string.filter_settings_clear_app_ops_confirmation)
