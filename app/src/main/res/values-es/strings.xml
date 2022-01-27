@@ -29,7 +29,6 @@
   <string name="settings_menu_item" maxLength="15">Ajustes</string>
   <string name="filter_menu_item" maxLength="15">Filtros de exclusión</string>
   <string name="root_menu_item" maxLength="15">Acceso Root</string>
-  <string name="adb_menu_item" maxLength="15">Consola ADB</string>
   <string name="backup_restore_menu_item" maxLength="15">Respaldar / Restaurar</string>
   <string name="help_menu_item" maxLength="15">Ayuda</string>
   <string name="donate_menu_item" maxLength="15">Donar</string>
@@ -136,8 +135,8 @@
   <string name="set_references" maxLength="15">Establecer Referencias</string>
   <string name="set_references_confirmation">¿Establecer todos los estados actuales de permisos como referencias?</string>
   <!-- MainActivity Dialogs -->
-  <string name="enable_app">Habilitar app</string>
-  <string name="disable_app">Deshabilitar app</string>
+  <string name="enable_app" maxLength="15">Habilitar app</string>
+  <string name="disable_app" maxLength="15">Deshabilitar app</string>
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">Algo salió mal</string>
   <string name="change_perms_warning" comment="'system' or 'framework'">Cambiar los permisos de una aplicación de %1$s es una acción peligrosa. En el peor de los casos el sistema Android podría colapsar.\n¿Seguro que quieres continuar?</string>
@@ -201,8 +200,6 @@
   <string name="source" maxLength="15">Código fuente</string>
   <string name="email" maxLength="15">Correo Electrónico</string>
   <string name="telegram_group" maxLength="15">Grupo de Telegram</string>
-  <string name="no_email_app_installed" maxLength="20">No hay aplicación de correo instalada</string>
-  <string name="no_browser_installed" maxLength="20">"No hay navegador web instalado"</string>
   <string name="collect_logs" maxLength="15">Recolectar Registros</string>
   <string name="collect_logs_summary" maxLength="20">Guardar archivo de registro detallado</string>
   <string name="report_issues" maxLength="15">Reportar Problemas</string>
@@ -234,6 +231,9 @@
   <string name="op_to_name">Op A Nombre</string>
   <string name="op_num_consistency">Consistencia de Números Op</string>
   <string name="permissions">Permisos</string>
+  <!-- ActivityNotFoundException -->
+  <string name="no_email_app_installed" maxLength="20">No hay aplicación de correo instalada</string>
+  <string name="no_browser_installed" maxLength="20">"No hay navegador web instalado"</string>
   <!-- Donate -->
   <string name="send_bitcoin">Enviar Bitcoin</string>
   <string name="no_bitcoin_app_installed">"Aplicación de Cartera Bitcoin no encontrada"</string>
@@ -251,7 +251,7 @@
   <string name="outdated_web_view" maxLength="20">WebView Obsoleto</string>
   <!-- DaemonCmdRcvSvc: Daemon return messages -->
   <string name="daemon_listen_on_loopback_failed" maxLength="20">Daemon falló al escuchar 127.0.0.1</string>
-  <string name="daemon_establish_connection_failed">Daemon falló al establecer conexión con el cliente</string>
+  <string name="daemon_establish_connection_failed" maxLength="20">Daemon falló al establecer conexión con el cliente</string>
   <string name="daemon_wrong_args_received" maxLength="20">Argumentos erróneos</string>
   <string name="daemon_set_app_ops_mode_failed" maxLength="20">Establecimiento del modo AppOps fallido</string>
   <string name="daemon_reset_app_ops_failed" maxLength="20">Restablecimiento de Appops fallido</string>

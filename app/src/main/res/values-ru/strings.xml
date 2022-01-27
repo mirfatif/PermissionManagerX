@@ -31,7 +31,6 @@
   <string name="settings_menu_item" maxLength="15">Настройки</string>
   <string name="filter_menu_item" maxLength="15">Фильтры исключения</string>
   <string name="root_menu_item" maxLength="15">Root доступ</string>
-  <string name="adb_menu_item" maxLength="15">Оболочка ADB</string>
   <string name="backup_restore_menu_item" maxLength="15">Бэкап / восстановление</string>
   <string name="help_menu_item" maxLength="15">Справка</string>
   <string name="donate_menu_item" maxLength="15">Пожертвование</string>
@@ -65,7 +64,7 @@
   <string name="starting_daemon" maxLength="15">Запуск демона</string>
   <string name="checking_root_access" maxLength="15">Проверка root-доступа</string>
   <string name="checking_adb_access" maxLength="15">Проверка доступа ADB</string>
-  <string name="missing_privileges">Отсутствуют привилегии</string>
+  <string name="missing_privileges" maxLength="15">Отсутствуют привилегии</string>
   <string name="root_granted" maxLength="20">Root предоставлен</string>
   <string name="getting_root_fail" maxLength="20">Сбой получения root-прав</string>
   <string name="getting_root_fail_long" maxLength="20">Не удалось получить root-права. У вас есть root-доступ?</string>
@@ -156,13 +155,13 @@
   <string name="set_references" maxLength="15">Установить целевые значения</string>
   <string name="set_references_confirmation">Установить все текущие состояния разрешений в качестве целевых?</string>
   <!-- MainActivity Dialogs -->
-  <string name="exclude_app_from_visible_list">Скрыть приложение из списка</string>
-  <string name="enable_app">Разморозка приложения</string>
-  <string name="disable_app">Заморозка приложения</string>
-  <string name="open_pkg_info">Открыть сведения о приложении</string>
-  <string name="find_pkg_process">Найти процесс приложения</string>
-  <string name="install">Установить</string>
-  <string name="wrun_not_installed">WhatsRunning не установлено</string>
+  <string name="exclude_app_from_visible_list" maxLength="15">Скрыть приложение из списка</string>
+  <string name="enable_app" maxLength="15">Разморозка приложения</string>
+  <string name="disable_app" maxLength="15">Заморозка приложения</string>
+  <string name="open_pkg_info" maxLength="15">Открыть сведения о приложении</string>
+  <string name="find_pkg_process" maxLength="15">Найти процесс приложения</string>
+  <string name="install" maxLength="10">Установить</string>
+  <string name="wrun_not_installed" maxLength="20">WhatsRunning не установлено</string>
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">Что-то пошло не так</string>
   <string name="change_perms_warning" comment="'system' or 'framework'">Изменение разрешений %1$s приложения — потенциально опасное действие вплоть до сбоя системы Android.\nВы уверены, что хотите продолжить?</string>
@@ -175,10 +174,10 @@
     <item quantity="other">Это разрешение в режиме UID. Его изменение затронет работу %1$d других пакетов.</item>
   </plurals>
   <string name="exclude_perm_from_list">Скрыть разрешения из списка</string>
-  <string name="set_perm_state_reference"><![CDATA[Установить <b><i>%1$s</i></b> как целевое значение]]></string>
-  <string name="set_reference">Установить целевые значения</string>
-  <string name="clear_reference">Очистить целевые значения</string>
-  <string name="no_action_available">Действия недоступны</string>
+  <string name="set_perm_state_reference" maxLength="10"><![CDATA[Установить <b><i>%1$s</i></b> как целевое значение]]></string>
+  <string name="set_reference" maxLength="15">Установить целевые значения</string>
+  <string name="clear_reference" maxLength="15">Очистить целевые значения</string>
+  <string name="no_action_available" maxLength="20">Действия недоступны</string>
   <plurals name="count_permissions_filtered_out">
     <item quantity="one">Отфильтровано %1$d разрешение</item>
     <item quantity="few">Отфильтровано %1$d разрешения</item>
@@ -240,8 +239,6 @@
   <string name="source" maxLength="15">Исходный код</string>
   <string name="email" maxLength="15">Почта</string>
   <string name="telegram_group" maxLength="15">Группа в Telegram</string>
-  <string name="no_email_app_installed" maxLength="20">Почтовая программа не установлена</string>
-  <string name="no_browser_installed" maxLength="20">"Веб-обозреватель не установлен"</string>
   <string name="collect_logs" maxLength="15">Сбор логов</string>
   <string name="collect_logs_summary" maxLength="20">Сохранить подробный лог в файл</string>
   <string name="report_issues" maxLength="15">Сообщить о проблемах</string>
@@ -285,6 +282,9 @@
   <string name="op_to_name">Op к имени</string>
   <string name="op_num_consistency">Последовательность номеров Op</string>
   <string name="permissions">Разрешения</string>
+  <!-- ActivityNotFoundException -->
+  <string name="no_email_app_installed" maxLength="20">Почтовая программа не установлена</string>
+  <string name="no_browser_installed" maxLength="20">"Веб-обозреватель не установлен"</string>
   <!-- Donate -->
   <string name="send_bitcoin">Отправить биткойны</string>
   <string name="no_bitcoin_app_installed">"Не найдено приложение Биткоин-кошелька"</string>
@@ -305,7 +305,7 @@
   <string name="outdated_web_view" maxLength="20">WebView устарел</string>
   <!-- DaemonCmdRcvSvc: Daemon return messages -->
   <string name="daemon_listen_on_loopback_failed" maxLength="20">Демон не смог прослушать 127.0.0.1</string>
-  <string name="daemon_establish_connection_failed">Демону не удалось установить связь с клиентом</string>
+  <string name="daemon_establish_connection_failed" maxLength="20">Демону не удалось установить связь с клиентом</string>
   <string name="daemon_wrong_args_received" maxLength="20">Неверные значения</string>
   <string name="daemon_set_app_ops_mode_failed" maxLength="20">Сбой установки режима AppOps</string>
   <string name="daemon_reset_app_ops_failed" maxLength="20">Сбой сброса AppOps</string>

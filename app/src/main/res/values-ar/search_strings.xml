@@ -9,6 +9,7 @@
   <string name="prot_lvl_normal">عادي</string>
   <string name="prot_lvl_dangerous">خطير</string>
   <string name="prot_lvl_signature">التوقيع</string>
+  <string name="prot_lvl_internal">الداخلية</string>
   <string name="prot_lvl_app_ops">خيارات التطبيق</string>
   <string name="prot_lvl_development">التطوير</string>
   <string name="prot_lvl_privileged">امتياز</string>

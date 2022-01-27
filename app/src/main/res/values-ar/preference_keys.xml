@@ -9,9 +9,9 @@
        - Only preference key names not ending with "_enc_key" are restored from backup file. -->
   <!-- MainActivity Preferences -->
   <!-- MainActivity Preferences corresponding to default values -->
-  <string name="pref_main_deep_search_title">بحث عميق</string>
+  <string name="pref_main_deep_search_title" maxLength="20">بحث عميق</string>
   <string name="pref_main_deep_search_summary">القيام بالبحث في قائمة الأذونات بدلاً من قائمة التطبيقات</string>
-  <string name="pref_main_case_sensitive_search_title">حساسية حالة الأحرف</string>
+  <string name="pref_main_case_sensitive_search_title" maxLength="20">حساسية حالة الأحرف</string>
   <string name="pref_main_case_sensitive_search_summary">مطابقة السلسلة مع نفس الحالة فقط</string>
   <!-- PreferencesActivity packages titles, keys and defaults -->
   <string name="pref_filter_packages_cat_title" maxLength="20">الحزم</string>
@@ -43,6 +43,7 @@
   <string name="pref_filter_show_extra_app_ops_title" maxLength="20">إظهار اذونات التطبيقات الإضافية، لم يتم استبعادها أبدا</string>
   <string name="pref_filter_extra_appops_title" maxLength="20">المزيد من قائمة اذونات التطبيقات</string>
   <!-- SettingsActivity -->
+  <string name="pref_settings_general_cat_title">إعدادات عامة</string>
   <string name="pref_settings_check_for_updates_title" maxLength="20">التحقق من وجود تحديثات</string>
   <string name="pref_settings_check_for_updates_summary">إظهار إشعار عندما يتوفر إصدار جديد</string>
   <string name="pref_settings_privileges_reminder_title" maxLength="20">التذكير بالامتيازات المفقودة</string>
@@ -52,6 +53,10 @@
   <string name="pref_settings_special_search_title" maxLength="20">بحث معقد</string>
   <string name="pref_settings_special_search_summary">استخدم المعلمات و (&amp;) أو (&lt;unk&gt;) و لا (!) في البحث عن الجمع بين الاستفسارات</string>
   <string name="pref_settings_locale_title" maxLength="20">لغة التطبيق</string>
+  <string name="pref_settings_theming_cat_title">السمة</string>
+  <string name="pref_settings_theme_color_title">لون السمة</string>
+  <string name="pref_settings_search_suggestions_count_title1">اقتراحات البحث</string>
+  <string name="pref_settings_search_suggestions_count_summary">اقتراح الحزمة، الأذونات، كلمات مفتاحية خاصة إلخ.</string>
   <!-- HelpActivity -->
   <!-- PackageActivity -->
 </resources>

@@ -32,8 +32,7 @@
   <string name="search_menu_item" maxLength="15">بحث</string>
   <string name="settings_menu_item" maxLength="15">الاعدادات</string>
   <string name="filter_menu_item" maxLength="15">مرشحات الاستبعاد</string>
-  <string name="root_menu_item" maxLength="15">الوصول إلى الجذر</string>
-  <string name="adb_menu_item" maxLength="15">صدفة ADB</string>
+  <string name="root_menu_item" maxLength="15">الوصول إلى الروت</string>
   <string name="backup_restore_menu_item" maxLength="15">النسخ الاحتياطي/الاستعادة</string>
   <string name="help_menu_item" maxLength="15">تعليمات</string>
   <string name="donate_menu_item" maxLength="15">تبرّع</string>
@@ -67,7 +66,7 @@
   <string name="starting_daemon" maxLength="15">بدء تشغيل دايمون</string>
   <string name="checking_root_access" maxLength="15">التحقق من صلاحيات الجذر</string>
   <string name="checking_adb_access" maxLength="15">التحقق من الوصول إلى ADB</string>
-  <string name="missing_privileges">امتيازات مفقودة</string>
+  <string name="missing_privileges" maxLength="15">امتيازات مفقودة</string>
   <string name="root_granted" maxLength="20">تم منح الروت</string>
   <string name="getting_root_fail" maxLength="20">فشل الحصول على امتيازات الجذر</string>
   <string name="getting_root_fail_long" maxLength="20">فشل الحصول على امتيازات الجذر. هل أنت متجذر؟</string>
@@ -166,9 +165,13 @@
   <string name="set_references" maxLength="15">تعيين المراجع</string>
   <string name="set_references_confirmation">تعيين كافة حالات الصلاحيات الحالية كمراجع؟</string>
   <!-- MainActivity Dialogs -->
-  <string name="enable_app">تمكين التطبيق</string>
-  <string name="disable_app">تعطيل التطبيق</string>
-  <string name="install">تثبيت</string>
+  <string name="exclude_app_from_visible_list" maxLength="15">إخفاء التطبيق من القائمة</string>
+  <string name="enable_app" maxLength="15">تمكين التطبيق</string>
+  <string name="disable_app" maxLength="15">تعطيل التطبيق</string>
+  <string name="open_pkg_info" maxLength="15">فتح معلومات التطبيق</string>
+  <string name="find_pkg_process" maxLength="15">العثور على عملية التطبيق</string>
+  <string name="install" maxLength="10">تثبيت</string>
+  <string name="wrun_not_installed" maxLength="20">WhatsRunning غير مثبت</string>
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">لقد حدث خطأ ما</string>
   <string name="change_perms_warning" comment="'system' or 'framework'">تغيير أذونات تطبيق %1$s إجراء خطير. في أسوأ سيناريو نظام أندرويد قد يتعطل.\nهل أنت متأكد تريد المتابعة؟</string>
@@ -183,9 +186,10 @@
     <item quantity="other">هذا هو تطبيق وضع UID. تغييره يؤثر أيضًا على %1$d حزم أخرى.</item>
   </plurals>
   <string name="exclude_perm_from_list">إخفاء الصلاحيّة من القائمة</string>
-  <string name="set_reference">تعيين مرجع</string>
-  <string name="clear_reference">مسح المرجع</string>
-  <string name="no_action_available">لا يوجد إجراء متاح</string>
+  <string name="set_perm_state_reference" maxLength="10"><![CDATA[تعيين <b><i>%1$s</i></b> كمرجع]]></string>
+  <string name="set_reference" maxLength="15">تعيين مرجع</string>
+  <string name="clear_reference" maxLength="15">مسح المرجع</string>
+  <string name="no_action_available" maxLength="20">لا يوجد إجراء متاح</string>
   <plurals name="count_permissions_filtered_out">
     <item quantity="zero">تم تصفية الإذن %1$d</item>
     <item quantity="one">تم تصفية الإذن %1$d</item>
@@ -234,7 +238,6 @@
   <string name="locale_ru">الروسية</string>
   <string name="locale_es">الإسبانية</string>
   <string name="locale_ar">العربية</string>
-
   <string name="theme_color_green">أخضر</string>
   <string name="theme_color_blue">أزرق</string>
   <string name="theme_color_pink">وردي</string>
@@ -252,8 +255,6 @@
   <string name="source" maxLength="15">المصدر</string>
   <string name="email" maxLength="15">البريد الإلكتروني</string>
   <string name="telegram_group" maxLength="15">مجموعة التليجرام</string>
-  <string name="no_email_app_installed" maxLength="20">لا يوجد تطبيق بريد إلكتروني مثبت</string>
-  <string name="no_browser_installed" maxLength="20">"لا يوجد تطبيق متصفح ويب مثبت"</string>
   <string name="collect_logs" maxLength="15">جمع السجلات</string>
   <string name="collect_logs_summary" maxLength="20">حفظ سجل شديد التفصيل للملف</string>
   <string name="report_issues" maxLength="15">بلغ عن خطأ</string>
@@ -297,6 +298,9 @@
   <string name="op_to_name">إلى الاسم</string>
   <string name="op_num_consistency">اتساق الأرقام</string>
   <string name="permissions">الأذونات</string>
+  <!-- ActivityNotFoundException -->
+  <string name="no_email_app_installed" maxLength="20">لا يوجد تطبيق بريد إلكتروني مثبت</string>
+  <string name="no_browser_installed" maxLength="20">"لا يوجد تطبيق متصفح ويب مثبت"</string>
   <!-- Donate -->
   <string name="send_bitcoin">إرسال بيتكوين</string>
   <string name="no_bitcoin_app_installed">"لم يتم العثور على تطبيق محفظة البيتكوين"</string>
@@ -317,7 +321,7 @@
   <string name="outdated_web_view" maxLength="20">عارض ويب قديم</string>
   <!-- DaemonCmdRcvSvc: Daemon return messages -->
   <string name="daemon_listen_on_loopback_failed" maxLength="20">فشل daemon في الاستماع في 127.0.0.1</string>
-  <string name="daemon_establish_connection_failed">فشل daemon في إنشاء اتصال مع العميل</string>
+  <string name="daemon_establish_connection_failed" maxLength="20">فشل daemon في إنشاء اتصال مع العميل</string>
   <string name="daemon_wrong_args_received" maxLength="20">حجج خاطئة</string>
   <string name="daemon_set_app_ops_mode_failed" maxLength="20">فشل في إعداد وضع اذونات التطبيقات</string>
   <string name="daemon_reset_app_ops_failed" maxLength="20">فشل إعادة تعيين اذونات التطبيقات</string>

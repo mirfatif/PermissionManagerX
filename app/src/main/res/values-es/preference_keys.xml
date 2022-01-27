@@ -39,6 +39,7 @@
   <string name="pref_filter_show_extra_app_ops_title" maxLength="20">Mostrar AppOps adicionales, nunca excluidas</string>
   <string name="pref_filter_extra_appops_title" maxLength="20">Lista de AppOps adicionales</string>
   <!-- SettingsActivity -->
+  <string name="pref_settings_general_cat_title">Ajustes generales</string>
   <string name="pref_settings_check_for_updates_title" maxLength="20">Buscar actualizaciones</string>
   <string name="pref_settings_privileges_reminder_title" maxLength="20">Recordar privilegios faltantes</string>
   <string name="pref_settings_quick_scan_title" maxLength="20">Realizar escaneo rápido</string>
