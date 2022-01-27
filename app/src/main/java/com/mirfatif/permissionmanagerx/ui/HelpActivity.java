@@ -31,7 +31,7 @@ public class HelpActivity extends BaseActivity {
 
   private static final String HELP_URL = "https://mirfatif.github.io/PermissionManagerX/help/";
   private static final String CONTACT_URL =
-      "https://mirfatif.github.io/PermissionManagerX/#contact-us";
+      "https://mirfatif.github.io/PermissionManagerX/#want-to-reach-us";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
