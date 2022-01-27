@@ -5,9 +5,8 @@
   android:orientation="vertical">
 
   <View
-    android:layout_width="match_parent"
-    android:background="?attr/accentColor"
-    android:layout_height="1dp"/>
+    style="@style/ListSeparator"
+    android:background="?attr/accentColor" />
 
   <ToggleButton
     android:id="@+id/exc_filters_master_switch"

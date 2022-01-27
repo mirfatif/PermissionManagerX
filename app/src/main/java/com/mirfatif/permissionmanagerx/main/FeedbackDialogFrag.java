@@ -1,12 +1,12 @@
 package com.mirfatif.permissionmanagerx.main;
 
-import static com.mirfatif.permissionmanagerx.main.MainActivity.TAG_DONATION;
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
+import static com.mirfatif.permissionmanagerx.main.fwk.MainActivity.TAG_DONATION;
 import static com.mirfatif.permissionmanagerx.util.Utils.isProVersion;
 import static com.mirfatif.permissionmanagerx.util.Utils.isPsVersion;
 import static com.mirfatif.permissionmanagerx.util.Utils.openWebUrl;
 
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,26 +17,30 @@ import androidx.fragment.app.FragmentManager;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.databinding.FeedbackDialogBinding;
 import com.mirfatif.permissionmanagerx.databinding.RateDonateDialogBinding;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
-import com.mirfatif.permissionmanagerx.ui.BottomSheetDialogFrag;
+import com.mirfatif.permissionmanagerx.ui.base.BottomSheetDialogFrag;
 import com.mirfatif.permissionmanagerx.util.Utils;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 public class FeedbackDialogFrag extends BottomSheetDialogFrag {
 
   private static final String FEEDBACK_TYPE = "FEEDBACK_TYPE";
 
-  public enum FeedbackType {
-    POSITIVE,
-    NEGATIVE,
-    RATE,
-    RATE_DONATE,
-    CONTACT
+  @Retention(RetentionPolicy.SOURCE)
+  public @interface FeedbackType {
+    int POSITIVE = 0;
+    int NEGATIVE = 1;
+    int RATE = 2;
+    int RATE_DONATE = 3;
+    int CONTACT = 4;
   }
 
-  public static void show(FeedbackType type, FragmentManager fm) {
+  public static void show(@FeedbackType int type, FragmentManager fm) {
     FeedbackDialogFrag frag = new FeedbackDialogFrag();
     Bundle args = new Bundle();
-    args.putString(FEEDBACK_TYPE, type.name());
+    args.putInt(FEEDBACK_TYPE, type);
     frag.setArguments(args);
     frag.show(fm, "FEEDBACK_RATING");
   }
@@ -48,19 +52,18 @@ public class FeedbackDialogFrag extends BottomSheetDialogFrag {
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
 
-    FeedbackType type = FeedbackType.valueOf(requireArguments().getString(FEEDBACK_TYPE));
+    @FeedbackType int type = requireArguments().getInt(FEEDBACK_TYPE);
     if (type == FeedbackType.POSITIVE) {
-      return getFeedbackView(container, true);
+      return getFeedbackView(true);
     }
     if (type == FeedbackType.NEGATIVE) {
-      return getFeedbackView(container, false);
+      return getFeedbackView(false);
     }
-    return getButtonsView(container, type);
+    return getButtonsView(type);
   }
 
-  private View getFeedbackView(ViewGroup parent, boolean isYes) {
-    FeedbackDialogBinding b =
-        FeedbackDialogBinding.inflate(getLayoutInflater(), parent, parent != null);
+  private View getFeedbackView(boolean isYes) {
+    FeedbackDialogBinding b = FeedbackDialogBinding.inflate(mA.getLayoutInflater());
     int msgResId, buttonResId;
 
     if (isYes) {
@@ -81,7 +84,8 @@ public class FeedbackDialogFrag extends BottomSheetDialogFrag {
 
     b.neutralButton.setOnClickListener(
         v -> {
-          SETTINGS.setAskForFeedbackTs(Long.MAX_VALUE);
+          MySettings.INSTANCE.setAskForFeedbackTs(
+              System.currentTimeMillis() + DateUtils.WEEK_IN_MILLIS * 25);
           dismiss();
         });
 
@@ -89,7 +93,7 @@ public class FeedbackDialogFrag extends BottomSheetDialogFrag {
 
     b.posButton.setOnClickListener(
         v -> {
-          FeedbackType type = isYes ? FeedbackType.RATE_DONATE : FeedbackType.CONTACT;
+          @FeedbackType int type = isYes ? FeedbackType.RATE_DONATE : FeedbackType.CONTACT;
           FeedbackDialogFrag.show(type, mA.getSupportFragmentManager());
           dismiss();
         });
@@ -97,12 +101,11 @@ public class FeedbackDialogFrag extends BottomSheetDialogFrag {
     return b.getRoot();
   }
 
-  private View getButtonsView(ViewGroup parent, FeedbackType type) {
+  private View getButtonsView(@FeedbackType int type) {
     int b1 = 0, b2 = 0, b3 = 0;
     ButtonListener l1 = null, l2 = null, l3 = null;
 
-    RateDonateDialogBinding b =
-        RateDonateDialogBinding.inflate(getLayoutInflater(), parent, parent != null);
+    RateDonateDialogBinding b = RateDonateDialogBinding.inflate(mA.getLayoutInflater());
 
     if (type == FeedbackType.CONTACT) {
       b1 = R.string.contact_on_telegram;

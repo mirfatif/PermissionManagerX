@@ -1,7 +1,5 @@
 package com.mirfatif.privtasks.hiddenapis;
 
-import static com.mirfatif.privtasks.Commands.CMD_RCV_SVC;
-
 import android.app.ActivityManagerNative;
 import android.app.AppOpsManager;
 import android.app.AppOpsManager.OpEntry;
@@ -21,6 +19,8 @@ import android.permission.IPermissionManager;
 import android.provider.Settings;
 import com.android.internal.app.IAppOpsService;
 import com.mirfatif.privtasks.Commands;
+import com.mirfatif.privtasks.hiddenapis.err.HiddenAPIsError;
+import com.mirfatif.privtasks.hiddenapis.err.HiddenAPIsException;
 import com.mirfatif.privtasks.ser.MyPackageOps;
 import java.util.ArrayList;
 import java.util.List;
@@ -293,7 +293,9 @@ public class HiddenAPIsImpl extends HiddenAPIs {
   public int getPermissionFlags(String permName, String pkgName, int userId)
       throws HiddenAPIsException {
     try {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        return mIPermissionManager.getPermissionFlags(pkgName, permName, userId);
+      } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.R) {
         return mIPermissionManager.getPermissionFlags(permName, pkgName, userId);
       } else {
         return mIPackageManager.getPermissionFlags(permName, pkgName, userId);
@@ -338,10 +340,20 @@ public class HiddenAPIsImpl extends HiddenAPIs {
   //////////////////////////// PACKAGES ////////////////////////////
   //////////////////////////////////////////////////////////////////
 
+  @Override
   public void setApplicationEnabledSetting(
       String pkg, int state, int flags, int userId, String callingPkg) throws HiddenAPIsException {
     try {
       mIPackageManager.setApplicationEnabledSetting(pkg, state, flags, userId, callingPkg);
+    } catch (RemoteException | SecurityException e) {
+      throw new HiddenAPIsException(e);
+    }
+  }
+
+  @Override
+  public String[] getPackagesForUid(int uid) throws HiddenAPIsException {
+    try {
+      return mIPackageManager.getPackagesForUid(uid);
     } catch (RemoteException | SecurityException e) {
       throw new HiddenAPIsException(e);
     }
@@ -374,9 +386,10 @@ public class HiddenAPIsImpl extends HiddenAPIs {
   }
 
   @Override
-  public void sendRequest(String command, String appId, int userId, String codeWord)
+  public void sendRequest(
+      String command, String appId, String cmdRcvSvc, int userId, String codeWord)
       throws HiddenAPIsException {
-    Intent intent = new Intent(command).setClassName(appId, CMD_RCV_SVC);
+    Intent intent = new Intent(command).setClassName(appId, cmdRcvSvc);
     intent.putExtra(Commands.CODE_WORD, codeWord);
     ComponentName cn;
     try {
@@ -392,7 +405,7 @@ public class HiddenAPIsImpl extends HiddenAPIs {
     }
 
     if (cn == null || !cn.getPackageName().equals(appId)) {
-      throw new HiddenAPIsException("Could not start " + CMD_RCV_SVC);
+      throw new HiddenAPIsException("Could not start " + cmdRcvSvc);
     }
   }
 

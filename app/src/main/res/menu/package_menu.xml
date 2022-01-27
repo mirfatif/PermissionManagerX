@@ -9,13 +9,6 @@
     app:actionViewClass="com.mirfatif.permissionmanagerx.ui.base.MySearchView"
     app:showAsAction="ifRoom" />
 
-  <item
-    android:id="@+id/action_information"
-    android:icon="@drawable/info"
-    android:orderInCategory="2"
-    android:title="@string/package_information_menu_item"
-    app:showAsAction="ifRoom" />
-
   <group android:id="@+id/group1">
     <item
       android:id="@+id/action_reset_app_ops"

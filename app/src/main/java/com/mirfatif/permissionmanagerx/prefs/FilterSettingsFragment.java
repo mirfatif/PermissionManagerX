@@ -1,9 +1,5 @@
 package com.mirfatif.permissionmanagerx.prefs;
 
-import static com.mirfatif.permissionmanagerx.parser.AppOpsParser.APP_OPS_PARSER;
-import static com.mirfatif.permissionmanagerx.parser.PackageParser.PKG_PARSER;
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -20,6 +16,9 @@ import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
+import com.mirfatif.permissionmanagerx.parser.PackageParser;
+import com.mirfatif.permissionmanagerx.prefs.fwk.FilterSettingsActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.PrivTasks;
 import java.util.ArrayList;
@@ -134,28 +133,28 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     }
 
     // required on Reset to Defaults
-    excludeNoIconAppsView.setChecked(SETTINGS.excludeNoIconApps());
-    excludeUserAppsView.setChecked(SETTINGS.excludeUserApps());
-    excludeSystemAppsView.setChecked(SETTINGS.excludeSystemApps());
-    excludeFrameworkAppsView.setChecked(SETTINGS.excludeFrameworkApps());
-    excludeDisabledAppsView.setChecked(SETTINGS.excludeDisabledApps());
-    excludeNoPermsAppsView.setChecked(SETTINGS.excludeNoPermissionsApps());
-    excludeNoPermsAppsView.setVisible(!SETTINGS.isQuickScanEnabled());
-    manuallyExcludeAppsView.setChecked(SETTINGS.manuallyExcludeApps());
+    excludeNoIconAppsView.setChecked(MySettings.INSTANCE.excludeNoIconApps());
+    excludeUserAppsView.setChecked(MySettings.INSTANCE.excludeUserApps());
+    excludeSystemAppsView.setChecked(MySettings.INSTANCE.excludeSystemApps());
+    excludeFrameworkAppsView.setChecked(MySettings.INSTANCE.excludeFrameworkApps());
+    excludeDisabledAppsView.setChecked(MySettings.INSTANCE.excludeDisabledApps());
+    excludeNoPermsAppsView.setChecked(MySettings.INSTANCE.excludeNoPermissionsApps());
+    excludeNoPermsAppsView.setVisible(!MySettings.INSTANCE.isQuickScanEnabled());
+    manuallyExcludeAppsView.setChecked(MySettings.INSTANCE.manuallyExcludeApps());
 
-    excludeNotChangeablePermsView.setChecked(SETTINGS.excludeNotChangeablePerms());
-    excludeNotGrantedPermsView.setChecked(SETTINGS.excludeNotGrantedPerms());
-    manuallyExcludePermsView.setChecked(SETTINGS.manuallyExcludePerms());
+    excludeNotChangeablePermsView.setChecked(MySettings.INSTANCE.excludeNotChangeablePerms());
+    excludeNotGrantedPermsView.setChecked(MySettings.INSTANCE.excludeNotGrantedPerms());
+    manuallyExcludePermsView.setChecked(MySettings.INSTANCE.manuallyExcludePerms());
 
-    excludeInvalidPermsView.setChecked(SETTINGS.excludeInvalidPermissions());
-    excludeNormalPermsView.setChecked(SETTINGS.excludeNormalPerms());
-    excludeDangerousPermsView.setChecked(SETTINGS.excludeDangerousPerms());
-    excludeSignaturePermsView.setChecked(SETTINGS.excludeSignaturePerms());
-    excludePrivilegedPermsView.setChecked(SETTINGS.excludePrivilegedPerms());
+    excludeInvalidPermsView.setChecked(MySettings.INSTANCE.excludeInvalidPermissions());
+    excludeNormalPermsView.setChecked(MySettings.INSTANCE.excludeNormalPerms());
+    excludeDangerousPermsView.setChecked(MySettings.INSTANCE.excludeDangerousPerms());
+    excludeSignaturePermsView.setChecked(MySettings.INSTANCE.excludeSignaturePerms());
+    excludePrivilegedPermsView.setChecked(MySettings.INSTANCE.excludePrivilegedPerms());
 
-    excludeAppOpsPermsView.setChecked(SETTINGS.excludeAppOpsPerms());
-    excludeNotSetAppOpsView.setChecked(SETTINGS.excludeNotSetAppOps());
-    showExtraAppOpsView.setChecked(SETTINGS.showExtraAppOps());
+    excludeAppOpsPermsView.setChecked(MySettings.INSTANCE.excludeAppOpsPerms());
+    excludeNotSetAppOpsView.setChecked(MySettings.INSTANCE.excludeNotSetAppOps());
+    showExtraAppOpsView.setChecked(MySettings.INSTANCE.showExtraAppOps());
 
     // required on manually changed by tapping
     if (excludeUserAppsView.isChecked()) {
@@ -193,27 +192,27 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     // Apps
     Utils.runInBg(
         () -> {
-          SETTINGS.getExcludedAppsLock();
-          Set<String> excludedApps = SETTINGS.getExcludedApps();
-          CharSequence[] excludedAppsLabels = SETTINGS.getExcludedAppsLabels();
+          MySettings.INSTANCE.getExcludedAppsLock();
+          Set<String> excludedApps = MySettings.INSTANCE.getExcludedApps();
+          CharSequence[] excludedAppsLabels = MySettings.INSTANCE.getExcludedAppsLabels();
           Utils.runInFg(this, () -> updateExcludedAppsView(excludedApps, excludedAppsLabels));
-          SETTINGS.releaseExcludedAppsLock();
+          MySettings.INSTANCE.releaseExcludedAppsLock();
         });
 
     // Permissions
     Utils.runInBg(
         () -> {
-          SETTINGS.getExcludedPermsLock();
-          Set<String> excludedPerms = SETTINGS.getExcludedPerms();
+          MySettings.INSTANCE.getExcludedPermsLock();
+          Set<String> excludedPerms = MySettings.INSTANCE.getExcludedPerms();
           Utils.runInFg(this, () -> updateExcludedPermsView(excludedPerms));
-          SETTINGS.releaseExcludedPermsLock();
+          MySettings.INSTANCE.releaseExcludedPermsLock();
         });
 
     // Extra AppOps
     Utils.runInBg(
         () -> {
-          SETTINGS.getExtraAppOpsLock();
-          List<String> appOpsList = new ArrayList<>(APP_OPS_PARSER.getAppOpsList());
+          MySettings.INSTANCE.getExtraAppOpsLock();
+          List<String> appOpsList = new ArrayList<>(AppOpsParser.INSTANCE.getAppOpsList());
           appOpsList.sort(Comparator.comparing(String::toUpperCase));
           CharSequence[] appOpsArray = new CharSequence[appOpsList.size()];
           for (int i = 0; i < appOpsArray.length; i++) {
@@ -227,10 +226,10 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
               appOpsArray[i] = extraAppOp;
             }
           }
-          Set<String> extraAppOps = SETTINGS.getExtraAppOps();
+          Set<String> extraAppOps = MySettings.INSTANCE.getExtraAppOps();
 
           Utils.runInFg(this, () -> updateExtraAppOpsView(appOpsArray, extraAppOps));
-          SETTINGS.releaseExtraAppOpsLock();
+          MySettings.INSTANCE.releaseExtraAppOpsLock();
         });
   }
 
@@ -309,14 +308,14 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     int extraAppOpsCount = extraAppOps.size();
 
     // Set summary
+    String message;
     if (extraAppOpsCount == 0 || appOpsCount == 0) {
-      String message = getString(R.string.extra_app_ops_summary);
+      message = getString(R.string.extra_app_ops_summary);
       if (appOpsCount != 0) {
         message += " " + getString(R.string.extra_app_ops_summary_count, appOpsCount);
       }
-      extraAppOpsListView.setSummary(message);
     } else {
-      String message = (String) extraAppOps.toArray()[0];
+      message = (String) extraAppOps.toArray()[0];
       extraAppOpsCount--;
       // Without providing context, getString() crashes with: "Fragment ... not attached to a
       // context" on rotation. getActivity() may also return null.
@@ -325,8 +324,8 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
             Utils.getQtyString(
                 R.plurals.and_others_count, extraAppOpsCount, message, extraAppOpsCount);
       }
-      extraAppOpsListView.setSummary(message);
     }
+    extraAppOpsListView.setSummary(message);
     extraAppOpsListView.setEnabled(showExtraAppOpsView.isChecked() && appOpsCount != 0);
   }
 
@@ -357,7 +356,7 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
   @Override
   public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     // only lists need to be updated if changed from Preferences screen
-    SETTINGS.updateList(key);
+    MySettings.INSTANCE.updateList(key);
 
     updateViews();
 
@@ -366,6 +365,6 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
 
     // update packages list when a Preference is changed so that RecyclerView is updated on
     // return to MainActivity
-    PKG_PARSER.updatePackagesList();
+    PackageParser.INSTANCE.updatePackagesList();
   }
 }

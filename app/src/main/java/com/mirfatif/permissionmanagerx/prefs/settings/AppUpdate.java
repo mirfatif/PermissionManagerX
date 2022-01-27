@@ -1,8 +1,8 @@
 package com.mirfatif.permissionmanagerx.prefs.settings;
 
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
+import static com.mirfatif.permissionmanagerx.util.Utils.PI_FLAGS;
+import static com.mirfatif.permissionmanagerx.util.Utils.getString;
 
-import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,6 +17,7 @@ import androidx.core.app.NotificationManagerCompat;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
 import java.io.BufferedReader;
@@ -39,7 +40,7 @@ public class AppUpdate {
   private String mVersion, mUpdateUrl;
 
   public Boolean check(boolean notify) {
-    if (notify && !SETTINGS.shouldCheckForUpdates()) {
+    if (notify && !MySettings.INSTANCE.shouldCheckForUpdates()) {
       return null;
     }
 
@@ -58,13 +59,13 @@ public class AppUpdate {
       } else {
         Log.i(TAG, "New update is available: " + mVersion);
         if (Utils.isPsVersion()) {
-          mUpdateUrl = Utils.getString(R.string.play_store_url);
+          mUpdateUrl = getString(R.string.play_store_url);
         } else {
-          mUpdateUrl = Utils.getString(R.string.telegram_channel);
+          mUpdateUrl = getString(R.string.source_url);
         }
         if (notify) {
           showNotification();
-          SETTINGS.setCheckForUpdatesTs(System.currentTimeMillis());
+          MySettings.INSTANCE.setCheckForUpdatesTs(System.currentTimeMillis());
         }
         return true;
       }
@@ -85,7 +86,7 @@ public class AppUpdate {
     int version = Integer.parseInt(mVersion.substring(1, 5).replace(".", ""));
     if (version > BuildConfig.VERSION_CODE && !mVersion.equals(BuildConfig.VERSION_NAME)) {
       Log.i(TAG, "New beta update is available: " + mVersion);
-      mUpdateUrl = Utils.getString(R.string.telegram_group_link);
+      mUpdateUrl = getString(R.string.source_url);
       return true;
     }
     return false;
@@ -132,16 +133,15 @@ public class AppUpdate {
 
   private void showNotification() {
     final String CHANNEL_ID = "channel_app_update";
-    final String CHANNEL_NAME = Utils.getString(R.string.channel_app_update);
+    final String CHANNEL_NAME = getString(R.string.channel_app_update);
     final int UNIQUE_ID = Utils.getInteger(R.integer.channel_app_update);
 
-    @SuppressLint("UnspecifiedImmutableFlag")
     PendingIntent pendingIntent =
         PendingIntent.getActivity(
             App.getContext(),
             UNIQUE_ID,
             new Intent(Intent.ACTION_VIEW, Uri.parse(mUpdateUrl)),
-            PendingIntent.FLAG_UPDATE_CURRENT);
+            PI_FLAGS);
 
     NotificationManagerCompat mNotificationManager =
         NotificationManagerCompat.from(App.getContext());
@@ -157,9 +157,10 @@ public class AppUpdate {
     notificationBuilder
         .setSmallIcon(R.drawable.notification_icon)
         .setColor(UtilsFlavor.getAccentColor())
-        .setContentTitle(Utils.getString(R.string.new_version_available))
-        .setContentText(Utils.getString(R.string.tap_to_download) + " " + mVersion)
+        .setContentTitle(getString(R.string.new_version_available))
+        .setContentText(getString(R.string.tap_to_download) + " " + mVersion)
         .setContentIntent(pendingIntent)
+        .addAction(0, getString(R.string.download), pendingIntent)
         .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setAutoCancel(true);

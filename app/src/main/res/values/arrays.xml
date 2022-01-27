@@ -27,6 +27,7 @@
     <item>com.android.calllogbackup</item>
     <item>com.android.camera2</item>
     <item>com.android.camera</item>
+    <item>com.android.cameraextensions</item>
     <item>com.android.captiveportallogin</item>
     <item>com.android.carrierconfig</item>
     <item>com.android.carrierdefaultapp</item>
@@ -57,6 +58,7 @@
     <item>com.android.hotspot2</item>
     <item>com.android.hotspot2.osulogin</item>
     <item>com.android.htmlviewer</item>
+    <item>com.android.imsserviceentitlement</item>
     <item>com.android.incallui</item>
     <item>com.android.inputdevices</item>
     <item>com.android.inputmethod.latin</item>
@@ -94,6 +96,7 @@
     <item>com.android.providers.downloads.ui</item>
     <item>com.android.providers.media</item>
     <item>com.android.providers.media.module</item>
+    <item>com.android.providers.partnerbookmarks</item>
     <item>com.android.providers.settings</item>
     <item>com.android.providers.telephony</item>
     <item>com.android.providers.userdictionary</item>
@@ -109,6 +112,7 @@
     <item>com.android.shell</item>
     <item>com.android.simappdialog</item>
     <item>com.android.smspush</item>
+    <item>com.android.soundpicker</item>
     <item>com.android.statementservice</item>
     <item>com.android.stk</item>
     <item>com.android.storagemanager</item>
@@ -232,6 +236,20 @@
 
   <string-array name="locale_contributor_links_ar">
     <item order="0">https://crowdin.com/profile/rex07</item>
+  </string-array>
+
+  <string-array name="theme_colors">
+    <item>@string/theme_color_green</item>
+    <item>@string/theme_color_blue</item>
+    <item>@string/theme_color_pink</item>
+    <item>@string/theme_color_gray</item>
+  </string-array>
+
+  <string-array name="theme_color_values">
+    <item>@string/theme_color_green_val</item>
+    <item>@string/theme_color_blue_val</item>
+    <item>@string/theme_color_pink_val</item>
+    <item>@string/theme_color_gray_val</item>
   </string-array>
 
 </resources>

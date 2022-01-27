@@ -1,8 +1,6 @@
 package com.mirfatif.permissionmanagerx.main;
 
-import static com.mirfatif.permissionmanagerx.parser.PackageParser.PKG_PARSER;
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
-
+import android.content.ActivityNotFoundException;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -20,7 +18,10 @@ import androidx.appcompat.app.AlertDialog.Builder;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.BackupRestoreDialogBinding;
+import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
+import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionEntity;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import java.io.ByteArrayInputStream;
@@ -101,7 +102,7 @@ public class BackupRestore {
 
   private boolean mSkipUninstalledApps = false;
 
-  AlertDialog createDialog() {
+  public AlertDialog createDialog() {
     if (mA == null) {
       return null;
     }
@@ -120,10 +121,14 @@ public class BackupRestore {
 
   private void doBackupRestore(boolean isBackup) {
     Utils.showToast(R.string.select_backup_file);
-    if (isBackup) {
-      mBackupLauncher.launch("PermissionManagerX_" + Utils.getCurrDateTime(false) + ".xml");
-    } else {
-      mRestoreLauncher.launch(new String[] {"text/xml"});
+    try {
+      if (isBackup) {
+        mBackupLauncher.launch("PermissionManagerX_" + Utils.getCurrDateTime(false) + ".xml");
+      } else {
+        mRestoreLauncher.launch(new String[] {"text/xml"});
+      }
+    } catch (ActivityNotFoundException ignored) {
+      Utils.showToast(R.string.no_file_picker_installed);
     }
   }
 
@@ -148,7 +153,7 @@ public class BackupRestore {
          PrivDaemonHandler#sendRequest(String)} in {@link AppOpsParser#buildAppOpsList()} in ADB
          daemon mode is not called on main thread
         */
-        SETTINGS.resetToDefaults();
+        MySettings.INSTANCE.resetToDefaults();
         if (!restore(inputStream)) {
           failed(false);
         }
@@ -236,7 +241,7 @@ public class BackupRestore {
     }
 
     // permissions
-    List<PermissionEntity> permEntities = SETTINGS.getPermDb().getAll();
+    List<PermissionEntity> permEntities = MySettings.INSTANCE.getPermDb().getAll();
     int skippedApps = 0;
 
     if (mSkipUninstalledApps) {
@@ -478,7 +483,7 @@ public class BackupRestore {
 
   public static void updatePermissionEntities(List<BackupEntry> permEntries) {
     Map<String, Integer> map = new HashMap<>();
-    for (PermissionEntity entity : SETTINGS.getPermDb().getAll()) {
+    for (PermissionEntity entity : MySettings.INSTANCE.getPermDb().getAll()) {
       map.put(entity.pkgName + "_" + entity.permName, entity.id);
     }
 
@@ -494,7 +499,7 @@ public class BackupRestore {
       }
       permEntities.add(entity);
     }
-    SETTINGS.getPermDb().insertAll(permEntities.toArray(new PermissionEntity[0]));
+    MySettings.INSTANCE.getPermDb().insertAll(permEntities.toArray(new PermissionEntity[0]));
   }
 
   private String getString(int resId) {
@@ -535,11 +540,11 @@ public class BackupRestore {
     }
     Utils.runInFg(mA, () -> mA.getRoundProgressContainer().setVisibility(View.GONE));
     if (!isBackup) {
-      SETTINGS.populateExcludedAppsList(false);
-      SETTINGS.populateExcludedPermsList();
-      SETTINGS.populateExtraAppOpsList(false);
-      PKG_PARSER.buildPermRefList();
-      PKG_PARSER.updatePackagesList();
+      MySettings.INSTANCE.populateExcludedAppsList(false);
+      MySettings.INSTANCE.populateExcludedPermsList();
+      MySettings.INSTANCE.populateExtraAppOpsList(false);
+      PackageParser.INSTANCE.buildPermRefList();
+      PackageParser.INSTANCE.updatePackagesList();
     }
 
     String message = Utils.getQtyString(R.plurals.backup_restore_processed_prefs, prefs, prefs);

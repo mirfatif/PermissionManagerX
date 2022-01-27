@@ -14,6 +14,8 @@
             border-radius: 10px;
             display: block;
             box-sizing: border-box;
+            font-family: sans-serif;
+            font-size: large;
         }
 
         @media only screen and (min-width: 800px) {
@@ -23,23 +25,16 @@
             }
         }
 
-        ul {
-            list-style: outside;
-        }
-
         li {
-            text-align: justify;
-        }
-
-        p {
-            text-align: justify;
+            margin-top: 1%;
+            margin-bottom: 1%;
         }
 
         hr {
             width: 100%;
             text-align: centre;
-            margin-top: 2%;
-            margin-bottom: 2%;
+            margin-top: 3%;
+            margin-bottom: 3%;
             height: 0px;
             border-left-width: 0;
             border-right-width: 0;
@@ -47,20 +42,38 @@
             border-bottom: 1px solid white;
         }
 
+        .dim-hr {
+            border-top: 1px solid rgba(0, 0, 0, 0.25);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
         img {
             width: 60%;
             height: auto;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            border-radius: 10px;
         }
 
         img.small {
             width: 30%;
             height: auto;
-            margin-top: 10px;
-            margin-bottom: 5px;
         }
 
-        a.contents {
+        .no-underline {
             text-decoration: none;
+        }
+
+        .high-top {
+            margin-top: 30px;
+        }
+
+        .high-bottom {
+            margin-bottom: 3%;
+        }
+
+        .indented {
+            margin-left: 40px;
         }
     </style>
 
@@ -68,12 +81,15 @@
         if (window.Android) {
             document.write("<style> ");
             document.write("body { padding: 1%; margin: 1%; border: none; }");
-            document.write("a { color: " + Android.getLinkColor() + "; text-decoration: none; }");
             document.write("ul { padding-left: " + Android.getBulletPadding() + ";}");
-            document.write("p { margin-top: " + Android.getParaMargin() + ";");
-            document.write("margin-bottom: " + Android.getParaMargin() + ";}");
-            document.write("img { width: 100%; max-width: " + Android.getImgMaxWidth() + ";}");
+            document.write("ol { padding-left: " + Android.getBulletPadding() + ";}");
+            document.write("p { margin-top: " + Android.getParaMargin() + "; margin-bottom: " + Android.getParaMargin() + ";}");
+            document.write("img { width: 100%; max-width: " + Android.getImgMaxWidth() + "; margin-top: " + Android.getParaMargin() + "; margin-bottom: " + Android.getParaMargin() + ";}");
             document.write("img.small { width: 100%; max-width: " + Android.getSmallImgMaxWidth() + ";}");
+            document.write("a { color: " + Android.getLinkColor() + "; text-decoration: none; }");
+            document.write(".high-top { margin-top: " + Android.getHighParaMargin() + ";}");
+            document.write(".high-bottom { margin-bottom: " + Android.getHighParaMargin() + ";}");
+            document.write(".indented { margin-left: " + Android.getBulletPadding() + ";}");
             document.write("</style>");
         }
     </script>
@@ -94,74 +110,78 @@
     <h2>Contents</h2>
 
     <ul>
-        <li style="margin-bottom:5px"><a href="#intro" class="contents"><b>What is PMX?</b></a></li>
-        <li style="margin-bottom:5px"><a href="#perms_types" class="contents"><b>Manifest permissions and AppOps</b></a></li>
-        <li style="margin-bottom:5px"><a href="#perm_ref" class="contents"><b>Permission References</b></a></li>
-        <li style="margin-bottom:5px"><a href="#packages" class="contents"><b>Packages</b></a></li>
-        <li style="margin-bottom:5px"><a href="#permissions" class="contents"><b>Permissions</b></a></li>
-        <li style="margin-bottom:5px"><a href="#search" class="contents"><b>Search</b></a></li>
-        <li style="margin-bottom:5px"><a href="#scheduled_checker" class="contents"><b>Scheduled Check</b></a></li>
-        <li style="margin-bottom:5px">
-            <a href="#perm_watcher" class="contents"><b>Permission Watcher</b></a>
+        <li><a href="#intro" class="no-underline"><b>What is PMX?</b></a></li>
+        <li><a href="#perms_types" class="no-underline"><b>Manifest Permissions and AppOps</b></a></li>
+        <li><a href="#perm_ref" class="no-underline"><b>Permission References</b></a></li>
+        <li><a href="#packages" class="no-underline"><b>App List</b></a></li>
+        <li><a href="#permissions" class="no-underline"><b>Permission List</b></a></li>
+        <li><a href="#search" class="no-underline"><b>Search</b></a></li>
+        <li><a href="#scheduled_checker" class="no-underline"><b>Scheduled Check</b></a></li>
+        <li>
+            <a href="#perm_watcher" class="no-underline"><b>Permission Watcher</b></a>
             <ul>
-                <li style="margin-bottom:5px; margin-top:5px"><a href="#perm_watcher_fails"><b>Why starting Permission Watcher fails?</b></a></li>
+                <li><a href="#perm_watcher_fails" class="no-underline"><b>Why starting Permission Watcher fails?</b></a></li>
             </ul>
         </li>
-        <li style="margin-bottom:5px">
-            <a href="#adb_help" class="contents"><b>Using PMX with ADB</b></a>
+        <li><a href="#wrun-integration" class="no-underline"><b>Integration with WhatsRunning</b></a></li>
+        <li>
+            <a href="#adb_help" class="no-underline"><b>Using PMX with ADB</b></a>
             <ul>
-                <li style="margin-bottom:5px; margin-top:5px"><a href="#adb_help_11" class="contents"><b>Android 11+</b></a></li>
+                <li><a href="#adb_help_11" class="no-underline"><b>Android 11+</b></a></li>
             </ul>
         </li>
-        <li style="margin-bottom:5px">
-            <a href="#versions" class="contents"><b>PMX Versions</b></a>
+        <li>
+            <a href="#versions" class="no-underline"><b>PMX Versions</b></a>
             <ul>
-                <li style="margin-bottom:5px; margin-top:5px"><a href="#paid_features" class="contents"><b>Paid Features</b></a></li>
+                <li><a href="#paid_features" class="no-underline"><b>Paid Features</b></a></li>
             </ul>
         </li>
-        <li style="margin-bottom:5px"><a href="#faq" class="contents"><b>FAQs</b></a></li>
+        <li><a href="#faq" class="no-underline"><b>FAQs</b></a></li>
         <ul>
-            <li style="margin-bottom:5px"><a href="#faq36" class="contents">Why do I need to use PMX?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq1" class="contents">Why PMX requires root or ADB access?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq33" class="contents">My device isn't rooted. How can I use PMX?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq2" class="contents">How does PMX change other apps permissions?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq37" class="contents">I've changed a permission but it's not working. Why?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq3" class="contents">Why do some permissions revert to their old state soon after changing them?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq34" class="contents">Do the permissions remain changed after ADB is turned off, or root is denied, or PMX is uninstalled?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq4" class="contents">What are hidden APIs in Advanced Settings?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq5" class="contents">What should I select for Privileged Daemon UID in Advanced Settings? System or ADB?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq6" class="contents">Why don't I see XYZ app in packages list?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq7" class="contents">Why don't I see XYZ permission in ABC package?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq8" class="contents">Why don't I see XYZ AppOp in ABC package?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq9" class="contents">What are <i>invalid permissions</i> in Exclusion Filters?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq10" class="contents">What are <i>extra AppOps</i> in Exclusion Filters?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq11" class="contents">What are different AppOp modes and which one should I use?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq12" class="contents">What's the difference between <i>Ignore</i> and <i>Deny</i> AppOp modes?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq13" class="contents">What does READ_MEDIA_AUDIO permission do?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq14" class="contents">What does WAKE_LOCK permission do?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq15" class="contents">Why can't I change XYZ permission?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq16" class="contents">How can I change INTERNET permission?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq17" class="contents">Can I change <i>System-Fixed</i> permissions?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq17" class="contents">How can I change <i>Signature</i>|<i>Privileged</i> permissions?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq17" class="contents">How can I change the permissions of framework apps?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq18" class="contents">What is <i>UID mode</i> in AppOp permissions?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq31" class="contents">Why do I get a lot of <i>Bad ROM</i> popups?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq19" class="contents">What does the "Exclude" button (on long press) do?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq20" class="contents">Why does scanning apps takes so long?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq21" class="contents">Is there a complete list of all permissions available with explanation?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq22" class="contents">How to use the app in work profile / multi-user environment?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq23" class="contents">How can I translate PMX to my language?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq30" class="contents">Are you going to add Shizuku support to PMX?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq24" class="contents">How does PMX compare to XPrivacyLua? Can they replace each other?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq32" class="contents">Can PMX auto remove permissions when an app is closed, like Bouncer does?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq35" class="contents">Can I get notified when a new app is installed?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq38" class="contents">When a new app is installed, can PMX disable its permissions by default?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq25" class="contents">Why PMX requires INTERNET permission?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq26" class="contents">How much privacy friendly PMX is?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq27" class="contents">Is PMX spying on me using ADB over network?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq28" class="contents">Is PMX misusing root privileges to collect my data?</a></li>
-            <li style="margin-bottom:5px"><a href="#faq29" class="contents">I think PMX is useless. Why was it created?</a></li>
+            <li><a href="#faq36" class="no-underline">Why do I need to use PMX?</a></li>
+            <li><a href="#faq1" class="no-underline">Why PMX requires root or ADB access?</a></li>
+            <li><a href="#faq33" class="no-underline">My device isn't rooted. How can I use PMX?</a></li>
+            <li><a href="#faq2" class="no-underline">How does PMX change other apps permissions?</a></li>
+            <li><a href="#faq37" class="no-underline">I've changed a permission but it's not working. Why?</a></li>
+            <li><a href="#faq3" class="no-underline">Why do some permissions revert to their old state soon after changing them?</a></li>
+            <li><a href="#faq34" class="no-underline">Do the permissions remain changed after ADB is turned off, or root is denied, or PMX is uninstalled?</a></li>
+            <li><a href="#faq4" class="no-underline">What are hidden APIs in Advanced Settings?</a></li>
+            <li><a href="#faq5" class="no-underline">What should I select for Privileged Daemon UID in Advanced Settings? System or ADB?</a></li>
+            <li><a href="#faq6" class="no-underline">Why don't I see XYZ app in packages list?</a></li>
+            <li><a href="#faq7" class="no-underline">Why don't I see XYZ permission in ABC package?</a></li>
+            <li><a href="#faq8" class="no-underline">Why don't I see XYZ AppOp in ABC package?</a></li>
+            <li><a href="#faq9" class="no-underline">What are <i>invalid permissions</i> in Exclusion Filters?</a></li>
+            <li><a href="#faq10" class="no-underline">What are <i>extra AppOps</i> in Exclusion Filters?</a></li>
+            <li><a href="#faq11" class="no-underline">What are different AppOp modes and which one should I use?</a></li>
+            <li><a href="#faq12" class="no-underline">What's the difference between <i>Ignore</i> and <i>Deny</i> AppOp modes?</a></li>
+            <li><a href="#faq13" class="no-underline">What does READ_MEDIA_AUDIO permission do?</a></li>
+            <li><a href="#faq14" class="no-underline">What does WAKE_LOCK permission do?</a></li>
+            <li><a href="#faq15" class="no-underline">Why can't I change XYZ permission?</a></li>
+            <li><a href="#faq16" class="no-underline">How can I change INTERNET permission?</a></li>
+            <li><a href="#faq17" class="no-underline">Can I change <i>System-Fixed</i> permissions?</a></li>
+            <li><a href="#faq17" class="no-underline">How can I change <i>Signature</i>|<i>Privileged</i> permissions?</a></li>
+            <li><a href="#faq17" class="no-underline">How can I change the permissions of framework apps?</a></li>
+            <li><a href="#faq18" class="no-underline">What is <i>UID mode</i> in AppOp permissions?</a></li>
+            <li><a href="#faq39" class="no-underline">Can I control Android's "Remove permissions if app isn't used" feature from PMX?</a></li>
+            <li><a href="#faq31" class="no-underline">Why do I get a lot of <i>Bad ROM</i> popups?</a></li>
+            <li><a href="#faq19" class="no-underline">What do the "Hide From List" buttons (on long press) do?</a></li>
+            <li><a href="#faq20" class="no-underline">Why does scanning apps takes so long?</a></li>
+            <li><a href="#faq21" class="no-underline">Is there a complete list of all permissions available with explanation?</a></li>
+            <li><a href="#faq22" class="no-underline">How to use the app in work profile / multi-user environment?</a></li>
+            <li><a href="#faq23" class="no-underline">How can I translate PMX to my language?</a></li>
+            <li><a href="#faq30" class="no-underline">Are you going to add Shizuku support to PMX?</a></li>
+            <li><a href="#faq24" class="no-underline">How does PMX compare to XPrivacyLua? Can they replace each other?</a></li>
+            <li><a href="#faq32" class="no-underline">Can PMX auto remove permissions when an app is closed, like Bouncer does?</a></li>
+            <li><a href="#faq35" class="no-underline">Can I get notified when a new app is installed?</a></li>
+            <li><a href="#faq38" class="no-underline">When a new app is installed, can PMX disable its permissions by default?</a></li>
+            <li><a href="#faq25" class="no-underline">Why PMX requires INTERNET permission?</a></li>
+            <li><a href="#faq26" class="no-underline">How much privacy friendly PMX is?</a></li>
+            <li><a href="#faq27" class="no-underline">Is PMX spying on me using ADB over network?</a></li>
+            <li><a href="#faq28" class="no-underline">Is PMX misusing root privileges to collect my data?</a></li>
+            <li><a href="#faq29" class="no-underline">I think PMX is useless. Why was it created?</a></li>
         </ul>
+        <li><a href="#download" class="no-underline"><b>Downloads / Screenshots</b></a></li>
+        <li><a href="#contact-us" class="no-underline"><b>Contact Us</b></a></li>
     </ul>
 
     <hr>
@@ -238,7 +258,7 @@
 
     <hr>
 
-    <h2 id="packages">Packages</h2>
+    <h2 id="packages">App List</h2>
     <img src="pkg.webp">
     <ul>
         <li>
@@ -262,7 +282,7 @@
 
     <hr>
 
-    <h2 id="permissions">Permissions</h2>
+    <h2 id="permissions">Permission List</h2>
     <img src="perm_en.webp">
     <ul>
         <li>
@@ -304,7 +324,7 @@
         </li>
         <li>
             <p>Permissions <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a>:</p>
-            <p><b><i>:Normal :Dangerous :Signature :Development :Privileged :Fixed :AppOps :Unknown</i></b></p>
+            <p><b><i>:Normal :Dangerous :Signature :Internal :Development :Privileged :Fixed :AppOps :Unknown</i></b></p>
         </li>
         <li>
             <p>Per UID AppOps:</p>
@@ -324,18 +344,18 @@
             <p><b><i>Foo&amp;!Bar&amp!Baz</i></b></p>
         </li>
     </ul>
-    <p>Pro version also shows search suggestions (if set in preferences) to ease the search process.</p>
+    <p>Paid version also shows search suggestions (if set in preferences) to ease the search process.</p>
 
     <hr>
 
-    <h2 id="scheduled_checker">Scheduled Checker (Pro only)</h2>
+    <h2 id="scheduled_checker">Scheduled Checker (Paid only)</h2>
     <p>Do you want to keep track of any unwanted changes to the permissions for all the installed apps? <i>Scheduled Check</i> can do this for you at regular intervals (in minutes, hour or days).</p>
     <p>Set <a href="#perm_ref">Permission References</a> to <i>GREEN</i> and leave the rest to PMX. If any permission is found changed (with <i>RED</i> state) or when a new app is found installed (with <i>ORANGE</i> state permissions), PMX reminds you that something needs your attention.</p>
     <p>Additionally, if configured in preferences, Scheduled Check can auto-revoke granted permissions with an informatory notification.</p>
 
     <hr>
 
-    <h2 id="perm_watcher">Permission Watcher (Pro only)</h2>
+    <h2 id="perm_watcher">Permission Watcher (Paid only)</h2>
     <p>Some apps do not work without having a certain permission granted. But you want to grant the permission for the time only when you are using the app, and revoke the permission as soon as you leave the app.</p>
     <p>Permission Watcher does exactly this. As soon as you leave the app, or after the set time has passed, it revokes an app's permissions (manifest and AppOp) on its own, or asks you to do so, depending on the preferences you've set.</p>
     <img class="small" src="perm_watcher.gif">
@@ -351,19 +371,37 @@
         <li>
             <p>PMX watches only <i>User</i>-installed or normal <i>System</i> apps, not <i>Framework</i> apps. Changing them might brick the device.</p>
         </li>
+        <li>
+            <p>On some devices Permission Watcher may not work reliably for apps in the secondary user / profile. Using it in combination with Scheduled Checker is recommended.</p>
+        </li>
     </ul>
     <p id="perm_watcher_fails"><b>Why starting Permission Watcher fails?</b></p>
     <p>Are you using ADB? Some OEMs remove permission <i>OBSERVE_GRANT_REVOKE_PERMISSIONS</i> or <i>SET_ACTIVITY_WATCHER</i> from <i>Shell</i> package. If this is the case with you, we are sorry. This is something we cannot fix. On such devices Permission Watcher can work only with root. See the note at the start of <a href="#adb_help">Using PMX with ADB</a>.</p>
+
+    <hr>
+
+    <h2 id="wrun-integration">Integration with WhatsRunning</h2>
+    <p>PMX is integrated with <a href="https://github.com/mirfatif/WhatsRunning">WhatsRunning</a> so you can open one from the other.</p>
+    <img class="small" src="wrun_integration1.jpg" />
+    <img class="small" src="wrun_integration2.webp" />
+    <p>So from PMX you can switch to WhatsRunning to find out if an app with restricted permissions is still running. If yes, in what state it is and how much resources it is using.</p>
+    <p>Similarly, from WhatsRunning you can switch to PMX to find out what permissions a running (or dead) app is granted.</p>
+    <p>This is particularly helpful when analyzing the effect of permissions like <code>RUN_IN_BACKGROUND</code>.</p>
+
     <hr>
 
     <h2 id="adb_help">Using PMX with ADB</h2>
+
     <p><b><i>Note:</i></b></p>
-    <p style="margin-left: 40px;">On some OEM ROMs the ADB functionality might be crippled due to lacking permissions or other restrictions. You can check the current status of what ADB can do in <b>About</b> -> <b>Privileges</b> (menu item):</p>
-    <img class="small" src="privs.png" style="margin-left: 40px;" />
-    <p style="margin-left: 40px;"> Unfortunately we cannot do anything if ADB is lacking some permissions on your device. The following instructions apply only to near-AOSP ROMs.</p>
+    <p>ADB is not as powerful as root is. In our case, for instance, PMX takes more time to build the list of apps when it's running with ADB.</p>
+    <p>Additionally, on some OEM ROMs the ADB functionality might be crippled due to lacking permissions or other restrictions. You can check the current status of what ADB can do in <b>About</b> -> <b>Privileges</b> (menu item):</p>
+    <img class="small" src="privs.webp" />
+    <p>Unfortunately we cannot do anything about it. And therefore some features are available only on rooted devices.</p>
+    <p>The following instructions apply to near-AOSP ROMs. Customized ROMs might have different or missing settings.</p>
 
-    <hr>
+    <hr class="dim-hr">
 
+    <p class="high-top">So here we start how you can make WhatsRunning work with ADB.</p>
     <p>If your device is not rooted, you need to turn <b>Wireless ADB</b> on before using PMX. Some devices have <b><i>ADB over Network</i></b> or <b><i>Wireless Debugging</i></b> setting available in <b>Developer options</b>:</p>
     <img class="small" src="adb_in_dev_options_1.webp" />
     <p>For others, you need to connect the device to a USB host like PC <b><i>once after every reboot</i></b>.</p>
@@ -373,6 +411,9 @@
             <p>Go to <b>Settings</b> -> <b>About</b> and tap <b>Build number</b> five to seven times.</p>
             <p><b>Developer options</b> should appear directly under <b>Settings</b> or in <b>Settings</b> -> <b>System</b> at the bottom.</p>
         </li>
+    </ol>
+    <p><b><u>Enable wireless debugging:</u></b></p>
+    <ol start="2">
         <li>
             <p>Enable <b>Android debugging</b> in <b>Developer options</b>.</p>
         </li>
@@ -412,6 +453,8 @@
     <p>Leave the <b>Android debugging</b> enabled. Run PMX app and check <b><i>ADB Shell</i></b> in drawer. It should connect to ADB. <i>Allow USB Debugging</i> if asked:</p>
     <img class="small" src="adb_in_dev_options_2.webp" />
     <p>For more details see <a href="https://developer.android.com/studio/command-line/adb#wireless">this</a>.</p>
+
+    <hr class="dim-hr" />
 
     <h3 id="adb_help_11">Android 11+</h3>
     <p>On Android 11 and above, it's possible to turn on Wireless ADB without connecting to a PC.</p>
@@ -467,19 +510,19 @@
     <h2 id="versions">PMX Versions</h2>
     <p>PMX is available in two variants: <b>Paid</b> and <b>Free</b>.</p>
     <p>Paid version is available in two variants: <b>Play Store</b> and <b>Pro</b>.</p>
-    <p>Paid version is released on <b>Play Store</b> and <a href="https://t.me/mirfatifApps">Telegram Channel</a>. Free version is released on <b>GitHub</b> (and some other sources including F-Droid). Latest APKs for both variants are also posted in the Telegram channel.</p>
+    <p>Paid version is released on <b>Play Store</b> and <b>Github</b>. Free version is released on <b>GitHub</b>, <b>F-Droid</b> and some other sources. Latest APKs for both variants are also posted in the <a href="https://t.me/mirfatifApps">Telegram Channel</a>.</p>
     <p>There's no free version on Play Store.</p>
     <p>Pro version can be installed along with any other version on a device. But no other two versions can be installed together (due to same package name). One must be uninstalled before installing the other one.</p>
     <p>Free version available on <a href="https://android.izzysoft.de/repo/apk/com.mirfatif.permissionmanagerx">IzzySoft</a> is the same as released on <a href="https://github.com/mirfatif/PermissionManagerX/releases/latest">Github</a> and posted in the Telegram channel. But the one available on official <a href="https://f-droid.org/packages/com.mirfatif.permissionmanagerx">F-Droid repo</a> has different signatures. So it cannot be installed over the former two, and vice versa.</p>
     <p>In between the major releases some test (<b>beta</b>) releases are also published in the Telegram channel only.</p>
     <p>You can update the <b>Play Store</b> version to the latest stable release either from Play Store or by installing the APK file posted in the Telegram channel with <b>-ps</b> in the file name. Sometimes Google team may take up to 24 hours before the update is live in Play Store.</p>
-    <p>You can update the <b>Pro</b> version to the latest release by installing the APK file from the Telegram channel with <b>-pro</b> in the file name.</p>
+    <p>You can update the <b>Pro</b> version to the latest release by installing the APK file from Github or the Telegram channel with <b>-pro</b> in the file name.</p>
     <p>You can update the <b>Free</b> version to the latest stable release either from GitHub (or F-Droid; from wherever you installed it) or by installing the APK file posted in the Telegram channel without <b>-ps</b> / <b>-pro</b> in the file name.</p>
     <p>Paid version installed by merely downloading the <b>-ps.apk</b> or <b>-pro.apk</b> file from the Telegram channel won't work if you haven't purchased the app.</p>
     <p>Once a new version is available for update, PMX app - when launched - shows a notification to download the update (provided that you've enabled the update check in settings). Play Store app also shows update notification according to your settings.</p>
     <p>If you've already downloaded and installed the latest release from the Telegram channel, you won't get update notification in the app and Play Store won't show update available.</p>
     <p>Free version is completely <b>open-source and free</b>. Source code is available on GitHub. Anyone can view and download the code and build the app. We respect users' privacy, so there's nothing hidden, there are no back-doors, no trackers, no ads. And we don't collect users' data and information for any kind of analytics, profiling or for the sole purpose of selling. Even submitting a crash report is also at user's discretion, though highly recommended.</p>
-    <p>One can purchase the paid version just to make a donation and/or to use the paid-only features. Other methods of making a donation are available in the Free version under <b>Donate</b> section. Developers can also <b>support the app development</b> by contributing to the source code e.g. by fixing a bug or adding a feature. Users can help us make the app better by testing the beta releases, reporting any crashes or glitches, suggesting improvements and new features, or translating the app to their native language.</p>
+    <p>One can purchase the paid version just to make a donation and/or to use the paid-only features. Other methods of making a donation are available in the Free / Pro version under <b>Donate</b> section. Developers can also <b>support the app development</b> by contributing to the source code e.g. by fixing a bug. Users can help us make the app better by testing the beta releases, reporting any crashes or glitches, suggesting improvements and new features, or translating the app to their native language.</p>
 
     <h3 id="paid_features">Paid Features</h3>
     <p>Paid version includes everything that's in the Free version, plus the following <b>extra features</b> which are also listed in the app under <b>About</b> section and in the Play Store description:</p>
@@ -500,204 +543,258 @@
     <hr>
 
     <h2 id="faq">FAQs</h2>
+
+    <hr class="dim-hr" />
+
+    <p id="faq36" class="high-bottom"><b>Why do I need to use PMX?</b></p>
+    <p>Because:</p>
     <ul>
-        <li id="faq36" style="margin-bottom:10px">
-            <p><b>Why do I need to use PMX?</b></p>
-            <p>Because:</p>
-            <ul>
-                <li style="margin-bottom:10px">PMX provides all the scattered (or otherwise unavailable) permission-related <b>information</b> and <b>controls</b> on a single screen so that you can watch and control them in a comprehensive and convenient way.</li>
-                <li style="margin-bottom:10px">There's no official tool available in stock Android to change <b>AppOps</b>. Only a subset of <b>manifest permissions</b> are exposed to user in permission settings. PMX exposes all the permissions in raw form. Related: <a href="#perms_types">Manifest permissions and AppOps</a>.</li>
-                <li style="margin-bottom:10px">PMX makes it easy for you to keep track of any <b>unwanted changes</b> to permissions.</li>
-                <li style="margin-bottom:10px">Giving control on your device, PMX enables you to <b>save device resources</b> like battery and network bandwidth, and <b>protect your privacy</b>. You are not entirely left to the mercy of app and ROM developers. Read this <a href="https://www.buzzfeednews.com/article/nicolenguyen/how-apps-take-your-data-and-sell-it-without-you-even">article</a> to get an idea.</li>
-                <li style="margin-bottom:10px">PMX can <b>watch permission changes</b> in realtime, reverting them automatically when you stop using an app. Or it can perform <b>scheduled scan</b> of permissions. So you don't have to remember things.</li>
-                <li style="margin-bottom:5px">PMX makes it easy for you to <b>backup and restore</b> permissions state of installed apps so that you don't have to tweak an app's permissions again and again.</li>
-            </ul>
-            <p>Please also see <a href="#intro">What is PMX?</a></p>
-        </li>
-        <li id="faq1" style="margin-bottom:10px">
-            <p><b>Why PMX requires root or ADB access?</b></p>
-            <p>Android won't allow a normal user app to change other apps' manifest or AppOp permissions, even its own. Only reading AppOps without root or ADB is possible provided that hidden APIs are not blacklisted on your device, which is <a href="https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces">very unlikely</a> on Android 9+.</p>
-            <p>That's why we run a separate process with high privileges to circumvent the restrictions.</p>
-            <p>By default, the background process (daemon) is run with ADB UID (<code>2000</code>) or (if rooted) System UID (<code>1000</code>). On rooted devices UID can be changed in <b><i>Advanced Settings</i></b>.</p>
-        </li>
-        <li id="faq33" style="margin-bottom:10px">
-            <p><b>My device isn't rooted. How can I use PMX?</b></p>
-            <p><a href="#adb_help">Use PMX with ADB</a>. Please do read the note at the start. There might be some limitations on some devices.</p>
-        </li>
-        <li id="faq2" style="margin-bottom:10px">
-            <p><b>How does PMX change other apps permissions?</b></p>
-            <p>PMX itself cannot and does not grant or revoke other apps' permissions. In fact no third party app is privileged to do that. It's the Android OS which controls apps' permissions. PMX just sends a request to the Android framework to change a permission's state. Now it's entirely up to Android how much it honors our request. Not all permissions are changeable. And if you are not able to change a permission's state using PMX, you won't be able to change it in any other way either.</p>
-        </li>
-        <li id="faq37" style="margin-bottom:10px">
-            <p><b>I've changed a permission but it's not working. Why?</b></p>
-            <p>After changing a permission successfully, if you are not getting the desired results, it's the Android operating system to be blamed. Please see <a href="#faq2">How does PMX change other apps permissions?</a></p>
-        </li>
-        <li id="faq3" style="margin-bottom:10px">
-            <p><b>Why do some permissions revert to their old state soon after changing them?</b></p>
-            <p>Usually they are AppOp permissions. Some AppOps are only used by Android for compatibility (e.g. LEGACY_STORAGE) and they don't actually control anything. If we explore their underlying working it's revealed that granting / revoking such permissions doesn't make sense.</p>
-            <p>Some permissions cannot be changed if the app is targeting old Android version. Also some OEM ROMs behave weird when it comes to AppOps. We do not know exactly what changes your OEM has made to the stock AOSP code. That's why the statement on Github and Play Store: <i>"The app is tested on stock Android 7-11. Some highly customized ROMs may behave unexpectedly."</i></p>
-            <p>Actually there come many more explanations if we dig every app and permission individually (which doesn't sound practical). As stated above, PMX doesn't change other apps' permissions on its own, so even if for some unknown reason Android doesn't change a permission, or reverts it back immediately, there's nothing we can do to force it because these are the limitations at Android end. Rather, I should say this is how Android works.</p>
-            <p>Related: <a href="#faq11">What are different AppOp modes and which one should I use?</a></p>
-        </li>
-        <li id="faq34" style="margin-bottom:10px">
-            <p><b>Do the permissions remain changed after ADB is turned off, or root is denied, or PMX is uninstalled?</b></p>
-            <p>PMX itself cannot and does not grant or revoke other apps' permissions. In fact no third party app is privileged to do that. It's the Android OS which controls apps' permissions. PMX just sends a request to the Android framework to change a permission's state.</p>
-            <p>So once a permission is changed, it makes no difference if you uninstall PMX or drop its privileges. The permission remains in whatever state it is, unless changed again by you or the operating system.</p>
-        </li>
-        <li id="faq4" style="margin-bottom:10px">
-            <p><b>What are hidden APIs in Advanced Settings?</b></p>
-            <p>The core functionality of PMX revolves around <b>Hidden APIs</b>. These are the capabilities required to perform tasks (like granting / revoking permissions) which can only be performed by privileged system apps. So these capabilities aren't available to normal user apps. But PMX uses these capabilities with the help of root or ADB. If <b><i>"Use Hidden APIs"</i></b> is checked, the app tries to use some of these capabilities without the help of root or ADB. But this is not very likely to work on Android 9+, so the box is auto-unchecked. Usually a user should not be concerned about this.</p>
-            <p>If you are interested in underlying details please read <a href="https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces">here</a>.</p>
-        </li>
-        <li id="faq5" style="margin-bottom:10px">
-            <p><b>What should I select for Privileged Daemon UID in Advanced Settings? System or ADB?</b></p>
-            <p>It matters only if you are using root, or ADBD on your device is running with root (which is not the case with the final user devices).</p>
-            <p>Preferably use <b>System</b> (UID 1000) as it allows more privileges than <b>ADB</b> (UID 2000). E.g. changing <i>"System-Fixed"</i> permissions is possible only when running as system.</p>
-        </li>
-        <li id="faq6" style="margin-bottom:10px">
-            <p><b>Why don't I see XYZ app in packages list?</b></p>
-            <p>Please check <i>Exclusion Filters</i>. Almost all the stock Android packages are excluded by default. You can exclude / include any package you want from / to visible list.</p>
-        </li>
-        <li id="faq7" style="margin-bottom:10px">
-            <p><b>Why don't I see XYZ permission in ABC package?</b></p>
-            <p>Please check <i>Exclusion Filters</i>. Permissions which are not changeable are excluded from the visible list by-default.</p>
-        </li>
-        <li id="faq8" style="margin-bottom:10px">
-            <p><b>Why don't I see XYZ AppOp in ABC package?</b></p>
-            <p>Please check <i>Exclusion Filters</i> if XYZ AppOp is excluded from the visible list. Or ABC package might not be using XYZ operation. You don't need to be worried about this.</p>
-            <p>But if you want to see the XYZ AppOp for all apps, go to <b>Exclusion Filters</b> -> <b>Extra AppOps, never excluded</b> and check XYZ AppOp in the list.</p>
-            <p>For instance, write <i>_CLIPBOARD</i> in search box (with <i>Deep Search</i> box checked) and you'll get all apps which used (or tried to use) <i>READ_CLIPBOARD</i> or <i>WRITE_CLIPBOARD</i> permission. Timestamp is also shown (but not for all AppOps).</p>
-            <p>So if the app you are concerned about isn't in the search results, check both AppOps in the <i>Exclusion Filters</i> list mentioned above.</p>
-        </li>
-        <li id="faq9" style="margin-bottom:10px">
-            <p><b>What are <i>invalid permissions</i> in Exclusion Filters?</b></p>
-            <p>If an app is requesting a manifest permission but it's not declared (provided) by Android framework or any of the installed packages, it's an invalid permission. For instance "<i>com.android.vending.BILLING</i>" is an invalid permission if Play Store app is not installed on your device.</p>
-        </li>
-        <li id="faq10" style="margin-bottom:10px">
-            <p><b>What are <i>extra AppOps</i> in Exclusion Filters?</b></p>
-            <p>Not all AppOps are being used for all installed apps. But you can enforce an AppOp to any app. Selected Extra AppOps appear in all apps' permission lists so that you can set them.</p>
-        </li>
-        <li id="faq11" style="margin-bottom:10px">
-            <p><b>What are different AppOp modes and which one should I use?</b></p>
-            <p>Normally you should <i>Allow</i> or <i>Ignore</i>. Or you may want to allow an operation only when the app is in <i>Foreground</i> (only on Pie+). <i>Deny</i> is the intense version of <i>Ignore</i> which may crash the requesting app. <i>Default</i> is the system's default behavior which differs for different AppOps.</p>
-            <p>Please note that not every AppOp mode can be possibly set on every AppOp for every app. For instance on recent Android releases CAMERA and MICROPHONE are allowed to be used by user apps only in foreground (even if set mode is <i>Allow</i>). Similarly, some AppOps can never be set to <i>Foreground</i> mode.</p>
-            <p>Related: <a href="#faq3">Why do some permissions revert to their old state soon after changing them?</a></p>
-            <p>Official documentation: <a href="https://developer.android.com/reference/android/app/AppOpsManager#access-control">AppOpsManager</a>.</p>
-        </li>
-        <li id="faq12" style="margin-bottom:10px">
-            <p><b>What's the difference between <i>Ignore</i> and <i>Deny</i> AppOp modes?</b></p>
-            <p><a href="https://developer.android.com/reference/android/app/AppOpsManager#MODE_IGNORED">Ignore</a> silently fails while <a href="https://developer.android.com/reference/android/app/AppOpsManager#MODE_ERRORED">Deny</a> throws back an error to the app which the app might not be expecting and may crash. You should normally be using <b>Ignore</b>.</p>
-        </li>
-        <li id="faq13" style="margin-bottom:10px">
-            <p><b>What does READ_MEDIA_AUDIO permission do?</b></p>
-            <p>READ_MEDIA_[AUDIO|VIDEO|IMAGES] are recent addition to AppOps list, added in Android 10 (IIRC) as a part of Android's <i>Scoped Storage</i> implementation. Source code <a href="https://cs.android.com/android/platform/superproject/+/android-11.0.0_r1:frameworks/base/core/java/android/app/AppOpsManager.java;l=1065">states</a>: <i>Read media of audio type</i>. In simple terms it controls apps (which use <a href="https://developer.android.com/training/data-storage/shared/media">MediaStore</a>) access to audio files in external shared storage.</p>
-        </li>
-        <li id="faq14" style="margin-bottom:10px">
-            <p><b>What does WAKE_LOCK permission do?</b></p>
-            <p>Apps hold wakelock to keep the device awake i.e. not entering <a href="https://developer.android.com/training/monitoring-device-state/doze-standby#understand_doze">Doze mode</a>.</p>
-        </li>
-        <li id="faq15" style="margin-bottom:10px">
-            <p><b>Why can't I change XYZ permission?</b></p>
-            <p>Manifest permissions with only <i>Dangerous</i> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a> (and a few others) are changeable. AppOps not dependent on some other AppOp are changeable. That's how Android works, we can't change the behavior. See <a href="#perms_types">Manifest permissions and AppOps</a>.</p>
-            <p>Additionally, PMX protects some critical framework apps and permissions; changing them might brick the device. See the <a href="#faq17">related question</a>.</p>
-        </li>
-        <li id="faq16" style="margin-bottom:10px">
-            <p><b>How can I change INTERNET permission?</b></p>
-            <p>Android doesn't allow changing all permissions, like those with the <b>Normal</b> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a> (e.g. INTERNET) or those with <b>Fixed</b> flag or <b>Signature</b> protection level (usually System or Framework apps). See <a href="#perms_types">Manifest permissions and AppOps</a>.</p>
-        </li>
-        <li id="faq17" style="margin-bottom:10px">
-            <p><b>How can I change <i>System-Fixed</i> permissions, <i>Signature</i>|<i>Privileged</i> permissions, or the permissions of framework apps?</b></p>
-            <p>In Paid version you can "<b>Allow Critical Changes</b>" in <b>Advanced Settings</b> to make changes to the permissions with the <i>System-Fixed</i> flag, protection level <i>Signature</i>|<i>Privileged</i>, or those of framework app. But it's not recommended to play with the System and Framework apps. You can brick your device.</p>
-        </li>
-        <li id="faq18" style="margin-bottom:10px">
-            <p><b>What is <i>UID mode</i> in AppOp permissions?</b></p>
-            <p>It's a mode of an AppOp permission which indicates that changing this AppOp will also affect other apps (with the same UID), if installed. See <a href="https://developer.android.com/guide/topics/manifest/manifest-element#uid">sharedUserId</a>.</p>
-        </li>
-        <li id="faq31" style="margin-bottom:10px">
-            <p><b>Why do I get a lot of <i>Bad ROM</i> popups?</b></p>
-            <p>OEMs make huge changes to stock AOSP code (which is developed by Google). So the AppOps framework on some custom / OEM ROMs returns unexpected results which PMX cannot understand. You can ignore these popups, but they mean that the functionality is somewhat limited.</p>
-        </li>
-        <li id="faq19" style="margin-bottom:10px">
-            <p><b>What does the "Exclude" button (on long press) do?</b></p>
-            <p>"Exclude" just hides the permission from the visible list. If you don't want to change a permission for any app, you may just "Exclude" it. And it won't appear for any app. To unhide it again go to <b><i>Exclusion Filters</i></b> settings.</p>
-            <p>Similarly, you can exclude an app from the visible list if you are not concerned about its permissions.</p>
-        </li>
-        <li id="faq20" style="margin-bottom:10px">
-            <p><b>Why does scanning apps takes so long?</b></p>
-            <p>PMX gets a lot of information about apps. It includes package label, name, icon, UID, and its state (framework, system, user, disabled). For manifest and AppOp permissions the information includes permission name, state (granted, revoked, allow, ignore, deny, foreground, default), <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a> (normal, dangerous, signature, development, privileged, fixed, AppOp) and AppOp's last access time. Then the set value of every permission is compared with the reference value and the reference state is decided (red, green or orange). After scanning all the permissions for every app, the count of visible vs total permissions and app's reference state is also shown in package information.</p>
-            <p>You can turn on <i>Quick Scan</i> in settings to disable permissions scan. Or exclude as much information as you can in <i>Exclusion Filters</i> to speed up the scan process. Speed also depends on how much CPU and RAM your device spares for the apps. ROMs investing more on UI (like MIUI) are slower.</p>
-        </li>
-        <li id="faq21" style="margin-bottom:10px">
-            <p><b>Is there a complete list of all permissions available with explanation?</b></p>
-            <p>There's no complete list of permissions with description, at least in my knowledge. For some manifest permissions there is a brief description available which is shown when you tap a permission name in PMX app. For AppOps there's no description provided in Android.</p>
-            <p>There are third part resources like <a href="https://android.izzysoft.de/applists.php?topic=perms">this one</a> by Izzy. Android's <a href="https://developer.android.com">official developer site</a> and <a href="https://cs.android.com">source code</a> are also good sources for learning. With every new Android release some new permissions are added, and some also get obsolete. Also, not all permissions are needed to be taken care of by every user.</p>
-        </li>
-        <li id="faq22" style="margin-bottom:10px">
-            <p><b>How to use the app in work profile / multi-user environment?</b></p>
-            <p>Paid version supports work profiles and multiple users. Select a user from drop-down menu.</p>
-        </li>
-        <li id="faq23" style="margin-bottom:10px">
-            <p><b>How can I translate PMX to my language?</b></p>
-            <p>Join the translators team on <a href="https://crowdin.com/project/pmx">Crowdin</a>. Let me know which language you are interested in and I'll add that to the project.</p>
-            <p>Major translators will be credited by adding their names to the app in <b>About</b> section.</p>
-        </li>
-        <li id="faq30" style="margin-bottom:10px">
-            <p><b>Are you going to add Shizuku support to PMX?</b></p>
-            <p>No. It's not currently planned.</p>
-        </li>
-        <li id="faq24" style="margin-bottom:10px">
-            <p><b>How does PMX compare to XPrivacyLua? Can they replace each other?</b></p>
-            <p>PMX is not designed to replace but to compliment projects like XPrivacyLua. They have different design goals.</p>
-            <p>XPrivacyLua hacks Android's standard functionality by hooking into internal APIs, using Xposed which replaces some Android libraries with the hacked ones. So we get extra functionality like feeding fake data to the apps and get notified of permission related events which we cannot know of by any other normal means.</p>
-            <p>PMX on the other hand is not targeted to be a framework mod. It provides convenient access to some privileged APIs which normal apps cannot use. It's not hacking Android's standard functionality by any means. Most of the tasks PMX performs can also be performed from commandline, except a few like changing System-Fixed permissions.</p>
-            <p>Rooting and Xposed are two strict requirements for using XPrivacyLua. PMX doesn't require any of the both for the most part. Both aren't available for many devices or many users don't consider them as an option due to the technical difficulties involved, warranty void, SafetyNet failing and other issues.</p>
-            <p>Here's a related <a href="https://github.com/mirfatif/PermissionManagerX/issues/9">issue</a>.</p>
-        </li>
-        <li id="faq32" style="margin-bottom:10px">
-            <p><b>Can PMX auto remove permissions when an app is closed, like Bouncer does?</b></p>
-            <p>Yes. See <a href="#perm_watcher">Permission Watcher</a> and <a href="#scheduled_checker">Scheduled Check</a>. But it doesn't use Android's <b><i>Accessibility</i></b> feature to perform taps / clicks on screen on user's behalf (though it's a good feature without requiring any extra setup). PMX relies on root or ADB privileges. So it can do far more (see <a href="#intro">What is PMX?</a>) than what can be done using Accessibility features.</p>
-            <p>If you are using ADB, and not root, <b>Permission Watcher</b> may not work on some devices. Please read the note given at the start of <a href="#adb_help">Using PMX with ADB</a>.</p>
-        </li>
-        <li id="faq35" style="margin-bottom:10px">
-            <p><b>Can I get notified when a new app is installed?</b></p>
-            <p>Yes. See <a href="#perm_watcher">Permission Watcher</a>.</p>
-            <p>Since Android 8 it's not possible for background (not running) apps to get notified of the new app installed event. So we've to run a foreground service (with persistent notification) to receive this event. Or you may consider using <a href="#scheduled_checker">Scheduled Checks</a> to keep things in place.</p>
-        </li>
-        <li id="faq38" style="margin-bottom:10px">
-            <p><b>When a new app is installed, can PMX drop its permissions by default?</b></p>
-            <p>Yes. But there's nothing to drop. All the revocable manifest permissions are already revoked and stay revoked unless the user grants them explicitly. As far as AppOps are concerned, many of them don't appear until at least once used by the app e.g. VIBRATION and READ_CLIPBOARD. Many others (e.g. READ_CONTACTS) have their corresponding manifest permissions already dropped, as pointed out. So it's not predictable at the time of app installation which AppOps should be removed.</p>
-            <p>But a notification is displayed when a new app is installed (if using <a href="#perm_watcher">Permission Watcher</a>) so the user can set permissions one by one or apply a profile (upcoming feature).</p>
-        </li>
-        <li id="faq25" style="margin-bottom:10px">
-            <p><b>Why PMX requires INTERNET permission?</b></p>
-            <p>As clearly stated in app description: <code>android.permission.INTERNET</code> permission is required to make use of ADB over network. The only connections made outside the device are to check for updates (which you can disable in app settings) and to fetch help contents (this webpage).</p>
-        </li>
-        <li id="faq26" style="margin-bottom:10px">
-            <p><b>How much privacy friendly PMX is?</b></p>
-            <p>We are not interested in you or your device. PMX is open source. You can go through the source code on Github. There's nothing hidden from the end user. We believe in our users being educated and well-informed of why they are using PMX. We respect your privacy, so no data is collected ever, even the crash logs. You may also want to see our <a href="https://mirfatif.github.io/PermissionManagerX/privacy_policy.html">Privacy Policy</a>.</p>
-        </li>
-        <li id="faq27" style="margin-bottom:10px">
-            <p><b>Is PMX spying on me using ADB over network?</b></p>
-            <p>No.</p>
-            <p>PMX talks to <code>adbd</code> process over localhost (<code>127.0.0.1</code>). But there's no way to start <code>adbd</code> listen on localhsot only, and not on other network interfaces (because ADB is meant to be used externally from a PC). You can surely stop <code>adbd</code> listening from external IP addresses, if you can. PMX would still work, without any port being exposed externally.</p>
-            <p>Also you can change <code>5555</code> port to whatever number you want in <b>Advanced Settings</b>. It's not hard-coded.</p>
-            <p>Also ADB since Android 4.2 is meant to be protected with <b>RSA key authentication</b> (one of the strongest authentication mechanism). So even if the device is accessible from internet (which is highly <a href="https://android.stackexchange.com/a/205807/218526">unlikely</a>), no one can make an ADB connection without authentication.</p>
-            <p>You can verify these claims in whatever way you want. We are here to assist you technically.</p>
-        </li>
-        <li id="faq28" style="margin-bottom:10px">
-            <p><b>Is PMX misusing root privileges to collect my data?</b></p>
-            <p>We believe in the <a href="https://en.wikipedia.org/wiki/Principle_of_least_privilege">principle of the least privilege</a>. But due to the restricted nature of Android operating system, PMX cannot function without having high privileges. What we can offer is, if you are a tech-savvy person, we can teach you how to make it difficult for apps to make internet connections, even with root privileges.</p>
-        </li>
-        <li id="faq29" style="margin-bottom:10px">
-            <p><b>I think PMX is useless. Why was it created?</b></p>
-            <p>You are correct. PMX is not for everyone (and that's why it wasn't polished and released to public for years because we knew we've a very small audience). It's only for some extra tech-savvy souls who are extra-conscious about their privacy and device control. Majority of the phone users are just in the hands of their OEMs and app developers. They aren't aware of what's being done to them and their data. And it's fine.</p>
-        </li>
+        <li>PMX provides all the scattered (or otherwise unavailable) permission-related <b>information</b> and <b>controls</b> on a single screen so that you can watch and control them in a comprehensive and convenient way.</li>
+        <li>There's no official tool available in stock Android to change <b>AppOps</b>. Only a subset of <b>manifest permissions</b> are exposed to user in permission settings. PMX exposes all the permissions in raw form. Related: <a href="#perms_types">Manifest permissions and AppOps</a>.</li>
+        <li>PMX makes it easy for you to keep track of any <b>unwanted changes</b> to permissions.</li>
+        <li>Giving control on your device, PMX enables you to <b>save device resources</b> like battery and network bandwidth, and <b>protect your privacy</b>. You are not entirely left to the mercy of app and ROM developers. Read this <a href="https://www.buzzfeednews.com/article/nicolenguyen/how-apps-take-your-data-and-sell-it-without-you-even">article</a> to get an idea.</li>
+        <li>PMX can <b>watch permission changes</b> in realtime, reverting them automatically when you stop using an app. Or it can perform <b>scheduled scan</b> of permissions. So you don't have to remember things.</li>
+        <li>PMX makes it easy for you to <b>backup and restore</b> permissions state of installed apps so that you don't have to tweak an app's permissions again and again.</li>
     </ul>
+    <p>Please also see <a href="#intro">What is PMX?</a></p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq1" class="high-bottom"><b>Why PMX requires root or ADB access?</b></p>
+    <p>Android won't allow a normal user app to change other apps' manifest or AppOp permissions, even its own. Only reading AppOps without root or ADB is possible provided that hidden APIs are not blacklisted on your device, which is <a href="https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces">very unlikely</a> on Android 9+.</p>
+    <p>That's why we run a separate process with high privileges to circumvent the restrictions.</p>
+    <p>By default, the background process (daemon) is run with ADB UID (<code>2000</code>) or (if rooted) System UID (<code>1000</code>). On rooted devices UID can be changed in <b><i>Advanced Settings</i></b>.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq33" class="high-bottom"><b>My device isn't rooted. How can I use PMX?</b></p>
+    <p><a href="#adb_help">Use PMX with ADB</a>. Please do read the note at the start. There might be some limitations on some devices.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq2" class="high-bottom"><b>How does PMX change other apps permissions?</b></p>
+    <p>PMX itself cannot and does not grant or revoke other apps' permissions. In fact no third party app is privileged to do that. It's the Android OS which controls apps' permissions. PMX just sends a request to the Android framework to change a permission's state. Now it's entirely up to Android how much it honors our request. Not all permissions are changeable. And if you are not able to change a permission's state using PMX, you won't be able to change it in any other way either.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq37" class="high-bottom"><b>I've changed a permission but it's not working. Why?</b></p>
+    <p>After changing a permission successfully, if you are not getting the desired results, it's the Android operating system to be blamed. Please see <a href="#faq2">How does PMX change other apps permissions?</a></p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq3" class="high-bottom"><b>Why do some permissions revert to their old state soon after changing them?</b></p>
+    <p>Usually they are AppOp permissions. Some AppOps are only used by Android for compatibility (e.g. LEGACY_STORAGE) and they don't actually control anything. If we explore their underlying working it's revealed that granting / revoking such permissions doesn't make sense.</p>
+    <p>Some permissions cannot be changed if the app is targeting old Android version. Also some OEM ROMs behave weird when it comes to AppOps. We do not know exactly what changes your OEM has made to the stock AOSP code. That's why the statement on Github and Play Store: <i>"The app is tested on stock Android 7-11. Some highly customized ROMs may behave unexpectedly."</i></p>
+    <p>Actually there come many more explanations if we dig every app and permission individually (which doesn't sound practical). As stated above, PMX doesn't change other apps' permissions on its own, so even if for some unknown reason Android doesn't change a permission, or reverts it back immediately, there's nothing we can do to force it because these are the limitations at Android end. Rather, I should say this is how Android works.</p>
+    <p>Related: <a href="#faq11">What are different AppOp modes and which one should I use?</a></p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq34" class="high-bottom"><b>Do the permissions remain changed after ADB is turned off, or root is denied, or PMX is uninstalled?</b></p>
+    <p>PMX itself cannot and does not grant or revoke other apps' permissions. In fact no third party app is privileged to do that. It's the Android OS which controls apps' permissions. PMX just sends a request to the Android framework to change a permission's state.</p>
+    <p>So once a permission is changed, it makes no difference if you uninstall PMX or drop its privileges. The permission remains in whatever state it is, unless changed again by you or the operating system.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq4" class="high-bottom"><b>What are hidden APIs in Advanced Settings?</b></p>
+    <p>The core functionality of PMX revolves around <b>Hidden APIs</b>. These are the capabilities required to perform tasks (like granting / revoking permissions) which can only be performed by privileged system apps. So these capabilities aren't available to normal user apps. But PMX uses these capabilities with the help of root or ADB. If <b><i>"Use Hidden APIs"</i></b> is checked, the app tries to use some of these capabilities without the help of root or ADB. But this is not very likely to work on Android 9+, so the box is auto-unchecked. Usually a user should not be concerned about this.</p>
+    <p>If you are interested in underlying details please read <a href="https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces">here</a>.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq5" class="high-bottom"><b>What should I select for Privileged Daemon UID in Advanced Settings? System or ADB?</b></p>
+    <p>It matters only if you are using root, or ADBD on your device is running with root (which is not the case with the final user devices).</p>
+    <p>Preferably use <b>System</b> (UID 1000) as it allows more privileges than <b>ADB</b> (UID 2000). E.g. changing <i>"System-Fixed"</i> permissions is possible only when running as system.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq6" class="high-bottom"><b>Why don't I see XYZ app in packages list?</b></p>
+    <p>Please check <i>Exclusion Filters</i>. Almost all the stock Android packages are excluded by default. You can exclude / include any package you want from / to visible list.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq7" class="high-bottom"><b>Why don't I see XYZ permission in ABC package?</b></p>
+    <p>Please check <i>Exclusion Filters</i>. Permissions which are not changeable are excluded from the visible list by-default.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq8" class="high-bottom"><b>Why don't I see XYZ AppOp in ABC package?</b></p>
+    <p>Please check <i>Exclusion Filters</i> if XYZ AppOp is excluded from the visible list. Or ABC package might not be using XYZ operation. You don't need to be worried about this.</p>
+    <p>But if you want to see the XYZ AppOp for all apps, go to <b>Exclusion Filters</b> -> <b>Extra AppOps, never excluded</b> and check XYZ AppOp in the list.</p>
+    <p>For instance, write <i>_CLIPBOARD</i> in search box (with <i>Deep Search</i> box checked) and you'll get all apps which used (or tried to use) <i>READ_CLIPBOARD</i> or <i>WRITE_CLIPBOARD</i> permission. Timestamp is also shown (but not for all AppOps).</p>
+    <p>So if the app you are concerned about isn't in the search results, check both AppOps in the <i>Exclusion Filters</i> list mentioned above.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq9" class="high-bottom"><b>What are <i>invalid permissions</i> in Exclusion Filters?</b></p>
+    <p>If an app is requesting a manifest permission but it's not declared (provided) by Android framework or any of the installed packages, it's an invalid permission. For instance "<i>com.android.vending.BILLING</i>" is an invalid permission if Play Store app is not installed on your device.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq10" class="high-bottom"><b>What are <i>extra AppOps</i> in Exclusion Filters?</b></p>
+    <p>Not all AppOps are being used for all installed apps. But you can enforce an AppOp to any app. Selected Extra AppOps appear in all apps' permission lists so that you can set them.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq11" class="high-bottom"><b>What are different AppOp modes and which one should I use?</b></p>
+    <p>Normally you should <i>Allow</i> or <i>Ignore</i>. Or you may want to allow an operation only when the app is in <i>Foreground</i> (only on Pie+). <i>Deny</i> is the intense version of <i>Ignore</i> which may crash the requesting app. <i>Default</i> is the system's default behavior which differs for different AppOps.</p>
+    <p>Please note that not every AppOp mode can be possibly set on every AppOp for every app. For instance on recent Android releases CAMERA and MICROPHONE are allowed to be used by user apps only in foreground (even if set mode is <i>Allow</i>). Similarly, some AppOps can never be set to <i>Foreground</i> mode.</p>
+    <p>Related: <a href="#faq3">Why do some permissions revert to their old state soon after changing them?</a></p>
+    <p>Official documentation: <a href="https://developer.android.com/reference/android/app/AppOpsManager#access-control">AppOpsManager</a>.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq12" class="high-bottom"><b>What's the difference between <i>Ignore</i> and <i>Deny</i> AppOp modes?</b></p>
+    <p><a href="https://developer.android.com/reference/android/app/AppOpsManager#MODE_IGNORED">Ignore</a> silently fails while <a href="https://developer.android.com/reference/android/app/AppOpsManager#MODE_ERRORED">Deny</a> throws back an error to the app which the app might not be expecting and may crash. You should normally be using <b>Ignore</b>.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq13" class="high-bottom"><b>What does READ_MEDIA_AUDIO permission do?</b></p>
+    <p>READ_MEDIA_[AUDIO|VIDEO|IMAGES] are recent addition to AppOps list, added in Android 10 (IIRC) as a part of Android's <i>Scoped Storage</i> implementation. Source code <a href="https://cs.android.com/android/platform/superproject/+/android-11.0.0_r1:frameworks/base/core/java/android/app/AppOpsManager.java;l=1065">states</a>: <i>Read media of audio type</i>. In simple terms it controls apps (which use <a href="https://developer.android.com/training/data-storage/shared/media">MediaStore</a>) access to audio files in external shared storage.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq14" class="high-bottom"><b>What does WAKE_LOCK permission do?</b></p>
+    <p>Apps hold wakelock to keep the device awake i.e. not entering <a href="https://developer.android.com/training/monitoring-device-state/doze-standby#understand_doze">Doze mode</a>.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq15" class="high-bottom"><b>Why can't I change XYZ permission?</b></p>
+    <p>Manifest permissions with only <i>Dangerous</i> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a> (and a few others) are changeable. AppOps not dependent on some other AppOp are changeable. That's how Android works, we can't change the behavior. See <a href="#perms_types">Manifest permissions and AppOps</a>.</p>
+    <p>Additionally, PMX protects some critical framework apps and permissions; changing them might brick the device. See the <a href="#faq17">related question</a>.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq16" class="high-bottom"><b>How can I change INTERNET permission?</b></p>
+    <p>Android doesn't allow changing all permissions, like those with the <b>Normal</b> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a> (e.g. INTERNET) or those with <b>Fixed</b> flag or <b>Signature</b> protection level (usually System or Framework apps). See <a href="#perms_types">Manifest permissions and AppOps</a>.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq17" class="high-bottom"><b>How can I change <i>System-Fixed</i> permissions, <i>Signature</i>|<i>Privileged</i> permissions, or the permissions of framework apps?</b></p>
+    <p>If your device is rooted, in paid version you can "<b>Allow Critical Changes</b>" in <b>Advanced Settings</b> to make changes to the permissions with the <i>System-Fixed</i> flag, protection level <i>Signature</i>|<i>Privileged</i>, or those of framework app. But it's not recommended to play with the System and Framework apps. You can brick your device.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq18" class="high-bottom"><b>What is <i>UID mode</i> in AppOp permissions?</b></p>
+    <p>It's a mode of an AppOp permission which indicates that changing this AppOp will also affect other apps (with the same UID), if installed. See <a href="https://developer.android.com/guide/topics/manifest/manifest-element#uid">sharedUserId</a>.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq39" class="high-bottom"><b>Can I control Android's "Remove permissions if app isn't used" feature from PMX?</b></p>
+    <p>Yes.</p>
+    <ul>
+        <li>Go to <i>Exclusion Filters</i> -> <i>Extra AppOps list</i> and check "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>".</li>
+        <li>Back on the main screen, type "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>" in the top search bar.</li>
+        <li>Set the mode <i>Allow</i> or <i>Ignore</i> for whichever apps you want.</li>
+    </ul>
+
+    <hr class="dim-hr" />
+
+    <p id="faq31" class="high-bottom"><b>Why do I get a lot of <i>Bad ROM</i> popups?</b></p>
+    <p>OEMs make huge changes to stock AOSP code (which is developed by Google). So the AppOps framework on some custom / OEM ROMs returns unexpected results which PMX cannot understand. You can ignore these popups, but they mean that the functionality is somewhat limited.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq19" class="high-bottom"><b>What do the "Hide From List" buttons (on long press) do?</b></p>
+    <p>They both just hide the app or the permission from the visible list. If you don't want to change a permission for any app, you may hide it. And it won't appear for any app. To unhide it again go to <b><i>Exclusion Filters</i></b> settings.</p>
+    <p>Similarly, you can exclude an app from the visible list if you are not concerned about its permissions.</p>
+    <img class="small" src="hide_app_from_list.webp" />
+    <img class="small" src="hide_perm_from_list.webp" />
+
+    <hr class="dim-hr" />
+
+    <p id="faq20" class="high-bottom"><b>Why does scanning apps takes so long?</b></p>
+    <p>PMX gets a lot of information about apps. It includes package label, name, icon, UID, and its state (framework, system, user, disabled). For manifest and AppOp permissions the information includes permission name, state (granted, revoked, allow, ignore, deny, foreground, default), <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a> (normal, dangerous, signature, development, privileged, fixed, AppOp) and AppOp's last access time. Then the set value of every permission is compared with the reference value and the reference state is decided (red, green or orange). After scanning all the permissions for every app, the count of visible vs total permissions and app's reference state is also shown in package information.</p>
+    <p>You can turn on <i>Quick Scan</i> in settings to disable permissions scan. Or exclude as much information as you can in <i>Exclusion Filters</i> to speed up the scan process. Speed also depends on how much CPU and RAM your device spares for the apps. ROMs investing more on UI (like MIUI) are slower. Also ADB is usually slower than root.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq21" class="high-bottom"><b>Is there a complete list of all permissions available with explanation?</b></p>
+    <p>There's no complete list of permissions with description, at least in my knowledge. For some manifest permissions there is a brief description available which is shown when you tap a permission name in PMX app. For AppOps there's no description provided in Android.</p>
+    <p>There are third part resources like <a href="https://android.izzysoft.de/applists.php?topic=perms">this one</a> by Izzy. Android's <a href="https://developer.android.com">official developer site</a> and <a href="https://cs.android.com">source code</a> are also good sources for learning. With every new Android release some new permissions are added, and some also get obsolete. Also, not all permissions are needed to be taken care of by every user.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq22" class="high-bottom"><b>How to use the app in work profile / multi-user environment?</b></p>
+    <p>Paid version supports work profiles and multiple users. Select a user from drop-down menu.</p>
+    <img class="small" src="multi_users.webp" />
+
+    <hr class="dim-hr" />
+
+    <p id="faq23" class="high-bottom"><b>How can I translate PMX to my language?</b></p>
+    <p>Join the translators team on <a href="https://crowdin.com/project/pmx">Crowdin</a>. Let me know which language you are interested in and I'll add that to the project.</p>
+    <p>Major translators will be credited by adding their names to the app in <b>About</b> section.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq30" class="high-bottom"><b>Are you going to add Shizuku support to PMX?</b></p>
+    <p>No. It's not currently planned.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq24" class="high-bottom"><b>How does PMX compare to XPrivacyLua? Can they replace each other?</b></p>
+    <p>PMX is not designed to replace but to compliment projects like XPrivacyLua. They have different design goals.</p>
+    <p>XPrivacyLua hacks Android's standard functionality by hooking into internal APIs, using Xposed which replaces some Android libraries with the hacked ones. So we get extra functionality like feeding fake data to the apps and get notified of permission related events which we cannot know of by any other normal means.</p>
+    <p>PMX on the other hand is not targeted to be a framework mod. It provides convenient access to some privileged APIs which normal apps cannot use. It's not hacking Android's standard functionality by any means. Most of the tasks PMX performs can also be performed from commandline, except a few like changing System-Fixed permissions.</p>
+    <p>Rooting and Xposed are two strict requirements for using XPrivacyLua. PMX doesn't require any of the both for the most part. Both aren't available for many devices or many users don't consider them as an option due to the technical difficulties involved, warranty void, SafetyNet failing and other issues.</p>
+    <p>Here's a related <a href="https://github.com/mirfatif/PermissionManagerX/issues/9">issue</a>.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq32" class="high-bottom"><b>Can PMX auto remove permissions when an app is closed, like Bouncer does?</b></p>
+    <p>Yes. See <a href="#perm_watcher">Permission Watcher</a> and <a href="#scheduled_checker">Scheduled Check</a>. But it doesn't use Android's <b><i>Accessibility</i></b> feature to perform taps / clicks on screen on user's behalf (though it's a good feature without requiring any extra setup). PMX relies on root or ADB privileges. So it can do far more (see <a href="#intro">What is PMX?</a>) than what can be done using Accessibility features.</p>
+    <p>If you are using ADB, and not root, <b>Permission Watcher</b> may not work on some devices. Please read the note given at the start of <a href="#adb_help">Using PMX with ADB</a>.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq35" class="high-bottom"><b>Can I get notified when a new app is installed?</b></p>
+    <p>Yes. See <a href="#perm_watcher">Permission Watcher</a>.</p>
+    <p>Since Android 8 it's not possible for background (not running) apps to get notified of the new app installed event. So we've to run a foreground service (with persistent notification) to receive this event. Or you may consider using <a href="#scheduled_checker">Scheduled Checks</a> to keep things in place.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq38" class="high-bottom"><b>When a new app is installed, can PMX drop its permissions by default?</b></p>
+    <p>Yes. But there's nothing to drop. All the revocable manifest permissions are already revoked and stay revoked unless the user grants them explicitly. As far as AppOps are concerned, many of them don't appear until at least once used by the app e.g. VIBRATION and READ_CLIPBOARD. Many others (e.g. READ_CONTACTS) have their corresponding manifest permissions already dropped, as pointed out. So it's not predictable at the time of app installation which AppOps should be removed.</p>
+    <p>But a notification is displayed when a new app is installed (if using <a href="#perm_watcher">Permission Watcher</a>) so the user can set permissions one by one or apply a profile (upcoming feature).</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq25" class="high-bottom"><b>Why PMX requires INTERNET permission?</b></p>
+    <p>As clearly stated in the app description: <code>android.permission.INTERNET</code> permission is required to make use of ADB over network. The only connections made outside the device are to check for updates (which you can disable in app settings) and to fetch help contents (this webpage). Pro version also requires internet connection for license verification.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq26" class="high-bottom"><b>How much privacy friendly PMX is?</b></p>
+    <p>We are not interested in you or your device. PMX is open source. You can go through the source code on Github. There's nothing hidden from the end user. We believe in our users being educated and well-informed of why they are using PMX. We respect your privacy, so no data is collected ever, even the crash logs. You may also want to see our <a href="https://mirfatif.github.io/PermissionManagerX/privacy_policy.html">Privacy Policy</a>.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq27" class="high-bottom"><b>Is PMX spying on me using ADB over network?</b></p>
+    <p>No.</p>
+    <p>PMX talks to <code>adbd</code> process over localhost (<code>127.0.0.1</code>). But there's no way to start <code>adbd</code> listen on localhsot only, and not on other network interfaces (because ADB is meant to be used externally from a PC). You can surely stop <code>adbd</code> listening from external IP addresses, if you can. PMX would still work, without any port being exposed externally.</p>
+    <p>Also you can change <code>5555</code> port to whatever number you want in <b>Advanced Settings</b>. It's not hard-coded.</p>
+    <p>Also ADB since Android 4.2 is meant to be protected with <b>RSA key authentication</b> (one of the strongest authentication mechanism). So even if the device is accessible from internet (which is highly <a href="https://android.stackexchange.com/a/205807/218526">unlikely</a>), no one can make an ADB connection without authentication.</p>
+    <p>You can verify these claims in whatever way you want. We are here to assist you technically.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq28" class="high-bottom"><b>Is PMX misusing root privileges to collect my data?</b></p>
+    <p>We believe in the <a href="https://en.wikipedia.org/wiki/Principle_of_least_privilege">principle of the least privilege</a>. But due to the restricted nature of Android operating system, PMX cannot function without having high privileges. What we can offer is, if you are a tech-savvy person, we can teach you how to make it difficult for apps to make internet connections, even with root privileges.</p>
+
+    <hr class="dim-hr" />
+
+    <p id="faq29" class="high-bottom"><b>I think PMX is useless. Why was it created?</b></p>
+    <p>You are correct. PMX is not for everyone (and that's why it wasn't polished and released to public for years because we knew we've a very small audience). It's only for some extra tech-savvy souls who are extra-conscious about their privacy and device control. Majority of the phone users are just in the hands of their OEMs and app developers. They aren't aware of what's being done to them and their data. And it's fine.</p>
 
     <hr>
 
-    <h2>Want more help?</h2>
-    <p>Please <a href="https://mirfatif.github.io/PermissionManagerX/#contact-us">contact us</a> via email or Telegram.</p>
+    <h2 id="download">Downloads / Screenshots</h2>
+    <p>Please visit Github <a href="https://mirfatif.github.io/PermissionManagerX">README</a>.</p>
+
+    <hr>
+
+    <h2 id="contact-us">Have more questions?</h2>
+    <p>Please <a href="https://mirfatif.github.io/PermissionManagerX/#want-to-reach-us">contact us</a> via email or Telegram.</p>
 
 </body>
 

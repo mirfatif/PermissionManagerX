@@ -25,12 +25,17 @@
   <bool name="pref_main_daemon_tmp_dir_default">true</bool>
   <string name="pref_main_app_launch_count_enc_key" translatable="false">pref_main_app_launch_count_enc</string>
   <integer name="pref_main_app_launch_count_enc_default">0</integer>
-  <string name="pref_main_deep_search_enc_key" translatable="false">pref_main_deep_search_enc</string>
-  <bool name="pref_main_deep_search_enc_default">false</bool>
-  <string name="pref_main_case_sensitive_search_enc_key" translatable="false">pref_main_case_sensitive_search_enc</string>
-  <bool name="pref_main_case_sensitive_search_enc_default">false</bool>
-  <string name="pref_main_dark_theme_key" translatable="false">pref_main_dark_theme</string>
-  <bool name="pref_main_dark_theme_default">true</bool>
+
+  <string name="pref_main_deep_search_key" translatable="false">pref_main_deep_search</string>
+  <bool name="pref_main_deep_search_default">false</bool>
+  <string name="pref_main_deep_search_title" maxLength="20">Deep search</string>
+  <string name="pref_main_deep_search_summary">Do search in permissions list instead of apps list</string>
+
+  <string name="pref_main_case_sensitive_search_key" translatable="false">pref_main_case_sensitive_search</string>
+  <bool name="pref_main_case_sensitive_search_default">false</bool>
+  <string name="pref_main_case_sensitive_search_title" maxLength="20">Case sensitive</string>
+  <string name="pref_main_case_sensitive_search_summary">Match string only with the same case</string>
+
   <string name="pref_main_use_hidden_apis_enc_key" translatable="false">pref_main_use_hidden_apis_enc</string>
   <bool name="pref_main_use_hidden_apis_enc_default">true</bool>
   <string name="pref_main_use_socket_enc_key" translatable="false">pref_main_use_socket_enc</string>
@@ -119,34 +124,51 @@
   <string name="pref_filter_extra_appops_title" maxLength="20">Extra AppOps list</string>
 
   <!-- SettingsActivity -->
+  <string name="pref_settings_general_cat_title" maxLength="20">General settings</string>
+
   <string name="pref_settings_check_for_updates_title" maxLength="20">Check for updates</string>
-  <string name="pref_settings_check_for_updates_summary">Show a notification when a new version is
-    available
-  </string>
+  <string name="pref_settings_check_for_updates_summary">Show a notification when a new version is available</string>
   <string name="pref_settings_check_for_updates_key" translatable="false">pref_settings_check_for_updates</string>
   <bool name="pref_settings_check_for_updates_default">true</bool>
   <string name="pref_settings_check_for_updates_ts_enc_key" translatable="false">pref_settings_check_for_updates_ts_enc</string>
   <string name="pref_settings_privileges_reminder_title" maxLength="20">Remind missing privileges</string>
-  <string name="pref_settings_privileges_reminder_summary">Show a dialog on app start if root and ADB
-    privileges are not granted
-  </string>
+  <string name="pref_settings_privileges_reminder_summary">Show a dialog on app start if root and ADB privileges are not granted</string>
   <string name="pref_settings_privileges_reminder_key" translatable="false">pref_settings_privileges_reminder</string>
   <bool name="pref_settings_privileges_reminder_default">true</bool>
   <string name="pref_settings_quick_scan_title" maxLength="20">Perform quick scan</string>
-  <string name="pref_settings_quick_scan_summary">Don\'t scan permissions, and don\'t show app\'s
-    reference state and permission count
-  </string>
+  <string name="pref_settings_quick_scan_summary">Don\'t scan permissions, and don\'t show app\'s reference state and permission count</string>
   <string name="pref_settings_quick_scan_key" translatable="false">pref_settings_quick_scan</string>
   <bool name="pref_settings_quick_scan_default">false</bool>
   <string name="pref_settings_special_search_key" translatable="false">pref_settings_special_search</string>
   <bool name="pref_settings_special_search_default">true</bool>
   <string name="pref_settings_special_search_title" maxLength="20">Complex search</string>
-  <string name="pref_settings_special_search_summary">Use AND (&amp;), OR (|) and NOT (!) operators
-    in search to combine queries
-  </string>
+  <string name="pref_settings_special_search_summary">Use AND (&amp;), OR (|) and NOT (!) operators in search to combine queries</string>
   <string name="pref_settings_locale_title" maxLength="20">Application language</string>
   <string name="pref_settings_locale_key" translatable="false">pref_settings_locale</string>
   <string name="pref_settings_locale_default" translatable="false" />
+
+  <string name="pref_settings_theming_cat_title" maxLength="20">Theming</string>
+  <string name="pref_settings_theme_color_title" maxLength="20">Theme color</string>
+  <string name="pref_settings_theme_color_key" translatable="false">pref_settings_theme_color</string>
+  <string name="pref_settings_theme_color_default" translatable="false">@string/theme_color_green_val</string>
+  <string name="theme_color_green_val" translatable="false">green</string>
+  <string name="theme_color_blue_val" translatable="false">blue</string>
+  <string name="theme_color_pink_val" translatable="false">pink</string>
+  <string name="theme_color_gray_val" translatable="false">gray</string>
+  <string name="pref_settings_dark_theme_title" maxLength="20">Dark theme</string>
+  <string name="pref_settings_dark_theme_summary" maxLength="20">Force night mode irrespective of system settings</string>
+  <string name="pref_settings_dark_theme_key" translatable="false">pref_settings_dark_theme</string>
+  <bool name="pref_settings_dark_theme_default">true</bool>
+
+
+  <string name="pref_settings_search_suggestions_count_title1" maxLength="20">Search suggestions</string>
+  <string name="pref_settings_search_suggestions_count_title2" maxLength="20">Max suggestions: %d</string>
+  <string name="pref_settings_search_suggestions_count_summary">Suggest package, permissions, special keywords etc.</string>
+  <string name="pref_settings_search_suggestions_count_key" translatable="false">pref_settings_search_suggestions_count</string>
+  <integer name="pref_settings_search_suggestions_count_default">5</integer>
+  <string name="pref_settings_search_keywords_key" translatable="false">pref_settings_search_keywords</string>
+  <string name="pref_settings_search_keywords_title" maxLength="20">Search keywords</string>
+  <string name="pref_settings_search_keywords_summary">Keywords with special meaning</string>
 
   <!-- HelpActivity -->
   <string name="pref_help_font_size_key" translatable="false">pref_help_font_size</string>

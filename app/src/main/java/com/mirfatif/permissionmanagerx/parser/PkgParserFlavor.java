@@ -1,6 +1,5 @@
 package com.mirfatif.permissionmanagerx.parser;
 
-import static com.mirfatif.permissionmanagerx.parser.PackageParser.PKG_PARSER;
 import static com.mirfatif.permissionmanagerx.parser.PackageParser.PM_GET_SIGNATURES;
 
 import android.content.pm.PackageInfo;
@@ -10,7 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public enum PkgParserFlavor {
-  PKG_PARSER_FLAVOR;
+  INSTANCE;
 
   private final PackageManager mPackageManager = App.getContext().getPackageManager();
 
@@ -34,7 +33,7 @@ public enum PkgParserFlavor {
   }
 
   PackageInfo getPackageInfo(Package pkg) {
-    return PKG_PARSER.getPackageInfo(pkg.getName(), PackageManager.GET_PERMISSIONS);
+    return PackageParser.INSTANCE.getPackageInfo(pkg.getName(), PackageManager.GET_PERMISSIONS);
   }
 
   @SuppressWarnings("UnusedDeclaration")
@@ -43,6 +42,10 @@ public enum PkgParserFlavor {
   @SuppressWarnings("UnusedDeclaration")
   public boolean isFilteredOut(PackageInfo packageInfo, Package pkg) {
     return false;
+  }
+
+  public boolean shouldFilterOut() {
+    return true;
   }
 
   @SuppressWarnings("UnusedDeclaration")

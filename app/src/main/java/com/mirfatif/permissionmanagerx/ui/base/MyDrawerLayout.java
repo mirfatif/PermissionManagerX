@@ -5,12 +5,12 @@ import android.util.AttributeSet;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
-import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
+import com.mirfatif.permissionmanagerx.util.Utils;
 
 public class MyDrawerLayout extends DrawerLayout {
 
   public MyDrawerLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
-    UtilsFlavor.onCreateLayout(this);
+    Utils.onCreateLayout(this);
   }
 }

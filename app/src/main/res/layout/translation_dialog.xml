@@ -2,6 +2,8 @@
 <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
+  xmlns:tools="http://schemas.android.com/tools"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   android:orientation="vertical">
 
   <View
@@ -11,46 +13,59 @@
     android:layout_gravity="center_horizontal"
     android:background="@drawable/hinge" />
 
-  <TextView
-    android:textStyle="bold"
+  <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
-    android:text="@string/translations"
-    android:textAlignment="center"
-    android:textColor="@color/dynamic_text_color"
-    android:textSize="18sp" />
+    android:gravity="center">
+
+    <ImageView
+      android:layout_width="32dp"
+      android:layout_height="24dp"
+      android:layout_marginEnd="8dp"
+      android:src="@drawable/locale"
+      app:tint="?attr/accentColor"
+      tools:ignore="ContentDescription" />
+
+    <TextView
+      android:textStyle="bold"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/translations"
+      android:textAlignment="center"
+      android:textColor="?attr/accentColor"
+      android:textSize="18sp" />
+
+  </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
   <androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
-    android:paddingTop="12dp"
-    android:paddingBottom="12dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
     android:scrollbars="vertical">
 
     <TextView
       android:id="@+id/lang_credits_v"
-      android:layout_width="match_parent"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
       android:paddingStart="20dp"
       android:paddingEnd="20dp"
-      android:textColor="@color/dynamic_text_color"
+      android:textColor="@color/sharpText"
       android:textSize="16sp" />
 
   </androidx.core.widget.NestedScrollView>
 
-  <Button
+  <com.mirfatif.permissionmanagerx.ui.base.CustomButton
     android:id="@+id/add_my_lang"
-    style="@style/Widget.AppCompat.Button"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    style="@style/CustomButton"
+    android:layout_marginTop="8dp"
     android:layout_marginBottom="12dp"
     android:layout_marginStart="20dp"
     android:layout_marginEnd="20dp"
-    android:background="@drawable/button_bg"
-    android:text="@string/add_my_language"
-    android:textColor="?attr/accentColor" />
+    android:text="@string/add_my_language" />
 
 </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>

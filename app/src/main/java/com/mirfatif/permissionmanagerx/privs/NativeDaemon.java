@@ -1,13 +1,11 @@
 package com.mirfatif.permissionmanagerx.privs;
 
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
-
 import android.os.SystemClock;
 import android.util.Log;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.privs.err.AdbException;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import java.io.BufferedReader;
 import java.io.File;
@@ -25,8 +23,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public enum NativeDaemon {
-  ROOT_DAEMON(false),
-  ADB_DAEMON(true);
+  INSTANCE_R(false),
+  INSTANCE_A(true);
 
   private final boolean mIsAdb;
   private final String TAG;
@@ -69,19 +67,18 @@ public enum NativeDaemon {
 
   private synchronized void startDaemon(boolean showAdbFailedToast) {
     if (mIsRunning) {
-      Log.e(TAG, "startDaemon: daemon already running");
+      Log.w(TAG, "startDaemon: daemon already running");
       return;
     }
 
     synchronized (READ_WRITE_LOCK) {
       if (mIsAdb) {
         startAdbDaemon(showAdbFailedToast);
-        SETTINGS.setAdbConnected(mIsRunning);
+        MySettings.INSTANCE.setAdbConnected(mIsRunning);
       } else {
         startRootDaemon();
-        SETTINGS.setRootGranted(mIsRunning);
+        MySettings.INSTANCE.setRootGranted(mIsRunning);
       }
-      updateDrawer();
     }
   }
 
@@ -272,15 +269,5 @@ public enum NativeDaemon {
       Log.i(TAG, "readMessages: restarting native daemon");
       startDaemon(false);
     }
-  }
-
-  private final MutableLiveData<Void> sDrawerChanged = new MutableLiveData<>();
-
-  private void updateDrawer() {
-    sDrawerChanged.postValue(null);
-  }
-
-  public LiveData<Void> getDrawerChanged() {
-    return sDrawerChanged;
   }
 }

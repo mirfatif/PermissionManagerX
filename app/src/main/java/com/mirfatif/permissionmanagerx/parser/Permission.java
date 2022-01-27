@@ -1,14 +1,13 @@
 package com.mirfatif.permissionmanagerx.parser;
 
-import static com.mirfatif.permissionmanagerx.parser.SearchConstants.CONSTANTS;
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
-import static com.mirfatif.permissionmanagerx.prefs.MySettingsFlavor.SETTINGS_FLAVOR;
-import static com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler.DAEMON_HANDLER;
 import static com.mirfatif.permissionmanagerx.util.Utils.getString;
 
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.prefs.MySettingsFlavor;
+import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
@@ -22,6 +21,7 @@ public class Permission {
   public static final String PROTECTION_DANGEROUS = "PROTECTION_DANGEROUS";
   public static final String PROTECTION_NORMAL = "PROTECTION_NORMAL";
   public static final String PROTECTION_SIGNATURE = "PROTECTION_SIGNATURE";
+  public static final String PROTECTION_INTERNAL = "PROTECTION_INTERNAL";
 
   public static final String GRANTED = "GRANTED";
   public static final String REVOKED = "REVOKED";
@@ -243,18 +243,25 @@ public class Permission {
   }
 
   private boolean _isChangeable() {
-    boolean allowCriticChanges = SETTINGS_FLAVOR.allowCriticalChanges();
-    if ((mIsFrameworkApp && !allowCriticChanges) || SETTINGS.isCriticalApp(mPackageName)) {
+    boolean allowCriticChanges = MySettingsFlavor.INSTANCE.allowCriticalChanges();
+    if ((mIsFrameworkApp && !allowCriticChanges)
+        || MySettings.INSTANCE.isCriticalApp(mPackageName)) {
       return false;
     }
     if (mIsAppOps) {
       return mDependsOn == null;
     } else {
-      // BasePermission.java#enforceDeclaredUsedAndRuntimeOrDevelopment()
+      /*
+       Role permissions (if not Dangerous and Development; with protection level: INTERNAL) can
+       only be changed by the PermissionController package.
+       Soft/Hard restricted permissions (if Dangerous or Development) might also not be changeable.
+       https://cs.android.com/android/platform/superproject/+/android-12.0.0_r1:frameworks/base/services/core/java/com/android/server/pm/permission/PermissionManagerService.java;l=1429
+       https://android.googlesource.com/platform/frameworks/base/+/b9893a600ea8c047cebb6a4a352322916ba8eaca
+      */
       return (mProtectionLevel.equals(PROTECTION_DANGEROUS) || mIsDevelopment)
           && (!mIsSystemApp || !mIsPrivileged || allowCriticChanges)
           && !mIsPolicyFixed
-          && (!mIsSystemFixed || (allowCriticChanges && DAEMON_HANDLER.isSystemUid()));
+          && (!mIsSystemFixed || (allowCriticChanges && PrivDaemonHandler.INSTANCE.isSystemUid()));
     }
   }
 
@@ -274,15 +281,17 @@ public class Permission {
     switch (mProtectionLevel) {
       case PROTECTION_UNKNOWN:
       default:
-        return CONSTANTS.SEARCH_PROT_UNKNOWN;
+        return SearchConstants.INSTANCE.SEARCH_PROT_UNKNOWN;
       case PROTECTION_NORMAL:
-        return CONSTANTS.SEARCH_PROT_NORMAL;
+        return SearchConstants.INSTANCE.SEARCH_PROT_NORMAL;
       case PROTECTION_DANGEROUS:
-        return CONSTANTS.SEARCH_PROT_DANGEROUS;
+        return SearchConstants.INSTANCE.SEARCH_PROT_DANGEROUS;
       case PROTECTION_SIGNATURE:
-        return CONSTANTS.SEARCH_PROT_SIGNATURE;
+        return SearchConstants.INSTANCE.SEARCH_PROT_SIGNATURE;
+      case PROTECTION_INTERNAL:
+        return SearchConstants.INSTANCE.SEARCH_PROT_INTERNAL;
       case APP_OPS:
-        return CONSTANTS.SEARCH_APP_OPS;
+        return SearchConstants.INSTANCE.SEARCH_APP_OPS;
     }
   }
 
@@ -314,7 +323,7 @@ public class Permission {
   }
 
   public boolean contains(Package pkg, String queryText, boolean caseSensitive) {
-    if (!SETTINGS.isSpecialSearch()) {
+    if (!MySettings.INSTANCE.isSpecialSearch()) {
       return _contains(pkg, queryText, caseSensitive);
     }
 
@@ -345,19 +354,19 @@ public class Permission {
 
   private boolean _contains(Package pkg, String queryText, boolean caseSensitive) {
     boolean contains = true;
-    if (SETTINGS.isSpecialSearch() && queryText.startsWith("!")) {
+    if (MySettings.INSTANCE.isSpecialSearch() && queryText.startsWith("!")) {
       queryText = queryText.replaceAll("^!", "");
       contains = false;
     }
 
-    Boolean handled = SETTINGS_FLAVOR.handleSearchQuery(queryText, pkg, this);
+    Boolean handled = MySettingsFlavor.INSTANCE.handleSearchQuery(queryText, pkg, this);
     if (Boolean.TRUE.equals(handled)) {
       return contains;
     } else if (Boolean.FALSE.equals(handled)) {
       return !contains;
     }
 
-    caseSensitive = caseSensitive && SETTINGS.isCaseSensitiveSearch();
+    caseSensitive = caseSensitive && MySettings.INSTANCE.isCaseSensitiveSearch();
     if (!caseSensitive) {
       queryText = queryText.toUpperCase();
     }
@@ -366,16 +375,18 @@ public class Permission {
         new String[] {
           mPermissionName,
           ":" + getLocalizedProtectionLevel(),
-          ((mIsAppOps || mIsManifestPermAppOp) ? CONSTANTS.SEARCH_APP_OPS : ""),
-          ((mIsAppOps && mIsPerUid) ? CONSTANTS.SEARCH_UID : ""),
-          (mIsPrivileged ? CONSTANTS.SEARCH_PRIVILEGED : ""),
-          (mIsDevelopment ? CONSTANTS.SEARCH_DEV : ""),
-          (mIsSystemFixed ? CONSTANTS.SEARCH_FIXED : ""),
+          ((mIsAppOps || mIsManifestPermAppOp) ? SearchConstants.INSTANCE.SEARCH_APP_OPS : ""),
+          ((mIsAppOps && mIsPerUid) ? SearchConstants.INSTANCE.SEARCH_UID : ""),
+          (mIsPrivileged ? SearchConstants.INSTANCE.SEARCH_PRIVILEGED : ""),
+          (mIsDevelopment ? SearchConstants.INSTANCE.SEARCH_DEV : ""),
+          (mIsSystemFixed ? SearchConstants.INSTANCE.SEARCH_FIXED : ""),
           (mIsReferenced == null
-              ? CONSTANTS.SEARCH_ORANGE
-              : (mIsReferenced ? CONSTANTS.SEARCH_GREEN : CONSTANTS.SEARCH_RED)),
-          getAppOpsAccessTime() != null ? CONSTANTS.SEARCH_TIME : "",
-          (mIsExtraAppOp ? CONSTANTS.SEARCH_EXTRA : "")
+              ? SearchConstants.INSTANCE.SEARCH_ORANGE
+              : (mIsReferenced
+                  ? SearchConstants.INSTANCE.SEARCH_GREEN
+                  : SearchConstants.INSTANCE.SEARCH_RED)),
+          getAppOpsAccessTime() != null ? SearchConstants.INSTANCE.SEARCH_TIME : "",
+          (mIsExtraAppOp ? SearchConstants.INSTANCE.SEARCH_EXTRA : "")
         }) {
       if (!caseSensitive) {
         field = field.toUpperCase();
@@ -440,10 +451,10 @@ public class Permission {
             + pkgName
             + " "
             + mode;
-    if (SETTINGS.isDebug()) {
+    if (MySettings.INSTANCE.isDebug()) {
       Util.debugLog(TAG, "setAppOpsMode: sending command: " + command);
     }
-    DAEMON_HANDLER.sendRequest(command);
+    PrivDaemonHandler.INSTANCE.sendRequest(command);
   }
 
   public static void setPermission(Package pkg, Permission perm) {
@@ -454,9 +465,9 @@ public class Permission {
       command = Commands.GRANT_PERMISSION + " " + command;
     }
 
-    if (SETTINGS.isDebug()) {
+    if (MySettings.INSTANCE.isDebug()) {
       Util.debugLog(TAG, "setPermission: sending command: " + command);
     }
-    DAEMON_HANDLER.sendRequest(command);
+    PrivDaemonHandler.INSTANCE.sendRequest(command);
   }
 }

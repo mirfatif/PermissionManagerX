@@ -23,6 +23,8 @@ import com.mirfatif.annotation.HiddenMethod.MType;
 import com.mirfatif.annotation.NonDaemonOnly;
 import com.mirfatif.annotation.Privileged;
 import com.mirfatif.annotation.Throws;
+import com.mirfatif.privtasks.hiddenapis.err.HiddenAPIsError;
+import com.mirfatif.privtasks.hiddenapis.err.HiddenAPIsException;
 import com.mirfatif.privtasks.ser.MyPackageOps;
 import java.util.List;
 
@@ -247,6 +249,16 @@ public abstract class HiddenAPIs {
   public abstract void setApplicationEnabledSetting(
       String pkg, int state, int flags, int userId, String callingPkg) throws HiddenAPIsException;
 
+  @HiddenMethod(name = "getPackagesForUid", cls = IPackageManager.class)
+  @DaemonOnly
+  @Privileged(
+      requires = {
+        "android.permission.INTERACT_ACROSS_USERS_FULL",
+        "android.permission.INTERACT_ACROSS_USERS"
+      })
+  @Throws(name = "SecurityException")
+  abstract String[] getPackagesForUid(int uid) throws HiddenAPIsException;
+
   //////////////////////////////////////////////////////////////////
   ////////////////////////////// OTHERS ////////////////////////////
   //////////////////////////////////////////////////////////////////
@@ -284,7 +296,8 @@ public abstract class HiddenAPIs {
   @DaemonOnly
   @Privileged
   @Throws(name = "SecurityException")
-  public abstract void sendRequest(String command, String appId, int userId, String codeWord)
+  public abstract void sendRequest(
+      String command, String appId, String cmdRcvSvc, int userId, String codeWord)
       throws HiddenAPIsException;
 
   //////////////////////////////////////////////////////////////////

@@ -33,12 +33,12 @@ public class Commands {
   public static final String OPEN_APP_INFO = "OPEN_APP_INFO";
   public static final String GET_PERM_STATUS = "GET_PERM_STATUS";
   public static final String GET_APP_OP_STATUS = "GET_APP_OP_STATUS";
+  public static final String GET_PKG_COUNT_FOR_UID = "GET_PKG_COUNT_FOR_UID";
 
   public static final String DUMP_HEAP = "DUMP_HEAP";
   public static final String RESET_OOS = "RESET_OOS";
 
   // From daemon to app
-  public static final String CMD_RCV_SVC = "com.mirfatif.permissionmanagerx.svc.DaemonCmdRcvSvc";
   public static final String CODE_WORD = "CODE_WORD";
 
   public static final String LISTEN_ON_LOOPBACK_FAILED = "LISTEN_ON_LOOPBACK_FAILED";

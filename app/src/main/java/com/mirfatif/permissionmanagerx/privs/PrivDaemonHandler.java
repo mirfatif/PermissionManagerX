@@ -1,19 +1,18 @@
 package com.mirfatif.permissionmanagerx.privs;
 
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
-import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.ADB_DAEMON;
+import static com.mirfatif.permissionmanagerx.BuildConfig.APPLICATION_ID;
+import static com.mirfatif.permissionmanagerx.BuildConfig.APP_ID;
 import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.PMX_BIN_PATH;
-import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.ROOT_DAEMON;
 import static com.mirfatif.permissionmanagerx.util.Utils.UID_ROOT;
 import static com.mirfatif.permissionmanagerx.util.Utils.UID_SHELL;
 import static com.mirfatif.permissionmanagerx.util.Utils.UID_SYSTEM;
 
 import android.os.SystemClock;
 import android.util.Log;
-import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.privs.err.AdbException;
 import com.mirfatif.permissionmanagerx.svc.DaemonCmdRcvSvc;
 import com.mirfatif.permissionmanagerx.svc.LogcatService;
 import com.mirfatif.permissionmanagerx.util.Utils;
@@ -31,7 +30,7 @@ import java.net.Inet4Address;
 import java.net.Socket;
 
 public enum PrivDaemonHandler {
-  DAEMON_HANDLER;
+  INSTANCE;
 
   private static final String TAG = "PrivDaemonHandler";
 
@@ -46,11 +45,11 @@ public enum PrivDaemonHandler {
 
   public Boolean startDaemon(boolean preferRoot) {
     synchronized (START_DAEMON_LOCK) {
-      if (SETTINGS.isPrivDaemonAlive()) {
+      if (MySettings.INSTANCE.isPrivDaemonAlive()) {
         Log.w(TAG, "startDaemon: daemon already running");
         return false;
       }
-      boolean dexInTmpDir = SETTINGS.dexInTmpDir();
+      boolean dexInTmpDir = MySettings.INSTANCE.dexInTmpDir();
       Boolean res = startDaemon(preferRoot, dexInTmpDir);
       if (res == null || res) {
         return true;
@@ -58,22 +57,22 @@ public enum PrivDaemonHandler {
       res = startDaemon(preferRoot, !dexInTmpDir);
       if (res == null || res) {
         Utils.showToast(R.string.dex_location_changed);
-        SETTINGS.setDexInTmpDir(!dexInTmpDir);
+        MySettings.INSTANCE.setDexInTmpDir(!dexInTmpDir);
       }
       return res;
     }
   }
 
   private Boolean startDaemon(boolean preferRoot, boolean dexInTmpDir) {
-    boolean isAdbConnected = SETTINGS.isAdbConnected();
-    mPreferRoot = SETTINGS.isRootGranted() && (preferRoot || !isAdbConnected);
+    boolean isAdbConnected = MySettings.INSTANCE.isAdbConnected();
+    mPreferRoot = MySettings.INSTANCE.isRootGranted() && (preferRoot || !isAdbConnected);
 
     if (!mPreferRoot && !isAdbConnected) {
       Log.e(TAG, "startDaemon: cannot start privileged daemon without root or ADB shell");
       return false;
     }
 
-    boolean extractDex = SETTINGS.shouldExtractFiles() || mForceFilesExtraction;
+    boolean extractDex = MySettings.INSTANCE.shouldExtractFiles() || mForceFilesExtraction;
     if (extractDex) {
       extractToTmpDir();
       extractToSharedDir();
@@ -91,29 +90,22 @@ public enum PrivDaemonHandler {
         return false;
       }
     } else if (extractDex) {
-      SETTINGS.setFileExtractionTs();
+      MySettings.INSTANCE.setFileExtractionTs();
     }
 
-    String daemonContext = SETTINGS.getDaemonContext();
+    String daemonContext = MySettings.INSTANCE.getDaemonContext();
 
-    String vmName = DAEMON_PACKAGE_NAME + ".pmx";
-    if (Utils.isProVersion()) {
-      vmName += ".pro";
-    }
-    if (BuildConfig.DEBUG) {
-      vmName += ".debug";
-    }
     String vmClass = DAEMON_PACKAGE_NAME + "." + DAEMON_CLASS_NAME;
-    String vmCmd = "app_process / --nice-name=" + vmName + " " + vmClass;
-    if (mPreferRoot || ADB_DAEMON.isRoot()) {
+    String vmCmd = "app_process / --nice-name=" + VM_NAME + " " + vmClass;
+    if (mPreferRoot || NativeDaemon.INSTANCE_A.isRoot()) {
       vmCmd =
           PMX_BIN_PATH
               + " --ns 1 --set-cg --rcaps "
               + (daemonContext.equals(MySettings.CONTEXT_DEFAULT) ? "" : "--cxt " + daemonContext)
               + " -u "
-              + SETTINGS.getDaemonUid()
+              + MySettings.INSTANCE.getDaemonUid()
               + " -g "
-              + SETTINGS.getDaemonUid()
+              + MySettings.INSTANCE.getDaemonUid()
               + " --groups "
               + DAEMON_GROUPS
               + " -- "
@@ -153,16 +145,18 @@ public enum PrivDaemonHandler {
       mCmdWriter = new PrintWriter(adb.getWriter(), true);
     }
 
-    boolean useSocket = !mPreferRoot || SETTINGS.useSocket();
+    boolean useSocket = !mPreferRoot || MySettings.INSTANCE.useSocket();
 
     String params =
-        SETTINGS.isDebug()
+        MySettings.INSTANCE.isDebug()
             + " "
             + useSocket
             + " "
             + Utils.getUserId()
             + " "
-            + BuildConfig.APPLICATION_ID
+            + APPLICATION_ID
+            + " "
+            + DaemonCmdRcvSvc.class.getName()
             + " "
             + DaemonCmdRcvSvc.CODE_WORD;
 
@@ -240,9 +234,9 @@ public enum PrivDaemonHandler {
       return false;
     }
 
-    SETTINGS.setPrivDaemonAlive(true);
+    MySettings.INSTANCE.setPrivDaemonAlive(true);
 
-    if (SETTINGS.shouldStartDaemonLog()) {
+    if (MySettings.INSTANCE.shouldStartDaemonLog()) {
       String logCommand = "exec logcat --pid " + mDaemonPid;
 
       if (mPreferRoot) {
@@ -281,8 +275,8 @@ public enum PrivDaemonHandler {
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
-      boolean restart = SETTINGS.isPrivDaemonAlive();
-      SETTINGS.setPrivDaemonAlive(false);
+      boolean restart = MySettings.INSTANCE.isPrivDaemonAlive();
+      MySettings.INSTANCE.setPrivDaemonAlive(false);
       Utils.cleanStreams(process, adb, TAG + ": readDaemonMessages");
 
       if (restart) {
@@ -298,19 +292,13 @@ public enum PrivDaemonHandler {
   private final Object SEND_REQ_LOCK = new Object();
 
   public Object sendRequest(String request) {
-    return sendRequest(request, SETTINGS.isPrivDaemonAlive());
+    return sendRequest(request, MySettings.INSTANCE.isPrivDaemonAlive());
   }
 
   private Object sendRequest(String request, boolean isPrivDaemonAlive) {
     synchronized (SEND_REQ_LOCK) {
       if (!isPrivDaemonAlive) {
-        String str;
-        if (SETTINGS.isDebug()) {
-          str = request;
-        } else {
-          str = Utils.ellipsize(request, 200);
-        }
-        Log.e(TAG, "sendRequest: " + str + ": Privileged daemon is dead");
+        Log.e(TAG, "sendRequest: " + truncateRequest(request) + ": Privileged daemon is dead");
         return null;
       }
 
@@ -321,7 +309,7 @@ public enum PrivDaemonHandler {
 
       // To avoid getting restarted
       if (request.equals(Commands.SHUTDOWN)) {
-        SETTINGS.setPrivDaemonAlive(false);
+        MySettings.INSTANCE.setPrivDaemonAlive(false);
       }
 
       mCmdWriter.println(request);
@@ -335,11 +323,19 @@ public enum PrivDaemonHandler {
       } catch (IOException | ClassNotFoundException e) {
         e.printStackTrace();
 
-        Log.e(TAG, "sendRequest: restarting privileged daemon");
+        Log.e(TAG, "sendRequest: " + truncateRequest(request) + ": restarting privileged daemon");
         mCmdWriter.println(Commands.SHUTDOWN);
 
         return null;
       }
+    }
+  }
+
+  private String truncateRequest(String request) {
+    if (MySettings.INSTANCE.isDebug()) {
+      return request;
+    } else {
+      return Utils.ellipsize(request, 200);
     }
   }
 
@@ -367,25 +363,29 @@ public enum PrivDaemonHandler {
   private static final String DAEMON_CLASS_NAME = "PrivDaemon";
 
   private static final String TMP_DIR = "/data/local/tmp/";
-  private static final String DAEMON_DEX = DAEMON_PACKAGE_NAME + ".pmx.dex";
+  private static final String ASSETS_DEX_FILE = DAEMON_PACKAGE_NAME + ".pmx.dex";
 
-  private final String SHARED_DIR_DEX_PATH;
-  private final String TMP_DIR_DEX_PATH;
+  private static final String VM_NAME;
 
-  {
+  private static final String SHARED_DIR_DEX_PATH;
+  private static final String TMP_DIR_DEX_PATH;
+
+  static {
+    VM_NAME = APPLICATION_ID.replace(APP_ID, DAEMON_PACKAGE_NAME + ".pmx");
+    String dex = VM_NAME + ".dex";
     String sharedDir = App.getContext().getExternalFilesDir(null).getAbsolutePath();
-    SHARED_DIR_DEX_PATH = new File(sharedDir, DAEMON_DEX).getAbsolutePath();
-    TMP_DIR_DEX_PATH = new File(TMP_DIR, DAEMON_DEX).getAbsolutePath();
+    SHARED_DIR_DEX_PATH = new File(sharedDir, dex).getAbsolutePath();
+    TMP_DIR_DEX_PATH = new File(TMP_DIR, dex).getAbsolutePath();
   }
 
   private final Object SHARED_DIR_LOCK = new Object();
 
   private void extractToSharedDir() {
     synchronized (SHARED_DIR_LOCK) {
-      try (InputStream inStream = App.getContext().getAssets().open(DAEMON_DEX);
+      try (InputStream inStream = App.getContext().getAssets().open(ASSETS_DEX_FILE);
           OutputStream outStream = new FileOutputStream(SHARED_DIR_DEX_PATH)) {
         if (!Utils.copyStream(inStream, outStream)) {
-          Log.e(TAG, "extractToSharedDir: extracting " + DAEMON_DEX + " failed");
+          Log.e(TAG, "extractToSharedDir: extracting " + ASSETS_DEX_FILE + " failed");
         } else {
           outStream.flush();
           Log.i(TAG, "extractToSharedDir: extracted file successfully");
@@ -401,23 +401,23 @@ public enum PrivDaemonHandler {
   private void extractToTmpDir() {
     synchronized (TMP_DIR_LOCK) {
       NativeDaemon daemon;
-      if (SETTINGS.isRootGranted()) {
-        daemon = ROOT_DAEMON;
-      } else if (SETTINGS.isAdbConnected()) {
-        daemon = ADB_DAEMON;
+      if (MySettings.INSTANCE.isRootGranted()) {
+        daemon = NativeDaemon.INSTANCE_R;
+      } else if (MySettings.INSTANCE.isAdbConnected()) {
+        daemon = NativeDaemon.INSTANCE_A;
       } else {
         return;
       }
 
-      try (InputStream inStream1 = App.getContext().getAssets().open(DAEMON_DEX);
-          InputStream inStream2 = App.getContext().getAssets().open(DAEMON_DEX)) {
+      try (InputStream inStream1 = App.getContext().getAssets().open(ASSETS_DEX_FILE);
+          InputStream inStream2 = App.getContext().getAssets().open(ASSETS_DEX_FILE)) {
         int size = 0;
         while (inStream1.read() != -1) {
           size++;
         }
 
         if (!daemon.copyStream(size, TMP_DIR_DEX_PATH, inStream2)) {
-          Log.e(TAG, "extractToTmpDir: extracting " + DAEMON_DEX + " failed");
+          Log.e(TAG, "extractToTmpDir: extracting " + ASSETS_DEX_FILE + " failed");
           return;
         }
         if (daemon.isRoot()) {
@@ -435,10 +435,10 @@ public enum PrivDaemonHandler {
 
   private boolean dexExists(String dexPath) {
     NativeDaemon daemon;
-    if (SETTINGS.isRootGranted()) {
-      daemon = ROOT_DAEMON;
-    } else if (SETTINGS.isAdbConnected()) {
-      daemon = ADB_DAEMON;
+    if (MySettings.INSTANCE.isRootGranted()) {
+      daemon = NativeDaemon.INSTANCE_R;
+    } else if (MySettings.INSTANCE.isAdbConnected()) {
+      daemon = NativeDaemon.INSTANCE_A;
     } else {
       return false;
     }

@@ -1,7 +1,5 @@
 package com.mirfatif.permissionmanagerx.ui;
 
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -16,8 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.webkit.WebViewClientCompat;
 import androidx.webkit.WebViewCompat;
 import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.about.AboutActivity;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.ActivityHelpBinding;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class HelpActivity extends BaseActivity {
 
   private static final String HELP_URL = "https://mirfatif.github.io/PermissionManagerX/help/";
   private static final String CONTACT_URL =
-      "https://mirfatif.github.io/PermissionManagerX/#contact-us";
+      "https://mirfatif.github.io/PermissionManagerX/#want-to-reach-us";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class HelpActivity extends BaseActivity {
 
     mWebSettings = mB.webView.getSettings();
 
-    mFontSize = SETTINGS.getIntPref(R.string.pref_help_font_size_key);
+    mFontSize = MySettings.INSTANCE.getIntPref(R.string.pref_help_font_size_key);
     setFontSize();
 
     mWebSettings.setSupportZoom(false);
@@ -68,7 +68,7 @@ public class HelpActivity extends BaseActivity {
     enableJs();
     mB.webView.addJavascriptInterface(new HelpJsInterface(this), "Android");
 
-    if (SETTINGS.isAppUpdated()) {
+    if (MySettings.INSTANCE.isAppUpdated()) {
       mB.webView.clearCache(true);
     }
 
@@ -88,7 +88,7 @@ public class HelpActivity extends BaseActivity {
     if (mFontSize > MAX_FONT_SIZE - 2 || mFontSize < MIN_FONT_SIZE + 2) {
       invalidateOptionsMenu();
     }
-    SETTINGS.savePref(R.string.pref_help_font_size_key, mFontSize);
+    MySettings.INSTANCE.savePref(R.string.pref_help_font_size_key, mFontSize);
   }
 
   @Override

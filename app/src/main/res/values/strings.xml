@@ -30,8 +30,7 @@
   <string name="settings_menu_item" maxLength="15">Settings</string>
   <string name="filter_menu_item" maxLength="15">Exclusion Filters</string>
   <string name="root_menu_item" maxLength="15">Root Access</string>
-  <string name="adb_menu_item" maxLength="15">ADB Shell</string>
-  <string name="dark_theme_menu_item" maxLength="15">Force Dark Theme</string>
+  <string name="adb_menu_item" maxLength="15">ADB Access</string>
   <string name="backup_restore_menu_item" maxLength="15">Backup / Restore</string>
   <string name="help_menu_item" maxLength="15">Help</string>
   <string name="donate_menu_item" maxLength="15">Donate</string>
@@ -57,20 +56,19 @@
 
   <!-- MainActivity strings -->
   <string name="primary_account" maxLength="15">Primary Account</string>
-  <string name="primary_profile_only">Permission Manager X can run only in primary user account /
-    device owner profile.
-  </string>
-  <string name="deep_search" maxLength="12">Deep Search (Permissions)</string>
-  <string name="case_sensitive_search" maxLength="12">Case Sensitive Search</string>
+  <string name="primary_profile_only">Permission Manager X can run only in primary user account / device owner profile.</string>
   <string name="grant_root_or_adb">Grant root access or connect to ADB to start privileged process.</string>
   <string name="logging_failed" maxLength="20">Logging failed</string>
   <string name="daemon_logging_failed" maxLength="20">Logging for privileged daemon failed</string>
+
   <string name="creating_packages_list" maxLength="15">Creating Apps List</string>
   <string name="reading_reference_perms" maxLength="15">Reading References</string>
   <string name="creating_app_ops_lists" maxLength="15">Preparing AppOps Data</string>
   <string name="starting_daemon" maxLength="15">Starting Daemon</string>
   <string name="checking_root_access" maxLength="15">Checking Root Access</string>
   <string name="checking_adb_access" maxLength="15">Checking ADB Access</string>
+  <string name="missing_privileges" maxLength="15">Missing Privileges</string>
+
   <string name="root_granted" maxLength="20">Root granted</string>
   <string name="getting_root_fail" maxLength="20">Getting root privileges failed</string>
   <string name="getting_root_fail_long" maxLength="20">Getting root privileges failed. Are you rooted?</string>
@@ -81,15 +79,7 @@
   <string name="adb_key_pair_failed" maxLength="20">Creating ADB key pair failed</string>
   <string name="adb_authentication_failed" maxLength="20">ADB authentication failed</string>
   <string name="adb_command_fail" maxLength="20">ADB command failed</string>
-  <string name="adb_connect_fail_long">
-    <![CDATA[
-      Connecting to ADB failed.
-      <ul>
-        <li>Enable <b><i>ADB Over Network</i></b> and come back to connect.</li>
-        <li>Allow ADB authentication if prompted.</li>
-      </ul>
-    ]]>
-  </string>
+  <string name="adb_connect_fail_long"><![CDATA[Connecting to ADB failed.<ul><li>Enable <b><i>ADB Over Network</i></b> and come back to connect.</li><li>Allow ADB authentication if prompted.</li></ul>]]></string>
   <string name="daemon_failed" maxLength="20">Starting privileged daemon failed</string>
   <string name="backup" maxLength="10">Backup</string>
   <string name="restore" maxLength="10">Restore</string>
@@ -119,46 +109,35 @@
   <string name="skip_uninstalled_packages" maxLength="20">Skip uninstalled packages</string>
   <string name="privileges" maxLength="15">"Privileges"</string>
   <string name="hidden_apis_warning" maxLength="20">Hidden APIs are blacklisted, switching to daemon</string>
-  <string name="hidden_apis_confirmation">Some ROMs allow using system\'s hidden APIs. Daemon mode might
-    be slower. Stop using hidden APIs?
-  </string>
+  <string name="hidden_apis_confirmation">Some ROMs allow using system\'s hidden APIs. Daemon mode might be slower. Stop using hidden APIs?</string>
   <string name="bad_port_number" maxLength="15">Bad port number</string>
   <string name="bad_path" maxLength="15">Bad path</string>
   <string name="granting_permission_failed" maxLength="20">Granting permission failed: %1$s</string>
 
   <string name="crash_report" maxLength="15">Crash Report</string>
   <string name="ask_to_report_crash_small" maxLength="30">Send crash report to the developer</string>
-  <string name="ask_to_report_crash">Sorry, a component of the app had a problem and crashed.
-    Send the log file to the developer through email or Telegram so that the bug can be fixed.
-  </string>
+  <string name="ask_to_report_crash">Sorry, a component of the app had a problem and crashed. Send the log file to the developer through email or Telegram so that the bug can be fixed.</string>
   <string name="send_report" maxLength="10">Send Report</string>
-  <string name="disable_pkg_warning" comment="'system' or 'framework'">Disabling a %1$s app is a
-    dangerous action. In worst-case scenario Android system may crash.\nAre you sure you want to continue?
-  </string>
+  <string name="disable_pkg_warning" comment="'system' or 'framework'">Disabling a %1$s app is a dangerous action. In worst-case scenario Android system may crash.\nAre you sure you want to continue?</string>
   <string name="pkg_state_disabled2" searchStr="true">%s, Disabled</string>
 
   <!-- Feedback -->
   <string name="love_using_app" maxLength="20">Liking Permission Manager X?</string>
-  <string name="purchase_and_rate_the_app">You can help us improve the app by making a small donation
-    or leaving a good app review so that we are able to better serve your needs.
-  </string>
-  <string name="rate_the_app">Good ratings and reviews help us improve the app and we are able to
-    better serve your needs.
-  </string>
-  <string name="ask_to_provide_feedback">Sorry to hear that. You can help improve the app by
-    contacting us via email or Telegram so that we are able to better serve your needs.
-  </string>
-  <string name="contact" maxLength="10">Write Now</string>
-  <string name="contact_on_telegram" maxLength="10">Write a Message on Telegram</string>
-  <string name="contact_on_email" maxLength="10">Write an Email</string>
-  <string name="rate_now" maxLength="10">Rate Now</string>
-  <string name="how_do_i" maxLength="10">How do I?</string>
-  <string name="purchase_donate" maxLength="10">Purchase / Donate</string>
-  <string name="rate_on_ps" maxLength="10">Rate on Play Store</string>
-  <string name="purchase_pro" maxLength="10">Purchase Pro</string>
-  <string name="star_on_github" maxLength="10">Star on GitHub</string>
-  <string name="review_on_xda" maxLength="10">Write a Review on XDA</string>
+  <string name="purchase_and_rate_the_app">You can help us improve the app by making a small donation or leaving a good app review so that we are able to better serve your needs.</string>
+  <string name="rate_the_app">Good ratings and reviews help us improve the app and we are able to better serve your needs.</string>
+  <string name="ask_to_provide_feedback">Sorry to hear that. You can help improve the app by contacting us via email or Telegram so that we are able to better serve your needs.</string>
   <string name="thank_you" maxLength="20">Thank you</string>
+
+  <string name="contact" maxLength="15">Write Now</string>
+  <string name="contact_on_telegram" maxLength="15">Write a Message on Telegram</string>
+  <string name="contact_on_email" maxLength="15">Write an Email</string>
+  <string name="rate_now" maxLength="15">Rate Now</string>
+  <string name="how_do_i" maxLength="15">How do I?</string>
+  <string name="purchase_donate" maxLength="15">Purchase / Donate</string>
+  <string name="rate_on_ps" maxLength="15">Rate on Play Store</string>
+  <string name="star_on_github" maxLength="15">Star on GitHub</string>
+  <string name="review_on_xda" maxLength="15">Write a Review on XDA</string>
+  <string name="do_not_ask" maxLength="15">Don\'t ask again</string>
 
   <!-- Links -->
   <string name="source_url" translatable="false">https://github.com/mirfatif/PermissionManagerX</string>
@@ -172,6 +151,7 @@
   <string name="bmc_url" translatable="false">https://www.buymeacoffee.com/mirfatif</string>
   <string name="xda_url" translatable="false">https://forum.xda-developers.com/t/app-7-0-permission-manager-x-manage-appops-and-manifest-permissions.4187657</string>
   <string name="translation_link" translatable="false">https://crowdin.com/project/pmx</string>
+  <string name="wrun_url" translatable="false">https://github.com/mirfatif/WhatsRunning</string>
 
   <!-- PrivDaemonHandler -->
   <string name="dex_location_changed" maxLength="20">Switching daemon load location</string>
@@ -183,20 +163,9 @@
 
   <!-- LogcatService -->
   <string name="logging" maxLength="15">Logging</string>
-  <string name="logging_warning">App may respond slow due to log collection and log file may grow
-    up to very large size. Logging is auto-stopped after 5 minutes.
-  </string>
-
-  <!-- Buttons-->
-  <string name="disable" maxLength="10">Disable</string>
-  <string name="enable" maxLength="10">Enable</string>
-  <string name="exclude" maxLength="10">Exclude</string>
-  <string name="clear_reference" maxLength="10" comment="'Clear Reference'">Clear Ref</string>
-  <string name="set_reference" maxLength="10" comment="'Set Reference'">Set Ref</string>
-  <string name="do_not_ask" maxLength="15">Don\'t ask again</string>
+  <string name="logging_warning">App may respond slow due to log collection and log file may grow up to very large size. Logging is auto-stopped after 5 minutes.</string>
 
   <!-- PackageActivity menu items -->
-  <string name="package_information_menu_item" maxLength="15" comment="'App Information'">App Info</string>
   <string name="reset_app_ops" maxLength="15">Reset AppOps</string>
   <string name="reset_app_ops_confirmation">Reset all AppOps to default modes?</string>
   <string name="clear_references" maxLength="15">Clear References</string>
@@ -204,18 +173,20 @@
   <string name="set_references" maxLength="15">Set References</string>
   <string name="set_references_confirmation">Set all current permission states as references?</string>
 
-  <!--PackageActivity Dialogs-->
-  <string name="exclude_app_from_visible_list">Exclude app from visible list.</string>
-  <string name="enable_app">Enable app.</string>
-  <string name="disable_app">Disable app.</string>
-  <string name="exclude_from_visible_list">%s Exclude from visible list.</string>
+  <!-- MainActivity Dialogs -->
+  <string name="exclude_app_from_visible_list" maxLength="15">Hide app from list</string>
+  <string name="enable_app" maxLength="15">Enable app</string>
+  <string name="disable_app" maxLength="15">Disable app</string>
+  <string name="open_pkg_info" maxLength="15">Open app info</string>
+  <string name="find_pkg_process" maxLength="15">Find app process</string>
+  <string name="install" maxLength="10">Install</string>
+  <string name="wrun_not_installed" maxLength="20">WhatsRunning not installed</string>
 
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">Something went wrong</string>
-  <string name="change_perms_warning" comment="'system' or 'framework'">Changing permissions of a
-    %1$s app is a dangerous action. In worst-case scenario Android system may crash.\nAre you sure
-    you want to continue?
-  </string>
+  <string name="failed_get_affected_pkg_count" maxLength="20">Failed to get affected package count</string>
+
+  <string name="change_perms_warning" comment="'system' or 'framework'">Changing permissions of a %1$s app is a dangerous action. In worst-case scenario Android system may crash.\nAre you sure you want to continue?</string>
   <string name="system">system</string>
   <string name="framework">framework</string>
 
@@ -224,10 +195,11 @@
     <item quantity="other">This is a UID mode AppOp. Changing it also affects %1$d other packages.</item>
   </plurals>
 
-  <string name="extra_ops_cant_be_excluded">Extra AppOps cannot be excluded from visible list.</string>
-  <string name="exclude_perm_from_list">Exclude permission from visible list.</string>
-  <string name="set_perm_state_reference" comment="AppOps or manifest permission state"><![CDATA[<br/>Set <b>%1$s</b> state as reference.]]></string>
-  <string comment="AppOps or manifest permission state" name="clear_perm_state_reference"><![CDATA[<br/>Clear <b>%1$s</b> state as reference.]]></string>
+  <string name="exclude_perm_from_list">Hide Permission From List</string>
+  <string name="set_perm_state_reference" maxLength="10"><![CDATA[Set <b><i>%1$s</i></b> As Reference]]></string>
+  <string name="set_reference" maxLength="15">Set Reference</string>
+  <string name="clear_reference" maxLength="15">Clear Reference</string>
+  <string name="no_action_available" maxLength="20">No action available</string>
 
   <plurals name="count_permissions_filtered_out">
     <item quantity="one">%1$d permission filtered out</item>
@@ -274,6 +246,11 @@
   <string name="locale_es">Spanish</string>
   <string name="locale_ar">Arabic</string>
 
+  <string name="theme_color_green">Green</string>
+  <string name="theme_color_blue">Blue</string>
+  <string name="theme_color_pink">Pink</string>
+  <string name="theme_color_gray">Gray</string>
+
   <!-- PreferenceActivity menu items -->
   <string name="filter_settings_reset_defaults_menu_item" maxLength="15">Reset To Defaults</string>
   <string name="filter_settings_reset_confirmation">Reset filter settings to default values?</string>
@@ -289,8 +266,6 @@
   <string name="email" maxLength="15">Email</string>
   <string name="email_address" translatable="false">mirfatif@gmail.com</string>
   <string name="telegram_group" maxLength="15">Telegram Group</string>
-  <string name="no_email_app_installed" maxLength="20">No email app installed</string>
-  <string name="no_browser_installed" maxLength="20">"No web browser app installed"</string>
   <string name="collect_logs" maxLength="15">Collect Logs</string>
   <string name="collect_logs_summary" maxLength="20">Save highly verbose log to file</string>
   <string name="report_issues" maxLength="15">Report Issues</string>
@@ -300,24 +275,20 @@
   <string name="logging_stopped" maxLength="20">Logging stopped</string>
   <string name="app_rating" maxLength="15">Rate Me</string>
   <string name="app_rating_summary" maxLength="20">Rating, reviewing, starring…</string>
+
   <string name="paid_features" maxLength="15">Paid Features</string>
-  <string name="paid_features_summary">
-    <![CDATA[
-      <ul>
-        <li>Sort apps and permissions by different parameters</li>
-        <li>Scheduled Check to notify bad reference states</li>
-        <li>Auto revoke granted permissions with RED states</li>
-        <li>Permission Watcher to remove permissions quickly</li>
-        <li>Make changes to critical apps and permissions</li>
-        <li>Multiple users / work profile support</li>
-        <li>Auto create backup file on changes</li>
-        <li>Search suggestions</li>
-        <li>Theming options</li>
-        <li>Permission Summary View (upcoming)</li>
-        <li>Batch operations (profiles) (upcoming)</li>
-      </ul>
-    ]]>
-  </string>
+  <string name="paid_features1">Sort apps and permissions by different parameters</string>
+  <string name="paid_features2">Scheduled Check to notify bad reference states</string>
+  <string name="paid_features3">Auto revoke granted permissions with RED states</string>
+  <string name="paid_features4">Permission Watcher to remove permissions quickly</string>
+  <string name="paid_features5">Make changes to critical apps and permissions</string>
+  <string name="paid_features6">Multiple users / work profile support</string>
+  <string name="paid_features7">Auto create backup file on changes</string>
+  <string name="paid_features8">Search suggestions</string>
+  <string name="paid_features9">Theming options</string>
+  <string name="paid_features10">Permission Summary View (upcoming)</string>
+  <string name="paid_features11">Batch operations (profiles) (upcoming)</string>
+
   <string name="update" maxLength="15">Update</string>
   <string name="update_summary" maxLength="20">Check for app updates</string>
   <string name="check_in_progress" maxLength="20">Check in progress</string>
@@ -343,15 +314,18 @@
   <string name="op_num_consistency">Op Numbers Consistency</string>
   <string name="permissions">Permissions</string>
 
+  <!-- ActivityNotFoundException -->
+  <string name="no_email_app_installed" maxLength="20">No email app installed</string>
+  <string name="no_browser_installed" maxLength="20">"No web browser app installed"</string>
+  <string name="no_file_picker_installed" maxLength="20">"No file picker app installed"</string>
+
   <!-- Donate -->
   <string name="send_bitcoin">Send Bitcoin</string>
   <string name="bitcoin_address" translatable="false">18ijfsv5fcDKQ6CTe4wycKxZMmti4oUXjW</string>
   <string name="no_bitcoin_app_installed">"Bitcoin Wallet app not found"</string>
   <string name="ask_for_bank_account">Ask For Bank Account</string>
   <string name="buy_me_a_coffee">Buy Me A Coffee</string>
-  <string name="bank_account_request" translatable="false">Hello,\n\nI need your IBAN and SWIFT/BIC
-    to make a donation.
-  </string>
+  <string name="bank_account_request" translatable="false">Hello,\n\nI need your IBAN and SWIFT/BIC to make a donation.</string>
   <string name="get_pro_version">Get Pro Version</string>
   <string name="get_ps_version">Get Play Store Version</string>
 
@@ -373,9 +347,7 @@
 
   <!-- DaemonCmdRcvSvc: Daemon return messages -->
   <string name="daemon_listen_on_loopback_failed" maxLength="20">Daemon failed to listen on 127.0.0.1</string>
-  <string name="daemon_establish_connection_failed" maxLength="20">Daemon failed to establish
-    connection with client
-  </string>
+  <string name="daemon_establish_connection_failed" maxLength="20">Daemon failed to establish connection with client</string>
   <string name="daemon_wrong_args_received" maxLength="20">Wrong arguments</string>
   <string name="daemon_set_app_ops_mode_failed" maxLength="20">Setting AppOps mode failed</string>
   <string name="daemon_reset_app_ops_failed" maxLength="20">Resetting AppOps failed</string>

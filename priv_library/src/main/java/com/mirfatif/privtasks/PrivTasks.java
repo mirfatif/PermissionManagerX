@@ -9,9 +9,9 @@ import android.os.Build;
 import android.os.Process;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIs;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIs.HiddenAPIsCallback;
-import com.mirfatif.privtasks.hiddenapis.HiddenAPIsError;
-import com.mirfatif.privtasks.hiddenapis.HiddenAPIsException;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIsImpl;
+import com.mirfatif.privtasks.hiddenapis.err.HiddenAPIsError;
+import com.mirfatif.privtasks.hiddenapis.err.HiddenAPIsException;
 import com.mirfatif.privtasks.ser.MyPackageOps;
 import com.mirfatif.privtasks.ser.PermStatus;
 import java.util.ArrayList;
@@ -24,13 +24,15 @@ public class PrivTasks {
 
   private final HiddenAPIsImpl mHiddenAPIs = new HiddenAPIsImpl(new HiddenAPIsCallbackImpl());
   private final PrivTasksCallback mCallback;
-  private final String mAppId;
+  private final String mAppId, mCmdRcvSvc;
   private final int mAppUserId;
   private final boolean mIsDaemon;
 
-  public PrivTasks(PrivTasksCallback callback, String appId, int appUserId, boolean isDaemon) {
+  public PrivTasks(
+      PrivTasksCallback callback, String appId, String cmdRcvSvc, int appUserId, boolean isDaemon) {
     mCallback = callback;
     mAppId = appId;
+    mCmdRcvSvc = cmdRcvSvc;
     mAppUserId = appUserId;
     mIsDaemon = isDaemon;
   }
@@ -327,6 +329,17 @@ public class PrivTasks {
     }
   }
 
+  public Integer getPkgCountForUid(String[] args) {
+    if (!haveWrongArgs(args, 1)) {
+      try {
+        return mHiddenAPIs.getPackagesForUid(Integer.parseInt(args[1])).length;
+      } catch (HiddenAPIsException e) {
+        e.printStackTrace();
+      }
+    }
+    return null;
+  }
+
   //////////////////////////////////////////////////////////////////
   ////////////////////////////// OTHERS ////////////////////////////
   //////////////////////////////////////////////////////////////////
@@ -364,7 +377,7 @@ public class PrivTasks {
   // Must be called only when the app is in foreground or a fg service is running.
   public void sendRequest(String command, String codeWord) {
     try {
-      mHiddenAPIs.sendRequest(command, mAppId, mAppUserId, codeWord);
+      mHiddenAPIs.sendRequest(command, mAppId, mCmdRcvSvc, mAppUserId, codeWord);
     } catch (HiddenAPIsException e) {
       e.printStackTrace();
     }

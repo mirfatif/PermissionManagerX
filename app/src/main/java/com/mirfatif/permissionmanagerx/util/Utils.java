@@ -1,15 +1,18 @@
 package com.mirfatif.permissionmanagerx.util;
 
+import static android.app.PendingIntent.FLAG_IMMUTABLE;
+import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import static android.text.style.DynamicDrawableSpan.ALIGN_BASELINE;
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
-import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.ADB_DAEMON;
-import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.ROOT_DAEMON;
 import static com.mirfatif.permissionmanagerx.util.UtilsFlavor.getAccentColor;
 
+import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningAppProcessInfo;
+import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -47,6 +50,8 @@ import android.text.style.TextAppearanceSpan;
 import android.text.style.URLSpan;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.AttrRes;
@@ -61,6 +66,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.ColorUtils;
 import androidx.lifecycle.Lifecycle.State;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.preference.PreferenceManager;
@@ -74,9 +80,11 @@ import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.Adb;
-import com.mirfatif.permissionmanagerx.svc.NotifDismissSvc;
+import com.mirfatif.permissionmanagerx.privs.NativeDaemon;
+import com.mirfatif.permissionmanagerx.ui.base.DialogBg;
 import com.mirfatif.privtasks.Commands;
 import com.mirfatif.privtasks.Util;
 import java.io.BufferedReader;
@@ -91,13 +99,14 @@ import java.io.StringWriter;
 import java.security.GeneralSecurityException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -115,20 +124,65 @@ public class Utils {
 
   private static final Handler mMainThreadHandler = new Handler(Looper.getMainLooper());
 
-  public static void runInFg(Runnable runnable) {
-    mMainThreadHandler.post(runnable);
+  public static Waiter runInFg(Runnable runnable) {
+    Waiter waiter = new Waiter(runnable);
+    mMainThreadHandler.post(waiter);
+    return waiter;
   }
 
-  public static void runInFg(LifecycleOwner lifecycleOwner, Runnable runnable) {
-    if (lifecycleOwner.getLifecycle().getCurrentState().isAtLeast(State.INITIALIZED)) {
-      runInFg(runnable);
+  public static Waiter runInFg(LifecycleOwner lifecycleOwner, Runnable runnable) {
+    if (isAlive(lifecycleOwner)) {
+      return runInFg(runnable);
     }
+    return new Waiter();
   }
 
   private static final ExecutorService mExecutor = Executors.newCachedThreadPool();
 
   public static Future<?> runInBg(Runnable runnable) {
     return mExecutor.submit(runnable);
+  }
+
+  public static class Waiter extends FutureTask<Void> {
+
+    public Waiter(Runnable runnable) {
+      super(runnable, null);
+    }
+
+    private boolean mIsEmpty = false;
+
+    public Waiter() {
+      super(() -> {}, null);
+      mIsEmpty = true;
+    }
+
+    @SuppressWarnings("UnusedReturnValue")
+    public boolean waitForMe() {
+      if (mIsEmpty) {
+        return false;
+      }
+
+      if (isMainThread()) {
+        Log.e(TAG, "Waiter: waitForMe() called on main thread");
+        return false;
+      }
+
+      try {
+        super.get();
+        return true;
+      } catch (ExecutionException | InterruptedException e) {
+        Log.e(TAG, e.toString());
+        return false;
+      }
+    }
+  }
+
+  public static boolean isMainThread() {
+    return Thread.currentThread() == Looper.getMainLooper().getThread();
+  }
+
+  public static boolean isAlive(LifecycleOwner lifecycleOwner) {
+    return lifecycleOwner.getLifecycle().getCurrentState().isAtLeast(State.INITIALIZED);
   }
 
   public static void runCommand(String tag, String... cmd) {
@@ -152,10 +206,7 @@ public class Utils {
 
   public static Process runCommand(String tag, boolean redirectStdErr, String... cmd) {
     File binDir = new File(App.getContext().getFilesDir(), "bin");
-    File cwd = App.getContext().getExternalFilesDir(null);
-
     ProcessBuilder processBuilder = new ProcessBuilder(cmd);
-    processBuilder.directory(cwd);
     Map<String, String> env = processBuilder.environment();
     env.put("PATH", binDir + ":" + env.get("PATH"));
     processBuilder.redirectErrorStream(redirectStdErr);
@@ -261,14 +312,11 @@ public class Utils {
   }
 
   public static boolean openWebUrl(Activity activity, String url) {
-    List<ResolveInfo> customTabsServices =
-        App.getContext()
-            .getPackageManager()
-            .queryIntentServices(
-                new Intent(CustomTabsService.ACTION_CUSTOM_TABS_CONNECTION),
-                PackageManager.MATCH_ALL);
+    PackageManager pm = App.getContext().getPackageManager();
+    Intent intent = new Intent(CustomTabsService.ACTION_CUSTOM_TABS_CONNECTION);
+    ResolveInfo customTabSvc = pm.resolveService(intent, PackageManager.MATCH_ALL);
 
-    if (customTabsServices.isEmpty()) {
+    if (customTabSvc == null) {
       try {
         activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
       } catch (ActivityNotFoundException e) {
@@ -296,6 +344,68 @@ public class Utils {
   // Doesn't work with Application or Service context
   public static @ColorInt int getColor(Activity activity, @AttrRes int colorAttrResId) {
     return MaterialColors.getColor(activity, colorAttrResId, Color.TRANSPARENT);
+  }
+
+  public static @ColorInt int getBgColor(Activity activity) {
+    return getColor(activity, android.R.attr.windowBackground);
+  }
+
+  public static @ColorInt int getSharpBgColor(Activity activity) {
+    return ColorUtils.blendARGB(
+        getBgColor(activity), isNightMode(activity) ? Color.BLACK : Color.WHITE, 0.05f);
+  }
+
+  public static @ColorInt int getDimBgColor(Activity activity) {
+    return ColorUtils.blendARGB(
+        getBgColor(activity), isNightMode(activity) ? Color.WHITE : Color.BLACK, 0.05f);
+  }
+
+  public static void onCreateLayout(ViewGroup view) {
+    LayoutTransition transition = new LayoutTransition();
+    transition.enableTransitionType(LayoutTransition.CHANGING);
+    view.setLayoutTransition(transition);
+  }
+
+  public static void onCreateDialog(Dialog dialog, Activity activity) {
+    Window window = dialog.getWindow();
+    if (window == null) {
+      return;
+    }
+
+    window.setBackgroundDrawable(new DialogBg(activity, true));
+
+    /*
+     May also directly use a custom style:
+       new Builder(this, R.style.myAlertDialogThemeWithAnimation)
+    */
+    window.setWindowAnimations(android.R.style.Animation_Dialog);
+    // Or: window.getAttributes().windowAnimations = android.R.style.Animation_Dialog
+  }
+
+  public static boolean isNightMode(Activity activity) {
+    int uiMode = activity.getResources().getConfiguration().uiMode;
+    return (uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+  }
+
+  public static boolean setNightTheme(Activity activity) {
+    if (!MySettings.INSTANCE.forceDarkMode()) {
+      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+      return false;
+    }
+
+    // Dark Mode applied on whole device
+    if (Utils.isNightMode(activity)) {
+      return false;
+    }
+
+    // Dark Mode already applied in app
+    int defMode = AppCompatDelegate.getDefaultNightMode();
+    if (defMode == AppCompatDelegate.MODE_NIGHT_YES) {
+      return false;
+    }
+
+    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+    return true;
   }
 
   public static TextAppearanceSpan getHighlight(@ColorInt int colorInt) {
@@ -356,32 +466,6 @@ public class Utils {
     }
   }
 
-  public static boolean isNightMode(Activity activity) {
-    int uiMode = activity.getResources().getConfiguration().uiMode;
-    return (uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
-  }
-
-  public static boolean setNightTheme(Activity activity) {
-    if (!SETTINGS.forceDarkMode()) {
-      AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-      return false;
-    }
-
-    // Dark Mode applied on whole device
-    if (Utils.isNightMode(activity)) {
-      return false;
-    }
-
-    // Dark Mode already applied in app
-    int defMode = AppCompatDelegate.getDefaultNightMode();
-    if (defMode == AppCompatDelegate.MODE_NIGHT_YES) {
-      return false;
-    }
-
-    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-    return true;
-  }
-
   public static Context setLocale(Context context) {
     Locale locale = getLocale();
     Locale.setDefault(locale);
@@ -405,7 +489,7 @@ public class Utils {
   }
 
   private static Locale getLocale() {
-    String lang = SETTINGS.getLocale();
+    String lang = MySettings.INSTANCE.getLocale();
     if (TextUtils.isEmpty(lang)) {
       return Resources.getSystem().getConfiguration().getLocales().get(0);
     } else {
@@ -513,7 +597,7 @@ public class Utils {
   }
 
   public static String getDeviceInfo() {
-    MySettings mySettings = SETTINGS;
+    MySettings mySettings = MySettings.INSTANCE;
     return "Version: "
         + BuildConfig.VERSION_NAME
         + "\nSDK: "
@@ -549,13 +633,14 @@ public class Utils {
   }
 
   // With longer button text, unnecessary bottom padding is added to dialog.
-  public static void removeButtonPadding(AlertDialog dialog) {
+  public static AlertDialog removeButtonPadding(AlertDialog dialog) {
     dialog.setOnShowListener(
         d -> {
           Button b = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
           int padding = dpToPx(4);
           b.setPadding(b.getPaddingLeft(), padding, padding, padding);
         });
+    return dialog;
   }
 
   public static Spanned htmlToString(int resId) {
@@ -676,9 +761,26 @@ public class Utils {
     return BuildConfig.VERSION_NAME.contains("-pro");
   }
 
+  public static boolean isFreeVersion() {
+    return !isPsVersion() && !isProVersion();
+  }
+
   @SuppressWarnings("ConstantConditions")
   public static boolean isAmazVersion() {
     return BuildConfig.VERSION_NAME.contains("-amaz");
+  }
+
+  @SuppressWarnings("UnusedDeclaration")
+  public static boolean isAppVisible() {
+    ActivityManager am =
+        (ActivityManager) App.getContext().getSystemService(Context.ACTIVITY_SERVICE);
+    for (RunningAppProcessInfo info : am.getRunningAppProcesses()) {
+      if (info.pid == android.os.Process.myPid()
+          && info.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+        return true;
+      }
+    }
+    return false;
   }
 
   //////////////////////////////////////////////////////////////////
@@ -688,7 +790,7 @@ public class Utils {
   private static long daemonDeadLogTs = 0;
 
   public static void logDaemonDead(String tag) {
-    if (SETTINGS.isDebug() || System.currentTimeMillis() - daemonDeadLogTs > 1000) {
+    if (MySettings.INSTANCE.isDebug() || System.currentTimeMillis() - daemonDeadLogTs > 1000) {
       Log.w(tag, "Privileged daemon is not running");
       daemonDeadLogTs = System.currentTimeMillis();
     }
@@ -699,7 +801,7 @@ public class Utils {
   public static void writeCrashLog(String stackTrace, boolean isDaemon) {
     synchronized (CRASH_LOG_LOCK) {
       // Be ashamed of your performance, don't ask for feedback in near future
-      SETTINGS.setAskForFeedbackTs(System.currentTimeMillis());
+      MySettings.INSTANCE.setAskForFeedbackTs(System.currentTimeMillis());
 
       File logFile = new File(App.getContext().getExternalFilesDir(null), "PMX_crash.log");
       boolean append = true;
@@ -724,9 +826,8 @@ public class Utils {
     }
   }
 
-  @SuppressLint("LaunchActivityFromNotification,UnspecifiedImmutableFlag")
   private static void showCrashNotification(File logFile) {
-    if (!SETTINGS.shouldAskToSendCrashReport()) {
+    if (!MySettings.INSTANCE.shouldAskToSendCrashReport()) {
       return;
     }
 
@@ -749,13 +850,11 @@ public class Utils {
 
     // Adding extra information to dismiss notification after the action is tapped
     intent
-        .setClass(App.getContext(), NotifDismissSvc.class)
-        .putExtra(NotifDismissSvc.EXTRA_INTENT_TYPE, NotifDismissSvc.INTENT_TYPE_ACTIVITY)
-        .putExtra(NotifDismissSvc.EXTRA_NOTIF_ID, UNIQUE_ID);
+        .setClass(App.getContext(), MainActivity.class)
+        .putExtra(MainActivity.EXTRA_CRASH_NOTIF_ID, UNIQUE_ID);
 
     PendingIntent pendingIntent =
-        PendingIntent.getService(
-            App.getContext(), UNIQUE_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.getActivity(App.getContext(), UNIQUE_ID, intent, PI_FLAGS);
 
     NotificationManagerCompat notificationManager =
         NotificationManagerCompat.from(App.getContext());
@@ -785,13 +884,15 @@ public class Utils {
     notificationManager.notify(UNIQUE_ID, notificationBuilder.build());
   }
 
+  public static final int PI_FLAGS = FLAG_UPDATE_CURRENT | FLAG_IMMUTABLE;
+
   //////////////////////////////////////////////////////////////////
   /////////////////////////// PRIVILEGES ///////////////////////////
   //////////////////////////////////////////////////////////////////
 
   @SuppressWarnings("UnusedReturnValue")
   public static boolean checkRootIfEnabled() {
-    if (!SETTINGS.isRootGranted()) {
+    if (!MySettings.INSTANCE.isRootGranted()) {
       return false;
     }
     boolean res = checkRoot();
@@ -802,8 +903,8 @@ public class Utils {
   }
 
   public static boolean checkRoot() {
-    boolean res = ROOT_DAEMON.isRunning();
-    if (SETTINGS.isDebug()) {
+    boolean res = NativeDaemon.INSTANCE_R.isRunning();
+    if (MySettings.INSTANCE.isDebug()) {
       Util.debugLog(TAG, "checkRoot: getting root privileges " + (res ? "succeeded" : "failed"));
     }
     return res;
@@ -811,22 +912,22 @@ public class Utils {
 
   @SuppressWarnings("UnusedReturnValue")
   public static boolean checkAdbIfEnabled() {
-    if (SETTINGS.isAdbConnected()) {
+    if (MySettings.INSTANCE.isAdbConnected()) {
       return checkAdb(true);
     }
     return false;
   }
 
   public static boolean checkAdb(boolean showToastOnFailure) {
-    boolean res = ADB_DAEMON.isRunning(showToastOnFailure);
-    if (SETTINGS.isDebug()) {
+    boolean res = NativeDaemon.INSTANCE_A.isRunning(showToastOnFailure);
+    if (MySettings.INSTANCE.isDebug()) {
       Util.debugLog(TAG, "checkAdb: connecting to ADB " + (res ? "succeeded" : "failed"));
     }
     return res;
   }
 
   public static String getSu() {
-    String path = SETTINGS.getSuExePath();
+    String path = MySettings.INSTANCE.getSuExePath();
     return path == null ? "su" : path;
   }
 }

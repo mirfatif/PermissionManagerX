@@ -1,10 +1,12 @@
 package com.mirfatif.permissionmanagerx.prefs;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.preference.MultiSelectListPreferenceDialogFragmentCompat;
-import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
+import com.mirfatif.permissionmanagerx.util.Utils;
 
 public class MultiSelectListPrefDialogFrag extends MultiSelectListPreferenceDialogFragmentCompat {
 
@@ -16,11 +18,19 @@ public class MultiSelectListPrefDialogFrag extends MultiSelectListPreferenceDial
     return fragment;
   }
 
+  private FragmentActivity mA;
+
+  @Override
+  public void onAttach(@NonNull Context context) {
+    super.onAttach(context);
+    mA = getActivity();
+  }
+
   @NonNull
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
     Dialog dialog = super.onCreateDialog(savedInstanceState);
-    UtilsFlavor.onCreateDialog(dialog);
+    Utils.onCreateDialog(dialog, mA);
     return dialog;
   }
 }

@@ -38,9 +38,7 @@ public class SettingsActivity extends BaseActivity implements OnPreferenceStartF
     }
 
     /*
-     Check null to avoid:
-      "IllegalStateException: Target fragment must implement TargetFragment interface"
-     on rotation when a DialogPreference is visible.
+     Check null to avoid IllegalStateException on rotation.
      https://issuetracker.google.com/issues/137173772
     */
     if (savedInstanceState == null) {

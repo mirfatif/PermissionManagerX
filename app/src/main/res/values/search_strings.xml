@@ -10,6 +10,7 @@
   <string name="prot_lvl_normal">Normal</string>
   <string name="prot_lvl_dangerous">Dangerous</string>
   <string name="prot_lvl_signature">Signature</string>
+  <string name="prot_lvl_internal">Internal</string>
   <string name="prot_lvl_app_ops">AppOps</string>
   <string name="prot_lvl_development">Development</string>
   <string name="prot_lvl_privileged">Privileged</string>

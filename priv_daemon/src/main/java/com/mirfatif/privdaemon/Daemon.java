@@ -58,9 +58,10 @@ class Daemon {
     boolean useSocket = Boolean.parseBoolean(params[1]);
     int appUserId = Integer.parseInt(params[2]);
     mAppId = params[3];
-    mCodeWord = params[4];
+    String cmdRcvSvc = params[4];
+    mCodeWord = params[5];
 
-    mPrivTasks = new PrivTasks(new PrivTasksCallbackImpl(), mAppId, appUserId, true);
+    mPrivTasks = new PrivTasks(new PrivTasksCallbackImpl(), mAppId, cmdRcvSvc, appUserId, true);
     mDaemonFlavor = new DaemonFlavor(this, mPrivTasks);
 
     for (int pid : mPrivTasks.getPidsForCommands(new String[] {TAG})) {
@@ -131,11 +132,17 @@ class Daemon {
         */
         String[] args = line.trim().replaceAll("  +", " ").split(" ");
         if (args[0].equals(Commands.SHUTDOWN)) {
+          Log.i(TAG, "Shutting down");
           break;
         } else {
           handleCommand(args);
         }
       }
+
+      if (line == null) {
+        Log.i(TAG, "InputStream closed, going down");
+      }
+
       if (client != null) {
         if (DEBUG) {
           Log.d(TAG, "Closing client socket");
@@ -281,6 +288,9 @@ class Daemon {
         break;
       case Commands.GET_APP_OP_STATUS:
         sendResponse(mPrivTasks.getAppOpsStatus());
+        break;
+      case Commands.GET_PKG_COUNT_FOR_UID:
+        sendResponse(mPrivTasks.getPkgCountForUid(args));
         break;
       case Commands.RESET_OOS:
         resetOos();

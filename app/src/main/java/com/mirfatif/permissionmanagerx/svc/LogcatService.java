@@ -1,9 +1,7 @@
 package com.mirfatif.permissionmanagerx.svc;
 
-import static com.mirfatif.permissionmanagerx.prefs.MySettings.SETTINGS;
-import static com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler.DAEMON_HANDLER;
+import static com.mirfatif.permissionmanagerx.util.Utils.PI_FLAGS;
 
-import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -22,8 +20,10 @@ import androidx.core.app.NotificationManagerCompat;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
-import com.mirfatif.permissionmanagerx.main.MainActivity;
+import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
+import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.Adb;
+import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
 import com.mirfatif.privtasks.Commands;
@@ -40,7 +40,7 @@ public class LogcatService extends Service {
 
   private static final String TAG = "LogcatService";
 
-  public static final String ACTION_START_LOG = BuildConfig.APPLICATION_ID + ".START_LOGCAT";
+  private static final String ACTION_START_LOG = BuildConfig.APPLICATION_ID + ".START_LOGCAT";
 
   @Override
   public IBinder onBind(Intent intent) {
@@ -78,6 +78,7 @@ public class LogcatService extends Service {
   private CountDownTimer mTimer;
   private NotificationManagerCompat mNotificationManager;
   private Builder mNotificationBuilder;
+  private final Object NOTIF_BUILDER_LOCK = new Object();
 
   private void startSvc() {
     final String CHANNEL_ID = "channel_logcat_collection";
@@ -91,27 +92,28 @@ public class LogcatService extends Service {
       mNotificationManager.createNotificationChannel(channel);
     }
 
-    @SuppressLint("UnspecifiedImmutableFlag")
     PendingIntent stopIntent =
         PendingIntent.getService(
             App.getContext(),
             getUniqueId(),
             new Intent(App.getContext(), LogcatService.class),
-            PendingIntent.FLAG_UPDATE_CURRENT);
+            PI_FLAGS);
 
-    mNotificationBuilder = new Builder(App.getContext(), CHANNEL_ID);
-    mNotificationBuilder
-        .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
-        .setPriority(NotificationCompat.PRIORITY_HIGH)
-        .setOnlyAlertOnce(true)
-        .setSmallIcon(R.drawable.notification_icon)
-        .setContentTitle(Utils.getString(R.string.logging))
-        .setColor(UtilsFlavor.getAccentColor())
-        .setStyle(
-            new NotificationCompat.BigTextStyle().bigText(getString(R.string.logging_warning)))
-        .addAction(0, getString(R.string.stop_logging), stopIntent);
+    synchronized (NOTIF_BUILDER_LOCK) {
+      mNotificationBuilder = new Builder(App.getContext(), CHANNEL_ID);
+      mNotificationBuilder
+          .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
+          .setPriority(NotificationCompat.PRIORITY_HIGH)
+          .setOnlyAlertOnce(true)
+          .setSmallIcon(R.drawable.notification_icon)
+          .setContentTitle(Utils.getString(R.string.logging))
+          .setColor(UtilsFlavor.getAccentColor())
+          .setStyle(
+              new NotificationCompat.BigTextStyle().bigText(getString(R.string.logging_warning)))
+          .addAction(0, getString(R.string.stop_logging), stopIntent);
 
-    startForeground(getUniqueId(), mNotificationBuilder.build());
+      startForeground(getUniqueId(), mNotificationBuilder.build());
+    }
   }
 
   private int getUniqueId() {
@@ -121,17 +123,22 @@ public class LogcatService extends Service {
   private static final int TIMEOUT_SEC = 5 * 60;
 
   private void setNotificationProgress(int now) {
-    if (mNotificationManager == null || mNotificationBuilder == null) {
-      return;
+    synchronized (NOTIF_BUILDER_LOCK) {
+      if (mNotificationManager == null || mNotificationBuilder == null) {
+        return;
+      }
+      int min = now / 60;
+      String text = String.format(Locale.getDefault(), "%02d:%02d", min, now - min * 60);
+      mNotificationBuilder.setProgress(TIMEOUT_SEC, now, false);
+      mNotificationBuilder.setContentText(text);
+      mNotificationManager.notify(getUniqueId(), mNotificationBuilder.build());
     }
-    int min = now / 60;
-    String text = String.format(Locale.getDefault(), "%02d:%02d", min, now - min * 60);
-    mNotificationBuilder.setProgress(TIMEOUT_SEC, now, false);
-    mNotificationBuilder.setContentText(text);
-    mNotificationManager.notify(getUniqueId(), mNotificationBuilder.build());
   }
 
   private void stopSvc() {
+    synchronized (NOTIF_BUILDER_LOCK) {
+      mNotificationBuilder = null;
+    }
     stopSelf();
     if (mTimer != null) {
       mTimer.cancel();
@@ -151,10 +158,10 @@ public class LogcatService extends Service {
 
   private void stopLogging(boolean sendCmd) {
     synchronized (LOG_WRITER_LOCK) {
-      if (!SETTINGS.isDebug()) {
+      if (!MySettings.INSTANCE.isDebug()) {
         return;
       }
-      SETTINGS.setDebugLog(false);
+      MySettings.INSTANCE.setDebugLog(false);
       if (sLogcatWriter != null) {
         sLogcatWriter.close();
       }
@@ -164,9 +171,9 @@ public class LogcatService extends Service {
         return;
       }
 
-      if (SETTINGS.isPrivDaemonAlive()) {
+      if (MySettings.INSTANCE.isPrivDaemonAlive()) {
         // Stop daemon logging
-        DAEMON_HANDLER.sendRequest(Commands.STOP_LOGGING);
+        PrivDaemonHandler.INSTANCE.sendRequest(Commands.STOP_LOGGING);
       }
       // Stop app logging
       Log.i(TAG, "stopLogging: please " + Commands.STOP_LOGGING);
@@ -204,12 +211,13 @@ public class LogcatService extends Service {
       return;
     }
 
-    SETTINGS.setDebugLog(true);
+    MySettings.INSTANCE.setDebugLog(true);
     writeToLogFile(Utils.getDeviceInfo());
+    writeToLogFile("=====================================");
 
-    if (SETTINGS.isPrivDaemonAlive()) {
+    if (MySettings.INSTANCE.isPrivDaemonAlive()) {
       // We'll start it in MainActivity to log all of the start messages.
-      DAEMON_HANDLER.sendRequest(Commands.SHUTDOWN);
+      PrivDaemonHandler.INSTANCE.sendRequest(Commands.SHUTDOWN);
     }
 
     Utils.runCommand(TAG + ": doLogging", "logcat", "-c");
@@ -225,7 +233,10 @@ public class LogcatService extends Service {
 
     Intent intent = new Intent(App.getContext(), MainActivity.class);
     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-    Utils.runInFg(() -> startActivity(intent));
+    // On Android 12+ startActivity() works from Service only if the app is in foreground.
+    if (VERSION.SDK_INT < VERSION_CODES.S || Utils.isAppVisible()) {
+      Utils.runInFg(() -> startActivity(intent));
+    }
   }
 
   @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -276,7 +287,7 @@ public class LogcatService extends Service {
       if (sLogcatWriter == null) {
         return;
       }
-      if (!SETTINGS.isDebug()) {
+      if (!MySettings.INSTANCE.isDebug()) {
         return;
       }
       sLogcatWriter.println(line);
@@ -297,5 +308,14 @@ public class LogcatService extends Service {
         sLogcatWriter.flush();
       }
     }
+  }
+
+  public static void start(Uri logFile) {
+    if (logFile == null || !Utils.isAppVisible()) {
+      return;
+    }
+
+    App.getContext()
+        .startService(new Intent(ACTION_START_LOG, logFile, App.getContext(), LogcatService.class));
   }
 }

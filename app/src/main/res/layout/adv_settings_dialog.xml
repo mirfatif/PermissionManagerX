@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
@@ -12,23 +13,38 @@
     android:layout_gravity="center_horizontal"
     android:background="@drawable/hinge" />
 
-  <TextView
-    android:textStyle="bold"
+  <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
-    android:text="@string/advanced_settings_menu_item"
-    android:textAlignment="center"
-    android:textColor="@color/dynamic_text_color"
-    android:textSize="18sp" />
+    android:gravity="center">
+
+    <ImageView
+      android:layout_width="32dp"
+      android:layout_height="24dp"
+      android:layout_marginEnd="8dp"
+      android:src="@drawable/advanced_settings"
+      app:tint="?attr/accentColor"
+      tools:ignore="ContentDescription" />
+
+    <TextView
+      android:textStyle="bold"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/advanced_settings_menu_item"
+      android:textAlignment="center"
+      android:textColor="?attr/accentColor"
+      android:textSize="18sp" />
+
+  </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
   <androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
-    android:paddingTop="12dp"
-    android:paddingBottom="4dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="12dp"
     android:scrollbars="vertical">
 
     <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
@@ -42,7 +58,7 @@
         android:id="@+id/critical_changes_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
+        android:layout_marginTop="8dp"
         android:gravity="center_vertical"
         android:visibility="gone">
 
@@ -52,7 +68,7 @@
           android:layout_weight="1"
           android:layout_gravity="center_vertical"
           android:text="@string/allow_critical_changes"
-          android:textColor="@color/dynamic_text_color"
+          android:textColor="@color/sharpText"
           android:textSize="16sp" />
 
         <CheckBox
@@ -69,8 +85,7 @@
       <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginTop="12dp"
         android:gravity="center_vertical">
 
         <TextView
@@ -79,7 +94,7 @@
           android:layout_weight="1"
           android:layout_gravity="center_vertical"
           android:text="@string/use_hidden_apis"
-          android:textColor="@color/dynamic_text_color"
+          android:textColor="@color/sharpText"
           android:textSize="16sp" />
 
         <CheckBox
@@ -96,8 +111,7 @@
       <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginTop="12dp"
         android:gravity="center_vertical">
 
         <TextView
@@ -106,7 +120,7 @@
           android:layout_weight="1"
           android:layout_gravity="center_vertical"
           android:text="@string/dex_tmp_dir"
-          android:textColor="@color/dynamic_text_color"
+          android:textColor="@color/sharpText"
           android:textSize="16sp" />
 
         <CheckBox
@@ -121,17 +135,14 @@
       </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
       <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
-        android:background="@color/disabledStateColor" />
+        style="@style/ListSeparatorDim"
+        android:layout_marginTop="16dp" />
 
       <TextView
         android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
         android:text="@string/adb_only_settings"
         android:textColor="?attr/accentColor"
         android:textSize="14sp" />
@@ -139,6 +150,7 @@
       <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
         android:gravity="center_vertical">
 
         <TextView
@@ -147,7 +159,7 @@
           android:layout_weight="1"
           android:layout_gravity="center_vertical"
           android:text="@string/adb_listening_port"
-          android:textColor="@color/dynamic_text_color"
+          android:textColor="@color/sharpText"
           android:textSize="16sp" />
 
         <EditText
@@ -168,17 +180,14 @@
       </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
 
       <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
-        android:background="@color/disabledStateColor" />
+        style="@style/ListSeparatorDim"
+        android:layout_marginTop="12dp" />
 
       <TextView
         android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
         android:text="@string/root_only_settings"
         android:textColor="?attr/accentColor"
         android:textSize="14sp" />
@@ -186,8 +195,7 @@
       <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginTop="16dp"
         android:gravity="center_vertical">
 
         <TextView
@@ -196,7 +204,7 @@
           android:layout_weight="1"
           android:layout_gravity="center_vertical"
           android:text="@string/talk_to_daemon_over_socket"
-          android:textColor="@color/dynamic_text_color"
+          android:textColor="@color/sharpText"
           android:textSize="16sp" />
 
         <CheckBox
@@ -213,8 +221,7 @@
       <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginTop="20dp"
         android:gravity="center_vertical">
 
         <TextView
@@ -223,7 +230,7 @@
           android:layout_weight="1"
           android:layout_gravity="center_vertical"
           android:text="@string/daemon_uid"
-          android:textColor="@color/dynamic_text_color"
+          android:textColor="@color/sharpText"
           android:textSize="16sp" />
 
         <androidx.appcompat.widget.AppCompatSpinner
@@ -253,8 +260,7 @@
       <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginTop="22dp"
         android:gravity="center_vertical">
 
         <TextView
@@ -263,7 +269,7 @@
           android:layout_weight="1"
           android:layout_gravity="center_vertical"
           android:text="@string/daemon_context"
-          android:textColor="@color/dynamic_text_color"
+          android:textColor="@color/sharpText"
           android:textSize="16sp" />
 
         <androidx.appcompat.widget.AppCompatSpinner
@@ -293,8 +299,7 @@
       <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginTop="12dp"
         android:gravity="center_vertical">
 
         <TextView
@@ -305,7 +310,7 @@
           android:ellipsize="end"
           android:maxLines="1"
           android:text="@string/su_exe_path"
-          android:textColor="@color/dynamic_text_color"
+          android:textColor="@color/sharpText"
           android:textSize="16sp" />
 
         <EditText
@@ -329,11 +334,9 @@
   </androidx.core.widget.NestedScrollView>
 
   <View
-    android:layout_width="match_parent"
-    android:layout_height="0.5dp"
+    style="@style/ListSeparatorDim"
     android:layout_marginStart="20dp"
-    android:layout_marginEnd="20dp"
-    android:background="@color/disabledStateColor" />
+    android:layout_marginEnd="20dp" />
 
   <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
     android:layout_width="match_parent"

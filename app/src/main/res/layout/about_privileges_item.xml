@@ -22,7 +22,7 @@
     android:scrollHorizontally="true"
     android:singleLine="true"
     android:textAlignment="viewStart"
-    android:textColor="@color/dynamic_text_color"
+    android:textColor="@color/sharpText"
     android:textSize="16sp" />
 
   <ImageView

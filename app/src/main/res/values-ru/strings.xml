@@ -15,7 +15,6 @@
   <string name="_default" maxLength="10">По умолчанию</string>
   <string name="open_drawer">Открыть</string>
   <string name="close_drawer">Закрыть</string>
-  <string name="contact" maxLength="10">Написать сейчас</string>
   <string name="do_not_remind" maxLength="10">Не напоминать</string>
   <string name="get_help" maxLength="10">Справка</string>
   <string name="switch_to_adb" maxLength="10">Переключиться на ADB</string>
@@ -32,8 +31,6 @@
   <string name="settings_menu_item" maxLength="15">Настройки</string>
   <string name="filter_menu_item" maxLength="15">Фильтры исключения</string>
   <string name="root_menu_item" maxLength="15">Root доступ</string>
-  <string name="adb_menu_item" maxLength="15">Оболочка ADB</string>
-  <string name="dark_theme_menu_item" maxLength="15">Принудительно тёмная тема</string>
   <string name="backup_restore_menu_item" maxLength="15">Бэкап / восстановление</string>
   <string name="help_menu_item" maxLength="15">Справка</string>
   <string name="donate_menu_item" maxLength="15">Пожертвование</string>
@@ -57,11 +54,7 @@
   <string name="su_exe_path" maxLength="20">Путь к бинарнику su</string>
   <!-- MainActivity strings -->
   <string name="primary_account" maxLength="15">Основной аккаунт</string>
-  <string name="primary_profile_only">Permission Manager X может работать только в основном аккаунте /
-    профиле владельца устройства.
-  </string>
-  <string name="deep_search" maxLength="12">Глубокий поиск (Разрешения)</string>
-  <string name="case_sensitive_search" maxLength="12">Поиск с учётом регистра</string>
+  <string name="primary_profile_only">Permission Manager X может работать только в основном аккаунте / профиле владельца устройства.</string>
   <string name="grant_root_or_adb">Предоставьте root-доступ или подключитесь к ADB для запуска привилегированного процесса.</string>
   <string name="logging_failed" maxLength="20">Сбой логирования</string>
   <string name="daemon_logging_failed" maxLength="20">Сбой логирования для привилегированного демона</string>
@@ -71,6 +64,7 @@
   <string name="starting_daemon" maxLength="15">Запуск демона</string>
   <string name="checking_root_access" maxLength="15">Проверка root-доступа</string>
   <string name="checking_adb_access" maxLength="15">Проверка доступа ADB</string>
+  <string name="missing_privileges" maxLength="15">Отсутствуют привилегии</string>
   <string name="root_granted" maxLength="20">Root предоставлен</string>
   <string name="getting_root_fail" maxLength="20">Сбой получения root-прав</string>
   <string name="getting_root_fail_long" maxLength="20">Не удалось получить root-права. У вас есть root-доступ?</string>
@@ -81,12 +75,7 @@
   <string name="adb_key_pair_failed" maxLength="20">Сбой создания пары ключей ADB</string>
   <string name="adb_authentication_failed" maxLength="20">Сбой аутентификации ADB</string>
   <string name="adb_command_fail" maxLength="20">Сбой выполнения команды ADB</string>
-  <string name="adb_connect_fail_long"><![CDATA[      Сбой подключения к ADB.
-      <ul>
-        <li>Включите <b><i>ADB через сеть</i></b> и вернитесь к подключению.</li>
-        <li>Разрешите аутентификацию ADB, если будет предложено.</li>
-      </ul>
-    ]]></string>
+  <string name="adb_connect_fail_long"><![CDATA[Сбой подключения к ADB.<ul><li>Включите <b><i>ADB через сеть</i></b> и вернитесь к подключению.</li><li>Разрешите аутентификацию ADB, если будет предложено.</li></ul>]]></string>
   <string name="daemon_failed" maxLength="20">Не удалось запустить привилегированный демон</string>
   <string name="backup" maxLength="10">Бэкап</string>
   <string name="restore" maxLength="10">Восстановление</string>
@@ -122,27 +111,33 @@
   <string name="skip_uninstalled_packages" maxLength="20">Без удалённых пакетов</string>
   <string name="privileges" maxLength="15">"Привилегии"</string>
   <string name="hidden_apis_warning" maxLength="20">Скрытые API в чёрном списке, переключаем на демон</string>
-  <string name="hidden_apis_confirmation">Некоторые прошивки позволяют использование скрытых API системы. Режим службы может быть медленнее. Прекратить использование скрытых API?
-  </string>
+  <string name="hidden_apis_confirmation">Некоторые прошивки позволяют использование скрытых API системы. Режим службы может быть медленнее. Прекратить использование скрытых API?</string>
   <string name="bad_port_number" maxLength="15">Недействительный номер порта</string>
   <string name="bad_path" maxLength="15">Неверный путь</string>
   <string name="granting_permission_failed" maxLength="20">Сбой предоставления разрешения: %1$s</string>
-  <string name="love_using_app" maxLength="20">Нравится Permission Manager X?</string>
-  <string name="purchase_and_rate_the_app">Вы можете помочь нам улучшить приложение путём небольшого пожертвования или оставить хороший отзыв, чтобы мы могли лучше соответствовать вашим потребностям.
-  </string>
-  <string name="rate_the_app">Хорошие рейтинги и отзывы помогают нам улучшить приложение так, чтобы мы могли лучше соответствовать вашим потребностям.
-  </string>
-  <string name="ask_to_provide_feedback">Жалко слышать это. Вы можете помочь улучшить приложение, связавшись с нами по email или в Telegram, чтобы мы могли лучше соответствовать вашим потребностям.</string>
-  <string name="thank_you" maxLength="20">Спасибо</string>
   <string name="crash_report" maxLength="15">Отчёт о падении</string>
   <string name="ask_to_report_crash_small" maxLength="30">Отправить отчёт о падении разработчику</string>
-  <string name="ask_to_report_crash">Извините, компонент приложения столкнулся с проблемой и дал сбой. Отправьте лог-файл разработчику по email или в Telegram, чтобы ошибка могла быть исправлена.
-  </string>
+  <string name="ask_to_report_crash">Извините, компонент приложения столкнулся с проблемой и дал сбой. Отправьте лог-файл разработчику по email или в Telegram, чтобы ошибка могла быть исправлена.</string>
   <string name="send_report" maxLength="10">Отправить отчёт</string>
-  <string name="disable_pkg_warning" comment="'system' or 'framework'">Заморозка приложения %1$s является
-    опасным действием. Это может нанести вред вплоть до сбоя работы системы Android.\nВы уверены что хотите продолжить?
-  </string>
+  <string name="disable_pkg_warning" comment="'system' or 'framework'">Заморозка приложения %1$s является опасным действием. Это может нанести вред вплоть до сбоя работы системы Android.\nВы уверены что хотите продолжить?</string>
   <string name="pkg_state_disabled2" searchStr="true">%s, заморожено</string>
+  <!-- Feedback -->
+  <string name="love_using_app" maxLength="20">Нравится Permission Manager X?</string>
+  <string name="purchase_and_rate_the_app">Вы можете помочь нам улучшить приложение путём небольшого пожертвования или оставить хороший отзыв, чтобы мы могли лучше соответствовать вашим потребностям.</string>
+  <string name="rate_the_app">Хорошие рейтинги и отзывы помогают нам улучшить приложение так, чтобы мы могли лучше соответствовать вашим потребностям.</string>
+  <string name="ask_to_provide_feedback">Жалко слышать это. Вы можете помочь улучшить приложение, связавшись с нами по email или в Telegram, чтобы мы могли лучше соответствовать вашим потребностям.</string>
+  <string name="thank_you" maxLength="20">Спасибо</string>
+  <string name="contact" maxLength="15">Написать сейчас</string>
+  <string name="contact_on_telegram" maxLength="15">Написать сообщение в Telegram</string>
+  <string name="contact_on_email" maxLength="15">Написать email</string>
+  <string name="rate_now" maxLength="15">Оценить сейчас</string>
+  <string name="how_do_i" maxLength="15">Как это сделать?</string>
+  <string name="purchase_donate" maxLength="15">Покупка/Пожертвование</string>
+  <string name="rate_on_ps" maxLength="15">Оценить на Play Маркет</string>
+  <string name="star_on_github" maxLength="15">Проставить \"звезду\" на GitHub</string>
+  <string name="review_on_xda" maxLength="15">Оставить отзыв на XDA</string>
+  <string name="do_not_ask" maxLength="15">Не спрашивать снова</string>
+  <!-- Links -->
   <!-- PrivDaemonHandler -->
   <string name="dex_location_changed" maxLength="20">Переключение места запуска демона</string>
   <string name="files_not_extracted_accessible" maxLength="20">Файлы не извлечены или недоступны</string>
@@ -152,26 +147,21 @@
   <!-- LogcatService -->
   <string name="logging" maxLength="15">Логирование</string>
   <string name="logging_warning">Из-за сбора лога приложение может реагировать медленно, а файл лога может вырасти до очень большого размера. Логирование автоматически отключается через 5 минут.</string>
-  <!-- Buttons-->
-  <string name="disable" maxLength="10">Заморозить</string>
-  <string name="enable" maxLength="10">Разморозить</string>
-  <string name="exclude" maxLength="10">Исключить</string>
-  <string name="clear_reference" maxLength="10" comment="'Clear Reference'">Очистить целевое</string>
-  <string name="set_reference" maxLength="10" comment="'Set Reference'">Установить целевым</string>
-  <string name="do_not_ask" maxLength="15">Не спрашивать снова</string>
   <!-- PackageActivity menu items -->
-  <string name="package_information_menu_item" maxLength="15" comment="'App Information'">Информация о приложении</string>
   <string name="reset_app_ops" maxLength="15">Сбросить AppOps</string>
   <string name="reset_app_ops_confirmation">Сбросить все AppOps к значениям по умолчанию?</string>
   <string name="clear_references" maxLength="15">Очистить целевые значения</string>
   <string name="clear_references_confirmation">Очистить все целевые значения разрешений?</string>
   <string name="set_references" maxLength="15">Установить целевые значения</string>
   <string name="set_references_confirmation">Установить все текущие состояния разрешений в качестве целевых?</string>
-  <!--PackageActivity Dialogs-->
-  <string name="exclude_app_from_visible_list">Исключить приложение из списка отображаемых.</string>
-  <string name="enable_app">Разморозка приложения</string>
-  <string name="disable_app">Заморозка приложения</string>
-  <string name="exclude_from_visible_list">%s Исключение приложения из списка видимых.</string>
+  <!-- MainActivity Dialogs -->
+  <string name="exclude_app_from_visible_list" maxLength="15">Скрыть приложение из списка</string>
+  <string name="enable_app" maxLength="15">Разморозка приложения</string>
+  <string name="disable_app" maxLength="15">Заморозка приложения</string>
+  <string name="open_pkg_info" maxLength="15">Открыть сведения о приложении</string>
+  <string name="find_pkg_process" maxLength="15">Найти процесс приложения</string>
+  <string name="install" maxLength="10">Установить</string>
+  <string name="wrun_not_installed" maxLength="20">WhatsRunning не установлено</string>
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">Что-то пошло не так</string>
   <string name="change_perms_warning" comment="'system' or 'framework'">Изменение разрешений %1$s приложения — потенциально опасное действие вплоть до сбоя системы Android.\nВы уверены, что хотите продолжить?</string>
@@ -183,10 +173,11 @@
     <item quantity="many">Это разрешение в режиме UID. Его изменение затронет работу %1$d других пакетов.</item>
     <item quantity="other">Это разрешение в режиме UID. Его изменение затронет работу %1$d других пакетов.</item>
   </plurals>
-  <string name="extra_ops_cant_be_excluded">Дополнительные AppOps не могут быть исключены из списка отображаемых.</string>
-  <string name="exclude_perm_from_list">Исключить разрешение из списка отображаемых.</string>
-  <string name="set_perm_state_reference" comment="AppOps or manifest permission state"><![CDATA[<br/>Установить<b>%1$s</b> состояние как целевое.]]></string>
-  <string comment="AppOps or manifest permission state" name="clear_perm_state_reference"><![CDATA[<br/>Очистить <b>%1$s</b> состояние как целевое.]]></string>
+  <string name="exclude_perm_from_list">Скрыть разрешения из списка</string>
+  <string name="set_perm_state_reference" maxLength="10"><![CDATA[Установить <b><i>%1$s</i></b> как целевое значение]]></string>
+  <string name="set_reference" maxLength="15">Установить целевые значения</string>
+  <string name="clear_reference" maxLength="15">Очистить целевые значения</string>
+  <string name="no_action_available" maxLength="20">Действия недоступны</string>
   <plurals name="count_permissions_filtered_out">
     <item quantity="one">Отфильтровано %1$d разрешение</item>
     <item quantity="few">Отфильтровано %1$d разрешения</item>
@@ -209,6 +200,8 @@
   <string name="app_op_mode_deny">Запретить</string>
   <string name="app_op_mode_default">По умолчанию</string>
   <string name="app_op_mode_foreground">Передний план</string>
+  <string name="perm_mode_granted">Разрешено</string>
+  <string name="perm_mode_revoked">Отклонено</string>
   <!-- FilterSettingsActivity -->
   <string name="filter_settings" maxLength="15">Фильтр настроек</string>
   <string name="excluded_apps_summary">Долгое нажатие на имя пакета, чтобы исключить его</string>
@@ -229,6 +222,10 @@
   <string name="locale_ru">Русский</string>
   <string name="locale_es">Испанский</string>
   <string name="locale_ar">Арабский</string>
+  <string name="theme_color_green">Зелёный</string>
+  <string name="theme_color_blue">Синий</string>
+  <string name="theme_color_pink">Розовый</string>
+  <string name="theme_color_gray">Серый</string>
   <!-- PreferenceActivity menu items -->
   <string name="filter_settings_reset_defaults_menu_item" maxLength="15">Сброс по умолчанию</string>
   <string name="filter_settings_reset_confirmation">Сбросить настройки фильтра к значениям по умолчанию?</string>
@@ -242,8 +239,6 @@
   <string name="source" maxLength="15">Исходный код</string>
   <string name="email" maxLength="15">Почта</string>
   <string name="telegram_group" maxLength="15">Группа в Telegram</string>
-  <string name="no_email_app_installed" maxLength="20">Почтовая программа не установлена</string>
-  <string name="no_browser_installed" maxLength="20">"Веб-обозреватель не установлен"</string>
   <string name="collect_logs" maxLength="15">Сбор логов</string>
   <string name="collect_logs_summary" maxLength="20">Сохранить подробный лог в файл</string>
   <string name="report_issues" maxLength="15">Сообщить о проблемах</string>
@@ -252,20 +247,19 @@
   <string name="stop_logging" maxLength="15">Остановить логирование</string>
   <string name="logging_stopped" maxLength="20">Логирование остановлено</string>
   <string name="app_rating" maxLength="15">Поставить оценку</string>
-  <string name="app_rating_summary" maxLength="20">Поставить оценку/оставить отзыв в Play Store</string>
+  <string name="app_rating_summary" maxLength="20">Оценки, отзывы, \"звезды\" на Github…</string>
   <string name="paid_features" maxLength="15">Платные функции</string>
-  <string name="paid_features_summary"><![CDATA[<ul>
-<li>Сортировка приложений и разрешений по различным параметрам</li>
-<li>Проверка разрешений по расписанию и уведомление в случае их изменений</li>
-<li>Автоматическая отмена предоставленных разрешений с КРАСНЫМИ состояниями</li>
-<li>Отслеживание разрешений для быстрого удаления разрешений</li>
-<li>Внесение изменения в критически важные приложения и разрешения</li>
-<li>Поддержка нескольких пользователей / рабочего профиля</li>
-<li>Автоматический бэкап при изменениях</li>
-<li>Подсказки поиска</li>
-<li>Настройки темы</li>
-<li>Пакетные операции (профили) (в ближайшее время)</li>
-</ul>]]></string>
+  <string name="paid_features1">Сортировка приложений и разрешений по различным параметрам</string>
+  <string name="paid_features2">Проверка разрешений по расписанию и уведомление в случае их изменений</string>
+  <string name="paid_features3">Автоматическая отмена разрешений с КРАСНЫМИ состояниями</string>
+  <string name="paid_features4">Отслеживание разрешений для быстрого удаления нежелательных разрешений</string>
+  <string name="paid_features5">Внесение изменений в критически важные приложения и разрешения</string>
+  <string name="paid_features6">Поддержка нескольких пользователей/рабочего профиля</string>
+  <string name="paid_features7">Автоматический бэкап при изменениях</string>
+  <string name="paid_features8">Подсказки поиска</string>
+  <string name="paid_features9">Настройки темы</string>
+  <string name="paid_features10">Просмотр сводки разрешений (в ближайшее время)</string>
+  <string name="paid_features11">Пакетные операции (профили) (в ближайшее время)</string>
   <string name="update" maxLength="15">Обновить</string>
   <string name="update_summary" maxLength="20">Проверить обновления приложения</string>
   <string name="check_in_progress" maxLength="20">Выполняется проверка</string>
@@ -288,10 +282,16 @@
   <string name="op_to_name">Op к имени</string>
   <string name="op_num_consistency">Последовательность номеров Op</string>
   <string name="permissions">Разрешения</string>
+  <!-- ActivityNotFoundException -->
+  <string name="no_email_app_installed" maxLength="20">Почтовая программа не установлена</string>
+  <string name="no_browser_installed" maxLength="20">"Веб-обозреватель не установлен"</string>
   <!-- Donate -->
   <string name="send_bitcoin">Отправить биткойны</string>
   <string name="no_bitcoin_app_installed">"Не найдено приложение Биткоин-кошелька"</string>
   <string name="ask_for_bank_account">Запросить банковский счёт</string>
+  <string name="buy_me_a_coffee">Купить мне кофе</string>
+  <string name="get_pro_version">Получить PRO версию</string>
+  <string name="get_ps_version">Получить Play Store версию</string>
   <!-- Notification Channels -->
   <string name="channel_app_update">Обновления приложения</string>
   <string name="channel_crash_report">Отчёт о падении</string>
@@ -305,9 +305,7 @@
   <string name="outdated_web_view" maxLength="20">WebView устарел</string>
   <!-- DaemonCmdRcvSvc: Daemon return messages -->
   <string name="daemon_listen_on_loopback_failed" maxLength="20">Демон не смог прослушать 127.0.0.1</string>
-  <string name="daemon_establish_connection_failed" maxLength="20">Демону не удалось установить
-    связь с клиентом
-  </string>
+  <string name="daemon_establish_connection_failed" maxLength="20">Демону не удалось установить связь с клиентом</string>
   <string name="daemon_wrong_args_received" maxLength="20">Неверные значения</string>
   <string name="daemon_set_app_ops_mode_failed" maxLength="20">Сбой установки режима AppOps</string>
   <string name="daemon_reset_app_ops_failed" maxLength="20">Сбой сброса AppOps</string>

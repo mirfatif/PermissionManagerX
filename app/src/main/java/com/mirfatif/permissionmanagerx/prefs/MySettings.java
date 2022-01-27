@@ -1,7 +1,5 @@
 package com.mirfatif.permissionmanagerx.prefs;
 
-import static com.mirfatif.permissionmanagerx.parser.AppOpsParser.APP_OPS_PARSER;
-import static com.mirfatif.permissionmanagerx.parser.PkgParserFlavor.PKG_PARSER_FLAVOR;
 import static com.mirfatif.permissionmanagerx.util.Utils.getString;
 
 import android.annotation.SuppressLint;
@@ -17,15 +15,19 @@ import android.text.TextUtils;
 import android.text.style.MetricAffectingSpan;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
+import com.mirfatif.permissionmanagerx.annot.ToDo;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.Permission;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDao;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDatabase;
+import com.mirfatif.permissionmanagerx.util.LiveEvent;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Util;
 import java.io.File;
@@ -41,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 public enum MySettings {
-  SETTINGS;
+  INSTANCE;
 
   private static final String TAG = "MySettings";
 
@@ -258,7 +260,7 @@ public enum MySettings {
 
     Editor prefEditor = Utils.getEncPrefs().edit();
     try {
-      if (crashCount >= 5 || (currTime - lastTS) >= TimeUnit.DAYS.toMillis(1)) {
+      if (crashCount >= 2 || (currTime - lastTS) >= TimeUnit.DAYS.toMillis(1)) {
         prefEditor.putLong(getString(R.string.pref_main_crash_report_ts_enc_key), currTime);
         prefEditor.putInt(getString(R.string.pref_main_crash_report_count_enc_key), 1);
         return true;
@@ -348,27 +350,25 @@ public enum MySettings {
   }
 
   public boolean isDeepSearchEnabled() {
-    return getBoolPref(R.string.pref_main_deep_search_enc_key);
+    return getBoolPref(R.string.pref_main_deep_search_key);
   }
 
   public void setDeepSearchEnabled(boolean enabled) {
-    savePref(R.string.pref_main_deep_search_enc_key, enabled);
+    savePref(R.string.pref_main_deep_search_key, enabled);
   }
 
   public boolean isCaseSensitiveSearch() {
-    return getBoolPref(R.string.pref_main_case_sensitive_search_enc_key);
-  }
-
-  public void setCaseSensitiveSearch(boolean isSensitive) {
-    savePref(R.string.pref_main_case_sensitive_search_enc_key, isSensitive);
+    return getBoolPref(R.string.pref_main_case_sensitive_search_key);
   }
 
   public boolean isSpecialSearch() {
     return getBoolPref(R.string.pref_settings_special_search_key);
   }
 
+  @ToDo(what = "Remove quick scan")
   public boolean isQuickScanEnabled() {
-    return getBoolPref(R.string.pref_settings_quick_scan_key) && PKG_PARSER_FLAVOR.allowQuickScan();
+    return false;
+    // getBoolPref(R.string.pref_settings_quick_scan_key) && PKG_PARSER_FLAVOR.allowQuickScan();
   }
 
   public boolean shouldDoQuickScan() {
@@ -385,6 +385,7 @@ public enum MySettings {
 
   public void setRootGranted(boolean granted) {
     savePref(R.string.pref_main_root_granted_enc_key, granted);
+    drawerPrefChanged();
   }
 
   public boolean isAdbConnected() {
@@ -393,6 +394,7 @@ public enum MySettings {
 
   public void setAdbConnected(boolean connected) {
     savePref(R.string.pref_main_adb_connected_enc_key, connected);
+    drawerPrefChanged();
   }
 
   private List<String> mCriticalApps;
@@ -525,11 +527,7 @@ public enum MySettings {
   }
 
   public boolean forceDarkMode() {
-    return getBoolPref(R.string.pref_main_dark_theme_key);
-  }
-
-  public void setForceDarkMode(boolean force) {
-    savePref(R.string.pref_main_dark_theme_key, force);
+    return getBoolPref(R.string.pref_settings_dark_theme_key);
   }
 
   public boolean useSocket() {
@@ -653,7 +651,7 @@ public enum MySettings {
     releaseExcludedAppsLock();
   }
 
-  private static class SmallTextSpan extends MetricAffectingSpan {
+  public static class SmallTextSpan extends MetricAffectingSpan {
 
     @Override
     public void updateDrawState(TextPaint tp) {
@@ -793,7 +791,7 @@ public enum MySettings {
     }
 
     // Let's remove AppOps not on this Android version
-    List<String> appOpsList = APP_OPS_PARSER.getAppOpsList();
+    List<String> appOpsList = AppOpsParser.INSTANCE.getAppOpsList();
     mExtraAppOps = new HashSet<>();
     for (String extraAppOp : extraAppOps) {
       // Necessarily build mExtraAppOps here even with excludeAppOpsPerms(). Otherwise on
@@ -862,5 +860,24 @@ public enum MySettings {
       this.packageLabel = packageLabel;
       this.packageName = packageName;
     }
+  }
+
+  ///////////////////////////////////////////////////////////////////
+
+  public static final int PREF_DRAWER_CHANGED = 0;
+  public static final int PREF_UI_CHANGED = 1;
+
+  private final LiveEvent<Integer> mPrefsWatcher = new LiveEvent<>();
+
+  public LiveData<Integer> getPrefsChanged() {
+    return mPrefsWatcher;
+  }
+
+  private void drawerPrefChanged() {
+    Utils.runInBg(() -> mPrefsWatcher.postValue(PREF_DRAWER_CHANGED));
+  }
+
+  public void recreateMainActivity() {
+    Utils.runInBg(() -> mPrefsWatcher.postValue(PREF_UI_CHANGED));
   }
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- On Android 9- attr color doesn't work at some places. -->
+  <style name="BgColorControlNormal">
+    <item name="android:background">?attr/colorControlNormal</item>
+  </style>
+
+</resources>

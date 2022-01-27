@@ -5,12 +5,12 @@ import android.util.AttributeSet;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.navigation.NavigationView;
-import com.mirfatif.permissionmanagerx.util.UtilsFlavor;
+import com.mirfatif.permissionmanagerx.util.Utils;
 
 public class MyNavigationView extends NavigationView {
 
   public MyNavigationView(@NonNull Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
-    UtilsFlavor.onCreateLayout(this);
+    Utils.onCreateLayout(this);
   }
 }

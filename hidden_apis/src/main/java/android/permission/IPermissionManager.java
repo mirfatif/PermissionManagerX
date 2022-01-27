@@ -10,7 +10,8 @@ public interface IPermissionManager {
 
   ParceledListSlice<?> queryPermissionsByGroup(String permGroup, int flags) throws RemoteException;
 
-  int getPermissionFlags(String permName, String pkgName, int userId) throws RemoteException;
+  // On R permName and pkgName are swapped
+  int getPermissionFlags(String pkgName, String permName, int userId) throws RemoteException;
 
   void revokeRuntimePermission(String pkgName, String permName, int userId, String reason)
       throws RemoteException;

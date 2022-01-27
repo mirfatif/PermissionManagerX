@@ -34,7 +34,7 @@ Confused? We are here to explain. Please start with:
 ## Required Privileges / Permissions
 
 * In order to let Permission Manager X serve you at its best, either the device must be <b>rooted</b> or you need to enable <b>ADB over network</b>.
-* <b>android.permission.INTERNET</b> is required to use ADB over network. The only connections made outside the device are to check for app updates or to fetch help contents.
+* <b>android.permission.INTERNET</b> is required to use ADB over network. The only connections made outside the device are to check for app updates or to fetch help contents. Pro version also requires internet connection for license verification.
 
 ## Note:
 
@@ -96,15 +96,18 @@ See [Guide and FAQs](https://mirfatif.github.io/PermissionManagerX/help/help.htm
 
 ## Want To Support Us?
 
-|<a href="https://www.buymeacoffee.com/mirfatif"><img src="https://cdn.buymeacoffee.com/buttons/default-white.png" alt="Buy Me A Coffee" height="45" width="170"></a>|&nbsp;&nbsp;<a href="http://mirfatif.github.io/mirfatif/bitcoin_redirect"><img src="http://mirfatif.github.io/mirfatif/logos/btc_button.png" alt="Donate Bitcoin" height="37" width="150"/></a>&nbsp;&nbsp;|
-|-|-|
+<table>
+    <td><a href="https://www.buymeacoffee.com/mirfatif"><img src="https://cdn.buymeacoffee.com/buttons/default-white.png" height="45" width="170" alt="Buy Me A Coffee"/></a></td>
+    <td>&nbsp;<a href="http://mirfatif.github.io/mirfatif/bitcoin_redirect"><img src="http://mirfatif.github.io/mirfatif/logos/btc_button.png" height="37" width="150" alt="Donate Bitcoin"/></a>&nbsp;</td>
+</table>
 
 &nbsp;&nbsp;&nbsp;(`bitcoin:18ijfsv5fcDKQ6CTe4wycKxZMmti4oUXjW`)
 
 ## Want To Reach Us?
 
 <table>
-    <td>&nbsp;<a href="https://t.me/PermissionManagerX"><img src="https://github.com/mirfatif/mirfatif/blob/main/logos/telegram.png" height="25"> Telegram</img></a>&nbsp;</td>
-    <td><a href="https://forum.xda-developers.com/t/app-7-0-permission-manager-x-manage-appops-and-manifest-permissions.4187657"><img src="https://github.com/mirfatif/mirfatif/blob/main/logos/xda.png" height="23" width="21"> XDA Thread</img></a></td>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="mailto:mirfatif@gmail.com"><img src="https://github.com/mirfatif/mirfatif/blob/main/logos/email.png" height="22" width="25"> Email</img></a>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+    <td>&nbsp;<a href="https://t.me/PermissionManagerX"><img src="https://raw.githubusercontent.com/mirfatif/mirfatif/main/logos/telegram.png" height="25"/> Telegram</a>&nbsp;</td>
+    <td><a href="https://forum.xda-developers.com/t/app-7-0-permission-manager-x-manage-appops-and-manifest-permissions.4187657"><img src="https://raw.githubusercontent.com/mirfatif/mirfatif/main/logos/xda.png" height="23" width="21"/> XDA Thread</a></td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="mailto:mirfatif@gmail.com"><img src="https://raw.githubusercontent.com/mirfatif/mirfatif/main/logos/email.png" height="22" width="25"/> Email</a>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 </table>
+
