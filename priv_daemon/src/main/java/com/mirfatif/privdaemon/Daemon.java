@@ -289,6 +289,9 @@ class Daemon {
       case Commands.GET_APP_OP_STATUS:
         sendResponse(mPrivTasks.getAppOpsStatus());
         break;
+      case Commands.GET_PKG_COUNT_FOR_UID:
+        sendResponse(mPrivTasks.getPkgCountForUid(args));
+        break;
       case Commands.RESET_OOS:
         resetOos();
         sendResponse(null);

@@ -340,10 +340,20 @@ public class HiddenAPIsImpl extends HiddenAPIs {
   //////////////////////////// PACKAGES ////////////////////////////
   //////////////////////////////////////////////////////////////////
 
+  @Override
   public void setApplicationEnabledSetting(
       String pkg, int state, int flags, int userId, String callingPkg) throws HiddenAPIsException {
     try {
       mIPackageManager.setApplicationEnabledSetting(pkg, state, flags, userId, callingPkg);
+    } catch (RemoteException | SecurityException e) {
+      throw new HiddenAPIsException(e);
+    }
+  }
+
+  @Override
+  public String[] getPackagesForUid(int uid) throws HiddenAPIsException {
+    try {
+      return mIPackageManager.getPackagesForUid(uid);
     } catch (RemoteException | SecurityException e) {
       throw new HiddenAPIsException(e);
     }

@@ -26,7 +26,6 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.annot.ToDo;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.databinding.ActivityPackageBinding;
 import com.mirfatif.permissionmanagerx.databinding.PermDetailsDialogBinding;
@@ -619,7 +618,6 @@ public class PackageActivity extends BaseActivity {
     }
 
     @Override
-    @ToDo(what = "Move getPackagesForUid() to daemon")
     public void onSpinnerItemSelect(Permission perm, int selectedValue) {
       if (mPackage == null || mPermissionAdapter == null) {
         finishAfterTransition();
@@ -633,25 +631,52 @@ public class PackageActivity extends BaseActivity {
         return;
       }
 
+      Utils.runInBg(
+          () -> {
+            boolean uidMode = perm.isPerUid();
+
+            int affectedPkgCount = 0;
+            if (uidMode) {
+              if (Utils.getUserId(mPackage.getUid()) != 0 && VERSION.SDK_INT >= VERSION_CODES.S) {
+                Object count =
+                    DAEMON_HANDLER.sendRequest(
+                        Commands.GET_PKG_COUNT_FOR_UID + " " + mPackage.getUid());
+                if (count instanceof Integer) {
+                  affectedPkgCount = (int) count;
+                } else {
+                  affectedPkgCount = -1;
+                }
+              } else {
+                try {
+                  affectedPkgCount =
+                      getPackageManager().getPackagesForUid(mPackage.getUid()).length;
+                } catch (SecurityException ignored) {
+                  affectedPkgCount = -1;
+                }
+              }
+            }
+
+            int finalAffectedPkgCount = affectedPkgCount;
+            Utils.runInFg(
+                () ->
+                    onSpinnerItemSelect(perm, selectedValue, uidMode, pos, finalAffectedPkgCount));
+          });
+    }
+
+    private void onSpinnerItemSelect(
+        Permission perm, int selectedValue, boolean uidMode, Integer pos, int affectedPkgCount) {
+      if (affectedPkgCount < 0) {
+        Utils.showToast(R.string.failed_get_affected_pkg_count);
+        updateSpinnerSelectionInBg(pos);
+        return;
+      }
+
       String warn = null;
       if (SETTINGS.getBoolPref(R.string.pref_package_warn_dang_change_enc_key)) {
         if (mPackage.isFrameworkApp()) {
           warn = getString(R.string.change_perms_warning, getString(R.string.framework));
         } else if (mPackage.isSystemApp()) {
           warn = getString(R.string.change_perms_warning, getString(R.string.system));
-        }
-      }
-
-      boolean uidMode = perm.isPerUid();
-
-      int affectedPkgCount = 0;
-      if (uidMode) {
-        try {
-          affectedPkgCount = getPackageManager().getPackagesForUid(mPackage.getUid()).length;
-        } catch (SecurityException ignored) {
-          Utils.showToast(R.string.failed_get_affected_pkg_count);
-          updateSpinnerSelectionInBg(pos);
-          return;
         }
       }
 

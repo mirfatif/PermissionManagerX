@@ -18,6 +18,8 @@ public interface IPackageManager {
   void setApplicationEnabledSetting(String pkg, int state, int flags, int userId, String callingPkg)
       throws RemoteException;
 
+  String[] getPackagesForUid(int uid) throws RemoteException;
+
   abstract class Stub {
 
     @SuppressWarnings("UnusedDeclaration")

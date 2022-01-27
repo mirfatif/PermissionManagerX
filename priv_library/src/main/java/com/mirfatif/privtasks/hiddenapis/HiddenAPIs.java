@@ -249,6 +249,16 @@ public abstract class HiddenAPIs {
   public abstract void setApplicationEnabledSetting(
       String pkg, int state, int flags, int userId, String callingPkg) throws HiddenAPIsException;
 
+  @HiddenMethod(name = "getPackagesForUid", cls = IPackageManager.class)
+  @DaemonOnly
+  @Privileged(
+      requires = {
+        "android.permission.INTERACT_ACROSS_USERS_FULL",
+        "android.permission.INTERACT_ACROSS_USERS"
+      })
+  @Throws(name = "SecurityException")
+  abstract String[] getPackagesForUid(int uid) throws HiddenAPIsException;
+
   //////////////////////////////////////////////////////////////////
   ////////////////////////////// OTHERS ////////////////////////////
   //////////////////////////////////////////////////////////////////

@@ -329,6 +329,17 @@ public class PrivTasks {
     }
   }
 
+  public Integer getPkgCountForUid(String[] args) {
+    if (!haveWrongArgs(args, 1)) {
+      try {
+        return mHiddenAPIs.getPackagesForUid(Integer.parseInt(args[1])).length;
+      } catch (HiddenAPIsException e) {
+        e.printStackTrace();
+      }
+    }
+    return null;
+  }
+
   //////////////////////////////////////////////////////////////////
   ////////////////////////////// OTHERS ////////////////////////////
   //////////////////////////////////////////////////////////////////
