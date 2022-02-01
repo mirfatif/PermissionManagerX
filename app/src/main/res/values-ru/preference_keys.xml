@@ -55,6 +55,8 @@
   <string name="pref_settings_locale_title" maxLength="20">Язык приложения</string>
   <string name="pref_settings_theming_cat_title">Темы</string>
   <string name="pref_settings_theme_color_title">Цвет темы</string>
+  <string name="pref_settings_dark_theme_title">Тёмная тема</string>
+  <string name="pref_settings_dark_theme_summary">Принудительно использовать ночной режим независимо от настроек системы</string>
   <string name="pref_settings_search_suggestions_count_title1">Подсказки поиска</string>
   <string name="pref_settings_search_suggestions_count_title2">Максимальное количество предложений: %d</string>
   <string name="pref_settings_search_suggestions_count_summary">Предлагать пакеты, разрешения, специальные ключевые слова и т. д.</string>

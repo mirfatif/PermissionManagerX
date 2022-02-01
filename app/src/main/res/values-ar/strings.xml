@@ -33,6 +33,7 @@
   <string name="settings_menu_item" maxLength="15">الاعدادات</string>
   <string name="filter_menu_item" maxLength="15">مرشحات الاستبعاد</string>
   <string name="root_menu_item" maxLength="15">الوصول إلى الروت</string>
+  <string name="adb_menu_item">الوصول إلى ADB</string>
   <string name="backup_restore_menu_item" maxLength="15">النسخ الاحتياطي/الاستعادة</string>
   <string name="help_menu_item" maxLength="15">تعليمات</string>
   <string name="donate_menu_item" maxLength="15">تبرّع</string>
@@ -174,6 +175,7 @@
   <string name="wrun_not_installed" maxLength="20">WhatsRunning غير مثبت</string>
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">لقد حدث خطأ ما</string>
+  <string name="failed_get_affected_pkg_count">فشل الحصول على عدد الحزمة المتأثرة</string>
   <string name="change_perms_warning" comment="'system' or 'framework'">تغيير أذونات تطبيق %1$s إجراء خطير. في أسوأ سيناريو نظام أندرويد قد يتعطل.\nهل أنت متأكد تريد المتابعة؟</string>
   <string name="system">النظام</string>
   <string name="framework">الإطار البرمجي</string>
@@ -301,6 +303,7 @@
   <!-- ActivityNotFoundException -->
   <string name="no_email_app_installed" maxLength="20">لا يوجد تطبيق بريد إلكتروني مثبت</string>
   <string name="no_browser_installed" maxLength="20">"لا يوجد تطبيق متصفح ويب مثبت"</string>
+  <string name="no_file_picker_installed">"لم يتم تثبيت تطبيق منتقي الملفات"</string>
   <!-- Donate -->
   <string name="send_bitcoin">إرسال بيتكوين</string>
   <string name="no_bitcoin_app_installed">"لم يتم العثور على تطبيق محفظة البيتكوين"</string>

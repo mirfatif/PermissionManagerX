@@ -111,10 +111,10 @@
 
     <ul>
         <li><a href="#intro" class="no-underline"><b>Что такое PMX?</b></a></li>
-        <li><a href="#perms_types" class="no-underline"><b>Manifest Permissions and AppOps</b></a></li>
+        <li><a href="#perms_types" class="no-underline"><b>Разрешения манифеста и AppOps</b></a></li>
         <li><a href="#perm_ref" class="no-underline"><b>Целевые значения разрешений</b></a></li>
-        <li><a href="#packages" class="no-underline"><b>App List</b></a></li>
-        <li><a href="#permissions" class="no-underline"><b>Permission List</b></a></li>
+        <li><a href="#packages" class="no-underline"><b>Список приложений</b></a></li>
+        <li><a href="#permissions" class="no-underline"><b>Список разрешений</b></a></li>
         <li><a href="#search" class="no-underline"><b>Поиск</b></a></li>
         <li><a href="#scheduled_checker" class="no-underline"><b>Проверка по расписанию</b></a></li>
         <li>
@@ -123,7 +123,7 @@
                 <li><a href="#perm_watcher_fails" class="no-underline"><b>Почему не удаётся запустить "Отслеживание разрешений" ?</b></a></li>
             </ul>
         </li>
-        <li><a href="#wrun-integration" class="no-underline"><b>Integration with WhatsRunning</b></a></li>
+        <li><a href="#wrun-integration" class="no-underline"><b>Интеграция с WhatsRunning</b></a></li>
         <li>
             <a href="#adb_help" class="no-underline"><b>Использование PMX с помощью ADB</b></a>
             <ul>
@@ -162,9 +162,9 @@
             <li><a href="#faq17" class="no-underline">Как я могу изменить разрешения уровня <i>Подпись</i>|<i>Привилегированный</i>?</a></li>
             <li><a href="#faq17" class="no-underline">Как я могу изменить разрешения фреймворк приложений?</a></li>
             <li><a href="#faq18" class="no-underline">Что такое <i>UID режим</i> в разрешениях AppOp?</a></li>
-            <li><a href="#faq39" class="no-underline">Can I control Android's "Remove permissions if app isn't used" feature from PMX?</a></li>
+            <li><a href="#faq39" class="no-underline">Могу ли я управлять функцией «Удалить разрешения, если приложение не используется» с помощью PMX?</a></li>
             <li><a href="#faq31" class="no-underline">Почему я получаю много всплывающих окон <i>Потенциально неподдерживаемая прошивка</i>?</a></li>
-            <li><a href="#faq19" class="no-underline">What do the "Hide From List" buttons (on long press) do?</a></li>
+            <li><a href="#faq19" class="no-underline">Что делает кнопка «Скрыть приложение из списка» (вызывается долгим нажатием)?</a></li>
             <li><a href="#faq20" class="no-underline">Почему сканирование приложений занимает так много времени?</a></li>
             <li><a href="#faq21" class="no-underline">Есть ли полный список всех разрешений с пояснениями?</a></li>
             <li><a href="#faq22" class="no-underline">Как использовать приложение в рабочем профиле/многопользовательской среде?</a></li>
@@ -180,8 +180,8 @@
             <li><a href="#faq28" class="no-underline">PMX злоупотребляет root правами, для сбора моих данных?</a></li>
             <li><a href="#faq29" class="no-underline">Я считаю, что PMX бесполезен. Зачем было создано это приложение?</a></li>
         </ul>
-        <li><a href="#download" class="no-underline"><b>Downloads / Screenshots</b></a></li>
-        <li><a href="#contact-us" class="no-underline"><b>Contact Us</b></a></li>
+        <li><a href="#download" class="no-underline"><b>Загрузки / Скриншоты</b></a></li>
+        <li><a href="#contact-us" class="no-underline"><b>Связаться с нами</b></a></li>
     </ul>
 
     <hr>
@@ -260,7 +260,7 @@
 
     <hr>
 
-    <h2 id="packages">App List</h2>
+    <h2 id="packages">Список приложений</h2>
     <img src="pkg.webp">
     <ul>
         <li>
@@ -284,7 +284,7 @@
 
     <hr>
 
-    <h2 id="permissions">Permission List</h2>
+    <h2 id="permissions">Список разрешений</h2>
     <img src="perm_ru.webp">
     <ul>
         <li>
@@ -382,28 +382,29 @@
 
     <hr>
 
-    <h2 id="wrun-integration">Integration with WhatsRunning</h2>
-    <p>PMX is integrated with <a href="https://github.com/mirfatif/WhatsRunning">WhatsRunning</a> so you can open one from the other.</p>
+    <h2 id="wrun-integration">Интеграция с WhatsRunning</h2>
+    <p>PMX интегрирован с <a href="https://github.com/mirfatif/WhatsRunning">WhatsRunning</a>, так что вы можете открывать одно приложение из другого.</p>
     <img class="small" src="wrun_integration1.jpg" />
     <img class="small" src="wrun_integration2.webp" />
-    <p>So from PMX you can switch to WhatsRunning to find out if an app with restricted permissions is still running. If yes, in what state it is and how much resources it is using.</p>
-    <p>Similarly, from WhatsRunning you can switch to PMX to find out what permissions a running (or dead) app is granted.</p>
-    <p>This is particularly helpful when analyzing the effect of permissions like <code>RUN_IN_BACKGROUND</code>.</p>
+    <p>Таким образом, из PMX вы можете переключиться на WhatsRunning, чтобы узнать, работает ли еще приложение с ограниченными разрешениями. Если да, то в каком состоянии он находится и сколько ресурсов использует.</p>
+    <p>Точно так же из WhatsRunning вы можете переключиться на PMX, чтобы узнать, какие разрешения предоставлены работающему (или неработающему) приложению.</p>
+    <p>Это особенно полезно при анализе эффекта таких разрешений, как <code>RUN_IN_BACKGROUND</code>.</p>
 
     <hr>
 
     <h2 id="adb_help">Использование PMX с помощью ADB</h2>
 
     <p><b><i>Примечание:</i></b></p>
-    <p>ADB is not as powerful as root is. In our case, for instance, PMX takes more time to build the list of apps when it's running with ADB.</p>
-    <p>Additionally, on some OEM ROMs the ADB functionality might be crippled due to lacking permissions or other restrictions. Вы можете проверить текущий статус того, что может делать ADB, нажав пункт меню <b>О приложении</b> -> <b>Привилегии</b>:</p>
+    <p>Режим ADB не такой мощный, как root. В нашем случае, например, PMX потребуется больше времени для построения списка приложений, когда он работает с ADB.</p>
+    <p>Примечание: На некоторых OEM прошивках функциональность ADB может быть нарушена из-за отсутствия разрешений или других ограничений. Вы можете проверить текущий статус того, что может делать ADB, нажав пункт меню <b>О приложении</b> -> <b>Привилегии</b>:</p>
     <img class="small" src="privs.webp" />
-    <p>К сожалению, мы не можем ничего сделать с этим. And therefore some features are available only on rooted devices.</p>
-    <p>Следующие инструкции относятся к прошивкам, близким к AOSP. Customized ROMs might have different or missing settings.</p>
+    <p>К сожалению, мы не можем ничего сделать с этим. Поэтому некоторые функции доступны только на устройствах с root.</p>
+    <p>Однако некоторые OEM-производители добавляют дополнительные настройки для управления привилегиями ADB. Например, вам нужно снять флажок "<i>Отключить Мониторинг разрешений</i>" на телефонах Oppo и "<i>Разрешить предоставление разрешений</i>" в настройках безопасности на телефонах Xiaomi. Смотрите <a href="https://stackoverflow.com/q/52079343/9165920">этот вопрос</a> для более детальной информации.</p>
+    <p>Следующие инструкции относятся к прошивкам, близким к AOSP. Кастомные прошивки могут иметь другие или отсутствующие настройки.</p>
 
     <hr class="dim-hr">
 
-    <p class="high-top">So here we start how you can make WhatsRunning work with ADB.</p>
+    <p class="high-top">Итак, мы начинаем с того, как заставить WhatsRunning работать с ADB.</p>
     <p>Если ваше устройство без root, вам необходимо включить <b>ADB по сети</b> перед использованием PMX. В некоторых устройствах есть пункты <b><i>ADB по сети</i></b> или <b><i>Отладка по Wi-Fi</i></b>, которые доступны в настройке <b>Для разработчиков</b>:</p>
     <img class="small" src="adb_in_dev_options_1.webp" />
     <p>В иных случаях вам необходимо подключать устройство к USB-хосту, например ПК, <b><i>один раз после каждой перезагрузки</i></b>.</p>
@@ -675,7 +676,7 @@ chmod a+x adb</code>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(сделать е
     <hr class="dim-hr" />
 
     <p id="faq17" class="high-bottom"><b>Как я могу изменить разрешения <i>System-Fixed</i>, <i>Подпись</i> | <i>Привилегированное</i> или разрешения фреймворк приложений?</b></p>
-    <p>If your device is rooted, in paid version you can "<b>Allow Critical Changes</b>" in <b>Advanced Settings</b> to make changes to the permissions with the <i>System-Fixed</i> flag, protection level <i>Signature</i>|<i>Privileged</i>, or those of framework app. Но не рекомендуется "играть" с системными или фреймворк приложениями. Вы можете "окирпичить" устройство.</p>
+    <p>В платной версии вы можете «<b>Разрешить критические изменения</b>» в <b>Расширенных настройках</b>, чтобы вносить изменения в разрешения с пометкой <i>Система-Фиксированный</i>, с уровнем защиты<i>Подпись</i>|<i>Привилегированный</i> или фреймворк приложения. Но не рекомендуется "играть" с системными или фреймворк приложениями. Вы можете "окирпичить" устройство.</p>
 
     <hr class="dim-hr" />
 
@@ -684,12 +685,12 @@ chmod a+x adb</code>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(сделать е
 
     <hr class="dim-hr" />
 
-    <p id="faq39" class="high-bottom"><b>Can I control Android's "Remove permissions if app isn't used" feature from PMX?</b></p>
+    <p id="faq39" class="high-bottom"><b>Могу ли я управлять функцией «Удалить разрешения, если приложение не используется» с помощью PMX?</b></p>
     <p>Да.</p>
     <ul>
-        <li>Go to <i>Exclusion Filters</i> -> <i>Extra AppOps list</i> and check "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>".</li>
-        <li>Back on the main screen, type "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>" in the top search bar.</li>
-        <li>Set the mode <i>Allow</i> or <i>Ignore</i> for whichever apps you want.</li>
+        <li>Перейдите в <i>Фильтры исключения</i> -> <i>Список дополнительных AppOps</i> и отметьте "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>".</li>
+        <li>Вернувшись на основной экран, наберите "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>" вверху, в строке поиска.</li>
+        <li>Установите режим <i>Разрешить</i> или <i>Игнорировать</i> для требуемых приложений.</li>
     </ul>
 
     <hr class="dim-hr" />
@@ -699,8 +700,8 @@ chmod a+x adb</code>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(сделать е
 
     <hr class="dim-hr" />
 
-    <p id="faq19" class="high-bottom"><b>What do the "Hide From List" buttons (on long press) do?</b></p>
-    <p>They both just hide the app or the permission from the visible list. If you don't want to change a permission for any app, you may hide it. И это разрешение не появится ни для одного приложения. Чтобы снова отобразить его, перейдите в <b><i>Фильтры исключения</i></b> в настройках.</p>
+    <p id="faq19" class="high-bottom"><b>Что делает кнопка «Скрыть приложение из списка» (вызывается долгим нажатием)?</b></p>
+    <p>«Исключить» просто скрывает разрешение из списка видимых. Если вы не хотите изменять разрешение для любого приложения, вы можете просто «Исключить» его. И это разрешение не появится ни для одного приложения. Чтобы снова отобразить его, перейдите в <b><i>Фильтры исключения</i></b> в настройках.</p>
     <p>Точно так же вы можете исключить приложение из списка видимых, если вас не беспокоят его разрешения.</p>
     <img class="small" src="hide_app_from_list.webp" />
     <img class="small" src="hide_perm_from_list.webp" />
@@ -709,7 +710,7 @@ chmod a+x adb</code>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(сделать е
 
     <p id="faq20" class="high-bottom"><b>Почему сканирование приложений занимает так много времени?</b></p>
     <p>Permission Manager X получает много информации о приложениях. Туда входят название приложения, имя пакета, иконка, UID и его состояние                 (фреймворк, системное, пользовательское, заморожено). Для разрешений манифеста и AppOp информация включает имя разрешения, его состояние (предоставлено, отозвано, разрешить, игнорировать, запретить, передний план, по умолчанию), <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">уровень защиты</a> (нормальный, опасный, подпись, разработка, привилегированный, фиксированный, AppOp) и время последнего доступа AppOp. Затем значение каждого разрешения сравнивается с целевым значением и устанавливается индикатор его состояния (красный, зеленый или оранжевый). После сканирования всех разрешений у каждого приложения в общем списке отображается счётчик видимых / всех разрешений манифеста и AppOps и его статус соответствия целевым значениям.</p>
-    <p>Вы можете включить <i>Быстрое сканирование</i> в настройках, чтобы отключить сканирование разрешений. Или исключите как можно больше информации во вкладке <i>Фильтры исключений</i> для ускорения процесса сканирования. Скорость также зависит от того, сколько мощности ЦП и какое количество ОЗУ ваше устройство оставляет для приложений. Прошивки, выделяющие больше мощности на пользовательский интерфейс (например, MIUI), работают медленнее. Also ADB is usually slower than root.</p>
+    <p>Вы можете включить <i>Быстрое сканирование</i> в настройках, чтобы отключить сканирование разрешений. Или исключите как можно больше информации во вкладке <i>Фильтры исключений</i> для ускорения процесса сканирования. Скорость также зависит от того, сколько мощности ЦП и какое количество ОЗУ ваше устройство оставляет для приложений. Прошивки, выделяющие больше мощности на пользовательский интерфейс (например, MIUI), работают медленнее. Также ADB обычно медленнее, чем root.</p>
 
     <hr class="dim-hr" />
 
@@ -764,7 +765,7 @@ chmod a+x adb</code>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(сделать е
     <hr class="dim-hr" />
 
     <p id="faq25" class="high-bottom"><b>Почему PMX требует разрешение INTERNET?</b></p>
-    <p>As clearly stated in the app description: <code>android.permission.INTERNET</code> permission is required to make use of ADB over network. Единственные внешние соединения - проверка обновлений (которую можно отключить в настройках) и получение содержимого справки (эта веб-страница). Pro version also requires internet connection for license verification.</p>
+    <p>Как четко указано в описании приложения разрешение <code>android.permission.INTERNET</code> требуется для использования ADB по сети. Единственные внешние соединения - проверка обновлений (которую можно отключить в настройках) и получение содержимого справки (эта веб-страница). Pro версия также требует подключения к Интернету для проверки лицензии.</p>
 
     <hr class="dim-hr" />
 
@@ -792,12 +793,12 @@ chmod a+x adb</code>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(сделать е
 
     <hr>
 
-    <h2 id="download">Downloads / Screenshots</h2>
-    <p>Please visit Github <a href="https://mirfatif.github.io/PermissionManagerX">README</a>.</p>
+    <h2 id="download">Загрузки / Скриншоты</h2>
+    <p>Пожалуйста, посетите Github <a href="https://mirfatif.github.io/PermissionManagerX">README</a>.</p>
 
     <hr>
 
-    <h2 id="contact-us">Have more questions?</h2>
+    <h2 id="contact-us">У Вас есть еще вопросы?</h2>
     <p>Пожалуйста, <a href="https://mirfatif.github.io/PermissionManagerX/#want-to-reach-us">свяжитесь с нами</a> по электронной почте или в Telegram.</p>
 
 </body>
