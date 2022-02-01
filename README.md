@@ -38,7 +38,7 @@ Confused? We are here to explain. Please start with:
 
 ## Note:
 
-* The app is tested on stock Android 7-11. Some highly customized ROMs may behave unexpectedly.
+* The app is tested on stock Android 7-12. Some highly customized ROMs may behave unexpectedly.
 
 ## Privacy Policy
 
