@@ -1,0 +1,10 @@
+- Added Android 12 support
+- Improved preferences
+- Moved search settings with SearchBar, added search keyword list
+- Fixes for RTL layout
+- Added Arabic translation
+- Updated translations and help
+- Replaced some Alert Dialogs with Bottom Dialogs
+- Integration with WhatsRunning
+- Added Dialog background and animations to Github/F-Droid version
+- Changes for Play Store independent Pro version
