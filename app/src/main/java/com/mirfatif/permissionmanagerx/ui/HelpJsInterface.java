@@ -50,6 +50,12 @@ public class HelpJsInterface {
 
   @JavascriptInterface
   @SuppressWarnings("UnusedDeclaration")
+  public String getHighParaMargin() {
+    return Utils.dpToPx(6f) + "px";
+  }
+
+  @JavascriptInterface
+  @SuppressWarnings("UnusedDeclaration")
   public String getImgMaxWidth() {
     return calcImgMaxWidth() + "px";
   }

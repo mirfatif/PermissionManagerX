@@ -31,6 +31,7 @@
   <string name="settings_menu_item" maxLength="15">Настройки</string>
   <string name="filter_menu_item" maxLength="15">Фильтры исключения</string>
   <string name="root_menu_item" maxLength="15">Root доступ</string>
+  <string name="adb_menu_item">ADB доступ</string>
   <string name="backup_restore_menu_item" maxLength="15">Бэкап / восстановление</string>
   <string name="help_menu_item" maxLength="15">Справка</string>
   <string name="donate_menu_item" maxLength="15">Пожертвование</string>
@@ -164,6 +165,7 @@
   <string name="wrun_not_installed" maxLength="20">WhatsRunning не установлено</string>
   <!-- PackageActivity -->
   <string name="something_bad_happened" maxLength="20">Что-то пошло не так</string>
+  <string name="failed_get_affected_pkg_count">Сбой получения количества затрагиваемых пакетов</string>
   <string name="change_perms_warning" comment="'system' or 'framework'">Изменение разрешений %1$s приложения — потенциально опасное действие вплоть до сбоя системы Android.\nВы уверены, что хотите продолжить?</string>
   <string name="system">системного</string>
   <string name="framework">фреймворк</string>
@@ -285,6 +287,7 @@
   <!-- ActivityNotFoundException -->
   <string name="no_email_app_installed" maxLength="20">Почтовая программа не установлена</string>
   <string name="no_browser_installed" maxLength="20">"Веб-обозреватель не установлен"</string>
+  <string name="no_file_picker_installed">"Не установлено приложение для выбора файлов"</string>
   <!-- Donate -->
   <string name="send_bitcoin">Отправить биткойны</string>
   <string name="no_bitcoin_app_installed">"Не найдено приложение Биткоин-кошелька"</string>

@@ -9,6 +9,10 @@
        - Only preference key names not ending with "_enc_key" are restored from backup file. -->
   <!-- MainActivity Preferences -->
   <!-- MainActivity Preferences corresponding to default values -->
+  <string name="pref_main_deep_search_title" maxLength="20">Búsqueda profunda</string>
+  <string name="pref_main_deep_search_summary">Buscar en lista de permisos en lugar de la lista de aplicaciones</string>
+  <string name="pref_main_case_sensitive_search_title" maxLength="20">Distingue mayúsculas</string>
+  <string name="pref_main_case_sensitive_search_summary">Coincidir cadenas únicamente con las mismas mayúsculas</string>
   <!-- PreferencesActivity packages titles, keys and defaults -->
   <string name="pref_filter_packages_cat_title" maxLength="20">Paquetes</string>
   <string name="pref_filter_exclude_no_icon_apps_title" maxLength="20">Excluir aplicaciones sin íconos</string>
@@ -41,10 +45,23 @@
   <!-- SettingsActivity -->
   <string name="pref_settings_general_cat_title">Ajustes generales</string>
   <string name="pref_settings_check_for_updates_title" maxLength="20">Buscar actualizaciones</string>
+  <string name="pref_settings_check_for_updates_summary">Mostrar una notificación cuando una nueva versión esté disponible</string>
   <string name="pref_settings_privileges_reminder_title" maxLength="20">Recordar privilegios faltantes</string>
+  <string name="pref_settings_privileges_reminder_summary">Mostrar un cuadro de diálogo al iniciar la aplicación si los privilegios root y ADB no han sido otorgados</string>
   <string name="pref_settings_quick_scan_title" maxLength="20">Realizar escaneo rápido</string>
+  <string name="pref_settings_quick_scan_summary">No escanear permisos, y no mostrar estados de referencia de las aplicaciones y conteo de permisos</string>
   <string name="pref_settings_special_search_title" maxLength="20">Búsqueda compleja</string>
+  <string name="pref_settings_special_search_summary">Usar los operadores Y (&amp;), O (|) y NO (!) en las búsquedas para combinar consultas</string>
   <string name="pref_settings_locale_title" maxLength="20">Lenguaje de la aplicación</string>
+  <string name="pref_settings_theming_cat_title">Tema</string>
+  <string name="pref_settings_theme_color_title">Color de tema</string>
+  <string name="pref_settings_dark_theme_title">Tema oscuro</string>
+  <string name="pref_settings_dark_theme_summary">Forzar modo nocturno independientemente de los ajustes del sistema</string>
+  <string name="pref_settings_search_suggestions_count_title1">Sugerencias de búsqueda</string>
+  <string name="pref_settings_search_suggestions_count_title2">Sugerencias máximas: %d</string>
+  <string name="pref_settings_search_suggestions_count_summary">Sugerir paquete, permisos, palabas clave especiales, etc.</string>
+  <string name="pref_settings_search_keywords_title">Buscar palabras clave</string>
+  <string name="pref_settings_search_keywords_summary">Palabras clave con significado especial</string>
   <!-- HelpActivity -->
   <!-- PackageActivity -->
 </resources>

@@ -55,8 +55,13 @@
   <string name="pref_settings_locale_title" maxLength="20">لغة التطبيق</string>
   <string name="pref_settings_theming_cat_title">السمة</string>
   <string name="pref_settings_theme_color_title">لون السمة</string>
+  <string name="pref_settings_dark_theme_title">السمة المظلمة</string>
+  <string name="pref_settings_dark_theme_summary">فرض الوضع الليلي بصرف النظر عن إعدادات النظام</string>
   <string name="pref_settings_search_suggestions_count_title1">اقتراحات البحث</string>
+  <string name="pref_settings_search_suggestions_count_title2">الحد الأقصى للاقتراحات: %d</string>
   <string name="pref_settings_search_suggestions_count_summary">اقتراح الحزمة، الأذونات، كلمات مفتاحية خاصة إلخ.</string>
+  <string name="pref_settings_search_keywords_title">كلمات البحث</string>
+  <string name="pref_settings_search_keywords_summary">كلمات رئيسية ذات معنى خاص</string>
   <!-- HelpActivity -->
   <!-- PackageActivity -->
 </resources>
