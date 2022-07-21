@@ -344,8 +344,9 @@ public class HiddenAPIsImpl extends HiddenAPIs {
   public void setApplicationEnabledSetting(
       String pkg, int state, int flags, int userId, String callingPkg) throws HiddenAPIsException {
     try {
+      // Throws IllegalArgumentException if pkg is unknown.
       mIPackageManager.setApplicationEnabledSetting(pkg, state, flags, userId, callingPkg);
-    } catch (RemoteException | SecurityException e) {
+    } catch (RemoteException | SecurityException | IllegalArgumentException e) {
       throw new HiddenAPIsException(e);
     }
   }
