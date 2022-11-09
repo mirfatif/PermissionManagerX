@@ -24,6 +24,7 @@ import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.Commands;
+import com.mirfatif.privtasks.PrivTasks;
 import com.mirfatif.privtasks.Util;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIs;
 import com.mirfatif.privtasks.hiddenapis.err.HiddenAPIsError;
@@ -866,7 +867,7 @@ public enum PackageParser {
       SYSTEM_FIXED_FLAG = HiddenAPIs.getSystemFixedFlag();
       return SYSTEM_FIXED_FLAG;
     } catch (HiddenAPIsError e) {
-      Log.e(TAG, "getSystemFixedFlag: " + e.toString());
+      Log.e(TAG, "getSystemFixedFlag: " + e);
     }
 
     if (!MySettings.INSTANCE.isPrivDaemonAlive()) {
@@ -895,7 +896,7 @@ public enum PackageParser {
       POLICY_FIXED_FLAG = HiddenAPIs.getPolicyFixedFlag();
       return POLICY_FIXED_FLAG;
     } catch (HiddenAPIsError e) {
-      Log.e(TAG, "getPolicyFixedFlag: " + e.toString());
+      Log.e(TAG, "getPolicyFixedFlag: " + e);
     }
 
     if (!MySettings.INSTANCE.isPrivDaemonAlive()) {
@@ -1038,6 +1039,10 @@ public enum PackageParser {
       return new int[] {1, 0};
     }
 
+    if (PrivTasks.UNKNOWN_OP.equals(opName)) {
+      return new int[] {0, 0};
+    }
+
     int opSwitch = AppOpsParser.INSTANCE.getOpToSwitchList().get(op);
     String dependsOn = op == opSwitch ? null : AppOpsParser.INSTANCE.getAppOpsList().get(opSwitch);
     boolean isAppOpSet = true;
@@ -1099,7 +1104,7 @@ public enum PackageParser {
     try {
       return mPackageManager.getPackageInfo(pkgName, flags);
     } catch (NameNotFoundException e) {
-      Log.e(TAG, "getPackageInfo: " + e.toString());
+      Log.e(TAG, "getPackageInfo: " + e);
       return null;
     }
   }
