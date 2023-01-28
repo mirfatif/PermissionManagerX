@@ -54,11 +54,11 @@ Confused? We are here to explain. Please start with:
 <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg" width="250"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.jpg" width="250">
 
 ## How to Build
-* `build.gradle` calls a shell script to build native binaries. So a Linux environment is expected with all standard tools.
+`build.gradle` calls a shell script to build native binaries. So a Linux environment is expected with all standard tools.
 * Download code: `git clone --depth=1 --recurse-submodules https://github.com/mirfatif/PermissionManagerX.git && cd PermissionManagerX`
-* Set `sdk.dir` in `local.properties` to the directory containing Android SDK API level (platform) 30, build-tools 30.0.3 (and obviously the latest SDK `tools` and `platform-tools`), and Android NDK 22.1.
-* Set `JAVA_HOME` environment variable to JDK 11 (`verifyGoogleJavaFormat` and some Annotations don't work with JDK 1.8). Or `java` and `javac` must be on `PATH`.
-* Run `./gradlew` with appropriate task name appended. Or use IntelliJ IDEA / Android Studio.
+* Set `sdk.dir` in `local.properties` to the directory containing Android SDK API level (platform) 33, build-tools 33.0.0 (and the latest SDK `tools` and `platform-tools`), and Android NDK 25.1.
+* Set `JAVA_HOME` environment variable to JDK 11.
+* Run `./gradlew :app:assembleRelease`. Or use IntelliJ IDEA / Android Studio.
 
 ## Translations [![Crowdin](https://badges.crowdin.net/pmx/localized.svg)](https://crowdin.com/project/pmx)
 [Crowdin](https://crowdin.com/project/pmx)
@@ -67,9 +67,11 @@ Confused? We are here to explain. Please start with:
 Credits and thanks to the developers of:
 * [Android Jetpack](https://github.com/androidx/androidx)
 * [Android Hidden APIs](https://github.com/anggrayudi/android-hidden-api)
-* [AdbLib](https://github.com/cgutman/AdbLib)
-* [Sherter's GoogleJavaFormat](https://github.com/sherter/google-java-format-gradle-plugin)
+* [LSPass](https://github.com/LSPosed/AndroidHiddenApiBypass)
+* [LibADB Android](https://github.com/MuntashirAkon/libadb-android)
+* [Spotless GoogleJavaFormat](https://github.com/diffplug/spotless)
 * [Material Components for Android](https://github.com/material-components/material-components-android)
+* [Guava](https://github.com/google/guava)
 * [BetterLinkMovementMethod](https://github.com/saket/Better-Link-Movement-Method)
 * [LeakCanary](https://github.com/square/leakcanary)
 
@@ -108,6 +110,5 @@ See [Guide and FAQs](https://mirfatif.github.io/PermissionManagerX/help/help.htm
 <table>
     <td>&nbsp;<a href="https://t.me/PermissionManagerX"><img src="https://raw.githubusercontent.com/mirfatif/mirfatif/main/logos/telegram.png" height="25"/> Telegram</a>&nbsp;</td>
     <td><a href="https://forum.xda-developers.com/t/app-7-0-permission-manager-x-manage-appops-and-manifest-permissions.4187657"><img src="https://raw.githubusercontent.com/mirfatif/mirfatif/main/logos/xda.png" height="23" width="21"/> XDA Thread</a></td>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="mailto:mirfatif@gmail.com"><img src="https://raw.githubusercontent.com/mirfatif/mirfatif/main/logos/email.png" height="22" width="25"/> Email</a>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="mailto:mirfatif.dev@gmail.com"><img src="https://raw.githubusercontent.com/mirfatif/mirfatif/main/logos/email.png" height="22" width="25"/> Email</a>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 </table>
-
