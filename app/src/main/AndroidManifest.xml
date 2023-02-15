@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  package="com.mirfatif.permissionmanagerx">
+  xmlns:tools="http://schemas.android.com/tools">
 
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
@@ -10,13 +9,14 @@
     android:name="android.permission.GET_APP_OPS_STATS"
     tools:ignore="ProtectedPermissions"/>
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
   <application
     android:allowBackup="true"
     android:extractNativeLibs="true"
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
-    android:name=".app.App"
+    android:name=".fwk.AppM"
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
     android:theme="@style/AppTheme"
@@ -24,7 +24,7 @@
 
     <activity
       android:exported="true"
-      android:name=".main.fwk.MainActivity">
+      android:name=".fwk.MainActivityM">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
@@ -32,29 +32,48 @@
     </activity>
 
     <activity
-      android:name=".pkg.fwk.PackageActivity"
-      android:parentActivityName=".main.fwk.MainActivity"/>
-    <activity
-      android:name=".prefs.settings.SettingsActivity"
-      android:parentActivityName=".main.fwk.MainActivity"/>
-    <activity
-      android:name=".prefs.fwk.FilterSettingsActivity"
-      android:parentActivityName=".main.fwk.MainActivity"/>
-    <activity
-      android:name=".about.AboutActivity"
-      android:parentActivityName=".main.fwk.MainActivity"/>
-    <activity
-      android:name=".ui.HelpActivity"
-      android:parentActivityName=".main.fwk.MainActivity"/>
+      android:name=".fwk.PackageActivityM"
+      android:parentActivityName=".fwk.MainActivityM"/>
 
-    <service android:name=".svc.LogcatService" />
+    <activity
+      android:name=".fwk.SettingsActivityM"
+      android:parentActivityName=".fwk.MainActivityM"/>
+
+    <activity
+      android:name=".fwk.AdvSettingsActivityM"
+      android:parentActivityName=".fwk.MainActivityM"/>
+
+    <activity
+      android:name=".fwk.FilterSettingsActivityM"
+      android:parentActivityName=".fwk.MainActivityM"/>
+
+    <activity
+      android:name=".fwk.AboutActivityM"
+      android:parentActivityName=".fwk.MainActivityM"/>
+
+    <activity
+      android:name=".fwk.HelpActivityM"
+      android:parentActivityName=".fwk.MainActivityM"/>
+
+    <activity
+      android:name=".fwk.CrashReportActivityM"
+      android:parentActivityName=".fwk.MainActivityM"/>
+
+    <service android:name=".fwk.LogcatSvcM" />
+
     <service
       android:exported="true"
-      android:name=".svc.DaemonCmdRcvSvc"
+      android:name=".fwk.DaemonRcvSvcM"
       tools:ignore="ExportedService" />
 
+    <service
+      android:name=".fwk.AdbConnectSvcM"
+      android:exported="true"
+      tools:ignore="ExportedService">
+    </service>
+
     <provider
-      android:authorities="com.mirfatif.permissionmanagerx.FileProvider"
+      android:authorities="${logFileProvider}"
       android:exported="false"
       android:grantUriPermissions="true"
       android:name="androidx.core.content.FileProvider">

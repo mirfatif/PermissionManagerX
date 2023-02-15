@@ -1,0 +1,11 @@
+- Chinese and Greek translations
+- Target Android 13
+- Binder IPC for app <--> daemon
+- Improved ADB pairing and connection
+- Show a corner tag with manifest permissions in permission list
+- "Follow System" option for dark theme
+- Menu item to temporarily show all permissions of an app
+- Replace AppOp states drop-down menu with toggle switch
+- Option to reset / cleanup permission references database
+- Option to send crash log to server
+- Fixed crashes, code cleanup, minor improvements

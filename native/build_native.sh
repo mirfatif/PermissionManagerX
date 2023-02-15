@@ -3,83 +3,111 @@
 [ -n "$ANDROID_NDK" ]
 BIN="$ANDROID_NDK"/toolchains/llvm/prebuilt/linux-x86_64/bin
 
-cd "$(dirname "$0")"
-
 [ "$1" = '-f' ] && FORCE=true || FORCE=false
 
-PMX_FILE='pmx.c'
-ARM_PMX_FILE='../app/src/main/jniLibs/armeabi-v7a/libpmxe.so'
-ARM64_PMX_FILE='../app/src/main/jniLibs/arm64-v8a/libpmxe.so'
-X86_PMX_FILE='../app/src/main/jniLibs/x86/libpmxe.so'
-X64_PMX_FILE='../app/src/main/jniLibs/x86_64/libpmxe.so'
+cd "$(dirname "$0")"
 
-LIBCAP_DIR=$(realpath libcap/libcap)
+[ "$SRC_FILE" ] || SRC_FILE="pmxe.c"
+SRC_FILES="$SRC_FILES $SRC_FILE"
+[ "$OUT_DIR" ] || OUT_DIR='../app/src/foss/jniLibs'
+ARM_PMXE_LIB="$OUT_DIR/armeabi-v7a/libpmxe.so"
+ARM64_PMXE_LIB="$OUT_DIR/arm64-v8a/libpmxe.so"
+X86_PMXE_LIB="$OUT_DIR/x86/libpmxe.so"
+X64_PMXE_LIB="$OUT_DIR/x86_64/libpmxe.so"
+
+LIBCAP_DIR='libcap/libcap'
+CAP_NAMES_H='cap_names.h'
+LIBCAP_CFLAGS="-D _LARGEFILE64_SOURCE -D _FILE_OFFSET_BITS=64 -D linux -I $LIBCAP_DIR/include"
+for file in cap_alloc.c cap_proc.c cap_flag.c cap_text.c; do
+	LIBCAP_SRC_FILES="$LIBCAP_SRC_FILES $LIBCAP_DIR/$file"
+done
+
+PMXD_FILE='pmxd.c'
+ARM_PMXD_LIB='../app/src/main/jniLibs/armeabi-v7a/libpmxd.so'
+ARM64_PMXD_LIB='../app/src/main/jniLibs/arm64-v8a/libpmxd.so'
+X86_PMXD_LIB='../app/src/main/jniLibs/x86/libpmxd.so'
+X64_PMXD_LIB='../app/src/main/jniLibs/x86_64/libpmxd.so'
 
 API=24
 
 ARM_TARGET=armv7a-linux-androideabi
-ARM_LINKER_TARGET=arm-linux-androideabi
 ARM64_TARGET=aarch64-linux-android
 X86_TARGET=i686-linux-android
 X64_TARGET=x86_64-linux-android
 
-#VERBOSE='-v'
+ARM_CC="$BIN/${ARM_TARGET}${API}-clang"
+ARM64_CC="$BIN/${ARM64_TARGET}${API}-clang"
+X86_CC="$BIN/${X86_TARGET}${API}-clang"
+X64_CC="$BIN/${X64_TARGET}${API}-clang"
 
-ARM_CC="$BIN/${ARM_TARGET}${API}-clang $VERBOSE"
-ARM64_CC="$BIN/${ARM64_TARGET}${API}-clang $VERBOSE"
-X86_CC="$BIN/${X86_TARGET}${API}-clang $VERBOSE"
-X64_CC="$BIN/${X64_TARGET}${API}-clang $VERBOSE"
+STRIP="$BIN/llvm-strip"
 
-STRIP=$BIN/llvm-strip
-AR=$BIN/llvm-ar
+#VERBOSE='-v'; MAKE_DEBUG='--debug=b'
 
-CC_OPTS="-Oz -Wl,--gc-sections -ffunction-sections -fdata-sections -Wl,-x -Wl,-X \
-	-fno-exceptions -fno-rtti -Wl,-z,norelro -Wl,--hash-style=gnu -D ANDROID -Wall"
-STRIP_OPTS="-s -S --strip-unneeded -R=.eh_frame -R=.eh_frame_ptr -R .note.android.ident -R .comment \
-	-R .note -R .note.gnu.gold-version -R .note.gnu.build-id -R .note.gnu.property -R .note.ABI-tag"
+up_to_date() {
+	! $FORCE || return 1
 
-build_libcap() (
-	CC=$1
+	OUT_FILE=$1
+	[ -f "$OUT_FILE" ] || return 1
 
-	cd $LIBCAP_DIR
-	make --debug=b clean cap_names.h
+	for file in $SRC_FILES; do
+		[ "$OUT_FILE" -nt "$file" ] || return 1
+	done
+}
 
-	LIBCAP_MAKE_OPTS="
-	    -Oz \
-		-Wall \
-	    -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -Dlinux \
-	    -fPIC \
-	    -I $LIBCAP_DIR/include -I $LIBCAP_DIR/include/uapi"
+trap 'cd "$LIBCAP_DIR"; [ ! -f "$CAP_NAMES_H" ] || make $MAKE_DEBUG clean' EXIT
 
-	set -ex
-
-	$CC $LIBCAP_MAKE_OPTS -c cap_alloc.c cap_proc.c cap_extint.c cap_flag.c cap_text.c cap_file.c
-	$AR rcs libcap.a cap_alloc.o cap_proc.o cap_extint.o cap_flag.o cap_text.o cap_file.o
+build_libcap_names_h() (
+	cd "$LIBCAP_DIR"
+	[ ! -f "$CAP_NAMES_H" ] || return 0
+	set -x
+	make $MAKE_DEBUG $CAP_NAMES_H
 )
 
-alias clean_libcap="( cd $LIBCAP_DIR; make --debug=b clean )"
-
-build_pmx() (
+build_pmx_bin() (
 	CC=$1
 	OUT_FILE=$2
 
-	$FORCE || [ ! -f $OUT_FILE ] || [ $PMX_FILE -nt $OUT_FILE ] || return 0
+	! up_to_date "$OUT_FILE" || return 0
 
-	mkdir -p $(dirname $OUT_FILE)
+	mkdir -p "$(dirname "$OUT_FILE")"
 
-	set -ex
+	build_libcap_names_h
 
-	build_libcap $CC
+	set -x
 
-	$CC -pie -o $OUT_FILE $CC_OPTS $PMX_FILE \
-		-I $LIBCAP_DIR/include -Wl,-Bstatic -L $LIBCAP_DIR -lcap -Wl,-Bdynamic -llog
+	$CC $VERBOSE -pie -o $OUT_FILE \
+		-Oz -Wl,--gc-sections -ffunction-sections -fdata-sections -Wl,-x -Wl,-X \
+		-fno-exceptions -fno-rtti -Wl,-z,norelro -Wl,--hash-style=gnu -D ANDROID -Wall \
+		$CFLAGS $LIBCAP_CFLAGS $SRC_FILE $LIBCAP_SRC_FILES -llog
 
-	$STRIP $OUT_FILE $STRIP_OPTS
-
-	clean_libcap
+	$STRIP $OUT_FILE \
+		-s -S --strip-unneeded -R=.eh_frame -R=.eh_frame_ptr -R .note.android.ident -R .comment \
+		-R .note -R .note.gnu.gold-version -R .note.gnu.build-id -R .note.gnu.property -R .note.ABI-tag
 )
 
-build_pmx $ARM_CC $ARM_PMX_FILE
-build_pmx $ARM64_CC $ARM64_PMX_FILE
-build_pmx $X86_CC $X86_PMX_FILE
-build_pmx $X64_CC $X64_PMX_FILE
+build_pmx_lib() (
+	CC=$1
+	SRC_FILE=$2
+	OUT_FILE=$3
+
+	$FORCE || [ ! -f $OUT_FILE ] || [ $SRC_FILE -nt $OUT_FILE ] || return 0
+
+	mkdir -p "$(dirname $OUT_FILE)"
+
+	set -x
+
+	$CC -o $OUT_FILE $CC_OPTS -shared -fvisibility=hidden $SRC_FILE -llog
+
+	$STRIP $OUT_FILE $STRIP_OPTS
+)
+
+build_pmx_bin "$ARM_CC" "$ARM_PMXE_LIB"
+build_pmx_bin "$ARM64_CC" "$ARM64_PMXE_LIB"
+build_pmx_bin "$X86_CC" "$X86_PMXE_LIB"
+build_pmx_bin "$X64_CC" "$X64_PMXE_LIB"
+
+build_pmx_lib "$ARM_CC" "$PMXD_FILE" "$ARM_PMXD_LIB"
+build_pmx_lib "$ARM64_CC" "$PMXD_FILE" "$ARM64_PMXD_LIB"
+build_pmx_lib "$X86_CC" "$PMXD_FILE" "$X86_PMXD_LIB"
+build_pmx_lib "$X64_CC" "$PMXD_FILE" "$X64_PMXD_LIB"

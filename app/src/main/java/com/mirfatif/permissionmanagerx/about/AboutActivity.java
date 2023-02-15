@@ -1,56 +1,70 @@
 package com.mirfatif.permissionmanagerx.about;
 
+import static com.mirfatif.permissionmanagerx.util.ApiUtils.getString;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
-import android.text.Spanned;
+import android.os.Debug;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument;
-import androidx.annotation.DrawableRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.databinding.AboutPrivilegesDialogBinding;
+import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.base.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.databinding.ActivityAboutBinding;
+import com.mirfatif.permissionmanagerx.fwk.AboutActivityM;
+import com.mirfatif.permissionmanagerx.help.HelpActivity;
 import com.mirfatif.permissionmanagerx.main.FeedbackDialogFrag;
 import com.mirfatif.permissionmanagerx.main.FeedbackDialogFrag.FeedbackType;
+import com.mirfatif.permissionmanagerx.parser.PackageParser;
+import com.mirfatif.permissionmanagerx.parser.PkgParserFlavor;
+import com.mirfatif.permissionmanagerx.prefs.AppUpdate;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
-import com.mirfatif.permissionmanagerx.prefs.settings.AppUpdate;
 import com.mirfatif.permissionmanagerx.prefs.settings.SettingsActivity;
-import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
-import com.mirfatif.permissionmanagerx.svc.LogcatService;
-import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
-import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
+import com.mirfatif.permissionmanagerx.privs.DaemonHandler;
+import com.mirfatif.permissionmanagerx.privs.DaemonIface;
+import com.mirfatif.permissionmanagerx.svc.LogcatSvc;
+import com.mirfatif.permissionmanagerx.util.ApiUtils;
+import com.mirfatif.permissionmanagerx.util.NotifUtils;
+import com.mirfatif.permissionmanagerx.util.UiUtils;
 import com.mirfatif.permissionmanagerx.util.Utils;
-import com.mirfatif.privtasks.Commands;
-import com.mirfatif.privtasks.ser.PermStatus;
-import java.util.ArrayList;
-import java.util.List;
+import com.mirfatif.permissionmanagerx.util.bg.LiveTasksQueueTyped;
+import com.mirfatif.privtasks.util.MyLog;
+import com.mirfatif.privtasks.util.Util;
+import com.mirfatif.privtasks.util.bg.BgRunner;
+import com.mirfatif.privtasks.util.bg.SingleSchedTaskExecutor;
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
-public class AboutActivity extends BaseActivity {
+public class AboutActivity {
+
+  private static final String TAG = "AboutActivity";
+
+  private final AboutActivityM mA;
+
+  public AboutActivity(AboutActivityM activity) {
+    mA = activity;
+  }
 
   private ActivityAboutBinding mB;
-  private ActivityResultLauncher<String> mLoggingLauncher;
+  private ActivityResultLauncher<String> mNotifPermReqLauncher, mLoggingLauncher, mDumpLauncher;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    if (Utils.setNightTheme(this)) {
-      return;
-    }
-    mB = ActivityAboutBinding.inflate(getLayoutInflater());
-    setContentView(mB.getRoot());
+  public void onCreated() {
+    mB = ActivityAboutBinding.inflate(mA.getLayoutInflater());
+    mA.setContentView(mB.getRoot());
 
-    ActionBar actionBar = getSupportActionBar();
+    ActionBar actionBar = mA.getSupportActionBar();
     if (actionBar != null) {
       actionBar.setTitle(R.string.about_menu_item);
     }
@@ -60,49 +74,78 @@ public class AboutActivity extends BaseActivity {
     openWebUrl(mB.sourceCode, R.string.source_url);
     openWebUrl(mB.issues, R.string.issues_url);
     mB.rating.setOnClickListener(
-        v -> FeedbackDialogFrag.show(FeedbackType.RATE, getSupportFragmentManager()));
-    mB.contact.setOnClickListener(v -> Utils.sendMail(this, null));
-    setLogTitle(MySettings.INSTANCE.isDebug() ? R.string.stop_logging : R.string.collect_logs);
-    mB.logging.setOnClickListener(v -> handleLogging());
-    openWebUrl(mB.privacyPolicy, R.string.privacy_policy_link);
-    mB.checkUpdate.setOnClickListener(v -> checkForUpdates());
-    mB.translate.setOnClickListener(v -> TransCreditsDialogFrag.show(getSupportFragmentManager()));
-    mB.shareApp.setOnClickListener(v -> sendShareIntent());
-
-    mB.paidFeaturesSummary.setText(createPaidFeaturesString());
-
-    mB.paidFeatures.setOnClickListener(
+        v -> FeedbackDialogFrag.show(FeedbackType.RATE, mA.getSupportFragmentManager()));
+    mB.contact.setOnClickListener(v -> ApiUtils.sendMail(mA, null));
+    setLogTitle(alreadyLogging() ? R.string.stop_logging : R.string.collect_logs);
+    mB.logging.setOnClickListener(
         v -> {
-          if (mB.paidFeaturesSummary.getMaxLines() == 1) {
-            mB.paidFeaturesSummary.setMaxLines(1000);
+          if (ApiUtils.hasNotifPerm()) {
+            handleLogging(true);
           } else {
-            mB.paidFeaturesSummary.setMaxLines(1);
+            NotifUtils.askForNotifPerm(mA, mNotifPermReqLauncher);
           }
         });
+    mB.sendCrashReport.setOnClickListener(v -> CrashReportActivity.start(mA));
 
-    ActivityResultCallback<Uri> callback = LogcatService::start;
-    // registerForActivityResult() must be called before onStart() is called
-    mLoggingLauncher = registerForActivityResult(new CreateDocument(), callback);
+    openWebUrl(mB.privacyPolicy, R.string.privacy_policy_link);
+    mB.checkUpdate.setOnClickListener(v -> checkForUpdates());
+    mB.translate.setOnClickListener(
+        v -> TransCreditsDialogFrag.show(mA.getSupportFragmentManager()));
+    mB.shareApp.setOnClickListener(v -> sendShareIntent(mA));
+
+    mB.paidFeatures.setOnClickListener(
+        v -> HelpActivity.start(mA, getString(R.string.paid_features_href)));
+
+    mNotifPermReqLauncher =
+        mA.registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), this::handleLogging);
+
+    ActivityResultCallback<Uri> callback =
+        logFile -> {
+          if (logFile != null) {
+            LogcatSvc.start(logFile);
+            setLogTitle(R.string.stop_logging);
+          }
+        };
+
+    mLoggingLauncher = mA.registerForActivityResult(new CreateDocument("text/plain"), callback);
+
+    if (!Utils.isFreeVersion()
+        && DaemonHandler.INS.isDaemonAlive()
+        && !PackageParser.INS.isUpdating()) {
+      callback = fileUri -> BgRunner.execute(() -> PkgParserFlavor.INS.dumpPerms(fileUri));
+      mDumpLauncher = mA.registerForActivityResult(new CreateDocument("text/plain"), callback);
+
+      mB.dumpCont.setVisibility(View.VISIBLE);
+      mB.dumpV.setOnClickListener(
+          v -> mDumpLauncher.launch("PMX_Dump_" + Util.getCurrDateTime(false, true) + ".txt"));
+    }
   }
 
   private void openWebUrl(View view, int linkResId) {
-    view.setOnClickListener(v -> Utils.openWebUrl(this, getString(linkResId)));
+    view.setOnClickListener(v -> ApiUtils.openWebUrl(mA, getString(linkResId)));
   }
 
   private void setLogTitle(int resId) {
     mB.loggingTitle.setText(resId);
   }
 
-  private void handleLogging() {
-    if (MySettings.INSTANCE.isDebug()) {
-      LogcatService.sendStopLogIntent();
+  private static boolean alreadyLogging() {
+    return MySettings.INS.isDebug();
+  }
+
+  private void handleLogging(boolean notifPermGranted) {
+    if (alreadyLogging()) {
+      LogcatSvc.stopSvc();
       setLogTitle(R.string.collect_logs);
       Snackbar.make(mB.logging, R.string.logging_stopped, 5000).show();
       return;
     }
 
-    Utils.showToast(R.string.select_log_file);
-    mLoggingLauncher.launch("PermissionManagerX_" + Utils.getCurrDateTime(false) + ".log");
+    if (notifPermGranted) {
+      UiUtils.showToast(R.string.select_log_file);
+      mLoggingLauncher.launch("PermissionManagerX_" + Util.getCurrDateTime(false, true) + ".log");
+    }
   }
 
   private boolean mCheckForUpdateInProgress = false;
@@ -114,179 +157,127 @@ public class AboutActivity extends BaseActivity {
     mCheckForUpdateInProgress = true;
 
     mB.checkUpdateSummary.setText(R.string.check_in_progress);
-    Utils.runInBg(this::checkForUpdatesInBg);
+
+    new LiveTasksQueueTyped<>(mA, () -> AppUpdate.check(false))
+        .onUiWith(this::handleAppUpdateResult)
+        .start();
   }
 
-  private void checkForUpdatesInBg() {
-    AppUpdate appUpdate = new AppUpdate();
-    Boolean res = appUpdate.check(false);
-
-    int messageResId;
+  private void handleAppUpdateResult(AppUpdate.AppUpdateResult res) {
+    int msg;
     boolean showDialog = false;
+
     if (res == null) {
-      messageResId = R.string.check_for_updates_failed;
-    } else if (!res) {
-      messageResId = R.string.app_is_up_to_date;
+      msg = R.string.app_is_up_to_date;
+    } else if (res.failed) {
+      msg = R.string.check_for_updates_failed;
     } else {
-      messageResId = R.string.new_version_available;
+      msg = R.string.new_version_available;
       showDialog = true;
     }
 
-    Utils.runInFg(this, () -> mB.checkUpdateSummary.setText(R.string.update_summary));
+    mB.checkUpdateSummary.setText(R.string.update_summary);
 
     if (showDialog) {
       Builder builder =
-          new Builder(this)
+          new Builder(mA)
               .setTitle(R.string.update)
-              .setMessage(Utils.getString(messageResId) + ": " + appUpdate.getVersion())
+              .setMessage(getString(msg) + ": " + res.version)
               .setPositiveButton(
-                  R.string.download,
-                  (dialog, which) -> Utils.openWebUrl(this, appUpdate.getUpdateUrl()))
-              .setNegativeButton(android.R.string.cancel, null);
-      Utils.runInFg(this, () -> AlertDialogFragment.show(this, builder.create(), "APP_UPDATE"));
+                  R.string.download, (d, w) -> ApiUtils.openWebUrl(mA, res.updateUrl))
+              .setNegativeButton(R.string.cancel_button, null);
+      AlertDialogFragment.show(mA, builder.create(), "APP_UPDATE");
     } else {
-      Utils.showToast(messageResId);
+      UiUtils.showToast(msg);
     }
 
     mCheckForUpdateInProgress = false;
   }
 
-  private void sendShareIntent() {
+  public static void sendShareIntent(Activity activity) {
     Intent intent = new Intent(Intent.ACTION_SEND).setType("text/plain");
     intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
     String text = getString(R.string.share_text, getString(R.string.source_url));
-    startActivity(Intent.createChooser(intent.putExtra(Intent.EXTRA_TEXT, text), null));
+    activity.startActivity(Intent.createChooser(intent.putExtra(Intent.EXTRA_TEXT, text), null));
   }
 
-  private Spanned createPaidFeaturesString() {
-    String string =
-        "<ul>"
-            + "<li>"
-            + getString(R.string.paid_features1)
-            + "</li>"
-            + "<li>"
-            + getString(R.string.paid_features2)
-            + "</li>"
-            + "<li>"
-            + getString(R.string.paid_features3)
-            + "</li>"
-            + "<li>"
-            + getString(R.string.paid_features4)
-            + "</li>"
-            + "<li>"
-            + getString(R.string.paid_features5)
-            + "</li>"
-            + "<li>"
-            + getString(R.string.paid_features6)
-            + "</li>"
-            + "<li>"
-            + getString(R.string.paid_features7)
-            + "</li>"
-            + "<li>"
-            + getString(R.string.paid_features8)
-            + "</li>"
-            + "<li>"
-            + getString(R.string.paid_features9)
-            + "</li>"
-            + "<li>"
-            + getString(R.string.paid_features10)
-            + "</li>"
-            + "<li>"
-            + getString(R.string.paid_features11)
-            + "</li>"
-            + "</ul>";
-
-    return Utils.htmlToString(string);
-  }
-
-  @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.about_menu, menu);
+    mA.getMenuInflater().inflate(R.menu.about_menu, menu);
     return true;
   }
 
-  @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
-    menu.findItem(R.id.action_perm_status).setEnabled(MySettings.INSTANCE.isPrivDaemonAlive());
+    menu.findItem(R.id.action_perm_status).setEnabled(DaemonHandler.INS.isDaemonAlive());
     menu.findItem(R.id.action_dump_daemon_heap).setVisible(BuildConfig.DEBUG);
     return true;
   }
 
-  @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == R.id.action_dump_daemon_heap) {
-      Utils.runInBg(() -> PrivDaemonHandler.INSTANCE.sendRequest(Commands.DUMP_HEAP));
+      item.setEnabled(false);
+      mDumpHeap = true;
       return true;
     }
 
     if (item.getItemId() == R.id.action_perm_status) {
-      if (MySettings.INSTANCE.isPrivDaemonAlive()) {
-        AlertDialogFragment.show(this, null, TAG_PERM_STATUS);
+      if (DaemonHandler.INS.isDaemonAlive()) {
+        AlertDialogFragment.show(mA, null, TAG_PERM_STATUS);
       } else {
         item.setEnabled(false);
       }
       return true;
     }
-    return super.onOptionsItemSelected(item);
+    return false;
   }
 
-  private void updatePermStatusDialog(
-      AboutPrivilegesDialogBinding b,
-      AboutPrivilegesAdapter adapter,
-      AlertDialogFragment dialogFragment) {
-    Object obj = PrivDaemonHandler.INSTANCE.sendRequest(Commands.GET_PERM_STATUS);
+  private boolean mDumpHeap = false;
 
-    if (obj instanceof List<?>) {
-      List<PermStatus> permStatusList = new ArrayList<>();
-      for (Object item : (List<?>) obj) {
-        permStatusList.add((PermStatus) item);
-      }
-
-      obj = PrivDaemonHandler.INSTANCE.sendRequest(Commands.GET_APP_OP_STATUS);
-      if (obj instanceof Integer) {
-        int appOpsStatus = (int) obj;
-
-        Utils.runInFg(
-            dialogFragment,
-            () -> {
-              adapter.submitList(permStatusList);
-              b.opToDefModeV.setImageResource(getIcon(appOpsStatus, Commands.OP_TO_DEF_MODE_WORKS));
-              b.opToSwV.setImageResource(getIcon(appOpsStatus, Commands.OP_TO_SWITCH_WORKS));
-              b.opToNameV.setImageResource(getIcon(appOpsStatus, Commands.OP_TO_NAME_WORKS));
-              b.opNumConsistentV.setImageResource(
-                  getIcon(appOpsStatus, Commands.OP_NUM_CONSISTENT));
-            });
-
-        return;
-      }
+  public void onDestroy() {
+    if (mDumpHeap) {
+      UiUtils.showToast("Heap dump will be taken after 10 seconds");
+      SingleSchedTaskExecutor.schedule(
+          AboutActivity::dumpHeap, 10, TimeUnit.SECONDS, TAG + "-HeapDump");
     }
-    Utils.runInFg(dialogFragment, dialogFragment::dismissAllowingStateLoss);
-  }
-
-  private @DrawableRes int getIcon(int appOpStatus, int type) {
-    return ((appOpStatus & type) != 0) ? R.drawable.tick : R.drawable.cross;
   }
 
   private static final String CLASS = SettingsActivity.class.getName();
   private static final String TAG_PERM_STATUS = CLASS + ".PERM_STATUS";
 
-  @Override
   public AlertDialog createDialog(String tag, AlertDialogFragment dialogFragment) {
     if (TAG_PERM_STATUS.equals(tag)) {
-      AboutPrivilegesDialogBinding b = AboutPrivilegesDialogBinding.inflate(getLayoutInflater());
-      AboutPrivilegesAdapter adapter = new AboutPrivilegesAdapter();
-      Utils.runInBg(() -> updatePermStatusDialog(b, adapter, dialogFragment));
-      b.uidV.setText(String.valueOf(PrivDaemonHandler.INSTANCE.getUid()));
-      b.recyclerV.setLayoutManager(new LinearLayoutManager(this));
-      b.recyclerV.addItemDecoration(
-          new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-      b.recyclerV.setAdapter(adapter);
-      return new Builder(this)
-          .setTitle(R.string.perm_status_menu_item)
-          .setView(b.getRoot())
-          .create();
+      return new PrivilegesDialog(mA).create(dialogFragment);
     }
 
-    return super.createDialog(tag, dialogFragment);
+    return null;
+  }
+
+  private static void dumpHeap() {
+    UiUtils.showToast("Taking heap dump");
+
+    boolean done = DaemonIface.INS.dumpHeap();
+
+    System.gc();
+
+    String directory = App.getCxt().getExternalCacheDir().getAbsolutePath();
+
+    File dir = new File(directory);
+    if (!dir.isDirectory()) {
+      MyLog.e(TAG, "dumpHeap", directory + " is not a directory");
+      done = false;
+    }
+
+    File file = new File(dir, "com.mirfatif.pmx.hprof");
+    try {
+      Debug.dumpHprofData(file.getAbsolutePath());
+    } catch (IOException e) {
+      MyLog.e(TAG, "dumpHeap", e);
+      done = false;
+    }
+
+    UiUtils.showToast(done ? "Heap dump completed" : "Heap dump failed");
+  }
+
+  public static void start(Activity activity) {
+    activity.startActivity(new Intent(App.getCxt(), AboutActivityM.class));
   }
 }

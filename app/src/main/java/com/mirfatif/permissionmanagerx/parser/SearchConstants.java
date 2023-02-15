@@ -1,17 +1,16 @@
 package com.mirfatif.permissionmanagerx.parser;
 
-import static com.mirfatif.permissionmanagerx.util.Utils.getString;
+import static com.mirfatif.permissionmanagerx.util.ApiUtils.getString;
 
 import com.mirfatif.permissionmanagerx.R;
 
 public enum SearchConstants {
-  INSTANCE;
+  INS;
 
   SearchConstants() {
     recreate();
   }
 
-  // Search constants which change with Locale change, so cannot be static and final.
   public String SEARCH_CRITICAL;
   public String SEARCH_FRAMEWORK;
   public String SEARCH_SYSTEM;

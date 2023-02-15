@@ -6,19 +6,22 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.base.BottomSheetDialogFrag;
 import com.mirfatif.permissionmanagerx.databinding.PermLongPressDialogBinding;
+import com.mirfatif.permissionmanagerx.fwk.PackageActivityM;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.parser.Permission;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionEntity;
-import com.mirfatif.permissionmanagerx.pkg.fwk.PackageActivity;
+import com.mirfatif.permissionmanagerx.parser.permsdb.PermsDb;
+import com.mirfatif.permissionmanagerx.parser.permsdb.PermsDbFlavor;
+import com.mirfatif.permissionmanagerx.prefs.ExcFiltersData;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
-import com.mirfatif.permissionmanagerx.ui.base.BottomSheetDialogFrag;
-import com.mirfatif.permissionmanagerx.util.Utils;
+import com.mirfatif.permissionmanagerx.util.StringUtils;
+import com.mirfatif.permissionmanagerx.util.UiUtils;
+import com.mirfatif.privtasks.util.bg.BgRunner;
 
 public class PermLongPressDialogFrag extends BottomSheetDialogFrag {
 
@@ -36,20 +39,15 @@ public class PermLongPressDialogFrag extends BottomSheetDialogFrag {
     this(null, null, null);
   }
 
-  private PackageActivity mA;
+  private PackageActivityM mA;
 
-  @Override
-  public void onAttach(@NonNull Context context) {
+  public void onAttach(Context context) {
     super.onAttach(context);
-    mA = (PackageActivity) getActivity();
+    mA = (PackageActivityM) getActivity();
   }
 
-  @Nullable
-  @Override
   public View onCreateView(
-      @NonNull LayoutInflater inflater,
-      @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
+      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     if (mPerm == null || mPkg == null) {
       return null;
@@ -58,43 +56,41 @@ public class PermLongPressDialogFrag extends BottomSheetDialogFrag {
     PermLongPressDialogBinding b = PermLongPressDialogBinding.inflate(mA.getLayoutInflater());
 
     b.permNameV.setText(mPerm.getName());
+    b.permNameV.setSelected(true);
 
-    if (MySettings.INSTANCE.canBeExcluded(mPerm)) {
+    if (ExcFiltersData.INS.canBeExcluded(mPerm)) {
       b.excludePerm.setOnClickListener(
           v -> {
             dismissAllowingStateLoss();
-            Utils.runInBg(this::excludePerm);
+            BgRunner.execute(this::excludePerm);
           });
     } else {
       b.excludePerm.setEnabled(false);
     }
 
     if (mPerm.isChangeable()) {
-      boolean isReferenced = mPerm.isReferenced() != null && mPerm.isReferenced();
-      String permState = mA.getPermState(mPerm);
+      boolean isReferenced = Boolean.TRUE.equals(mPerm.isReferenced());
+      String permState = mPerm.refString();
 
       if (isReferenced) {
         b.refButton.setText(R.string.clear_reference);
       } else {
         String permStateStr;
-        if (mPerm.isAppOps()) {
+        if (mPerm.isAppOp()) {
           permStateStr = PermissionAdapter.getLocalizedMode(permState);
-          if (permStateStr == null) {
-            permStateStr = permState;
-          }
         } else if (permState.equals(Permission.GRANTED)) {
           permStateStr = getString(R.string.perm_mode_granted);
         } else {
           permStateStr = getString(R.string.perm_mode_revoked);
         }
         b.refButton.setText(
-            Utils.htmlToString(getString(R.string.set_perm_state_reference, permStateStr)));
+            StringUtils.htmlToString(getString(R.string.set_perm_state_reference, permStateStr)));
       }
 
       b.refButton.setOnClickListener(
           v -> {
             dismissAllowingStateLoss();
-            Utils.runInBg(() -> setClearRef(isReferenced, permState));
+            BgRunner.execute(() -> setOrClearRef(isReferenced, permState));
           });
     } else {
       b.refButton.setText(R.string.set_reference);
@@ -104,52 +100,59 @@ public class PermLongPressDialogFrag extends BottomSheetDialogFrag {
     return b.getRoot();
   }
 
-  @NonNull
-  @Override
-  public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+  public Dialog onCreateDialog(Bundle savedInstanceState) {
     if (mPerm == null) {
+
       dismissAllowingStateLoss();
     }
     return super.onCreateDialog(savedInstanceState);
   }
 
   private void excludePerm() {
-    MySettings.INSTANCE.addPermToExcludedPerms(mPerm.getName());
-    mA.updatePackage();
+    MySettings.INS.addPermToExcludedPerms(mPerm.getName());
+    mA.mA.updatePkg();
 
-    // Other packages are also affected
-    PackageParser.INSTANCE.updatePackagesList();
+    PackageParser.INS.updatePkgList();
   }
 
-  private void setClearRef(boolean isReferenced, String permState) {
+  private void setOrClearRef(boolean isReferenced, String permState) {
     if (isReferenced) {
-      MySettings.INSTANCE.getPermDb().deletePermission(mPkg.getName(), mPerm.getName());
-      PackageParser.INSTANCE.updatePermReferences(mPkg.getName(), mPerm.getName(), null);
-      mA.updatePackage();
+      boolean isPerUid = MySettings.INS.useUniqueRefForAppOpUidMode() && mPerm.isPerUid();
+      int userID = PermsDbFlavor.getUserIdForPermRefs(mPkg.getUid());
+
+      PermsDb.INS
+          .getDb()
+          .deletePerm(mPkg.getName(), mPerm.getName(), mPerm.isAppOp(), isPerUid, userID);
+
+      PermsDb.INS.updateRefs(
+          mPkg.getName(), mPerm.getName(), null, mPerm.isAppOp(), isPerUid, userID);
+
       mPkgActivityFlavor.pkgRefChanged(mPkg);
-      return;
+      mA.mA.updatePkg();
+    } else {
+      setRef(mPkg, mPerm, permState, mPkgActivityFlavor);
+      mA.mA.updatePkg();
     }
+  }
 
-    PermissionEntity entity = new PermissionEntity();
-    entity.isAppOps = mPerm.isAppOps();
-    entity.permName = mPerm.getName();
-    entity.pkgName = mPkg.getName();
-    entity.state = permState;
+  static void setRef(Package pkg, Permission perm, String state, PkgActivityFlavor actFlav) {
+    boolean isPerUid = MySettings.INS.useUniqueRefForAppOpUidMode() && perm.isPerUid();
+    int userID = PermsDbFlavor.getUserIdForPermRefs(pkg.getUid());
 
-    int id = MySettings.INSTANCE.getPermDb().getId(entity.pkgName, entity.permName);
-    if (id > 0) {
-      entity.id = id;
-    }
-    MySettings.INSTANCE.getPermDb().insertAll(entity);
-    PackageParser.INSTANCE.updatePermReferences(mPkg.getName(), mPerm.getName(), permState);
-    mA.updatePackage();
-    mPkgActivityFlavor.pkgRefChanged(mPkg);
+    PermissionEntity entity =
+        new PermissionEntity(
+            pkg.getName(), perm.getName(), state, perm.isAppOp(), isPerUid, userID);
+
+    PermsDb.INS.updateRefsDb(entity);
+
+    PermsDb.INS.updateRefs(pkg.getName(), perm.getName(), state, perm.isAppOp(), isPerUid, userID);
+    actFlav.pkgRefChanged(pkg);
   }
 
   public static void show(
       Permission perm, Package pkg, PkgActivityFlavor pkgActivityFlavor, FragmentManager fm) {
-    if (!MySettings.INSTANCE.canBeExcluded(perm) && !perm.isChangeable()) {
-      Utils.showToast(R.string.no_action_available);
+    if (!ExcFiltersData.INS.canBeExcluded(perm) && !perm.isChangeable()) {
+      UiUtils.showToast(R.string.no_action_available);
     } else {
       new PermLongPressDialogFrag(perm, pkg, pkgActivityFlavor).show(fm, "PERM_OPTIONS");
     }

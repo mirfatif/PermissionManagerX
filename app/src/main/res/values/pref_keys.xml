@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <!--
+  NOTE:
+  If pref name equals its value + "_key":
+  - Pref values starting with "pref_filter_" are cleared on "Reset to Defaults".
+  - Pref values starting with "pref_" and not ending with "_enc" are backed up and restored.
+  -->
+
+  <!-- MainActivity Preferences -->
+  <eat-comment />
+  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="pref_main_crash_report_ts_enc_key" translatable="false">pref_main_crash_report_ts_enc</string>
+  <string name="pref_main_ask_for_feedback_ts_enc_key" translatable="false">pref_main_ask_for_feedback_ts_enc</string>
+  <string name="pref_main_warned_unsupported_sdk_enc_key" translatable="false">pref_main_warned_unsupported_sdk_enc</string>
+
+  <!-- MainActivity Preferences corresponding to default values -->
+  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="pref_main_app_launch_count_enc_key" translatable="false">pref_main_app_launch_count_enc</string>
+  <integer name="pref_main_app_launch_count_enc_default">0</integer>
+  <string name="pref_main_ask_for_notif_perm_ts_enc_key" translatable="false">pref_main_ask_for_notif_perm_ts_enc</string>
+
+  <string name="pref_main_deep_search_key" translatable="false">pref_main_deep_search</string>
+  <bool name="pref_main_deep_search_default">false</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_main_deep_search_title">Deep search</string>
+  <string name="pref_main_deep_search_summary">Do search in permissions list instead of apps list</string>
+
+  <string name="pref_main_case_sensitive_search_key" translatable="false">pref_main_case_sensitive_search</string>
+  <bool name="pref_main_case_sensitive_search_default">false</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_main_case_sensitive_search_title">Case sensitive</string>
+  <string name="pref_main_case_sensitive_search_summary">Match string only with the same case</string>
+
+  <string name="pref_main_crash_report_count_enc_key" translatable="false">pref_main_crash_report_count_enc</string>
+  <integer name="pref_main_crash_report_count_enc_default">1</integer>
+  <string name="pref_main_warn_dang_change_enc_key" translatable="false">pref_main_warn_dang_change_enc</string>
+  <bool name="pref_main_warn_dang_change_enc_default">true</bool>
+
+  <!-- Privileges / Daemon -->
+  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="pref_privs_root_daemon_port_enc_key" translatable="false">pref_privs_root_daemon_port_enc</string>
+  <integer name="pref_privs_root_daemon_port_enc_default">0</integer>
+
+  <string name="pref_privs_adb_daemon_port_enc_key" translatable="false">pref_privs_adb_daemon_port_enc</string>
+  <integer name="pref_privs_adb_daemon_port_enc_default">0</integer>
+
+  <string name="pref_privs_adb_port_key" translatable="false">pref_privs_adb_port</string>
+  <integer name="pref_privs_adb_port_default">5555</integer>
+
+  <string name="pref_privs_root_enabled_enc_key" translatable="false">pref_privs_root_enabled_enc</string>
+  <bool name="pref_privs_root_enabled_enc_default">false</bool>
+
+  <string name="pref_privs_adb_enabled_enc_key" translatable="false">pref_privs_adb_enabled_enc</string>
+  <bool name="pref_privs_adb_enabled_enc_default">false</bool>
+
+  <string name="pref_privs_dex_extraction_ts_enc_key" translatable="false">pref_privs_dex_extraction_ts_enc</string>
+
+  <string name="pref_privs_daemon_port_enc_key" translatable="false">pref_privs_daemon_port_enc</string>
+  <integer name="pref_privs_daemon_port_enc_default">0</integer>
+
+  <string name="pref_privs_app_privs_check_ts_enc_key" translatable="false">pref_privs_app_privs_check_ts_enc</string>
+
+  <!-- Advanced Settings -->
+  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_allow_critical_changes_title">Allow critical changes</string>
+  <string name="pref_adv_settings_allow_critical_changes_summary">Make changes to critical permissions and framework apps</string>
+  <string name="pref_adv_settings_allow_critical_changes_key" translatable="false">pref_adv_settings_allow_critical_changes</string>
+  <bool name="pref_adv_settings_allow_critical_changes_default">false</bool>
+
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_exit_on_app_death_title">Auto-stop daemon</string>
+  <string name="pref_adv_settings_exit_on_app_death_summary">Stop the privileged daemon when the app is killed</string>
+  <string name="pref_adv_settings_exit_on_app_death_key" translatable="false">pref_adv_settings_exit_on_app_death</string>
+  <bool name="pref_adv_settings_exit_on_app_death_default">false</bool>
+
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_perm_refs_cat_title">Permission References</string>
+
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_unique_ref_app_op_uid_mode_title">AppOp UID mode reference</string>
+  <string name="pref_adv_settings_unique_ref_app_op_uid_mode_summary">Use different permission reference for AppOp in UID mode</string>
+  <string name="pref_adv_settings_unique_ref_app_op_uid_mode_key" translatable="false">pref_adv_settings_unique_ref_app_op_uid_mode</string>
+  <bool name="pref_adv_settings_unique_ref_app_op_uid_mode_default">false</bool>
+
+  <string name="pref_tmp_fix_perm_db_enc_key" translatable="false">pref_tmp_fix_perm_db_enc</string>
+
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_unique_ref_sec_users_title">Secondary user references</string>
+  <string name="pref_adv_settings_unique_ref_sec_users_summary">Use different permission references for secondary users / profiles</string>
+  <string name="pref_adv_settings_unique_ref_sec_users_key" translatable="false">pref_adv_settings_unique_ref_sec_users</string>
+  <bool name="pref_adv_settings_unique_ref_sec_users_default">false</bool>
+
+  <string name="pref_adv_settings_reset_perm_db_title">Reset / cleanup references</string>
+  <string name="pref_adv_settings_reset_perm_db_summary">Reset or cleanup permissions references database</string>
+  <string name="pref_adv_settings_reset_perm_db_key" translatable="false">pref_adv_settings_reset_perm_db</string>
+
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_daemon_dex_location_title">Daemon file location</string>
+  <string name="pref_adv_settings_daemon_dex_location_summary">Load daemon from: %s</string>
+  <string name="pref_adv_settings_daemon_dex_location_key" translatable="false">pref_adv_settings_daemon_dex_location</string>
+  <string name="pref_adv_settings_daemon_dex_location_default" translatable="false">@string/daemon_dex_location_tmp_val</string>
+
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_root_cat_title">Root</string>
+
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_daemon_uid_title">Daemon UID</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_daemon_uid_title2">Daemon UID: %s</string>
+  <string name="pref_adv_settings_daemon_uid_summary">Daemon\'s UNIX user identifier</string>
+  <string name="pref_adv_settings_daemon_uid_key" translatable="false">pref_adv_settings_daemon_uid</string>
+  <string name="pref_adv_settings_daemon_uid_default" translatable="false">@string/daemon_uid_system_val</string>
+
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_daemon_context_title">Daemon context</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_daemon_context_title2">Daemon context: %s</string>
+  <string name="pref_adv_settings_daemon_context_summary">SELinux context of the daemon process</string>
+  <string name="pref_adv_settings_daemon_context_key" translatable="false">pref_adv_settings_daemon_context</string>
+  <string name="pref_adv_settings_daemon_context_default" translatable="false">@string/daemon_context_default_val</string>
+
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_su_exe_path_title">Superuser binary location</string>
+  <string name="pref_adv_settings_su_exe_path_key" translatable="false">pref_adv_settings_su_exe_path</string>
+  <string name="pref_adv_settings_su_exe_path_default" translatable="false" />
+
+  <!-- FilterSettingsActivity -->
+  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="pref_filter_master_switch_key" translatable="false">pref_filter_master_switch</string>
+  <bool name="pref_filter_master_switch_default">true</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_packages_cat_title">Packages</string>
+  <string name="pref_filter_exclude_no_icon_apps_key" translatable="false">pref_filter_exclude_no_icon_apps</string>
+  <bool name="pref_filter_exclude_no_icon_apps_default">true</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_no_icon_apps_title">Exclude apps without icons</string>
+  <string name="pref_filter_exclude_user_apps_key" translatable="false">pref_filter_exclude_user_apps</string>
+  <bool name="pref_filter_exclude_user_apps_default">false</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_user_apps_title">Exclude user apps</string>
+  <string name="pref_filter_exclude_system_apps_key" translatable="false">pref_filter_exclude_system_apps</string>
+  <bool name="pref_filter_exclude_system_apps_default">false</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_system_apps_title">Exclude system apps</string>
+  <string name="pref_filter_exclude_framework_apps_key" translatable="false">pref_filter_exclude_framework_apps</string>
+  <bool name="pref_filter_exclude_framework_apps_default">true</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_framework_apps_title">Exclude framework apps</string>
+  <string name="pref_filter_exclude_disabled_apps_key" translatable="false">pref_filter_exclude_disabled_apps</string>
+  <bool name="pref_filter_exclude_disabled_apps_default">true</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_disabled_apps_title">Exclude disabled apps</string>
+  <string name="pref_filter_exclude_no_perms_apps_key" translatable="false">pref_filter_exclude_no_perms_apps</string>
+  <bool name="pref_filter_exclude_no_perms_apps_default">true</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_no_perms_apps_title">Exclude apps without permissions</string>
+  <string name="pref_filter_manually_exclude_apps_key" translatable="false">pref_filter_manually_exclude_apps</string>
+  <bool name="pref_filter_manually_exclude_apps_default">true</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_manually_exclude_apps_title">Manually exclude apps</string>
+  <string name="pref_filter_excluded_apps_key" translatable="false">pref_filter_excluded_apps</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_excluded_apps_title">Manually excluded apps list</string>
+
+  <!-- PreferencesActivity permissions titles, keys and defaults -->
+  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_permissions_cat_title">Permissions</string>
+  <string name="pref_filter_exclude_not_changeable_perms_key" translatable="false">pref_filter_exclude_not_changeable_perms</string>
+  <bool name="pref_filter_exclude_not_changeable_perms_default">true</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_not_changeable_perms_title">Exclude permissions not changeable</string>
+  <string name="pref_filter_exclude_not_granted_perms_key" translatable="false">pref_filter_exclude_not_granted_perms</string>
+  <bool name="pref_filter_exclude_not_granted_perms_default">false</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_not_granted_perms_title">Exclude permissions not granted</string>
+  <string name="pref_filter_manually_exclude_perms_key" translatable="false">pref_filter_manually_exclude_perms</string>
+  <bool name="pref_filter_manually_exclude_perms_default">true</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_manually_exclude_perms_title">Manually exclude permissions</string>
+  <string name="pref_filter_excluded_perms_key" translatable="false">pref_filter_excluded_perms</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_excluded_perms_title">Manually excluded permissions list</string>
+
+  <!-- PreferencesActivity manifest permissions titles, keys and defaults -->
+  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_man_permissions_cat_title">Manifest Permissions</string>
+  <string name="pref_filter_exclude_invalid_perms_key" translatable="false">pref_filter_exclude_invalid_perms</string>
+  <bool name="pref_filter_exclude_invalid_perms_default">true</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_invalid_perms_title">Exclude invalid permissions</string>
+  <string name="pref_filter_exclude_normal_perms_key" translatable="false">pref_filter_exclude_normal_perms</string>
+  <bool name="pref_filter_exclude_normal_perms_default">false</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_normal_perms_title">Exclude normal permissions</string>
+  <string name="pref_filter_exclude_dangerous_perms_key" translatable="false">pref_filter_exclude_dangerous_perms</string>
+  <bool name="pref_filter_exclude_dangerous_perms_default">false</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_dangerous_perms_title">Exclude dangerous permissions</string>
+  <string name="pref_filter_exclude_signature_perms_key" translatable="false">pref_filter_exclude_signature_perms</string>
+  <bool name="pref_filter_exclude_signature_perms_default">false</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_signature_perms_title">Exclude signature permissions</string>
+  <string name="pref_filter_exclude_privileged_perms_key" translatable="false">pref_filter_exclude_privileged_perms</string>
+  <bool name="pref_filter_exclude_privileged_perms_default">false</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_privileged_perms_title">Exclude privileged permissions</string>
+
+  <!-- PreferencesActivity AppOps permissions titles, keys and defaults -->
+  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_app_ops_permissions_cat_title">AppOps Permissions</string>
+  <string name="pref_filter_exclude_appops_perms_key" translatable="false">pref_filter_exclude_appops_perms</string>
+  <bool name="pref_filter_exclude_appops_perms_default">false</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_appops_perms_title">Exclude AppOps</string>
+  <string name="pref_filter_exclude_not_set_appops_key" translatable="false">pref_filter_exclude_not_set_appops</string>
+  <bool name="pref_filter_exclude_not_set_appops_default">false</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_not_set_appops_title">Exclude AppOps not set (Defaults)</string>
+  <string name="pref_filter_show_extra_app_ops_key" translatable="false">pref_filter_show_extra_app_ops</string>
+  <bool name="pref_filter_show_extra_app_ops_default">true</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_show_extra_app_ops_title">Show extra AppOps, never excluded</string>
+  <string name="pref_filter_extra_appops_key" translatable="false">pref_filter_extra_appops</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_extra_appops_title">Extra AppOps list</string>
+
+  <!-- SettingsActivity -->
+  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_general_cat_title">General settings</string>
+  <string name="pref_settings_general_cat_key" translatable="false">pref_settings_general_cat</string>
+
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_check_for_updates_title">Check for updates</string>
+  <string name="pref_settings_check_for_updates_summary">Show a notification when a new version is available</string>
+  <string name="pref_settings_check_for_updates_key" translatable="false">pref_settings_check_for_updates</string>
+  <bool name="pref_settings_check_for_updates_default">true</bool>
+  <string name="pref_settings_check_for_updates_ts_enc_key" translatable="false">pref_settings_check_for_updates_ts_enc</string>
+
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_privileges_reminder_title">Remind missing privileges</string>
+  <string name="pref_settings_privileges_reminder_summary">Show a dialog on app start if root and ADB privileges are not granted</string>
+  <string name="pref_settings_privileges_reminder_key" translatable="false">pref_settings_privileges_reminder</string>
+  <bool name="pref_settings_privileges_reminder_default">true</bool>
+
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_auto_perm_ref_title">Auto-set reference</string>
+  <string name="pref_settings_auto_perm_ref_summary">Set the selected state of a permission as reference</string>
+  <string name="pref_settings_auto_perm_ref_key" translatable="false">pref_settings_auto_perm_ref</string>
+  <bool name="pref_settings_auto_perm_ref_default">false</bool>
+
+  <string name="pref_settings_special_search_key" translatable="false">pref_settings_special_search</string>
+  <bool name="pref_settings_special_search_default">true</bool>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_special_search_title">Complex search</string>
+  <string name="pref_settings_special_search_summary">Use AND (&amp;), OR (|) and NOT (!) operators in search to combine queries</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_locale_title">Application language</string>
+  <string name="pref_settings_locale_key" translatable="false">pref_settings_locale</string>
+  <string name="pref_settings_locale_default" translatable="false" />
+
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_theming_cat_title">Theming</string>
+  <string name="pref_settings_theming_cat_key" translatable="false">pref_settings_theming_cat</string>
+
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_theme_color_title">Theme color</string>
+  <string name="pref_settings_theme_color_key" translatable="false">pref_settings_theme_color</string>
+  <string name="pref_settings_theme_color_default" translatable="false">@string/theme_color_green_val</string>
+
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_dark_theme_title">Dark theme</string>
+  <string name="pref_settings_dark_theme_key" translatable="false">pref_settings_dark_theme</string>
+  <string name="pref_settings_dark_theme_default" translatable="false">@string/dark_theme_mode_system_val</string>
+
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_search_suggestions_count_title2">Max suggestions: %d</string>
+  <string name="pref_settings_search_suggestions_count_summary">Suggest package, permissions, special keywords etc.</string>
+  <string name="pref_settings_search_suggestions_count_key" translatable="false">pref_settings_search_suggestions_count</string>
+  <integer name="pref_settings_search_suggestions_count_default">5</integer>
+  <string name="pref_settings_search_keywords_key" translatable="false">pref_settings_search_keywords</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_search_keywords_title">Search keywords</string>
+  <string name="pref_settings_search_keywords_summary">Keywords with special meaning</string>
+
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_ref_states_cat_title">Scheduled checks</string>
+
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_perm_watcher_cat_title">Permission watcher</string>
+
+  <!-- HelpActivity -->
+  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="pref_help_font_size_key" translatable="false">pref_help_font_size</string>
+  <integer name="pref_help_font_size_default">14</integer>
+  <string name="pref_help_web_view_clear_cache_ts_enc_key" translatable="false">pref_help_web_view_clear_cache_ts_enc</string>
+
+  <!-- PackageActivity -->
+  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="pref_package_warn_dang_change_enc_key" translatable="false">pref_package_warn_dang_change_enc</string>
+  <bool name="pref_package_warn_dang_change_enc_default">true</bool>
+
+</resources>

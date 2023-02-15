@@ -5,76 +5,96 @@
   <group android:id="@+id/group1">
     <item
       android:id="@+id/action_settings"
-      android:title="@string/settings_menu_item"
-      android:icon="@drawable/settings"/>
+      android:icon="@drawable/settings"
+      android:orderInCategory="1"
+      android:title="@string/settings_menu_item" />
+
+    <item
+      android:id="@+id/action_advanced_settings"
+      android:icon="@drawable/advanced_settings"
+      android:orderInCategory="2"
+      android:title="@string/advanced_settings_menu_item" />
 
     <item
       android:id="@+id/action_filter"
-      android:title="@string/filter_menu_item"
-      android:icon="@drawable/filter"/>
+      android:icon="@drawable/filter"
+      android:orderInCategory="3"
+      android:title="@string/filter_menu_item" />
   </group>
 
   <group android:id="@+id/group1.5">
     <item
       android:id="@+id/action_sched_check"
+      android:orderInCategory="5"
       android:visible="false" />
 
     <item
       android:id="@+id/action_perm_watcher"
+      android:orderInCategory="6"
       android:visible="false" />
 
     <item
       android:id="@+id/action_perm_summary"
       android:enabled="false"
+      android:orderInCategory="7"
       android:visible="false" />
   </group>
 
   <group android:id="@+id/group2">
     <item
       android:id="@+id/action_root"
-      app:actionViewClass="android.widget.CheckBox"
+      android:icon="@drawable/root"
+      android:orderInCategory="9"
       android:title="@string/root_menu_item"
-      android:icon="@drawable/root"/>
+      app:actionViewClass="android.widget.CheckBox" />
 
     <item
       android:id="@+id/action_adb"
-      app:actionViewClass="android.widget.CheckBox"
+      android:icon="@drawable/shell"
+      android:orderInCategory="10"
       android:title="@string/adb_menu_item"
-      android:icon="@drawable/shell"/>
-
-    <item
-      android:id="@+id/action_advanced_settings"
-      android:title="@string/advanced_settings_menu_item"
-      android:icon="@drawable/advanced_settings"/>
+      app:actionViewClass="android.widget.CheckBox" />
   </group>
 
   <group android:id="@+id/group3">
     <item
       android:id="@+id/action_backup_restore"
-      android:title="@string/backup_restore_menu_item"
-      android:icon="@drawable/backup_restore"/>
+      android:icon="@drawable/backup_restore"
+      android:orderInCategory="12"
+      android:title="@string/backup_restore_menu_item" />
 
     <item
       android:id="@+id/action_perm_profiles"
       android:enabled="false"
+      android:orderInCategory="13"
       android:visible="false" />
   </group>
 
   <group android:id="@+id/group4">
     <item
       android:id="@+id/action_help"
-      android:title="@string/help_menu_item"
-      android:icon="@drawable/help"/>
+      android:icon="@drawable/help"
+      android:orderInCategory="15"
+      android:title="@string/help_menu_item" />
 
     <item
       android:id="@+id/action_donate"
       android:icon="@drawable/donate"
+      android:orderInCategory="16"
       android:title="@string/donate_menu_item"
-      android:visible="false"/>
+      android:visible="false" />
+
+    <item
+      android:id="@+id/action_license"
+      android:icon="@drawable/key"
+      android:orderInCategory="17"
+      android:title="@string/license_menu_item"
+      android:visible="false" />
 
     <item
       android:id="@+id/action_about"
-      android:title="@string/about_menu_item"
-      android:icon="@drawable/info"/>
+      android:icon="@drawable/info"
+      android:orderInCategory="18"
+      android:title="@string/about_menu_item" />
   </group>
 </menu>

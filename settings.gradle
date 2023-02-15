@@ -3,13 +3,17 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+
+        // For libadb-android
+        maven { url 'https://jitpack.io' }
     }
 }
 
-rootProject.name = "Permission Manager X"
+if (new File(rootDir, 'configs/settings-pro.gradle').isFile()) {
+    apply from: 'configs/settings-pro.gradle'
+}
 
 include ':hidden_apis'
 include ':priv_library'
 include ':priv_daemon'
-include ':AdbLib'
 include ':app'

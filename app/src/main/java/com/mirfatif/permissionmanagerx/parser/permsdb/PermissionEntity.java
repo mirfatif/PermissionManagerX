@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey;
 
 @Entity
 public class PermissionEntity {
+
   @PrimaryKey(autoGenerate = true)
   public int id;
 
@@ -20,4 +21,27 @@ public class PermissionEntity {
 
   @ColumnInfo(name = "isAppOps")
   public boolean isAppOps;
+
+  @ColumnInfo(name = "isPerUid")
+  public boolean isPerUid;
+
+  @ColumnInfo(name = "userId")
+  public int userId;
+
+  public PermissionEntity() {}
+
+  public PermissionEntity(
+      String pkgName,
+      String permName,
+      String state,
+      boolean isAppOp,
+      boolean isPerUid,
+      int userId) {
+    this.pkgName = pkgName;
+    this.permName = permName;
+    this.state = state;
+    this.isAppOps = isAppOp;
+    this.isPerUid = isPerUid;
+    this.userId = userId;
+  }
 }

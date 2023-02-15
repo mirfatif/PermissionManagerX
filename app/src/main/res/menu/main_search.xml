@@ -6,6 +6,6 @@
     android:icon="@android:drawable/ic_menu_search"
     android:orderInCategory="1"
     android:title="@string/search_menu_item"
-    app:actionViewClass="com.mirfatif.permissionmanagerx.ui.base.MySearchView"
+    app:actionViewClass="com.mirfatif.permissionmanagerx.fwk.MySearchView"
     app:showAsAction="ifRoom" />
 </menu>

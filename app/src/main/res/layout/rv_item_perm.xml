@@ -11,99 +11,117 @@
     android:layout_width="4dp"
     android:layout_height="match_parent"/>
 
-  <LinearLayout
+  <FrameLayout
     android:layout_width="0dp"
-    android:layout_height="wrap_content"
     android:layout_weight="1"
-    android:background="?android:attr/selectableItemBackground"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content">
 
-    <ImageView
-      android:id="@+id/icon_v"
-      android:layout_width="24dp"
-      android:layout_height="24dp"
-      android:layout_marginStart="8dp"
-      android:layout_marginEnd="8dp"
-      android:layout_gravity="center"
-      tools:ignore="ContentDescription" />
+    <View
+      android:id="@+id/flag"
+      android:layout_width="12dp"
+      android:layout_height="12dp"
+      android:layout_gravity="top|start"
+      android:background="@drawable/triangle" />
 
     <LinearLayout
-      android:layout_width="0dp"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:padding="8dp"
-      android:orientation="vertical"
-      tools:ignore="NestedWeights">
-
-      <TextView
-        android:id="@+id/perm_name_v"
-        android:textStyle="bold"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="1dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textAlignment="viewStart" />
-
-      <TextView
-        android:id="@+id/prot_level_v"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="1dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textAlignment="viewStart"
-        app:autoSizeTextType="uniform" />
-
-      <TextView
-        android:id="@+id/app_ops_time_v"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="1dp"
-        android:textAlignment="viewStart" />
-
-      <TextView
-        android:id="@+id/app_ops_ref_state_v"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="1dp"
-        android:textAlignment="viewStart" />
-
-    </LinearLayout>
-
-    <androidx.appcompat.widget.SwitchCompat
-      android:id="@+id/perm_state_switch"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:padding="8dp" />
-
-    <LinearLayout
-      android:id="@+id/perm_state_spinner_cont"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:padding="8dp"
       android:background="?android:attr/selectableItemBackground"
-      android:gravity="end|center_vertical"
-      android:orientation="vertical">
+      android:gravity="center_vertical"
+      android:orientation="horizontal">
 
-      <androidx.appcompat.widget.AppCompatSpinner
-        android:id="@+id/perm_state_spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+      <ImageView
+        android:id="@+id/icon_v"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        tools:ignore="ContentDescription" />
+
+      <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
-        android:gravity="end|center_vertical" />
+        android:orientation="vertical"
+        android:padding="8dp"
+        tools:ignore="NestedWeights">
 
-      <TextView
-        android:id="@+id/app_ops_default_v"
+        <TextView
+          android:id="@+id/perm_name_v"
+          android:textStyle="bold"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="1dp"
+          android:ellipsize="end"
+          android:maxLines="1"
+          android:textAlignment="viewStart" />
+
+        <TextView
+          android:id="@+id/prot_level_v"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="1dp"
+          android:ellipsize="end"
+          android:maxLines="1"
+          android:textAlignment="viewStart"
+          app:autoSizeTextType="uniform" />
+
+        <TextView
+          android:id="@+id/app_ops_time_v"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="1dp"
+          android:textAlignment="viewStart" />
+
+        <TextView
+          android:id="@+id/app_ops_ref_state_v"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="1dp"
+          android:textAlignment="viewStart" />
+
+      </LinearLayout>
+
+      <LinearLayout
+        android:id="@+id/perm_state_cont"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="1dp"
-        android:text="@string/_default"
-        android:textAlignment="center"
-        android:textSize="10sp"
-        tools:ignore="SmallSp" />
+        android:layout_gravity="center_vertical"
+        android:gravity="end"
+        android:orientation="vertical"
+        android:padding="8dp">
 
+        <androidx.appcompat.widget.SwitchCompat
+          android:id="@+id/perm_state_switch"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          style="@android:style/Widget.Material.CompoundButton.Switch"
+          android:layout_gravity="end"
+          android:padding="2dp"
+          android:thumb="@drawable/slim_switch_thumb"
+          app:switchMinWidth="30dp"
+          app:track="@drawable/slim_switch_track" />
+
+        <TextView
+          android:id="@+id/app_op_mode_v"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="end"
+          android:layout_marginTop="2dp"
+          android:textColor="?attr/accentColor"
+          android:textStyle="bold" />
+
+        <TextView
+          android:id="@+id/app_op_mode_sub_v"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="end"
+          android:layout_marginTop="2dp" />
+
+      </LinearLayout>
     </LinearLayout>
-  </LinearLayout>
+
+  </FrameLayout>
 </LinearLayout>

@@ -9,10 +9,9 @@
 -allowaccessmodification
 
 # VM entry point must be kept.
--keep class com.mirfatif.privdaemon.PrivDaemon {
+-keep class com.mirfatif.privdaemon.Main {
   public static void main(java.lang.String[]);
 }
 
 # Throwable names must not be obfuscated to correctly print e.toString()
--keepnames class com.mirfatif.** extends java.lang.Exception
--keepnames class com.mirfatif.** extends java.lang.Error
+-keepnames class com.mirfatif.err.*

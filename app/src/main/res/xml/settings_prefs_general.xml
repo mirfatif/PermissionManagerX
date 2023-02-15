@@ -22,15 +22,14 @@
     app:summary="@string/pref_settings_privileges_reminder_summary"
     app:title="@string/pref_settings_privileges_reminder_title" />
 
-  <PreferenceCategory />
-
   <SwitchPreferenceCompat
-    app:defaultValue="@bool/pref_settings_quick_scan_default"
-    app:icon="@drawable/quick_scan"
-    app:key="@string/pref_settings_quick_scan_key"
+    app:defaultValue="@bool/pref_settings_auto_perm_ref_default"
+    app:enabled="false"
+    app:icon="@drawable/check_circle"
+    app:key="@string/pref_settings_auto_perm_ref_key"
     app:singleLineTitle="false"
-    app:summary="@string/pref_settings_quick_scan_summary"
-    app:title="@string/pref_settings_quick_scan_title" />
+    app:summary="@string/pref_settings_auto_perm_ref_summary"
+    app:title="@string/pref_settings_auto_perm_ref_title" />
 
   <PreferenceCategory />
 

@@ -5,19 +5,19 @@
   <data>
     <variable
       name="data"
-      type="com.mirfatif.permissionmanagerx.main.fwk.MainActivity.Data" />
+      type="com.mirfatif.permissionmanagerx.main.MainActivity.Data" />
   </data>
 
-  <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+  <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <View
       style="@style/ListSeparator"
-      android:background="?attr/accentTransColor" />
+      android:background="?attr/accentTrans10Color" />
 
-    <com.mirfatif.permissionmanagerx.main.fwk.ProgressLinearLayout
+    <com.mirfatif.permissionmanagerx.fwk.ProgressLinearLayout
       android:id="@+id/prog_bar_cont"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -64,20 +64,20 @@
         style="@style/ListSeparator"
         android:background="@{data.progBgSeparatorColor}" />
 
-    </com.mirfatif.permissionmanagerx.main.fwk.ProgressLinearLayout>
+    </com.mirfatif.permissionmanagerx.fwk.ProgressLinearLayout>
 
-    <com.mirfatif.permissionmanagerx.ui.base.MyCoordinatorLayout
+    <com.mirfatif.permissionmanagerx.fwk.MyCoordinatorLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
 
-      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
         android:id="@+id/feedback_cont"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone">
 
-        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+        <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:paddingStart="8dp"
@@ -116,14 +116,14 @@
             android:text="@string/yes"
             android:textColor="?attr/accentColor" />
 
-        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+        </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
         <View
           style="@style/ListSeparator"
           android:background="@{data.progBgSeparatorColor}" />
 
-      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
-    </com.mirfatif.permissionmanagerx.ui.base.MyCoordinatorLayout>
-  </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+    </com.mirfatif.permissionmanagerx.fwk.MyCoordinatorLayout>
+  </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
 </layout>

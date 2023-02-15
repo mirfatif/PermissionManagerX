@@ -1,8 +1,7 @@
 package com.mirfatif.permissionmanagerx.main;
 
-import static com.mirfatif.permissionmanagerx.util.Utils.getString;
+import static com.mirfatif.permissionmanagerx.util.ApiUtils.getString;
 
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
@@ -13,59 +12,57 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import androidx.annotation.NonNull;
 import androidx.core.graphics.ColorUtils;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.base.MyListAdapter;
 import com.mirfatif.permissionmanagerx.databinding.RvItemPkgBinding;
 import com.mirfatif.permissionmanagerx.main.PackageAdapter.ItemViewHolder;
 import com.mirfatif.permissionmanagerx.parser.Package;
-import com.mirfatif.permissionmanagerx.ui.base.MyListAdapter;
-import com.mirfatif.permissionmanagerx.util.Utils;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import com.mirfatif.permissionmanagerx.util.ApiUtils;
+import com.mirfatif.permissionmanagerx.util.StringUtils;
+import com.mirfatif.permissionmanagerx.util.UiUtils;
+import com.mirfatif.permissionmanagerx.util.bg.LiveSingleParamTask;
+import com.mirfatif.permissionmanagerx.util.bg.UiRunner;
 
 public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
 
+  private static final String TAG = "PackageAdapter";
+
+  private final LifecycleOwner mLifecycleOwner;
   private final PkgAdapterCallback mCallback;
-  private final PackageManager mPackageManager;
 
-  // Orange state color
-  public static final int ORANGE = App.getContext().getColor(R.color.orangeState);
+  public static final int ORANGE = App.getCxt().getColor(R.color.orangeState);
 
-  public PackageAdapter(PkgAdapterCallback callback) {
-    super(new DiffUtilItemCallBack(), callback::runInFg);
+  public PackageAdapter(LifecycleOwner owner, PkgAdapterCallback callback) {
+    super(new DiffUtilItemCallBack(), owner, TAG);
+    mLifecycleOwner = owner;
     mCallback = callback;
-    mPackageManager = App.getContext().getPackageManager();
   }
 
-  // Override Adapter method
-  // Inflate a View, create and return a ViewHolder
-  @NonNull
-  @Override
-  public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+  private Package getPkg(int pos) {
+    return pos == RecyclerView.NO_POSITION ? null : getItem(pos);
+  }
+
+  public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     LayoutInflater inflater = LayoutInflater.from(parent.getContext());
     RvItemPkgBinding binding = RvItemPkgBinding.inflate(inflater, parent, false);
     return new ItemViewHolder(binding);
   }
 
-  // Override Adapter method
-  // set contents in Views
-  @Override
-  public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
+  public void onBindViewHolder(ItemViewHolder holder, int position) {
     holder.bind(position);
   }
 
-  private final ExecutorService ICON_SETTER = Executors.newCachedThreadPool();
-
-  // Store and recycle items as they are scrolled off screen
   class ItemViewHolder extends RecyclerView.ViewHolder
       implements OnClickListener, OnLongClickListener {
 
     private final RvItemPkgBinding mB;
+    private final LiveSingleParamTask<Package> mIconSetter =
+        new LiveSingleParamTask<>(mLifecycleOwner, this::setIcon, TAG + "-IconSetter");
 
     public ItemViewHolder(RvItemPkgBinding binding) {
       super(binding.getRoot());
@@ -74,10 +71,8 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
       binding.getRoot().setOnLongClickListener(this);
     }
 
-    public void bind(int position) {
-      Package pkg = getItem(position);
-
-      // Rarely pkg comes null, don't know ATM why
+    public void bind(int pos) {
+      Package pkg = getPkg(pos);
       if (pkg == null) {
         return;
       }
@@ -95,7 +90,7 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
         mB.refIndicationV.setVisibility(View.GONE);
       }
 
-      ICON_SETTER.submit(() -> setIcon(pkg, mB.iconV));
+      mIconSetter.cancelAndSubmit(pkg, true);
 
       mB.pkgLabelV.setText(pkg.getLabel());
       mB.pkgNameV.setText(pkg.getFormattedName());
@@ -121,7 +116,7 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
       } else {
         if (pkg.isFrameworkApp() && pkg.isChangeable()) {
           mB.pkgStateV.setText(
-              Utils.getHighlightString(
+              StringUtils.getHighlightString(
                   pkgState,
                   getHighlightSpan(mB.pkgStateV.getCurrentTextColor()),
                   true,
@@ -135,31 +130,32 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
       mB.dateV.setText(pkg.getDate());
     }
 
-    @Override
     public void onClick(View v) {
       int pos = getBindingAdapterPosition();
-      if (pos != RecyclerView.NO_POSITION) {
-        mCallback.onClick(getItem(pos));
+      Package pkg = getPkg(pos);
+      if (pkg != null) {
+        mCallback.onClick(pkg);
       }
     }
 
-    @Override
     public boolean onLongClick(View v) {
       int pos = getBindingAdapterPosition();
-      if (pos != RecyclerView.NO_POSITION) {
-        mCallback.onLongClick(getItem(pos));
+      Package pkg = getPkg(pos);
+      if (pkg != null) {
+        mCallback.onLongClick(pkg);
       }
       return true;
     }
-  }
 
-  private void setIcon(Package pkg, ImageView view) {
-    try {
-      int flags = PackageManager.MATCH_UNINSTALLED_PACKAGES;
-      ApplicationInfo appInfo = mPackageManager.getApplicationInfo(pkg.getName(), flags);
-      Drawable icon = mPackageManager.getApplicationIcon(appInfo);
-      mCallback.runInFg(() -> view.setImageDrawable(icon));
-    } catch (NameNotFoundException ignored) {
+    private void setIcon(Package pkg) {
+      try {
+        int flags = PackageManager.MATCH_UNINSTALLED_PACKAGES;
+        Drawable icon = App.getPm().getApplicationIcon(ApiUtils.getAppInfo(pkg.getName(), flags));
+        if (!Thread.interrupted()) {
+          UiRunner.post(mLifecycleOwner, () -> mB.iconV.setImageDrawable(icon));
+        }
+      } catch (NameNotFoundException ignored) {
+      }
     }
   }
 
@@ -167,19 +163,19 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
 
   private TextAppearanceSpan getHighlightSpan(int currentColor) {
     if (HIGHLIGHT == null) {
-      HIGHLIGHT = Utils.getHighlight(ColorUtils.blendARGB(currentColor, Color.RED, 0.75f));
+      HIGHLIGHT =
+          UiUtils.getTextHighlightSpan(ColorUtils.blendARGB(currentColor, Color.RED, 0.75f));
     }
     return HIGHLIGHT;
   }
 
   private static class DiffUtilItemCallBack extends DiffUtil.ItemCallback<Package> {
-    @Override
-    public boolean areItemsTheSame(@NonNull Package oldItem, @NonNull Package newItem) {
+
+    public boolean areItemsTheSame(Package oldItem, Package newItem) {
       return oldItem.getName().equals(newItem.getName());
     }
 
-    @Override
-    public boolean areContentsTheSame(@NonNull Package oldItem, @NonNull Package newItem) {
+    public boolean areContentsTheSame(Package oldItem, Package newItem) {
       return oldItem.areContentsTheSame(newItem);
     }
   }
@@ -189,7 +185,5 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
     void onClick(Package pkg);
 
     void onLongClick(Package pkg);
-
-    void runInFg(Runnable task);
   }
 }

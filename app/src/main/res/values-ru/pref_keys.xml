@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <!--
+  NOTE:
+  If pref name equals its value + "_key":
+  - Pref values starting with "pref_filter_" are cleared on "Reset to Defaults".
+  - Pref values starting with "pref_" and not ending with "_enc" are backed up and restored.
+  -->
+  <!-- MainActivity Preferences -->
+  <!-- MainActivity Preferences corresponding to default values -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_main_deep_search_title">Глубокий поиск</string>
+  <string name="pref_main_deep_search_summary">Поиск в списке разрешений вместо списка приложений</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_main_case_sensitive_search_title">С учетом регистра</string>
+  <string name="pref_main_case_sensitive_search_summary">Соответствующая строка только в том же регистре</string>
+  <!-- Privileges / Daemon -->
+  <!-- Advanced Settings -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_allow_critical_changes_title">Разрешить критические изменения</string>
+  <string name="pref_adv_settings_allow_critical_changes_summary">Сделать изменения в критических разрешениях и фреймворках</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_exit_on_app_death_title">Автоостановка демона</string>
+  <string name="pref_adv_settings_exit_on_app_death_summary">Остановить привилегированный демон при закрытии приложения</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_perm_refs_cat_title">Целевые значения разрешений</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_unique_ref_app_op_uid_mode_title">Целевые значения AppOp в режиме UID</string>
+  <string name="pref_adv_settings_unique_ref_app_op_uid_mode_summary">Использовать другие целевые значения разрешений AppOp в режиме UID</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_unique_ref_sec_users_title">Целевые значения второго пользователя</string>
+  <string name="pref_adv_settings_unique_ref_sec_users_summary">Использовать другие целевые значения разрешений для второго пользователя / профиля</string>
+  <string name="pref_adv_settings_reset_perm_db_title">Сброс / очистка целевых значений</string>
+  <string name="pref_adv_settings_reset_perm_db_summary">Сброс или очистка базы данных целевых значений разрешений</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_daemon_dex_location_title">Расположение файла демона</string>
+  <string name="pref_adv_settings_daemon_dex_location_summary">Загрузить демон из: %s</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_root_cat_title">Root</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_daemon_uid_title">UID демона</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_daemon_uid_title2">UID демона: %s</string>
+  <string name="pref_adv_settings_daemon_uid_summary">Идентификатор пользователя UNIX демона</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_daemon_context_title">Контекст демона</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_daemon_context_title2">Контекст демона: %s</string>
+  <string name="pref_adv_settings_daemon_context_summary">SELinux контекст процесса демона</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_su_exe_path_title">Расположение бинарника su</string>
+  <!-- FilterSettingsActivity -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_packages_cat_title">Пакеты</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_no_icon_apps_title">Исключить приложения без иконок</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_user_apps_title">Исключить пользовательские приложения</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_system_apps_title">Исключить системные приложения</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_framework_apps_title">Исключить приложения уровня фреймворка</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_disabled_apps_title">Исключить замороженные приложения</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_no_perms_apps_title">Исключить приложения без разрешений</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_manually_exclude_apps_title">Исключённые вручную приложения</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_excluded_apps_title">Список исключенных вручную приложений</string>
+  <!-- PreferencesActivity permissions titles, keys and defaults -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_permissions_cat_title">Разрешения</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_not_changeable_perms_title">Исключить неизменяемые разрешения</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_not_granted_perms_title">Исключить не предоставленные разрешения</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_manually_exclude_perms_title">Исключённые вручную разрешения</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_excluded_perms_title">Список исключенных вручную разрешений</string>
+  <!-- PreferencesActivity manifest permissions titles, keys and defaults -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_man_permissions_cat_title">Разрешения манифеста</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_invalid_perms_title">Исключить недопустимые разрешения</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_normal_perms_title">Исключить обычные разрешения</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_dangerous_perms_title">Исключить опасные разрешения</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_signature_perms_title">Исключить разрешения с уровнем «подпись»</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_privileged_perms_title">Исключить привилегированные разрешения</string>
+  <!-- PreferencesActivity AppOps permissions titles, keys and defaults -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_app_ops_permissions_cat_title">Разрешения AppOps</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_appops_perms_title">Исключить AppOps</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_not_set_appops_title">Исключить ненастроенные AppOps (По умолчанию)</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_show_extra_app_ops_title">Дополнительные AppOps, никогда не исключаемые</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_extra_appops_title">Список дополнительных AppOps</string>
+  <!-- SettingsActivity -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_general_cat_title">Общие настройки</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_check_for_updates_title">Проверка обновлений</string>
+  <string name="pref_settings_check_for_updates_summary">Показывать уведомление, когда доступна новая версия</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_privileges_reminder_title">Напоминать об отсутствии root-прав</string>
+  <string name="pref_settings_privileges_reminder_summary">Показать диалог при запуске приложения, если права root и ADB не предоставлены</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_auto_perm_ref_title">Автоустановка целевых значений</string>
+  <string name="pref_settings_auto_perm_ref_summary">Установить выбранное состояние разрешения как целевое</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_special_search_title">Комплексный поиск</string>
+  <string name="pref_settings_special_search_summary">Используйте символы И (&amp;), ИЛИ (|) и НЕ (!) для уточнения поиска</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_locale_title">Язык приложения</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_theming_cat_title">Темы</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_theme_color_title">Цвет темы</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_dark_theme_title">Тёмная тема</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_search_suggestions_count_title2">Максимальное количество предложений: %d</string>
+  <string name="pref_settings_search_suggestions_count_summary">Предлагать пакеты, разрешения, специальные ключевые слова и т. д.</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_search_keywords_title">Поиск по ключевым словам</string>
+  <string name="pref_settings_search_keywords_summary">Ключевые слова со специальным значением</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_ref_states_cat_title">Проверки по расписанию</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_perm_watcher_cat_title">Отслеживание разрешений</string>
+  <!-- HelpActivity -->
+  <!-- PackageActivity -->
+</resources>

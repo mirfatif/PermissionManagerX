@@ -1,26 +1,24 @@
 package com.mirfatif.permissionmanagerx.main;
 
-import static com.mirfatif.permissionmanagerx.main.fwk.MainActivity.TAG_DONATION;
-import static com.mirfatif.permissionmanagerx.util.Utils.isProVersion;
-import static com.mirfatif.permissionmanagerx.util.Utils.isPsVersion;
-import static com.mirfatif.permissionmanagerx.util.Utils.openWebUrl;
+import static com.mirfatif.permissionmanagerx.util.ApiUtils.openWebUrl;
+import static com.mirfatif.permissionmanagerx.util.Utils.isPsProVersion;
+import static com.mirfatif.permissionmanagerx.util.Utils.isSelfProVersion;
 
 import android.os.Bundle;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.about.AboutActivity;
+import com.mirfatif.permissionmanagerx.base.BottomSheetDialogFrag;
 import com.mirfatif.permissionmanagerx.databinding.FeedbackDialogBinding;
 import com.mirfatif.permissionmanagerx.databinding.RateDonateDialogBinding;
+import com.mirfatif.permissionmanagerx.help.HelpActivity;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
-import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
-import com.mirfatif.permissionmanagerx.ui.base.BottomSheetDialogFrag;
-import com.mirfatif.permissionmanagerx.util.Utils;
+import com.mirfatif.permissionmanagerx.util.ApiUtils;
+import com.mirfatif.permissionmanagerx.util.UiUtils;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -37,7 +35,7 @@ public class FeedbackDialogFrag extends BottomSheetDialogFrag {
     int CONTACT = 4;
   }
 
-  public static void show(@FeedbackType int type, FragmentManager fm) {
+  public static void show(int type, FragmentManager fm) {
     FeedbackDialogFrag frag = new FeedbackDialogFrag();
     Bundle args = new Bundle();
     args.putInt(FEEDBACK_TYPE, type);
@@ -45,14 +43,10 @@ public class FeedbackDialogFrag extends BottomSheetDialogFrag {
     frag.show(fm, "FEEDBACK_RATING");
   }
 
-  @Nullable
-  @Override
   public View onCreateView(
-      @NonNull LayoutInflater inflater,
-      @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
+      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-    @FeedbackType int type = requireArguments().getInt(FEEDBACK_TYPE);
+    int type = requireArguments().getInt(FEEDBACK_TYPE);
     if (type == FeedbackType.POSITIVE) {
       return getFeedbackView(true);
     }
@@ -67,7 +61,7 @@ public class FeedbackDialogFrag extends BottomSheetDialogFrag {
     int msgResId, buttonResId;
 
     if (isYes) {
-      if (isPsVersion() || isProVersion()) {
+      if (isPsProVersion() || isSelfProVersion()) {
         msgResId = R.string.rate_the_app;
         buttonResId = R.string.rate_now;
       } else {
@@ -84,49 +78,57 @@ public class FeedbackDialogFrag extends BottomSheetDialogFrag {
 
     b.neutralButton.setOnClickListener(
         v -> {
-          MySettings.INSTANCE.setAskForFeedbackTs(
-              System.currentTimeMillis() + DateUtils.WEEK_IN_MILLIS * 25);
-          dismiss();
+          MySettings.INS.setAskForFeedbackTs(true);
+          dismissAllowingStateLoss();
         });
 
-    b.negButton.setOnClickListener(v -> dismiss());
+    b.negButton.setOnClickListener(v -> dismissAllowingStateLoss());
 
     b.posButton.setOnClickListener(
         v -> {
-          @FeedbackType int type = isYes ? FeedbackType.RATE_DONATE : FeedbackType.CONTACT;
+          int type = isYes ? FeedbackType.RATE_DONATE : FeedbackType.CONTACT;
           FeedbackDialogFrag.show(type, mA.getSupportFragmentManager());
-          dismiss();
+          dismissAllowingStateLoss();
         });
 
     return b.getRoot();
   }
 
-  private View getButtonsView(@FeedbackType int type) {
-    int b1 = 0, b2 = 0, b3 = 0;
-    ButtonListener l1 = null, l2 = null, l3 = null;
+  private View getButtonsView(int type) {
+    int b1 = 0, b2, b3 = 0;
+    ButtonListener l1 = null, l2, l3 = null;
 
     RateDonateDialogBinding b = RateDonateDialogBinding.inflate(mA.getLayoutInflater());
 
     if (type == FeedbackType.CONTACT) {
       b1 = R.string.contact_on_telegram;
-      l1 = new ButtonListener(() -> openWebUrl(mA, Utils.getString(R.string.telegram_mirfatif)));
+      l1 = new ButtonListener(() -> openWebUrl(mA, ApiUtils.getString(R.string.telegram_mirfatif)));
       b2 = R.string.contact_on_email;
-      l2 = new ButtonListener(() -> Utils.sendMail(mA, null));
+      l2 = new ButtonListener(() -> ApiUtils.sendMail(mA, null));
+
     } else {
-      if (isPsVersion()) {
+      b2 = R.string.rating_options;
+
+      if (isPsProVersion() || type == FeedbackType.RATE) {
         b1 = R.string.rate_on_ps;
         l1 = new ButtonListener(() -> openWebUrl(mA, getString(R.string.play_store_url)));
-      } else {
-        if (type == FeedbackType.RATE_DONATE && !isProVersion()) {
-          b1 = R.string.purchase_donate;
-          l1 = new ButtonListener(() -> AlertDialogFragment.show(mA, null, TAG_DONATION));
-        }
-        b2 = R.string.review_on_xda;
-        l2 = new ButtonListener(() -> openWebUrl(mA, getString(R.string.xda_url)));
+
+        b2 = R.string.other_rating_options;
+
+      } else if (type == FeedbackType.RATE_DONATE && !isSelfProVersion()) {
+        b1 = R.string.purchase_donate;
+        l1 =
+            new ButtonListener(() -> ApiUtils.openWebUrl(mA, getString(R.string.purchase_pro_url)));
       }
 
-      b3 = R.string.star_on_github;
-      l3 = new ButtonListener(() -> openWebUrl(mA, Utils.getString(R.string.source_url)));
+      l2 =
+          new ButtonListener(
+              () -> HelpActivity.start(mA, getString(R.string.rate_review_help_href)));
+
+      if (type == FeedbackType.RATE_DONATE) {
+        b3 = R.string.share_with_others;
+        l3 = new ButtonListener(() -> AboutActivity.sendShareIntent(mA));
+      }
     }
 
     if (l1 != null) {
@@ -136,12 +138,8 @@ public class FeedbackDialogFrag extends BottomSheetDialogFrag {
       b.button1.setVisibility(View.GONE);
     }
 
-    if (l2 != null) {
-      b.button2.setText(b2);
-      b.button2.setOnClickListener(l2);
-    } else {
-      b.button2.setVisibility(View.GONE);
-    }
+    b.button2.setText(b2);
+    b.button2.setOnClickListener(l2);
 
     if (l3 != null) {
       b.button3.setText(b3);
@@ -161,11 +159,10 @@ public class FeedbackDialogFrag extends BottomSheetDialogFrag {
       mTask = task;
     }
 
-    @Override
     public void onClick(View v) {
       mTask.run();
-      Utils.showToast(R.string.thank_you);
-      dismiss();
+      UiUtils.showToast(R.string.thank_you);
+      dismissAllowingStateLoss();
     }
   }
 }

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <PreferenceCategory />
+
+  <SwitchPreferenceCompat
+    app:defaultValue="@bool/pref_adv_settings_allow_critical_changes_default"
+    app:enabled="false"
+    app:icon="@drawable/danger"
+    app:key="@string/pref_adv_settings_allow_critical_changes_key"
+    app:singleLineTitle="false"
+    app:summary="@string/pref_adv_settings_allow_critical_changes_summary"
+    app:title="@string/pref_adv_settings_allow_critical_changes_title" />
+
+  <PreferenceCategory
+    app:icon="@drawable/check_circle"
+    app:title="@string/pref_adv_settings_perm_refs_cat_title" />
+
+  <SwitchPreferenceCompat
+    app:defaultValue="@bool/pref_adv_settings_unique_ref_app_op_uid_mode_default"
+    app:key="@string/pref_adv_settings_unique_ref_app_op_uid_mode_key"
+    app:singleLineTitle="false"
+    app:summary="@string/pref_adv_settings_unique_ref_app_op_uid_mode_summary"
+    app:title="@string/pref_adv_settings_unique_ref_app_op_uid_mode_title" />
+
+  <SwitchPreferenceCompat
+    app:defaultValue="@bool/pref_adv_settings_unique_ref_sec_users_default"
+    app:enabled="false"
+    app:key="@string/pref_adv_settings_unique_ref_sec_users_key"
+    app:singleLineTitle="false"
+    app:summary="@string/pref_adv_settings_unique_ref_sec_users_summary"
+    app:title="@string/pref_adv_settings_unique_ref_sec_users_title" />
+
+  <Preference
+    app:key="@string/pref_adv_settings_reset_perm_db_key"
+    app:singleLineTitle="false"
+    app:summary="@string/pref_adv_settings_reset_perm_db_summary"
+    app:title="@string/pref_adv_settings_reset_perm_db_title" />
+
+  <PreferenceCategory />
+
+  <SwitchPreferenceCompat
+    app:defaultValue="@bool/pref_adv_settings_exit_on_app_death_default"
+    app:icon="@drawable/exit"
+    app:key="@string/pref_adv_settings_exit_on_app_death_key"
+    app:singleLineTitle="false"
+    app:summary="@string/pref_adv_settings_exit_on_app_death_summary"
+    app:title="@string/pref_adv_settings_exit_on_app_death_title" />
+
+  <PreferenceCategory />
+
+  <ListPreference
+    app:defaultValue="@string/pref_adv_settings_daemon_dex_location_default"
+    app:entries="@array/daemon_locations"
+    app:entryValues="@array/daemon_location_values"
+    app:icon="@drawable/folder"
+    app:key="@string/pref_adv_settings_daemon_dex_location_key"
+    app:singleLineTitle="false"
+    app:title="@string/pref_adv_settings_daemon_dex_location_title" />
+
+  <PreferenceCategory
+    app:icon="@drawable/root"
+    app:title="@string/pref_adv_settings_root_cat_title" />
+
+  <ListPreference
+    app:defaultValue="@string/pref_adv_settings_daemon_uid_default"
+    app:entries="@array/daemon_uids"
+    app:entryValues="@array/daemon_uid_values"
+    app:key="@string/pref_adv_settings_daemon_uid_key"
+    app:singleLineTitle="false"
+    app:summary="@string/pref_adv_settings_daemon_uid_summary"
+    app:title="@string/pref_adv_settings_daemon_uid_title" />
+
+  <ListPreference
+    app:defaultValue="@string/pref_adv_settings_daemon_context_default"
+    app:entries="@array/daemon_contexts"
+    app:entryValues="@array/daemon_context_values"
+    app:key="@string/pref_adv_settings_daemon_context_key"
+    app:singleLineTitle="false"
+    app:summary="@string/pref_adv_settings_daemon_context_summary"
+    app:title="@string/pref_adv_settings_daemon_context_title" />
+
+  <EditTextPreference
+    app:defaultValue="@string/pref_adv_settings_su_exe_path_default"
+    app:key="@string/pref_adv_settings_su_exe_path_key"
+    app:singleLineTitle="false"
+    app:title="@string/pref_adv_settings_su_exe_path_title" />
+
+</PreferenceScreen>

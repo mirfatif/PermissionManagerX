@@ -11,12 +11,14 @@
     app:singleLineTitle="false"
     app:title="@string/pref_settings_theme_color_title" />
 
-  <SwitchPreferenceCompat
-    app:defaultValue="@bool/pref_settings_dark_theme_default"
+  <ListPreference
+    app:defaultValue="@string/pref_settings_dark_theme_default"
+    app:entries="@array/dark_theme_modes"
+    app:entryValues="@array/dark_theme_mode_values"
     app:icon="@drawable/dark_mode"
     app:key="@string/pref_settings_dark_theme_key"
     app:singleLineTitle="false"
-    app:summary="@string/pref_settings_dark_theme_summary"
-    app:title="@string/pref_settings_dark_theme_title" />
+    app:title="@string/pref_settings_dark_theme_title"
+    app:useSimpleSummaryProvider="true" />
 
 </PreferenceScreen>

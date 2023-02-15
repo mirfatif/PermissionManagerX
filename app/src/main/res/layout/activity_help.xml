@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.mirfatif.permissionmanagerx.fwk.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:layout_marginBottom="8dp"
   android:orientation="vertical">
 
   <View
     style="@style/ListSeparator"
     android:background="?attr/accentColor" />
 
-  <com.mirfatif.permissionmanagerx.ui.base.MyWebView
-    android:id="@+id/web_view"
+  <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:id="@+id/refresh_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" />
+    android:layout_height="match_parent">
 
-</com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+    <com.mirfatif.permissionmanagerx.fwk.MyWebView
+      android:id="@+id/web_v"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingTop="8dp"
+      android:paddingBottom="8dp"
+      android:clipToPadding="false" />
+
+  </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>

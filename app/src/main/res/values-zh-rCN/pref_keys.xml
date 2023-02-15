@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <!--
+  NOTE:
+  If pref name equals its value + "_key":
+  - Pref values starting with "pref_filter_" are cleared on "Reset to Defaults".
+  - Pref values starting with "pref_" and not ending with "_enc" are backed up and restored.
+  -->
+  <!-- MainActivity Preferences -->
+  <!-- MainActivity Preferences corresponding to default values -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_main_deep_search_title">深度搜索</string>
+  <string name="pref_main_deep_search_summary">搜索权限列表而非应用列表</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_main_case_sensitive_search_title">区分大小写</string>
+  <string name="pref_main_case_sensitive_search_summary">大小写相同时才匹配</string>
+  <!-- Privileges / Daemon -->
+  <!-- Advanced Settings -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_perm_refs_cat_title">权限模板</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_root_cat_title">Root</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- FilterSettingsActivity -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_packages_cat_title">应用</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_no_icon_apps_title">排除无图标应用</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_user_apps_title">排除用户应用</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_system_apps_title">排除系统应用</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_framework_apps_title">排除框架应用</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_disabled_apps_title">隐藏已停用应用</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_no_perms_apps_title">排除无权限应用</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_manually_exclude_apps_title">手动排除应用</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_excluded_apps_title">手动排除应用列表</string>
+  <!-- PreferencesActivity permissions titles, keys and defaults -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_permissions_cat_title">权限</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_not_changeable_perms_title">排除无法更改的权限</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_not_granted_perms_title">排除未授予的权限</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_manually_exclude_perms_title">手动排除权限</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_excluded_perms_title">手动排除权限列表</string>
+  <!-- PreferencesActivity manifest permissions titles, keys and defaults -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_man_permissions_cat_title">清单权限</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_invalid_perms_title">排除无效权限</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_normal_perms_title">排除普通权限</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_dangerous_perms_title">排除危险权限</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_signature_perms_title">排除签名权限</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_privileged_perms_title">排除特权权限</string>
+  <!-- PreferencesActivity AppOps permissions titles, keys and defaults -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_app_ops_permissions_cat_title">AppOps 权限</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_appops_perms_title">排除 AppOps</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_not_set_appops_title">排除未设置的 AppOps (默认)</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_show_extra_app_ops_title">显示额外的AppOps, 从不排除</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_extra_appops_title">额外的AppOps列表</string>
+  <!-- SettingsActivity -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_general_cat_title">常规设置</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_check_for_updates_title">检查更新</string>
+  <string name="pref_settings_check_for_updates_summary">当有新版本时显示通知</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_privileges_reminder_title">提醒缺少权限</string>
+  <string name="pref_settings_privileges_reminder_summary">缺少 Root 和 ADB 权限时显示提示对话框</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_special_search_title">综合搜索</string>
+  <string name="pref_settings_special_search_summary">使用 AND (&amp;), OR (|) 和 nt (!) 操作员搜索合并查询</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_locale_title">应用语言</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_theming_cat_title">主题</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_theme_color_title">主题颜色</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_dark_theme_title">深色主题</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_search_suggestions_count_title2">最大建议： %d</string>
+  <string name="pref_settings_search_suggestions_count_summary">推荐·应用、权限、特殊关键词等</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_search_keywords_title">搜索关键词</string>
+  <string name="pref_settings_search_keywords_summary">具有特殊意义的关键词</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_ref_states_cat_title">定期检查</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_perm_watcher_cat_title">权限监控</string>
+  <!-- HelpActivity -->
+  <!-- PackageActivity -->
+</resources>

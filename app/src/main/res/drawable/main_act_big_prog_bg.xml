@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  <item
+    android:width="8dp"
+    android:gravity="start">
+    <shape android:shape="rectangle">
+      <gradient
+        android:angle="180"
+        android:endColor="?attr/accentTrans50Color"
+        android:startColor="?android:attr/windowBackground" />
+      <corners android:radius="8dp" />
+    </shape>
+  </item>
+
+  <item
+    android:width="8dp"
+    android:gravity="end">
+    <shape android:shape="rectangle">
+      <gradient
+        android:endColor="?attr/accentTrans50Color"
+        android:startColor="?android:attr/windowBackground" />
+      <corners android:radius="8dp" />
+    </shape>
+  </item>
+
+  <item
+    android:height="8dp"
+    android:gravity="top">
+    <shape android:shape="rectangle">
+      <gradient
+        android:angle="90"
+        android:endColor="?attr/accentTrans50Color"
+        android:startColor="?android:attr/windowBackground" />
+      <corners android:radius="8dp" />
+    </shape>
+  </item>
+
+  <item
+    android:height="8dp"
+    android:gravity="bottom">
+    <shape android:shape="rectangle">
+      <gradient
+        android:angle="270"
+        android:endColor="?attr/accentTrans50Color"
+        android:startColor="?android:attr/windowBackground" />
+      <corners android:radius="8dp" />
+    </shape>
+  </item>
+
+  <item>
+    <inset android:inset="8dp">
+      <shape android:shape="rectangle">
+        <solid android:color="?android:attr/windowBackground" />
+      </shape>
+    </inset>
+  </item>
+</layer-list>

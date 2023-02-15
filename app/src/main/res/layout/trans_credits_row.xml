@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:padding="8dp">
+
+  <TextView
+    android:id="@+id/lang"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="12dp"
+    android:textColor="@color/sharpText"
+    android:textSize="16sp"
+    android:textStyle="bold" />
+
+  <TextView
+    android:id="@+id/credits"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:paddingHorizontal="12dp"
+    android:textColor="@color/sharpText"
+    android:textSize="16sp" />
+
+</TableRow>

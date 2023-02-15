@@ -6,7 +6,7 @@
     android:icon="@android:drawable/ic_menu_search"
     android:orderInCategory="1"
     android:title="@string/search_menu_item"
-    app:actionViewClass="com.mirfatif.permissionmanagerx.ui.base.MySearchView"
+    app:actionViewClass="com.mirfatif.permissionmanagerx.fwk.MySearchView"
     app:showAsAction="ifRoom" />
 
   <group android:id="@+id/group1">
@@ -28,6 +28,15 @@
       android:id="@+id/action_clear_references"
       android:orderInCategory="6"
       android:title="@string/clear_references"
+      app:showAsAction="never" />
+  </group>
+
+  <group android:id="@+id/group3">
+    <item
+      android:id="@+id/action_show_all_perms"
+      android:checkable="true"
+      android:orderInCategory="7"
+      android:title="@string/menu_item_show_all_perms"
       app:showAsAction="never" />
   </group>
 </menu>

@@ -1,19 +1,17 @@
 package com.mirfatif.permissionmanagerx.parser;
 
-import android.annotation.SuppressLint;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.prefs.ExcFiltersData;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.MySettingsFlavor;
-import java.io.File;
+import com.mirfatif.permissionmanagerx.util.ApiUtils;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class Package {
@@ -63,10 +61,8 @@ public class Package {
 
   static {
     try {
-      PackageManager pm = App.getContext().getPackageManager();
-      PackageInfo pkgInfo = pm.getPackageInfo("android", 0);
-      ApplicationInfo appInfo = pkgInfo.applicationInfo;
-      BUILD_DATE = Math.max(pkgInfo.firstInstallTime, new File(appInfo.sourceDir).lastModified());
+      PackageInfo pkgInfo = ApiUtils.getPkgInfo("android", 0);
+      BUILD_DATE = Math.max(pkgInfo.firstInstallTime, pkgInfo.lastUpdateTime);
     } catch (NameNotFoundException ignored) {
       BUILD_DATE = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(365);
     }
@@ -80,22 +76,13 @@ public class Package {
     return mPackageName;
   }
 
-  private String mLastFormattedName = "";
-
   public String getFormattedName() {
-    mLastFormattedName = getName();
-    if (!MySettings.INSTANCE.isQuickScanEnabled()) {
-      mLastFormattedName += " (" + getUid() + ")";
-    }
-    return mLastFormattedName;
+    return getName() + " (" + getUid() + ")";
   }
 
-  public List<Permission> getPermissionsList() {
-    if (MySettings.INSTANCE.isDeepSearching()) {
-      if (mSearchPermList == null) {
-        return new ArrayList<>();
-      }
-      return mSearchPermList;
+  public List<Permission> getPermList() {
+    if (MySettings.INS.isDeepSearching()) {
+      return mSearchPermList == null ? new ArrayList<>() : mSearchPermList;
     }
     return getFullPermsList();
   }
@@ -121,12 +108,11 @@ public class Package {
   }
 
   public boolean isCriticalApp() {
-    return MySettings.INSTANCE.isCriticalApp(mPackageName);
+    return ExcFiltersData.INS.isCriticalApp(mPackageName);
   }
 
   public boolean isChangeable() {
-    return !isCriticalApp()
-        && (!mIsFrameworkApp || MySettingsFlavor.INSTANCE.allowCriticalChanges());
+    return !isCriticalApp() && (!mIsFrameworkApp || MySettingsFlavor.INS.allowCriticalChanges());
   }
 
   public void setTotalPermCount(int count) {
@@ -148,36 +134,25 @@ public class Package {
   private String mLastPermCount = "";
 
   public String getPermCount() {
-    if (MySettings.INSTANCE.isQuickScanEnabled()) {
-      return String.valueOf(getUid());
-    }
     NumberFormat nf = NumberFormat.getIntegerInstance();
-    if (MySettings.INSTANCE.isDeepSearching()) {
+    if (MySettings.INS.isDeepSearching()) {
       mLastPermCount = nf.format(mSearchPermCount) + "/" + nf.format(getTotalPermCount());
     } else {
       mLastPermCount = nf.format(mPermCount) + "/" + nf.format(getTotalPermCount());
     }
-    if (!MySettings.INSTANCE.excludeAppOpsPerms()) {
+    if (AppOpsParser.INS.hasAppOps()) {
       mLastPermCount += " | " + getAppOpsCount(nf);
     }
     return mLastPermCount;
   }
 
-  @SuppressWarnings("UnusedDeclaration")
   public int getTotalPermAppOpCount() {
-    if (MySettings.INSTANCE.isQuickScanEnabled()) {
-      return 0;
-    }
     return getTotalAppOpsCount() + getTotalPermCount();
   }
 
-  @SuppressWarnings("UnusedDeclaration")
   public int getGrantedPermAppOpCount() {
-    if (MySettings.INSTANCE.isQuickScanEnabled()) {
-      return 0;
-    }
     int granted = 0;
-    for (Permission perm : getPermissionsList()) {
+    for (Permission perm : getPermList()) {
       if (perm.isGranted()) {
         granted++;
       }
@@ -202,7 +177,7 @@ public class Package {
   }
 
   private String getAppOpsCount(NumberFormat nf) {
-    if (MySettings.INSTANCE.isDeepSearching()) {
+    if (MySettings.INS.isDeepSearching()) {
       return nf.format(mSearchAppOpsCount) + "/" + nf.format(getTotalAppOpsCount());
     } else {
       return nf.format(mAppOpsCount) + "/" + nf.format(getTotalAppOpsCount());
@@ -220,14 +195,14 @@ public class Package {
   private boolean mLastShowingRef = true;
 
   public boolean shouldShowRefs() {
-    mLastShowingRef = MySettings.INSTANCE.shouldShowRefs();
+    mLastShowingRef = !MySettings.INS.isDeepSearching();
     return mLastShowingRef;
   }
 
   private String mLastDate;
 
   public String getDate() {
-    Boolean isPkgInstalledDate = MySettingsFlavor.INSTANCE.isPkgInstallDate();
+    Boolean isPkgInstalledDate = MySettingsFlavor.INS.isPkgInstallDate();
     if (isPkgInstalledDate == null) {
       mLastDate = null;
     } else {
@@ -242,33 +217,30 @@ public class Package {
     return mLastDate;
   }
 
-  @SuppressWarnings("UnusedDeclaration")
   public long getInstallTime() {
     return mInstallDate;
   }
 
-  private boolean mIsRemoved = false;
+  private boolean mPkgRemoved = false;
 
   public boolean isRemoved() {
-    return mIsRemoved;
+    return mPkgRemoved;
   }
 
-  public void setIsRemoved(boolean isRemoved) {
-    mIsRemoved = isRemoved;
+  public void setPkgRemoved(boolean isRemoved) {
+    mPkgRemoved = isRemoved;
   }
 
-  @SuppressWarnings("UnusedDeclaration")
   public List<String> getPermFilter() {
     return mPermFilter;
   }
 
-  @SuppressWarnings("UnusedDeclaration")
   public void setPermFilter(List<String> permFilter) {
     mPermFilter = permFilter;
   }
 
   public boolean contains(String queryText) {
-    if (!MySettings.INSTANCE.isSpecialSearch()) {
+    if (!MySettings.INS.isSpecialSearch()) {
       return _contains(queryText);
     }
 
@@ -299,44 +271,24 @@ public class Package {
 
   private boolean _contains(String queryText) {
     boolean contains = true;
-    if (MySettings.INSTANCE.isSpecialSearch() && queryText.startsWith("!")) {
+    if (MySettings.INS.isSpecialSearch() && queryText.startsWith("!")) {
       queryText = queryText.replaceAll("^!", "");
       contains = false;
     }
 
-    Boolean handled = MySettingsFlavor.INSTANCE.handleSearchQuery(queryText, this, null);
+    Boolean handled = MySettingsFlavor.INS.handleSearchQuery(queryText, this, null);
     if (Boolean.TRUE.equals(handled)) {
       return contains;
     } else if (Boolean.FALSE.equals(handled)) {
       return !contains;
     }
 
-    boolean isCaseSensitive = MySettings.INSTANCE.isCaseSensitiveSearch();
+    boolean isCaseSensitive = MySettings.INS.isCaseSensitiveSearch();
     if (!isCaseSensitive) {
       queryText = queryText.toUpperCase();
     }
 
-    for (String field :
-        new String[] {
-          mPackageLabel,
-          mPackageName,
-          String.valueOf(mUid),
-          (isCriticalApp()
-              ? SearchConstants.INSTANCE.SEARCH_CRITICAL
-              : (mIsFrameworkApp
-                  ? SearchConstants.INSTANCE.SEARCH_FRAMEWORK
-                  : (mIsSystemApp
-                      ? SearchConstants.INSTANCE.SEARCH_SYSTEM
-                      : SearchConstants.INSTANCE.SEARCH_USER))),
-          (mIsEnabled ? "" : SearchConstants.INSTANCE.SEARCH_DISABLED),
-          (MySettings.INSTANCE.isQuickScanEnabled()
-              ? ""
-              : (mIsReferenced == null
-                  ? SearchConstants.INSTANCE.SEARCH_ORANGE
-                  : (mIsReferenced
-                      ? SearchConstants.INSTANCE.SEARCH_GREEN
-                      : SearchConstants.INSTANCE.SEARCH_RED)))
-        }) {
+    for (String field : searchableFields()) {
       if (!isCaseSensitive) {
         field = field.toUpperCase();
       }
@@ -347,53 +299,43 @@ public class Package {
     return !contains;
   }
 
-  /*
-    For ListAdapter / DiffUtil.
-    Consider which fields can change when the Package Object changes and when it remains same.
-    When the Package remains same e.g. while searching, in order to compare the UI-only changes,
-    we need to retain the last returned values of changeable fields for later comparison.
-    When ref state or enabled state changes, Activity gets Live Package changed update. So no
-    need to retain their states.
-    boolean is not immutable like String, so preserve the old value before overwriting the Object.
-  */
+  private String[] searchableFields() {
+    return new String[] {
+      mPackageLabel,
+      mPackageName,
+      String.valueOf(mUid),
+      (isCriticalApp()
+          ? SearchConstants.INS.SEARCH_CRITICAL
+          : (mIsFrameworkApp
+              ? SearchConstants.INS.SEARCH_FRAMEWORK
+              : (mIsSystemApp
+                  ? SearchConstants.INS.SEARCH_SYSTEM
+                  : SearchConstants.INS.SEARCH_USER))),
+      (mIsEnabled ? "" : SearchConstants.INS.SEARCH_DISABLED),
+      (mIsReferenced == null
+          ? SearchConstants.INS.SEARCH_ORANGE
+          : (mIsReferenced ? SearchConstants.INS.SEARCH_GREEN : SearchConstants.INS.SEARCH_RED))
+    };
+  }
+
   public boolean areContentsTheSame(Package pkg) {
-    if (!MySettings.INSTANCE.isQuickScanEnabled()) {
-      if (getNewBoolean(mLastShowingRef) != pkg.shouldShowRefs()) {
-        return false;
-      }
-
-      if (isReferenced() != null) {
-        if (!isReferenced().equals(pkg.isReferenced())) {
-          return false;
-        }
-      } else if (pkg.isReferenced() != null) {
-        return false;
-      }
-
-      if (!mLastPermCount.equals(pkg.getPermCount())) {
-        return false;
-      }
-    }
-
-    // This necessarily changes when we change QuickScan settings
-    if (!mLastFormattedName.equals(pkg.getFormattedName())) {
+    boolean lastShowingRef = mLastShowingRef;
+    if (lastShowingRef != pkg.shouldShowRefs()) {
       return false;
     }
 
-    if (mLastDate != null) {
-      if (!mLastDate.equals(pkg.getDate())) {
-        return false;
-      }
-    } else if (pkg.getDate() != null) {
+    if (!Objects.equals(isReferenced(), pkg.isReferenced())) {
+      return false;
+    }
+
+    if (!mLastPermCount.equals(pkg.getPermCount())) {
+      return false;
+    }
+
+    if (!Objects.equals(mLastDate, pkg.getDate())) {
       return false;
     }
 
     return isEnabled() == pkg.isEnabled();
-  }
-
-  @SuppressLint("UseValueOf")
-  @SuppressWarnings("UnnecessaryBoxing,BooleanConstructorCall")
-  private Boolean getNewBoolean(boolean bool) {
-    return new Boolean(bool);
   }
 }

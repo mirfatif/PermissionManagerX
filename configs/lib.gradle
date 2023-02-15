@@ -1,0 +1,9 @@
+apply plugin: 'com.android.library'
+
+apply from: "$rootDir/configs/base.gradle"
+
+android {
+    buildFeatures {
+        buildConfig = false
+    }
+}

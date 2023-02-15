@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.mirfatif.permissionmanagerx.ui.base.MyDrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.mirfatif.permissionmanagerx.fwk.MyDrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:id="@+id/activity_main"
   android:layout_height="match_parent"
   android:layout_width="match_parent">
 
-  <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+  <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -14,16 +14,16 @@
       style="@style/ListSeparator"
       android:background="?attr/accentColor" />
 
-    <com.mirfatif.permissionmanagerx.ui.base.MyCoordinatorLayout
+    <com.mirfatif.permissionmanagerx.fwk.MyCoordinatorLayout
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:layout_weight="1">
 
-      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
+        android:id="@+id/move_up_cont"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_behavior="com.mirfatif.permissionmanagerx.main.fwk.MoveUpwardBehavior">
+        android:orientation="vertical">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
           android:id="@+id/refresh_layout"
@@ -39,56 +39,83 @@
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <!--In MoveUpwardBehavior we'll move up only this container, not SwipeRefreshLayout -->
+        <!--In MoveUpBehavior we'll move up only this container, not SwipeRefreshLayout -->
         <include
           android:id="@+id/mov_cont"
           layout="@layout/activity_main_moving_container" />
 
-      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
-    </com.mirfatif.permissionmanagerx.ui.base.MyCoordinatorLayout>
-  </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+    </com.mirfatif.permissionmanagerx.fwk.MyCoordinatorLayout>
+  </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
-  <com.mirfatif.permissionmanagerx.main.fwk.ProgressFrameLayout
-    android:id="@+id/rnd_prog_cont"
+  <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
+    android:id="@+id/big_prog_cont"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/selectableItemBackground">
+    android:background="@color/darkTransBg"
+    android:gravity="center"
+    android:visibility="gone">
 
-    <ProgressBar
-      android:id="@+id/round_prog_bar"
-      style="@style/Widget.AppCompat.ProgressBar"
-      android:layout_width="200dp"
-      android:layout_height="200dp"
-      android:layout_gravity="center"
-      android:indeterminate="true"
-      android:indeterminateBehavior="cycle"
-      android:indeterminateDrawable="@drawable/circle_progress_bar" />
-
-    <TextView
-      android:id="@+id/rnd_prog_text_v"
-      android:textStyle="bold"
+    <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
-      android:ellipsize="end"
-      android:fontFamily="sans-serif-smallcaps"
+      android:background="@drawable/main_act_big_prog_bg"
       android:gravity="center"
-      android:maxHeight="120dp"
-      android:maxWidth="160dp"
-      android:textAlignment="center"
-      android:textColor="@color/sharpText" />
+      android:orientation="vertical"
+      android:padding="36dp">
 
-  </com.mirfatif.permissionmanagerx.main.fwk.ProgressFrameLayout>
+      <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp">
+
+        <ProgressBar
+          style="@style/Widget.AppCompat.ProgressBar"
+          android:layout_width="60dp"
+          android:layout_height="60dp"
+          android:indeterminate="true"
+          android:indeterminateBehavior="cycle"
+          android:indeterminateDrawable="@drawable/circle_progress_bar"
+          android:indeterminateDuration="1000"
+          android:indeterminateTint="?attr/accentColor"
+          android:progressTint="?attr/accentColor" />
+
+        <ProgressBar
+          style="@style/Widget.AppCompat.ProgressBar"
+          android:layout_width="60dp"
+          android:layout_height="60dp"
+          android:indeterminate="true"
+          android:indeterminateBehavior="cycle"
+          android:indeterminateDrawable="@drawable/circle_progress_bar"
+          android:indeterminateDuration="1000"
+          android:indeterminateTint="?attr/accentColor"
+          android:progressTint="?attr/accentColor"
+          android:rotation="180" />
+
+      </FrameLayout>
+
+      <TextView
+        android:id="@+id/big_prog_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/sharpText"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+
+  </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
   <FrameLayout
     android:id="@+id/search_settings_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="1dp"
-    android:background="@color/searchSettingsBg"
+    android:background="@color/darkTransBg"
     android:visibility="gone">
 
-    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+    <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="@drawable/search_settings_bg">
@@ -101,15 +128,15 @@
         android:layout_marginBottom="6dp"
         android:padding="2dp" />
 
-    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+    </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
   </FrameLayout>
 
-  <com.mirfatif.permissionmanagerx.ui.base.MyNavigationView
+  <com.mirfatif.permissionmanagerx.fwk.MyNavigationView
     android:id="@+id/nav_v"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_gravity="start"
     app:menu="@menu/main_drawer" />
 
-</com.mirfatif.permissionmanagerx.ui.base.MyDrawerLayout>
+</com.mirfatif.permissionmanagerx.fwk.MyDrawerLayout>

@@ -1,83 +1,100 @@
 package com.mirfatif.permissionmanagerx.prefs.settings;
 
-import static com.mirfatif.permissionmanagerx.BuildConfig.APPLICATION_ID;
+import static com.mirfatif.permissionmanagerx.util.ApiUtils.getString;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceFragmentCompat.OnPreferenceStartFragmentCallback;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.ui.base.BaseActivity;
-import com.mirfatif.permissionmanagerx.util.Utils;
+import com.mirfatif.permissionmanagerx.fwk.SettingsActivityM;
+import java.util.Objects;
 
-public class SettingsActivity extends BaseActivity implements OnPreferenceStartFragmentCallback {
+public class SettingsActivity {
 
-  public static final String EXTRA_NO_PARENT = APPLICATION_ID + ".extra.NO_PARENT";
+  public final SettingsActivityM mA;
 
-  @Override
-  protected void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    if (Utils.setNightTheme(this)) {
-      return;
+  public SettingsActivity(SettingsActivityM activity) {
+    mA = activity;
+  }
+
+  final SettingsActivityFlavor mActFlavor = new SettingsActivityFlavor(this);
+
+  private static final String CLASS = SettingsActivity.class.getName();
+  public static final String EXTRA_NO_PARENT = CLASS + ".extra.NO_PARENT";
+  private static final String SAVED_STATE_TITLE = CLASS + ".TITLE";
+
+  public void onCreated(Bundle savedInstanceState) {
+    mA.setContentView(R.layout.activity_fragment_container);
+
+    String title = null;
+
+    if (savedInstanceState == null) {
+      mA.getSupportFragmentManager()
+          .beginTransaction()
+          .replace(R.id.fragment_container, new SettingsFragFlavor())
+          .commit();
+    } else {
+      title = savedInstanceState.getString(SAVED_STATE_TITLE);
     }
-    setContentView(R.layout.activity_fragment_container);
 
-    mCloseOnBackPressed = SettingsFragFlavor.shouldCloseOnBackPressed(getIntent());
+    mCloseOnBackPressed = SettingsActivityFlavor.shouldCloseOnBackPressed(mA.getIntent());
 
-    ActionBar actionBar = getSupportActionBar();
+    ActionBar actionBar = mA.getSupportActionBar();
     if (actionBar != null) {
-      actionBar.setTitle(R.string.settings_menu_item);
-      Intent intent = getIntent();
+      actionBar.setTitle(title != null ? title : getString(R.string.settings_menu_item));
+
+      Intent intent = mA.getIntent();
       if (intent != null && intent.getBooleanExtra(EXTRA_NO_PARENT, false)) {
         actionBar.setDisplayHomeAsUpEnabled(false);
       }
     }
 
-    /*
-     Check null to avoid IllegalStateException on rotation.
-     https://issuetracker.google.com/issues/137173772
-    */
-    if (savedInstanceState == null) {
-      getSupportFragmentManager()
-          .beginTransaction()
-          .replace(R.id.fragment_container, new SettingsFragFlavor())
-          .commit();
-    }
+    mActFlavor.onCreate();
   }
 
   private boolean mCloseOnBackPressed = false;
 
-  @Override
-  public void onBackPressed() {
+  public boolean onBackPressed() {
     if (mCloseOnBackPressed) {
-      finishAfterTransition();
+      mA.finishAfterTransition();
+      return true;
     } else {
-      super.onBackPressed();
+      return false;
     }
   }
 
-  @Override
-  public boolean onPreferenceStartFragment(PreferenceFragmentCompat caller, Preference pref) {
-    final Fragment fragment =
-        getSupportFragmentManager()
-            .getFragmentFactory()
-            .instantiate(getClassLoader(), pref.getFragment());
+  public void onSaveInstanceState(Bundle outState) {
+    ActionBar actionBar = mA.getSupportActionBar();
+    if (actionBar != null) {
+      CharSequence title = actionBar.getTitle();
+      if (title != null) {
+        outState.putString(SAVED_STATE_TITLE, title.toString());
+      }
+    }
+  }
+
+  public boolean onPreferenceStartFragment(Preference pref) {
+    FragmentManager fm = mA.getSupportFragmentManager();
+
+    Fragment fragment =
+        fm.getFragmentFactory()
+            .instantiate(mA.getClassLoader(), Objects.requireNonNull(pref.getFragment()));
+
     fragment.setArguments(pref.getExtras());
-    getSupportFragmentManager()
-        .beginTransaction()
-        .replace(R.id.fragment_container, fragment)
-        .addToBackStack(null)
-        .commit();
-    setActionBarTitle(Utils.capitalizeWords(pref.getTitle().toString()));
+
+    fm.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+
+    setActionBarTitle(Objects.requireNonNull(pref.getTitle()).toString());
+
     return true;
   }
 
   void setActionBarTitle(String title) {
-    ActionBar actionBar = getSupportActionBar();
+    ActionBar actionBar = mA.getSupportActionBar();
+
     if (actionBar != null) {
       actionBar.setTitle(title);
     }

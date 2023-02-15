@@ -4,8 +4,10 @@
 
     <!--Define custom attributes unique to the theme-->
     <item name="accentColor">@color/green</item>
-    <item name="accentTransColor">@color/greenTrans</item>
-    <item name="accentTransHighColor">@color/greenTransHigh</item>
+    <item name="accentTrans5Color">@color/greenTrans5</item>
+    <item name="accentTrans10Color">@color/greenTrans10</item>
+    <item name="accentTrans50Color">@color/greenTrans50</item>
+    <item name="accentTrans75Color">@color/greenTrans75</item>
 
     <!--Preference Group Titles, Dialog Button Text-->
     <item name="colorAccent">?attr/accentColor</item>
@@ -17,7 +19,7 @@
     <item name="colorPrimaryDark">?attr/accentColor</item>
 
     <!--Action Bar-->
-    <item name="colorPrimary">?attr/accentTransColor</item>
+    <item name="colorPrimary">?attr/accentTrans10Color</item>
 
     <item name="android:spinnerItemStyle">@style/SpinnerItemStyle</item>
     <!--<item name="alertDialogTheme">@style/myAlertDialogTheme</item>-->
@@ -25,23 +27,7 @@
 
   <style name="SpinnerItemStyle">
     <item name="android:textStyle">bold</item>
-    <item name="android:textColor">@color/button_spinner_text</item>
-  </style>
-
-  <style name="AlertDialogTheme" parent="ThemeOverlay.AppCompat.Dialog.Alert">
-    <item name="buttonBarButtonStyle">@style/AlertDialogButtonStyle</item>
-    <item name="android:windowTitleStyle">@style/AlertDialogTitleStyle</item>
-  </style>
-
-  <!--Overrides disabled button color too-->
-  <style name="AlertDialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
-    <item name="android:textColor">?attr/accentColor</item>
-  </style>
-
-  <!--Does not work-->
-  <style name="AlertDialogTitleStyle" parent="@style/TextAppearance.AppCompat.Title">
-    <item name="maxLines">1</item>
-    <item name="autoSizeTextType">uniform</item>
+    <item name="android:textColor">@color/active_disabled</item>
   </style>
 
   <!--============== About Activity ==============-->
@@ -99,7 +85,7 @@
   <style name="CustomButton" parent="Widget.AppCompat.Button">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
-    <item name="android:textColor">@color/button_spinner_text</item>
+    <item name="android:textColor">@color/active_disabled</item>
   </style>
 
 </resources>

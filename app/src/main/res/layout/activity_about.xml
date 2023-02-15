@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.mirfatif.permissionmanagerx.fwk.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
@@ -13,7 +13,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+    <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_margin="8dp"
@@ -48,7 +48,7 @@
         style="@style/ListSeparator"
         android:background="?attr/accentColor" />
 
-      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
         android:id="@+id/contact"
         style="@style/AboutActivityItemContainer">
 
@@ -57,7 +57,7 @@
           android:src="@drawable/email"
           tools:ignore="ContentDescription" />
 
-        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout style="@style/AboutActivityItemTextBox">
+        <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout style="@style/AboutActivityItemTextBox">
 
           <TextView
             style="@style/AboutActivityItemTitle"
@@ -67,15 +67,15 @@
             style="@style/AboutActivityItemSummary"
             android:text="@string/email_address" />
 
-        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+        </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
-      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
       <View
         style="@style/ListSeparator"
         android:background="?attr/accentColor" />
 
-      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
         android:id="@+id/telegram"
         style="@style/AboutActivityItemContainer">
 
@@ -84,7 +84,7 @@
           android:src="@drawable/telegram"
           tools:ignore="ContentDescription" />
 
-        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout style="@style/AboutActivityItemTextBox">
+        <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout style="@style/AboutActivityItemTextBox">
 
           <TextView
             style="@style/AboutActivityItemTitle"
@@ -94,14 +94,14 @@
             style="@style/AboutActivityItemSummary"
             android:text="@string/telegram_group_link" />
 
-        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
-      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+        </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
       <View
         style="@style/ListSeparator"
         android:background="?attr/accentColor" />
 
-      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
         android:id="@+id/source_code"
         style="@style/AboutActivityItemContainer">
 
@@ -110,7 +110,7 @@
           android:src="@drawable/github_mark"
           tools:ignore="ContentDescription" />
 
-        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout style="@style/AboutActivityItemTextBox">
+        <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout style="@style/AboutActivityItemTextBox">
 
           <TextView
             style="@style/AboutActivityItemTitle"
@@ -120,14 +120,14 @@
             style="@style/AboutActivityItemSummary"
             android:text="@string/source_url" />
 
-        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
-      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+        </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
       <View
         style="@style/ListSeparator"
         android:background="?attr/accentColor" />
 
-      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
         android:id="@+id/issues"
         style="@style/AboutActivityItemContainer">
 
@@ -136,7 +136,7 @@
           android:src="@drawable/issues"
           tools:ignore="ContentDescription" />
 
-        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout style="@style/AboutActivityItemTextBox">
+        <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout style="@style/AboutActivityItemTextBox">
 
           <TextView
             style="@style/AboutActivityItemTitle"
@@ -146,14 +146,14 @@
             style="@style/AboutActivityItemSummary"
             android:text="@string/report_issues_summary" />
 
-        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
-      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+        </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
       <View
         style="@style/ListSeparator"
         android:background="?attr/accentColor" />
 
-      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
         android:id="@+id/logging"
         style="@style/AboutActivityItemContainer">
 
@@ -162,7 +162,7 @@
           android:src="@drawable/log"
           tools:ignore="ContentDescription" />
 
-        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout style="@style/AboutActivityItemTextBox">
+        <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout style="@style/AboutActivityItemTextBox">
 
           <TextView
             android:id="@+id/logging_title"
@@ -173,14 +173,75 @@
             style="@style/AboutActivityItemSummary"
             android:text="@string/collect_logs_summary" />
 
-        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
-      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+        </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
       <View
         style="@style/ListSeparator"
         android:background="?attr/accentColor" />
 
-      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
+        android:id="@+id/send_crash_report"
+        style="@style/AboutActivityItemContainer">
+
+        <ImageView
+          style="@style/AboutActivityIconImg"
+          android:src="@drawable/report"
+          tools:ignore="ContentDescription" />
+
+        <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout style="@style/AboutActivityItemTextBox">
+
+          <TextView
+            style="@style/AboutActivityItemTitle"
+            android:text="@string/send_crash_report_title" />
+
+          <TextView
+            style="@style/AboutActivityItemSummary"
+            android:text="@string/send_crash_report_summary" />
+
+        </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+
+      <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
+        android:id="@+id/dump_cont"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <View
+          style="@style/ListSeparator"
+          android:background="?attr/accentColor" />
+
+        <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
+          android:id="@+id/dump_v"
+          style="@style/AboutActivityItemContainer">
+
+          <ImageView
+            style="@style/AboutActivityIconImg"
+            android:src="@drawable/database"
+            tools:ignore="ContentDescription" />
+
+          <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout style="@style/AboutActivityItemTextBox">
+
+            <TextView
+              style="@style/AboutActivityItemTitle"
+              android:text="@string/about_dump_title" />
+
+            <TextView
+              style="@style/AboutActivityItemSummary"
+              android:text="@string/about_dump_summary" />
+
+          </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+        </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+
+      </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+
+      <View
+        style="@style/ListSeparator"
+        android:background="?attr/accentColor" />
+
+      <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
         android:id="@+id/rating"
         style="@style/AboutActivityItemContainer">
 
@@ -189,7 +250,7 @@
           android:src="@drawable/star"
           tools:ignore="ContentDescription" />
 
-        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout style="@style/AboutActivityItemTextBox">
+        <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout style="@style/AboutActivityItemTextBox">
 
           <TextView
             style="@style/AboutActivityItemTitle"
@@ -199,20 +260,20 @@
             style="@style/AboutActivityItemSummary"
             android:text="@string/app_rating_summary" />
 
-        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
-      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+        </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
       <View
         style="@style/ListSeparator"
         android:background="?attr/accentColor" />
 
-      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
         android:id="@+id/paid_features_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+        <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
           android:id="@+id/paid_features"
           style="@style/AboutActivityItemContainer">
 
@@ -221,7 +282,7 @@
             android:src="@drawable/paid"
             tools:ignore="ContentDescription" />
 
-          <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout style="@style/AboutActivityItemTextBox">
+          <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout style="@style/AboutActivityItemTextBox">
 
             <TextView
               style="@style/AboutActivityItemTitle"
@@ -231,18 +292,19 @@
               android:id="@+id/paid_features_summary"
               style="@style/AboutActivityItemSummary"
               android:ellipsize="end"
-              android:maxLines="1" />
+              android:maxLines="1"
+              android:text="@string/paid_features_url" />
 
-          </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
-        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+          </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+        </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
         <View
           style="@style/ListSeparator"
           android:background="?attr/accentColor" />
 
-      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
-      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
         android:id="@+id/privacy_policy"
         style="@style/AboutActivityItemContainer">
 
@@ -251,7 +313,7 @@
           android:src="@drawable/privacy_policy"
           tools:ignore="ContentDescription" />
 
-        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout style="@style/AboutActivityItemTextBox">
+        <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout style="@style/AboutActivityItemTextBox">
 
           <TextView
             style="@style/AboutActivityItemTitle"
@@ -263,14 +325,14 @@
             android:maxLines="1"
             android:text="@string/privacy_policy_link" />
 
-        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
-      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+        </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
       <View
         style="@style/ListSeparator"
         android:background="?attr/accentColor" />
 
-      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
         android:id="@+id/translate"
         style="@style/AboutActivityItemContainer">
 
@@ -279,7 +341,7 @@
           android:src="@drawable/locale"
           tools:ignore="ContentDescription" />
 
-        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout style="@style/AboutActivityItemTextBox">
+        <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout style="@style/AboutActivityItemTextBox">
 
           <TextView
             style="@style/AboutActivityItemTitle"
@@ -289,14 +351,14 @@
             style="@style/AboutActivityItemSummary"
             android:text="@string/translations_summary" />
 
-        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
-      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+        </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
       <View
         style="@style/ListSeparator"
         android:background="?attr/accentColor" />
 
-      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
         android:id="@+id/share_app"
         style="@style/AboutActivityItemContainer">
 
@@ -305,24 +367,25 @@
           android:src="@drawable/share"
           tools:ignore="ContentDescription" />
 
-        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout style="@style/AboutActivityItemTextBox">
+        <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout style="@style/AboutActivityItemTextBox">
 
           <TextView
             style="@style/AboutActivityItemTitle"
-            android:text="@string/share" />
+            android:text="@string/share"
+            tools:ignore="TooManyViews" />
 
           <TextView
             style="@style/AboutActivityItemSummary"
             android:text="@string/share_summary" />
 
-        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
-      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+        </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
       <View
         style="@style/ListSeparator"
         android:background="?attr/accentColor" />
 
-      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
         android:id="@+id/check_update"
         style="@style/AboutActivityItemContainer">
 
@@ -331,7 +394,7 @@
           android:src="@drawable/update"
           tools:ignore="ContentDescription" />
 
-        <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout style="@style/AboutActivityItemTextBox">
+        <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout style="@style/AboutActivityItemTextBox">
 
           <TextView
             style="@style/AboutActivityItemTitle"
@@ -342,13 +405,13 @@
             style="@style/AboutActivityItemSummary"
             android:text="@string/update_summary" />
 
-        </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
-      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+        </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
       <View
         style="@style/ListSeparator"
         android:background="?attr/accentColor" />
 
-    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+    </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
   </androidx.core.widget.NestedScrollView>
-</com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+</com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>

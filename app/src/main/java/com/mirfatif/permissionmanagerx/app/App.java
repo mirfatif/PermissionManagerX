@@ -1,64 +1,54 @@
 package com.mirfatif.permissionmanagerx.app;
 
-import android.annotation.SuppressLint;
-import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.util.Log;
-import androidx.annotation.NonNull;
-import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
-import com.mirfatif.permissionmanagerx.svc.LogcatService;
-import com.mirfatif.permissionmanagerx.util.Utils;
+import com.mirfatif.permissionmanagerx.fwk.AppM;
+import com.mirfatif.permissionmanagerx.util.AppLifecycle;
+import com.mirfatif.permissionmanagerx.util.LocaleUtils;
+import com.mirfatif.permissionmanagerx.util.LogUtils;
+import com.mirfatif.privtasks.util.MyLog;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-public class App extends Application {
+public class App {
 
   private static final String TAG = "App";
 
-  @SuppressLint("StaticFieldLeak")
+  private final AppM mA;
+
+  public App(AppM app) {
+    mA = app;
+  }
+
   private static Context sContext;
 
   private Thread.UncaughtExceptionHandler defaultExceptionHandler;
 
-  @Override
   public void onCreate() {
-    super.onCreate();
-    sContext = getApplicationContext();
+    sContext = mA.getApplicationContext();
+    mPm = App.getCxt().getPackageManager();
+
     setLocale();
+
     defaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+    Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
 
-    Thread.setDefaultUncaughtExceptionHandler(
-        (t, e) -> {
-          Log.e(TAG, e.toString());
-          LogcatService.appCrashed();
+    new AppFlavor().onCreated();
 
-          StringWriter stringWriter = new StringWriter();
-          PrintWriter writer = new PrintWriter(stringWriter, true);
-          e.printStackTrace(writer);
-          writer.close();
-          Utils.writeCrashLog(stringWriter.toString(), false);
-
-          defaultExceptionHandler.uncaughtException(t, e);
-        });
-
-    // User is waiting for the first glance. Free the main thread.
-    Utils.runInBg(() -> new AppFlavor().onCreated());
-
-    Utils.runInBg(this::getEncPrefs);
+    AppLifecycle.init(mA);
   }
 
-  @Override
-  public void onConfigurationChanged(@NonNull Configuration newConfig) {
-    super.onConfigurationChanged(Utils.setLocale(newConfig));
+  public Configuration onConfigurationChanged(Configuration newConfig) {
+    return LocaleUtils.setLocale(newConfig);
   }
 
   public static void setLocale() {
-    Utils.setLocale(sContext);
+    LocaleUtils.setLocale(sContext);
   }
 
-  public static Context getContext() {
+  public static Context getCxt() {
     return sContext;
   }
 
@@ -66,9 +56,24 @@ public class App extends Application {
     return sContext.getResources();
   }
 
-  // To avoid delays later
-  @SecurityLibBug
-  private void getEncPrefs() {
-    Utils.getEncPrefs();
+  private static PackageManager mPm;
+
+  public static PackageManager getPm() {
+    return mPm;
+  }
+
+  private class ExceptionHandler implements Thread.UncaughtExceptionHandler {
+
+    public void uncaughtException(Thread t, Throwable e) {
+      MyLog.e(TAG, "uncaughtException", t.getName() + ": " + e);
+
+      StringWriter stringWriter = new StringWriter();
+      PrintWriter writer = new PrintWriter(stringWriter, true);
+      e.printStackTrace(writer);
+      writer.close();
+      LogUtils.showCrashNotification(stringWriter.toString(), false);
+
+      defaultExceptionHandler.uncaughtException(t, e);
+    }
   }
 }

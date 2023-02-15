@@ -1,21 +1,20 @@
 package com.mirfatif.permissionmanagerx.parser;
 
-import static com.mirfatif.permissionmanagerx.util.Utils.getString;
+import static com.mirfatif.permissionmanagerx.util.ApiUtils.getString;
 
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.prefs.ExcFiltersData;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.MySettingsFlavor;
-import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
-import com.mirfatif.permissionmanagerx.util.Utils;
-import com.mirfatif.privtasks.Commands;
-import com.mirfatif.privtasks.Util;
+import com.mirfatif.permissionmanagerx.privs.DaemonHandler;
+import com.mirfatif.permissionmanagerx.privs.DaemonIface;
+import com.mirfatif.permissionmanagerx.util.ApiUtils;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class Permission {
-
-  private static final String TAG = "Permission";
 
   public static final String PROTECTION_UNKNOWN = "PROTECTION_UNKNOWN";
   public static final String PROTECTION_DANGEROUS = "PROTECTION_DANGEROUS";
@@ -28,43 +27,38 @@ public class Permission {
 
   private static final String APP_OPS = "APP_OPS";
 
-  // Common
-  private final int mOrder;
-  private final Integer mIconResId;
+  private final int mGroupId;
+  private final int mIconResId;
   private final String mPackageName;
   private final String mPermissionName;
-  private final boolean mIsGranted;
-  private final Boolean mIsReferenced;
-  private final String mReference;
-  private final boolean mIsSystemApp, mIsFrameworkApp;
+  private final boolean mGranted;
+  private Boolean mReferenced;
+  private String mReference;
+  private final boolean mSystemApp, mFrameworkApp;
 
-  // Manifest permissions
   private final String mProtectionLevel;
-  private final boolean mIsPrivileged;
-  private final boolean mIsDevelopment;
-  private final boolean mIsManifestPermAppOp;
-  private final boolean mIsSystemFixed, mIsPolicyFixed;
-  private final boolean mProviderMissing;
-  private final CharSequence mPermDesc;
+  private final boolean mPrivileged;
+  private final boolean mDevelopment;
+  private final boolean mManifestPermAppOp;
+  private final boolean mSystemFixed, mPolicyFixed;
+  private final String mProviderPkg;
 
-  // AppOps
-  private final boolean mIsAppOps;
-  private final boolean mIsPerUid;
-  private final boolean mIsAppOpsSet;
-  private int mAppOpsMode;
-  private final long mAppOpsAccessTime;
-  private String mAppOpsAccessTimeFormatted;
+  private final boolean mAppOp;
+  private final boolean mPerUid;
+  private final boolean mAppOpModeSet;
+  private final boolean mUnknownAppOpMode;
+  private final int mAppOpMode;
+  private final long mAppOpAccessTime;
+  private String mAppOpAccessTimeFormatted;
   private final String mDependsOn;
-  private boolean mIsExtraAppOp;
+  private boolean mExtraAppOp;
 
   Permission(
-      int order,
-      Integer iconResId,
+      int groupId,
+      int iconResId,
       String packageName,
       String name,
       boolean isGranted,
-      Boolean isReferenced,
-      String reference,
       boolean isSystemApp,
       boolean isFrameworkApp,
       String protectionLevel,
@@ -73,116 +67,110 @@ public class Permission {
       boolean isManifestPermAppOp,
       boolean isSystemFixed,
       boolean isPolicyFixed,
-      boolean providerMissing,
-      CharSequence permDesc) {
-    mOrder = order;
+      String providerPkg) {
+    mGroupId = groupId;
     mIconResId = iconResId;
     mPackageName = packageName;
     mPermissionName = name;
-    mIsGranted = isGranted;
-    mIsReferenced = isReferenced;
-    mReference = reference;
-    mIsSystemApp = isSystemApp;
-    mIsFrameworkApp = isFrameworkApp;
+    mGranted = isGranted;
+    mSystemApp = isSystemApp;
+    mFrameworkApp = isFrameworkApp;
     mProtectionLevel = protectionLevel;
-    mIsPrivileged = isPrivileged;
-    mIsDevelopment = isDevelopment;
-    mIsManifestPermAppOp = isManifestPermAppOp;
-    mIsSystemFixed = isSystemFixed;
-    mIsPolicyFixed = isPolicyFixed;
-    mProviderMissing = providerMissing;
-    mPermDesc = permDesc;
+    mPrivileged = isPrivileged;
+    mDevelopment = isDevelopment;
+    mManifestPermAppOp = isManifestPermAppOp;
+    mSystemFixed = isSystemFixed;
+    mPolicyFixed = isPolicyFixed;
+    mProviderPkg = providerPkg;
 
-    mIsAppOps = false;
-    mIsPerUid = false;
-    mIsAppOpsSet = false;
-    mAppOpsMode = -1;
-    mAppOpsAccessTime = -1;
+    mAppOp = false;
+    mPerUid = false;
+    mAppOpModeSet = true;
+    mUnknownAppOpMode = false;
+    mAppOpMode = -1;
+    mAppOpAccessTime = -1;
     mDependsOn = null;
-    mIsExtraAppOp = false;
+    mExtraAppOp = false;
   }
 
   Permission(
-      int order,
+      int groupId,
       Integer iconResId,
       String packageName,
       String name,
       boolean isGranted,
-      Boolean isReferenced,
-      String reference,
       boolean isSystemApp,
       boolean isFrameworkApp,
       boolean isPerUid,
-      boolean isAppOpsSet,
-      int appOpsMode,
-      long appOpsAccessTime,
+      boolean opModeSet,
+      boolean unknownOpMode,
+      int appOpMode,
+      long appOpAccessTime,
       String dependsOn,
       boolean isExtraAppOp) {
-    mOrder = order;
+    mGroupId = groupId;
     mIconResId = iconResId;
     mPackageName = packageName;
     mPermissionName = name;
-    mIsGranted = isGranted;
-    mIsReferenced = isReferenced;
-    mReference = reference;
-    mIsSystemApp = isSystemApp;
-    mIsFrameworkApp = isFrameworkApp;
-    mIsPerUid = isPerUid;
-    mIsAppOpsSet = isAppOpsSet;
-    mAppOpsMode = appOpsMode;
-    mAppOpsAccessTime = appOpsAccessTime;
+    mGranted = isGranted;
+    mSystemApp = isSystemApp;
+    mFrameworkApp = isFrameworkApp;
+    mPerUid = isPerUid;
+    mAppOpModeSet = opModeSet;
+    mUnknownAppOpMode = unknownOpMode;
+    mAppOpMode = appOpMode;
+    mAppOpAccessTime = appOpAccessTime;
     mDependsOn = dependsOn;
-    mIsExtraAppOp = isExtraAppOp;
+    mExtraAppOp = isExtraAppOp;
 
-    mIsAppOps = true;
+    mAppOp = true;
     mProtectionLevel = APP_OPS;
-    mIsPrivileged = false;
-    mIsDevelopment = false;
-    mIsManifestPermAppOp = false;
-    mIsSystemFixed = false;
-    mIsPolicyFixed = false;
-    mProviderMissing = false;
-    mPermDesc = null;
+    mPrivileged = false;
+    mDevelopment = false;
+    mManifestPermAppOp = false;
+    mSystemFixed = false;
+    mPolicyFixed = false;
+    mProviderPkg = null;
   }
 
-  public int getOrder() {
-    return mOrder;
+  public int getGroupId() {
+    return mGroupId;
   }
 
-  public Integer getIconResId() {
+  public int getIconResId() {
     return mIconResId;
   }
 
-  public boolean isAppOps() {
-    return mIsAppOps;
+  public boolean isAppOp() {
+    return mAppOp;
   }
 
   public boolean isPerUid() {
-    return mIsPerUid;
+    return mPerUid;
   }
 
-  public boolean isAppOpsSet() {
-    return mIsAppOpsSet;
+  public boolean hasUnknownOpMode() {
+    return mUnknownAppOpMode;
   }
 
-  public void setAppOpsMode(int mode) {
-    mAppOpsMode = mode;
+  public boolean isAppOpModeSet() {
+    return mAppOpModeSet;
   }
 
-  public int getAppOpsMode() {
-    return mAppOpsMode;
+  public int getAppOpMode() {
+    return mAppOpMode;
   }
 
-  public String getAppOpsAccessTime() {
-    // Do not show time older than a year, including zero epoch time and -1
-    if (System.currentTimeMillis() - mAppOpsAccessTime > TimeUnit.DAYS.toMillis(365)) {
+  public String getAppOpAccessTime() {
+
+    if (System.currentTimeMillis() - mAppOpAccessTime > TimeUnit.DAYS.toMillis(365)) {
       return null;
     }
-    mAppOpsAccessTimeFormatted =
+    mAppOpAccessTimeFormatted =
         DateUtils.getRelativeTimeSpanString(
-                mAppOpsAccessTime, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS)
+                mAppOpAccessTime, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS)
             .toString();
-    return mAppOpsAccessTimeFormatted;
+    return mAppOpAccessTimeFormatted;
   }
 
   public String dependsOn() {
@@ -190,11 +178,11 @@ public class Permission {
   }
 
   public void setExtraAppOp() {
-    mIsExtraAppOp = true;
+    mExtraAppOp = true;
   }
 
   public boolean isExtraAppOp() {
-    return mIsExtraAppOp;
+    return mExtraAppOp;
   }
 
   public String getName() {
@@ -202,7 +190,7 @@ public class Permission {
   }
 
   public boolean isGranted() {
-    return mIsGranted;
+    return mGranted;
   }
 
   public String getProtectionLevel() {
@@ -210,19 +198,28 @@ public class Permission {
   }
 
   public boolean isPrivileged() {
-    return mIsPrivileged;
+    return mPrivileged;
   }
 
-  public boolean isProviderMissing() {
-    return mProviderMissing;
+  public boolean hasProviderPkg() {
+    return mProviderPkg != null;
+  }
+
+  public String getProviderPkg() {
+    return mProviderPkg;
   }
 
   public boolean isSystemFixed() {
-    return mIsSystemFixed;
+    return mSystemFixed;
+  }
+
+  public void setReference(Boolean isReferenced, String reference) {
+    mReferenced = isReferenced;
+    mReference = reference;
   }
 
   public Boolean isReferenced() {
-    return mIsReferenced;
+    return mReferenced;
   }
 
   public String getReference() {
@@ -230,48 +227,47 @@ public class Permission {
   }
 
   public boolean isCritical() {
-    return (mIsSystemApp && mIsPrivileged) || mIsSystemFixed;
+    return (mSystemApp && mPrivileged) || mSystemFixed;
   }
 
-  private Boolean mIsChangeable = null;
+  private Boolean mChangeable = null;
 
   public boolean isChangeable() {
-    if (mIsChangeable == null) {
-      mIsChangeable = _isChangeable();
+    if (mChangeable == null) {
+      mChangeable = isChangeableInternal();
     }
-    return mIsChangeable;
+    return mChangeable;
   }
 
-  private boolean _isChangeable() {
-    boolean allowCriticChanges = MySettingsFlavor.INSTANCE.allowCriticalChanges();
-    if ((mIsFrameworkApp && !allowCriticChanges)
-        || MySettings.INSTANCE.isCriticalApp(mPackageName)) {
+  private boolean isChangeableInternal() {
+    boolean allowCriticChanges = MySettingsFlavor.INS.allowCriticalChanges();
+    if ((mFrameworkApp && !allowCriticChanges) || ExcFiltersData.INS.isCriticalApp(mPackageName)) {
       return false;
     }
-    if (mIsAppOps) {
+    if (mAppOp) {
       return mDependsOn == null;
     } else {
-      /*
-       Role permissions (if not Dangerous and Development; with protection level: INTERNAL) can
-       only be changed by the PermissionController package.
-       Soft/Hard restricted permissions (if Dangerous or Development) might also not be changeable.
-       https://cs.android.com/android/platform/superproject/+/android-12.0.0_r1:frameworks/base/services/core/java/com/android/server/pm/permission/PermissionManagerService.java;l=1429
-       https://android.googlesource.com/platform/frameworks/base/+/b9893a600ea8c047cebb6a4a352322916ba8eaca
-      */
-      return (mProtectionLevel.equals(PROTECTION_DANGEROUS) || mIsDevelopment)
-          && (!mIsSystemApp || !mIsPrivileged || allowCriticChanges)
-          && !mIsPolicyFixed
-          && (!mIsSystemFixed || (allowCriticChanges && PrivDaemonHandler.INSTANCE.isSystemUid()));
+
+      return (mProtectionLevel.equals(PROTECTION_DANGEROUS) || mDevelopment)
+          && (!mSystemApp || !mPrivileged || allowCriticChanges)
+          && !mPolicyFixed
+          && (!mSystemFixed || (allowCriticChanges && DaemonHandler.INS.isSystemUid()));
     }
   }
 
-  public CharSequence getDescription() {
-    return mPermDesc;
+  public boolean isChangeableForDump() {
+    if (mAppOp) {
+      return mDependsOn == null;
+    }
+
+    return (mProtectionLevel.equals(PROTECTION_DANGEROUS) || mDevelopment)
+        && !mPolicyFixed
+        && !mSystemFixed;
   }
 
   public String getPermNameString() {
     String permName = mPermissionName;
-    if (mIsAppOps && mDependsOn != null) {
+    if (mAppOp && mDependsOn != null) {
       permName += " (" + mDependsOn + ")";
     }
     return permName;
@@ -281,41 +277,41 @@ public class Permission {
     switch (mProtectionLevel) {
       case PROTECTION_UNKNOWN:
       default:
-        return SearchConstants.INSTANCE.SEARCH_PROT_UNKNOWN;
+        return SearchConstants.INS.SEARCH_PROT_UNKNOWN;
       case PROTECTION_NORMAL:
-        return SearchConstants.INSTANCE.SEARCH_PROT_NORMAL;
+        return SearchConstants.INS.SEARCH_PROT_NORMAL;
       case PROTECTION_DANGEROUS:
-        return SearchConstants.INSTANCE.SEARCH_PROT_DANGEROUS;
+        return SearchConstants.INS.SEARCH_PROT_DANGEROUS;
       case PROTECTION_SIGNATURE:
-        return SearchConstants.INSTANCE.SEARCH_PROT_SIGNATURE;
+        return SearchConstants.INS.SEARCH_PROT_SIGNATURE;
       case PROTECTION_INTERNAL:
-        return SearchConstants.INSTANCE.SEARCH_PROT_INTERNAL;
+        return SearchConstants.INS.SEARCH_PROT_INTERNAL;
       case APP_OPS:
-        return SearchConstants.INSTANCE.SEARCH_APP_OPS;
+        return SearchConstants.INS.SEARCH_APP_OPS;
     }
   }
 
   public String getProtLevelString() {
     String protectionLevel = getLocalizedProtectionLevel().replaceFirst("^:", "");
 
-    if (mIsAppOps) {
-      if (mIsPerUid) {
+    if (mAppOp) {
+      if (mPerUid) {
         protectionLevel = getString(R.string.prot_lvl_uid_mode, protectionLevel);
       }
-      if (mIsExtraAppOp) {
+      if (mExtraAppOp) {
         protectionLevel = getString(R.string.prot_lvl_extra, protectionLevel);
       }
     } else {
-      if (mIsDevelopment) { // Implies "Signature"
+      if (mDevelopment) {
         protectionLevel = getString(R.string.prot_lvl_development2, protectionLevel);
       }
-      if (mIsManifestPermAppOp) { // Implies "Signature"
+      if (mManifestPermAppOp) {
         protectionLevel = getString(R.string.prot_lvl_app_ops2, protectionLevel);
       }
-      if (mIsPrivileged) { // Implies "Signature"
+      if (mPrivileged) {
         protectionLevel = getString(R.string.prot_lvl_privileged2, protectionLevel);
       }
-      if (mIsSystemFixed || mIsPolicyFixed) {
+      if (mSystemFixed || mPolicyFixed) {
         protectionLevel = getString(R.string.prot_lvl_fixed2, protectionLevel);
       }
     }
@@ -323,8 +319,8 @@ public class Permission {
   }
 
   public boolean contains(Package pkg, String queryText, boolean caseSensitive) {
-    if (!MySettings.INSTANCE.isSpecialSearch()) {
-      return _contains(pkg, queryText, caseSensitive);
+    if (!MySettings.INS.isSpecialSearch()) {
+      return containsNot(pkg, queryText, caseSensitive);
     }
 
     boolean isEmpty = true;
@@ -333,40 +329,40 @@ public class Permission {
         continue;
       }
       isEmpty = false;
-      if (contains_(pkg, str, caseSensitive)) {
+      if (containsAnd(pkg, str, caseSensitive)) {
         return true;
       }
     }
     return isEmpty;
   }
 
-  private boolean contains_(Package pkg, String queryText, boolean caseSensitive) {
+  private boolean containsAnd(Package pkg, String queryText, boolean caseSensitive) {
     for (String str : queryText.split("&")) {
       if (TextUtils.isEmpty(str)) {
         continue;
       }
-      if (!_contains(pkg, str, caseSensitive)) {
+      if (!containsNot(pkg, str, caseSensitive)) {
         return false;
       }
     }
     return true;
   }
 
-  private boolean _contains(Package pkg, String queryText, boolean caseSensitive) {
+  private boolean containsNot(Package pkg, String queryText, boolean caseSensitive) {
     boolean contains = true;
-    if (MySettings.INSTANCE.isSpecialSearch() && queryText.startsWith("!")) {
+    if (MySettings.INS.isSpecialSearch() && queryText.startsWith("!")) {
       queryText = queryText.replaceAll("^!", "");
       contains = false;
     }
 
-    Boolean handled = MySettingsFlavor.INSTANCE.handleSearchQuery(queryText, pkg, this);
+    Boolean handled = MySettingsFlavor.INS.handleSearchQuery(queryText, pkg, this);
     if (Boolean.TRUE.equals(handled)) {
       return contains;
     } else if (Boolean.FALSE.equals(handled)) {
       return !contains;
     }
 
-    caseSensitive = caseSensitive && MySettings.INSTANCE.isCaseSensitiveSearch();
+    caseSensitive = caseSensitive && MySettings.INS.isCaseSensitiveSearch();
     if (!caseSensitive) {
       queryText = queryText.toUpperCase();
     }
@@ -375,18 +371,16 @@ public class Permission {
         new String[] {
           mPermissionName,
           ":" + getLocalizedProtectionLevel(),
-          ((mIsAppOps || mIsManifestPermAppOp) ? SearchConstants.INSTANCE.SEARCH_APP_OPS : ""),
-          ((mIsAppOps && mIsPerUid) ? SearchConstants.INSTANCE.SEARCH_UID : ""),
-          (mIsPrivileged ? SearchConstants.INSTANCE.SEARCH_PRIVILEGED : ""),
-          (mIsDevelopment ? SearchConstants.INSTANCE.SEARCH_DEV : ""),
-          (mIsSystemFixed ? SearchConstants.INSTANCE.SEARCH_FIXED : ""),
-          (mIsReferenced == null
-              ? SearchConstants.INSTANCE.SEARCH_ORANGE
-              : (mIsReferenced
-                  ? SearchConstants.INSTANCE.SEARCH_GREEN
-                  : SearchConstants.INSTANCE.SEARCH_RED)),
-          getAppOpsAccessTime() != null ? SearchConstants.INSTANCE.SEARCH_TIME : "",
-          (mIsExtraAppOp ? SearchConstants.INSTANCE.SEARCH_EXTRA : "")
+          ((mAppOp || mManifestPermAppOp) ? SearchConstants.INS.SEARCH_APP_OPS : ""),
+          ((mAppOp && mPerUid) ? SearchConstants.INS.SEARCH_UID : ""),
+          (mPrivileged ? SearchConstants.INS.SEARCH_PRIVILEGED : ""),
+          (mDevelopment ? SearchConstants.INS.SEARCH_DEV : ""),
+          (mSystemFixed ? SearchConstants.INS.SEARCH_FIXED : ""),
+          (mReferenced == null
+              ? SearchConstants.INS.SEARCH_ORANGE
+              : (mReferenced ? SearchConstants.INS.SEARCH_GREEN : SearchConstants.INS.SEARCH_RED)),
+          getAppOpAccessTime() != null ? SearchConstants.INS.SEARCH_TIME : "",
+          (mExtraAppOp ? SearchConstants.INS.SEARCH_EXTRA : "")
         }) {
       if (!caseSensitive) {
         field = field.toUpperCase();
@@ -398,76 +392,74 @@ public class Permission {
     return !contains;
   }
 
-  // Required for ListAdapter/DiffUtil. Consider which fields can change in a Permission.
   public boolean areContentsTheSame(Permission newPerm) {
-    if (isReferenced() != null) {
-      if (!isReferenced().equals(newPerm.isReferenced())) {
-        return false;
-      }
-    } else if (newPerm.isReferenced() != null) {
+    if (!Objects.equals(isReferenced(), newPerm.isReferenced())) {
       return false;
     }
 
-    if (!isAppOps()) {
+    if (!isAppOp()) {
       return isGranted() == newPerm.isGranted();
     }
 
-    if (getAppOpsMode() != newPerm.getAppOpsMode()) {
+    if (getAppOpMode() != newPerm.getAppOpMode()) {
       return false;
     }
 
-    if (isAppOpsSet() != newPerm.isAppOpsSet()) {
+    if (hasUnknownOpMode() != newPerm.hasUnknownOpMode()) {
       return false;
     }
 
-    // Compare the new Permission Object's calculated value with previously one's saved value,
-    // even if both Objects are the same.
-    // If calculated on both, the values are always the same, so UI changes cannot be compared.
-    if (mAppOpsAccessTimeFormatted != null) {
-      if (!mAppOpsAccessTimeFormatted.equals(newPerm.getAppOpsAccessTime())) {
-        return false;
-      }
-    } else if (newPerm.getAppOpsAccessTime() != null) {
+    if (isAppOpModeSet() != newPerm.isAppOpModeSet()) {
+      return false;
+    }
+
+    if (!Objects.equals(mAppOpAccessTimeFormatted, newPerm.getAppOpAccessTime())) {
       return false;
     }
 
     return isExtraAppOp() == newPerm.isExtraAppOp();
   }
 
-  public static void setAppOpMode(Package pkg, Permission perm, int mode) {
-    String pkgName;
-    if (perm.isPerUid()) {
-      pkgName = "null";
-    } else {
-      pkgName = pkg.getName();
-    }
-    String command =
-        Commands.SET_APP_OPS_MODE
-            + " "
-            + perm.getName()
-            + " "
-            + pkg.getUid()
-            + " "
-            + pkgName
-            + " "
-            + mode;
-    if (MySettings.INSTANCE.isDebug()) {
-      Util.debugLog(TAG, "setAppOpsMode: sending command: " + command);
-    }
-    PrivDaemonHandler.INSTANCE.sendRequest(command);
+  public boolean isSamePerm(Permission newPerm) {
+    return isAppOp() == newPerm.isAppOp()
+        && getName().equals(newPerm.getName())
+        && (!isAppOp() || isPerUid() == newPerm.isPerUid());
   }
 
-  public static void setPermission(Package pkg, Permission perm) {
-    String command = pkg.getName() + " " + perm.getName() + " " + Utils.getUserId(pkg.getUid());
-    if (perm.isGranted()) {
-      command = Commands.REVOKE_PERMISSION + " " + command;
-    } else {
-      command = Commands.GRANT_PERMISSION + " " + command;
+  public void setAppOpMode(Package pkg, int mode) {
+    if (isAppOp()) {
+      DaemonIface.INS.setAppOpMode(
+          pkg.getUid(),
+          isPerUid() ? null : pkg.getName(),
+          AppOpsParser.INS.getAppOpsNames().indexOf(getName()),
+          mode);
     }
+  }
 
-    if (MySettings.INSTANCE.isDebug()) {
-      Util.debugLog(TAG, "setPermission: sending command: " + command);
+  public void toggleState(Package pkg) {
+    if (!isAppOp()) {
+      DaemonIface.INS.setPermState(
+          !isGranted(), pkg.getName(), getName(), ApiUtils.getUserId(pkg.getUid()));
     }
-    PrivDaemonHandler.INSTANCE.sendRequest(command);
+  }
+
+  public String refString() {
+    return isAppOp() ? refString(getAppOpMode()) : refString(isGranted());
+  }
+
+  public static String refString(boolean granted) {
+    return granted ? Permission.GRANTED : Permission.REVOKED;
+  }
+
+  public static String refString(int appOpMode) {
+    return AppOpsParser.INS.getAppOpsModes().get(appOpMode);
+  }
+
+  public static Boolean isReferenced(String savedRef, boolean granted) {
+    return savedRef == null ? null : savedRef.equals(refString(granted));
+  }
+
+  public static Boolean isReferenced(String savedRef, int appOpMode) {
+    return savedRef == null ? null : savedRef.equals(refString(appOpMode));
   }
 }

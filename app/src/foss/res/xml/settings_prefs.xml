@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <Preference
+    app:icon="@drawable/settings"
+    app:key="@string/pref_settings_general_cat_key"
+    app:singleLineTitle="false"
+    app:title="@string/pref_settings_general_cat_title" />
+
+  <Preference
+    app:icon="@drawable/theme"
+    app:key="@string/pref_settings_theming_cat_key"
+    app:singleLineTitle="false"
+    app:title="@string/pref_settings_theming_cat_title" />
+
+  <Preference
+    app:enabled="false"
+    app:icon="@drawable/schedule"
+    app:singleLineTitle="false"
+    app:title="@string/pref_settings_ref_states_cat_title" />
+
+  <Preference
+    app:enabled="false"
+    app:icon="@drawable/perm_watcher"
+    app:singleLineTitle="false"
+    app:title="@string/pref_settings_perm_watcher_cat_title" />
+
+</PreferenceScreen>

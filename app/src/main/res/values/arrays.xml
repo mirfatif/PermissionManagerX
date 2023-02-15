@@ -167,15 +167,36 @@
     <item>RUN_IN_BACKGROUND</item>
   </string-array>
 
+  <string-array name="daemon_locations">
+    <item>@string/daemon_dex_location_tmp</item>
+    <item>@string/daemon_dex_location_external</item>
+  </string-array>
+
+  <string-array name="daemon_location_values">
+    <item>@string/daemon_dex_location_tmp_val</item>
+    <item>@string/daemon_dex_location_external_val</item>
+  </string-array>
+
   <string-array name="daemon_uids">
     <item>@string/daemon_uid_system</item>
     <item>@string/daemon_uid_root</item>
     <item>@string/daemon_uid_adb</item>
   </string-array>
 
+  <string-array name="daemon_uid_values">
+    <item>@string/daemon_uid_system_val</item>
+    <item>@string/daemon_uid_root_val</item>
+    <item>@string/daemon_uid_adb_val</item>
+  </string-array>
+
   <string-array name="daemon_contexts">
     <item>@string/daemon_context_shell</item>
     <item>@string/daemon_context_default</item>
+  </string-array>
+
+  <string-array name="daemon_context_values">
+    <item>@string/daemon_context_shell_val</item>
+    <item>@string/daemon_context_default_val</item>
   </string-array>
 
   <string-array name="locales">
@@ -184,6 +205,8 @@
     <item order="2">@string/locale_ru</item>
     <item order="3">@string/locale_es</item>
     <item order="4">@string/locale_ar</item>
+    <item order="5">@string/locale_el</item>
+    <item order="6">@string/locale_cn</item>
   </string-array>
 
   <string-array name="locale_codes">
@@ -192,6 +215,8 @@
     <item order="2">ru</item>
     <item order="3">es</item>
     <item order="4">ar</item>
+    <item order="5">el</item>
+    <item order="6">zh</item>
   </string-array>
 
   <array name="locale_contributor_name_arrays">
@@ -200,6 +225,8 @@
     <item order="2">@array/locale_contributor_names_ru</item>
     <item order="3">@array/locale_contributor_names_es</item>
     <item order="4">@array/locale_contributor_names_ar</item>
+    <item order="5">@array/locale_contributor_names_el</item>
+    <item order="6">@array/locale_contributor_names_cn</item>
   </array>
 
   <array name="locale_contributor_link_arrays">
@@ -208,6 +235,8 @@
     <item order="2">@array/locale_contributor_links_ru</item>
     <item order="3">@array/locale_contributor_links_es</item>
     <item order="4">@array/locale_contributor_links_ar</item>
+    <item order="5">@array/locale_contributor_links_el</item>
+    <item order="6">@array/locale_contributor_links_cn</item>
   </array>
 
   <string-array name="locale_contributor_names_ru">
@@ -238,6 +267,20 @@
     <item order="0">https://crowdin.com/profile/rex07</item>
   </string-array>
 
+  <string-array name="locale_contributor_names_el">
+  </string-array>
+
+  <string-array name="locale_contributor_links_el">
+  </string-array>
+
+  <string-array name="locale_contributor_names_cn">
+    <item order="0">wushidi</item>
+  </string-array>
+
+  <string-array name="locale_contributor_links_cn">
+    <item order="0">https://crowdin.com/profile/wushidia</item>
+  </string-array>
+
   <string-array name="theme_colors">
     <item>@string/theme_color_green</item>
     <item>@string/theme_color_blue</item>
@@ -251,5 +294,688 @@
     <item>@string/theme_color_pink_val</item>
     <item>@string/theme_color_gray_val</item>
   </string-array>
+
+  <string-array name="dark_theme_modes">
+    <item>@string/dark_theme_mode_system</item>
+    <item>@string/dark_theme_mode_light</item>
+    <item>@string/dark_theme_mode_dark</item>
+  </string-array>
+
+  <string-array name="dark_theme_mode_values">
+    <item>@string/dark_theme_mode_system_val</item>
+    <item>@string/dark_theme_mode_light_val</item>
+    <item>@string/dark_theme_mode_dark_val</item>
+  </string-array>
+
+  <!-- Permission Groups Mapping -->
+
+  <string-array name="perm_groups_perms">
+    <item order="1">android.permission.ACCOUNT_MANAGER</item>
+    <item order="2">android.permission.AUTHENTICATE_ACCOUNTS</item>
+    <item order="3">android.permission.CREATE_USERS</item>
+    <item order="4">android.permission.GET_ACCOUNTS</item>
+    <item order="5">android.permission.GET_ACCOUNTS_PRIVILEGED</item>
+    <item order="6">android.permission.INTERACT_ACROSS_PROFILES</item>
+    <item order="7">android.permission.INTERACT_ACROSS_USERS_FULL</item>
+    <item order="8">android.permission.INTERACT_ACROSS_USERS</item>
+    <item order="9">android.permission.MANAGE_ACCOUNTS</item>
+    <item order="10">android.permission.MANAGE_DEVICE_ADMINS</item>
+    <item order="11">android.permission.MANAGE_USERS</item>
+    <item order="12">android.permission.READ_PROFILE</item>
+    <item order="13">android.permission.USE_CREDENTIALS</item>
+    <item order="14">android.permission.WRITE_PROFILE</item>
+    <item order="15">android.permission.CAPTURE_AUDIO_HOTWORD</item>
+    <item order="16">android.permission.CAPTURE_AUDIO_OUTPUT</item>
+    <item order="17">android.permission.MODIFY_AUDIO_ROUTING</item>
+    <item order="18">android.permission.MODIFY_AUDIO_SETTINGS</item>
+    <item order="19" />
+    <item order="20" />
+    <item order="21" />
+    <item order="22" />
+    <item order="23" />
+    <item order="24" />
+    <item order="25" />
+    <item order="26" />
+    <item order="27" />
+    <item order="28" />
+    <item order="29">android.permission.DOWNLOAD_WITHOUT_NOTIFICATION</item>
+    <item order="30">android.permission.FOREGROUND_SERVICE</item>
+    <item order="31">android.permission.RECEIVE_BOOT_COMPLETED</item>
+    <item order="32">android.permission.RUN_IN_BACKGROUND</item>
+    <item order="33">android.permission.START_ACTIVITIES_FROM_BACKGROUND</item>
+    <item order="34">android.permission.WAKE_LOCK</item>
+    <item order="35" />
+    <item order="36" />
+    <item order="37">android.permission.MANAGE_BIOMETRIC_DIALOG</item>
+    <item order="38">android.permission.MANAGE_BIOMETRIC</item>
+    <item order="39">android.permission.MANAGE_FINGERPRINT</item>
+    <item order="40">android.permission.RESET_FINGERPRINT_LOCKOUT</item>
+    <item order="41">android.permission.USE_BIOMETRIC_INTERNAL</item>
+    <item order="42">android.permission.USE_BIOMETRIC</item>
+    <item order="43">android.permission.USE_FINGERPRINT</item>
+    <item order="44">android.permission.BLUETOOTH_ADMIN</item>
+    <item order="45">android.permission.BLUETOOTH_MAP</item>
+    <item order="46">android.permission.BLUETOOTH</item>
+    <item order="47">android.permission.BLUETOOTH_PRIVILEGED</item>
+    <item order="48">android.permission.BLUETOOTH_STACK</item>
+    <item order="49">android.permission.MANAGE_BLUETOOTH_WHEN_WIRELESS_CONSENT_REQUIRED</item>
+    <item order="50">android.permission.RECEIVE_BLUETOOTH_MAP</item>
+    <item order="51" />
+    <item order="52">android.permission.READ_CALENDAR</item>
+    <item order="53">android.permission.WRITE_CALENDAR</item>
+    <item order="54">android.permission.READ_CALL_LOG</item>
+    <item order="55">android.permission.WRITE_CALL_LOG</item>
+    <item order="56">android.permission.CAMERA</item>
+    <item order="57">android.permission.MANAGE_CAMERA</item>
+    <item order="58">android.permission.READ_CLIPBOARD_IN_BACKGROUND</item>
+    <item order="59" />
+    <item order="60" />
+    <item order="61">android.permission.READ_CONTACTS</item>
+    <item order="62">android.permission.WRITE_CONTACTS</item>
+    <item order="63">android.permission.USE_DATA_IN_BACKGROUND</item>
+    <item order="64">android.permission.HIDE_NON_SYSTEM_OVERLAY_WINDOWS</item>
+    <item order="65">android.permission.STATUS_BAR</item>
+    <item order="66">android.permission.SYSTEM_ALERT_WINDOW</item>
+    <item order="67" />
+    <item order="68" />
+    <item order="69">android.permission.LOCAL_MAC_ADDRESS</item>
+    <item order="70">android.permission.LOCATION_HARDWARE</item>
+    <item order="71">android.permission.MANAGE_USB</item>
+    <item order="72">android.permission.MASTER_CLEAR</item>
+    <item order="73">android.permission.READ_FRAME_BUFFER</item>
+    <item order="74">android.permission.SET_WALLPAPER_COMPONENT</item>
+    <item order="75">android.permission.SET_WALLPAPER</item>
+    <item order="76">com.android.launcher.permission.INSTALL_SHORTCUT</item>
+    <item order="77">com.android.launcher.permission.UNINSTALL_SHORTCUT</item>
+    <item order="78">android.permission.ACCESS_BACKGROUND_LOCATION</item>
+    <item order="79">android.permission.ACCESS_COARSE_LOCATION</item>
+    <item order="80">android.permission.ACCESS_FINE_LOCATION</item>
+    <item order="81">android.permission.ACCESS_LOCATION_EXTRA_COMMANDS</item>
+    <item order="82" />
+    <item order="83" />
+    <item order="84" />
+    <item order="84.1" />
+    <item order="85">android.permission.BATTERY_STATS</item>
+    <item order="86">android.permission.DUMP</item>
+    <item order="87">android.permission.READ_LOGS</item>
+    <item order="88">android.permission.READ_NETWORK_USAGE_HISTORY</item>
+    <item order="89">android.permission.READ_SYNC_STATS</item>
+    <item order="90">android.permission.UPDATE_DEVICE_STATS</item>
+    <item order="90.1">android.permission.LOADER_USAGE_STATS</item>
+    <item order="91">android.permission.RECORD_AUDIO</item>
+    <item order="92" />
+    <item order="93">android.permission.ACCESS_NETWORK_STATE</item>
+    <item order="94">android.permission.CHANGE_NETWORK_STATE</item>
+    <item order="95">android.permission.CONNECTIVITY_INTERNAL</item>
+    <item order="96">android.permission.CONNECTIVITY_USE_RESTRICTED_NETWORKS</item>
+    <item order="97">android.permission.INTERNET</item>
+    <item order="98">android.permission.MANAGE_NETWORK_POLICY</item>
+    <item order="99">android.permission.NETWORK_SCAN</item>
+    <item order="100">android.permission.NETWORK_SETTINGS</item>
+    <item order="101">android.permission.TETHER_PRIVILEGED</item>
+    <item order="101.1" />
+    <item order="102">android.permission.ACCESS_NOTIFICATION_POLICY</item>
+    <item order="103">android.permission.ACCESS_NOTIFICATIONS</item>
+    <item order="104">android.permission.MANAGE_NOTIFICATIONS</item>
+    <item order="105">android.permission.SUBSTITUTE_NOTIFICATION_APP_NAME</item>
+    <item order="105.1">android.permission.POST_NOTIFICATIONS</item>
+    <item order="106">android.permission.ACCESS_INSTANT_APPS</item>
+    <item order="107">android.permission.CHANGE_COMPONENT_ENABLED_STATE</item>
+    <item order="108">android.permission.CLEAR_APP_CACHE</item>
+    <item order="109">android.permission.DELETE_PACKAGES</item>
+    <item order="110">android.permission.FORCE_STOP_PACKAGES</item>
+    <item order="111">android.permission.GET_APP_OPS_STATS</item>
+    <item order="112">android.permission.GET_PACKAGE_SIZE</item>
+    <item order="113">android.permission.GET_TASKS</item>
+    <item order="114">android.permission.GRANT_RUNTIME_PERMISSIONS</item>
+    <item order="115">android.permission.INSTALL_PACKAGES</item>
+    <item order="116">android.permission.KILL_BACKGROUND_PROCESSES</item>
+    <item order="117">android.permission.MANAGE_APP_OPS_MODES</item>
+    <item order="118">android.permission.OBSERVE_GRANT_REVOKE_PERMISSIONS</item>
+    <item order="119">android.permission.PACKAGE_USAGE_STATS</item>
+    <item order="120">android.permission.QUERY_ALL_PACKAGES</item>
+    <item order="121">android.permission.REAL_GET_TASKS</item>
+    <item order="122">android.permission.REMOVE_TASKS</item>
+    <item order="123">android.permission.REORDER_TASKS</item>
+    <item order="124">android.permission.REQUEST_DELETE_PACKAGES</item>
+    <item order="125">android.permission.REQUEST_INSTALL_PACKAGES</item>
+    <item order="126">android.permission.REVOKE_RUNTIME_PERMISSIONS</item>
+    <item order="127">android.permission.START_TASKS_FROM_RECENTS</item>
+    <item order="128">android.permission.STOP_APP_SWITCHES</item>
+    <item order="129">android.permission.UPDATE_APP_OPS_STATS</item>
+    <item order="130">android.permission.WATCH_APPOPS</item>
+    <item order="131">android.permission.ACCEPT_HANDOVER</item>
+    <item order="132">android.permission.ANSWER_PHONE_CALLS</item>
+    <item order="133">android.permission.CALL_PHONE</item>
+    <item order="134">android.permission.CALL_PRIVILEGED</item>
+    <item order="135">android.permission.CONTROL_INCALL_EXPERIENCE</item>
+    <item order="136">android.permission.MODIFY_PHONE_STATE</item>
+    <item order="137">android.permission.PROCESS_OUTGOING_CALLS</item>
+    <item order="138">android.permission.READ_PHONE_NUMBERS</item>
+    <item order="139">android.permission.READ_PHONE_STATE</item>
+    <item order="140">android.permission.READ_PRECISE_PHONE_STATE</item>
+    <item order="141">android.permission.READ_PRIVILEGED_PHONE_STATE</item>
+    <item order="142">android.permission.USE_SIP</item>
+    <item order="143">com.android.voicemail.permission.ADD_VOICEMAIL</item>
+    <item order="144">com.android.voicemail.permission.READ_VOICEMAIL</item>
+    <item order="145">com.android.voicemail.permission.WRITE_VOICEMAIL</item>
+    <item order="146">android.permission.DEVICE_POWER</item>
+    <item order="147">android.permission.REBOOT</item>
+    <item order="148">android.permission.SHUTDOWN</item>
+    <item order="149">android.permission.BODY_SENSORS</item>
+    <item order="150">android.permission.MANAGE_SENSOR_PRIVACY</item>
+    <item order="151">android.permission.MANAGE_SENSORS</item>
+    <item order="152">android.permission.NFC</item>
+    <item order="153">android.permission.BACKUP</item>
+    <item order="154">android.permission.CHANGE_CONFIGURATION</item>
+    <item order="155">android.permission.CHANGE_DEVICE_IDLE_TEMP_WHITELIST</item>
+    <item order="156">android.permission.DISABLE_KEYGUARD</item>
+    <item order="157">android.permission.MANAGE_ROLE_HOLDERS</item>
+    <item order="158">android.permission.MODIFY_DAY_NIGHT_MODE</item>
+    <item order="159">android.permission.READ_DEVICE_CONFIG</item>
+    <item order="160">android.permission.READ_DREAM_STATE</item>
+    <item order="161">android.permission.READ_SYNC_SETTINGS</item>
+    <item order="162">android.permission.READ_USER_DICTIONARY</item>
+    <item order="163">android.permission.SET_PREFERRED_APPLICATIONS</item>
+    <item order="164">android.permission.SET_TIME</item>
+    <item order="165">android.permission.SET_TIME_ZONE</item>
+    <item order="166">android.permission.WRITE_APN_SETTINGS</item>
+    <item order="167">android.permission.WRITE_DEVICE_CONFIG</item>
+    <item order="168">android.permission.WRITE_DREAM_STATE</item>
+    <item order="169">android.permission.WRITE_SECURE_SETTINGS</item>
+    <item order="170">android.permission.WRITE_SETTINGS</item>
+    <item order="171">android.permission.WRITE_SYNC_SETTINGS</item>
+    <item order="172">android.permission.WRITE_USER_DICTIONARY</item>
+    <item order="173">android.permission.BIND_FINANCIAL_SMS_SERVICE</item>
+    <item order="174">android.permission.BROADCAST_SMS</item>
+    <item order="175">android.permission.CARRIER_FILTER_SMS</item>
+    <item order="176">android.permission.MONITOR_DEFAULT_SMS_PACKAGE</item>
+    <item order="177">android.permission.READ_CELL_BROADCASTS</item>
+    <item order="178">android.permission.READ_SMS</item>
+    <item order="179">android.permission.RECEIVE_EMERGENCY_BROADCAST</item>
+    <item order="180">android.permission.RECEIVE_MMS</item>
+    <item order="181">android.permission.RECEIVE_SMS</item>
+    <item order="182">android.permission.RECEIVE_WAP_PUSH</item>
+    <item order="183">android.permission.SEND_SMS_NO_CONFIRMATION</item>
+    <item order="184">android.permission.SEND_SMS</item>
+    <item order="185">android.permission.SMS_FINANCIAL_TRANSACTIONS</item>
+    <item order="186">android.permission.WRITE_SMS</item>
+    <item order="187" />
+    <item order="188" />
+    <item order="189" />
+    <item order="190">android.permission.ACCESS_MEDIA_LOCATION</item>
+    <item order="191">android.permission.MANAGE_EXTERNAL_STORAGE</item>
+    <item order="192">android.permission.MOUNT_UNMOUNT_FILESYSTEMS</item>
+    <item order="193">android.permission.READ_EXTERNAL_STORAGE</item>
+    <item order="194">android.permission.USE_RESERVED_DISK</item>
+    <item order="195">android.permission.WRITE_EXTERNAL_STORAGE</item>
+    <item order="196">android.permission.WRITE_MEDIA_STORAGE</item>
+    <item order="197" />
+    <item order="198" />
+    <item order="199" />
+    <item order="200" />
+    <item order="201" />
+    <item order="202" />
+    <item order="203" />
+    <item order="204" />
+    <item order="205">android.permission.VIBRATE</item>
+    <item order="206">android.permission.ACCESS_WIFI_STATE</item>
+    <item order="207">android.permission.CHANGE_WIFI_MULTICAST_STATE</item>
+    <item order="208">android.permission.CHANGE_WIFI_STATE</item>
+    <item order="209">android.permission.OVERRIDE_WIFI_CONFIG</item>
+    <item order="210">android.permission.ACTIVITY_RECOGNITION</item>
+    <item order="211">android.permission.BIND_ACCESSIBILITY_SERVICE</item>
+    <item order="212">android.permission.INSTANT_APP_FOREGROUND_SERVICE</item>
+    <item order="213">android.permission.MANAGE_IPSEC_TUNNELS</item>
+    <item order="214" />
+    <item order="215" />
+    <item order="216" />
+  </string-array>
+
+  <string-array name="perm_groups_app_ops">
+    <item order="1" />
+    <item order="2" />
+    <item order="3" />
+    <item order="4">GET_ACCOUNTS</item>
+    <item order="5" />
+    <item order="6">INTERACT_ACROSS_PROFILES</item>
+    <item order="7" />
+    <item order="8" />
+    <item order="9" />
+    <item order="10" />
+    <item order="11" />
+    <item order="12" />
+    <item order="13" />
+    <item order="14" />
+    <item order="15" />
+    <item order="16" />
+    <item order="17" />
+    <item order="18" />
+    <item order="19">AUDIO_ACCESSIBILITY_VOLUME</item>
+    <item order="20">AUDIO_ALARM_VOLUME</item>
+    <item order="21">AUDIO_BLUETOOTH_VOLUME</item>
+    <item order="22">AUDIO_MASTER_VOLUME</item>
+    <item order="23">AUDIO_MEDIA_VOLUME</item>
+    <item order="24">AUDIO_NOTIFICATION_VOLUME</item>
+    <item order="25">AUDIO_RING_VOLUME</item>
+    <item order="26">AUDIO_VOICE_VOLUME</item>
+    <item order="27">PLAY_AUDIO</item>
+    <item order="28">TAKE_AUDIO_FOCUS</item>
+    <item order="29" />
+    <item order="30">START_FOREGROUND</item>
+    <item order="31" />
+    <item order="32" />
+    <item order="33" />
+    <item order="34">WAKE_LOCK</item>
+    <item order="35">RUN_ANY_IN_BACKGROUND</item>
+    <item order="36">RUN_IN_BACKGROUND</item>
+    <item order="37" />
+    <item order="38" />
+    <item order="39" />
+    <item order="40" />
+    <item order="41" />
+    <item order="42">USE_BIOMETRIC</item>
+    <item order="43">USE_FINGERPRINT</item>
+    <item order="44" />
+    <item order="45" />
+    <item order="46" />
+    <item order="47" />
+    <item order="48" />
+    <item order="49" />
+    <item order="50" />
+    <item order="51">BLUETOOTH_SCAN</item>
+    <item order="52">READ_CALENDAR</item>
+    <item order="53">WRITE_CALENDAR</item>
+    <item order="54">READ_CALL_LOG</item>
+    <item order="55">WRITE_CALL_LOG</item>
+    <item order="56">CAMERA</item>
+    <item order="57" />
+    <item order="58" />
+    <item order="59">READ_CLIPBOARD</item>
+    <item order="60">WRITE_CLIPBOARD</item>
+    <item order="61">READ_CONTACTS</item>
+    <item order="62">WRITE_CONTACTS</item>
+    <item order="63" />
+    <item order="64" />
+    <item order="65" />
+    <item order="66">SYSTEM_ALERT_WINDOW</item>
+    <item order="67">TOAST_WINDOW</item>
+    <item order="68">TURN_ON_SCREEN</item>
+    <item order="69" />
+    <item order="70" />
+    <item order="71" />
+    <item order="72" />
+    <item order="73" />
+    <item order="74" />
+    <item order="75" />
+    <item order="76" />
+    <item order="77" />
+    <item order="78" />
+    <item order="79">COARSE_LOCATION</item>
+    <item order="80">FINE_LOCATION</item>
+    <item order="81" />
+    <item order="82">GPS</item>
+    <item order="83">MONITOR_HIGH_POWER_LOCATION</item>
+    <item order="84">MONITOR_LOCATION</item>
+    <item order="84.1">MOCK_LOCATION</item>
+    <item order="85" />
+    <item order="86" />
+    <item order="87" />
+    <item order="88" />
+    <item order="89" />
+    <item order="90" />
+    <item order="90.1">LOADER_USAGE_STATS</item>
+    <item order="91">RECORD_AUDIO</item>
+    <item order="92">MUTE_MICROPHONE</item>
+    <item order="93" />
+    <item order="94" />
+    <item order="95" />
+    <item order="96" />
+    <item order="97" />
+    <item order="98" />
+    <item order="99" />
+    <item order="100" />
+    <item order="101" />
+    <item order="101.1">ACTIVATE_VPN</item>
+    <item order="102" />
+    <item order="103">ACCESS_NOTIFICATIONS</item>
+    <item order="104" />
+    <item order="105" />
+    <item order="105.1">POST_NOTIFICATION</item>
+    <item order="106" />
+    <item order="107" />
+    <item order="108" />
+    <item order="109" />
+    <item order="110" />
+    <item order="111" />
+    <item order="112" />
+    <item order="113" />
+    <item order="114" />
+    <item order="115" />
+    <item order="116" />
+    <item order="117" />
+    <item order="118" />
+    <item order="119">GET_USAGE_STATS</item>
+    <item order="120" />
+    <item order="121" />
+    <item order="122" />
+    <item order="123" />
+    <item order="124">REQUEST_DELETE_PACKAGES</item>
+    <item order="125">REQUEST_INSTALL_PACKAGES</item>
+    <item order="126" />
+    <item order="127" />
+    <item order="128" />
+    <item order="129" />
+    <item order="130" />
+    <item order="131">ACCEPT_HANDOVER</item>
+    <item order="132">ANSWER_PHONE_CALLS</item>
+    <item order="133">CALL_PHONE</item>
+    <item order="134" />
+    <item order="135" />
+    <item order="136" />
+    <item order="137">PROCESS_OUTGOING_CALLS</item>
+    <item order="138">READ_PHONE_NUMBERS</item>
+    <item order="139">READ_PHONE_STATE</item>
+    <item order="140" />
+    <item order="141" />
+    <item order="142">USE_SIP</item>
+    <item order="143">ADD_VOICEMAIL</item>
+    <item order="144" />
+    <item order="145" />
+    <item order="146" />
+    <item order="147" />
+    <item order="148" />
+    <item order="149">BODY_SENSORS</item>
+    <item order="150" />
+    <item order="151" />
+    <item order="152" />
+    <item order="153" />
+    <item order="154" />
+    <item order="155" />
+    <item order="156" />
+    <item order="157" />
+    <item order="158" />
+    <item order="159" />
+    <item order="160" />
+    <item order="161" />
+    <item order="162" />
+    <item order="163" />
+    <item order="164" />
+    <item order="165" />
+    <item order="166" />
+    <item order="167" />
+    <item order="168" />
+    <item order="169" />
+    <item order="170">WRITE_SETTINGS</item>
+    <item order="171" />
+    <item order="172" />
+    <item order="173" />
+    <item order="174" />
+    <item order="175" />
+    <item order="176" />
+    <item order="177">READ_CELL_BROADCASTS</item>
+    <item order="178">READ_SMS</item>
+    <item order="179">RECEIVE_EMERGECY_SMS</item>
+    <item order="180">RECEIVE_MMS</item>
+    <item order="181">RECEIVE_SMS</item>
+    <item order="182">RECEIVE_WAP_PUSH</item>
+    <item order="183" />
+    <item order="184">SEND_SMS</item>
+    <item order="185">SMS_FINANCIAL_TRANSACTIONS</item>
+    <item order="186" />
+    <item order="187">READ_ICC_SMS</item>
+    <item order="188">WRITE_ICC_SMS</item>
+    <item order="189">WRITE_SMS</item>
+    <item order="190">ACCESS_MEDIA_LOCATION</item>
+    <item order="191">MANAGE_EXTERNAL_STORAGE</item>
+    <item order="192" />
+    <item order="193">READ_EXTERNAL_STORAGE</item>
+    <item order="194" />
+    <item order="195">WRITE_EXTERNAL_STORAGE</item>
+    <item order="196" />
+    <item order="197">LEGACY_STORAGE</item>
+    <item order="198">NO_ISOLATED_STORAGE</item>
+    <item order="199">READ_MEDIA_AUDIO</item>
+    <item order="200">READ_MEDIA_IMAGES</item>
+    <item order="201">READ_MEDIA_VIDEO</item>
+    <item order="202">WRITE_MEDIA_AUDIO</item>
+    <item order="203">WRITE_MEDIA_IMAGES</item>
+    <item order="204">WRITE_MEDIA_VIDEO</item>
+    <item order="205">VIBRATE</item>
+    <item order="206">WIFI_SCAN</item>
+    <item order="207" />
+    <item order="208">CHANGE_WIFI_STATE</item>
+    <item order="209" />
+    <item order="210">ACTIVITY_RECOGNITION</item>
+    <item order="211">BIND_ACCESSIBILITY_SERVICE</item>
+    <item order="212">INSTANT_APP_START_FOREGROUND</item>
+    <item order="213">MANAGE_IPSEC_TUNNELS</item>
+    <item order="214">READ_DEVICE_IDENTIFIERS</item>
+    <item order="215">PROJECT_MEDIA</item>
+    <item order="216">AUTO_REVOKE_PERMISSIONS_IF_UNUSED</item>
+  </string-array>
+
+  <array name="perm_groups_icons">
+    <item order="1">@drawable/g_accounts</item>
+    <item order="2">@drawable/g_accounts</item>
+    <item order="3">@drawable/g_accounts</item>
+    <item order="4">@drawable/g_accounts</item>
+    <item order="5">@drawable/g_accounts</item>
+    <item order="6">@drawable/g_accounts</item>
+    <item order="7">@drawable/g_accounts</item>
+    <item order="8">@drawable/g_accounts</item>
+    <item order="9">@drawable/g_accounts</item>
+    <item order="10">@drawable/g_accounts</item>
+    <item order="11">@drawable/g_accounts</item>
+    <item order="12">@drawable/g_accounts</item>
+    <item order="13">@drawable/g_accounts</item>
+    <item order="14">@drawable/g_accounts</item>
+    <item order="15">@drawable/g_audio</item>
+    <item order="16">@drawable/g_audio</item>
+    <item order="17">@drawable/g_audio</item>
+    <item order="18">@drawable/g_audio</item>
+    <item order="19">@drawable/g_audio</item>
+    <item order="20">@drawable/g_audio</item>
+    <item order="21">@drawable/g_audio</item>
+    <item order="22">@drawable/g_audio</item>
+    <item order="23">@drawable/g_audio</item>
+    <item order="24">@drawable/g_audio</item>
+    <item order="25">@drawable/g_audio</item>
+    <item order="26">@drawable/g_audio</item>
+    <item order="27">@drawable/g_audio</item>
+    <item order="28">@drawable/g_audio</item>
+    <item order="29">@drawable/g_background</item>
+    <item order="30">@drawable/g_background</item>
+    <item order="31">@drawable/g_background</item>
+    <item order="32">@drawable/g_background</item>
+    <item order="33">@drawable/g_background</item>
+    <item order="34">@drawable/g_background</item>
+    <item order="35">@drawable/g_background</item>
+    <item order="36">@drawable/g_background</item>
+    <item order="37">@drawable/g_biometrics</item>
+    <item order="38">@drawable/g_biometrics</item>
+    <item order="39">@drawable/g_biometrics</item>
+    <item order="40">@drawable/g_biometrics</item>
+    <item order="41">@drawable/g_biometrics</item>
+    <item order="42">@drawable/g_biometrics</item>
+    <item order="43">@drawable/g_biometrics</item>
+    <item order="44">@drawable/g_bluetooth</item>
+    <item order="45">@drawable/g_bluetooth</item>
+    <item order="46">@drawable/g_bluetooth</item>
+    <item order="47">@drawable/g_bluetooth</item>
+    <item order="48">@drawable/g_bluetooth</item>
+    <item order="49">@drawable/g_bluetooth</item>
+    <item order="50">@drawable/g_bluetooth</item>
+    <item order="51">@drawable/g_bluetooth</item>
+    <item order="52">@drawable/g_calendar</item>
+    <item order="53">@drawable/g_calendar</item>
+    <item order="54">@drawable/g_calllog</item>
+    <item order="55">@drawable/g_calllog</item>
+    <item order="56">@drawable/g_camera</item>
+    <item order="57">@drawable/g_camera</item>
+    <item order="58">@drawable/g_clipboard</item>
+    <item order="59">@drawable/g_clipboard</item>
+    <item order="60">@drawable/g_clipboard</item>
+    <item order="61">@drawable/g_contacts</item>
+    <item order="62">@drawable/g_contacts</item>
+    <item order="63">@drawable/g_data</item>
+    <item order="64">@drawable/g_display</item>
+    <item order="65">@drawable/g_display</item>
+    <item order="66">@drawable/g_display</item>
+    <item order="67">@drawable/g_display</item>
+    <item order="68">@drawable/g_display</item>
+    <item order="69">@drawable/g_hardware</item>
+    <item order="70">@drawable/g_hardware</item>
+    <item order="71">@drawable/g_hardware</item>
+    <item order="72">@drawable/g_hardware</item>
+    <item order="73">@drawable/g_hardware</item>
+    <item order="74">@drawable/g_home</item>
+    <item order="75">@drawable/g_home</item>
+    <item order="76">@drawable/g_home</item>
+    <item order="77">@drawable/g_home</item>
+    <item order="78">@drawable/g_location</item>
+    <item order="79">@drawable/g_location</item>
+    <item order="80">@drawable/g_location</item>
+    <item order="81">@drawable/g_location</item>
+    <item order="82">@drawable/g_location</item>
+    <item order="83">@drawable/g_location</item>
+    <item order="84">@drawable/g_location</item>
+    <item order="84.1">@drawable/g_location</item>
+    <item order="85">@drawable/g_log</item>
+    <item order="86">@drawable/g_log</item>
+    <item order="87">@drawable/g_log</item>
+    <item order="88">@drawable/g_log</item>
+    <item order="89">@drawable/g_log</item>
+    <item order="90">@drawable/g_log</item>
+    <item order="90.1">@drawable/g_log</item>
+    <item order="91">@drawable/g_mic</item>
+    <item order="92">@drawable/g_mic</item>
+    <item order="93">@drawable/g_network</item>
+    <item order="94">@drawable/g_network</item>
+    <item order="95">@drawable/g_network</item>
+    <item order="96">@drawable/g_network</item>
+    <item order="97">@drawable/g_network</item>
+    <item order="98">@drawable/g_network</item>
+    <item order="99">@drawable/g_network</item>
+    <item order="100">@drawable/g_network</item>
+    <item order="101">@drawable/g_network</item>
+    <item order="101.1">@drawable/g_network</item>
+    <item order="102">@drawable/g_notif</item>
+    <item order="103">@drawable/g_notif</item>
+    <item order="104">@drawable/g_notif</item>
+    <item order="105">@drawable/g_notif</item>
+    <item order="105.1">@drawable/g_notif</item>
+    <item order="106">@drawable/g_package</item>
+    <item order="107">@drawable/g_package</item>
+    <item order="108">@drawable/g_package</item>
+    <item order="109">@drawable/g_package</item>
+    <item order="110">@drawable/g_package</item>
+    <item order="111">@drawable/g_package</item>
+    <item order="112">@drawable/g_package</item>
+    <item order="113">@drawable/g_package</item>
+    <item order="114">@drawable/g_package</item>
+    <item order="115">@drawable/g_package</item>
+    <item order="116">@drawable/g_package</item>
+    <item order="117">@drawable/g_package</item>
+    <item order="118">@drawable/g_package</item>
+    <item order="119">@drawable/g_package</item>
+    <item order="120">@drawable/g_package</item>
+    <item order="121">@drawable/g_package</item>
+    <item order="122">@drawable/g_package</item>
+    <item order="123">@drawable/g_package</item>
+    <item order="124">@drawable/g_package</item>
+    <item order="125">@drawable/g_package</item>
+    <item order="126">@drawable/g_package</item>
+    <item order="127">@drawable/g_package</item>
+    <item order="128">@drawable/g_package</item>
+    <item order="129">@drawable/g_package</item>
+    <item order="130">@drawable/g_package</item>
+    <item order="131">@drawable/g_phone</item>
+    <item order="132">@drawable/g_phone</item>
+    <item order="133">@drawable/g_phone</item>
+    <item order="134">@drawable/g_phone</item>
+    <item order="135">@drawable/g_phone</item>
+    <item order="136">@drawable/g_phone</item>
+    <item order="137">@drawable/g_phone</item>
+    <item order="138">@drawable/g_phone</item>
+    <item order="139">@drawable/g_phone</item>
+    <item order="140">@drawable/g_phone</item>
+    <item order="141">@drawable/g_phone</item>
+    <item order="142">@drawable/g_phone</item>
+    <item order="143">@drawable/g_phone</item>
+    <item order="144">@drawable/g_phone</item>
+    <item order="145">@drawable/g_phone</item>
+    <item order="146">@drawable/g_power</item>
+    <item order="147">@drawable/g_power</item>
+    <item order="148">@drawable/g_power</item>
+    <item order="149">@drawable/g_sensors</item>
+    <item order="150">@drawable/g_sensors</item>
+    <item order="151">@drawable/g_sensors</item>
+    <item order="152">@drawable/g_sensors</item>
+    <item order="153">@drawable/g_settings</item>
+    <item order="154">@drawable/g_settings</item>
+    <item order="155">@drawable/g_settings</item>
+    <item order="156">@drawable/g_settings</item>
+    <item order="157">@drawable/g_settings</item>
+    <item order="158">@drawable/g_settings</item>
+    <item order="159">@drawable/g_settings</item>
+    <item order="160">@drawable/g_settings</item>
+    <item order="161">@drawable/g_settings</item>
+    <item order="162">@drawable/g_settings</item>
+    <item order="163">@drawable/g_settings</item>
+    <item order="164">@drawable/g_settings</item>
+    <item order="165">@drawable/g_settings</item>
+    <item order="166">@drawable/g_settings</item>
+    <item order="167">@drawable/g_settings</item>
+    <item order="168">@drawable/g_settings</item>
+    <item order="169">@drawable/g_settings</item>
+    <item order="170">@drawable/g_settings</item>
+    <item order="171">@drawable/g_settings</item>
+    <item order="172">@drawable/g_settings</item>
+    <item order="173">@drawable/g_sms</item>
+    <item order="174">@drawable/g_sms</item>
+    <item order="175">@drawable/g_sms</item>
+    <item order="176">@drawable/g_sms</item>
+    <item order="177">@drawable/g_sms</item>
+    <item order="178">@drawable/g_sms</item>
+    <item order="179">@drawable/g_sms</item>
+    <item order="180">@drawable/g_sms</item>
+    <item order="181">@drawable/g_sms</item>
+    <item order="182">@drawable/g_sms</item>
+    <item order="183">@drawable/g_sms</item>
+    <item order="184">@drawable/g_sms</item>
+    <item order="185">@drawable/g_sms</item>
+    <item order="186">@drawable/g_sms</item>
+    <item order="187">@drawable/g_sms</item>
+    <item order="188">@drawable/g_sms</item>
+    <item order="189">@drawable/g_sms</item>
+    <item order="190">@drawable/g_storage</item>
+    <item order="191">@drawable/g_storage</item>
+    <item order="192">@drawable/g_storage</item>
+    <item order="193">@drawable/g_storage</item>
+    <item order="194">@drawable/g_storage</item>
+    <item order="195">@drawable/g_storage</item>
+    <item order="196">@drawable/g_storage</item>
+    <item order="197">@drawable/g_storage</item>
+    <item order="198">@drawable/g_storage</item>
+    <item order="199">@drawable/g_storage</item>
+    <item order="200">@drawable/g_storage</item>
+    <item order="201">@drawable/g_storage</item>
+    <item order="202">@drawable/g_storage</item>
+    <item order="203">@drawable/g_storage</item>
+    <item order="204">@drawable/g_storage</item>
+    <item order="205">@drawable/g_vibration</item>
+    <item order="206">@drawable/g_wifi</item>
+    <item order="207">@drawable/g_wifi</item>
+    <item order="208">@drawable/g_wifi</item>
+    <item order="209">@drawable/g_wifi</item>
+    <item order="210">0</item>
+    <item order="211">0</item>
+    <item order="212">0</item>
+    <item order="213">0</item>
+    <item order="214">0</item>
+    <item order="215">0</item>
+    <item order="216">0</item>
+  </array>
 
 </resources>

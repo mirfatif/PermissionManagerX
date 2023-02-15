@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--
+  NOTE:
+  If pref name equals its value + "_key":
+  - Pref values starting with "pref_filter_" are cleared on "Reset to Defaults".
+  - Pref values starting with "pref_" and not ending with "_enc" are backed up and restored.
+  -->
+  <!-- MainActivity Preferences -->
+  <!-- MainActivity Preferences corresponding to default values -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_main_deep_search_title">بحث عميق</string>
+  <string name="pref_main_deep_search_summary">القيام بالبحث في قائمة الأذونات بدلاً من قائمة التطبيقات</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_main_case_sensitive_search_title">حساسية حالة الأحرف</string>
+  <string name="pref_main_case_sensitive_search_summary">مطابقة السلسلة مع نفس الحالة فقط</string>
+  <!-- Privileges / Daemon -->
+  <!-- Advanced Settings -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_perm_refs_cat_title">مراجع الصلاحيات</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_root_cat_title">الجذر</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- FilterSettingsActivity -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_packages_cat_title">الحزم</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_no_icon_apps_title">استبعاد التطبيقات التي لاتحتوي أيقونات</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_user_apps_title">استبعاد تطبيقات المستخدم</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_system_apps_title">استبعاد تطبيقات النظام</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_framework_apps_title">استبعاد تطبيقات إطار العمل</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_disabled_apps_title">استبعاد التطبيقات المعطلة</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_no_perms_apps_title">استبعاد التطبيقات التي لا تتحوي على أذونات</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_manually_exclude_apps_title">استبعاد التطبيقات يدوياً</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_excluded_apps_title">قائمة التطبيقات المستبعدة يدوياً</string>
+  <!-- PreferencesActivity permissions titles, keys and defaults -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_permissions_cat_title">الأذونات</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_not_changeable_perms_title">استبعاد الاذونات الغير قابلة للتغيير</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_not_granted_perms_title">استبعاد الأذونات غير الممنوحة</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_manually_exclude_perms_title">استبعاد الأذونات يدويا</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_excluded_perms_title">قائمة الأذونات المستبعدة يدويا</string>
+  <!-- PreferencesActivity manifest permissions titles, keys and defaults -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_man_permissions_cat_title">أذونات البيان</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_invalid_perms_title">استبعاد الأذونات الغير صالحة</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_normal_perms_title">استبعاد الأذونات العادية</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_dangerous_perms_title">استبعاد الأذونات الخطرة</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_signature_perms_title">استبعاد أذونات التوقيع</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_privileged_perms_title">استبعاد الأذونات المميزة</string>
+  <!-- PreferencesActivity AppOps permissions titles, keys and defaults -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_app_ops_permissions_cat_title">تصاريح أذونات التطبيقات</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_appops_perms_title">استبعاد اذونات التطبيقات</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_not_set_appops_title">استبعاد اذونات التطبيقات لم يتم تعيينها (الافتراضي)</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_show_extra_app_ops_title">إظهار اذونات التطبيقات الإضافية، لم يتم استبعادها أبدا</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_extra_appops_title">المزيد من قائمة اذونات التطبيقات</string>
+  <!-- SettingsActivity -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_general_cat_title">إعدادات عامة</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_check_for_updates_title">التحقق من وجود تحديثات</string>
+  <string name="pref_settings_check_for_updates_summary">إظهار إشعار عندما يتوفر إصدار جديد</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_privileges_reminder_title">التذكير بالامتيازات المفقودة</string>
+  <string name="pref_settings_privileges_reminder_summary">إظهار مربع حوار عند بدء التطبيق إذا لم يتم منح امتيازات الجذر و ADB</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_special_search_title">بحث معقد</string>
+  <string name="pref_settings_special_search_summary">استخدم المعلمات و (&amp;) أو (&lt;unk&gt;) و لا (!) في البحث عن الجمع بين الاستفسارات</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_locale_title">لغة التطبيق</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_theming_cat_title">السمة</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_theme_color_title">لون السمة</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_dark_theme_title">السمة المظلمة</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_search_suggestions_count_title2">الحد الأقصى للاقتراحات: %d</string>
+  <string name="pref_settings_search_suggestions_count_summary">اقتراح الحزمة، الأذونات، كلمات مفتاحية خاصة إلخ.</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_search_keywords_title">كلمات البحث</string>
+  <string name="pref_settings_search_keywords_summary">كلمات رئيسية ذات معنى خاص</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_ref_states_cat_title">المهام المجدولة</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_perm_watcher_cat_title">مراقب الصلاحيات</string>
+  <!-- HelpActivity -->
+  <!-- PackageActivity -->
+</resources>

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:paddingTop="16dp"
+  android:paddingBottom="16dp"
+  android:paddingStart="4dp"
+  android:paddingEnd="4dp"
+  android:scrollbars="vertical">
+
+  <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+      android:id="@+id/pair_header_cont"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      android:gravity="center_vertical"
+      android:visibility="gone"
+      tools:ignore="UseCompoundDrawables">
+
+      <TextView
+        android:textStyle="bold"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/pairing_button"
+        android:textColor="?attr/accentColor"
+        android:textSize="14sp" />
+
+      <ImageView
+        android:id="@+id/pair_arrow"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:padding="4dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/arrow_right"
+        tools:ignore="ContentDescription" />
+
+    </LinearLayout>
+
+    <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
+      android:id="@+id/pair_cont"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      android:orientation="vertical"
+      android:visibility="gone">
+
+      <TextView
+        android:id="@+id/pair_help_v"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/sharpText"
+        android:textSize="16sp" />
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/pairing_code_cont"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+
+        <EditText
+          android:id="@+id/pairing_code_v"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/pairing_code_hint"
+          android:importantForAutofill="no"
+          android:inputType="number"
+          android:maxLength="6"
+          android:maxLines="1" />
+
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+          android:id="@+id/pairing_ip_cont"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1">
+
+          <EditText
+            android:id="@+id/pairing_ip_v"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:digits="0123456789."
+            android:hint="@string/ip_address_hint"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:maxLength="15"
+            android:maxLines="1" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+          android:id="@+id/pairing_port_cont"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1">
+
+          <EditText
+            android:id="@+id/pairing_port_v"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/socket_port_hint"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:maxLength="5"
+            android:maxLines="1" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+      </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+
+      <ProgressBar
+        android:id="@+id/pairing_prog"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="12dp"
+        android:indeterminate="true"
+        android:indeterminateTint="?attr/accentColor"
+        android:visibility="invisible" />
+
+      <com.mirfatif.permissionmanagerx.fwk.CustomButton
+        android:id="@+id/pair_button"
+        style="@style/CustomButton"
+        android:text="@string/pair_button" />
+
+    </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+
+    <View
+      android:id="@+id/divider"
+      style="@style/ListSeparatorDim"
+      android:visibility="gone" />
+
+    <LinearLayout
+      android:id="@+id/connect_header_cont"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:layout_marginBottom="16dp"
+      android:gravity="center_vertical"
+      android:visibility="gone"
+      tools:ignore="UseCompoundDrawables">
+
+      <TextView
+        android:textStyle="bold"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/connection_title"
+        android:textColor="?attr/accentColor"
+        android:textSize="14sp" />
+
+      <ImageView
+        android:id="@+id/connect_arrow"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:padding="4dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:rotation="90"
+        android:src="@drawable/arrow_right"
+        tools:ignore="ContentDescription" />
+
+    </LinearLayout>
+
+    <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
+      android:id="@+id/connect_cont"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+      <TextView
+        android:id="@+id/connect_help_v"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/sharpText"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+      <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+          android:id="@+id/connect_ip_cont"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1">
+
+          <EditText
+            android:id="@+id/connect_ip_v"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:digits="0123456789."
+            android:hint="@string/ip_address_hint"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:maxLength="15"
+            android:maxLines="1" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+          android:id="@+id/connect_port_cont"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1">
+
+          <EditText
+            android:id="@+id/connect_port_v"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/socket_port_hint"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:maxLength="5"
+            android:maxLines="1" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+      </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+
+      <ProgressBar
+        android:id="@+id/connect_prog"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="12dp"
+        android:indeterminate="true"
+        android:indeterminateTint="?attr/accentColor"
+        android:visibility="invisible" />
+
+      <com.mirfatif.permissionmanagerx.fwk.CustomButton
+        android:id="@+id/connect_button"
+        style="@style/CustomButton"
+        android:text="@string/connect_button" />
+
+    </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+
+  </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--
+  NOTE:
+  If pref name equals its value + "_key":
+  - Pref values starting with "pref_filter_" are cleared on "Reset to Defaults".
+  - Pref values starting with "pref_" and not ending with "_enc" are backed up and restored.
+  -->
+  <!-- MainActivity Preferences -->
+  <!-- MainActivity Preferences corresponding to default values -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_main_deep_search_title">Búsqueda profunda</string>
+  <string name="pref_main_deep_search_summary">Buscar en lista de permisos en lugar de la lista de aplicaciones</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_main_case_sensitive_search_title">Distingue mayúsculas</string>
+  <string name="pref_main_case_sensitive_search_summary">Coincidir cadenas únicamente con las mismas mayúsculas</string>
+  <!-- Privileges / Daemon -->
+  <!-- Advanced Settings -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_root_cat_title">Root</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- FilterSettingsActivity -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_packages_cat_title">Paquetes</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_no_icon_apps_title">Excluir aplicaciones sin íconos</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_user_apps_title">Excluir aplicaciones del usuario</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_system_apps_title">Excluir aplicaciones del sistema</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_framework_apps_title">Excluir aplicaciones de framework</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_disabled_apps_title">Excluir aplicaciones deshabilitadas</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_no_perms_apps_title">Excluir aplicaciones sin permisos</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_manually_exclude_apps_title">Aplicaciones manualmente excluidas</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_excluded_apps_title">Lista de aplicaciones manualmente excluidas</string>
+  <!-- PreferencesActivity permissions titles, keys and defaults -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_permissions_cat_title">Permisos</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_not_changeable_perms_title">Excluir permisos no modificables</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_not_granted_perms_title">Excluir permisos no otorgados</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_manually_exclude_perms_title">Permisos manualmente excluidos</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_excluded_perms_title">Lista de permisos manualmente excluidos</string>
+  <!-- PreferencesActivity manifest permissions titles, keys and defaults -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_man_permissions_cat_title">Permisos de Manifiesto</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_invalid_perms_title">Excluir permisos inválidos</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_normal_perms_title">Excluir permisos normales</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_dangerous_perms_title">Excluir permisos peligrosos</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_signature_perms_title">Excluir permisos de firma</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_privileged_perms_title">Excluir permisos privilegiados</string>
+  <!-- PreferencesActivity AppOps permissions titles, keys and defaults -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_app_ops_permissions_cat_title">Permisos de AppOps</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_appops_perms_title">Excluir AppOps</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_not_set_appops_title">Excluir AppOps no establecidas (Por defecto)</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_show_extra_app_ops_title">Mostrar AppOps adicionales, nunca excluidas</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_extra_appops_title">Lista de AppOps adicionales</string>
+  <!-- SettingsActivity -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_general_cat_title">Ajustes generales</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_check_for_updates_title">Buscar actualizaciones</string>
+  <string name="pref_settings_check_for_updates_summary">Mostrar una notificación cuando una nueva versión esté disponible</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_privileges_reminder_title">Recordar privilegios faltantes</string>
+  <string name="pref_settings_privileges_reminder_summary">Mostrar un cuadro de diálogo al iniciar la aplicación si los privilegios root y ADB no han sido otorgados</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_special_search_title">Búsqueda compleja</string>
+  <string name="pref_settings_special_search_summary">Usar los operadores Y (&amp;), O (|) y NO (!) en las búsquedas para combinar consultas</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_locale_title">Lenguaje de la aplicación</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_theming_cat_title">Tema</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_theme_color_title">Color de tema</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_dark_theme_title">Tema oscuro</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_search_suggestions_count_title2">Sugerencias máximas: %d</string>
+  <string name="pref_settings_search_suggestions_count_summary">Sugerir paquete, permisos, palabas clave especiales, etc.</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_search_keywords_title">Buscar palabras clave</string>
+  <string name="pref_settings_search_keywords_summary">Palabras clave con significado especial</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_ref_states_cat_title">Verificaciones programadas</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_perm_watcher_cat_title">Observador de permisos</string>
+  <!-- HelpActivity -->
+  <!-- PackageActivity -->
+</resources>

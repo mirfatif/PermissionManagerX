@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.mirfatif.permissionmanagerx.fwk.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:paddingTop="8dp"
@@ -29,4 +30,55 @@
     android:textColor="@color/sharpText"
     android:textSize="16sp" />
 
-</com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+  <CheckBox
+    android:id="@+id/swap_user_ids"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="-4dp"
+    android:layout_marginTop="8dp"
+    android:text="@string/swap_user_ids"
+    android:textColor="@color/sharpText"
+    android:textSize="16sp"
+    android:visibility="gone" />
+
+  <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
+    android:id="@+id/user_ids_cont"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="8dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:visibility="gone">
+
+    <EditText
+      android:id="@+id/user_id_from"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      android:layout_weight="1"
+      android:hint="@string/replace_user_id_from_hint"
+      android:inputType="number"
+      tools:ignore="Autofill,LabelFor" />
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      android:layout_marginHorizontal="4dp"
+      android:text="@string/replace_user_id_with"
+      android:textColor="@color/sharpText"
+      android:textSize="16sp" />
+
+    <EditText
+      android:id="@+id/user_id_to"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      android:layout_weight="1"
+      android:hint="@string/replace_user_id_to_hint"
+      android:inputType="number"
+      tools:ignore="Autofill,LabelFor" />
+
+  </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+
+</com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>

@@ -1,45 +1,25 @@
-apply plugin: 'com.android.application'
+apply from: '../configs/apk.gradle'
+
+if (new File(rootDir, 'configs/pro-daemon.gradle').isFile()) {
+    apply from: '../configs/pro-daemon.gradle'
+}
 
 android {
-    compileSdk compileSdkVer
-    buildToolsVersion buildToolsVer
+    namespace 'com.mirfatif.privdaemon'
 
     defaultConfig {
-        applicationId "com.mirfatif.privdaemon"
-        minSdk minSdkVer
-        targetSdk targetSdkVer
+        applicationId 'com.mirfatif.privdaemon'
+        multiDexEnabled false
     }
 
     buildFeatures {
         buildConfig = false
         resValues = false
     }
-
-    buildTypes {
-        debug {
-            multiDexEnabled false
-        }
-        release {
-            multiDexEnabled false
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    dependenciesInfo {
-        includeInApk false
-    }
 }
 
 dependencies {
     implementation project(path: ':priv_library')
-}
 
-apply plugin: 'com.github.sherter.google-java-format'
-preBuild.dependsOn(verifyGoogleJavaFormat)
+    compileOnly 'androidx.annotation:annotation:1.5.0'
+}

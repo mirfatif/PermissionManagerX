@@ -63,7 +63,7 @@
         android:textAlignment="viewStart"
         app:autoSizeTextType="uniform" />
 
-      <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+      <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="1dp">
@@ -83,7 +83,7 @@
           android:textAlignment="viewStart"
           android:textSize="12sp" />
 
-      </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+      </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
     </LinearLayout>
   </LinearLayout>
 </LinearLayout>

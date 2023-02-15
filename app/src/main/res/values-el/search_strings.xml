@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="pkg_state_critical">Κρίσιμο</string>
+  <string name="pkg_state_framework">Framework</string>
+  <string name="pkg_state_system">Σύστημα</string>
+  <string name="pkg_state_user">Χρήστης</string>
+  <string name="pkg_state_disabled">Απενεργοποιημένο</string>
+  <string name="prot_lvl_unknown">Άγνωστο</string>
+  <string name="prot_lvl_normal">Κανονικό</string>
+  <string name="prot_lvl_dangerous">Επικίνδυνο</string>
+  <string name="prot_lvl_signature">Υπογραφή</string>
+  <string name="prot_lvl_internal">Εσωτερική</string>
+  <string name="prot_lvl_app_ops">AppOps</string>
+  <string name="prot_lvl_development">Ανάπτυξη</string>
+  <string name="prot_lvl_privileged">Προνόμια</string>
+  <string name="prot_lvl_fixed">Σταθερό</string>
+  <string name="search_str_uid">UID</string>
+  <string name="search_str_time">ΧΡΟΝΟΣ</string>
+  <string name="search_str_extra">EXTRA</string>
+  <string name="search_str_red">ΚΟΚΚΚ</string>
+  <string name="search_str_orange">ΟΡΓΑΝΑ</string>
+  <string name="search_str_green">ΕΛΛΑΔΑ</string>
+</resources>

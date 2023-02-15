@@ -9,12 +9,12 @@
   android:paddingEnd="4dp"
   android:scrollbars="vertical">
 
-  <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+  <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+    <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:paddingStart="20dp"
@@ -37,7 +37,7 @@
         android:textColor="@color/sharpText"
         android:textSize="16sp" />
 
-    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+    </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
     <TextView
       android:textStyle="bold"
@@ -74,7 +74,7 @@
       style="@style/ListSeparatorDim"
       android:layout_marginBottom="4dp" />
 
-    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+    <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:paddingStart="20dp"
@@ -100,14 +100,14 @@
         android:layout_gravity="center_vertical"
         tools:ignore="ContentDescription" />
 
-    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+    </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
     <View
       style="@style/ListSeparatorDim"
       android:layout_marginTop="4dp"
       android:layout_marginBottom="4dp" />
 
-    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+    <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:paddingStart="20dp"
@@ -133,14 +133,14 @@
         android:layout_gravity="center_vertical"
         tools:ignore="ContentDescription" />
 
-    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+    </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
     <View
       style="@style/ListSeparatorDim"
       android:layout_marginTop="4dp"
       android:layout_marginBottom="4dp" />
 
-    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+    <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:paddingStart="20dp"
@@ -166,14 +166,14 @@
         android:layout_gravity="center_vertical"
         tools:ignore="ContentDescription" />
 
-    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+    </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
     <View
       style="@style/ListSeparatorDim"
       android:layout_marginTop="4dp"
       android:layout_marginBottom="4dp" />
 
-    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+    <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:paddingStart="20dp"
@@ -188,23 +188,89 @@
         android:layout_gravity="center_vertical"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="@string/op_num_consistency"
+        android:text="@string/get_app_ops"
         android:textColor="@color/sharpText"
         android:textSize="16sp" />
 
       <ImageView
-        android:id="@+id/op_num_consistent_v"
+        android:id="@+id/get_ops_v"
         android:layout_width="32dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         tools:ignore="ContentDescription" />
 
-    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+    </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 
     <View
       style="@style/ListSeparatorDim"
       android:layout_marginTop="4dp"
       android:layout_marginBottom="4dp" />
 
-  </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+    <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingStart="20dp"
+      android:paddingEnd="20dp"
+      android:orientation="horizontal">
+
+      <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginEnd="8dp"
+        android:layout_gravity="center_vertical"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/consistent_app_op_num"
+        android:textColor="@color/sharpText"
+        android:textSize="16sp" />
+
+      <ImageView
+        android:id="@+id/cons_app_op_num_v"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        tools:ignore="ContentDescription" />
+
+    </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+
+    <View
+      style="@style/ListSeparatorDim"
+      android:layout_marginTop="4dp"
+      android:layout_marginBottom="4dp" />
+
+    <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingStart="20dp"
+      android:paddingEnd="20dp"
+      android:orientation="horizontal">
+
+      <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginEnd="8dp"
+        android:layout_gravity="center_vertical"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/consistent_app_op_mode"
+        android:textColor="@color/sharpText"
+        android:textSize="16sp" />
+
+      <ImageView
+        android:id="@+id/cons_app_op_mode_v"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        tools:ignore="ContentDescription" />
+
+    </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+
+    <View
+      style="@style/ListSeparatorDim"
+      android:layout_marginTop="4dp"
+      android:layout_marginBottom="4dp" />
+
+  </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 </androidx.core.widget.NestedScrollView>

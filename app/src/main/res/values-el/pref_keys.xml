@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--
+  NOTE:
+  If pref name equals its value + "_key":
+  - Pref values starting with "pref_filter_" are cleared on "Reset to Defaults".
+  - Pref values starting with "pref_" and not ending with "_enc" are backed up and restored.
+  -->
+  <!-- MainActivity Preferences -->
+  <!-- MainActivity Preferences corresponding to default values -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_main_deep_search_title">Βαθιά αναζήτηση</string>
+  <string name="pref_main_deep_search_summary">Να γίνει αναζήτηση στη λίστα δικαιωμάτων αντί για λίστα εφαρμογών</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_main_case_sensitive_search_title">Διάκριση πεζών/ κεφαλαίων</string>
+  <string name="pref_main_case_sensitive_search_summary">Ταίριασμα συμβολοσειράς μόνο με την ίδια υπόθεση</string>
+  <!-- Privileges / Daemon -->
+  <!-- Advanced Settings -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_root_cat_title">Ρίζα</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- FilterSettingsActivity -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_packages_cat_title">Πακέτα</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_no_icon_apps_title">Εξαίρεση εφαρμογών χωρίς εικονίδια</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_user_apps_title">Εξαίρεση εφαρμογών χρήστη</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_system_apps_title">Εξαίρεση εφαρμογών συστήματος</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_framework_apps_title">Εξαίρεση εφαρμογών πλαισίου</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_disabled_apps_title">Εξαίρεση απενεργοποιημένων εφαρμογών</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_no_perms_apps_title">Εξαίρεση εφαρμογών χωρίς δικαιώματα</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_manually_exclude_apps_title">Χειροκίνητη εξαίρεση εφαρμογών</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_excluded_apps_title">Λίστα χειροκίνητων εξαιρέσεων εφαρμογών</string>
+  <!-- PreferencesActivity permissions titles, keys and defaults -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_permissions_cat_title">Δικαιώματα</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_not_changeable_perms_title">Εξαίρεση δικαιωμάτων μη μεταβλητών</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_not_granted_perms_title">Εξαίρεση δικαιωμάτων δεν έχουν χορηγηθεί</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_manually_exclude_perms_title">Χειροκίνητη εξαίρεση δικαιωμάτων</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_excluded_perms_title">Λίστα δικαιωμάτων χειροκίνητα εξαιρούμενων</string>
+  <!-- PreferencesActivity manifest permissions titles, keys and defaults -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_man_permissions_cat_title">Δικαιώματα Manifest</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_invalid_perms_title">Εξαίρεση μη έγκυρων δικαιωμάτων</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_normal_perms_title">Εξαίρεση κανονικών δικαιωμάτων</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_dangerous_perms_title">Εξαίρεση επικίνδυνων δικαιωμάτων</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_signature_perms_title">Εξαίρεση δικαιωμάτων υπογραφής</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_privileged_perms_title">Εξαίρεση προνομιακών δικαιωμάτων</string>
+  <!-- PreferencesActivity AppOps permissions titles, keys and defaults -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_app_ops_permissions_cat_title">Δικαιώματα AppOps</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_appops_perms_title">Εξαίρεση Εφαρμογών</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_exclude_not_set_appops_title">Δεν ορίστηκε η εξαίρεση εφαρμογών (Προεπιλογές)</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_show_extra_app_ops_title">Εμφάνιση επιπλέον AppOps, δεν αποκλείεται ποτέ</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_filter_extra_appops_title">Extra AppOps list</string>
+  <!-- SettingsActivity -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_general_cat_title">Γενικές ρυθμίσεις</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_check_for_updates_title">Έλεγχος ενημερώσεων</string>
+  <string name="pref_settings_check_for_updates_summary">Εμφάνιση ειδοποίησης όταν είναι διαθέσιμη μια νέα έκδοση</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_privileges_reminder_title">Υπενθύμιση ελλείποντων δικαιωμάτων</string>
+  <string name="pref_settings_privileges_reminder_summary">Εμφάνιση διαλόγου στην εφαρμογή ξεκινά, αν δεν χορηγούνται δικαιώματα root και ADB</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_special_search_title">Σύνθετη αναζήτηση</string>
+  <string name="pref_settings_special_search_summary">Χρήση ΚΑΙ (&amp;), Ή (ο) και ΟΧΙ (!) χειριστές στην αναζήτηση για να συνδυάσουν ερωτήματα</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_locale_title">Γλώσσα εφαρμογής</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_theming_cat_title">Θέμα</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_theme_color_title">Χρώμα θέματος</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_dark_theme_title">Σκοτεινό θέμα</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_search_suggestions_count_title2">Μέγιστες προτάσεις: %d</string>
+  <string name="pref_settings_search_suggestions_count_summary">Προτείνετε πακέτο, άδειες, ειδικές λέξεις-κλειδιά κλπ.</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_search_keywords_title">Αναζήτηση λέξεων-κλειδιών</string>
+  <string name="pref_settings_search_keywords_summary">Λέξεις-κλειδιά με ειδική έννοια</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_ref_states_cat_title">Προγραμματισμένοι έλεγχοι</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_perm_watcher_cat_title">Παρακολούθηση δικαιωμάτων</string>
+  <!-- HelpActivity -->
+  <!-- PackageActivity -->
+</resources>

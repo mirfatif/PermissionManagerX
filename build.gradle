@@ -4,28 +4,37 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.1'
+        classpath 'com.android.tools.build:gradle:7.3.1'
+        classpath 'io.michaelrocks:paranoid-gradle-plugin:0.3.7'
     }
 }
 
 plugins {
-    id 'com.github.sherter.google-java-format' version '0.9'
+    id 'com.diffplug.spotless' version '6.12.0'
+    id 'com.dorongold.task-tree' version '2.1.0'
 }
 
 allprojects {
     tasks.withType(JavaCompile) {
-        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        options.compilerArgs << '-Xlint:all,-processing'
     }
 
     project.ext {
-        compileSdkVer = 31
-        buildToolsVer = "31.0.0"
+        compileSdkVer = 33
+        buildToolsVer = '33.0.0'
         minSdkVer = 24
-        targetSdkVer = 31
-        ndkVer = "23.0.7599858"
-    }
-}
+        targetSdkVer = 33
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+        String ndkVer = '25.1.8937393'
+
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+        String sdkDir = properties.getProperty('sdk.dir')
+        ndkDir = new File(sdkDir, 'ndk/' + ndkVer).getAbsolutePath()
+
+        daemonDex = 'daemon.dx'
+        nativeDir = rootDir.absolutePath + '/native'
+
+        noPro = !new File(rootDir, 'configs/pro-app.gradle').isFile()
+    }
 }

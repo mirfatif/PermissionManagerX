@@ -1,70 +1,144 @@
 package com.mirfatif.permissionmanagerx.prefs;
 
-import static com.mirfatif.permissionmanagerx.util.Utils.getString;
+import static com.mirfatif.permissionmanagerx.util.ApiUtils.getString;
 
-import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.SystemClock;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextPaint;
+import android.os.Build;
 import android.text.TextUtils;
-import android.text.style.MetricAffectingSpan;
-import android.util.Log;
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
-import androidx.room.Room;
-import com.mirfatif.permissionmanagerx.BuildConfig;
+import android.text.format.DateUtils;
+import androidx.preference.PreferenceManager;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.annot.SecurityLibBug;
-import com.mirfatif.permissionmanagerx.annot.ToDo;
 import com.mirfatif.permissionmanagerx.app.App;
-import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
-import com.mirfatif.permissionmanagerx.parser.Package;
-import com.mirfatif.permissionmanagerx.parser.Permission;
-import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDao;
-import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDatabase;
-import com.mirfatif.permissionmanagerx.util.LiveEvent;
-import com.mirfatif.permissionmanagerx.util.Utils;
-import com.mirfatif.privtasks.Util;
-import java.io.File;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
+import com.mirfatif.permissionmanagerx.util.ApiUtils;
+import com.mirfatif.permissionmanagerx.util.bg.LiveEvent;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
 
 public enum MySettings {
-  INSTANCE;
+  INS;
 
-  private static final String TAG = "MySettings";
+  private boolean mDebug;
 
-  private final SharedPreferences mPrefs = Utils.getDefPrefs();
-
-  // Removed mEncPrefs and mUseHiddenAPIs initialization due to bug
-  @SecurityLibBug
-  MySettings() {}
-
-  private boolean mPrivDaemonAlive = false;
-
-  public boolean isPrivDaemonAlive() {
-    return mPrivDaemonAlive;
+  public boolean isDebug() {
+    return mDebug;
   }
 
-  public void setPrivDaemonAlive(boolean alive) {
-    mPrivDaemonAlive = alive;
+  public void setDebugLog(boolean debugLog) {
+    mDebug = debugLog;
+  }
+
+  public static SharedPreferences getDefPrefs() {
+    return PreferenceManager.getDefaultSharedPreferences(App.getCxt());
+  }
+
+  public static SharedPreferences getNoBackupPrefs() {
+    return MySettingsFlavor.INS.getNoBackupPrefs();
+  }
+
+  public boolean getBoolPref(int key, int def) {
+    return getBoolPref(key, App.getRes().getBoolean(def));
+  }
+
+  public boolean getBoolPref(int key, boolean def) {
+    String prefKey = getString(key);
+    if (prefKey.endsWith("_enc")) {
+      return getNoBackupPrefs().getBoolean(prefKey, def);
+    } else {
+      return getDefPrefs().getBoolean(prefKey, def);
+    }
+  }
+
+  public int getIntPref(int key, int def) {
+    return getIntegerPref(key, App.getCxt().getResources().getInteger(def));
+  }
+
+  public int getIntegerPref(int key, int defValue) {
+    String prefKey = getString(key);
+    if (prefKey.endsWith("_enc")) {
+      return getNoBackupPrefs().getInt(prefKey, defValue);
+    } else {
+      return getDefPrefs().getInt(prefKey, defValue);
+    }
+  }
+
+  private long getLongPref(int key) {
+    String prefKey = getString(key);
+    if (prefKey.endsWith("_enc")) {
+      return getNoBackupPrefs().getLong(prefKey, 0);
+    } else {
+      return getDefPrefs().getLong(prefKey, 0);
+    }
+  }
+
+  public String getStringPref(int key, int def) {
+    return getStringPref(key, def == 0 ? null : getString(def));
+  }
+
+  public String getStringPref(int key, String def) {
+    String prefKey = getString(key);
+    if (prefKey.endsWith("_enc")) {
+      return getNoBackupPrefs().getString(prefKey, def);
+    } else {
+      return getDefPrefs().getString(prefKey, def);
+    }
+  }
+
+  public Set<String> getSetPref(int key) {
+    return getDefPrefs().getStringSet(getString(key), null);
+  }
+
+  public void savePref(int key, boolean val) {
+    String prefKey = getString(key);
+    if (prefKey.endsWith("_enc")) {
+      getNoBackupPrefs().edit().putBoolean(prefKey, val).apply();
+    } else {
+      getDefPrefs().edit().putBoolean(prefKey, val).apply();
+    }
+  }
+
+  public void savePref(int key, int val) {
+    String prefKey = getString(key);
+    if (prefKey.endsWith("_enc")) {
+      getNoBackupPrefs().edit().putInt(prefKey, val).apply();
+    } else {
+      getDefPrefs().edit().putInt(prefKey, val).apply();
+    }
+  }
+
+  private void savePref(int key, long val) {
+    String prefKey = getString(key);
+    if (prefKey.endsWith("_enc")) {
+      getNoBackupPrefs().edit().putLong(prefKey, val).apply();
+    } else {
+      getDefPrefs().edit().putLong(prefKey, val).apply();
+    }
+  }
+
+  public void savePref(int key, String val) {
+    String prefKey = getString(key);
+    if (prefKey.endsWith("_enc")) {
+      getNoBackupPrefs().edit().putString(prefKey, val).apply();
+    } else {
+      getDefPrefs().edit().putString(prefKey, val).apply();
+    }
+  }
+
+  public String getDarkThemeMode() {
+    try {
+      return getStringPref(
+          R.string.pref_settings_dark_theme_key, R.string.pref_settings_dark_theme_default);
+    } catch (ClassCastException e) {
+      getDefPrefs().edit().remove(getString(R.string.pref_settings_dark_theme_key)).apply();
+      return getDarkThemeMode();
+    }
   }
 
   public boolean shouldRemindMissingPrivileges() {
-    return getBoolPref(R.string.pref_settings_privileges_reminder_key);
+    return getBoolPref(
+        R.string.pref_settings_privileges_reminder_key,
+        R.bool.pref_settings_privileges_reminder_default);
   }
 
   public void setPrivReminderOff() {
@@ -72,170 +146,13 @@ public enum MySettings {
   }
 
   public String getLocale() {
-    return mPrefs.getString(
-        getString(R.string.pref_settings_locale_key),
-        getString(R.string.pref_settings_locale_default));
-  }
-
-  private boolean DEBUG = false;
-  private boolean daemonLogging = false;
-
-  public boolean isDebug() {
-    return DEBUG;
-  }
-
-  public void setDebugLog(boolean debugLog) {
-    DEBUG = daemonLogging = debugLog;
-  }
-
-  public boolean shouldStartDaemonLog() {
-    if (daemonLogging) {
-      daemonLogging = false;
-      return true;
-    }
-    return false;
-  }
-
-  public boolean getBoolPref(int keyResId) {
-    String prefKey = getString(keyResId);
-    Integer boolKeyId =
-        Utils.getStaticIntField(prefKey + "_default", R.bool.class, TAG + ": getBoolPref");
-    if (boolKeyId == null) {
-      return false;
-    }
-    if (prefKey.endsWith("_enc")) {
-      return Utils.getEncPrefs()
-          .getBoolean(prefKey, App.getContext().getResources().getBoolean(boolKeyId));
-    } else {
-      return mPrefs.getBoolean(prefKey, App.getContext().getResources().getBoolean(boolKeyId));
-    }
-  }
-
-  public int getIntPref(int keyResId) {
-    String prefKey = getString(keyResId);
-    Integer intKeyId =
-        Utils.getStaticIntField(prefKey + "_default", R.integer.class, TAG + ": getIntPref");
-    if (intKeyId == null) {
-      return -1;
-    }
-    if (prefKey.endsWith("_enc")) {
-      return Utils.getEncPrefs()
-          .getInt(prefKey, App.getContext().getResources().getInteger(intKeyId));
-    } else {
-      return mPrefs.getInt(prefKey, App.getContext().getResources().getInteger(intKeyId));
-    }
-  }
-
-  private long getLongPref(int keyResId) {
-    String prefKey = getString(keyResId);
-    if (prefKey.endsWith("_enc")) {
-      return Utils.getEncPrefs().getLong(prefKey, 0);
-    } else {
-      return mPrefs.getLong(prefKey, 0);
-    }
-  }
-
-  private Set<String> getSetPref(int keyId) {
-    return mPrefs.getStringSet(getString(keyId), null);
-  }
-
-  public void savePref(int key, boolean bool) {
-    String prefKey = getString(key);
-    if (prefKey.endsWith("_enc")) {
-      Utils.getEncPrefs().edit().putBoolean(prefKey, bool).apply();
-    } else {
-      mPrefs.edit().putBoolean(prefKey, bool).apply();
-    }
-  }
-
-  public void savePref(int key, int integer) {
-    String prefKey = getString(key);
-    if (prefKey.endsWith("_enc")) {
-      Utils.getEncPrefs().edit().putInt(prefKey, integer).apply();
-    } else {
-      mPrefs.edit().putInt(prefKey, integer).apply();
-    }
-  }
-
-  private void savePref(int key, long _long) {
-    String prefKey = getString(key);
-    if (prefKey.endsWith("_enc")) {
-      Utils.getEncPrefs().edit().putLong(prefKey, _long).apply();
-    } else {
-      mPrefs.edit().putLong(prefKey, _long).apply();
-    }
-  }
-
-  private void savePref(int key, Set<String> stringSet) {
-    mPrefs.edit().putStringSet(getString(key), stringSet).apply();
-    updateList(getString(key));
-  }
-
-  public int getAdbPort() {
-    return getIntPref(R.string.pref_main_adb_port_key);
-  }
-
-  public void setAdbPort(int port) {
-    if (port == 0) {
-      mPrefs.edit().remove(getString(R.string.pref_main_adb_port_key)).apply();
-    } else {
-      savePref(R.string.pref_main_adb_port_key, port);
-    }
-  }
-
-  public int getDaemonUid() {
-    return getIntPref(R.string.pref_main_daemon_uid_key);
-  }
-
-  public void setDaemonUid(int uid) {
-    savePref(R.string.pref_main_daemon_uid_key, uid);
-  }
-
-  public static String CONTEXT_DEFAULT = "default";
-  public static String CONTEXT_SHELL = "u:r:shell:s0";
-
-  public String getDaemonContext() {
-    return mPrefs.getString(getString(R.string.pref_main_daemon_context_key), CONTEXT_SHELL);
-  }
-
-  public void setDaemonContext(String context) {
-    mPrefs.edit().putString(getString(R.string.pref_main_daemon_context_key), context).apply();
-  }
-
-  public String getSuExePath() {
-    return Utils.getEncPrefs().getString(getString(R.string.pref_main_su_exe_path_enc_key), null);
-  }
-
-  public void setSuExePath(String path) {
-    Editor editor = Utils.getEncPrefs().edit();
-    String key = getString(R.string.pref_main_su_exe_path_enc_key);
-    if (path == null) {
-      editor.remove(key);
-    } else {
-      editor.putString(key, path);
-    }
-    editor.apply();
-  }
-
-  public boolean dexInTmpDir() {
-    return getBoolPref(R.string.pref_main_daemon_tmp_dir_key);
-  }
-
-  public void setDexInTmpDir(boolean dexInTmpDir) {
-    savePref(R.string.pref_main_daemon_tmp_dir_key, dexInTmpDir);
-  }
-
-  public boolean shouldExtractFiles() {
-    return new File(App.getContext().getApplicationInfo().sourceDir).lastModified()
-        > getLongPref(R.string.pref_main_file_extraction_ts_enc_key);
-  }
-
-  public void setFileExtractionTs() {
-    savePref(R.string.pref_main_file_extraction_ts_enc_key, System.currentTimeMillis());
+    return getStringPref(R.string.pref_settings_locale_key, R.string.pref_settings_locale_default);
   }
 
   public boolean shouldCheckForUpdates() {
-    if (!getBoolPref(R.string.pref_settings_check_for_updates_key)) {
+    if (!getBoolPref(
+        R.string.pref_settings_check_for_updates_key,
+        R.bool.pref_settings_check_for_updates_default)) {
       return false;
     }
     long lastTS = getLongPref(R.string.pref_settings_check_for_updates_ts_enc_key);
@@ -246,19 +163,88 @@ public enum MySettings {
     savePref(R.string.pref_settings_check_for_updates_ts_enc_key, timeStamp);
   }
 
-  @SecurityLibBug
-  public void plusAppLaunchCount() {
-    int appLaunchCountId = R.string.pref_main_app_launch_count_enc_key;
-    Utils.runInBg(() -> savePref(appLaunchCountId, getIntPref(appLaunchCountId) + 1));
+  public boolean getShowUnsupportedSdkWarning() {
+    int warnedSdk = getIntegerPref(R.string.pref_main_warned_unsupported_sdk_enc_key, 0);
+    return Build.VERSION.SDK_INT > warnedSdk
+        && Build.VERSION.SDK_INT > ApiUtils.getMyAppInfo().targetSdkVersion;
   }
 
-  @SuppressLint("ApplySharedPref")
+  public void onUnsupportedSdkWarningShown() {
+    savePref(R.string.pref_main_warned_unsupported_sdk_enc_key, Build.VERSION.SDK_INT);
+  }
+
+  public void plusAppLaunchCount() {
+    int appLaunchCountId = R.string.pref_main_app_launch_count_enc_key;
+    int count = getIntPref(appLaunchCountId, R.integer.pref_main_app_launch_count_enc_default);
+    savePref(appLaunchCountId, count + 1);
+  }
+
+  private boolean mMayAskForFeedback = false;
+
+  public void setMayAskForFeedback(boolean askForFeedback) {
+    mMayAskForFeedback = askForFeedback;
+  }
+
+  public boolean shouldAskForFeedback() {
+    if (!mMayAskForFeedback) {
+      return false;
+    }
+
+    long lastTS = getLongPref(R.string.pref_main_ask_for_feedback_ts_enc_key);
+    if (lastTS == 0) {
+      setAskForFeedbackTs(false);
+      return false;
+    }
+
+    if (lastTS - System.currentTimeMillis() > DateUtils.WEEK_IN_MILLIS * 8) {
+      setAskForFeedbackTs(true);
+    }
+
+    boolean ask =
+        getIntPref(
+                R.string.pref_main_app_launch_count_enc_key,
+                R.integer.pref_main_app_launch_count_enc_default)
+            >= 10;
+    ask = ask && (System.currentTimeMillis() - lastTS) >= TimeUnit.DAYS.toMillis(10);
+
+    return ask;
+  }
+
+  public void setAskForFeedbackTs(boolean longTs) {
+    savePref(R.string.pref_main_app_launch_count_enc_key, 0);
+    savePref(
+        R.string.pref_main_ask_for_feedback_ts_enc_key,
+        System.currentTimeMillis() + (longTs ? DateUtils.WEEK_IN_MILLIS * 8 : 0));
+  }
+
+  public boolean shouldGrantAppPrivs() {
+    long lastUpdate = ApiUtils.getMyPkgInfo().lastUpdateTime;
+    long lastCheck = getLongPref(R.string.pref_privs_app_privs_check_ts_enc_key);
+    boolean updated = lastUpdate >= lastCheck;
+    if (updated) {
+      savePref(R.string.pref_privs_app_privs_check_ts_enc_key, System.currentTimeMillis());
+    }
+    return updated;
+  }
+
+  public boolean shouldAskForNotifPerm() {
+    long lastTS = getLongPref(R.string.pref_main_ask_for_notif_perm_ts_enc_key);
+    return lastTS == 0 || (System.currentTimeMillis() - lastTS) >= TimeUnit.DAYS.toMillis(30);
+  }
+
+  public void setAskForNotifPermTs() {
+    savePref(R.string.pref_main_ask_for_notif_perm_ts_enc_key, System.currentTimeMillis());
+  }
+
   public boolean shouldAskToSendCrashReport() {
-    int crashCount = getIntPref(R.string.pref_main_crash_report_count_enc_key);
+    int crashCount =
+        getIntPref(
+            R.string.pref_main_crash_report_count_enc_key,
+            R.integer.pref_main_crash_report_count_enc_default);
     long lastTS = getLongPref(R.string.pref_main_crash_report_ts_enc_key);
     long currTime = System.currentTimeMillis();
 
-    Editor prefEditor = Utils.getEncPrefs().edit();
+    Editor prefEditor = getNoBackupPrefs().edit();
     try {
       if (crashCount >= 2 || (currTime - lastTS) >= TimeUnit.DAYS.toMillis(1)) {
         prefEditor.putLong(getString(R.string.pref_main_crash_report_ts_enc_key), currTime);
@@ -273,62 +259,176 @@ public enum MySettings {
     return false;
   }
 
-  // Do not ask for feedback before the first package loading is completed
-  private boolean mMayAskForFeedback = false;
-
-  public void setMayAskForFeedback() {
-    Utils.runInBg(
-        () -> {
-          SystemClock.sleep(5000);
-          mMayAskForFeedback = true;
-        });
+  public boolean shouldClearWebViewCache() {
+    long lastUpdate = ApiUtils.getMyPkgInfo().lastUpdateTime;
+    long lastCheck = getLongPref(R.string.pref_help_web_view_clear_cache_ts_enc_key);
+    boolean updated = lastUpdate >= lastCheck;
+    savePref(R.string.pref_help_web_view_clear_cache_ts_enc_key, System.currentTimeMillis());
+    return updated;
   }
 
-  public boolean shouldAskForFeedback() {
-    if (!mMayAskForFeedback) {
-      return false;
-    }
-    long lastTS = getLongPref(R.string.pref_main_ask_for_feedback_ts_enc_key);
-    if (lastTS == 0) {
-      setAskForFeedbackTs(System.currentTimeMillis());
-      return false;
-    }
-    int appLaunchCountId = R.string.pref_main_app_launch_count_enc_key;
-    boolean ask = getIntPref(appLaunchCountId) >= 10;
-    ask = ask && (System.currentTimeMillis() - lastTS) >= TimeUnit.DAYS.toMillis(10);
-    if (ask) {
-      savePref(appLaunchCountId, 0);
-      setAskForFeedbackTs(System.currentTimeMillis());
-    }
-    return ask;
+  public int getHelpFontSize() {
+    return getIntPref(R.string.pref_help_font_size_key, R.integer.pref_help_font_size_default);
   }
 
-  public void setAskForFeedbackTs(long timeStamp) {
-    savePref(R.string.pref_main_ask_for_feedback_ts_enc_key, timeStamp);
+  public void setHelpFontSize(int size) {
+    savePref(R.string.pref_help_font_size_key, size);
   }
 
-  public boolean isAppUpdated() {
-    PackageManager pm = App.getContext().getPackageManager();
-    try {
-      long lastUpdate = pm.getPackageInfo(BuildConfig.APPLICATION_ID, 0).lastUpdateTime;
-      long lastCheck = getLongPref(R.string.pref_help_update_check_ts_enc_key);
-      boolean updated = lastUpdate >= lastCheck;
-      savePref(R.string.pref_help_update_check_ts_enc_key, System.currentTimeMillis());
-      return updated;
-    } catch (NameNotFoundException ignored) {
-    }
-    return true;
+  public boolean warnDangerousPkgChanges() {
+    return getBoolPref(
+        R.string.pref_main_warn_dang_change_enc_key, R.bool.pref_main_warn_dang_change_enc_default);
   }
 
-  private PermissionDao mPermDb;
+  public void disableWarnDangerousPkgChanges() {
+    savePref(R.string.pref_main_warn_dang_change_enc_key, false);
+  }
 
-  public PermissionDao getPermDb() {
-    if (mPermDb == null) {
-      Class<PermissionDatabase> dbClass = PermissionDatabase.class;
-      String dbName = "permissions.db";
-      mPermDb = Room.databaseBuilder(App.getContext(), dbClass, dbName).build().permissionDao();
+  public boolean warnDangerousPermChanges() {
+    return getBoolPref(
+        R.string.pref_package_warn_dang_change_enc_key,
+        R.bool.pref_package_warn_dang_change_enc_default);
+  }
+
+  public void disableWarnDangerousPermChanges() {
+    savePref(R.string.pref_package_warn_dang_change_enc_key, false);
+  }
+
+  public boolean isRootEnabled() {
+    return getBoolPref(
+        R.string.pref_privs_root_enabled_enc_key, R.bool.pref_privs_root_enabled_enc_default);
+  }
+
+  public void setRootEnabled(boolean granted) {
+    savePref(R.string.pref_privs_root_enabled_enc_key, granted);
+    drawerPrefChanged();
+  }
+
+  public boolean isAdbEnabled() {
+    return getBoolPref(
+        R.string.pref_privs_adb_enabled_enc_key, R.bool.pref_privs_adb_enabled_enc_default);
+  }
+
+  public void setAdbEnabled(boolean connected) {
+    savePref(R.string.pref_privs_adb_enabled_enc_key, connected);
+    drawerPrefChanged();
+  }
+
+  public int getRootDaemonPort() {
+    return getIntPref(
+        R.string.pref_privs_root_daemon_port_enc_key,
+        R.integer.pref_privs_root_daemon_port_enc_default);
+  }
+
+  public void saveRootDaemonPort(int port) {
+    savePref(R.string.pref_privs_root_daemon_port_enc_key, port);
+  }
+
+  public int getAdbDaemonPort() {
+    return getIntPref(
+        R.string.pref_privs_adb_daemon_port_enc_key,
+        R.integer.pref_privs_adb_daemon_port_enc_default);
+  }
+
+  public void saveAdbDaemonPort(int port) {
+    savePref(R.string.pref_privs_adb_daemon_port_enc_key, port);
+  }
+
+  public int getAdbPort() {
+    return getIntPref(R.string.pref_privs_adb_port_key, R.integer.pref_privs_adb_port_default);
+  }
+
+  public void saveAdbPort(int port) {
+    if (port == 0) {
+      getDefPrefs().edit().remove(getString(R.string.pref_privs_adb_port_key)).apply();
+    } else {
+      savePref(R.string.pref_privs_adb_port_key, port);
     }
-    return mPermDb;
+  }
+
+  private String mAdbHost = "127.0.0.1";
+
+  public void setAdbHost(String host) {
+    mAdbHost = host;
+  }
+
+  public String getAdbHost() {
+    return mAdbHost;
+  }
+
+  public int getDaemonUid() {
+    return Integer.parseInt(
+        getStringPref(
+            R.string.pref_adv_settings_daemon_uid_key,
+            R.string.pref_adv_settings_daemon_uid_default));
+  }
+
+  public String getDaemonContext() {
+    String cxt =
+        getStringPref(
+            R.string.pref_adv_settings_daemon_context_key,
+            R.string.pref_adv_settings_daemon_context_default);
+    return getString(R.string.pref_adv_settings_daemon_context_default).equals(cxt) ? null : cxt;
+  }
+
+  public boolean shouldDaemonExitOnAppDeath() {
+    return getBoolPref(
+        R.string.pref_adv_settings_exit_on_app_death_key,
+        R.bool.pref_adv_settings_exit_on_app_death_default);
+  }
+
+  public int getDaemonPort() {
+    return getIntPref(
+        R.string.pref_privs_daemon_port_enc_key, R.integer.pref_privs_daemon_port_enc_default);
+  }
+
+  public void saveDaemonPort(int port) {
+    savePref(R.string.pref_privs_daemon_port_enc_key, port);
+  }
+
+  public boolean loadDexFromTmpDir() {
+    return getString(R.string.daemon_dex_location_tmp_val)
+        .equals(
+            getStringPref(
+                R.string.pref_adv_settings_daemon_dex_location_key,
+                R.string.pref_adv_settings_daemon_dex_location_default));
+  }
+
+  public void setLoadDexFromTmpDir(boolean fromTmpDir) {
+    savePref(
+        R.string.pref_adv_settings_daemon_dex_location_key,
+        getString(
+            fromTmpDir
+                ? R.string.daemon_dex_location_tmp_val
+                : R.string.daemon_dex_location_external_val));
+  }
+
+  public boolean shouldExtractFiles() {
+    return ApiUtils.getMyPkgInfo().lastUpdateTime
+        > getLongPref(R.string.pref_privs_dex_extraction_ts_enc_key);
+  }
+
+  public void setFileExtractionTs(long ts) {
+    savePref(R.string.pref_privs_dex_extraction_ts_enc_key, ts);
+  }
+
+  public String getSuExePath() {
+    String path = getStringPref(R.string.pref_adv_settings_su_exe_path_key, 0);
+    return TextUtils.isEmpty(path) ? "su" : path;
+  }
+
+  public boolean useUniqueRefForAppOpUidMode() {
+    return getBoolPref(
+        R.string.pref_adv_settings_unique_ref_app_op_uid_mode_key,
+        R.bool.pref_adv_settings_unique_ref_app_op_uid_mode_default);
+  }
+
+  public boolean shouldFixPermDb() {
+    return getBoolPref(R.string.pref_tmp_fix_perm_db_enc_key, true);
+  }
+
+  public void setFixPermDb(boolean fixPermDb) {
+    savePref(R.string.pref_tmp_fix_perm_db_enc_key, fixPermDb);
   }
 
   private String mQueryText;
@@ -350,7 +450,7 @@ public enum MySettings {
   }
 
   public boolean isDeepSearchEnabled() {
-    return getBoolPref(R.string.pref_main_deep_search_key);
+    return getBoolPref(R.string.pref_main_deep_search_key, R.bool.pref_main_deep_search_default);
   }
 
   public void setDeepSearchEnabled(boolean enabled) {
@@ -358,314 +458,81 @@ public enum MySettings {
   }
 
   public boolean isCaseSensitiveSearch() {
-    return getBoolPref(R.string.pref_main_case_sensitive_search_key);
+    return getBoolPref(
+        R.string.pref_main_case_sensitive_search_key,
+        R.bool.pref_main_case_sensitive_search_default);
   }
 
   public boolean isSpecialSearch() {
-    return getBoolPref(R.string.pref_settings_special_search_key);
+    return getBoolPref(
+        R.string.pref_settings_special_search_key, R.bool.pref_settings_special_search_default);
   }
 
-  @ToDo(what = "Remove quick scan")
-  public boolean isQuickScanEnabled() {
-    return false;
-    // getBoolPref(R.string.pref_settings_quick_scan_key) && PKG_PARSER_FLAVOR.allowQuickScan();
-  }
-
-  public boolean shouldDoQuickScan() {
-    return isQuickScanEnabled() && !isDeepSearching();
-  }
-
-  public boolean shouldShowRefs() {
-    return !isQuickScanEnabled() && !isDeepSearching();
-  }
-
-  public boolean isRootGranted() {
-    return getBoolPref(R.string.pref_main_root_granted_enc_key);
-  }
-
-  public void setRootGranted(boolean granted) {
-    savePref(R.string.pref_main_root_granted_enc_key, granted);
-    drawerPrefChanged();
-  }
-
-  public boolean isAdbConnected() {
-    return getBoolPref(R.string.pref_main_adb_connected_enc_key);
-  }
-
-  public void setAdbConnected(boolean connected) {
-    savePref(R.string.pref_main_adb_connected_enc_key, connected);
-    drawerPrefChanged();
-  }
-
-  private List<String> mCriticalApps;
-
-  public boolean isCriticalApp(String packageName) {
-    if (mCriticalApps == null) {
-      mCriticalApps =
-          Arrays.asList(App.getContext().getResources().getStringArray(R.array.critical_apps));
-    }
-    return mCriticalApps.contains(packageName);
-  }
-
-  // Exclusion filters master switch
   public boolean getExcFiltersEnabled() {
-    return getBoolPref(R.string.pref_filter_master_switch_key);
+    return getBoolPref(
+        R.string.pref_filter_master_switch_key, R.bool.pref_filter_master_switch_default);
   }
 
   public void setExcFiltersEnabled(boolean enabled) {
     savePref(R.string.pref_filter_master_switch_key, enabled);
   }
 
-  // apps
-  public boolean excludeNoIconApps() {
-    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_no_icon_apps_key);
-  }
-
-  public boolean excludeUserApps() {
-    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_user_apps_key);
-  }
-
-  public boolean excludeSystemApps() {
-    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_system_apps_key);
-  }
-
-  public boolean excludeFrameworkApps() {
-    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_framework_apps_key);
-  }
-
-  public boolean excludeDisabledApps() {
-    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_disabled_apps_key);
-  }
-
-  public boolean excludeNoPermissionsApps() {
-    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_no_perms_apps_key);
-  }
-
-  public boolean shouldExcludeNoPermApps() {
-    return !isQuickScanEnabled() && excludeNoPermissionsApps();
-  }
-
-  public boolean showExtraAppOps() {
-    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_show_extra_app_ops_key);
-  }
-
-  // permissions
-  public boolean excludeInvalidPermissions() {
-    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_invalid_perms_key);
-  }
-
-  public boolean excludeNotChangeablePerms() {
-    return getExcFiltersEnabled()
-        && getBoolPref(R.string.pref_filter_exclude_not_changeable_perms_key);
-  }
-
-  public boolean excludeNotGrantedPerms() {
-    return getExcFiltersEnabled()
-        && getBoolPref(R.string.pref_filter_exclude_not_granted_perms_key);
-  }
-
-  public boolean manuallyExcludePerms() {
-    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_manually_exclude_perms_key);
-  }
-
-  public boolean excludeNormalPerms() {
-    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_normal_perms_key);
-  }
-
-  public boolean excludeDangerousPerms() {
-    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_dangerous_perms_key);
-  }
-
-  public boolean excludeSignaturePerms() {
-    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_signature_perms_key);
-  }
-
-  public boolean excludePrivilegedPerms() {
-    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_privileged_perms_key);
-  }
-
-  public boolean excludeAppOpsPerms() {
-    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_appops_perms_key);
-  }
-
-  public boolean excludeNotSetAppOps() {
-    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_exclude_not_set_appops_key);
+  public void saveExcludedList(int key, Set<String> set) {
+    getDefPrefs().edit().putStringSet(getString(key), set).apply();
+    ExcFiltersData.INS.updateList(getString(key));
   }
 
   public boolean manuallyExcludeApps() {
-    return getExcFiltersEnabled() && getBoolPref(R.string.pref_filter_manually_exclude_apps_key);
+    return getExcFiltersEnabled()
+        && getBoolPref(
+            R.string.pref_filter_manually_exclude_apps_key,
+            R.bool.pref_filter_manually_exclude_apps_default);
   }
 
-  public boolean canReadAppOps() {
-    return canUseHiddenAPIs() || mPrivDaemonAlive;
+  public boolean excludeNoIconApps() {
+    return getExcFiltersEnabled()
+        && getBoolPref(
+            R.string.pref_filter_exclude_no_icon_apps_key,
+            R.bool.pref_filter_exclude_no_icon_apps_default);
   }
 
-  public static final String PERM_GET_APP_OPS_STATS = "android.permission.GET_APP_OPS_STATS";
-
-  public boolean isAppOpsGranted() {
-    return App.getContext().checkSelfPermission(PERM_GET_APP_OPS_STATS)
-        == PackageManager.PERMISSION_GRANTED;
+  public boolean excludeUserApps() {
+    return getExcFiltersEnabled()
+        && getBoolPref(
+            R.string.pref_filter_exclude_user_apps_key,
+            R.bool.pref_filter_exclude_user_apps_default);
   }
 
-  public boolean canUseHiddenAPIs() {
-    return useHiddenAPIs() && isAppOpsGranted();
+  public boolean excludeSystemApps() {
+    return getExcFiltersEnabled()
+        && getBoolPref(
+            R.string.pref_filter_exclude_system_apps_key,
+            R.bool.pref_filter_exclude_system_apps_default);
   }
 
-  // Accessing Preference every time may slow down
-  private Boolean mUseHiddenAPIs = null;
-
-  public boolean useHiddenAPIs() {
-    if (mUseHiddenAPIs == null) {
-      mUseHiddenAPIs = getBoolPref(R.string.pref_main_use_hidden_apis_enc_key);
-    }
-    return mUseHiddenAPIs;
+  public boolean excludeFrameworkApps() {
+    return getExcFiltersEnabled()
+        && getBoolPref(
+            R.string.pref_filter_exclude_framework_apps_key,
+            R.bool.pref_filter_exclude_framework_apps_default);
   }
 
-  public void setUseHiddenAPIs(boolean useHiddenAPIs) {
-    mUseHiddenAPIs = useHiddenAPIs;
-    savePref(R.string.pref_main_use_hidden_apis_enc_key, useHiddenAPIs);
+  public boolean excludeDisabledApps() {
+    return getExcFiltersEnabled()
+        && getBoolPref(
+            R.string.pref_filter_exclude_disabled_apps_key,
+            R.bool.pref_filter_exclude_disabled_apps_default);
   }
 
-  public boolean forceDarkMode() {
-    return getBoolPref(R.string.pref_settings_dark_theme_key);
-  }
-
-  public boolean useSocket() {
-    return getBoolPref(R.string.pref_main_use_socket_enc_key);
-  }
-
-  public void setUseSocket(boolean useSocket) {
-    savePref(R.string.pref_main_use_socket_enc_key, useSocket);
-  }
-
-  private final String mExcludedAppsPrefKey = getString(R.string.pref_filter_excluded_apps_key);
-  private Set<String> mExcludedApps;
-  private CharSequence[] mExcludedAppsLabels;
-
-  public CharSequence[] getExcludedAppsLabels() {
-    if (mExcludedAppsLabels == null) {
-      populateExcludedAppsList(false);
-    }
-    return mExcludedAppsLabels;
-  }
-
-  public Set<String> getExcludedApps() {
-    if (mExcludedApps == null) {
-      populateExcludedAppsList(false);
-    }
-    return mExcludedApps;
-  }
-
-  public int getExcludedAppsCount() {
-    return getExcludedApps().size();
-  }
-
-  // getExcludedApps() must be called at least once from bg thread so that to avoid
-  // blocking UI later in canBeExcluded().
-  public boolean isPkgExcluded(String packageName) {
-    return getExcludedApps().contains(packageName) && manuallyExcludeApps();
-  }
-
-  public boolean canBeExcluded(Package pkg) {
-    return getExcFiltersEnabled() && !getExcludedApps().contains(pkg.getName());
-  }
-
-  private final ReentrantLock EXCLUDED_APPS_LOCK = new ReentrantLock();
-
-  public void getExcludedAppsLock() {
-    EXCLUDED_APPS_LOCK.lock();
-  }
-
-  public void releaseExcludedAppsLock() {
-    EXCLUDED_APPS_LOCK.unlock();
-  }
-
-  public void populateExcludedAppsList(boolean loadDefaults) {
-    getExcludedAppsLock();
-    if (DEBUG) {
-      Util.debugLog(TAG, "populateExcludedAppsList: loadDefaults: " + loadDefaults);
-    }
-
-    // on first run or after "reset to defaults" it returns null, so use default values
-    Set<String> savedExcludedApps = mPrefs.getStringSet(mExcludedAppsPrefKey, null);
-    Set<String> excludedApps = savedExcludedApps;
-    if (savedExcludedApps == null || loadDefaults) {
-      String[] defaultExcludedApps =
-          App.getContext().getResources().getStringArray(R.array.excluded_apps);
-      excludedApps = new HashSet<>(Arrays.asList(defaultExcludedApps));
-    }
-
-    // Let's remove uninstalled packages from excluded apps list.
-    // Also get sorted lists of labels (to show) vs. names (to save).
-    // Set (is not ordered and thus) cannot be sorted.
-    List<Pair> excludedAppsPairList = new ArrayList<>();
-    PackageManager packageManager = App.getContext().getPackageManager();
-
-    for (String packageName : excludedApps) {
-      String packageLabel;
-      try {
-        int flags = PackageManager.MATCH_UNINSTALLED_PACKAGES;
-        packageLabel =
-            packageManager
-                .getApplicationInfo(packageName, flags)
-                .loadLabel(packageManager)
-                .toString();
-      } catch (NameNotFoundException e) {
-        // package is not installed
-        continue;
-      }
-      if (packageLabel.equals(packageName)) {
-        excludedAppsPairList.add(new Pair(new SpannableString(packageLabel), packageName));
-      } else {
-
-        SpannableString string = new SpannableString(packageLabel + "\n" + packageName);
-        string.setSpan(
-            new SmallTextSpan(),
-            packageLabel.length(),
-            string.length(),
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        excludedAppsPairList.add(new Pair(string, packageName));
-      }
-    }
-
-    // List can be sorted now
-    excludedAppsPairList.sort(Comparator.comparing(o -> o.packageLabel.toString().toUpperCase()));
-
-    // Separate the pair elements to sorted ordered lists.
-    CharSequence[] excludedAppsLabels = new CharSequence[excludedAppsPairList.size()];
-    mExcludedApps = new LinkedHashSet<>(); // Must be ordered to correspond with Labels
-
-    for (int i = 0; i < excludedAppsPairList.size(); i++) {
-      excludedAppsLabels[i] = excludedAppsPairList.get(i).packageLabel;
-      mExcludedApps.add(excludedAppsPairList.get(i).packageName);
-    }
-
-    mExcludedAppsLabels = excludedAppsLabels;
-
-    // Remove uninstalled excluded apps from saved list.
-    // Save preferences only on app's first run or if changed, otherwise
-    // OnSharedPreferenceChangeListener will cause infinite loop.
-    if (savedExcludedApps == null || !savedExcludedApps.equals(mExcludedApps)) {
-      mPrefs.edit().putStringSet(mExcludedAppsPrefKey, new HashSet<>(mExcludedApps)).apply();
-    }
-    releaseExcludedAppsLock();
-  }
-
-  public static class SmallTextSpan extends MetricAffectingSpan {
-
-    @Override
-    public void updateDrawState(TextPaint tp) {
-      tp.setTextSize(tp.getTextSize() * 4 / 5);
-    }
-
-    @Override
-    public void updateMeasureState(@NonNull TextPaint textPaint) {
-      updateDrawState(textPaint);
-    }
+  public boolean excludeNoPermsApps() {
+    return getExcFiltersEnabled()
+        && getBoolPref(
+            R.string.pref_filter_exclude_no_perms_apps_key,
+            R.bool.pref_filter_exclude_no_perms_apps_default);
   }
 
   public void clearExcludedAppsList() {
-    savePref(R.string.pref_filter_excluded_apps_key, new HashSet<>());
+    saveExcludedList(R.string.pref_filter_excluded_apps_key, new HashSet<>());
   }
 
   public void addPkgToExcludedApps(String pkgName) {
@@ -676,65 +543,67 @@ public enum MySettings {
       excludedApps = new HashSet<>(excludedApps);
     }
     excludedApps.add(pkgName);
-    savePref(R.string.pref_filter_excluded_apps_key, excludedApps);
+    saveExcludedList(R.string.pref_filter_excluded_apps_key, excludedApps);
   }
 
-  private final String mExcludedPermsPrefKey = getString(R.string.pref_filter_excluded_perms_key);
-  private Set<String> mExcludedPerms;
-
-  public Set<String> getExcludedPerms() {
-    if (mExcludedPerms == null) {
-      populateExcludedPermsList();
-    }
-    return mExcludedPerms;
-  }
-
-  public int getExcludedPermsCount() {
-    return getExcludedPerms().size();
-  }
-
-  // getExcludedPerms() must be called at least once from bg thread so that to avoid
-  // blocking UI later in canBeExcluded().
-  public boolean isPermExcluded(String permissionName) {
-    return getExcludedPerms().contains(permissionName) && manuallyExcludePerms();
-  }
-
-  public boolean canBeExcluded(Permission perm) {
+  public boolean excludeInvalidPerms() {
     return getExcFiltersEnabled()
-        && !getExcludedPerms().contains(perm.getName())
-        && !perm.isExtraAppOp();
+        && getBoolPref(
+            R.string.pref_filter_exclude_invalid_perms_key,
+            R.bool.pref_filter_exclude_invalid_perms_default);
   }
 
-  private final ReentrantLock EXCLUDED_PERMS_LOCK = new ReentrantLock();
-
-  public void getExcludedPermsLock() {
-    EXCLUDED_PERMS_LOCK.lock();
+  public boolean excludeNotChangeablePerms() {
+    return getExcFiltersEnabled()
+        && getBoolPref(
+            R.string.pref_filter_exclude_not_changeable_perms_key,
+            R.bool.pref_filter_exclude_not_changeable_perms_default);
   }
 
-  public void releaseExcludedPermsLock() {
-    EXCLUDED_PERMS_LOCK.unlock();
+  public boolean excludeNotGrantedPerms() {
+    return getExcFiltersEnabled()
+        && getBoolPref(
+            R.string.pref_filter_exclude_not_granted_perms_key,
+            R.bool.pref_filter_exclude_not_granted_perms_default);
   }
 
-  public void populateExcludedPermsList() {
-    getExcludedPermsLock();
-    if (DEBUG) {
-      Util.debugLog(TAG, "populateExcludedPermsList() called");
-    }
-    Set<String> excludedPerms = mPrefs.getStringSet(mExcludedPermsPrefKey, null);
-    if (excludedPerms == null) {
-      excludedPerms = new HashSet<>();
-    }
+  public boolean manuallyExcludePerms() {
+    return getExcFiltersEnabled()
+        && getBoolPref(
+            R.string.pref_filter_manually_exclude_perms_key,
+            R.bool.pref_filter_manually_exclude_perms_default);
+  }
 
-    List<String> excludedPermsList = new ArrayList<>(excludedPerms);
-    excludedPermsList.sort(Comparator.comparing(String::toUpperCase));
+  public boolean excludeNormalPerms() {
+    return getExcFiltersEnabled()
+        && getBoolPref(
+            R.string.pref_filter_exclude_normal_perms_key,
+            R.bool.pref_filter_exclude_normal_perms_default);
+  }
 
-    mExcludedPerms = new LinkedHashSet<>(); // Maintain the sort order
-    mExcludedPerms.addAll(excludedPermsList);
-    releaseExcludedPermsLock();
+  public boolean excludeDangerousPerms() {
+    return getExcFiltersEnabled()
+        && getBoolPref(
+            R.string.pref_filter_exclude_dangerous_perms_key,
+            R.bool.pref_filter_exclude_dangerous_perms_default);
+  }
+
+  public boolean excludeSignaturePerms() {
+    return getExcFiltersEnabled()
+        && getBoolPref(
+            R.string.pref_filter_exclude_signature_perms_key,
+            R.bool.pref_filter_exclude_signature_perms_default);
+  }
+
+  public boolean excludePrivilegedPerms() {
+    return getExcFiltersEnabled()
+        && getBoolPref(
+            R.string.pref_filter_exclude_privileged_perms_key,
+            R.bool.pref_filter_exclude_privileged_perms_default);
   }
 
   public void clearExcludedPermsList() {
-    savePref(R.string.pref_filter_excluded_perms_key, new HashSet<>());
+    saveExcludedList(R.string.pref_filter_excluded_perms_key, new HashSet<>());
   }
 
   public void addPermToExcludedPerms(String permName) {
@@ -745,139 +614,44 @@ public enum MySettings {
       excludedPerms = new HashSet<>(excludedPerms);
     }
     excludedPerms.add(permName);
-    savePref(R.string.pref_filter_excluded_perms_key, excludedPerms);
+    saveExcludedList(R.string.pref_filter_excluded_perms_key, excludedPerms);
   }
 
-  private final String mExtraAppOpsPrefKey = getString(R.string.pref_filter_extra_appops_key);
-  private Set<String> mExtraAppOps;
-
-  public Set<String> getExtraAppOps() {
-    if (mExtraAppOps == null) {
-      populateExtraAppOpsList(false);
-    }
-    return mExtraAppOps;
+  public boolean excludeAppOpsPerms() {
+    return getExcFiltersEnabled()
+        && getBoolPref(
+            R.string.pref_filter_exclude_appops_perms_key,
+            R.bool.pref_filter_exclude_appops_perms_default);
   }
 
-  public int getExtraAppOpsCount() {
-    return getExtraAppOps().size();
+  public boolean excludeNotSetAppOps() {
+    return getExcFiltersEnabled()
+        && getBoolPref(
+            R.string.pref_filter_exclude_not_set_appops_key,
+            R.bool.pref_filter_exclude_not_set_appops_default);
   }
 
-  public boolean isExtraAppOp(String opName) {
-    return showExtraAppOps() && getExtraAppOps().contains(opName);
-  }
-
-  private final ReentrantLock EXTRA_APP_OPS_LOCK = new ReentrantLock();
-
-  public void getExtraAppOpsLock() {
-    EXTRA_APP_OPS_LOCK.lock();
-  }
-
-  public void releaseExtraAppOpsLock() {
-    EXTRA_APP_OPS_LOCK.unlock();
-  }
-
-  public void populateExtraAppOpsList(boolean loadDefaults) {
-    getExtraAppOpsLock();
-    if (DEBUG) {
-      Util.debugLog(TAG, "populateExtraAppOpsList: loadDefaults: " + loadDefaults);
-    }
-    // on first run or after "reset to defaults" it returns null, so use default values
-    Set<String> savedExtraAppOps = mPrefs.getStringSet(mExtraAppOpsPrefKey, null);
-    Set<String> extraAppOps = savedExtraAppOps;
-    if (savedExtraAppOps == null || loadDefaults) {
-      String[] defaultExtraAppOps =
-          App.getContext().getResources().getStringArray(R.array.extra_app_ops);
-      extraAppOps = new HashSet<>(Arrays.asList(defaultExtraAppOps));
-    }
-
-    // Let's remove AppOps not on this Android version
-    List<String> appOpsList = AppOpsParser.INSTANCE.getAppOpsList();
-    mExtraAppOps = new HashSet<>();
-    for (String extraAppOp : extraAppOps) {
-      // Necessarily build mExtraAppOps here even with excludeAppOpsPerms(). Otherwise on
-      // unchecking "Exclude AppOps" the immediate call to getExtraAppOps() from
-      // FilterSettingsFragment receives an empty value which clears previous saved values.
-      if (appOpsList.size() == 0 || appOpsList.contains(extraAppOp)) {
-        mExtraAppOps.add(extraAppOp);
-      }
-    }
-
-    // Remove invalid AppOps from saved list.
-    // Save preferences only on app's first run or if changed, otherwise
-    // OnSharedPreferenceChangeListener will cause infinite loop.
-    if (savedExtraAppOps == null || !savedExtraAppOps.equals(mExtraAppOps)) {
-      mPrefs.edit().putStringSet(mExtraAppOpsPrefKey, new HashSet<>(mExtraAppOps)).apply();
-    }
-    releaseExtraAppOpsLock();
+  public boolean showExtraAppOps() {
+    return getExcFiltersEnabled()
+        && getBoolPref(
+            R.string.pref_filter_show_extra_app_ops_key,
+            R.bool.pref_filter_show_extra_app_ops_default);
   }
 
   public void clearExtraAppOpsList() {
-    savePref(R.string.pref_filter_extra_appops_key, new HashSet<>());
+    saveExcludedList(R.string.pref_filter_extra_appops_key, new HashSet<>());
   }
-
-  public void updateList(String key) {
-    if (key.equals(mExcludedAppsPrefKey)) {
-      populateExcludedAppsList(false);
-    } else if (key.equals(mExcludedPermsPrefKey)) {
-      populateExcludedPermsList();
-    } else if (key.equals(mExtraAppOpsPrefKey)) {
-      populateExtraAppOpsList(false);
-    }
-  }
-
-  public void resetToDefaults() {
-    // excluded apps Set must be explicitly removed to set default values
-    // .clear() does not work correctly
-    Editor prefEditor = mPrefs.edit();
-    int count = 0;
-    for (Field field : R.string.class.getDeclaredFields()) {
-      String strName = field.getName();
-      if (strName.startsWith("pref_filter_") && strName.endsWith("_key")) {
-        Integer strKeyResId =
-            Utils.getStaticIntField(strName, R.string.class, TAG + ": resetToDefaults");
-        if (strKeyResId == null) {
-          continue;
-        }
-        String prefKey = getString(strKeyResId);
-        prefEditor.remove(prefKey);
-        count++;
-      }
-    }
-    prefEditor.apply();
-    Log.i(TAG, "resetToDefaults: " + count + " preferences removed");
-
-    // StringSet is not cleared (null) by remove() or clear() sometimes.
-    populateExcludedAppsList(true);
-    populateExtraAppOpsList(true);
-  }
-
-  private static class Pair {
-
-    SpannableString packageLabel;
-    String packageName;
-
-    Pair(SpannableString packageLabel, String packageName) {
-      this.packageLabel = packageLabel;
-      this.packageName = packageName;
-    }
-  }
-
-  ///////////////////////////////////////////////////////////////////
 
   public static final int PREF_DRAWER_CHANGED = 0;
   public static final int PREF_UI_CHANGED = 1;
 
-  private final LiveEvent<Integer> mPrefsWatcher = new LiveEvent<>();
-
-  public LiveData<Integer> getPrefsChanged() {
-    return mPrefsWatcher;
-  }
+  public final LiveEvent<Integer> mPrefsWatcher = new LiveEvent<>(true);
 
   private void drawerPrefChanged() {
-    Utils.runInBg(() -> mPrefsWatcher.postValue(PREF_DRAWER_CHANGED));
+    mPrefsWatcher.postValue(PREF_DRAWER_CHANGED, true);
   }
 
   public void recreateMainActivity() {
-    Utils.runInBg(() -> mPrefsWatcher.postValue(PREF_UI_CHANGED));
+    mPrefsWatcher.postValue(PREF_UI_CHANGED, true);
   }
 }

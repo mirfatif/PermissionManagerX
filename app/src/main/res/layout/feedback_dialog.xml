@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.mirfatif.permissionmanagerx.fwk.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
@@ -12,7 +12,7 @@
     android:layout_gravity="center_horizontal"
     android:background="@drawable/hinge" />
 
-  <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+  <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="24dp"
@@ -27,42 +27,63 @@
       android:textSize="16sp"
       tools:ignore="UnusedAttribute" />
 
-    <com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout
+    <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="24dp"
       android:orientation="horizontal">
 
-      <Button
-        android:id="@+id/neutral_button"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/do_not_ask"
-        android:textColor="?attr/accentColor" />
-
-      <!--Expander-->
-      <View
+      <FrameLayout
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-      <Button
-        android:id="@+id/neg_button"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@android:string/cancel"
-        android:textColor="?attr/accentColor"
-        tools:ignore="ButtonOrder" />
+        android:layout_gravity="center_vertical"
+        android:layout_weight="2">
 
-      <Button
-        android:id="@+id/pos_button"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
+        <Button
+          android:id="@+id/neutral_button"
+          style="@style/Widget.AppCompat.Button.Borderless"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="start"
+          android:text="@string/ignore_for_now"
+          android:textColor="?attr/accentColor" />
+
+      </FrameLayout>
+
+      <FrameLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textColor="?attr/accentColor" />
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1">
 
-    </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
-  </com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
-</com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+        <Button
+          android:id="@+id/neg_button"
+          style="@style/Widget.AppCompat.Button.Borderless"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="end"
+          android:text="@android:string/cancel"
+          android:textColor="?attr/accentColor"
+          tools:ignore="ButtonOrder" />
+
+      </FrameLayout>
+
+      <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1">
+
+        <Button
+          android:id="@+id/pos_button"
+          style="@style/Widget.AppCompat.Button.Borderless"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="end"
+          android:textColor="?attr/accentColor" />
+
+      </FrameLayout>
+
+    </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+  </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+</com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>

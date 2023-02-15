@@ -1,50 +1,105 @@
-apply plugin: 'com.android.application'
+import java.nio.file.Files
+import java.nio.file.Paths
+
+apply from: '../configs/apk.gradle'
 
 android {
-    compileSdk compileSdkVer
-    buildToolsVersion buildToolsVer
+    String APP_ID = 'com.mirfatif.permissionmanagerx'
+    namespace APP_ID
 
     defaultConfig {
-        applicationId "com.mirfatif.permissionmanagerx"
-        minSdk minSdkVer
-        targetSdk targetSdkVer
-        versionCode 112
-        versionName "v1.12"
+        applicationId APP_ID
 
-        // BuildType-independent and Flavor-independent BuildConfig.APPLICATION_ID
-        buildConfigField "String", "APP_ID", '"com.mirfatif.permissionmanagerx"'
+        versionCode 113
+        versionName 'v1.13'
+
+        // Flavor-independent and BuildType-independent BuildConfig.APPLICATION_ID
+        buildConfigField 'String', 'APP_ID', '"' + APP_ID + '"'
+
+        // Daemon dex file to be saved in assets directory.
+        buildConfigField 'String', 'DAEMON_DEX', '"' + daemonDex + '"'
+    }
+
+    flavorDimensions.add(0, 'type')
+    productFlavors {
+        self {
+            dimension 'type'
+        }
+        ps {
+            dimension 'type'
+            applicationIdSuffix '.ps'
+            versionNameSuffix '-ps'
+        }
+        fdroid {
+            dimension 'type'
+            versionNameSuffix '-fd'
+        }
+        amaz {
+            dimension 'type'
+            versionNameSuffix '-amaz'
+        }
+        pro {
+            applicationIdSuffix '.pro'
+            versionNameSuffix '-pro'
+        }
+    }
+
+    variantFilter { variant ->
+        List names = variant.flavors*.name
+        if (noPro) {
+            if (!names.contains('fdroid') || !names.contains('foss')) {
+                variant.setIgnore(true)
+            }
+        } else if (names.contains('ps') && names.contains('foss')) {
+            variant.setIgnore(true)
+        } else if ((names.contains('fdroid') || names.contains('amaz')) && names.contains('pro')) {
+            variant.setIgnore(true)
+        }
     }
 
     buildTypes {
-        // Flavor-specific
-        String flavor = ""
-
-        release {
-            versionNameSuffix flavor
-
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-
         debug {
-            applicationIdSuffix ".debug"
-            versionNameSuffix flavor  + "-debug"
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-debug'
         }
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+    applicationVariants.all { variant ->
+        def mf = variant.mergedFlavor
+        if (variant.flavorName == 'psPro' && variant.buildType.name == 'release') {
+            // No .ps.pro suffix for Play Store Pro release
+            mf.setApplicationId(APP_ID)
+        }
+
+        String lfp = variant.applicationId + '.LogFileProvider'
+        mf.addManifestPlaceholders(logFileProvider: lfp)
+        variant.buildConfigField 'String', 'LOG_FILE_PROVIDER', '"' + lfp + '"'
+
+        // print(variant.name + ' ' + variant.applicationId + ' ')
+        // print(mf.manifestPlaceholders)
+        // println()
     }
 
-    dependenciesInfo {
-        includeInApk false
+    sourceSets.all { sc ->
+        // These combinations are not created by default (required for daemon dex).
+        def dir
+        if (sc.name.matches('(self|ps)ProDebug')) {
+            dir = 'proDebug'
+        } else if (sc.name.matches('(self|ps)ProRelease')) {
+            dir = 'proRelease'
+        } else if (sc.name.matches('(self|fdroid|amaz)FossDebug')) {
+            dir = 'fossDebug'
+        } else if (sc.name.matches('(self|fdroid|amaz)FossRelease')) {
+            dir = 'fossRelease'
+        } else {
+            return
+        }
+        sc.assets.srcDirs += ["$projectDir/src/$dir/assets"]
     }
 
     packagingOptions {
         jniLibs {
-            // Due to android:extractNativeLibs set to "true" in AndroidManifest.
+            // Due to android:extractNativeLibs set to 'true' in AndroidManifest.
             useLegacyPackaging true
         }
     }
@@ -55,81 +110,179 @@ android {
     }
 }
 
+configurations {
+    all {
+        // To avoid duplicate class version conflict.
+        exclude group: 'androidx.lifecycle', module: 'lifecycle-viewmodel-ktx'
+    }
+}
+
 dependencies {
-    implementation project(path: ':AdbLib')
     implementation project(path: ':priv_library')
 
-    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'com.github.MuntashirAkon:libadb-android:2.2.0'
+    // To generate X509Certificate
+    implementation 'com.github.MuntashirAkon:sun-security-android:1.1'
+    // For conscrypt
+    implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
+
+    implementation 'androidx.appcompat:appcompat:1.6.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01'
     implementation 'androidx.preference:preference:1.2.0'
     implementation 'androidx.browser:browser:1.4.0'
-    implementation 'androidx.room:room-runtime:2.4.2'
-    implementation "androidx.security:security-crypto:1.1.0-alpha03"
-    implementation 'androidx.webkit:webkit:1.4.0'
-    annotationProcessor 'androidx.room:room-compiler:2.4.2'
+    implementation 'androidx.room:room-runtime:2.5.0'
+    implementation 'androidx.security:security-crypto:1.1.0-alpha04'
+    implementation 'androidx.webkit:webkit:1.6.0'
+    annotationProcessor 'androidx.room:room-compiler:2.5.0'
 
     // For SnackBar and NavigationView. Also includes CoordinatorLayout
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
 
     // To handle hyperlink onClick in TextView
     implementation 'me.saket:better-link-movement-method:2.2.0'
 
+    // To use Iterables for splitting Collections
+    implementation("com.google.guava:guava:31.1-android")
+
     // Let's behave responsibly
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
 }
 
-task buildDaemon() {
-    def isDebug = false
-    for (String taskName : gradle.startParameter.taskNames) {
-        if (taskName.contains("Debug")) {
-            isDebug = true
-            break
+def copyFileIfChanged(File src, File dst) {
+    assert src.file
+    assert !dst.exists() || dst.file
+
+    if (dst.exists()) {
+        byte[] s = Files.readAllBytes(Paths.get(src.absolutePath))
+        byte[] d = Files.readAllBytes(Paths.get(dst.absolutePath))
+        if (Arrays.equals(s, d)) {
+            println('UP-TO-DATE: ' + dst.absolutePath)
+            return
         }
+
+        delete dst
     }
-    def src = "priv_daemon/build/outputs/apk/release/priv_daemon-release.apk"
-    if (isDebug) {
-        src = "priv_daemon/build/outputs/apk/debug/priv_daemon-debug.apk"
-        dependsOn(':priv_daemon:assembleDebug')
-        mustRunAfter(':priv_daemon:assembleDebug')
+
+    copy {
+        from src
+        into dst.parentFile
+        rename { fileName -> dst }
+    }
+
+    if (dst.exists()) {
+        println('Creating: ' + dst.absolutePath)
     } else {
-        dependsOn(':priv_daemon:assembleRelease')
-        mustRunAfter(':priv_daemon:assembleRelease')
+        throw new GradleException('Failed to create: ' + dst.absolutePath)
     }
+}
 
-    doLast {
-        def dexFile = 'com.mirfatif.privdaemon.pmx.dex'
-        def dstDir = new File(rootDir, "app/src/main/assets/")
-        def dstFile = new File(dstDir, dexFile)
-        delete dstFile
-        copy {
-            from zipTree(new File(rootDir, src)).matching { include 'classes.dex' }.singleFile
-            into dstDir
-            rename { fileName -> dexFile }
+def createTasksForDaemonBuild = () -> {
+    for (boolean foss : new boolean[]{true, false}) {
+        if (noPro && !foss) {
+            continue
         }
-        if (!dstFile.exists()) {
-            throw new GradleException("buildDaemon failed!\n" + dstFile.getPath() + " does not exist")
+
+        for (boolean debug : new boolean[]{true, false}) {
+            String task = foss ? 'Foss' : 'Pro'
+            task += debug ? 'Debug' : 'Release'
+
+            String dir = foss ? 'foss' : 'pro'
+            dir += debug ? 'Debug' : 'Release'
+
+            String dexTaskDep
+
+            if (!debug) {
+                dexTaskDep = 'minify' + task + 'WithR8'
+            } else {
+                dexTaskDep = 'mergeDex' + task
+            }
+
+            String src = 'priv_daemon/build/intermediates/dex/'
+            src += dir + '/' + dexTaskDep + '/classes.dex'
+
+            File srcFile = new File(rootDir, src)
+            File dstFile = new File(rootDir, 'app/src/' + dir + '/assets/' + daemonDex)
+
+            tasks.create('buildDaemon' + task) {
+                dependsOn(':priv_daemon:' + dexTaskDep)
+
+                if (foss) {
+                    doLast {
+                        copyFileIfChanged(srcFile, dstFile)
+                    }
+                } else {
+                    ext.srcFile = srcFile
+                    ext.dstFile = dstFile
+                }
+            }
         }
     }
 }
-preBuild.dependsOn(buildDaemon)
 
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-def sdkDir = properties.getProperty('sdk.dir')
-
-task buildNative(type: Exec) {
-    environment 'ANDROID_NDK', new File(sdkDir, "ndk/" + ndkVer).getAbsolutePath()
-    workingDir "$rootDir/native"
+task buildNativeFoss(type: Exec) {
+    environment 'ANDROID_NDK', ndkDir
+    workingDir nativeDir
     commandLine './build_native.sh'
+
     doLast {
         if (executionResult.get().exitValue != 0) {
-            println "buildNative failed!"
+            throw new GradleException('buildNativeFoss failed')
         }
     }
 }
-preBuild.dependsOn(buildNative)
 
-apply plugin: 'com.github.sherter.google-java-format'
-preBuild.dependsOn(verifyGoogleJavaFormat)
+def setExtSrcDependencies(String type, String version) {
+    for (boolean debug : new boolean[]{true, false}) {
+        String build = debug ? 'Debug' : 'Release'
+
+        Task task = tasks.findByName('merge' + type + version + build + 'Assets')
+
+        task.dependsOn('buildDaemon' + version + build)
+
+        task = tasks.findByName('merge' + type + version + build + 'JniLibFolders')
+
+        if (version == 'Foss') {
+            task.dependsOn('buildNativeFoss')
+        } else {
+            task.dependsOn('buildNative' + type + version + build)
+        }
+    }
+}
+
+createTasksForDaemonBuild()
+
+if (!noPro) {
+    apply from: '../configs/pro-app.gradle'
+}
+
+afterEvaluate {
+    setExtSrcDependencies('Fdroid', 'Foss')
+
+    if (!noPro) {
+        setExtSrcDependencies('Self', 'Foss')
+        setExtSrcDependencies('Amaz', 'Foss')
+        setExtSrcDependencies('Self', 'Pro')
+        setExtSrcDependencies('Ps', 'Pro')
+    }
+}
+
+clean.doLast {
+    // Delete daemon dex
+    for (String variant in new String[]{'fossRelease', 'fossDebug', 'proRelease', 'proDebug'}) {
+        Paths.get(projectDir.absolutePath, 'src/' + variant + '/assets').deleteDir()
+    }
+    // Delete native libraries
+    for (String variant in new String[]{'main', 'foss', 'selfProRelease',
+            'psProRelease', 'selfProDebug', 'psProDebug'}) {
+        Paths.get(projectDir.absolutePath, 'src/' + variant + '/jniLibs').deleteDir()
+    }
+}
+
+preBuild.doFirst {
+    // Re-merge the assets and jniLibs source sets.
+    for (String dir in new String[]{'assets', 'merged_jni_libs'}) {
+        Paths.get(projectDir.absolutePath, 'build/intermediates/' + dir).deleteDir()
+    }
+}

@@ -1,327 +1,234 @@
 package com.mirfatif.privtasks.hiddenapis;
 
-import android.app.ActivityManager;
+import static com.mirfatif.privtasks.hiddenapis.HiddenAPIsConstants.PKG_URI;
+import static com.mirfatif.privtasks.hiddenapis.HiddenAPIsConstants.START_SVC_ERR;
+import static com.mirfatif.privtasks.hiddenapis.HiddenAPIsConstants.getString;
+
 import android.app.AppOpsManager;
 import android.app.AppOpsManager.OpEntry;
 import android.app.AppOpsManager.PackageOps;
-import android.app.IActivityManager;
-import android.content.pm.IPackageManager;
-import android.content.pm.PackageManager;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.content.pm.ParceledListSlice;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Process;
-import android.os.ServiceManager;
-import android.permission.IPermissionManager;
-import com.android.internal.app.IAppOpsService;
-import com.mirfatif.annotation.DaemonOnly;
-import com.mirfatif.annotation.HiddenClass;
-import com.mirfatif.annotation.HiddenClass.CType;
-import com.mirfatif.annotation.HiddenField;
-import com.mirfatif.annotation.HiddenField.FType;
-import com.mirfatif.annotation.HiddenMethod;
-import com.mirfatif.annotation.HiddenMethod.MType;
-import com.mirfatif.annotation.NonDaemonOnly;
-import com.mirfatif.annotation.Privileged;
-import com.mirfatif.annotation.Throws;
-import com.mirfatif.privtasks.hiddenapis.err.HiddenAPIsError;
-import com.mirfatif.privtasks.hiddenapis.err.HiddenAPIsException;
-import com.mirfatif.privtasks.ser.MyPackageOps;
+import android.os.RemoteException;
+import android.provider.Settings;
+import com.mirfatif.err.HiddenAPIsException;
+import com.mirfatif.privtasks.HiddenSdkConstants;
+import com.mirfatif.privtasks.bind.MyPackageOps;
+import java.util.ArrayList;
 import java.util.List;
 
-public abstract class HiddenAPIs {
+public enum HiddenAPIs {
+  INS;
 
-  final HiddenAPIsCallback mCallback;
-  Integer OP_FLAGS_ALL = null;
+  public static int getNumOps() {
+    return AppOpsManager.getNumOps();
+  }
 
-  @HiddenClass(cls = ServiceManager.class)
-  @HiddenClass(cls = IAppOpsService.class)
-  @HiddenClass(cls = IPackageManager.class)
-  @HiddenClass(cls = IPermissionManager.class)
-  @HiddenClass(cls = IActivityManager.class)
-  @HiddenMethod(name = "getService", type = MType.STATIC_METHOD, cls = ServiceManager.class)
-  @HiddenMethod(
-      name = "asInterface",
-      type = MType.STATIC_METHOD,
-      cls = {
-        IAppOpsService.Stub.class,
-        IPackageManager.Stub.class,
-        IPermissionManager.Stub.class,
-        IActivityManager.Stub.class,
-      })
-  // IPackageManager and IPermissionManager don't have a constant in Context class
-  HiddenAPIs(HiddenAPIsCallback callback) {
-    mCallback = callback;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+  public static int getOpModeNamesSize() {
+    return AppOpsManager.MODE_NAMES.length;
+  }
+
+  public static int opToDefaultMode(int opCode, boolean isLos) {
+    if (isLos) {
+      return AppOpsManager.opToDefaultMode(opCode, false);
+    } else {
+      return AppOpsManager.opToDefaultMode(opCode);
+    }
+  }
+
+  public static int opToSwitch(int opCode) {
+    return AppOpsManager.opToSwitch(opCode);
+  }
+
+  public static String opToName(int opCode) {
+    return AppOpsManager.opToName(opCode);
+  }
+
+  public static String modeToName(int opMode) {
+    return AppOpsManager.modeToName(opMode);
+  }
+
+  public static int permToOpCode(String permName) {
+    return AppOpsManager.permissionToOpCode(permName);
+  }
+
+  public static int strDebugOpToOp(String opName) {
+    return AppOpsManager.strDebugOpToOp(opName);
+  }
+
+  public void setAppOpMode(String pkgName, int uid, int op, int mode) throws RemoteException {
+
+    SysSvcFactory.INS.getIAppOpsSvc().setMode(op, uid, pkgName, mode);
+  }
+
+  public void setAppOpUidMode(int uid, int op, int mode) throws RemoteException {
+    SysSvcFactory.INS.getIAppOpsSvc().setUidMode(op, uid, mode);
+  }
+
+  public void resetAllModes(int userId, String pkgName) throws RemoteException {
+    SysSvcFactory.INS.getIAppOpsSvc().resetAllModes(userId, pkgName);
+  }
+
+  public List<MyPackageOps> getOpsForPkg(int uid, String pkgName, int[] ops, AppOpsErrorCallback cb)
+      throws RemoteException {
+    List<PackageOps> pkgOpsList = null;
+
+    if (pkgName != null) {
+      pkgOpsList = SysSvcFactory.INS.getIAppOpsSvc().getOpsForPackage(uid, pkgName, ops);
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       try {
-        OP_FLAGS_ALL = getOpFlagAll();
-      } catch (HiddenAPIsError e) {
-        e.printStackTrace();
+        pkgOpsList = SysSvcFactory.INS.getIAppOpsSvc().getUidOps(uid, ops);
+      } catch (NullPointerException e) {
+        cb.onGetUidOpsNpException(e);
+        return null;
       }
     }
-  }
 
-  //////////////////////////////////////////////////////////////////
-  //////////////////////////// APP OPS /////////////////////////////
-  //////////////////////////////////////////////////////////////////
+    List<MyPackageOps> myPkgOpsList = new ArrayList<>();
 
-  @HiddenField(name = "_NUM_OP", type = FType.STATIC_FIELD, cls = AppOpsManager.class)
-  public int getNumOps() throws HiddenAPIsError {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-      return _getNumOps();
+    if (pkgOpsList == null) {
+      return myPkgOpsList;
     }
-    // Using directly the value in compile-time SDK gets hard-coded
-    return getStaticIntField("_NUM_OP", AppOpsManager.class);
-  }
 
-  @HiddenMethod(name = "getNumOps", type = MType.STATIC_METHOD, cls = AppOpsManager.class)
-  abstract int _getNumOps() throws HiddenAPIsError;
+    for (PackageOps pkgOps : pkgOpsList) {
+      List<MyPackageOps.MyOpEntry> myOpEntryList = new ArrayList<>();
 
-  @HiddenField(name = "OP_NONE", type = FType.STATIC_FIELD, cls = AppOpsManager.class)
-  public int getOpNone() throws HiddenAPIsError {
-    // Using directly the value in compile-time SDK gets hard-coded
-    return getStaticIntField("OP_NONE", AppOpsManager.class);
-  }
+      for (OpEntry opEntry : pkgOps.getOps()) {
+        MyPackageOps.MyOpEntry myOpEntry = new MyPackageOps.MyOpEntry();
 
-  @HiddenField(
-      name = "OP_FLAGS_ALL",
-      type = FType.STATIC_FIELD,
-      cls = AppOpsManager.class,
-      minSDK = 29)
-  public int getOpFlagAll() throws HiddenAPIsError {
-    // Using directly the value in compile-time SDK gets hard-coded
-    return getStaticIntField("OP_FLAGS_ALL", AppOpsManager.class);
-  }
+        myOpEntry.op = opEntry.getOp();
 
-  @HiddenField(name = "MODE_NAMES", type = FType.STATIC_FIELD, cls = AppOpsManager.class)
-  public abstract int getOpModeNamesSize() throws HiddenAPIsError;
+        if (myOpEntry.op >= HiddenSdkConstants._NUM_OP.get()) {
+          cb.onInvalidOpCode(myOpEntry.op, pkgOps.getPackageName());
+          continue;
+        }
 
-  @HiddenMethod(name = "opToDefaultMode", type = MType.STATIC_METHOD, cls = AppOpsManager.class)
-  public abstract int opToDefaultMode(int opCode, boolean isLos)
-      throws HiddenAPIsError, HiddenAPIsException;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+          myOpEntry.lastAccessTime =
+              opEntry.getLastAccessTime(HiddenSdkConstants.OP_FLAGS_ALL.get());
+        } else {
+          myOpEntry.lastAccessTime = opEntry.getTime();
+        }
+        myOpEntry.opMode = opEntry.getMode();
 
-  @HiddenMethod(name = "opToSwitch", type = MType.STATIC_METHOD, cls = AppOpsManager.class)
-  public abstract int opToSwitch(int opCode) throws HiddenAPIsError, HiddenAPIsException;
+        myOpEntryList.add(myOpEntry);
+      }
 
-  @HiddenMethod(name = "opToName", type = MType.STATIC_METHOD, cls = AppOpsManager.class)
-  public abstract String opToName(int opCode) throws HiddenAPIsError, HiddenAPIsException;
-
-  @HiddenMethod(name = "modeToName", type = MType.STATIC_METHOD, cls = AppOpsManager.class)
-  public abstract String modeToName(int opMode) throws HiddenAPIsError;
-
-  @HiddenMethod(name = "permissionToOpCode", type = MType.STATIC_METHOD, cls = AppOpsManager.class)
-  public abstract int permissionToOpCode(String permName);
-
-  @DaemonOnly
-  @HiddenMethod(name = "strDebugOpToOp", type = MType.STATIC_METHOD, cls = AppOpsManager.class)
-  public abstract int strDebugOpToOp(String opName) throws HiddenAPIsError;
-
-  @HiddenMethod(name = "setMode", cls = IAppOpsService.class)
-  @DaemonOnly
-  @Privileged(requires = "android.permission.MANAGE_APP_OPS_MODES")
-  @Throws(name = "SecurityException")
-  // Profile owners are allowed to change modes but only for apps within their user.
-  public abstract void setMode(int op, int uid, String pkgName, int mode)
-      throws HiddenAPIsException;
-
-  @HiddenMethod(name = "setUidMode", cls = IAppOpsService.class)
-  @DaemonOnly
-  @Privileged(requires = "android.permission.MANAGE_APP_OPS_MODES")
-  @Throws(name = "SecurityException")
-  // Profile owners are allowed to change modes but only for apps within their user.
-  public abstract void setUidMode(int op, int uid, int mode) throws HiddenAPIsException;
-
-  @HiddenMethod(name = "resetAllModes", cls = IAppOpsService.class)
-  @DaemonOnly
-  @Privileged(requires = "android.permission.MANAGE_APP_OPS_MODES")
-  @Throws(name = "SecurityException")
-  // Profile owners are allowed to change modes but only for apps within their user.
-  public abstract void resetAllModes(int userId, String pkgName) throws HiddenAPIsException;
-
-  @HiddenClass(cls = PackageOps.class, type = CType.INNER_CLASS)
-  @HiddenClass(cls = OpEntry.class, type = CType.INNER_CLASS)
-  @HiddenMethod(name = "getOpsForPackage", cls = IAppOpsService.class)
-  @HiddenMethod(name = "getUidOps", cls = IAppOpsService.class)
-  @HiddenMethod(name = "getPackageName", cls = PackageOps.class)
-  @HiddenMethod(name = "getOps", cls = PackageOps.class)
-  @HiddenMethod(name = "getOp", cls = OpEntry.class)
-  @HiddenMethod(name = "getMode", cls = OpEntry.class)
-  @HiddenMethod(name = "getLastAccessTime", cls = OpEntry.class)
-  @HiddenMethod(name = "getTime", cls = OpEntry.class)
-  @Privileged(requires = "android.permission.GET_APP_OPS_STATS")
-  @Throws(name = "SecurityException")
-  /*
-   getUidOps() (on O and P) is buggy, throws NullPointerException. Check was added in Q:
-     android-10.0.0_r1: frameworks/base/services/core/java/com/android/server/appop/AppOpsService.java#1016
-   But don't consider it an error, it just means there are no UID AppOps for the package.
-   MIUI has bug and returns bad opCode like 10005, so compare with valid range.
-   N and O (P too?) don't have getLastAccessTime(), so use deprecated getTime().
-   Returning null is considered an error, so return empty List if no error.
-  */
-  public abstract List<MyPackageOps> getMyPackageOpsList(
-      int uid, String packageName, String op, int opNum)
-      throws HiddenAPIsException, HiddenAPIsError;
-
-  //////////////////////////////////////////////////////////////////
-  ////////////////////// MANIFEST PERMISSIONS //////////////////////
-  //////////////////////////////////////////////////////////////////
-
-  @HiddenField(
-      name = "FLAG_PERMISSION_SYSTEM_FIXED",
-      type = FType.STATIC_FIELD,
-      cls = PackageManager.class)
-  public static int getSystemFixedFlag() throws HiddenAPIsError {
-    return getStaticIntField("FLAG_PERMISSION_SYSTEM_FIXED", PackageManager.class);
-  }
-
-  @HiddenField(
-      name = "FLAG_PERMISSION_POLICY_FIXED",
-      type = FType.STATIC_FIELD,
-      cls = PackageManager.class)
-  public static int getPolicyFixedFlag() throws HiddenAPIsError {
-    return getStaticIntField("FLAG_PERMISSION_POLICY_FIXED", PackageManager.class);
-  }
-
-  @HiddenClass(cls = ParceledListSlice.class)
-  @HiddenMethod(
-      name = "getAllPermissionGroups",
-      cls = {IPackageManager.class, IPermissionManager.class})
-  @HiddenMethod(name = "getList", cls = ParceledListSlice.class)
-  // getAllPermissionGroups() moved from IPackageManager to IPermissionManager in SDK 30.
-  public abstract List<?> getPermGroupInfoList() throws HiddenAPIsException, HiddenAPIsError;
-
-  @HiddenClass(cls = ParceledListSlice.class)
-  @HiddenMethod(
-      name = "queryPermissionsByGroup",
-      cls = {IPackageManager.class, IPermissionManager.class})
-  @HiddenMethod(name = "getList", cls = ParceledListSlice.class)
-  // queryPermissionsByGroup() moved from IPackageManager to IPermissionManager in SDK 30.
-  public abstract List<?> getPermInfoList(String permGroup)
-      throws HiddenAPIsException, HiddenAPIsError;
-
-  @HiddenMethod(
-      name = "getPermissionFlags",
-      cls = {IPackageManager.class, IPermissionManager.class})
-  @DaemonOnly
-  @Privileged(
-      requires = {
-        "android.permission.GRANT_RUNTIME_PERMISSIONS",
-        "android.permission.REVOKE_RUNTIME_PERMISSIONS"
-      })
-  @Throws(name = "SecurityException")
-  // getPermissionFlags() moved from IPackageManager to IPermissionManager in SDK 30.
-  public abstract int getPermissionFlags(String permName, String pkgName, int userId)
-      throws HiddenAPIsException;
-
-  @HiddenMethod(name = "grantRuntimePermission", cls = IPackageManager.class)
-  @DaemonOnly
-  @Privileged(requires = "android.permission.GRANT_RUNTIME_PERMISSIONS")
-  @Throws(name = "SecurityException")
-  public abstract void grantRuntimePermission(String pkgName, String permName, int userId)
-      throws HiddenAPIsException;
-
-  @HiddenMethod(
-      name = "revokeRuntimePermission",
-      cls = {IPackageManager.class, IPermissionManager.class})
-  @DaemonOnly
-  @Privileged(requires = "android.permission.REVOKE_RUNTIME_PERMISSIONS")
-  @Throws(name = "SecurityException")
-  // revokeRuntimePermission() moved from IPackageManager to IPermissionManager in SDK 30.
-  public abstract void revokeRuntimePermission(String pkgName, String permName, int userId)
-      throws HiddenAPIsException;
-
-  @HiddenMethod(
-      name = "checkPermission",
-      cls = {IActivityManager.class})
-  public abstract int checkPermission(String perm, int pid, int uid) throws HiddenAPIsException;
-
-  //////////////////////////////////////////////////////////////////
-  //////////////////////////// PACKAGES ////////////////////////////
-  //////////////////////////////////////////////////////////////////
-
-  @HiddenMethod(name = "setApplicationEnabledSetting", cls = IPackageManager.class)
-  @DaemonOnly
-  @Privileged(
-      requires = {
-        "android.permission.CHANGE_COMPONENT_ENABLED_STATE",
-        "android.permission.INTERACT_ACROSS_USERS"
-      })
-  @Throws(name = "SecurityException")
-  public abstract void setApplicationEnabledSetting(
-      String pkg, int state, int flags, int userId, String callingPkg) throws HiddenAPIsException;
-
-  @HiddenMethod(name = "getPackagesForUid", cls = IPackageManager.class)
-  @DaemonOnly
-  @Privileged(
-      requires = {
-        "android.permission.INTERACT_ACROSS_USERS_FULL",
-        "android.permission.INTERACT_ACROSS_USERS"
-      })
-  @Throws(name = "SecurityException")
-  abstract String[] getPackagesForUid(int uid) throws HiddenAPIsException;
-
-  //////////////////////////////////////////////////////////////////
-  ////////////////////////////// OTHERS ////////////////////////////
-  //////////////////////////////////////////////////////////////////
-
-  @HiddenMethod(name = "getPidsForCommands", type = MType.STATIC_METHOD, cls = Process.class)
-  @DaemonOnly
-  public abstract int[] getPidsForCommands(String[] commands);
-
-  @HiddenMethod(name = "startActivityAsUser", cls = IActivityManager.class)
-  @DaemonOnly
-  @Privileged
-  @Throws(name = "SecurityException")
-  public abstract int openAppInfo(String pkgName, int userId) throws HiddenAPIsException;
-
-  @HiddenField(name = "START_SUCCESS", type = FType.STATIC_FIELD, cls = ActivityManager.class)
-  @DaemonOnly
-  public int getAmSuccessCode() throws HiddenAPIsError {
-    return getStaticIntField("START_SUCCESS", ActivityManager.class);
-  }
-
-  @HiddenMethod(
-      name =
-          "ComponentName startService(IApplicationThread, Intent, String, boolean, String, String, int)",
-      cls = IActivityManager.class,
-      minSDK = 30)
-  @HiddenMethod(
-      name = "ComponentName startService(IApplicationThread, Intent, String, boolean, String, int)",
-      cls = IActivityManager.class,
-      minSDK = 26,
-      maxSDK = 29)
-  @HiddenMethod(
-      name = "ComponentName startService(IApplicationThread, Intent, String, String, int)",
-      cls = IActivityManager.class,
-      maxSDK = 25)
-  @DaemonOnly
-  @Privileged
-  @Throws(name = "SecurityException")
-  public abstract void sendRequest(
-      String command, String appId, String cmdRcvSvc, int userId, String codeWord)
-      throws HiddenAPIsException;
-
-  //////////////////////////////////////////////////////////////////
-  ///////////////////////// COMMON METHODS /////////////////////////
-  //////////////////////////////////////////////////////////////////
-
-  public static int getStaticIntField(String name, Class<?> cls) throws HiddenAPIsError {
-    try {
-      return cls.getDeclaredField(name).getInt(null);
-    } catch (IllegalAccessException | NoSuchFieldException e) {
-      throw new HiddenAPIsError(e);
+      myPkgOpsList.add(new MyPackageOps(pkgOps.getPackageName(), myOpEntryList));
     }
+
+    return myPkgOpsList;
   }
 
-  @NonDaemonOnly
-  public abstract boolean canUseIAppOpsService();
-
-  @NonDaemonOnly
-  public abstract boolean canUseIPm();
-
-  public interface HiddenAPIsCallback {
+  public interface AppOpsErrorCallback {
 
     void onGetUidOpsNpException(Exception e);
 
     void onInvalidOpCode(int opCode, String pkgName);
+  }
+
+  public List<?> getPermGroupInfoList() throws RemoteException {
+    ParceledListSlice<?> pls;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      pls = SysSvcFactory.INS.getIPermMgr().getAllPermissionGroups(0);
+    } else {
+      pls = (ParceledListSlice<?>) SysSvcFactory.INS.getIPkgMgr().getAllPermissionGroups(0);
+    }
+
+    return pls != null ? pls.getList() : new ArrayList<>();
+  }
+
+  public List<?> getPermInfoList(String permGroup) throws RemoteException {
+    ParceledListSlice<?> pls;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      pls = SysSvcFactory.INS.getIPermMgr().queryPermissionsByGroup(permGroup, 0);
+    } else {
+      pls =
+          (ParceledListSlice<?>)
+              SysSvcFactory.INS.getIPkgMgr().queryPermissionsByGroup(permGroup, 0);
+    }
+    return pls != null ? pls.getList() : new ArrayList<>();
+  }
+
+  public int getPermFlags(String permName, String pkgName, int userId) throws RemoteException {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+      return SysSvcFactory.INS.getIPermMgr().getPermissionFlags(pkgName, permName, userId);
+    } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.R) {
+      return SysSvcFactory.INS.getIPermMgr().getPermissionFlags(permName, pkgName, userId);
+    } else {
+      return SysSvcFactory.INS.getIPkgMgr().getPermissionFlags(permName, pkgName, userId);
+    }
+  }
+
+  public void grantRuntimePermission(String pkgName, String permName, int userId)
+      throws RemoteException {
+    SysSvcFactory.INS.getIPkgMgr().grantRuntimePermission(pkgName, permName, userId);
+  }
+
+  public void revokeRuntimePermission(String pkgName, String permName, int userId)
+      throws RemoteException {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      SysSvcFactory.INS.getIPermMgr().revokeRuntimePermission(pkgName, permName, userId, null);
+    } else {
+      SysSvcFactory.INS.getIPkgMgr().revokeRuntimePermission(pkgName, permName, userId);
+    }
+  }
+
+  public int checkPermission(String perm, int pid, int uid) throws RemoteException {
+    return SysSvcFactory.INS.getIActMgr().checkPermission(perm, pid, uid);
+  }
+
+  public void setApplicationEnabledSetting(
+      String pkg, int state, int flags, int userId, String callingPkg) throws RemoteException {
+    try {
+      SysSvcFactory.INS
+          .getIPkgMgr()
+          .setApplicationEnabledSetting(pkg, state, flags, userId, callingPkg);
+    } catch (IllegalArgumentException e) {
+
+      throw new HiddenAPIsException(e);
+    }
+  }
+
+  public String[] getPackagesForUid(int uid) throws RemoteException {
+    return SysSvcFactory.INS.getIPkgMgr().getPackagesForUid(uid);
+  }
+
+  public void addPowerSaveWhitelistApp(String pkgName) throws RemoteException {
+    SysSvcFactory.INS.getIDevIdleController().addPowerSaveWhitelistApp(pkgName);
+  }
+
+  public int openAppInfo(String pkgName, int userId) throws RemoteException {
+    Intent intent =
+        new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            .setData(Uri.parse(getString(PKG_URI, pkgName)))
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    return SysSvcFactory.INS
+        .getIActMgr()
+        .startActivityAsUser(null, null, intent, null, null, null, 0, 0, null, null, userId);
+  }
+
+  public void fireSvcIntent(Intent intent, String appId, String svcClass, int userId, boolean fg)
+      throws RemoteException {
+    ComponentName cn;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      cn = SysSvcFactory.INS.getIActMgr().startService(null, intent, null, fg, appId, null, userId);
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      cn = SysSvcFactory.INS.getIActMgr().startService(null, intent, null, fg, appId, userId);
+    } else {
+      cn = SysSvcFactory.INS.getIActMgr().startService(null, intent, null, appId, userId);
+    }
+
+    if (cn == null || !cn.getPackageName().equals(appId)) {
+      throw new HiddenAPIsException(getString(START_SVC_ERR, svcClass));
+    }
+  }
+
+  public static int[] getPidsForCommands(String[] commands) {
+    return Process.getPidsForCommands(commands);
   }
 }

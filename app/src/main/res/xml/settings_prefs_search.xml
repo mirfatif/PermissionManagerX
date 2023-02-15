@@ -25,7 +25,7 @@
     app:summary="@string/pref_settings_special_search_summary"
     app:title="@string/pref_settings_special_search_title" />
 
-  <com.mirfatif.permissionmanagerx.prefs.settings.NumPickerPrefFlavor
+  <com.mirfatif.permissionmanagerx.fwk.NumPickerPref
     app:defaultValue="@integer/pref_settings_search_suggestions_count_default"
     app:enabled="false"
     app:iconSpaceReserved="false"

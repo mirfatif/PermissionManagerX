@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <color name="green">#007F7F</color>
-  <color name="greenTrans">#1A007F7F</color>
-  <color name="greenTransHigh">#0D007F7F</color>
+  <color name="greenTrans5">#0D007F7F</color>
+  <color name="greenTrans10">#1A007F7F</color>
+  <color name="greenTrans50">#80007F7F</color>
+  <color name="greenTrans75">#BF007F7F</color>
 
   <color name="sharpText">@android:color/black</color>
 
   <color name="orangeState">#FFFFC107</color>
 
-  <color name="searchSettingsBg">#80000000</color>
+  <color name="darkTransBg">#80000000</color>
 
   <!-- On Android 9- attr color doesn't work at some places. -->
   <color name="colorControlNormal">#919191</color>
 
   <color name="colorControlNormalA50">#80919191</color>
+
+  <!-- Slim switch disabled state. -->
+  <color name="colorControlNormalDisabled">#D2D2D2</color>
 
 </resources>

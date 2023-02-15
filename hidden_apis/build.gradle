@@ -1,23 +1,9 @@
-apply plugin: 'com.android.library'
+apply from: '../configs/lib.gradle'
 
 android {
-    compileSdk compileSdkVer
-    buildToolsVersion buildToolsVer
-
-    defaultConfig {
-        minSdk minSdkVer
-        targetSdk targetSdkVer
-    }
-
-    buildFeatures {
-        buildConfig = false
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+    namespace 'com.mirfatif.hiddenapis'
 }
 
-apply plugin: 'com.github.sherter.google-java-format'
-preBuild.dependsOn(verifyGoogleJavaFormat)
+dependencies {
+    compileOnly 'androidx.annotation:annotation:1.5.0'
+}

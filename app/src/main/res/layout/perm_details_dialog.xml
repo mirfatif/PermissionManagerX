@@ -1,58 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
+<com.mirfatif.permissionmanagerx.fwk.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  android:padding="20dp"
-  android:orientation="vertical">
+  android:orientation="vertical"
+  android:paddingStart="20dp"
+  android:paddingTop="16dp"
+  android:paddingEnd="20dp">
 
   <TextView
     android:id="@+id/perm_name_v"
-    android:textStyle="bold"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
+    android:ellipsize="marquee"
     android:maxLines="1"
-    android:textColor="@color/sharpText"
-    app:autoSizeMinTextSize="8sp"
-    app:autoSizeTextType="uniform" />
+    android:singleLine="true"
+    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-  <TextView
-    android:id="@+id/perm_group_v"
-    android:visibility="gone"
-    android:layout_marginTop="4dp"
-    android:layout_marginStart="4dp"
-    android:layout_marginEnd="4dp"
+  <LinearLayout
+    android:id="@+id/perm_name_sub_cont"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textColor="@color/sharpText"/>
+    android:visibility="gone">
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="4dp"
+      android:text="@string/depends_on"
+      android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+      android:textStyle="bold" />
+
+    <TextView
+      android:id="@+id/perm_name_sub_v"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="4dp"
+      android:ellipsize="marquee"
+      android:maxLines="1"
+      android:singleLine="true"
+      android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+  </LinearLayout>
 
   <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical">
 
     <TextView
-      android:textStyle="bold"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="2dp"
-      android:layout_marginStart="4dp"
-      android:layout_marginEnd="4dp"
+      android:layout_margin="4dp"
+      android:gravity="center_vertical"
       android:text="@string/protection_level"
-      android:textColor="@color/sharpText" />
+      android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+      android:textStyle="bold" />
 
     <TextView
       android:id="@+id/prot_level_v"
-      android:layout_width="0dp"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:layout_marginTop="2dp"
-      android:layout_marginEnd="4dp"
-      android:ellipsize="end"
-      android:maxLines="1"
-      android:textColor="@color/sharpText"
-      app:autoSizeTextType="uniform" />
+      android:layout_margin="4dp"
+      android:gravity="center_vertical"
+      android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
   </LinearLayout>
 
@@ -60,13 +71,8 @@
     android:id="@+id/perm_desc_v"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="2dp"
-    android:layout_marginBottom="4dp"
-    android:layout_marginStart="4dp"
-    android:layout_marginEnd="4dp"
-    android:justificationMode="inter_word"
-    android:textColor="@color/sharpText"
-    android:visibility="gone"
-    tools:ignore="UnusedAttribute" />
+    android:layout_margin="4dp"
+    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+    android:visibility="gone" />
 
-</com.mirfatif.permissionmanagerx.ui.base.MyLinearLayout>
+</com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>

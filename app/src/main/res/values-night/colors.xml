@@ -3,4 +3,7 @@
 
   <color name="sharpText">@android:color/white</color>
 
+  <!-- Slim switch disabled state. -->
+  <color name="colorControlNormalDisabled">#505050</color>
+
 </resources>

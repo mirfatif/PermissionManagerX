@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mirfatif.permissionmanagerx.fwk.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <View
+    style="@style/ListSeparator"
+    android:background="?attr/accentColor" />
+
+  <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
+    android:id="@+id/prog_cont"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="8dp"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ProgressBar
+      android:layout_width="48dp"
+      android:layout_height="48dp"
+      android:layout_gravity="center"
+      android:layout_marginBottom="8dp"
+      android:indeterminate="true"
+      android:indeterminateBehavior="cycle"
+      android:indeterminateTint="?attr/accentColor"
+      android:progressTint="?attr/accentColor" />
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:text="@string/reading_crash_log_file"
+      android:textColor="@color/sharpText"
+      android:textSize="16sp" />
+
+  </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+
+  <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
+    android:id="@+id/report_cont"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="8dp"
+    android:orientation="vertical"
+    android:visibility="gone">
+
+    <androidx.core.widget.NestedScrollView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:background="@drawable/crash_report_text_bg"
+      android:padding="8dp">
+
+      <HorizontalScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+          android:id="@+id/content_v"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:fontFamily="monospace"
+          android:textColor="@color/sharpText" />
+
+      </HorizontalScrollView>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="0"
+      android:orientation="vertical">
+
+      <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+          android:id="@+id/send_email_button"
+          style="@style/Widget.AppCompat.Button.Borderless"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          android:text="@string/send_email_button"
+          android:textColor="?attr/accentColor" />
+
+        <View
+          android:layout_width="0dp"
+          android:layout_height="0dp"
+          android:layout_weight="1" />
+
+        <Button
+          android:id="@+id/submit_button"
+          style="@style/Widget.AppCompat.Button.Borderless"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          android:text="@string/submit_report_button"
+          android:textColor="@color/active_disabled" />
+
+      </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+
+      <TextView
+        android:id="@+id/email_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/send_crash_report_email_desc" />
+
+    </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+
+  </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+
+</com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>

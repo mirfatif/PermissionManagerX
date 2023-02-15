@@ -9,29 +9,29 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.annot.ToDo;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.base.AlertDialogFragment;
+import com.mirfatif.permissionmanagerx.base.BottomSheetDialogFrag;
 import com.mirfatif.permissionmanagerx.databinding.PkgLongPressDialogBinding;
-import com.mirfatif.permissionmanagerx.main.fwk.MainActivity;
+import com.mirfatif.permissionmanagerx.fwk.MainActivityM;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
+import com.mirfatif.permissionmanagerx.prefs.ExcFiltersData;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
-import com.mirfatif.permissionmanagerx.privs.PrivDaemonHandler;
-import com.mirfatif.permissionmanagerx.ui.AlertDialogFragment;
-import com.mirfatif.permissionmanagerx.ui.base.BottomSheetDialogFrag;
+import com.mirfatif.permissionmanagerx.privs.DaemonHandler;
+import com.mirfatif.permissionmanagerx.privs.DaemonIface;
+import com.mirfatif.permissionmanagerx.privs.DaemonStarter;
+import com.mirfatif.permissionmanagerx.util.ApiUtils;
+import com.mirfatif.permissionmanagerx.util.StringUtils;
+import com.mirfatif.permissionmanagerx.util.UiUtils;
 import com.mirfatif.permissionmanagerx.util.Utils;
-import com.mirfatif.privtasks.Commands;
-import com.mirfatif.privtasks.Util;
+import com.mirfatif.privtasks.util.bg.BgRunner;
 
 public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
-
-  private static final String TAG = "PkgLongPressDialogFrag";
 
   private final Package mPkg;
 
@@ -43,13 +43,8 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
     mPkg = null;
   }
 
-  @Nullable
-  @Override
-  @ToDo(what = "Hide WhatsRunning install button only in F-Droid version")
   public View onCreateView(
-      @NonNull LayoutInflater inflater,
-      @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
+      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     if (mPkg == null) {
       return null;
@@ -58,19 +53,21 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
     PkgLongPressDialogBinding b = PkgLongPressDialogBinding.inflate(mA.getLayoutInflater());
 
     b.pkgLabelV.setText(mPkg.getLabel());
+    b.pkgLabelV.setText(mPkg.getLabel());
     if (!mPkg.getLabel().equals(mPkg.getName())) {
       b.pkgNameV.setText(mPkg.getName());
       b.pkgNameV.setVisibility(View.VISIBLE);
+      b.pkgNameV.setSelected(true);
     }
 
-    if (MySettings.INSTANCE.canBeExcluded(mPkg)) {
+    if (ExcFiltersData.INS.canBeExcluded(mPkg)) {
       b.excludePkg.setOnClickListener(
           v -> {
             dismissAllowingStateLoss();
-            Utils.runInBg(
+            BgRunner.execute(
                 () -> {
-                  MySettings.INSTANCE.addPkgToExcludedApps(mPkg.getName());
-                  PackageParser.INSTANCE.removePackage(mPkg);
+                  MySettings.INS.addPkgToExcludedApps(mPkg.getName());
+                  PackageParser.INS.removePackage(mPkg);
                 });
           });
     } else {
@@ -78,7 +75,7 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
     }
 
     b.disablePkg.setText(mPkg.isEnabled() ? R.string.disable_app : R.string.enable_app);
-    if (mPkg.isChangeable() && !mPkg.getName().equals(App.getContext().getPackageName())) {
+    if (mPkg.isChangeable() && !mPkg.getName().equals(App.getCxt().getPackageName())) {
       b.disablePkg.setOnClickListener(
           v -> {
             dismissAllowingStateLoss();
@@ -94,11 +91,10 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
           openAppInfo();
         });
 
-    PackageManager pm = App.getContext().getPackageManager();
-    Intent intent = new Intent(WRUN_ACTION_SEARCH_PKG);
-
-    if (!Utils.isFreeVersion()
-        || pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+    if (!Utils.isFdroidVersion()
+        || ApiUtils.resolveActivity(
+                new Intent(WRUN_ACTION_SEARCH_PKG), PackageManager.MATCH_DEFAULT_ONLY)
+            != null) {
       b.findPkgProc.setVisibility(View.VISIBLE);
       b.findPkgProc.setOnClickListener(
           v -> {
@@ -110,10 +106,9 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
     return b.getRoot();
   }
 
-  @NonNull
-  @Override
-  public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+  public Dialog onCreateDialog(Bundle savedInstanceState) {
     if (mPkg == null) {
+
       dismissAllowingStateLoss();
     }
     return super.onCreateDialog(savedInstanceState);
@@ -123,80 +118,67 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
     if (mPkg == null) {
       return;
     }
-    if (!MySettings.INSTANCE.isPrivDaemonAlive()) {
-      Utils.logDaemonDead(TAG + ": setPackageEnabledState");
-      ((MainActivity) mA).restartPrivDaemon(true, true);
+    if (!DaemonHandler.INS.isDaemonAlive()) {
+      requireDaemon();
       return;
     }
 
     boolean enabled = mPkg.isEnabled();
 
     String warn = null;
-    if (enabled && MySettings.INSTANCE.getBoolPref(R.string.pref_main_warn_dang_change_enc_key)) {
+    if (enabled && MySettings.INS.warnDangerousPkgChanges()) {
       if (mPkg.isFrameworkApp()) {
-        warn = Utils.getString(R.string.disable_pkg_warning, Utils.getString(R.string.framework));
+        warn =
+            ApiUtils.getString(
+                R.string.disable_pkg_warning, ApiUtils.getString(R.string.framework));
       } else if (mPkg.isSystemApp()) {
-        warn = Utils.getString(R.string.disable_pkg_warning, Utils.getString(R.string.system));
+        warn =
+            ApiUtils.getString(R.string.disable_pkg_warning, ApiUtils.getString(R.string.system));
       }
     }
 
     if (warn == null) {
-      Utils.runInBg(() -> setPackageEnabledState(mPkg, enabled));
+      BgRunner.execute(() -> setPackageEnabledState(mPkg, enabled));
       return;
     }
 
     AlertDialog dialog =
         new Builder(mA)
             .setPositiveButton(
-                R.string.yes, (d, which) -> Utils.runInBg(() -> setPackageEnabledState(mPkg, true)))
+                R.string.yes,
+                (d, which) -> BgRunner.execute(() -> setPackageEnabledState(mPkg, true)))
             .setNegativeButton(R.string.no, null)
             .setNeutralButton(
                 R.string.do_not_remind,
                 (d, which) -> {
-                  MySettings.INSTANCE.savePref(R.string.pref_main_warn_dang_change_enc_key, false);
-                  Utils.runInBg(() -> setPackageEnabledState(mPkg, true));
+                  MySettings.INS.disableWarnDangerousPkgChanges();
+                  BgRunner.execute(() -> setPackageEnabledState(mPkg, true));
                 })
             .setTitle(R.string.warning)
-            .setMessage(Utils.breakParas(warn))
+            .setMessage(StringUtils.breakParas(warn))
             .create();
+
     AlertDialogFragment.show(mA, dialog, "PKG_DISABLE_WARNING");
   }
 
   private void setPackageEnabledState(Package pkg, boolean enabled) {
-    String command = pkg.getName() + " " + Utils.getUserId(pkg.getUid());
-    if (enabled) {
-      command = Commands.DISABLE_PACKAGE + " " + command;
-    } else {
-      command = Commands.ENABLE_PACKAGE + " " + command;
-    }
-
-    if (MySettings.INSTANCE.isDebug()) {
-      Util.debugLog(TAG, "setPkgEnabledState: sending command: " + command);
-    }
-    PrivDaemonHandler.INSTANCE.sendRequest(command);
-    PackageParser.INSTANCE.updatePackage(pkg);
+    DaemonIface.INS.setPkgState(!enabled, pkg.getName(), ApiUtils.getUserId(pkg.getUid()));
+    PackageParser.INS.updatePackage(pkg, true);
   }
 
   private void openAppInfo() {
     if (mPkg == null) {
       return;
     }
-    int pkgUserId = Utils.getUserId(mPkg.getUid());
-    if (Utils.getUserId() == pkgUserId) {
+    int pkgUserId = ApiUtils.getUserId(mPkg.getUid());
+    if (ApiUtils.getUserId() == pkgUserId) {
       startActivity(
           new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
               .setData(Uri.parse("package:" + mPkg.getName())));
-    } else if (MySettings.INSTANCE.isPrivDaemonAlive()) {
-      String cmd = Commands.OPEN_APP_INFO + " " + mPkg.getName() + " " + pkgUserId;
-
-      if (MySettings.INSTANCE.isDebug()) {
-        Util.debugLog(TAG, "openAppInfo: sending command: " + cmd);
-      }
-
-      Utils.runInBg(() -> PrivDaemonHandler.INSTANCE.sendRequest(cmd));
+    } else if (DaemonHandler.INS.isDaemonAlive()) {
+      BgRunner.execute(() -> DaemonIface.INS.openAppInfo(mPkg.getName(), pkgUserId));
     } else {
-      Utils.logDaemonDead(TAG + ": openAppInfo");
-      ((MainActivity) mA).restartPrivDaemon(true, true);
+      requireDaemon();
     }
   }
 
@@ -216,12 +198,17 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
       startActivity(intent);
     } catch (ActivityNotFoundException ignored) {
       Snackbar sb =
-          Snackbar.make(
-              ((MainActivity) mA).getRootView().recyclerView, R.string.wrun_not_installed, 10000);
+          ((MainActivityM) mA)
+              .mA.createSnackBar(ApiUtils.getString(R.string.wrun_not_installed), 10);
       sb.setTextColor(mA.getColor(R.color.sharpText));
-      sb.getView().setBackgroundColor(Utils.getSharpBgColor(mA));
-      sb.setAction(R.string.install, v -> Utils.openWebUrl(mA, Utils.getString(R.string.wrun_url)));
+      sb.getView().setBackgroundColor(UiUtils.getSharpBgColor(mA));
+      sb.setAction(
+          R.string.install, v -> ApiUtils.openWebUrl(mA, ApiUtils.getString(R.string.wrun_url)));
       sb.show();
     }
+  }
+
+  private void requireDaemon() {
+    DaemonStarter.INS.startPrivDaemon(false, false, true, true);
   }
 }
