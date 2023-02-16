@@ -675,7 +675,9 @@
 
             <p id="faq20" class="high-bottom"><b>Why does scanning apps takes so long?</b></p>
             <p>PMX gets a lot of information about apps. It includes package label, name, icon, UID, and its state (framework, system, user, disabled). For manifest and AppOp permissions the information includes permission name, state (granted, revoked, allow, ignore, deny, foreground, default), <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a> (normal, dangerous, signature, development, privileged, fixed, AppOp) and AppOp's last access time. Then the set value of every permission is compared with the reference value and the reference state is decided (red, green or orange). After scanning all the permissions for every app, the count of visible vs total permissions and app's reference state is also shown in package information.</p>
-            <p>You can exclude as much information as you can in <i>Exclusion Filters</i> to speed up the scan process. Speed also depends on how much CPU and RAM your device spares for the apps. ROMs investing more on UI (like MIUI) are slower. Also ADB is usually slower than root.</p>
+            <p>Speed also depends on how much CPU and RAM your device spares for the apps. ROMs investing more on UI (like MIUI) are slower. Also ADB is usually slower than root.</p>
+            <p>You can exclude as much information as you can in <i>Exclusion Filters</i> to speed up the scan process.</p>
+            <p>Another thing that may speedup the loading of app list is to cleanup the references database in <i>Advanced Settings</i>.</p>
 
             <hr class="dim" />
 
