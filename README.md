@@ -26,10 +26,10 @@ When you reinstall an app, or change your device, or upgrade your ROM, it's a ti
 
 Confused? We are here to explain. Please start with:
 
-* <a href="https://mirfatif.github.io/PermissionManagerX/help/help.html#intro">What is PMX?</a>
-* <a href="https://mirfatif.github.io/PermissionManagerX/help/help#faq36">Why do I need to use PMX?</a>
-* <a href="https://mirfatif.github.io/PermissionManagerX/help/help#perms_types">What are manifest permissions and AppOps?</a>
-* <a href="https://mirfatif.github.io/PermissionManagerX/help/help#perm_ref">Permission References</a>
+* <a href="https://mirfatif.github.io/PermissionManagerX/help/en#intro">What is PMX?</a>
+* <a href="https://mirfatif.github.io/PermissionManagerX/help/en#faq36">Why do I need to use PMX?</a>
+* <a href="https://mirfatif.github.io/PermissionManagerX/help/en#perms_types">What are manifest permissions and AppOps?</a>
+* <a href="https://mirfatif.github.io/PermissionManagerX/help/en#perm_ref">Permission References</a>
 
 ## Required Privileges / Permissions
 
@@ -38,7 +38,7 @@ Confused? We are here to explain. Please start with:
 
 ## Note:
 
-* The app is tested on stock Android 7-12. Some highly customized ROMs may behave unexpectedly.
+* The app is tested on stock Android 7-13. Some highly customized ROMs may behave unexpectedly.
 
 ## Privacy Policy
 
@@ -46,7 +46,7 @@ Confused? We are here to explain. Please start with:
 
 ## Paid Features
 
-[Paid Features](https://mirfatif.github.io/PermissionManagerX/help/help#paid_features)
+[Paid Features](https://mirfatif.github.io/PermissionManagerX/help/en#paid_features)
 
 ## Screenshots
 
