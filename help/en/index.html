@@ -22,7 +22,7 @@
     <script src="../main.js"></script>
 
     <div is="custom-div" data-custom-type="header-img" class="header">
-        <img alt="banner" class="header" src="../en/img/banner.webp" />
+        <img alt="Banner" class="header" src="../en/img/banner.webp" />
     </div>
 
     <div class="content">
@@ -49,6 +49,9 @@
                     <ul>
                         <li><a href="#perm_watcher_fails" class="no-underline"><b>Why starting Permission Watcher fails?</b></a></li>
                     </ul>
+                </li>
+                <li>
+                    <a href="#perm_view" class="no-underline"><b>Permission View</b></a>
                 </li>
                 <li><a href="#wrun-integration" class="no-underline"><b>Integration with WhatsRunning</b></a></li>
                 <li>
@@ -184,24 +187,20 @@
             <hr />
 
             <img src="../en/img/pkg.webp">
-            <ul>
+            <ol>
+                <li>Colored strip at the left indicates <b>reference state</b></li>
+                <li>App <b>icon</b></li>
+                <li>First line shows package <b>label</b></li>
+                <li>Second line shows package <b>name</b> and</li>
+                <li><b>UID</b></li>
+                <li>Third line (optionally) shows package's state: <b>Critical</b> (Framework), <b>Framework</b> or <b>System</b> app. Also if the app is <b>Disabled</b>. No state is shown for <b>Enabled</b>, <b>User</b> apps.</li>
+                <li>Last line shows <b>count</b> of visible out of total manifest permissions and </li>
                 <li>
-                    <p>Colored strip at the left indicates <b>reference state</b></p>
+                    <p>AppOps permissions.</p>
+                    <p>Invisible permissions are those excluded in <i>Exclusion Filters</i>.</p>
                 </li>
-                <li>
-                    <p>First line shows package <b>label</b></p>
-                </li>
-                <li>
-                    <p>Second line shows package <b>name</b> and <b>UID</b></p>
-                </li>
-                <li>
-                    <p>Third line (optionally) shows package's state: <b>Critical</b> (Framework), <b>Framework</b> or <b>System</b> app. Also if the app is <b>Disabled</b>. No state is shown for <b>Enabled</b>, <b>User</b> apps.</p>
-                </li>
-                <li>
-                    <p>Last line shows <b>count</b> of visible out of total manifest permissions and AppOps permissions. Invisible permissions are those excluded in <i>Exclusion Filters</i>.</p>
-                    <p>If sorted by install or update time, this line also shows date on the right side.</p>
-                </li>
-            </ul>
+                <li>If sorted by install or update time, the last line also shows date or time on the right side.</li>
+            </ol>
         </div>
 
         <div class="card">
@@ -209,26 +208,19 @@
             <hr />
 
             <img src="img/perm.webp">
-            <ul>
-                <li>
-                    <p>Colored strip at the left indicates <b>reference state</b></p>
-                </li>
-                <li>
-                    <p>First line shows <b>permission name</b></p>
-                </li>
-                <li>
-                    <p>Second line shows permission's <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a>: <b>Normal</b>, <b>Dangerous</b>, <b>Signature</b>, <b>Development</b>, <b>Privileged</b>, <b>Fixed</b>, <b>AppOps</b> or <b>Unknown</b>. Also if AppOp is <b>per Package</b> or <b>per UID</b>. And if it is an <b>Extra</b> AppOp (never excluded in filter settings).</p>
-                </li>
-                <li>
-                    <p>Third line (in case of AppOp) shows <b>last access time</b></p>
-                </li>
-                <li>
-                    <p>Fourth line (in case of AppOp) shows the referenced value if it doesn't match the current set value.</p>
-                </li>
-                <li>
-                    <p>If an AppOp is never set, word: <b><i>Default</i></b> is shown below currently set value.</p>
-                </li>
-            </ul>
+            <img src="img/perm2.webp">
+            <ol>
+                <li>Colored strip at the left indicates <b>reference state</b></li>
+                <li>Manifest permissions show a flag in the upper right corner</li>
+                <li>Permission <b>icon</b></li>
+                <li>First line shows <b>permission name</b></li>
+                <li>Second line shows permission's <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a>: <b>Normal</b>, <b>Dangerous</b>, <b>Signature</b>, <b>Development</b>, <b>Privileged</b>, <b>Fixed</b>, <b>AppOps</b> or <b>Unknown</b>. Also if AppOp is <b>per Package</b> or <b>per UID</b>. And if it is an <b>Extra</b> AppOp (never excluded in filter settings).</li>
+                <li>Third line (in case of AppOp) shows <b>last access time</b></li>
+                <li>Fourth line (in case of AppOp) shows the referenced value if it doesn't match the current set value.</li>
+                <li>Switch to change the permission state</li>
+                <li>Current state (in case of AppOp)</li>
+                <li><b><i>Default</i></b> indicates that the AppOp state has never been changed</li>
+            </ol>
         </div>
 
         <div class="card">
@@ -310,6 +302,36 @@
             </ul>
             <p id="perm_watcher_fails"><b>Why starting Permission Watcher fails?</b></p>
             <p>Are you using ADB? Some OEMs remove permission <i>OBSERVE_GRANT_REVOKE_PERMISSIONS</i> or <i>SET_ACTIVITY_WATCHER</i> from <i>Shell</i> package. If this is the case with you, we are sorry. This is something we cannot fix. On such devices Permission Watcher can work only with root. See the note at the start of <a href="#adb_help">Using PMX with ADB</a>.</p>
+        </div>
+
+        <div class="card">
+            <h2 id="perm_view">Permission View (Pro only)</h2>
+            <hr />
+
+            <p>Permission View shows a list of all permissions with a count of how many apps are using these permissions.</p>
+
+            <img src="../en/img/perm_view.webp" />
+            <ol>
+                <li>Permission name</li>
+                <li>Protection level</li>
+                <li>App count</li>
+                <li>Granted permission count out of total permission count. The latter can be bigger than the app count because some apps may use an AppOp permission twice (in <a href="#faq18">UID mode</a>).</li>
+            </ol>
+
+            <p>When you select a permission, a list of apps using this permission shows up:</p>
+
+            <img class="small" src="../en/img/perm_view2.webp" />
+            <ol>
+                <li>Permission name</li>
+                <li>Permission description</li>
+                <li>Flag indicating that the permission is granted</li>
+                <li>App icon</li>
+                <li>App label</li>
+                <li>Package name</li>
+                <li>App UID</li>
+            </ol>
+
+            <p>When you select an app, the <a href="#permissions">permission list</a> opens where you can change the permission state.</p>
         </div>
 
         <div class="card">
