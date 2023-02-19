@@ -63,7 +63,7 @@ public enum AppOpsParser {
 
   private int mListsStatus = ListsStatus.NOT_BUILT;
 
-  public void buildAppOpsList() {
+  public synchronized void buildAppOpsList() {
     if (mListsStatus == ListsStatus.BUILT_WITH_DAEMON) {
       return;
     }

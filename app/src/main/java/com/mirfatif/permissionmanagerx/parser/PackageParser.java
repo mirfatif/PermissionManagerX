@@ -190,41 +190,44 @@ public enum PackageParser {
   private boolean mAppCanReadFlags = true;
   private Integer SYSTEM_FIXED_FLAG, POLICY_FIXED_FLAG;
 
+  private static final Object BUILD_DATA_LOCK = new Object();
+
   public void buildRequiredData() {
+    synchronized (BUILD_DATA_LOCK) {
+      if (!PermsDb.INS.refsBuilt()) {
+        setProgress(REF_PERMS_LIST, true, false);
+        PermsDb.INS.buildRefs();
+      }
 
-    if (!PermsDb.INS.refsBuilt()) {
-      setProgress(REF_PERMS_LIST, true, false);
-      PermsDb.INS.buildRefs();
-    }
+      setProgress(APP_OPS_LISTS, true, false);
+      AppOpsParser.INS.buildAppOpsList();
 
-    setProgress(APP_OPS_LISTS, true, false);
-    AppOpsParser.INS.buildAppOpsList();
-
-    if (SYSTEM_FIXED_FLAG != null && POLICY_FIXED_FLAG != null) {
-      return;
-    }
-
-    PermFixedFlags flags;
-
-    if (DaemonHandler.INS.isDaemonAlive()) {
-      flags = DaemonIface.INS.getPermFixedFlags();
-      if (flags == null) {
+      if (SYSTEM_FIXED_FLAG != null && POLICY_FIXED_FLAG != null) {
         return;
       }
-    } else if (mAppCanReadFlags) {
-      try {
-        flags = HiddenSdkConstants.getPermFixedFlags();
-      } catch (RemoteException e) {
-        mAppCanReadFlags = false;
-        MyLog.e(TAG, "buildRequiredData", e.toString());
+
+      PermFixedFlags flags;
+
+      if (DaemonHandler.INS.isDaemonAlive()) {
+        flags = DaemonIface.INS.getPermFixedFlags();
+        if (flags == null) {
+          return;
+        }
+      } else if (mAppCanReadFlags) {
+        try {
+          flags = HiddenSdkConstants.getPermFixedFlags();
+        } catch (RemoteException e) {
+          mAppCanReadFlags = false;
+          MyLog.e(TAG, "buildRequiredData", e.toString());
+          return;
+        }
+      } else {
         return;
       }
-    } else {
-      return;
-    }
 
-    SYSTEM_FIXED_FLAG = flags.systemFixed;
-    POLICY_FIXED_FLAG = flags.policyFixed;
+      SYSTEM_FIXED_FLAG = flags.systemFixed;
+      POLICY_FIXED_FLAG = flags.policyFixed;
+    }
   }
 
   public Integer getSystemFixedFlag() {
