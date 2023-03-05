@@ -2,6 +2,7 @@ package com.mirfatif.permissionmanagerx.pkg;
 
 import static com.mirfatif.permissionmanagerx.util.ApiUtils.getString;
 
+import android.app.Activity;
 import android.app.AppOpsManager;
 import android.content.Intent;
 import android.os.Build.VERSION;
@@ -39,6 +40,7 @@ import com.mirfatif.permissionmanagerx.privs.DaemonIface;
 import com.mirfatif.permissionmanagerx.util.ApiUtils;
 import com.mirfatif.permissionmanagerx.util.StringUtils;
 import com.mirfatif.permissionmanagerx.util.UiUtils;
+import com.mirfatif.permissionmanagerx.util.UserUtils;
 import com.mirfatif.permissionmanagerx.util.bg.LiveBgTask;
 import com.mirfatif.permissionmanagerx.util.bg.LiveSchedTask;
 import com.mirfatif.permissionmanagerx.util.bg.LiveSingleParamTask;
@@ -55,6 +57,10 @@ public class PackageActivity implements PermAdapterCallback {
 
   private static final String TAG = "PackageActivity";
 
+  private static final String CLASS = PackageActivity.class.getName();
+  private static final String EXTRA_PKG_POSITION = CLASS + ".extra.PKG_POSITION";
+  private static final String EXTRA_PERM_FILTER = CLASS + ".extra.PERM_FILTER";
+
   public final PackageActivityM mA;
 
   private final PkgActivityFlavor mActFlavor = new PkgActivityFlavor(this);
@@ -63,6 +69,7 @@ public class PackageActivity implements PermAdapterCallback {
   private final LiveUiTask mPostPermListUpdateTask;
   private final LiveBgTask mPermListSortTask;
 
+  private String mPermFilter;
   private boolean mFilterPerms = true;
 
   public PackageActivity(PackageActivityM activity) {
@@ -88,7 +95,7 @@ public class PackageActivity implements PermAdapterCallback {
   private ActivityPackageBinding mB;
 
   public void onCreated() {
-    int pos = mA.getIntent().getIntExtra(MainActivity.EXTRA_PKG_POSITION, -1);
+    int pos = mA.getIntent().getIntExtra(EXTRA_PKG_POSITION, -1);
     if (pos == -1 || (mPkg = PackageParser.INS.getPkg(pos)) == null) {
       UiUtils.showToast(R.string.something_went_wrong);
       mA.finishAfterTransition();
@@ -114,6 +121,8 @@ public class PackageActivity implements PermAdapterCallback {
     mB.recyclerV.setLayoutManager(layoutManager);
 
     mB.recyclerV.addItemDecoration(new DividerItemDecoration(mA, LinearLayoutManager.VERTICAL));
+
+    mPermFilter = mA.getIntent().getStringExtra(EXTRA_PERM_FILTER);
 
     mPermListSortTask.execute();
 
@@ -221,7 +230,6 @@ public class PackageActivity implements PermAdapterCallback {
     return false;
   }
 
-  private static final String CLASS = PackageActivity.class.getName();
   private static final String TAG_GRANT_ROOT_OR_ADB = CLASS + ".GRANT_ROOT_OR_ADB";
   private static final String TAG_RESET_APP_OPS_CONFIRM = CLASS + ".RESET_APP_OPS_CONFIRM";
   private static final String TAG_SET_REF_CONFIRM = CLASS + ".SET_REF_CONFIRM";
@@ -315,6 +323,11 @@ public class PackageActivity implements PermAdapterCallback {
   private void sortPermList() {
     mSortedPermList.clear();
     mSortedPermList.addAll(mPkg.getPermList());
+    if (mFilterPerms && mPermFilter != null) {
+      synchronized (mSortedPermList) {
+        mSortedPermList.removeIf(perm -> !perm.getName().equals(mPermFilter));
+      }
+    }
     mActFlavor.sortPermsList(mSortedPermList);
     mPostPermListUpdateTask.post(true);
   }
@@ -471,17 +484,8 @@ public class PackageActivity implements PermAdapterCallback {
       return 0;
     }
 
-    if (ApiUtils.getUserId(mPkg.getUid()) != 0 && VERSION.SDK_INT >= VERSION_CODES.S) {
-      return DaemonIface.INS.getPkgCountForUid(mPkg.getUid());
-    }
-
-    String[] pkgs = App.getPm().getPackagesForUid(mPkg.getUid());
-    if (pkgs == null) {
-      UiUtils.showToast(R.string.failed_get_affected_pkg_count_toast);
-      return null;
-    }
-
-    return pkgs.length;
+    String[] pkgs = UserUtils.getPackagesForUid(mPkg.getUid());
+    return pkgs == null ? null : pkgs.length;
   }
 
   private void onAppOpModeSelect(Permission appOp, int mode, Integer affectedPkgCount) {
@@ -558,7 +562,7 @@ public class PackageActivity implements PermAdapterCallback {
   }
 
   private void resetAppOps() {
-    DaemonIface.INS.resetAppOps(ApiUtils.getUserId(mPkg.getUid()), mPkg.getName());
+    DaemonIface.INS.resetAppOps(UserUtils.getUserId(mPkg.getUid()), mPkg.getName());
     updatePkg();
   }
 
@@ -598,5 +602,14 @@ public class PackageActivity implements PermAdapterCallback {
 
     mActFlavor.afterPermChange(mPkg, perm, before);
     updatePkg();
+  }
+
+  public static void start(Activity activity, Package pkg, String permFilter) {
+    Intent intent = new Intent(App.getCxt(), PackageActivityM.class);
+    intent.putExtra(EXTRA_PKG_POSITION, PackageParser.INS.getPkgPosition(pkg));
+    if (permFilter != null) {
+      intent.putExtra(EXTRA_PERM_FILTER, permFilter);
+    }
+    activity.startActivity(intent);
   }
 }

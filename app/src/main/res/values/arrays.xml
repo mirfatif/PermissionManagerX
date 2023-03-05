@@ -346,6 +346,7 @@
     <item order="34">android.permission.WAKE_LOCK</item>
     <item order="35" />
     <item order="36" />
+    <item order="36.1">android.permission.SCHEDULE_EXACT_ALARM</item>
     <item order="37">android.permission.MANAGE_BIOMETRIC_DIALOG</item>
     <item order="38">android.permission.MANAGE_BIOMETRIC</item>
     <item order="39">android.permission.MANAGE_FINGERPRINT</item>
@@ -360,7 +361,9 @@
     <item order="48">android.permission.BLUETOOTH_STACK</item>
     <item order="49">android.permission.MANAGE_BLUETOOTH_WHEN_WIRELESS_CONSENT_REQUIRED</item>
     <item order="50">android.permission.RECEIVE_BLUETOOTH_MAP</item>
-    <item order="51" />
+    <item order="51">android.permission.BLUETOOTH_SCAN</item>
+    <item order="51.1">android.permission.BLUETOOTH_ADVERTISE</item>
+    <item order="51.2">android.permission.BLUETOOTH_CONNECT</item>
     <item order="52">android.permission.READ_CALENDAR</item>
     <item order="53">android.permission.WRITE_CALENDAR</item>
     <item order="54">android.permission.READ_CALL_LOG</item>
@@ -444,6 +447,7 @@
     <item order="128">android.permission.STOP_APP_SWITCHES</item>
     <item order="129">android.permission.UPDATE_APP_OPS_STATS</item>
     <item order="130">android.permission.WATCH_APPOPS</item>
+    <item order="130.1" />
     <item order="131">android.permission.ACCEPT_HANDOVER</item>
     <item order="132">android.permission.ANSWER_PHONE_CALLS</item>
     <item order="133">android.permission.CALL_PHONE</item>
@@ -459,9 +463,11 @@
     <item order="143">com.android.voicemail.permission.ADD_VOICEMAIL</item>
     <item order="144">com.android.voicemail.permission.READ_VOICEMAIL</item>
     <item order="145">com.android.voicemail.permission.WRITE_VOICEMAIL</item>
+    <item order="145.1">android.permission.WRITE_EMBEDDED_SUBSCRIPTIONS</item>
     <item order="146">android.permission.DEVICE_POWER</item>
     <item order="147">android.permission.REBOOT</item>
     <item order="148">android.permission.SHUTDOWN</item>
+    <item order="148.1">android.permission.ACTIVITY_RECOGNITION</item>
     <item order="149">android.permission.BODY_SENSORS</item>
     <item order="150">android.permission.MANAGE_SENSOR_PRIVACY</item>
     <item order="151">android.permission.MANAGE_SENSORS</item>
@@ -486,6 +492,7 @@
     <item order="170">android.permission.WRITE_SETTINGS</item>
     <item order="171">android.permission.WRITE_SYNC_SETTINGS</item>
     <item order="172">android.permission.WRITE_USER_DICTIONARY</item>
+    <item order="172.1" />
     <item order="173">android.permission.BIND_FINANCIAL_SMS_SERVICE</item>
     <item order="174">android.permission.BROADCAST_SMS</item>
     <item order="175">android.permission.CARRIER_FILTER_SMS</item>
@@ -512,9 +519,9 @@
     <item order="196">android.permission.WRITE_MEDIA_STORAGE</item>
     <item order="197" />
     <item order="198" />
-    <item order="199" />
-    <item order="200" />
-    <item order="201" />
+    <item order="199">android.permission.READ_MEDIA_AUDIO</item>
+    <item order="200">android.permission.READ_MEDIA_IMAGES</item>
+    <item order="201">android.permission.READ_MEDIA_VIDEO</item>
     <item order="202" />
     <item order="203" />
     <item order="204" />
@@ -523,13 +530,13 @@
     <item order="207">android.permission.CHANGE_WIFI_MULTICAST_STATE</item>
     <item order="208">android.permission.CHANGE_WIFI_STATE</item>
     <item order="209">android.permission.OVERRIDE_WIFI_CONFIG</item>
-    <item order="210">android.permission.ACTIVITY_RECOGNITION</item>
+    <item order="210">android.permission.NEARBY_WIFI_DEVICES</item>
     <item order="211">android.permission.BIND_ACCESSIBILITY_SERVICE</item>
+    <item order="211.1" />
+    <item order="211.2" />
     <item order="212">android.permission.INSTANT_APP_FOREGROUND_SERVICE</item>
     <item order="213">android.permission.MANAGE_IPSEC_TUNNELS</item>
-    <item order="214" />
     <item order="215" />
-    <item order="216" />
   </string-array>
 
   <string-array name="perm_groups_app_ops">
@@ -569,6 +576,7 @@
     <item order="34">WAKE_LOCK</item>
     <item order="35">RUN_ANY_IN_BACKGROUND</item>
     <item order="36">RUN_IN_BACKGROUND</item>
+    <item order="36.1">SCHEDULE_EXACT_ALARM</item>
     <item order="37" />
     <item order="38" />
     <item order="39" />
@@ -584,6 +592,8 @@
     <item order="49" />
     <item order="50" />
     <item order="51">BLUETOOTH_SCAN</item>
+    <item order="51.1">BLUETOOTH_ADVERTISE</item>
+    <item order="51.2">BLUETOOTH_CONNECT</item>
     <item order="52">READ_CALENDAR</item>
     <item order="53">WRITE_CALENDAR</item>
     <item order="54">READ_CALL_LOG</item>
@@ -667,6 +677,7 @@
     <item order="128" />
     <item order="129" />
     <item order="130" />
+    <item order="130.1">AUTO_REVOKE_PERMISSIONS_IF_UNUSED</item>
     <item order="131">ACCEPT_HANDOVER</item>
     <item order="132">ANSWER_PHONE_CALLS</item>
     <item order="133">CALL_PHONE</item>
@@ -682,9 +693,11 @@
     <item order="143">ADD_VOICEMAIL</item>
     <item order="144" />
     <item order="145" />
+    <item order="145.1" />
     <item order="146" />
     <item order="147" />
     <item order="148" />
+    <item order="148.1">ACTIVITY_RECOGNITION</item>
     <item order="149">BODY_SENSORS</item>
     <item order="150" />
     <item order="151" />
@@ -709,6 +722,7 @@
     <item order="170">WRITE_SETTINGS</item>
     <item order="171" />
     <item order="172" />
+    <item order="172.1">ACCESS_RESTRICTED_SETTINGS</item>
     <item order="173" />
     <item order="174" />
     <item order="175" />
@@ -746,13 +760,13 @@
     <item order="207" />
     <item order="208">CHANGE_WIFI_STATE</item>
     <item order="209" />
-    <item order="210">ACTIVITY_RECOGNITION</item>
+    <item order="210">NEARBY_WIFI_DEVICES</item>
     <item order="211">BIND_ACCESSIBILITY_SERVICE</item>
+    <item order="211.1">ACCESS_ACCESSIBILITY</item>
+    <item order="211.2">READ_DEVICE_IDENTIFIERS</item>
     <item order="212">INSTANT_APP_START_FOREGROUND</item>
     <item order="213">MANAGE_IPSEC_TUNNELS</item>
-    <item order="214">READ_DEVICE_IDENTIFIERS</item>
     <item order="215">PROJECT_MEDIA</item>
-    <item order="216">AUTO_REVOKE_PERMISSIONS_IF_UNUSED</item>
   </string-array>
 
   <array name="perm_groups_icons">
@@ -792,6 +806,7 @@
     <item order="34">@drawable/g_background</item>
     <item order="35">@drawable/g_background</item>
     <item order="36">@drawable/g_background</item>
+    <item order="36.1">@drawable/g_background</item>
     <item order="37">@drawable/g_biometrics</item>
     <item order="38">@drawable/g_biometrics</item>
     <item order="39">@drawable/g_biometrics</item>
@@ -807,6 +822,8 @@
     <item order="49">@drawable/g_bluetooth</item>
     <item order="50">@drawable/g_bluetooth</item>
     <item order="51">@drawable/g_bluetooth</item>
+    <item order="51.1">@drawable/g_bluetooth</item>
+    <item order="51.2">@drawable/g_bluetooth</item>
     <item order="52">@drawable/g_calendar</item>
     <item order="53">@drawable/g_calendar</item>
     <item order="54">@drawable/g_calllog</item>
@@ -890,6 +907,7 @@
     <item order="128">@drawable/g_package</item>
     <item order="129">@drawable/g_package</item>
     <item order="130">@drawable/g_package</item>
+    <item order="130.1">@drawable/g_package</item>
     <item order="131">@drawable/g_phone</item>
     <item order="132">@drawable/g_phone</item>
     <item order="133">@drawable/g_phone</item>
@@ -905,9 +923,11 @@
     <item order="143">@drawable/g_phone</item>
     <item order="144">@drawable/g_phone</item>
     <item order="145">@drawable/g_phone</item>
+    <item order="145.1">@drawable/g_phone</item>
     <item order="146">@drawable/g_power</item>
     <item order="147">@drawable/g_power</item>
     <item order="148">@drawable/g_power</item>
+    <item order="148.1">@drawable/g_sensors</item>
     <item order="149">@drawable/g_sensors</item>
     <item order="150">@drawable/g_sensors</item>
     <item order="151">@drawable/g_sensors</item>
@@ -932,6 +952,7 @@
     <item order="170">@drawable/g_settings</item>
     <item order="171">@drawable/g_settings</item>
     <item order="172">@drawable/g_settings</item>
+    <item order="172.1">@drawable/g_settings</item>
     <item order="173">@drawable/g_sms</item>
     <item order="174">@drawable/g_sms</item>
     <item order="175">@drawable/g_sms</item>
@@ -969,13 +990,13 @@
     <item order="207">@drawable/g_wifi</item>
     <item order="208">@drawable/g_wifi</item>
     <item order="209">@drawable/g_wifi</item>
-    <item order="210">0</item>
-    <item order="211">0</item>
+    <item order="210">@drawable/g_wifi</item>
+    <item order="211">@drawable/accessibility</item>
+    <item order="211.1">@drawable/accessibility</item>
+    <item order="211.2">@drawable/privacy_policy</item>
     <item order="212">0</item>
     <item order="213">0</item>
-    <item order="214">0</item>
     <item order="215">0</item>
-    <item order="216">0</item>
   </array>
 
 </resources>

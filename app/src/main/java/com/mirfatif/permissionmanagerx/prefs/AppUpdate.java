@@ -56,29 +56,29 @@ public class AppUpdate {
       boolean oldIsBeta = oldVerStr.contains("-beta");
       boolean newIsBeta = newVerStr.contains("-beta");
 
-      if (newVer < oldVer
+      if (newVer > oldVer + 1
+          || (newVer > oldVer && (!newIsBeta || (newIsBeta && oldIsBeta)))
           || (newVer == oldVer
-              && (!newIsBeta
-                  || !oldIsBeta
-                  || (getBetaSubVersion(oldVerStr) >= getBetaSubVersion(newVerStr))))) {
-        MyLog.i(TAG, "check", "App is up-to-date: " + oldVerStr + " -> " + newVerStr);
-        return null;
-      }
-
-      if (newIsBeta) {
-        MyLog.i(TAG, "check", "New beta update is available: " + oldVerStr + " -> " + newVerStr);
-        if (notify && !oldIsBeta) {
-          return null;
-        } else {
-          updateUrl = getString(R.string.source_url);
-        }
-      } else {
-        MyLog.i(TAG, "check", "New release update is available: " + oldVerStr + " -> " + newVerStr);
+              && ((oldIsBeta && !newIsBeta)
+                  || (oldIsBeta
+                      && newIsBeta
+                      && getBetaSubVersion(newVerStr) > getBetaSubVersion(oldVerStr))))) {
+        MyLog.i(TAG, "check", "New update is available: " + oldVerStr + " -> " + newVerStr);
         if (Utils.isPsProVersion()) {
           updateUrl = getString(R.string.play_store_url);
         } else {
           updateUrl = getString(R.string.source_url);
         }
+      } else if (newVer > oldVer && !oldIsBeta && newIsBeta) {
+        MyLog.i(TAG, "check", "New update is available: " + oldVerStr + " -> " + newVerStr);
+        if (notify) {
+          return null;
+        } else {
+          updateUrl = getString(R.string.source_url);
+        }
+      } else {
+        MyLog.i(TAG, "check", "App is up-to-date: " + oldVerStr + " -> " + newVerStr);
+        return null;
       }
 
       if (notify && ApiUtils.hasNotifPerm()) {

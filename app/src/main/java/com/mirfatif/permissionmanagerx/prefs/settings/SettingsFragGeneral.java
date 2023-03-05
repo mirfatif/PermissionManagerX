@@ -10,6 +10,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.parser.SearchConstants;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.fwk.CustomPrefDialogFrag;
@@ -57,6 +58,9 @@ public class SettingsFragGeneral extends PreferenceFragmentCompat
       SearchConstants.INS.recreate();
       mA.recreate();
       MySettings.INS.recreateMainActivity();
+      PackageParser.INS.updatePkgList();
+    } else {
+      SettingsFragGeneralFlavor.onSharedPreferenceChanged(key);
     }
   }
 }

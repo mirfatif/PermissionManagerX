@@ -116,6 +116,9 @@
   <string name="pref_settings_auto_perm_ref_title">Автоустановка целевых значений</string>
   <string name="pref_settings_auto_perm_ref_summary">Установить выбранное состояние разрешения как целевое</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_show_fwk_perm_name_title">Фреймворк имена разрешений</string>
+  <string name="pref_settings_show_fwk_perm_name_summary">Показать оригинальные имена разрешений</string>
+  <!-- CHAR LIMIT: 20 -->
   <string name="pref_settings_special_search_title">Комплексный поиск</string>
   <string name="pref_settings_special_search_summary">Используйте символы И (&amp;), ИЛИ (|) и НЕ (!) для уточнения поиска</string>
   <!-- CHAR LIMIT: 20 -->

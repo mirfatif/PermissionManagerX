@@ -277,7 +277,8 @@ public enum BackupRestore {
 
     try (InputStream is = App.getCxt().getContentResolver().openInputStream(file)) {
       res = restore(is, skipUninstalledApps, swapUserIds);
-    } catch (IOException e) {
+    } catch (IOException | SecurityException e) {
+
       MyLog.e(TAG, "restore", e);
       return null;
     }

@@ -127,7 +127,7 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
       }
 
       if (perm.isAppOp()) {
-        if (perm.dependsOn() != null) {
+        if (perm.hasDependsOnPerm()) {
           mB.permStateCont.setVisibility(View.GONE);
         } else {
           mB.permStateCont.setVisibility(View.VISIBLE);

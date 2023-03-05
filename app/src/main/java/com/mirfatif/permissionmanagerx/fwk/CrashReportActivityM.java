@@ -11,4 +11,14 @@ public class CrashReportActivityM extends BaseActivity {
   protected void onCreated(Bundle savedInstanceState) {
     mA.onCreated();
   }
+
+  protected void onPause() {
+    mA.onPause();
+    super.onPause();
+  }
+
+  protected void onResume() {
+    super.onResume();
+    mA.onResume();
+  }
 }

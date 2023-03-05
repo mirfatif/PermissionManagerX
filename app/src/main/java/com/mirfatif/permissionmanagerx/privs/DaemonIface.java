@@ -137,16 +137,16 @@ public enum DaemonIface {
     return null;
   }
 
-  public Integer getPkgCountForUid(int uid) {
+  public String[] getPackagesForUid(int uid) {
     ThreadUtils.assertNotMainThread();
 
     synchronized (this) {
       if (isDaemonAlive()) {
         try {
-          return mPrivTasks.getPkgCountForUid(uid);
+          return mPrivTasks.getPackagesForUid(uid);
         } catch (RemoteException e) {
-          MyLog.e(TAG, "getPkgCountForUid", e);
-          UiUtils.showToast(R.string.daemon_get_pkg_count_failed_toast);
+          MyLog.e(TAG, "getPackagesForUid", e);
+          UiUtils.showToast(R.string.daemon_get_pkgs_for_uid_failed_toast);
         }
       }
     }

@@ -318,11 +318,11 @@ public class AppPrivTasks {
 
     private final RateLimitedTask mAppOpsImplErrSender =
         new RateLimitedTask(
-            1, TimeUnit.MINUTES, () -> mCallback.showError(PrivTasksError.APP_OPS_IMPL));
+            2, TimeUnit.MINUTES, () -> mCallback.showError(PrivTasksError.APP_OPS_IMPL));
 
     private final RateLimitedTask mOpNumErrSender =
         new RateLimitedTask(
-            1, TimeUnit.MINUTES, () -> mCallback.showError(PrivTasksError.OP_NUM_INCONSISTENCY));
+            2, TimeUnit.MINUTES, () -> mCallback.showError(PrivTasksError.OP_NUM_INCONSISTENCY));
 
     private final RateLimitedTaskTyped<Exception> mNPELogger =
         new RateLimitedTaskTyped<>(

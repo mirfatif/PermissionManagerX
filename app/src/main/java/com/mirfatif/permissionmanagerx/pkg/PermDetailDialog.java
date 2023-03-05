@@ -35,12 +35,20 @@ class PermDetailDialog {
   void show(Permission perm, int yLocation) {
     PermDetailsDialogBinding b = PermDetailsDialogBinding.inflate(mA.mA.getLayoutInflater());
 
-    b.permNameV.setText(perm.getName());
+    CharSequence name = PkgParserFlavor.INS.getPermName(perm);
+    b.permNameV.setText(name);
     b.permNameV.setSelected(true);
 
-    if (perm.isAppOp() && perm.dependsOn() != null) {
-      b.permNameSubCont.setVisibility(View.VISIBLE);
-      b.permNameSubV.setText(perm.dependsOn());
+    if (!name.equals(perm.getName())) {
+      b.permNameSubV.setText(perm.getName());
+      b.permNameSubV.setSelected(true);
+      b.permNameSubV.setVisibility(View.VISIBLE);
+    }
+
+    if (perm.isAppOp() && perm.hasDependsOnPerm()) {
+      b.dependsPermNameV.setText(perm.getDependsOnName());
+      b.dependsPermNameV.setSelected(true);
+      b.dependsPermNameCont.setVisibility(View.VISIBLE);
     }
 
     b.protLevelV.setText(perm.getProtLevelString());
@@ -64,7 +72,7 @@ class PermDetailDialog {
               getString(R.string.perm_mode_granted), getString(R.string.perm_mode_revoked)
             };
         mPreChecked = perm.isGranted() ? 0 : 1;
-      } else if (perm.dependsOn() == null) {
+      } else if (!perm.hasDependsOnPerm()) {
         boolean noFg =
             perm.getName().equals("RUN_IN_BACKGROUND")
                 || perm.getName().equals("RUN_ANY_IN_BACKGROUND");

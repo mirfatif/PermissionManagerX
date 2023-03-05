@@ -116,7 +116,6 @@
   <string name="crash_report">Отчёт о падении</string>
   <!-- CHAR LIMIT: 30 -->
   <string name="ask_to_report_crash_small">Отправить отчёт о падении разработчику</string>
-  <string name="ask_to_report_crash">Извините, компонент приложения столкнулся с проблемой и дал сбой. Отправьте лог-файл разработчику по email или в Telegram, чтобы ошибка могла быть исправлена.</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="send_report">Отправить отчёт</string>
   <!-- CHAR LIMIT: 20 -->
@@ -133,6 +132,7 @@
   <string name="reading_crash_log_file">Чтение лога сбоя…</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="submit_crash_report_failed_toast">Не удалось отправить отчёт о сбое</string>
+  <!-- CHAR LIMIT: 15 -->
   <!-- Progress -->
   <!-- CHAR LIMIT: 20 -->
   <string name="prog_msg_checking_privs">Проверка привилегий…</string>
@@ -281,7 +281,7 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="daemon_get_perm_fixed_flags_failed_toast">Сбой установки флагов разрешений</string>
   <!-- CHAR LIMIT: 20 -->
-  <string name="daemon_get_pkg_count_failed_toast">Сбой получения количества пакетов</string>
+  <string name="daemon_get_pkgs_for_uid_failed_toast">Сбой получения пакетов для UID</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="daemon_get_pkg_ops_failed_toast">Сбой получения AppOps</string>
   <!-- CHAR LIMIT: 20 -->
@@ -346,8 +346,6 @@
   <!-- PackageActivity -->
   <!-- CHAR LIMIT: 20 -->
   <string name="something_went_wrong">Что-то пошло не так</string>
-  <!-- CHAR LIMIT: 20 -->
-  <string name="failed_get_affected_pkg_count_toast">Сбой получения количества затрагиваемых пакетов</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="app_op_mode_not_chaged_toast">Режим AppOp не изменён</string>
   <string name="change_perms_warning" comment="'system' or 'framework'">Изменение разрешений приложения %1$s — потенциально опасное действие вплоть до сбоя системы Android.\nВы уверены, что хотите продолжить?</string>
@@ -472,7 +470,7 @@
   <!-- CHAR LIMIT: 15 -->
   <string name="paid_features">Платные функции</string>
   <!-- CHAR LIMIT: 15 -->
-  <string name="about_dump_title">Данные дампа</string>
+  <string name="about_dump_title">Дамп данных</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="about_dump_summary">Дамп недостающих значков разрешений и описаний</string>
   <!-- CHAR LIMIT: 15 -->

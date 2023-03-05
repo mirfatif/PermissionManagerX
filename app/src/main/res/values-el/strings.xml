@@ -93,7 +93,6 @@
   <string name="crash_report">Αναφορά Σφάλματος</string>
   <!-- CHAR LIMIT: 30 -->
   <string name="ask_to_report_crash_small">Αποστολή αναφοράς σε developer</string>
-  <string name="ask_to_report_crash">Συγνώμη, ένα στοιχείο της εφαρμογής είχε ένα πρόβλημα και κατέρρευσε. Στείλτε το αρχείο καταγραφής στον προγραμματιστή μέσω email ή Telegram, ώστε να μπορεί να διορθωθεί το σφάλμα.</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="send_report">Αποστ Αναφ</string>
   <!-- CHAR LIMIT: 20 -->
@@ -102,6 +101,7 @@
   <!-- CHAR LIMIT: 10 -->
   <!-- CHAR LIMIT: 10 -->
   <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
   <!-- Progress -->
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
@@ -231,7 +231,6 @@
   <!-- PackageActivity -->
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
-  <!-- CHAR LIMIT: 20 -->
   <string name="change_perms_warning" comment="'system' or 'framework'">Αλλάζοντας τα δικαιώματα μιας εφαρμογής %1$s είναι μια επικίνδυνη ενέργεια. Στη χειρότερη περίπτωση το σύστημα Android μπορεί να καταρρεύσει.\nΕίστε βέβαιοι ότι θέλετε να συνεχίσετε?</string>
   <string name="system">σύστημα</string>
   <string name="framework">framework</string>
@@ -291,6 +290,7 @@
   <string name="locale_ru">Ρωσικά</string>
   <string name="locale_es">Ισπανικά</string>
   <string name="locale_ar">Αραβικά</string>
+  <string name="locale_el">Ελληνικά</string>
   <string name="theme_color_green">Πράσινο</string>
   <string name="theme_color_blue">Μπλε</string>
   <string name="theme_color_pink">Ροζ</string>
@@ -396,5 +396,4 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="outdated_web_view">Παρωχημένη WebView</string>
   <!-- Locale -->
-  <string name="help_dir_name">en</string>
 </resources>

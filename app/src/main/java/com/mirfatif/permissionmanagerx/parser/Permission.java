@@ -10,7 +10,7 @@ import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.MySettingsFlavor;
 import com.mirfatif.permissionmanagerx.privs.DaemonHandler;
 import com.mirfatif.permissionmanagerx.privs.DaemonIface;
-import com.mirfatif.permissionmanagerx.util.ApiUtils;
+import com.mirfatif.permissionmanagerx.util.UserUtils;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -173,8 +173,13 @@ public class Permission {
     return mAppOpAccessTimeFormatted;
   }
 
-  public String dependsOn() {
-    return mDependsOn;
+  public boolean hasDependsOnPerm() {
+    return mDependsOn != null;
+  }
+
+  public CharSequence getDependsOnName() {
+    return PkgParserFlavor.INS.getPermName(
+        mDependsOn, PermGroupsMapping.INS.getGroupId(mDependsOn, true));
   }
 
   public void setExtraAppOp() {
@@ -245,7 +250,7 @@ public class Permission {
       return false;
     }
     if (mAppOp) {
-      return mDependsOn == null;
+      return !hasDependsOnPerm();
     } else {
 
       return (mProtectionLevel.equals(PROTECTION_DANGEROUS) || mDevelopment)
@@ -257,7 +262,7 @@ public class Permission {
 
   public boolean isChangeableForDump() {
     if (mAppOp) {
-      return mDependsOn == null;
+      return !hasDependsOnPerm();
     }
 
     return (mProtectionLevel.equals(PROTECTION_DANGEROUS) || mDevelopment)
@@ -265,10 +270,10 @@ public class Permission {
         && !mSystemFixed;
   }
 
-  public String getPermNameString() {
-    String permName = mPermissionName;
-    if (mAppOp && mDependsOn != null) {
-      permName += " (" + mDependsOn + ")";
+  public CharSequence getPermNameString() {
+    CharSequence permName = PkgParserFlavor.INS.getPermName(this);
+    if (mAppOp && hasDependsOnPerm()) {
+      permName = TextUtils.concat(permName, " (", getDependsOnName(), ")");
     }
     return permName;
   }
@@ -369,7 +374,7 @@ public class Permission {
 
     for (String field :
         new String[] {
-          mPermissionName,
+          PkgParserFlavor.INS.getPermName(this).toString(),
           ":" + getLocalizedProtectionLevel(),
           ((mAppOp || mManifestPermAppOp) ? SearchConstants.INS.SEARCH_APP_OPS : ""),
           ((mAppOp && mPerUid) ? SearchConstants.INS.SEARCH_UID : ""),
@@ -439,7 +444,7 @@ public class Permission {
   public void toggleState(Package pkg) {
     if (!isAppOp()) {
       DaemonIface.INS.setPermState(
-          !isGranted(), pkg.getName(), getName(), ApiUtils.getUserId(pkg.getUid()));
+          !isGranted(), pkg.getName(), getName(), UserUtils.getUserId(pkg.getUid()));
     }
   }
 

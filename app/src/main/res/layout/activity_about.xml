@@ -218,6 +218,7 @@
           style="@style/AboutActivityItemContainer">
 
           <ImageView
+            android:id="@+id/dump_icon_v"
             style="@style/AboutActivityIconImg"
             android:src="@drawable/database"
             tools:ignore="ContentDescription" />
@@ -225,10 +226,12 @@
           <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout style="@style/AboutActivityItemTextBox">
 
             <TextView
+              android:id="@+id/dump_title_v"
               style="@style/AboutActivityItemTitle"
               android:text="@string/about_dump_title" />
 
             <TextView
+              android:id="@+id/dump_summary_v"
               style="@style/AboutActivityItemSummary"
               android:text="@string/about_dump_summary" />
 

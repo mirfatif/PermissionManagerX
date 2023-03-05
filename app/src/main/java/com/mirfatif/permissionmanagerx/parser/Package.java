@@ -8,7 +8,7 @@ import com.mirfatif.permissionmanagerx.prefs.ExcFiltersData;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.MySettingsFlavor;
 import com.mirfatif.permissionmanagerx.util.ApiUtils;
-import java.text.NumberFormat;
+import com.mirfatif.permissionmanagerx.util.LocaleUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -134,14 +134,19 @@ public class Package {
   private String mLastPermCount = "";
 
   public String getPermCount() {
-    NumberFormat nf = NumberFormat.getIntegerInstance();
     if (MySettings.INS.isDeepSearching()) {
-      mLastPermCount = nf.format(mSearchPermCount) + "/" + nf.format(getTotalPermCount());
+      mLastPermCount =
+          LocaleUtils.toLocalizedNum(mSearchPermCount)
+              + "/"
+              + LocaleUtils.toLocalizedNum(getTotalPermCount());
     } else {
-      mLastPermCount = nf.format(mPermCount) + "/" + nf.format(getTotalPermCount());
+      mLastPermCount =
+          LocaleUtils.toLocalizedNum(mPermCount)
+              + "/"
+              + LocaleUtils.toLocalizedNum(getTotalPermCount());
     }
     if (AppOpsParser.INS.hasAppOps()) {
-      mLastPermCount += " | " + getAppOpsCount(nf);
+      mLastPermCount += " | " + getAppOpsCount();
     }
     return mLastPermCount;
   }
@@ -176,11 +181,15 @@ public class Package {
     mSearchAppOpsCount = count;
   }
 
-  private String getAppOpsCount(NumberFormat nf) {
+  private String getAppOpsCount() {
     if (MySettings.INS.isDeepSearching()) {
-      return nf.format(mSearchAppOpsCount) + "/" + nf.format(getTotalAppOpsCount());
+      return LocaleUtils.toLocalizedNum(mSearchAppOpsCount)
+          + "/"
+          + LocaleUtils.toLocalizedNum(getTotalAppOpsCount());
     } else {
-      return nf.format(mAppOpsCount) + "/" + nf.format(getTotalAppOpsCount());
+      return LocaleUtils.toLocalizedNum(mAppOpsCount)
+          + "/"
+          + LocaleUtils.toLocalizedNum(getTotalAppOpsCount());
     }
   }
 

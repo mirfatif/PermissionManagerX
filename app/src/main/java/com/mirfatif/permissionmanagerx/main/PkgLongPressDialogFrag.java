@@ -28,6 +28,7 @@ import com.mirfatif.permissionmanagerx.privs.DaemonStarter;
 import com.mirfatif.permissionmanagerx.util.ApiUtils;
 import com.mirfatif.permissionmanagerx.util.StringUtils;
 import com.mirfatif.permissionmanagerx.util.UiUtils;
+import com.mirfatif.permissionmanagerx.util.UserUtils;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.util.bg.BgRunner;
 
@@ -53,7 +54,7 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
     PkgLongPressDialogBinding b = PkgLongPressDialogBinding.inflate(mA.getLayoutInflater());
 
     b.pkgLabelV.setText(mPkg.getLabel());
-    b.pkgLabelV.setText(mPkg.getLabel());
+    b.pkgLabelV.setSelected(true);
     if (!mPkg.getLabel().equals(mPkg.getName())) {
       b.pkgNameV.setText(mPkg.getName());
       b.pkgNameV.setVisibility(View.VISIBLE);
@@ -162,7 +163,7 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
   }
 
   private void setPackageEnabledState(Package pkg, boolean enabled) {
-    DaemonIface.INS.setPkgState(!enabled, pkg.getName(), ApiUtils.getUserId(pkg.getUid()));
+    DaemonIface.INS.setPkgState(!enabled, pkg.getName(), UserUtils.getUserId(pkg.getUid()));
     PackageParser.INS.updatePackage(pkg, true);
   }
 
@@ -170,8 +171,8 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
     if (mPkg == null) {
       return;
     }
-    int pkgUserId = ApiUtils.getUserId(mPkg.getUid());
-    if (ApiUtils.getUserId() == pkgUserId) {
+    int pkgUserId = UserUtils.getUserId(mPkg.getUid());
+    if (UserUtils.getUserId() == pkgUserId) {
       startActivity(
           new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
               .setData(Uri.parse("package:" + mPkg.getName())));

@@ -1,0 +1,9 @@
+- Added Permission View (Pro)
+- Added permission names (Pro)
+- Increased tap area of permission switch
+- Updated permission names, descriptions, groups, icons
+- Updated translations
+- Fixed crash due to feedback views called on worker thread
+- Fixed crash due to get users from daemon called on main thread
+- Fixed crash due to INTERACT_ACROSS_USERS injected in getPackagesForUid in S+
+- Minor fixes and improvements

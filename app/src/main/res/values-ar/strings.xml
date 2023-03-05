@@ -114,7 +114,6 @@
   <string name="crash_report">تقرير الأعطال</string>
   <!-- CHAR LIMIT: 30 -->
   <string name="ask_to_report_crash_small">إرسال تقرير الأعطال إلى المطور</string>
-  <string name="ask_to_report_crash">عذراً، كان هناك مشكلة في التطبيق او أحد مكوناته تعطل. إرسال ملف السجل إلى المطور من خلال البريد الإلكتروني أو تيليجرام بحيث يمكن إصلاح الخطأ.</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="send_report">إرسال التقرير</string>
   <!-- CHAR LIMIT: 20 -->
@@ -123,6 +122,7 @@
   <!-- CHAR LIMIT: 10 -->
   <!-- CHAR LIMIT: 10 -->
   <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
   <!-- Progress -->
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
@@ -272,8 +272,6 @@
   <!-- PackageActivity -->
   <!-- CHAR LIMIT: 20 -->
   <string name="something_went_wrong">لقد حدث خطأ ما</string>
-  <!-- CHAR LIMIT: 20 -->
-  <string name="failed_get_affected_pkg_count_toast">فشل الحصول على عدد الحزمة المتأثرة</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="change_perms_warning" comment="'system' or 'framework'">تغيير أذونات تطبيق %1$s إجراء خطير. في أسوأ سيناريو نظام أندرويد قد يتعطل.\nهل أنت متأكد تريد المتابعة؟</string>
   <string name="system">النظام</string>
@@ -454,5 +452,4 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="outdated_web_view">عارض ويب قديم</string>
   <!-- Locale -->
-  <string name="help_dir_name">en</string>
 </resources>

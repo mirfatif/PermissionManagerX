@@ -15,10 +15,23 @@
     android:ellipsize="marquee"
     android:maxLines="1"
     android:singleLine="true"
+    android:textAlignment="viewStart"
     android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
+  <TextView
+    android:id="@+id/perm_name_sub_v"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:ellipsize="marquee"
+    android:maxLines="1"
+    android:singleLine="true"
+    android:textAlignment="viewStart"
+    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+    android:visibility="gone" />
+
   <LinearLayout
-    android:id="@+id/perm_name_sub_cont"
+    android:id="@+id/depends_perm_name_cont"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:visibility="gone">
@@ -28,18 +41,18 @@
       android:layout_height="wrap_content"
       android:layout_margin="4dp"
       android:text="@string/depends_on"
-      android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+      android:textAppearance="@style/TextAppearance.AppCompat.Small"
       android:textStyle="bold" />
 
     <TextView
-      android:id="@+id/perm_name_sub_v"
+      android:id="@+id/depends_perm_name_v"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_margin="4dp"
       android:ellipsize="marquee"
       android:maxLines="1"
       android:singleLine="true"
-      android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+      android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
   </LinearLayout>
 
@@ -54,7 +67,7 @@
       android:layout_margin="4dp"
       android:gravity="center_vertical"
       android:text="@string/protection_level"
-      android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+      android:textAppearance="@style/TextAppearance.AppCompat.Small"
       android:textStyle="bold" />
 
     <TextView
@@ -63,7 +76,7 @@
       android:layout_height="wrap_content"
       android:layout_margin="4dp"
       android:gravity="center_vertical"
-      android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+      android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
   </LinearLayout>
 

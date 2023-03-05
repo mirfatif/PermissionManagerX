@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <!--
   NOTE:
   If pref name equals its value + "_key":
@@ -92,6 +92,7 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_settings_privileges_reminder_title">Recordar privilegios faltantes</string>
   <string name="pref_settings_privileges_reminder_summary">Mostrar un cuadro de diálogo al iniciar la aplicación si los privilegios root y ADB no han sido otorgados</string>
+  <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_settings_special_search_title">Búsqueda compleja</string>

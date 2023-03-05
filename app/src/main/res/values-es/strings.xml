@@ -93,7 +93,6 @@
   <string name="crash_report">Reporte de Error</string>
   <!-- CHAR LIMIT: 30 -->
   <string name="ask_to_report_crash_small">Enviar el reporte de error al desarrollador</string>
-  <string name="ask_to_report_crash">Lo sentimos, un componente de la aplicación tuvo un problema y se cerró de golpe. Envía el registro al desarrollador vía correo electrónico o Telegram para que el error sea arreglado.</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="send_report">Enviar Reporte</string>
   <!-- CHAR LIMIT: 20 -->
@@ -102,6 +101,7 @@
   <!-- CHAR LIMIT: 10 -->
   <!-- CHAR LIMIT: 10 -->
   <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
   <!-- Progress -->
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
@@ -240,7 +240,6 @@
   <!-- PackageActivity -->
   <!-- CHAR LIMIT: 20 -->
   <string name="something_went_wrong">Algo salió mal</string>
-  <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
   <string name="change_perms_warning" comment="'system' or 'framework'">Cambiar los permisos de una aplicación de %1$s es una acción peligrosa. En el peor de los casos el sistema Android podría colapsar.\n¿Seguro que quieres continuar?</string>
   <string name="system">sistema</string>
@@ -399,5 +398,4 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="outdated_web_view">WebView Obsoleto</string>
   <!-- Locale -->
-  <string name="help_dir_name">en</string>
 </resources>

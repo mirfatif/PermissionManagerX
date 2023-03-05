@@ -20,6 +20,7 @@ import com.mirfatif.permissionmanagerx.parser.permsdb.PermsDb;
 import com.mirfatif.permissionmanagerx.util.ApiUtils;
 import com.mirfatif.permissionmanagerx.util.StringUtils;
 import com.mirfatif.permissionmanagerx.util.UiUtils;
+import com.mirfatif.permissionmanagerx.util.UserUtils;
 import com.mirfatif.permissionmanagerx.util.bg.LiveTasksQueueTyped;
 import java.util.ArrayList;
 import java.util.List;
@@ -145,7 +146,7 @@ public class AdvSettingsActivity {
                     perm.getName(),
                     perm.isAppOp(),
                     perm.isPerUid(),
-                    ApiUtils.getUserId(pkg.getUid()))
+                    UserUtils.getUserId(pkg.getUid()))
                 + "_"
                 + perm.refString());
       }

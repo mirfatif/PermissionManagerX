@@ -254,6 +254,12 @@
   <string name="pref_settings_auto_perm_ref_key" translatable="false">pref_settings_auto_perm_ref</string>
   <bool name="pref_settings_auto_perm_ref_default">false</bool>
 
+  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_show_fwk_perm_name_title">Framework permission names</string>
+  <string name="pref_settings_show_fwk_perm_name_summary">Show original permission names, not pretty names</string>
+  <string name="pref_settings_show_fwk_perm_name_key" translatable="false">pref_settings_show_fwk_perm_name</string>
+  <bool name="pref_settings_show_fwk_perm_name_default">true</bool>
+
   <string name="pref_settings_special_search_key" translatable="false">pref_settings_special_search</string>
   <bool name="pref_settings_special_search_default">true</bool>
   <!-- CHAR LIMIT: 20 -->

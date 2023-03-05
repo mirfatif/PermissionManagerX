@@ -95,11 +95,12 @@
 
         <androidx.appcompat.widget.SwitchCompat
           android:id="@+id/perm_state_switch"
+          style="@android:style/Widget.Material.CompoundButton.Switch"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          style="@android:style/Widget.Material.CompoundButton.Switch"
           android:layout_gravity="end"
-          android:padding="2dp"
+          android:paddingHorizontal="4dp"
+          android:paddingVertical="6dp"
           android:thumb="@drawable/slim_switch_thumb"
           app:switchMinWidth="30dp"
           app:track="@drawable/slim_switch_track" />

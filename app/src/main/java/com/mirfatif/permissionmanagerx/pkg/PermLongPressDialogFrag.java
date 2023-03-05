@@ -14,6 +14,7 @@ import com.mirfatif.permissionmanagerx.fwk.PackageActivityM;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.parser.Permission;
+import com.mirfatif.permissionmanagerx.parser.PkgParserFlavor;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionEntity;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermsDb;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermsDbFlavor;
@@ -55,8 +56,16 @@ public class PermLongPressDialogFrag extends BottomSheetDialogFrag {
 
     PermLongPressDialogBinding b = PermLongPressDialogBinding.inflate(mA.getLayoutInflater());
 
-    b.permNameV.setText(mPerm.getName());
-    b.permNameV.setSelected(true);
+    CharSequence label = PkgParserFlavor.INS.getPermName(mPerm);
+
+    b.permLabelV.setText(label);
+    b.permLabelV.setSelected(true);
+
+    if (!label.equals(mPerm.getName())) {
+      b.permNameV.setText(mPerm.getName());
+      b.permNameV.setSelected(true);
+      b.permNameV.setVisibility(View.VISIBLE);
+    }
 
     if (ExcFiltersData.INS.canBeExcluded(mPerm)) {
       b.excludePerm.setOnClickListener(

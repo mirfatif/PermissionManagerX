@@ -26,4 +26,8 @@ public enum MySettingsFlavor {
         .getSharedPreferences(
             App.getCxt().getPackageName() + "_no_backup_prefs", Context.MODE_PRIVATE);
   }
+
+  public boolean showFrameworkPermNames() {
+    return true;
+  }
 }

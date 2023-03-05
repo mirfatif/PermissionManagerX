@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import java.text.NumberFormat;
 import java.util.Locale;
 
 public class LocaleUtils {
@@ -15,6 +16,7 @@ public class LocaleUtils {
   public static Context setLocale(Context context) {
     Locale locale = getLocale();
     Locale.setDefault(locale);
+    sNumFmt = NumberFormat.getIntegerInstance(Locale.getDefault());
     Configuration config = setLocale(context.getResources().getConfiguration(), locale);
 
     updateConfiguration(context.getResources(), config, context.getResources().getDisplayMetrics());
@@ -42,5 +44,11 @@ public class LocaleUtils {
     } else {
       return new Locale(lang);
     }
+  }
+
+  private static NumberFormat sNumFmt = NumberFormat.getIntegerInstance(Locale.getDefault());
+
+  public static String toLocalizedNum(long num) {
+    return sNumFmt.format(num);
   }
 }

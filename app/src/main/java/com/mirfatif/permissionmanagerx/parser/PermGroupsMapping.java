@@ -24,12 +24,21 @@ public enum PermGroupsMapping {
       ICONS[i] = icons.getResourceId(i, 0);
     }
     icons.recycle();
+
+    if (PERMS.size() != APP_OPS.size() || PERMS.size() != ICONS.length) {
+      throw new RuntimeException("Permission arrays size mismatch");
+    }
   }
 
   PermGroupInfo get(String perm, boolean isAppOp) {
-    int i = isAppOp ? APP_OPS.indexOf(perm) : PERMS.indexOf(perm);
+    int id = getGroupId(perm, isAppOp);
     return new PermGroupInfo(
-        i >= 0 ? i : ICONS.length, i >= 0 && ICONS[i] != 0 ? ICONS[i] : R.drawable.g_others);
+        id, id < ICONS.length && ICONS[id] != 0 ? ICONS[id] : R.drawable.g_others);
+  }
+
+  public int getGroupId(String perm, boolean isAppOp) {
+    int i = isAppOp ? APP_OPS.indexOf(perm) : PERMS.indexOf(perm);
+    return i >= 0 ? i : ICONS.length;
   }
 
   static class PermGroupInfo {

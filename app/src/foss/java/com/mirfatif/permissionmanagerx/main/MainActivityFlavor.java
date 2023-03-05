@@ -33,7 +33,7 @@ class MainActivityFlavor {
     return false;
   }
 
-  void setNavMenu(Menu menu) {}
+  void setNavMenu() {}
 
   boolean handleNavItemChecked(MenuItem item) {
     return false;
@@ -66,6 +66,8 @@ class MainActivityFlavor {
   void onRootStopped() {}
 
   void onAdbStopped() {}
+
+  void setLiveDataObservers() {}
 
   void onNotifPermGranted() {}
 }

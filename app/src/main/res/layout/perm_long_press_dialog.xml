@@ -18,20 +18,31 @@
     android:orientation="vertical">
 
     <TextView
-      android:id="@+id/perm_name_v"
+      android:id="@+id/perm_label_v"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
-      android:layout_marginBottom="16dp"
       android:ellipsize="marquee"
       android:maxLines="1"
       android:singleLine="true"
       android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
+    <TextView
+      android:id="@+id/perm_name_v"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="8dp"
+      android:ellipsize="marquee"
+      android:maxLines="1"
+      android:singleLine="true"
+      android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+      android:visibility="gone" />
+
     <com.mirfatif.permissionmanagerx.fwk.CustomButton
       android:id="@+id/exclude_perm"
       style="@style/CustomButton"
-      android:layout_marginTop="16dp"
+      android:layout_marginTop="32dp"
       android:text="@string/exclude_perm_from_list" />
 
     <com.mirfatif.permissionmanagerx.fwk.CustomButton

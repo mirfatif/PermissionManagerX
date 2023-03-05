@@ -15,6 +15,8 @@ public enum PkgParserFlavor {
 
   private final PackageManager mPm = App.getPm();
 
+  public void buildRequiredData() {}
+
   void onPkgCreated(Package pkg) {}
 
   void onPkgListCompleted() {}
@@ -47,6 +49,14 @@ public enum PkgParserFlavor {
 
   public boolean isFilteredOut(Package pkg) {
     return false;
+  }
+
+  public CharSequence getPermName(Permission perm) {
+    return perm.getName();
+  }
+
+  public CharSequence getPermName(String permName, int groupId) {
+    return permName;
   }
 
   public CharSequence getPermDesc(Permission perm) {

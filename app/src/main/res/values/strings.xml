@@ -119,7 +119,7 @@
   <string name="crash_report">Crash Report</string>
   <!-- CHAR LIMIT: 30 -->
   <string name="ask_to_report_crash_small">Send crash report to the developer</string>
-  <string name="ask_to_report_crash">Sorry, a component of the app had a problem and crashed. Send the log file to the developer through email or Telegram so that the bug can be fixed.</string>
+  <string name="ask_to_report_crash">Sorry, a component of the app had a problem and crashed. Send the log file to the developer so that the bug can be fixed.</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="send_report">Send Report</string>
   <!-- CHAR LIMIT: 20 -->
@@ -136,6 +136,9 @@
   <string name="reading_crash_log_file">Reading crash log file…</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="submit_crash_report_failed_toast">Failed to submit crash report</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="delete_crash_report_file_title">Delete file</string>
+  <string name="crash_file_delete_confirmation">If the crash report is sent, delete the old file on device?</string>
 
   <!-- Progress -->
   <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
@@ -337,7 +340,7 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="daemon_get_perm_fixed_flags_failed_toast">Getting fixed permission flags failed</string>
   <!-- CHAR LIMIT: 20 -->
-  <string name="daemon_get_pkg_count_failed_toast">Getting package count failed</string>
+  <string name="daemon_get_pkgs_for_uid_failed_toast">Getting packages for UID failed</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="daemon_get_pkg_ops_failed_toast">Getting AppOps failed</string>
   <!-- CHAR LIMIT: 20 -->
@@ -415,8 +418,6 @@
   <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="something_went_wrong">Something went wrong</string>
-  <!-- CHAR LIMIT: 20 -->
-  <string name="failed_get_affected_pkg_count_toast">Failed to get affected package count</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="app_op_mode_not_chaged_toast">AppOp mode not changed</string>
 
@@ -570,7 +571,7 @@
   <!-- CHAR LIMIT: 15 -->
   <string name="about_dump_title">Dump Info</string>
   <!-- CHAR LIMIT: 20 -->
-  <string name="about_dump_summary">Dump missing permission icons and descriptions</string>
+  <string name="about_dump_summary">Dump missing permission icons, names and descriptions</string>
 
   <!-- CHAR LIMIT: 15 -->
   <string name="update">Update</string>

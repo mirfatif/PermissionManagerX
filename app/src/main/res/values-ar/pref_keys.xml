@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <!--
   NOTE:
   If pref name equals its value + "_key":
@@ -93,6 +93,7 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_settings_privileges_reminder_title">التذكير بالامتيازات المفقودة</string>
   <string name="pref_settings_privileges_reminder_summary">إظهار مربع حوار عند بدء التطبيق إذا لم يتم منح امتيازات الجذر و ADB</string>
+  <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_settings_special_search_title">بحث معقد</string>

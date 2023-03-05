@@ -35,7 +35,7 @@ public interface IPrivTasks extends IInterface {
 
   PermFixedFlags getPermFixedFlags() throws RemoteException;
 
-  int getPkgCountForUid(int uid) throws RemoteException;
+  String[] getPackagesForUid(int uid) throws RemoteException;
 
   List<MyPackageOps> getOpsForPackage(int uid, String pkgName, int[] ops) throws RemoteException;
 
@@ -88,8 +88,8 @@ public interface IPrivTasks extends IInterface {
         getAppOpsLists(data, reply);
       } else if (code == TRANSACTION_getPermFixedFlags) {
         getPermFixedFlags(data, reply);
-      } else if (code == TRANSACTION_getPkgCountForUid) {
-        getPkgCountForUid(data, reply);
+      } else if (code == TRANSACTION_getPackagesForUid) {
+        getPackagesForUid(data, reply);
       } else if (code == TRANSACTION_getOpsForPackage) {
         getOpsForPackage(data, reply);
       } else if (code == TRANSACTION_getPermFlags) {
@@ -388,29 +388,29 @@ public interface IPrivTasks extends IInterface {
       }
     }
 
-    private static final int TRANSACTION_getPkgCountForUid = createTransactionCode();
+    private static final int TRANSACTION_getPackagesForUid = createTransactionCode();
 
-    private static int getPkgCountForUid(int uid, IBinder remote) throws RemoteException {
+    private static String[] getPackagesForUid(int uid, IBinder remote) throws RemoteException {
       Parcel data = obtainData(), reply = Parcel.obtain();
 
       data.writeInt(uid);
 
       try {
-        remote.transact(TRANSACTION_getPkgCountForUid, data, reply, 0);
+        remote.transact(TRANSACTION_getPackagesForUid, data, reply, 0);
         readException(reply);
-        return reply.readInt();
+        return reply.createStringArray();
       } finally {
         recycle(data, reply);
       }
     }
 
-    private void getPkgCountForUid(Parcel data, Parcel reply) {
+    private void getPackagesForUid(Parcel data, Parcel reply) {
       initReply(data, reply);
 
       int uid = data.readInt();
 
       try {
-        reply.writeInt(getPkgCountForUid(uid));
+        reply.writeStringArray(this.getPackagesForUid(uid));
       } catch (Throwable t) {
         writeException(reply, t);
       }
@@ -743,8 +743,8 @@ public interface IPrivTasks extends IInterface {
         return Stub.getPermFixedFlags(mRemote);
       }
 
-      public int getPkgCountForUid(int uid) throws RemoteException {
-        return Stub.getPkgCountForUid(uid, mRemote);
+      public String[] getPackagesForUid(int uid) throws RemoteException {
+        return Stub.getPackagesForUid(uid, mRemote);
       }
 
       public List<MyPackageOps> getOpsForPackage(int uid, String pkgName, int[] ops)

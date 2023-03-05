@@ -28,14 +28,6 @@ public class ApiUtils {
 
   private ApiUtils() {}
 
-  public static int getUserId(int uid) {
-    return uid / 100000;
-  }
-
-  public static int getUserId() {
-    return getUserId(android.os.Process.myUid());
-  }
-
   public static String getString(int resId, Object... args) {
     return App.getCxt().getString(resId, args);
   }

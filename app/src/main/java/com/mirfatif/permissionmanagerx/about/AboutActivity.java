@@ -110,15 +110,24 @@ public class AboutActivity {
 
     mLoggingLauncher = mA.registerForActivityResult(new CreateDocument("text/plain"), callback);
 
-    if (!Utils.isFreeVersion()
-        && DaemonHandler.INS.isDaemonAlive()
-        && !PackageParser.INS.isUpdating()) {
+    if (!Utils.isFreeVersion() && DaemonHandler.INS.isDaemonAlive()) {
       callback = fileUri -> BgRunner.execute(() -> PkgParserFlavor.INS.dumpPerms(fileUri));
       mDumpLauncher = mA.registerForActivityResult(new CreateDocument("text/plain"), callback);
 
       mB.dumpCont.setVisibility(View.VISIBLE);
       mB.dumpV.setOnClickListener(
           v -> mDumpLauncher.launch("PMX_Dump_" + Util.getCurrDateTime(false, true) + ".txt"));
+
+      PackageParser.INS
+          .getListInProg()
+          .observe(
+              mA,
+              inProg -> {
+                mB.dumpV.setEnabled(!inProg);
+                mB.dumpIconV.setEnabled(!inProg);
+                mB.dumpTitleV.setEnabled(!inProg);
+                mB.dumpSummaryV.setEnabled(!inProg);
+              });
     }
   }
 

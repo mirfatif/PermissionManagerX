@@ -2,7 +2,6 @@
 <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
   android:padding="8dp"
   android:orientation="vertical">
 
@@ -23,6 +22,9 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
+      android:ellipsize="marquee"
+      android:maxLines="1"
+      android:singleLine="true"
       android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
     <TextView
@@ -31,7 +33,6 @@
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
       android:layout_marginTop="8dp"
-      android:layout_marginBottom="16dp"
       android:ellipsize="marquee"
       android:maxLines="1"
       android:singleLine="true"
@@ -41,7 +42,7 @@
     <com.mirfatif.permissionmanagerx.fwk.CustomButton
       android:id="@+id/exclude_pkg"
       style="@style/CustomButton"
-      android:layout_marginTop="16dp"
+      android:layout_marginTop="32dp"
       android:text="@string/exclude_app_from_visible_list" />
 
     <com.mirfatif.permissionmanagerx.fwk.CustomButton

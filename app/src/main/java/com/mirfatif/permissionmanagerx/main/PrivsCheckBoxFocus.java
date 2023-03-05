@@ -65,8 +65,6 @@ public class PrivsCheckBoxFocus {
     private final Overlay mOverlay = new Overlay();
     private final ValueAnimator mAnim = ValueAnimator.ofFloat(0, 0.8f);
 
-    private boolean mDrawerOpen = true;
-
     private AnimationFocus() {
       if (mDrawerLayout.isOpen()) {
         mDrawerListener.onDrawerOpened(null);
@@ -95,12 +93,6 @@ public class PrivsCheckBoxFocus {
 
         scrollToCheckBoxes();
         showOverlayDelayed();
-      }
-
-      public synchronized void onDrawerSlide(View drawerView, float slideOffset) {
-        if (drawerOpened) {
-          mDrawerOpen = false;
-        }
       }
     }
 
@@ -166,8 +158,12 @@ public class PrivsCheckBoxFocus {
 
       mAnim.addUpdateListener(
           animation -> {
-            mOverlay.alpha = (float) animation.getAnimatedValue();
-            mOverlay.invalidate();
+            if (!mDrawerLayout.isOpen()) {
+              endFocus();
+            } else {
+              mOverlay.alpha = (float) animation.getAnimatedValue();
+              mOverlay.invalidate();
+            }
           });
 
       mAnim.addListener(
@@ -187,15 +183,13 @@ public class PrivsCheckBoxFocus {
       LifecycleWatcher.addOnDestroyed(mA.mA, PrivsCheckBoxFocus.this::endFocus);
       mOverlay.setOnClickListener(v -> endFocus());
 
-      mDecorView.addView(mOverlay);
-
-      if (!mDrawerOpen) {
+      if (!mDrawerLayout.isOpen()) {
 
         endFocus();
-        return;
+      } else {
+        mDecorView.addView(mOverlay);
+        mAnim.start();
       }
-
-      mAnim.start();
     }
 
     private class Overlay extends FrameLayout {

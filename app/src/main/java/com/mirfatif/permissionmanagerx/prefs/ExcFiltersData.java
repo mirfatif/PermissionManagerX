@@ -12,7 +12,7 @@ import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.Permission;
 import com.mirfatif.permissionmanagerx.util.ApiUtils;
-import com.mirfatif.permissionmanagerx.util.SmallTextSpan;
+import com.mirfatif.permissionmanagerx.util.SmallDimMarginSpan;
 import com.mirfatif.privtasks.util.MyLog;
 import com.mirfatif.privtasks.util.bg.BgRunner;
 import java.lang.reflect.Field;
@@ -79,6 +79,8 @@ public enum ExcFiltersData {
 
       List<Pkg> excAppsTmpList = new ArrayList<>();
 
+      SpannableString ss;
+
       for (String pkgName : excApps) {
         String pkgLabel;
         try {
@@ -90,16 +92,17 @@ public enum ExcFiltersData {
         }
 
         if (pkgLabel.equals(pkgName)) {
-          excAppsTmpList.add(new Pkg(new SpannableString(pkgLabel), pkgName));
+          ss = new SpannableString(pkgLabel);
         } else {
-          SpannableString str = new SpannableString(pkgLabel + "\n" + pkgName);
-          str.setSpan(
-              new SmallTextSpan(),
+          ss = new SpannableString(pkgLabel + "\n" + pkgName);
+          ss.setSpan(
+              new SmallDimMarginSpan(),
               pkgLabel.length(),
-              str.length(),
+              ss.length(),
               Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-          excAppsTmpList.add(new Pkg(str, pkgName));
         }
+
+        excAppsTmpList.add(new Pkg(ss, pkgName));
       }
 
       excAppsTmpList.sort(Comparator.comparing(o -> o.label.toString().toUpperCase()));

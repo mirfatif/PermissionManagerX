@@ -40,13 +40,13 @@ import com.mirfatif.permissionmanagerx.fwk.FilterSettingsActivityM;
 import com.mirfatif.permissionmanagerx.fwk.LifecycleWatcher;
 import com.mirfatif.permissionmanagerx.fwk.MainActivityM;
 import com.mirfatif.permissionmanagerx.fwk.MoveUpBehavior;
-import com.mirfatif.permissionmanagerx.fwk.PackageActivityM;
 import com.mirfatif.permissionmanagerx.fwk.SettingsActivityM;
 import com.mirfatif.permissionmanagerx.help.HelpActivity;
 import com.mirfatif.permissionmanagerx.main.PackageAdapter.PkgAdapterCallback;
 import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
+import com.mirfatif.permissionmanagerx.pkg.PackageActivity;
 import com.mirfatif.permissionmanagerx.prefs.AppUpdate;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.settings.SearchSettingsFrag;
@@ -54,8 +54,10 @@ import com.mirfatif.permissionmanagerx.privs.DaemonHandler;
 import com.mirfatif.permissionmanagerx.privs.DaemonStarter;
 import com.mirfatif.permissionmanagerx.privs.NativeDaemon;
 import com.mirfatif.permissionmanagerx.util.ApiUtils;
+import com.mirfatif.permissionmanagerx.util.LocaleUtils;
 import com.mirfatif.permissionmanagerx.util.NotifUtils;
 import com.mirfatif.permissionmanagerx.util.UiUtils;
+import com.mirfatif.permissionmanagerx.util.UserUtils;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.permissionmanagerx.util.bg.LiveMinDelayParamTask;
 import com.mirfatif.permissionmanagerx.util.bg.LiveSchedParamTask;
@@ -64,7 +66,6 @@ import com.mirfatif.permissionmanagerx.util.bg.LiveTasksQueue;
 import com.mirfatif.permissionmanagerx.util.bg.LiveTasksQueueTyped;
 import com.mirfatif.privtasks.util.bg.BgRunner;
 import com.mirfatif.privtasks.util.bg.NotifyWaiter;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -94,8 +95,8 @@ public class MainActivity {
     mWindowWaiter = new NotifyWaiter(() -> mA.getWindow() == null);
   }
 
-  public static final String ACTION_SHOW_DRAWER = "com.mirfatif.pmx.action.SHOW_DRAWER";
-  public static final String EXTRA_PKG_POSITION = "com.mirfatif.pmx.extra.PKG_POSITION";
+  private static final String CLASS = MainActivity.class.getName();
+  public static final String ACTION_SHOW_DRAWER = CLASS + ".action.SHOW_DRAWER";
 
   public final DaemonStartProg mDaemonStartProg = new DaemonStartProg(this);
   final MainActivityFlavor mActFlavor = new MainActivityFlavor(this);
@@ -204,7 +205,7 @@ public class MainActivity {
   }
 
   public boolean onCreateOptionsMenu(Menu menu) {
-    if (ApiUtils.getUserId() != 0) {
+    if (UserUtils.getUserId() != 0) {
 
       return false;
     }
@@ -289,7 +290,6 @@ public class MainActivity {
     mWindowWaiter.notify(true);
   }
 
-  private static final String CLASS = MainActivity.class.getName();
   public static final String TAG_PRIVS_REQ_FOR_DAEMON = CLASS + ".PRIVS_REQ_FOR_DAEMON";
   public static final String TAG_GRANT_ROOT_OR_ADB = CLASS + ".GRANT_ROOT_OR_ADB";
   public static final String TAG_ADB_CONNECTION = CLASS + ".TAG_ADB_CONNECTION";
@@ -327,7 +327,7 @@ public class MainActivity {
   }
 
   private boolean isSecondaryUser() {
-    if (ApiUtils.getUserId() == 0) {
+    if (UserUtils.getUserId() == 0) {
       return false;
     }
 
@@ -345,9 +345,7 @@ public class MainActivity {
   private class PkgAdapterCallbackImpl implements PkgAdapterCallback {
 
     public void onClick(Package pkg) {
-      Intent intent = new Intent(App.getCxt(), PackageActivityM.class);
-      intent.putExtra(EXTRA_PKG_POSITION, PackageParser.INS.getPkgPosition(pkg));
-      mA.startActivity(intent);
+      PackageActivity.start(mA, pkg, null);
     }
 
     public void onLongClick(Package pkg) {
@@ -368,12 +366,12 @@ public class MainActivity {
     PackageParser.INS.getPkgListLive().observe(mA, this::pkgListReceived);
     PackageParser.INS.getChangedPkg().observe(mA, this::pkgChanged);
 
+    mActFlavor.setLiveDataObservers();
+
     mObserversSet = true;
 
     PackageParser.INS.updatePkgListIfChanged();
   }
-
-  private final NumberFormat mNumFmt = NumberFormat.getIntegerInstance();
 
   private void setMaxProg(int progMax) {
     if (progMax < 0) {
@@ -394,9 +392,9 @@ public class MainActivity {
 
     mB.movCont.progBar.setIndeterminate(false);
     mB.movCont.progBar.setProgress(0);
-    mB.movCont.progNowV.setText(mNumFmt.format(0));
+    mB.movCont.progNowV.setText(LocaleUtils.toLocalizedNum(0));
     mB.movCont.progBar.setMax(progMax);
-    mB.movCont.progMaxV.setText(mNumFmt.format(progMax));
+    mB.movCont.progMaxV.setText(LocaleUtils.toLocalizedNum(progMax));
 
     setBigProgVisible(false);
     setProgVisible(true);
@@ -404,7 +402,7 @@ public class MainActivity {
 
   private void setNowProg(int progNow) {
     mB.movCont.progBar.setProgress(progNow, true);
-    mB.movCont.progNowV.setText(mNumFmt.format(progNow));
+    mB.movCont.progNowV.setText(LocaleUtils.toLocalizedNum(progNow));
   }
 
   private boolean mFirstListCompleted = true;
@@ -429,7 +427,7 @@ public class MainActivity {
       mFirstListCompleted = false;
 
       LiveSchedTask.schedule(
-          mA, this::askForFeedback, 5, TimeUnit.SECONDS, false, TAG + "-FeedbackPrompt");
+          mA, this::askForFeedback, 5, TimeUnit.SECONDS, true, TAG + "-FeedbackPrompt");
 
       showAppOpsPrivsToast();
 
@@ -625,7 +623,7 @@ public class MainActivity {
     boolean showDonate = !Utils.isPsProVersion() && !Utils.isAmazonVersion();
     mB.navV.getMenu().findItem(R.id.action_donate).setVisible(showDonate);
 
-    mActFlavor.setNavMenu(mB.navV.getMenu());
+    mActFlavor.setNavMenu();
   }
 
   private void setBoxesChecked() {

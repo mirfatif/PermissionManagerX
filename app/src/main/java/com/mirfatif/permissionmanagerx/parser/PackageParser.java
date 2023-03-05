@@ -26,6 +26,7 @@ import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.DaemonHandler;
 import com.mirfatif.permissionmanagerx.privs.DaemonIface;
 import com.mirfatif.permissionmanagerx.util.ApiUtils;
+import com.mirfatif.permissionmanagerx.util.UserUtils;
 import com.mirfatif.permissionmanagerx.util.bg.LiveEvent;
 import com.mirfatif.permissionmanagerx.util.bg.UiRunner;
 import com.mirfatif.privtasks.Constants;
@@ -34,10 +35,12 @@ import com.mirfatif.privtasks.bind.MyPackageOps;
 import com.mirfatif.privtasks.bind.PermFixedFlags;
 import com.mirfatif.privtasks.util.MyLog;
 import com.mirfatif.privtasks.util.Util;
+import com.mirfatif.privtasks.util.bg.BgRunner;
 import com.mirfatif.privtasks.util.bg.RateLimitedTaskTyped;
 import com.mirfatif.privtasks.util.bg.SingleParamTask;
 import com.mirfatif.privtasks.util.bg.SingleSchedTaskExecutor;
 import com.mirfatif.privtasks.util.bg.SingleTaskExecutorTyped;
+import com.mirfatif.privtasks.util.bg.ThreadUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -56,6 +59,7 @@ public enum PackageParser {
   private final LiveEvent<Package> mChangedPkg = new LiveEvent<>(true);
   private final LiveEvent<Integer> mProgMax = new LiveEvent<>(true);
   private final LiveEvent<Integer> mProgNow = new LiveEvent<>(true);
+  private final LiveEvent<Boolean> mListInProgress = new LiveEvent<>(false);
   private final LiveEvent<Integer> mListCompleted = new LiveEvent<>(true);
 
   private final List<PackageInfo> mPkgInfoList = new ArrayList<>();
@@ -96,6 +100,8 @@ public enum PackageParser {
   }
 
   private List<Package> updatePkgListInternal() {
+    mListInProgress.postValue(true);
+
     mPkgInfoListCleaner.cancel(false);
     List<PackageInfo> pkgInfoList = buildPkgInfoList();
 
@@ -136,10 +142,12 @@ public enum PackageParser {
 
     mPkgInfoListCleaner.schedule(30, TimeUnit.SECONDS);
 
+    mListInProgress.postValue(false);
+
     return getPkgList();
   }
 
-  public boolean isUpdating() {
+  private boolean isUpdating() {
     return mPkgUpdater.hasRunningOrPendingTasks();
   }
 
@@ -182,6 +190,11 @@ public enum PackageParser {
   }
 
   private void clearPkgInfoList() {
+    if (ThreadUtils.isMainThread()) {
+      BgRunner.execute(this::clearPkgInfoList);
+      return;
+    }
+
     synchronized (mPkgInfoList) {
       mPkgInfoList.clear();
     }
@@ -201,6 +214,8 @@ public enum PackageParser {
 
       setProgress(APP_OPS_LISTS, true, false);
       AppOpsParser.INS.buildAppOpsList();
+
+      PkgParserFlavor.INS.buildRequiredData();
 
       if (SYSTEM_FIXED_FLAG != null && POLICY_FIXED_FLAG != null) {
         return;
@@ -366,6 +381,10 @@ public enum PackageParser {
     if (isFinal == PostListStatus.FINAL || (isFinal == PostListStatus.UNDEFINED && !isUpdating())) {
       mListCompleted.postValue(pkgCount, true);
     }
+  }
+
+  public LiveData<Boolean> getListInProg() {
+    return mListInProgress;
   }
 
   private static final int CREATE_LIST = -1;
@@ -717,7 +736,7 @@ public enum PackageParser {
 
     Integer flags =
         DaemonIface.INS.getPermFlags(
-            perm, pkgInfo.packageName, ApiUtils.getUserId(pkgInfo.applicationInfo.uid));
+            perm, pkgInfo.packageName, UserUtils.getUserId(pkgInfo.applicationInfo.uid));
 
     if (flags != null) {
       return flags;

@@ -116,8 +116,8 @@ public class IPrivTasksImpl extends IPrivTasks.Stub {
     return HiddenSdkConstants.getPermFixedFlags();
   }
 
-  public int getPkgCountForUid(int uid) throws RemoteException {
-    return HiddenAPIs.INS.getPackagesForUid(uid).length;
+  public String[] getPackagesForUid(int uid) throws RemoteException {
+    return HiddenAPIs.INS.getPackagesForUid(uid);
   }
 
   public List<MyPackageOps> getOpsForPackage(int uid, String pkgName, int[] ops)

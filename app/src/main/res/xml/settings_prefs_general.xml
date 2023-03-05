@@ -31,6 +31,15 @@
     app:summary="@string/pref_settings_auto_perm_ref_summary"
     app:title="@string/pref_settings_auto_perm_ref_title" />
 
+  <SwitchPreferenceCompat
+    app:defaultValue="@bool/pref_settings_show_fwk_perm_name_default"
+    app:enabled="false"
+    app:icon="@drawable/label"
+    app:key="@string/pref_settings_show_fwk_perm_name_key"
+    app:singleLineTitle="false"
+    app:summary="@string/pref_settings_show_fwk_perm_name_summary"
+    app:title="@string/pref_settings_show_fwk_perm_name_title" />
+
   <PreferenceCategory />
 
   <ListPreference

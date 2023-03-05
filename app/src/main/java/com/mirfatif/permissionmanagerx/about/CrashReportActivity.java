@@ -6,12 +6,14 @@ import android.net.Uri;
 import android.util.TypedValue;
 import android.view.View;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentActivity;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
+import com.mirfatif.permissionmanagerx.base.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.databinding.ActivityCrashReportBinding;
 import com.mirfatif.permissionmanagerx.fwk.CrashReportActivityM;
 import com.mirfatif.permissionmanagerx.util.ApiUtils;
@@ -20,6 +22,7 @@ import com.mirfatif.permissionmanagerx.util.UiUtils;
 import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.permissionmanagerx.util.bg.LiveTasksQueueTyped;
 import com.mirfatif.privtasks.util.MyLog;
+import com.mirfatif.privtasks.util.bg.BgRunner;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -54,6 +57,19 @@ public class CrashReportActivity {
     }
 
     new LiveTasksQueueTyped<>(mA, this::getFileContents).onUiWith(this::setFileContents).start();
+  }
+
+  public void onPause() {
+    if (mAskedToSendEmail) {
+      mPausedForEmailSendWaiting = true;
+    }
+  }
+
+  public void onResume() {
+    if (mAskedToSendEmail && mPausedForEmailSendWaiting) {
+      mAskedToSendEmail = mPausedForEmailSendWaiting = false;
+      askToDeleteOldFile();
+    }
   }
 
   private String getFileContents() {
@@ -143,7 +159,7 @@ public class CrashReportActivity {
     return true;
   }
 
-  private static final String URL = "https://mirfatif.com/crash-report?app=PMX";
+  private static final String URL = "https://api.mirfatif.com/crash-report?app=PMX";
 
   private static class ServerConnection implements AutoCloseable {
 
@@ -196,6 +212,8 @@ public class CrashReportActivity {
     UiUtils.showToast(R.string.thank_you);
   }
 
+  private boolean mAskedToSendEmail = false, mPausedForEmailSendWaiting = true;
+
   private void sendEmail() {
     Uri uri =
         FileProvider.getUriForFile(
@@ -212,10 +230,33 @@ public class CrashReportActivity {
 
     try {
       mA.startActivity(intent);
-      sayThankYou();
+      mAskedToSendEmail = true;
     } catch (ActivityNotFoundException e) {
       UiUtils.showToast(R.string.no_email_app_installed);
     }
+  }
+
+  private void askToDeleteOldFile() {
+    sayThankYou();
+
+    AlertDialog dialog =
+        new AlertDialog.Builder(mA)
+            .setTitle(R.string.delete_crash_report_file_title)
+            .setMessage(R.string.crash_file_delete_confirmation)
+            .setPositiveButton(android.R.string.ok, (d, w) -> BgRunner.execute(this::deleteOldFile))
+            .setNegativeButton(android.R.string.cancel, null)
+            .create();
+    AlertDialogFragment.show(mA, dialog, "DELETE_OLD_CRASH_FILE");
+  }
+
+  private void deleteOldFile() {
+    File logFile = LogUtils.getCrashLogFile();
+    if (!logFile.delete()) {
+      MyLog.e(TAG, "submit", "Failed to delete " + logFile.getAbsolutePath());
+    }
+
+    LogUtils.createCrashLogFile();
+    mA.finish();
   }
 
   public static void start(FragmentActivity act) {
