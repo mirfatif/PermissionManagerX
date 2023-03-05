@@ -22,7 +22,7 @@
     <script src="../main.js"></script>
 
     <div is="custom-div" data-custom-type="header-img" class="header">
-        <img alt="banner" class="header" src="../en/img/banner.webp" />
+        <img alt="Banner" class="header" src="../en/img/banner.webp" />
     </div>
 
     <div class="content">
@@ -49,6 +49,9 @@
                     <ul>
                         <li><a href="#perm_watcher_fails" class="no-underline"><b>为什么会启动权限监控失败？</b></a></li>
                     </ul>
+                </li>
+                <li>
+                    <a href="#perm_view" class="no-underline"><b>Permission View</b></a>
                 </li>
                 <li><a href="#wrun-integration" class="no-underline"><b>与 WhatsRunning 整合</b></a></li>
                 <li>
@@ -184,24 +187,20 @@
             <hr />
 
             <img src="../en/img/pkg.webp">
-            <ul>
+            <ol>
+                <li>左侧彩色条纹表示 <b>参考状态</b></li>
+                <li>App <b>icon</b></li>
+                <li>第一行显示软件 <b>名称</b></li>
+                <li>Second line shows package <b>name</b> and</li>
+                <li><b>UID</b></li>
+                <li>第三行 (可选) 显示软件的状态： <b>核心</b> (框架)、 <b>框架</b> 或 <b>系统</b> 应用， 同时如果应用程序是 <b>禁用</b>状态， <b>已启用</b> 和 <b>用户</b> 应用不会有显示状态</li>
+                <li>Last line shows <b>count</b> of visible out of total manifest permissions and </li>
                 <li>
-                    <p>左侧彩色条纹表示 <b>参考状态</b></p>
+                    <p>AppOps permissions.</p>
+                    <p>不可见的权限是在 <i>排除过滤器</i> 中排除的权限。</p>
                 </li>
-                <li>
-                    <p>第一行显示软件 <b>名称</b></p>
-                </li>
-                <li>
-                    <p>第二行显示软件 <b>包名</b> 和 <b>UID</b></p>
-                </li>
-                <li>
-                    <p>第三行 (可选) 显示软件的状态： <b>核心</b> (框架)、 <b>框架</b> 或 <b>系统</b> 应用， 同时如果应用程序是 <b>禁用</b>状态， <b>已启用</b> 和 <b>用户</b> 应用不会有显示状态</p>
-                </li>
-                <li>
-                    <p>最后一行显示了总清单权限和 AppOps 权限中可见的 <b>数量</b> ， 不可见的权限是在 <i>排除过滤器</i> 中排除的权限。</p>
-                    <p>如果按安装或更新时间排序，此行也会在右侧显示日期</p>
-                </li>
-            </ul>
+                <li>If sorted by install or update time, the last line also shows date or time on the right side.</li>
+            </ol>
         </div>
 
         <div class="card">
@@ -209,26 +208,19 @@
             <hr />
 
             <img src="img/perm.webp">
-            <ul>
-                <li>
-                    <p>左侧彩色条纹表示 <b>参考状态</b></p>
-                </li>
-                <li>
-                    <p>第一行显示 <b>权限名称</b></p>
-                </li>
-                <li>
-                    <p>第二行显示权限 <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">保护等级</a>: <b>普通</b>, <b>危险</b>, <b>签名</b>, <b>开发</b>, <b>特权</b>, <b>修复</b>, <b>AppOps</b> 或 <b>未知</b>。 以及 AppOps 是 <b>同包名</b> 或 <b>同UID</b>， 是 <b>额外的</b> AppOps(未在过滤设置中排除)</p>
-                </li>
-                <li>
-                    <p>第三行(例如AppOps) 显示 <b>最后使用的时间</b></p>
-                </li>
-                <li>
-                    <p>第四行(例如AppOp)，如果不符合当前设置的值，则显示被引用的值</p>
-                </li>
-                <li>
-                    <p>如果从未设置AppOps，字符：<b><i>默认</i></b> 将显示在当前设置的值下</p>
-                </li>
-            </ul>
+            <img src="img/perm2.webp">
+            <ol>
+                <li>左侧彩色条纹表示 <b>参考状态</b></li>
+                <li>Manifest permissions show a flag in the upper right corner</li>
+                <li>Permission <b>icon</b></li>
+                <li>第一行显示 <b>权限名称</b></li>
+                <li>第二行显示权限 <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">保护等级</a>: <b>普通</b>, <b>危险</b>, <b>签名</b>, <b>开发</b>, <b>特权</b>, <b>修复</b>, <b>AppOps</b> 或 <b>未知</b>。 以及 AppOps 是 <b>同包名</b> 或 <b>同UID</b>， 是 <b>额外的</b> AppOps(未在过滤设置中排除)</li>
+                <li>第三行(例如AppOps) 显示 <b>最后使用的时间</b></li>
+                <li>第四行(例如AppOp)，如果不符合当前设置的值，则显示被引用的值</li>
+                <li>Switch to change the permission state</li>
+                <li>Current state (in case of AppOp)</li>
+                <li><b><i>Default</i></b> indicates that the AppOp state has never been changed</li>
+            </ol>
         </div>
 
         <div class="card">
@@ -310,6 +302,36 @@
             </ul>
             <p id="perm_watcher_fails"><b>为什么会启动权限监控失败？</b></p>
             <p>您用的是 ADB 激活的吗？ 一些设备制造商从 <i>Shell</i> 中删除了权限 <i>OBSERVE_GRANT_REVOKE_PERMISSIONS</i> 或 <i>SET_ACTIVITY_WATCHER</i>， 如果你的情况如此，我们很抱歉。 我们无法修复该问题。 在这些设备上，权限监控只能使用 root 功能。 查看 <a href="#adb_help">使用权限管理 X 与 ADB</a> 开始处的注释。</p>
+        </div>
+
+        <div class="card">
+            <h2 id="perm_view">Permission View (Pro only)</h2>
+            <hr />
+
+            <p>Permission View shows a list of all permissions with a count of how many apps are using these permissions.</p>
+
+            <img src="../en/img/perm_view.webp" />
+            <ol>
+                <li>Permission name</li>
+                <li>Protection level</li>
+                <li>App count</li>
+                <li>Granted permission count out of total permission count. The latter can be bigger than the app count because some apps may use an AppOp permission twice (in <a href="#faq18">UID mode</a>).</li>
+            </ol>
+
+            <p>When you select a permission, a list of apps using this permission shows up:</p>
+
+            <img class="small" src="../en/img/perm_view2.webp" />
+            <ol>
+                <li>Permission name</li>
+                <li>Permission description</li>
+                <li>Flag indicating that the permission is granted</li>
+                <li>App icon</li>
+                <li>应用名称</li>
+                <li>包名</li>
+                <li>应用 UID</li>
+            </ol>
+
+            <p>When you select an app, the <a href="#permissions">permission list</a> opens where you can change the permission state.</p>
         </div>
 
         <div class="card">
@@ -675,7 +697,9 @@
 
             <p id="faq20" class="high-bottom"><b>为何扫描应用时间很长？</b></p>
             <p>权限管理 X 会获取大量应用信息。 包括应用名称、包名、图标、UID及其状态 (框架、系统、用户、禁用)。 对于清单和应用权限，信息包括权限名称、状态 (授予、撤销、允许、忽略、拒绝、前台允许、默认), <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">保护级别</a> (普通、 危险、 签名、 开发、 特权、固定、 AppOp) 和 AppOp的最后访问时间。 然后将每个权限的设定值与参考值进行比较，并决定参考状态(红色、绿色或橙色)。 在扫描每个应用的所有权限后，在应用信息中也显示可见相对于全部权限和应用参考状态的计数。</p>
-            <p>You can exclude as much information as you can in <i>Exclusion Filters</i> to speed up the scan process. 速度还取决于您的设备备份量的 CPU 和 RAM 。 在 UI 占用较多的ROM (如MIUI) 上比较慢。 当然，ADB通常比root慢.</p>
+            <p>速度还取决于您的设备备份量的 CPU 和 RAM 。 在 UI 占用较多的ROM (如MIUI) 上比较慢。 当然，ADB通常比root慢.</p>
+            <p>You can exclude as much information as you can in <i>Exclusion Filters</i> to speed up the scan process.</p>
+            <p>Another thing that may speedup the loading of app list is to cleanup the references database in <i>Advanced Settings</i>.</p>
 
             <hr class="dim" />
 
@@ -730,7 +754,26 @@
             <hr class="dim" />
 
             <p id="faq25" class="high-bottom"><b>为什么权限管理 X 需要互联网权限？</b></p>
-            <p>正如应用描述中明确指出的那样：需要 <code>android.permission.INTERNET</code> 权限才能通过网络使用 网络ADB 设备唯一的网络连接是检查更新(您可以在应用设置中禁用)，并获取帮助内容(本网页)。 专业版还需要互联网连接才能验证许可证。</p>
+            <p>The standalone <a href="https://mirfatif.github.io/mirfatif/getpro">Pro</a> version requires internet connection for license verification. The other two <a href="#versions">versions</a> - Free and Play Store Pro - can work completely offline.</p>
+
+            <p><b>Optional use</b> of <code>android.permission.INTERNET</code> permission:</p>
+            <ul>
+                <li>检查更新. You can disable this in app settings.</li>
+                <li>Fetch help contents of this webpage that you view in drawer -> Help.</li>
+            </ul>
+
+            <p><b>Local (on-device) use</b> of <code>android.permission.INTERNET</code> permission:</p>
+            <p>Android does not allow apps to create network sockets without having the <a href="https://developer.android.com/reference/android/Manifest.permission#INTERNET">INTERNET</a> permission even if they are meant to be used only locally and not for an internet connection. PMX has two uses of local (on-device) connections (the ability to create <code>localhost</code> sockets at <code>127.0.0.1</code>) for Inter Process Communication (IPC):</p>
+
+            <ul>
+                <li>PMX starts a background process with root / ADB privileges and talks to that process over network socket. After the initial handshake, both processes start talking over Binder. We have no better way to do this because Android doesn't allow apps to talk over UNIX domain sockets either.</li>
+                <li>If your device is not rooted and you <a href="#adb_help">use PMX with ADB</a>, then connecting to <code>adbd</code> requires internet permissions. See <a href="#faq27">Is PMX spying on me using ADB over network?</a>.</li>
+            </ul>
+
+            <p>So if the app is unable to create or use local network sockets, it will fail. And if you want to stop PMX from using internet, it must not stop the app from talking to on-device processes over <a href="https://superuser.com/questions/263142">loopback interface for IPC</a>. This is usually the case with <code>iptables</code>-based firewalls like AFWall+ and VPN based firewalls like NetGuard. But some ROMs have a built-in feature to disallow network access:</p>
+            <img class="small" src="../en/img/allow_network_access.webp" />
+            <p>This not only prevents the app from using internet but also disables its ability to create loopback sockets for IPC. So PMX won't be able to get root / ADB privileges if this permission is denied.</p>
+
 
             <hr class="dim" />
 
