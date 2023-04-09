@@ -74,22 +74,23 @@
                     <li><a href="#faq36" class="no-underline">Why do I need to use PMX?</a></li>
                     <li><a href="#faq1" class="no-underline">Why PMX requires root or ADB access?</a></li>
                     <li><a href="#faq33" class="no-underline">My device isn't rooted. How can I use PMX?</a></li>
-                    <li><a href="#faq2" class="no-underline">How does PMX change other apps permissions?</a></li>
                     <li><a href="#faq4" class="no-underline">What are hidden APIs?</a></li>
+                    <li><a href="#faq2" class="no-underline">How does PMX change other apps permissions?</a></li>
+                    <li><a href="#faq34" class="no-underline">Do the permissions remain changed after ADB is turned off, or root is denied, or PMX is uninstalled?</a></li>
+                    <li><a href="#faq15" class="no-underline">Why can't I change XYZ permission?</a></li>
                     <li><a href="#faq37" class="no-underline">I've changed a permission but it's not working. Why?</a></li>
                     <li><a href="#faq3" class="no-underline">Why do some AppOps cannot be changed?</a></li>
-                    <li><a href="#faq34" class="no-underline">Do the permissions remain changed after ADB is turned off, or root is denied, or PMX is uninstalled?</a></li>
-                    <li><a href="#faq5" class="no-underline">What should I select for Privileged Daemon UID in Advanced Settings? System or ADB?</a></li>
                     <li><a href="#faq6" class="no-underline">Why don't I see XYZ app in packages list?</a></li>
                     <li><a href="#faq7" class="no-underline">Why don't I see XYZ permission in ABC package?</a></li>
                     <li><a href="#faq8" class="no-underline">Why don't I see XYZ AppOp in ABC package?</a></li>
+                    <li><a href="#faq5" class="no-underline">What should I select for Privileged Daemon UID in Advanced Settings? System or ADB?</a></li>
                     <li><a href="#faq9" class="no-underline">What are <i>invalid permissions</i> in Exclusion Filters?</a></li>
                     <li><a href="#faq10" class="no-underline">What are <i>extra AppOps</i> in Exclusion Filters?</a></li>
                     <li><a href="#faq11" class="no-underline">What are different AppOp modes and which one should I use?</a></li>
                     <li><a href="#faq12" class="no-underline">What's the difference between <i>Ignore</i> and <i>Deny</i> AppOp modes?</a></li>
+                    <li><a href="#faq41" class="no-underline">Why cannot I set AppOp mode to foreground?</a></li>
                     <li><a href="#faq13" class="no-underline">What does READ_MEDIA_AUDIO permission do?</a></li>
                     <li><a href="#faq14" class="no-underline">What does WAKE_LOCK permission do?</a></li>
-                    <li><a href="#faq15" class="no-underline">Why can't I change XYZ permission?</a></li>
                     <li><a href="#faq16" class="no-underline">How can I change INTERNET permission?</a></li>
                     <li><a href="#faq40" class="no-underline">What are <i>Fixed</i> permissions?</a></li>
                     <li><a href="#faq17" class="no-underline">Can I change <i>System-Fixed</i> permissions?</a></li>
@@ -548,23 +549,36 @@
 
             <hr class="dim" />
 
-            <p id="faq2" class="high-bottom"><b>How does PMX change other apps permissions?</b></p>
-            <p>PMX itself cannot and does not grant or revoke other apps' permissions. In fact no third party app is privileged to do that. It's the Android OS which controls apps' permissions. PMX just sends a request to the Android framework to change a permission's state. Now it's entirely up to Android how much it honors our request. Not all permissions are changeable. And if you are not able to change a permission's state using PMX, you won't be able to change it in any other way either.</p>
-
-            <hr class="dim" />
-
             <p id="faq4" class="high-bottom"><b>What are hidden APIs?</b></p>
             <p>The core functionality of PMX revolves around <b>Hidden APIs</b>. These are the capabilities required to perform tasks (like granting / revoking permissions) which can only be performed by privileged system apps. So these capabilities aren't available to normal user apps. But PMX uses these capabilities with the help of root or ADB. Usually a user should not be concerned about this.</p>
             <p>If you are interested in underlying details please read <a href="https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces">here</a>.</p>
 
             <hr class="dim" />
 
+            <p id="faq2" class="high-bottom"><b>How does PMX change other apps permissions?</b></p>
+            <p>PMX itself cannot and does not grant or revoke other apps' permissions. In fact no third party app is privileged to do that. It's the Android OS which controls apps' permissions. PMX just sends a request to the Android framework to change a permission's state. Now it's entirely up to Android how much it honors our request. Not all permissions are changeable. And if you are not able to change a permission's state using PMX, you won't be able to change it in any other way either.</p>
+
+            <hr class="dim" />
+
+            <p id="faq34" class="high-bottom"><b>Do the permissions remain changed after ADB is turned off, or root is denied, or PMX is uninstalled?</b></p>
+            <p>PMX itself cannot and does not grant or revoke other apps' permissions. In fact no third party app is privileged to do that. It's the Android OS which controls apps' permissions. PMX just sends a request to the Android framework to change a permission's state.</p>
+            <p>So once a permission is changed, it makes no difference if you uninstall PMX or drop its privileges. The permission remains in whatever state it is, unless changed again by you or the operating system.</p>
+
+            <hr class="dim" />
+
+            <p id="faq15" class="high-bottom"><b>Why can't I change XYZ permission?</b></p>
+            <p>Manifest permissions with only <i>Dangerous</i> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a> (and a few others) are changeable. AppOps not dependent on some other AppOp are changeable. That's how Android works, we can't change the behavior. See <a href="#perms_types">Manifest permissions and AppOps</a>.</p>
+            <p>Additionally, PMX protects some critical framework apps and permissions; changing them might brick the device. See the <a href="#faq17">related question</a>.</p>
+
+            <hr class="dim" />
+
             <p id="faq37" class="high-bottom"><b>I've changed a permission but it's not working. Why?</b></p>
-            <p>After changing a permission successfully, if you are not getting the desired results, it's the Android operating system to be blamed. Please see:</p>
+            <p>After changing a permission successfully, if you are not getting the desired results i.e. it reverts back immediately or after some hours or days, it's the Android operating system to be blamed. Please see:</p>
             <ul>
                 <li><a href="#faq2">How does PMX change other apps permissions?</a></li>
                 <li><a href="#faq3">Why do some AppOps cannot be changed?</a></li>
             </ul>
+            <p>As you use apps, Android may change their permissions. And unfortunately we do not have a way to prevent this. <a href="#perm_watcher">Permission Watcher</a> and <a href="#scheduled_checker">Scheduled Checker</a> may help in this regard.</p>
 
             <hr class="dim" />
 
@@ -577,19 +591,11 @@
                 <li>Some OEM ROMs behave weird when it comes to AppOps. We do not know exactly what changes your OEM has made to the stock AOSP code. That's why the statement on Github and Play Store: <i>"The app is tested on stock Android 7-11. Some highly customized ROMs may behave unexpectedly."</i></li>
             </ul>
             <p>Actually there come many more explanations if we dig every app and permission individually (which doesn't sound practical). As stated above, PMX doesn't change other apps' permissions on its own. So even if for some unknown reason Android doesn't change a permission, or reverts it back immediately, there's nothing we can do to force it because these are the limitations at Android end. Rather, I should say this is how Android works.</p>
-            <p>Related: <a href="#faq11">What are different AppOp modes and which one should I use?</a></p>
-
-            <hr class="dim" />
-
-            <p id="faq34" class="high-bottom"><b>Do the permissions remain changed after ADB is turned off, or root is denied, or PMX is uninstalled?</b></p>
-            <p>PMX itself cannot and does not grant or revoke other apps' permissions. In fact no third party app is privileged to do that. It's the Android OS which controls apps' permissions. PMX just sends a request to the Android framework to change a permission's state.</p>
-            <p>So once a permission is changed, it makes no difference if you uninstall PMX or drop its privileges. The permission remains in whatever state it is, unless changed again by you or the operating system.</p>
-
-            <hr class="dim" />
-
-            <p id="faq5" class="high-bottom"><b>What should I select for Privileged Daemon UID in Advanced Settings? System or ADB?</b></p>
-            <p>It matters only if you are using root, or ADBD on your device is running with root (which is not the case with the final user devices).</p>
-            <p>Preferably use <b>System</b> (UID 1000) as it allows more privileges than <b>ADB</b> (UID 2000). E.g. changing <i>"System-Fixed"</i> permissions is possible only when running as system.</p>
+            <p>Related:</p>
+            <ul>
+                <li><a href="#faq11">What are different AppOp modes and which one should I use?</a></li>
+                <li><a href="#faq41">Why cannot I set AppOp mode to foreground?</a></li>
+            </ul>
 
             <hr class="dim" />
 
@@ -608,6 +614,12 @@
             <p>But if you want to see the XYZ AppOp for all apps, go to <b>Exclusion Filters</b> -> <b>Extra AppOps, never excluded</b> and check XYZ AppOp in the list.</p>
             <p>For instance, write <i>_CLIPBOARD</i> in search box (with <i>Deep Search</i> box checked) and you'll get all apps which used (or tried to use) <i>READ_CLIPBOARD</i> or <i>WRITE_CLIPBOARD</i> permission. Timestamp is also shown (but not for all AppOps).</p>
             <p>So if the app you are concerned about isn't in the search results, check both AppOps in the <i>Exclusion Filters</i> list mentioned above.</p>
+
+            <hr class="dim" />
+
+            <p id="faq5" class="high-bottom"><b>What should I select for Privileged Daemon UID in Advanced Settings? System or ADB?</b></p>
+            <p>It matters only if you are using root, or ADBD on your device is running with root (which is not the case with the final user devices).</p>
+            <p>Preferably use <b>System</b> (UID 1000) as it allows more privileges than <b>ADB</b> (UID 2000). E.g. changing <i>"System-Fixed"</i> permissions is possible only when running as system.</p>
 
             <hr class="dim" />
 
@@ -634,6 +646,21 @@
 
             <hr class="dim" />
 
+            <p id="faq41" class="high-bottom"><b>Why cannot I set AppOp mode to foreground?</b></p>
+            <p>Foreground mode cannot be set for all AppOps. Even when set, it may not give expected results.</p>
+            <p>Related:</p>
+            <ul>
+                <li><a href="#faq11">What are different AppOp modes and which one should I use?</a></li>
+                <li><a href="#faq3">Why do some AppOps cannot be changed?</a></li>
+            </ul>
+            <p>Please note that the permission mode "Allow only while using the app" does not alway set the AppOp mode to "Foreground":</p>
+            <img class="small" src="../en/img/fg_and_one_time_perm_modes.webp" />
+            <p>Normally we see only two states for a manifest permission: granted and revoked. But Android uses <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/content/pm/PackageManager.java#4655">flags</a> to split these two states into many sub-states. For some permissions the same phenomenon is used to achieve the "grant only when the app is visible" behavior. AppOp permission is not used in this case.</p>
+            <p>For more details see official documentation of <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/permission/Permissions.md#background-access">background access</a> and <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/app/AppOps.md#foreground">foreground access</a>.</p>
+            <p>For simplicity, PMX does not watch permission flags at the moment. But in future an option might be added to also track changes to permission flags even if granted / revoked mode remains unchanged.</p>
+
+            <hr class="dim" />
+
             <p id="faq13" class="high-bottom"><b>What does READ_MEDIA_AUDIO permission do?</b></p>
             <p>READ_MEDIA_[AUDIO|VIDEO|IMAGES] are recent addition to AppOps list, added in Android 10 (IIRC) as a part of Android's <i>Scoped Storage</i> implementation. Source code <a href="https://cs.android.com/android/platform/superproject/+/android-11.0.0_r1:frameworks/base/core/java/android/app/AppOpsManager.java;l=1065">states</a>: <i>Read media of audio type</i>. In simple terms it controls apps (which use <a href="https://developer.android.com/training/data-storage/shared/media">MediaStore</a>) access to audio files in external shared storage.</p>
 
@@ -641,12 +668,6 @@
 
             <p id="faq14" class="high-bottom"><b>What does WAKE_LOCK permission do?</b></p>
             <p>Apps hold wakelock to keep the device awake i.e. not entering <a href="https://developer.android.com/training/monitoring-device-state/doze-standby#understand_doze">Doze mode</a>.</p>
-
-            <hr class="dim" />
-
-            <p id="faq15" class="high-bottom"><b>Why can't I change XYZ permission?</b></p>
-            <p>Manifest permissions with only <i>Dangerous</i> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a> (and a few others) are changeable. AppOps not dependent on some other AppOp are changeable. That's how Android works, we can't change the behavior. See <a href="#perms_types">Manifest permissions and AppOps</a>.</p>
-            <p>Additionally, PMX protects some critical framework apps and permissions; changing them might brick the device. See the <a href="#faq17">related question</a>.</p>
 
             <hr class="dim" />
 
@@ -673,10 +694,12 @@
             <hr class="dim" />
 
             <p id="faq39" class="high-bottom"><b>Can I control Android's "Remove permissions if app isn't used" feature from PMX?</b></p>
-            <p>Yes. This feature is available since <a href="https://developer.android.com/about/versions/11/privacy/permissions#auto-reset">Android 11</a>. It's also labeled as "Pause app activity if unused".</p>
+            <p>Yes. This feature is available since <a href="https://developer.android.com/about/versions/11/privacy/permissions#auto-reset">Android 11</a>. It's also labeled as "Pause app activity if unused" on some devices.</p>
+            <img class="small" src="../en/img/remove_unused_perms.webp" />
+            <p>To change this option from PMX:</p>
             <ul>
                 <li>Go to <i>Exclusion Filters</i> -> <i>Extra AppOps list</i> and check "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>".</li>
-                <li>Back on the main screen, type "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>" in the top search bar.</li>
+                <li>Back on the main screen, type "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>" in the top search bar. Make sure that deep search is enabled in search settings.</li>
                 <li>Set the mode <i>Allow</i> or <i>Ignore</i> for whichever apps you want.</li>
             </ul>
 
@@ -704,8 +727,9 @@
             <hr class="dim" />
 
             <p id="faq21" class="high-bottom"><b>Is there a complete list of all permissions available with explanation?</b></p>
-            <p>There's no complete list of permissions with description, at least in my knowledge. For some manifest permissions there is a brief description available which is shown when you tap a permission name in PMX app. For AppOps there's no description provided in Android. But the Pro version of PMX shows description for some AppOps too.</p>
-            <p>There are third part resources like <a href="https://android.izzysoft.de/applists.php?topic=perms">this one</a> by Izzy. Android's <a href="https://developer.android.com">official developer site</a> and <a href="https://cs.android.com">source code</a> are also good sources for learning. With every new Android release some new permissions are added, and some also get obsolete. Also, not all permissions are needed to be taken care of by every user.</p>
+            <p>There's no complete list of permissions with description, at least in my knowledge. PMX Pro version shows a brief description of common manifest and AppOp permissions.</p>
+            <p>There are third party resources like <a href="https://android.izzysoft.de/applists.php?topic=perms">this one</a> by Izzy. Android's <a href="https://developer.android.com">official developer site</a> and <a href="https://cs.android.com">source code</a> are also good sources for learning.</p>
+            <p>With every new Android release some new permissions are added, and some also get obsolete. Also, not all permissions are needed to be taken care of by every user.</p>
 
             <hr class="dim" />
 
@@ -722,7 +746,7 @@
             <hr class="dim" />
 
             <p id="faq30" class="high-bottom"><b>Are you going to add Shizuku support to PMX?</b></p>
-            <p>No. It's not currently planned.</p>
+            <p>No. Shizuku is not supported. It adds unnecessary design complexity. And we lose the freedom to develop our app independently without heavily relying on an additional third party app. PMX natively supports root and <a href="#adb_help">ADB</a>.</p>
 
             <hr class="dim" />
 

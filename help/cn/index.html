@@ -74,22 +74,23 @@
                     <li><a href="#faq36" class="no-underline">-为何需要使用权限管理X？</a></li>
                     <li><a href="#faq1" class="no-underline">为什么权限管理 X 需要 Root 或 ADB 权限？</a></li>
                     <li><a href="#faq33" class="no-underline">设备尚未Root， 如何使用权限管理 X？</a></li>
-                    <li><a href="#faq2" class="no-underline">权限管理 X 是如何修改其他应用的权限的？</a></li>
                     <li><a href="#faq4" class="no-underline">What are hidden APIs?</a></li>
+                    <li><a href="#faq2" class="no-underline">权限管理 X 是如何修改其他应用的权限的？</a></li>
+                    <li><a href="#faq34" class="no-underline">在关闭 ADB、拒绝 Root 权限或卸载权限管理 X 后，之前修改过的权限是否仍然有效？</a></li>
+                    <li><a href="#faq15" class="no-underline">为什么不能更改某些权限？</a></li>
                     <li><a href="#faq37" class="no-underline">为什么修改了对应权限但没有生效 ？</a></li>
                     <li><a href="#faq3" class="no-underline">Why do some AppOps cannot be changed?</a></li>
-                    <li><a href="#faq34" class="no-underline">在关闭 ADB、拒绝 Root 权限或卸载权限管理 X 后，之前修改过的权限是否仍然有效？</a></li>
-                    <li><a href="#faq5" class="no-underline">我应该在高级设置中选择哪个特权守护进程 UID ？ 系统还是ADB？</a></li>
                     <li><a href="#faq6" class="no-underline">为什么我在应用列表中看不到某些应用？</a></li>
                     <li><a href="#faq7" class="no-underline">为什么在某些应用中看不到部分权限？</a></li>
                     <li><a href="#faq8" class="no-underline">为什么在某些应用中看不到部分AppOps 权限？</a></li>
+                    <li><a href="#faq5" class="no-underline">我应该在高级设置中选择哪个特权守护进程 UID ？ 系统还是ADB？</a></li>
                     <li><a href="#faq9" class="no-underline">过滤列表中的<i>无效的权限</i>是什么？</a></li>
                     <li><a href="#faq10" class="no-underline">过滤列表中<i>额外的AppOps</i>是什么？</a></li>
                     <li><a href="#faq11" class="no-underline">什么是不同的 AppOps 模式，我应该使用哪些模式？</a></li>
                     <li><a href="#faq12" class="no-underline"><i>忽略</i> 和 <i>拒绝</i> AppOps 模式之间有什么区别？</a></li>
+                    <li><a href="#faq41" class="no-underline">Why cannot I set AppOp mode to foreground?</a></li>
                     <li><a href="#faq13" class="no-underline">READ_MEDIA_AUDIO 权限是什么？</a></li>
                     <li><a href="#faq14" class="no-underline">WAKE_LOCK 权限是什么？</a></li>
-                    <li><a href="#faq15" class="no-underline">为什么不能更改某些权限？</a></li>
                     <li><a href="#faq16" class="no-underline">如何修改 INTERNET 权限？</a></li>
                     <li><a href="#faq40" class="no-underline">What are <i>Fixed</i> permissions?</a></li>
                     <li><a href="#faq17" class="no-underline">我能更改 <i>System-Fixed</i> 权限吗？</a></li>
@@ -548,23 +549,36 @@
 
             <hr class="dim" />
 
-            <p id="faq2" class="high-bottom"><b>权限管理 X 是如何修改其他应用的权限的？</b></p>
-            <p>权限管理 X 本身不能、也不会授予或撤销其他应用的权限。 事实上，没有第三方应用程序有权这样做。 本应用只能控制应用权限。 本软件只是发送请求到 Android 框架以更改权限状态。 操作能否成功完全取决于Android系统能否满足我们的请求。 并非所有权限都可以更改。 如果您无法使用 权限管理 X 更改权限状态，您也将无法以任何其他方式更改它。</p>
-
-            <hr class="dim" />
-
             <p id="faq4" class="high-bottom"><b>What are hidden APIs?</b></p>
             <p>权限管理 X 的核心功能围绕 <b>隐藏API</b>。 这些是执行操作所需的能力(如授予/撤销权限)，而这些操作只能由特权系统应用（privileged system apps）来执行。 所以这些功能不适用于普通用户应用。 但权限管理 X 在 Root 或 ADB 的帮助下使用这些能力。 通常，用户不应考虑该功能。</p>
             <p>如果您对基本细节感兴趣，请参阅 <a href="https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces">此文档</a>。</p>
 
             <hr class="dim" />
 
+            <p id="faq2" class="high-bottom"><b>权限管理 X 是如何修改其他应用的权限的？</b></p>
+            <p>权限管理 X 本身不能、也不会授予或撤销其他应用的权限。 事实上，没有第三方应用程序有权这样做。 本应用只能控制应用权限。 本软件只是发送请求到 Android 框架以更改权限状态。 操作能否成功完全取决于Android系统能否满足我们的请求。 并非所有权限都可以更改。 如果您无法使用 权限管理 X 更改权限状态，您也将无法以任何其他方式更改它。</p>
+
+            <hr class="dim" />
+
+            <p id="faq34" class="high-bottom"><b>在关闭 ADB、拒绝 Root 权限或卸载权限管理 X 后，之前修改过的权限是否仍然有效？</b></p>
+            <p>权限管理 X 本身不能、也不会授予或撤销其他应用的权限。 事实上，没有第三方应用程序有权这样做。 本应用只能控制应用权限。 本软件只是发送请求到 Android 框架以更改权限状态。</p>
+            <p>因此，一旦权限被修改，即使你卸载本软件或撤销本软件的权限，也不会对被修改过的权限造成任何影响。 除非您或Android系统再次修改，否则该权限将保持在您所修改的状态。</p>
+
+            <hr class="dim" />
+
+            <p id="faq15" class="high-bottom"><b>为什么不能更改某些权限？</b></p>
+            <p>仅有 <i>危险</i> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">保护级别</a> (以及其他一些级别) 的清单权限是可以更改的。 不依赖其他AppOps的AppOps是可以更改的。 这就是Android的工作方式，我们不能改变其行为。 相关: <a href="#perms_types">清单权限和 AppOps</a>。</p>
+            <p>此外，权限管理 X 会保护一些关键的框架应用和权限；修改它们可能会使设备变砖。 查看 <a href="#faq17">相关问题</a>。</p>
+
+            <hr class="dim" />
+
             <p id="faq37" class="high-bottom"><b>为什么修改了对应权限但没有生效 ？</b></p>
-            <p>成功更改权限后，如果您没有得到期望的结果，则基本是系统问题。 Please see:</p>
+            <p>After changing a permission successfully, if you are not getting the desired results i.e. it reverts back immediately or after some hours or days, it's the Android operating system to be blamed. Please see:</p>
             <ul>
                 <li><a href="#faq2">权限管理 X 是如何修改其他应用的权限的？</a></li>
                 <li><a href="#faq3">Why do some AppOps cannot be changed?</a></li>
             </ul>
+            <p>As you use apps, Android may change their permissions. And unfortunately we do not have a way to prevent this. <a href="#perm_watcher">Permission Watcher</a> and <a href="#scheduled_checker">Scheduled Checker</a> may help in this regard.</p>
 
             <hr class="dim" />
 
@@ -577,19 +591,11 @@
                 <li>Some OEM ROMs behave weird when it comes to AppOps. 我们不知道您的 OEM 对AOSP代码做了什么修改。 这就是为什么Github 和 Play Store上是这样描述的： <i>"应用程序在原生 Android 7-11上测试可用， 一些高度定制的ROM可能无法使用“</i></li>
             </ul>
             <p>事实上，如果我们个别挖掘每个应用和权限（这种情况不实际），就会有更多的解释。 As stated above, PMX doesn't change other apps' permissions on its own. So even if for some unknown reason Android doesn't change a permission, or reverts it back immediately, there's nothing we can do to force it because these are the limitations at Android end. 相反，我应该说这是Android系统的工作方式。</p>
-            <p>相关内容: <a href="#faq11">不同的 AppOps模式有何区别，我又应怎样使用它？</a></p>
-
-            <hr class="dim" />
-
-            <p id="faq34" class="high-bottom"><b>在关闭 ADB、拒绝 Root 权限或卸载权限管理 X 后，之前修改过的权限是否仍然有效？</b></p>
-            <p>权限管理 X 本身不能、也不会授予或撤销其他应用的权限。 事实上，没有第三方应用程序有权这样做。 本应用只能控制应用权限。 本软件只是发送请求到 Android 框架以更改权限状态。</p>
-            <p>因此，一旦权限被修改，即使你卸载本软件或撤销本软件的权限，也不会对被修改过的权限造成任何影响。 除非您或Android系统再次修改，否则该权限将保持在您所修改的状态。</p>
-
-            <hr class="dim" />
-
-            <p id="faq5" class="high-bottom"><b>我应该在高级设置中选择哪个特权守护进程 UID ？ 系统还是ADB？</b></p>
-            <p>只有当你正在使用 root 权限时它才很重要， 或者您设备上的 ADBD 正在以 root 运行(最终用户设备的情况不是如此)。</p>
-            <p>最好使用 <b>系统</b> (UID 1000) ，因为它优先级比 <b>ADB</b> (UID 2000) 更高。 例如， 更改 <i>"System-Fixed"</i> 权限只有在系统运行时才可用。</p>
+            <p>Related:</p>
+            <ul>
+                <li><a href="#faq11">什么是不同的 AppOps 模式，我应该使用哪些模式？</a></li>
+                <li><a href="#faq41">Why cannot I set AppOp mode to foreground?</a></li>
+            </ul>
 
             <hr class="dim" />
 
@@ -608,6 +614,12 @@
             <p>但如果您想要看到所有应用的 AppOps 权限，前往 <b>排除筛选</b> -> <b>额外应用权限, 从不排除</b> 并在列表中检查该 AppOps 是否存在。</p>
             <p>例如， 在搜索框中输入 <i>_CLIPBOARD</i> ( <i>深度搜索</i>)，你会得到所有使用过(或试图使用) <i>READ_CLIPBOARD</i> 或 <i>WRITE_CLIPBOARD</i> 权限的应用， 时间戳也显会示(但不显示所有AppOps)。</p>
             <p>因此，如果您查找的应用不在搜索结果中，请在上面提到的 <i>排除过滤</i> 列表中检查AppOps 。</p>
+
+            <hr class="dim" />
+
+            <p id="faq5" class="high-bottom"><b>我应该在高级设置中选择哪个特权守护进程 UID ？ 系统还是ADB？</b></p>
+            <p>只有当你正在使用 root 权限时它才很重要， 或者您设备上的 ADBD 正在以 root 运行(最终用户设备的情况不是如此)。</p>
+            <p>最好使用 <b>系统</b> (UID 1000) ，因为它优先级比 <b>ADB</b> (UID 2000) 更高。 例如， 更改 <i>"System-Fixed"</i> 权限只有在系统运行时才可用。</p>
 
             <hr class="dim" />
 
@@ -634,6 +646,21 @@
 
             <hr class="dim" />
 
+            <p id="faq41" class="high-bottom"><b>Why cannot I set AppOp mode to foreground?</b></p>
+            <p>Foreground mode cannot be set for all AppOps. Even when set, it may not give expected results.</p>
+            <p>Related:</p>
+            <ul>
+                <li><a href="#faq11">什么是不同的 AppOps 模式，我应该使用哪些模式？</a></li>
+                <li><a href="#faq3">Why do some AppOps cannot be changed?</a></li>
+            </ul>
+            <p>Please note that the permission mode "Allow only while using the app" does not alway set the AppOp mode to "Foreground":</p>
+            <img class="small" src="../en/img/fg_and_one_time_perm_modes.webp" />
+            <p>Normally we see only two states for a manifest permission: granted and revoked. But Android uses <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/content/pm/PackageManager.java#4655">flags</a> to split these two states into many sub-states. For some permissions the same phenomenon is used to achieve the "grant only when the app is visible" behavior. AppOp permission is not used in this case.</p>
+            <p>For more details see official documentation of <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/permission/Permissions.md#background-access">background access</a> and <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/app/AppOps.md#foreground">foreground access</a>.</p>
+            <p>For simplicity, PMX does not watch permission flags at the moment. But in future an option might be added to also track changes to permission flags even if granted / revoked mode remains unchanged.</p>
+
+            <hr class="dim" />
+
             <p id="faq13" class="high-bottom"><b>READ_MEDIA_AUDIO 权限是什么？</b></p>
             <p>READ_MEDIA_[AUDIO|VIDEO|IMAGES] 是最近添加到 Android 10 (IIRC) 的 AppOps 列表中，作为Android的 <i>扩展存储</i> 实现的一部分。 源代码 <a href="https://cs.android.com/android/platform/superproject/+/android-11.0.0_r1:frameworks/base/core/java/android/app/AppOpsManager.java;l=1065">表明</a>: 该权限用于 <i>读取音频类型</i> 的媒体。 简单地说，它控制应用(使用 <a href="https://developer.android.com/training/data-storage/shared/media">MediaStore</a>) 访问外部共享存储中的音频文件。</p>
 
@@ -641,12 +668,6 @@
 
             <p id="faq14" class="high-bottom"><b>WAKE_LOCK 权限是什么？</b></p>
             <p>应用保持唤醒设备，即不进入 <a href="https://developer.android.com/training/monitoring-device-state/doze-standby#understand_doze">Doze模式</a>。</p>
-
-            <hr class="dim" />
-
-            <p id="faq15" class="high-bottom"><b>为什么不能更改某些权限？</b></p>
-            <p>仅有 <i>危险</i> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">保护级别</a> (以及其他一些级别) 的清单权限是可以更改的。 不依赖其他AppOps的AppOps是可以更改的。 这就是Android的工作方式，我们不能改变其行为。 相关: <a href="#perms_types">清单权限和 AppOps</a>。</p>
-            <p>此外，权限管理 X 会保护一些关键的框架应用和权限；修改它们可能会使设备变砖。 查看 <a href="#faq17">相关问题</a>。</p>
 
             <hr class="dim" />
 
@@ -673,10 +694,12 @@
             <hr class="dim" />
 
             <p id="faq39" class="high-bottom"><b>可以在权限管理 X 中控制“长期未使用时撤消权限”吗？</b></p>
-            <p>可以， This feature is available since <a href="https://developer.android.com/about/versions/11/privacy/permissions#auto-reset">Android 11</a>. It's also labeled as "Pause app activity if unused".</p>
+            <p>可以， This feature is available since <a href="https://developer.android.com/about/versions/11/privacy/permissions#auto-reset">Android 11</a>. It's also labeled as "Pause app activity if unused" on some devices.</p>
+            <img class="small" src="../en/img/remove_unused_perms.webp" />
+            <p>To change this option from PMX:</p>
             <ul>
                 <li>前往 <i>排除过滤</i> -> <i>额外AppOps 列表</i> 并检查 "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>".</li>
-                <li>返回主屏幕，在顶部搜索栏中输入 "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>" 。</li>
+                <li>返回主屏幕，在顶部搜索栏中输入 "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>" 。 Make sure that deep search is enabled in search settings.</li>
                 <li>将您想要使用的应用设置为 <i>允许</i> 或 <i>忽略</i>。</li>
             </ul>
 
@@ -704,8 +727,9 @@
             <hr class="dim" />
 
             <p id="faq21" class="high-bottom"><b>是否有一份所有权限的完整列表，并附有解释？</b></p>
-            <p>没有完整的权限列表描述，至少据我所知是这样。 对于某些清单权限，您可以在权限管理 X 中点击权限名称显示简要描述。 但 AppOps 通常不会有描述 But the Pro version of PMX shows description for some AppOps too.</p>
-            <p>有第三方网站收录了部分内容，例如 <a href="https://android.izzysoft.de/applists.php?topic=perms">lzzy网站</a>， Android <a href="https://developer.android.com">官方开发者网站</a> 和 <a href="https://cs.android.com">源代码</a> 等。 每次新的 Android 版本都会添加一些新的权限，有些权限会过时。 此外，并非所有权限都需要由每个用户处理。</p>
+            <p>没有完整的权限列表描述，至少据我所知是这样。 PMX Pro version shows a brief description of common manifest and AppOp permissions.</p>
+            <p>There are third party resources like <a href="https://android.izzysoft.de/applists.php?topic=perms">this one</a> by Izzy. Android <a href="https://developer.android.com">官方开发者网站</a> 和 <a href="https://cs.android.com">源代码</a> 等。</p>
+            <p>每次新的 Android 版本都会添加一些新的权限，有些权限会过时。 此外，并非所有权限都需要由每个用户处理。</p>
 
             <hr class="dim" />
 
@@ -722,7 +746,7 @@
             <hr class="dim" />
 
             <p id="faq30" class="high-bottom"><b>是否会考虑添加 Shizuku 支持？</b></p>
-            <p>不会。 目前没有计划。</p>
+            <p>不会。 Shizuku is not supported. It adds unnecessary design complexity. And we lose the freedom to develop our app independently without heavily relying on an additional third party app. PMX natively supports root and <a href="#adb_help">ADB</a>.</p>
 
             <hr class="dim" />
 

@@ -74,22 +74,23 @@
                     <li><a href="#faq36" class="no-underline">Зачем мне нужно использовать PMX?</a></li>
                     <li><a href="#faq1" class="no-underline">Почему PMX требует root или ADB доступ?</a></li>
                     <li><a href="#faq33" class="no-underline">Мое устройство без root. Как я могу использовать PMX?</a></li>
-                    <li><a href="#faq2" class="no-underline">Как PMX изменяет разрешения других приложений?</a></li>
                     <li><a href="#faq4" class="no-underline">Что такое скрытые API?</a></li>
+                    <li><a href="#faq2" class="no-underline">Как PMX изменяет разрешения других приложений?</a></li>
+                    <li><a href="#faq34" class="no-underline">Разрешения остаются измененными после отключения ADB, отказа root или удаления PMX?</a></li>
+                    <li><a href="#faq15" class="no-underline">Почему я не могу изменить разрешение XYZ?</a></li>
                     <li><a href="#faq37" class="no-underline">Я изменил разрешение, но это не работает. Почему?</a></li>
                     <li><a href="#faq3" class="no-underline">Почему некоторые AppOps нельзя изменить?</a></li>
-                    <li><a href="#faq34" class="no-underline">Разрешения остаются измененными после отключения ADB, отказа root или удаления PMX?</a></li>
-                    <li><a href="#faq5" class="no-underline">Что мне следует выбрать для UID привилегированного демона в расширенных настройках? Система или ADB?</a></li>
                     <li><a href="#faq6" class="no-underline">Почему в списке пакетов я не вижу приложение XYZ?</a></li>
                     <li><a href="#faq7" class="no-underline">Почему я не вижу разрешения XYZ в пакете/приложении ABC?</a></li>
                     <li><a href="#faq8" class="no-underline">Почему я не вижу AppOps XYZ в пакете/приложении ABC?</a></li>
+                    <li><a href="#faq5" class="no-underline">Что мне следует выбрать для UID привилегированного демона в расширенных настройках? Система или ADB?</a></li>
                     <li><a href="#faq9" class="no-underline">Что такое <i>недопустимые разрешения</i> в «Фильтрах исключений»?</a></li>
                     <li><a href="#faq10" class="no-underline">Что такое <i>дополнительные AppOps</i> в «Фильтрах исключений»?</a></li>
                     <li><a href="#faq11" class="no-underline">Какие существуют режимы AppOp и какие мне следует использовать?</a></li>
                     <li><a href="#faq12" class="no-underline">В чем разница между режимами AppOp <i>Игнорировать</i> и <i>Запретить</i>?</a></li>
+                    <li><a href="#faq41" class="no-underline">Why cannot I set AppOp mode to foreground?</a></li>
                     <li><a href="#faq13" class="no-underline">Что делает разрешение READ_MEDIA_AUDIO?</a></li>
                     <li><a href="#faq14" class="no-underline">Что делает разрешение WAKE_LOCK?</a></li>
-                    <li><a href="#faq15" class="no-underline">Почему я не могу изменить разрешение XYZ?</a></li>
                     <li><a href="#faq16" class="no-underline">Как я могу изменить разрешение INTERNET?</a></li>
                     <li><a href="#faq40" class="no-underline">Что такое <i>Фиксированные</i> разрешения?</a></li>
                     <li><a href="#faq17" class="no-underline">Могу ли я изменить разрешения <i>Система-Фиксированный</i>?</a></li>
@@ -548,23 +549,36 @@
 
             <hr class="dim" />
 
-            <p id="faq2" class="high-bottom"><b>Как PMX изменяет разрешения других приложений?</b></p>
-            <p>PMX не может и не предоставляет и не отменяет разрешения других приложений. Фактически, ни одно стороннее приложение не имеет права сделать это. Это делает ОС Android, которая контролирует разрешения приложений. PMX просто отправляет запрос в платформу Android на изменение состояния разрешения. Теперь все зависит от ОС Android, насколько она выполнит наш запрос. Не все разрешения изменяются. И если вы не можете изменить состояние разрешения используя PMX, то вы не сможете изменить его другим способом.</p>
-
-            <hr class="dim" />
-
             <p id="faq4" class="high-bottom"><b>Что такое скрытые API?</b></p>
             <p>Основной функционал PMX вращается вокруг <b>скрытых API</b>. Это возможности, необходимые для выполнения задач (например, предоставления/отзыва разрешений), которые могут выполняться только привилегированными системными приложениями. Таким образом, эти возможности недоступны для обычных пользовательских приложений. Но PMX использует эти возможности с помощью root или ADB. Обычно пользователь не должен беспокоиться об этом.</p>
             <p>Если вас интересуют основные подробности, прочтите <a href="https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces">это</a>.</p>
 
             <hr class="dim" />
 
+            <p id="faq2" class="high-bottom"><b>Как PMX изменяет разрешения других приложений?</b></p>
+            <p>PMX не может и не предоставляет и не отменяет разрешения других приложений. Фактически, ни одно стороннее приложение не имеет права сделать это. Это делает ОС Android, которая контролирует разрешения приложений. PMX просто отправляет запрос в платформу Android на изменение состояния разрешения. Теперь все зависит от ОС Android, насколько она выполнит наш запрос. Не все разрешения изменяются. И если вы не можете изменить состояние разрешения используя PMX, то вы не сможете изменить его другим способом.</p>
+
+            <hr class="dim" />
+
+            <p id="faq34" class="high-bottom"><b>Разрешения остаются измененными после отключения ADB, отказа root или удаления PMX?</b></p>
+            <p>PMX не может и не предоставляет и не отменяет разрешения других приложений. Фактически, ни одно стороннее приложение не имеет права сделать это. Это делает ОС Android, которая контролирует разрешения приложений. PMX просто отправляет запрос в платформу Android на изменение состояния разрешения.</p>
+            <p>Таким образом, после изменения разрешения не имеет значения, удаляете ли вы PMX или отзываете его привилегии. Разрешение останется в любом состоянии, если оно снова не будет изменено вами или операционной системой.</p>
+
+            <hr class="dim" />
+
+            <p id="faq15" class="high-bottom"><b>Почему я не могу изменить разрешение XYZ?</b></p>
+            <p> Можно изменять разрешения манифеста только с <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">уровнем защиты</a> <i>опасный</i> (и некоторыми другими). Можно изменять только AppOps, которые не зависят от некоторых других AppOp. Так работает Android, мы не можем изменить его поведение. Смотрите <a href="#perms_types">разрешения манифеста и AppOps</a>.</p>
+            <p>Кроме того, PMX защищает некоторые критически важные фреймворк приложения и разрешения, их изменение может привести к "окирпичиванию" устройства. Смотрите <a href="#faq17">связанный вопрос</a>.</p>
+
+            <hr class="dim" />
+
             <p id="faq37" class="high-bottom"><b>Я изменил разрешение, но это не работает. Почему?</b></p>
-            <p>Если после успешного изменения разрешения вы не получаете желаемых результатов, виновата операционная система Android. Пожалуйста, посмотрите:</p>
+            <p>After changing a permission successfully, if you are not getting the desired results i.e. it reverts back immediately or after some hours or days, it's the Android operating system to be blamed. Пожалуйста, посмотрите:</p>
             <ul>
                 <li><a href="#faq2">Как PMX изменяет разрешения других приложений?</a></li>
                 <li><a href="#faq3">Почему некоторые AppOps нельзя изменить?</a></li>
             </ul>
+            <p>As you use apps, Android may change their permissions. And unfortunately we do not have a way to prevent this. <a href="#perm_watcher">Permission Watcher</a> and <a href="#scheduled_checker">Scheduled Checker</a> may help in this regard.</p>
 
             <hr class="dim" />
 
@@ -577,19 +591,11 @@
                 <li>Также некоторые OEM прошивки ведут себя странно, когда дело доходит до AppOps. Мы не знаем, какие именно изменения ваш OEM-производитель внес в стандартный код AOSP. Вот почему есть заявление на Github и в Play Маркет: <i>Приложение протестировано на стоковом Android 7-11. Некоторые прошивки с большим количеством настроек могут вести себя непредсказуемо."</i></li>
             </ul>
             <p>На самом деле, если мы исследуем каждое приложение и разрешение по отдельности, то мы получим еще много объяснений (что звучит непрактично). Как было сказано выше, PMX не меняет разрешения других приложений самостоятельно. Таким образом, даже если по какой-то неизвестной причине Android не меняет разрешение или сразу же возвращает его обратно, мы ничего не можем сделать, чтобы заставить его, потому что это ограничения со стороны Android. Скорее всего, я должен сказать, что именно так работает Android.</p>
-            <p>Связано: <a href="#faq11">Что такое различные режимы AppOp и какие я должен использовать?</a></p>
-
-            <hr class="dim" />
-
-            <p id="faq34" class="high-bottom"><b>Разрешения остаются измененными после отключения ADB, отказа root или удаления PMX?</b></p>
-            <p>PMX не может и не предоставляет и не отменяет разрешения других приложений. Фактически, ни одно стороннее приложение не имеет права сделать это. Это делает ОС Android, которая контролирует разрешения приложений. PMX просто отправляет запрос в платформу Android на изменение состояния разрешения.</p>
-            <p>Таким образом, после изменения разрешения не имеет значения, удаляете ли вы PMX или отзываете его привилегии. Разрешение останется в любом состоянии, если оно снова не будет изменено вами или операционной системой.</p>
-
-            <hr class="dim" />
-
-            <p id="faq5" class="high-bottom"><b>Что мне следует выбрать для UID привилегированного демона в расширенных настройках? Система или ADB?</b></p>
-            <p>Это имеет значение только в том случае, если вы используете root или ADBD на вашем устройстве работает с root (что не относится к конечным пользовательским устройствам).</p>
-            <p>Предпочтительнее использовать вариант <b>Система</b> (UID 1000), поскольку он предоставляет больше привилегий, чем <b>ADB</b> (UID 2000). Например изменение разрешений "Система-Фиксированный" возможно только при работе в варианте "Система". .</p>
+            <p>Related:</p>
+            <ul>
+                <li><a href="#faq11">Какие существуют режимы AppOp и какие мне следует использовать?</a></li>
+                <li><a href="#faq41">Why cannot I set AppOp mode to foreground?</a></li>
+            </ul>
 
             <hr class="dim" />
 
@@ -608,6 +614,12 @@
             <p>Но если вы хотите видеть XYZ AppOp всех приложений, перейдите в <b>Фильтры исключения </b> -> <b>Дополнительные AppOps, никогда не исключаемые</b> и отметьте XYZ AppOp в списке.</p>
             <p>Например, если ввести <i>_CLIPBOARD</i> в поле поиска (с установленным флажком <i>Глубокий поиск</i>), то вы получите все приложения, которые использовали (или пытались использовать) разрешение <i>READ_CLIPBOARD</i> или <i>WRITE_CLIPBOARD</i>. Также отображается метка времени (но не для всех приложений).</p>
             <p>Поэтому, если интересующего вас приложения нет в результатах поиска, отметьте оба AppOps в списке <i>Фильтров исключения</i>, упомянутом выше.</p>
+
+            <hr class="dim" />
+
+            <p id="faq5" class="high-bottom"><b>Что мне следует выбрать для UID привилегированного демона в расширенных настройках? Система или ADB?</b></p>
+            <p>Это имеет значение только в том случае, если вы используете root или ADBD на вашем устройстве работает с root (что не относится к конечным пользовательским устройствам).</p>
+            <p>Предпочтительнее использовать вариант <b>Система</b> (UID 1000), поскольку он предоставляет больше привилегий, чем <b>ADB</b> (UID 2000). Например изменение разрешений "Система-Фиксированный" возможно только при работе в варианте "Система". .</p>
 
             <hr class="dim" />
 
@@ -634,6 +646,21 @@
 
             <hr class="dim" />
 
+            <p id="faq41" class="high-bottom"><b>Why cannot I set AppOp mode to foreground?</b></p>
+            <p>Foreground mode cannot be set for all AppOps. Even when set, it may not give expected results.</p>
+            <p>Related:</p>
+            <ul>
+                <li><a href="#faq11">Какие существуют режимы AppOp и какие мне следует использовать?</a></li>
+                <li><a href="#faq3">Почему некоторые AppOps нельзя изменить?</a></li>
+            </ul>
+            <p>Please note that the permission mode "Allow only while using the app" does not alway set the AppOp mode to "Foreground":</p>
+            <img class="small" src="../en/img/fg_and_one_time_perm_modes.webp" />
+            <p>Normally we see only two states for a manifest permission: granted and revoked. But Android uses <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/content/pm/PackageManager.java#4655">flags</a> to split these two states into many sub-states. For some permissions the same phenomenon is used to achieve the "grant only when the app is visible" behavior. AppOp permission is not used in this case.</p>
+            <p>For more details see official documentation of <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/permission/Permissions.md#background-access">background access</a> and <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/app/AppOps.md#foreground">foreground access</a>.</p>
+            <p>For simplicity, PMX does not watch permission flags at the moment. But in future an option might be added to also track changes to permission flags even if granted / revoked mode remains unchanged.</p>
+
+            <hr class="dim" />
+
             <p id="faq13" class="high-bottom"><b>Что делает разрешение READ_MEDIA_AUDIO?</b></p>
             <p>READ_MEDIA_ [AUDIO | VIDEO | IMAGES] - недавнее дополнение к списку AppOps, добавленное в Android 10 (IIRC) как часть реализации Android <i>Scoped Storage</i>. В исходном коде <a href="https://cs.android.com/android/platform/superproject/+/android-11.0.0_r1:frameworks/base/core/java/android/app/AppOpsManager.java;l=1065">указано</a>:<i>чтение носителя аудио типа </i>. Проще говоря, оно контролирует доступ приложений (которые используют <a href="https://developer.android.com/training/data-storage/shared/media">MediaStore</a>) к аудиофайлам во внешнем общем хранилище.</p>
 
@@ -641,12 +668,6 @@
 
             <p id="faq14" class="high-bottom"><b>Что делает разрешение WAKE_LOCK?</b></p>
             <p>Приложения удерживают wakelock, чтобы устройство не спало, то есть не переходило в <a href="https://developer.android.com/training/monitoring-device-state/doze-standby#understand_doze">режим сна (Doze)</a>.</p>
-
-            <hr class="dim" />
-
-            <p id="faq15" class="high-bottom"><b>Почему я не могу изменить разрешение XYZ?</b></p>
-            <p> Можно изменять разрешения манифеста только с <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">уровнем защиты</a> <i>опасный</i> (и некоторыми другими). Можно изменять только AppOps, которые не зависят от некоторых других AppOp. Так работает Android, мы не можем изменить его поведение. Смотрите <a href="#perms_types">разрешения манифеста и AppOps</a>.</p>
-            <p>Кроме того, PMX защищает некоторые критически важные фреймворк приложения и разрешения, их изменение может привести к "окирпичиванию" устройства. Смотрите <a href="#faq17">связанный вопрос</a>.</p>
 
             <hr class="dim" />
 
@@ -673,10 +694,12 @@
             <hr class="dim" />
 
             <p id="faq39" class="high-bottom"><b>Могу ли я управлять функцией «Удалить разрешения, если приложение не используется» с помощью PMX?</b></p>
-            <p>Да. Эта функция доступна с <a href="https://developer.android.com/about/versions/11/privacy/permissions#auto-reset">Android 11</a>. Он также называется "Пауза активити приложения, если не используется".</p>
+            <p>Да. Эта функция доступна с <a href="https://developer.android.com/about/versions/11/privacy/permissions#auto-reset">Android 11</a>. It's also labeled as "Pause app activity if unused" on some devices.</p>
+            <img class="small" src="../en/img/remove_unused_perms.webp" />
+            <p>To change this option from PMX:</p>
             <ul>
                 <li>Перейдите в <i>Фильтры исключения</i> -> <i>Список дополнительных AppOps</i> и отметьте "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>".</li>
-                <li>Вернувшись на основной экран, наберите "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>" вверху, в строке поиска.</li>
+                <li>Вернувшись на основной экран, наберите "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>" вверху, в строке поиска. Make sure that deep search is enabled in search settings.</li>
                 <li>Установите режим <i>Разрешить</i> или <i>Игнорировать</i> для требуемых приложений.</li>
             </ul>
 
@@ -704,8 +727,9 @@
             <hr class="dim" />
 
             <p id="faq21" class="high-bottom"><b>Есть ли полный список всех разрешений с пояснениями?</b></p>
-            <p>Нет полного списка разрешений с описанием, по крайней мере, насколько мне известно. Для некоторых разрешений манифеста доступно краткое описание, которое отображается при нажатии имени разрешения в приложении PMX. Для AppOps в Android нет описания. Но описание некоторых AppOps отображается в Pro версии PMX.</p>
-            <p>Есть сторонние ресурсы, такие как <a href="https://android.izzysoft.de/applists.php?topic=perms">этот</a> от Izzy. Официальный сайт <a href="https://developer.android.com">разработки Андроид</a> и <a href="https://cs.android.com">исходного кода</a> также являются хорошими источниками для обучения. С каждой новой версией Android добавляются новые разрешения, а некоторые  устаревают. Кроме того, не все разрешения необходимы каждому пользователю.</p>
+            <p>Нет полного списка разрешений с описанием, по крайней мере, насколько мне известно. PMX Pro version shows a brief description of common manifest and AppOp permissions.</p>
+            <p>There are third party resources like <a href="https://android.izzysoft.de/applists.php?topic=perms">this one</a> by Izzy. Официальный сайт <a href="https://developer.android.com">разработки Андроид</a> и <a href="https://cs.android.com">исходного кода</a> также являются хорошими источниками для обучения.</p>
+            <p>С каждой новой версией Android добавляются новые разрешения, а некоторые  устаревают. Кроме того, не все разрешения необходимы каждому пользователю.</p>
 
             <hr class="dim" />
 
@@ -722,7 +746,7 @@
             <hr class="dim" />
 
             <p id="faq30" class="high-bottom"><b>Собираетесь ли вы добавить поддержку Shizuku в PMX?</b></p>
-            <p>Нет. В настоящее время это не планируется.</p>
+            <p>Нет. Shizuku is not supported. It adds unnecessary design complexity. And we lose the freedom to develop our app independently without heavily relying on an additional third party app. PMX natively supports root and <a href="#adb_help">ADB</a>.</p>
 
             <hr class="dim" />
 
