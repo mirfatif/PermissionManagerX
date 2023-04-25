@@ -66,7 +66,7 @@
   <!-- CHAR LIMIT: 15 -->
   <string name="primary_account">Primary Account</string>
   <string name="primary_profile_only">Permission Manager X can run only in primary user account / device owner profile.</string>
-  <string name="grant_root_or_adb">Grant root access or connect to ADB to start privileged process.</string>
+  <string name="grant_root_or_adb">Root or ADB access is required to get AppOp permissions and to change permissions state.</string>
 
   <!-- CHAR LIMIT: 10 -->
   <string name="backup">Backup</string>
@@ -382,6 +382,11 @@
   <string name="adb_conn_notif_title">ADB Connection</string>
   <string name="adb_conn_notif_text">Connecting…</string>
 
+  <!-- DaemonRcvSvc -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="daemon_connection_title">Daemon Connection</string>
+  <string name="daemon_connection_text">Connecting…</string>
+
   <!-- PackageActivity menu items -->
   <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
   <!-- CHAR LIMIT: 15 -->
@@ -418,6 +423,7 @@
   <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="something_went_wrong">Something went wrong</string>
+  <string name="grant_root_or_adb_to_change_perms">Root or ADB access is required to change permissions state.</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="app_op_mode_not_chaged_toast">AppOp mode not changed</string>
 
@@ -633,6 +639,9 @@
 
   <string name="channel_adb_connection">ADB Connection</string>
   <integer name="channel_adb_connection">400</integer>
+
+  <string name="channel_daemon_connection">Daemon Connection</string>
+  <integer name="channel_daemon_connection">500</integer>
 
   <!-- Notification permission -->
   <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>

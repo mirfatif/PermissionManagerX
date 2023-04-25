@@ -2,13 +2,17 @@ package com.mirfatif.permissionmanagerx.util;
 
 import static android.app.PendingIntent.FLAG_IMMUTABLE;
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
+import static com.mirfatif.permissionmanagerx.util.ApiUtils.getString;
 
 import android.Manifest;
+import android.app.Notification;
 import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.os.Build;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.FragmentActivity;
 import com.mirfatif.permissionmanagerx.R;
@@ -53,5 +57,22 @@ public class NotifUtils {
       channel = new NotificationChannel(id, name, importance);
       nm.createNotificationChannel(channel);
     }
+  }
+
+  public static Notification createSilentFgNotif(
+      String channelId, int channelName, int title, int text) {
+    NotifUtils.createNotifChannel(
+        channelId, getString(channelName), NotificationManager.IMPORTANCE_NONE);
+
+    NotificationCompat.Builder builder = new NotificationCompat.Builder(App.getCxt(), channelId);
+    builder
+        .setPriority(NotificationCompat.PRIORITY_MIN)
+        .setSilent(true)
+        .setContentTitle(getString(title))
+        .setContentText(getString(text))
+        .setSmallIcon(R.drawable.notification_icon)
+        .setColor(UiUtilsFlavor.getAccentColor());
+
+    return builder.build();
   }
 }

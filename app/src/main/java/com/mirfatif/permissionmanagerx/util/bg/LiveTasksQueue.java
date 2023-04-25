@@ -11,7 +11,7 @@ public class LiveTasksQueue {
 
   protected LiveTasksQueue(LifecycleOwner owner, Object task) {
     addTask(task);
-    LifecycleWatcher.addOnDestroyed(owner, LiveTasksQueue.this::onDestroyed);
+    LifecycleWatcher.addOnDestroyed(owner, () -> BgRunner.execute(this::onDestroyed));
   }
 
   public LiveTasksQueue(LifecycleOwner owner, BgTask task) {

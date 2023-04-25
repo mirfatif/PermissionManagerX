@@ -390,8 +390,8 @@ public class AdbConnectDialog {
     return dismissed;
   }
 
-  private static final int MIN_PORT = 1;
-  private static final int MAX_PORT = 65535;
+  public static final int MIN_PORT = 1;
+  public static final int MAX_PORT = 65535;
 
   private static int getPort(CharSequence portStr, TextInputLayout container) {
     if (!TextUtils.isEmpty(portStr)) {

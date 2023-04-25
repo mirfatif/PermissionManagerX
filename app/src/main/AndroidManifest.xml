@@ -73,7 +73,7 @@
     </service>
 
     <provider
-      android:authorities="${logFileProvider}"
+      android:authorities="${LOG_FILE_PROVIDER}"
       android:exported="false"
       android:grantUriPermissions="true"
       android:name="androidx.core.content.FileProvider">

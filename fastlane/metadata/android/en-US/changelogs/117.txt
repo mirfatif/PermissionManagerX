@@ -1,0 +1,10 @@
+- Process package filters on worker thread
+- Update translations
+- Improve privileges dialog message and help link
+- Fix Scheduled Checker not working due to app always in FG
+- Fix extra AppOps not selected with pretty permission names
+- Bump libraries
+- Fix issues due to background service restrictions
+- Fix rare NPE crashes
+- Fix crash due to App context null
+- Fix ANR due to lock contention

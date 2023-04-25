@@ -299,7 +299,7 @@ public class MainActivity {
     if (TAG_PRIVS_REQ_FOR_DAEMON.equals(tag) || TAG_GRANT_ROOT_OR_ADB.equals(tag)) {
       DilogTitleWithHelpBinding b = DilogTitleWithHelpBinding.inflate(mA.getLayoutInflater());
       b.titleV.setText(R.string.privileges_title);
-      b.helpV.setOnClickListener(v -> HelpActivity.start(mA, null));
+      b.helpV.setOnClickListener(v -> HelpActivity.start(mA, "faq1"));
 
       Builder builder =
           new Builder(mA)

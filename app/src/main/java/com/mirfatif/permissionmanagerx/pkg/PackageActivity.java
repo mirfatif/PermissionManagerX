@@ -249,7 +249,7 @@ public class PackageActivity implements PermAdapterCallback {
               })
           .setNegativeButton(android.R.string.cancel, null)
           .setTitle(R.string.privileges_title)
-          .setMessage(R.string.grant_root_or_adb)
+          .setMessage(R.string.grant_root_or_adb_to_change_perms)
           .create();
     }
 
@@ -292,13 +292,11 @@ public class PackageActivity implements PermAdapterCallback {
   }
 
   public void onPermSwitchToggle(Permission perm) {
-    if (isDaemonAlive()) {
-      if (perm.isAppOp()) {
-        onAppOpModeSelect(
-            perm, perm.isGranted() ? AppOpsManager.MODE_IGNORED : AppOpsManager.MODE_ALLOWED);
-      } else if (mActFlavor.onPermClick(perm)) {
-        onManifestPermStateChanged(perm);
-      }
+    if (perm.isAppOp()) {
+      onAppOpModeSelect(
+          perm, perm.isGranted() ? AppOpsManager.MODE_IGNORED : AppOpsManager.MODE_ALLOWED);
+    } else if (mActFlavor.onPermClick(perm)) {
+      onManifestPermStateChanged(perm);
     }
   }
 
@@ -567,6 +565,10 @@ public class PackageActivity implements PermAdapterCallback {
   }
 
   void onManifestPermStateChanged(Permission perm) {
+    if (!isDaemonAlive()) {
+      return;
+    }
+
     String warn = createDangPermChangeWarn();
 
     if (warn == null) {

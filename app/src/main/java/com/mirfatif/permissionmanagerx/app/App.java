@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.SystemClock;
 import com.mirfatif.permissionmanagerx.fwk.AppM;
 import com.mirfatif.permissionmanagerx.util.AppLifecycle;
 import com.mirfatif.permissionmanagerx.util.LocaleUtils;
@@ -49,6 +50,10 @@ public class App {
   }
 
   public static Context getCxt() {
+
+    while (sContext == null) {
+      SystemClock.sleep(100);
+    }
     return sContext;
   }
 

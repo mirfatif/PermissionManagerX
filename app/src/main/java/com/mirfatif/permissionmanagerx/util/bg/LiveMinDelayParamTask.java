@@ -2,6 +2,7 @@ package com.mirfatif.permissionmanagerx.util.bg;
 
 import androidx.lifecycle.LifecycleOwner;
 import com.mirfatif.permissionmanagerx.fwk.LifecycleWatcher;
+import com.mirfatif.privtasks.util.bg.BgRunner;
 import com.mirfatif.privtasks.util.bg.MinDelayTaskExecutor;
 import com.mirfatif.privtasks.util.bg.RunnableWithParam;
 import java.util.concurrent.TimeUnit;
@@ -18,7 +19,7 @@ public class LiveMinDelayParamTask<T> {
       TimeUnit unit,
       boolean onUi,
       String threadName) {
-    LifecycleWatcher.addOnDestroyed(owner, this::shutdownNow);
+    LifecycleWatcher.addOnDestroyed(owner, () -> BgRunner.execute(this::shutdownNow));
     mE =
         new MinDelayTaskExecutor(
             onUi

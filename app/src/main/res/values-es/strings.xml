@@ -56,7 +56,6 @@
   <!-- CHAR LIMIT: 15 -->
   <string name="primary_account">Cuenta Primaria</string>
   <string name="primary_profile_only">Permission Manager X puede correr únicamente en la cuenta del usuario principal / perfil del propietario del dispositivo.</string>
-  <string name="grant_root_or_adb">Concede acceso root o conecta a ADB para iniciar procesos privilegiados.</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="backup">Copia de seguridad</string>
   <!-- CHAR LIMIT: 10 -->
@@ -215,6 +214,8 @@
   <string name="logging_title">Registrando</string>
   <string name="logging_warning_msg">La aplicación podría responder lento debido a los registros y el archivo de registros podría crecer a un tamaño muy grande. El registro es detenido automaticamente después de 5 minutos.</string>
   <!-- AdbConnectSvc -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- DaemonRcvSvc -->
   <!-- CHAR LIMIT: 15 -->
   <!-- PackageActivity menu items -->
   <!-- CHAR LIMIT: 15 -->

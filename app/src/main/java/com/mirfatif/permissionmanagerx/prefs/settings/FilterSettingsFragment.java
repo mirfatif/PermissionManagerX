@@ -10,6 +10,7 @@ import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.MetricAffectingSpan;
+import androidx.core.util.Pair;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
@@ -194,30 +195,35 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
         .start();
 
     new LiveTasksQueueTyped<>(this, this::buildAppOpsNamesList)
-        .onUiWith(appOps -> updateExtraAppOpsView(appOps, ExcFiltersData.INS.getExtraAppOps()))
+        .onUiWith(
+            appOps ->
+                updateExtraAppOpsView(
+                    appOps.first, appOps.second, ExcFiltersData.INS.getExtraAppOps()))
         .start();
   }
 
-  private CharSequence[] buildAppOpsNamesList() {
-    List<String> appOpsList = new ArrayList<>(AppOpsParser.INS.getAppOpsNames());
-    appOpsList.sort(Comparator.comparing(String::toUpperCase));
+  private Pair<String[], CharSequence[]> buildAppOpsNamesList() {
+    String[] appOps =
+        AppOpsParser.INS.getAppOpsNames().stream()
+            .sorted(Comparator.comparing(String::toUpperCase))
+            .toArray(String[]::new);
 
-    CharSequence[] arr = new CharSequence[appOpsList.size()];
+    CharSequence[] labels = new CharSequence[appOps.length];
     String extraAppOp;
     SpannableString string;
 
-    for (int i = 0; i < arr.length; i++) {
-      extraAppOp = appOpsList.get(i);
+    for (int i = 0; i < labels.length; i++) {
+      extraAppOp = appOps[i];
       if (Constants.UNKNOWN_OP.equals(extraAppOp)) {
         string = new SpannableString(extraAppOp);
         string.setSpan(new RedTextSpan(), 0, string.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        arr[i] = string;
+        labels[i] = string;
       } else {
-        arr[i] = createPermName(extraAppOp, true);
+        labels[i] = createPermName(extraAppOp, true);
       }
     }
 
-    return arr;
+    return new Pair<>(appOps, labels);
   }
 
   private static class RedTextSpan extends MetricAffectingSpan {
@@ -300,7 +306,8 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     excludedPermsListView.setEnabled(manuallyExcludePermsView.isChecked() && permCount != 0);
   }
 
-  private void updateExtraAppOpsView(CharSequence[] appOpsLabels, Set<String> extraAppOps) {
+  private void updateExtraAppOpsView(
+      String[] appOps, CharSequence[] appOpsLabels, Set<String> extraAppOps) {
 
     int appOpsCount = appOpsLabels.length;
 
@@ -308,7 +315,7 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
 
       extraAppOpsListView.setEntries(appOpsLabels);
 
-      extraAppOpsListView.setEntryValues(appOpsLabels);
+      extraAppOpsListView.setEntryValues(appOps);
 
       extraAppOpsListView.setValues(extraAppOps);
     }

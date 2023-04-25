@@ -17,8 +17,13 @@
   <!-- Privileges / Daemon -->
   <!-- Advanced Settings -->
   <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_allow_critical_changes_title">Permitir cambios críticos</string>
+  <string name="pref_adv_settings_allow_critical_changes_summary">Hacer cambios a permisos críticos y aplicaciones de framework</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_exit_on_app_death_title">Autodetener daemon</string>
+  <string name="pref_adv_settings_exit_on_app_death_summary">Detener el daemon privilegiado cuando la app sea detenida</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_perm_refs_cat_title">Referencias de Permisos</string>
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->

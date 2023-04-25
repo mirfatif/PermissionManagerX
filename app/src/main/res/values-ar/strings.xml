@@ -61,7 +61,6 @@
   <!-- CHAR LIMIT: 15 -->
   <string name="primary_account">الحساب الرئيسي</string>
   <string name="primary_profile_only">مدير الأذونات X يمكن تشغيله فقط في حساب المستخدم الرئيسي / ملف تعريف مالك الجهاز.</string>
-  <string name="grant_root_or_adb">منح صلاحيات الجذر أو الاتصال بـ ADB لبدء عملية مميزة.</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="backup">النسخ الاحتياطي</string>
   <!-- CHAR LIMIT: 10 -->
@@ -242,6 +241,8 @@
   <string name="logging_title">تسجيل</string>
   <string name="logging_warning_msg">قد يستجيب التطبيق ببطء بسبب جمع السجلات، وقد ينمو ملف السجل حتى حجم كبير جدا. يتم إيقاف التسجيل تلقائياً بعد 5 دقائق.</string>
   <!-- AdbConnectSvc -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- DaemonRcvSvc -->
   <!-- CHAR LIMIT: 15 -->
   <!-- PackageActivity menu items -->
   <!-- CHAR LIMIT: 15 -->

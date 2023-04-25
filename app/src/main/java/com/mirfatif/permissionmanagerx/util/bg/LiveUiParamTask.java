@@ -23,17 +23,14 @@ public class LiveUiParamTask<T> {
     post(param, false);
   }
 
-  public synchronized void post(T param, boolean waitForCompletion) {
-    if (mTask == null) {
+  public void post(T param, boolean waitForCompletion) {
+    Runnable task = mTask;
+
+    if (task == null) {
       return;
     }
 
     mParam.set(param);
-
-    Runnable task = mTask;
-    if (task == null) {
-      return;
-    }
 
     if (waitForCompletion) {
       LiveUiWaitTask.post(task).waitForMe();
@@ -42,7 +39,7 @@ public class LiveUiParamTask<T> {
     }
   }
 
-  public synchronized void stop() {
+  public void stop() {
     mTask = null;
   }
 }

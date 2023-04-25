@@ -46,7 +46,7 @@ public class SingleSchedTaskExecutor extends SingleTaskExecutorAbstract {
 
   public void schedule(long delay, TimeUnit unit) {
     synchronized (mAlive) {
-      if (mAlive.get() && !hasRunningOrPendingTasks()) {
+      if (mAlive.get()) {
         addTask(mTask.setTime(unit, delay), mQ);
       }
     }

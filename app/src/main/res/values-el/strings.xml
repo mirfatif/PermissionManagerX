@@ -56,7 +56,6 @@
   <!-- CHAR LIMIT: 15 -->
   <string name="primary_account">Κύριος Λογαριασμός</string>
   <string name="primary_profile_only">Ο διαχειριστής δικαιωμάτων X μπορεί να τρέξει μόνο στο προφίλ κύριου λογαριασμού χρήστη / ιδιοκτήτη συσκευής.</string>
-  <string name="grant_root_or_adb">Χορηγήστε πρόσβαση root ή συνδεθείτε στο ADB για να ξεκινήσετε την προνομιακή διαδικασία.</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="backup">Αντίγραφα Ασφαλείας</string>
   <!-- CHAR LIMIT: 10 -->
@@ -201,6 +200,8 @@
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 15 -->
   <!-- AdbConnectSvc -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- DaemonRcvSvc -->
   <!-- CHAR LIMIT: 15 -->
   <!-- PackageActivity menu items -->
   <!-- CHAR LIMIT: 15 -->

@@ -140,7 +140,7 @@ public enum PackageParser {
 
     PkgParserFlavor.INS.onPkgListCompleted();
 
-    mPkgInfoListCleaner.schedule(30, TimeUnit.SECONDS);
+    mPkgInfoListCleaner.cancelAndSchedule(false, 30, TimeUnit.SECONDS);
 
     mListInProgress.postValue(false);
 

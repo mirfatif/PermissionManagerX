@@ -59,7 +59,6 @@
   <!-- CHAR LIMIT: 15 -->
   <string name="primary_account">主用户</string>
   <string name="primary_profile_only">权限管理 X 只能在主用户帐户/设备所有者配置文件中运行</string>
-  <string name="grant_root_or_adb">授予Root权限或连接到 ADB 并启动特权进程</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="backup">备份</string>
   <!-- CHAR LIMIT: 10 -->
@@ -243,6 +242,9 @@
   <!-- CHAR LIMIT: 15 -->
   <string name="adb_conn_notif_title">ADB 连接</string>
   <string name="adb_conn_notif_text">正在连接…</string>
+  <!-- DaemonRcvSvc -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="daemon_connection_text">正在连接…</string>
   <!-- PackageActivity menu items -->
   <!-- CHAR LIMIT: 15 -->
   <string name="reset_app_ops">重置 AppOps</string>

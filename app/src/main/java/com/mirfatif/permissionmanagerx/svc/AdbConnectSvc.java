@@ -1,16 +1,13 @@
 package com.mirfatif.permissionmanagerx.svc;
 
 import static com.mirfatif.permissionmanagerx.util.ApiUtils.getInt;
-import static com.mirfatif.permissionmanagerx.util.ApiUtils.getString;
 
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
-import androidx.core.app.NotificationCompat;
 import com.mirfatif.err.AdbException;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.fwk.AdbConnectSvcM;
+import com.mirfatif.permissionmanagerx.main.AdbConnectDialog;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.AdbConnManager;
 import com.mirfatif.permissionmanagerx.privs.DaemonHandler;
@@ -18,7 +15,6 @@ import com.mirfatif.permissionmanagerx.privs.DaemonStarter;
 import com.mirfatif.permissionmanagerx.privs.NativeDaemon;
 import com.mirfatif.permissionmanagerx.util.AppLifecycle;
 import com.mirfatif.permissionmanagerx.util.NotifUtils;
-import com.mirfatif.permissionmanagerx.util.UiUtilsFlavor;
 import com.mirfatif.privtasks.util.MyLog;
 import com.mirfatif.privtasks.util.bg.BgRunner;
 import java.io.IOException;
@@ -38,26 +34,18 @@ public class AdbConnectSvc {
   private static final String EXTRA_PORT = "com.mirfatif.pmx.extra.ADB_PORT";
 
   public int onStartCommand(Intent intent) {
-    final String CHANNEL_ID = "channel_adb_connection";
-    final String CHANNEL_NAME = getString(R.string.channel_adb_connection);
-
-    NotifUtils.createNotifChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_NONE);
-
-    NotificationCompat.Builder builder = new NotificationCompat.Builder(App.getCxt(), CHANNEL_ID);
-    builder
-        .setPriority(NotificationCompat.PRIORITY_MIN)
-        .setSilent(true)
-        .setContentTitle(getString(R.string.adb_conn_notif_title))
-        .setContentText(getString(R.string.adb_conn_notif_text))
-        .setSmallIcon(R.drawable.notification_icon)
-        .setColor(UiUtilsFlavor.getAccentColor());
-
-    mS.startForeground(getInt(R.integer.channel_adb_connection), builder.build());
+    mS.startForeground(
+        getInt(R.integer.channel_adb_connection),
+        NotifUtils.createSilentFgNotif(
+            "channel_adb_connection",
+            R.string.channel_adb_connection,
+            R.string.adb_conn_notif_title,
+            R.string.adb_conn_notif_text));
 
     if (intent != null) {
-      int port = intent.getIntExtra(EXTRA_PORT, 0);
-      if (port == 0) {
-        MyLog.e(TAG, null, "No port received in intent");
+      int port = intent.getIntExtra(EXTRA_PORT, AdbConnectDialog.MIN_PORT - 1);
+      if (port < AdbConnectDialog.MIN_PORT || port > AdbConnectDialog.MAX_PORT) {
+        MyLog.e(TAG, null, "No or bad port received in intent");
       } else if (AppLifecycle.isAppVisible()) {
         MyLog.e(TAG, null, "App is in foreground");
       } else {

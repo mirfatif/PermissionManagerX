@@ -2,6 +2,7 @@ package com.mirfatif.permissionmanagerx.util.bg;
 
 import androidx.lifecycle.LifecycleOwner;
 import com.mirfatif.permissionmanagerx.fwk.LifecycleWatcher;
+import com.mirfatif.privtasks.util.bg.BgRunner;
 import com.mirfatif.privtasks.util.bg.SingleSchedTaskExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -83,7 +84,7 @@ public class LiveSchedTask {
 
     public void onDestroyed() {
       mTask = null;
-      shutdownNow();
+      BgRunner.execute(LiveSchedTask.this::shutdownNow);
     }
   }
 

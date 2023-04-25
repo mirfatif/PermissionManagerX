@@ -62,7 +62,6 @@
   <!-- CHAR LIMIT: 15 -->
   <string name="primary_account">Основной аккаунт</string>
   <string name="primary_profile_only">Permission Manager X может работать только в основном аккаунте / профиле владельца устройства.</string>
-  <string name="grant_root_or_adb">Предоставьте root-доступ или подключитесь к ADB для запуска привилегированного процесса.</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="backup">Бэкап</string>
   <!-- CHAR LIMIT: 10 -->
@@ -116,6 +115,7 @@
   <string name="crash_report">Отчёт о падении</string>
   <!-- CHAR LIMIT: 30 -->
   <string name="ask_to_report_crash_small">Отправить отчёт о падении разработчику</string>
+  <string name="ask_to_report_crash">Извините, в компоненте приложения возникла проблема, и он аварийно завершил работу. Чтобы ошибка могла быть исправлена, отправьте лог-файл разработчику.</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="send_report">Отправить отчёт</string>
   <!-- CHAR LIMIT: 20 -->
@@ -133,6 +133,8 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="submit_crash_report_failed_toast">Не удалось отправить отчёт о сбое</string>
   <!-- CHAR LIMIT: 15 -->
+  <string name="delete_crash_report_file_title">Удалить файл</string>
+  <string name="crash_file_delete_confirmation">Если отчет о сбое отправлен, удалить старый файл на устройстве?</string>
   <!-- Progress -->
   <!-- CHAR LIMIT: 20 -->
   <string name="prog_msg_checking_privs">Проверка привилегий…</string>
@@ -316,6 +318,9 @@
   <!-- CHAR LIMIT: 15 -->
   <string name="adb_conn_notif_title">ADB подключение</string>
   <string name="adb_conn_notif_text">Подключение…</string>
+  <!-- DaemonRcvSvc -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="daemon_connection_text">Подключение…</string>
   <!-- PackageActivity menu items -->
   <!-- CHAR LIMIT: 15 -->
   <string name="reset_app_ops">Сбросить AppOps</string>
