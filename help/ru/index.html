@@ -88,7 +88,7 @@
                     <li><a href="#faq10" class="no-underline">Что такое <i>дополнительные AppOps</i> в «Фильтрах исключений»?</a></li>
                     <li><a href="#faq11" class="no-underline">Какие существуют режимы AppOp и какие мне следует использовать?</a></li>
                     <li><a href="#faq12" class="no-underline">В чем разница между режимами AppOp <i>Игнорировать</i> и <i>Запретить</i>?</a></li>
-                    <li><a href="#faq41" class="no-underline">Why cannot I set AppOp mode to foreground?</a></li>
+                    <li><a href="#faq41" class="no-underline">Почему я не могу установить AppOp режим переднего плана (активный режим)?</a></li>
                     <li><a href="#faq13" class="no-underline">Что делает разрешение READ_MEDIA_AUDIO?</a></li>
                     <li><a href="#faq14" class="no-underline">Что делает разрешение WAKE_LOCK?</a></li>
                     <li><a href="#faq16" class="no-underline">Как я могу изменить разрешение INTERNET?</a></li>
@@ -573,12 +573,12 @@
             <hr class="dim" />
 
             <p id="faq37" class="high-bottom"><b>Я изменил разрешение, но это не работает. Почему?</b></p>
-            <p>After changing a permission successfully, if you are not getting the desired results i.e. it reverts back immediately or after some hours or days, it's the Android operating system to be blamed. Пожалуйста, посмотрите:</p>
+            <p>Если вы не получаете желаемых результатов после успешного изменения разрешения, т.е. состояние разрешения возвращается сразу или через несколько часов или дней, в этой ситуации виновата операционная система Android. Пожалуйста, посмотрите:</p>
             <ul>
                 <li><a href="#faq2">Как PMX изменяет разрешения других приложений?</a></li>
                 <li><a href="#faq3">Почему некоторые AppOps нельзя изменить?</a></li>
             </ul>
-            <p>As you use apps, Android may change their permissions. And unfortunately we do not have a way to prevent this. <a href="#perm_watcher">Permission Watcher</a> and <a href="#scheduled_checker">Scheduled Checker</a> may help in this regard.</p>
+            <p>По мере того, как вы используете приложения, Android может изменять их разрешения. И, к сожалению, у нас нет способа предотвратить это. <a href="#perm_watcher">Отслеживание разрешений</a> и <a href="#scheduled_checker">Проверка по расписанию</a> могут помочь в таких случаях.</p>
 
             <hr class="dim" />
 
@@ -591,10 +591,10 @@
                 <li>Также некоторые OEM прошивки ведут себя странно, когда дело доходит до AppOps. Мы не знаем, какие именно изменения ваш OEM-производитель внес в стандартный код AOSP. Вот почему есть заявление на Github и в Play Маркет: <i>Приложение протестировано на стоковом Android 7-11. Некоторые прошивки с большим количеством настроек могут вести себя непредсказуемо."</i></li>
             </ul>
             <p>На самом деле, если мы исследуем каждое приложение и разрешение по отдельности, то мы получим еще много объяснений (что звучит непрактично). Как было сказано выше, PMX не меняет разрешения других приложений самостоятельно. Таким образом, даже если по какой-то неизвестной причине Android не меняет разрешение или сразу же возвращает его обратно, мы ничего не можем сделать, чтобы заставить его, потому что это ограничения со стороны Android. Скорее всего, я должен сказать, что именно так работает Android.</p>
-            <p>Related:</p>
+            <p>Также:</p>
             <ul>
                 <li><a href="#faq11">Какие существуют режимы AppOp и какие мне следует использовать?</a></li>
-                <li><a href="#faq41">Why cannot I set AppOp mode to foreground?</a></li>
+                <li><a href="#faq41">Почему я не могу установить AppOp режим переднего плана (активный режим)?</a></li>
             </ul>
 
             <hr class="dim" />
@@ -646,18 +646,18 @@
 
             <hr class="dim" />
 
-            <p id="faq41" class="high-bottom"><b>Why cannot I set AppOp mode to foreground?</b></p>
-            <p>Foreground mode cannot be set for all AppOps. Even when set, it may not give expected results.</p>
-            <p>Related:</p>
+            <p id="faq41" class="high-bottom"><b>Почему я не могу установить AppOp режим переднего плана (активный режим)?</b></p>
+            <p>Режим переднего плана не может быть установлен для всех AppOps. Даже когда он установлен, он может не дать ожидаемых результатов.</p>
+            <p>Также:</p>
             <ul>
                 <li><a href="#faq11">Какие существуют режимы AppOp и какие мне следует использовать?</a></li>
                 <li><a href="#faq3">Почему некоторые AppOps нельзя изменить?</a></li>
             </ul>
-            <p>Please note that the permission mode "Allow only while using the app" does not alway set the AppOp mode to "Foreground":</p>
+            <p>Обратите внимание, что режим разрешений «Разрешить только при использовании приложения» не всегда устанавливает для режима AppOp значение «Передний план»:</p>
             <img class="small" src="../en/img/fg_and_one_time_perm_modes.webp" />
-            <p>Normally we see only two states for a manifest permission: granted and revoked. But Android uses <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/content/pm/PackageManager.java#4655">flags</a> to split these two states into many sub-states. For some permissions the same phenomenon is used to achieve the "grant only when the app is visible" behavior. AppOp permission is not used in this case.</p>
-            <p>For more details see official documentation of <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/permission/Permissions.md#background-access">background access</a> and <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/app/AppOps.md#foreground">foreground access</a>.</p>
-            <p>For simplicity, PMX does not watch permission flags at the moment. But in future an option might be added to also track changes to permission flags even if granted / revoked mode remains unchanged.</p>
+            <p>Обычно мы видим только два состояния разрешения манифеста: предоставлено и отозвано. Но Android использует <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/content/pm/PackageManager.java#4655">флаги</a>, чтобы разделить эти два состояния на многие подсостояния. Для некоторых разрешений тот же феномен используется для достижения поведения «предоставлять только тогда, когда приложение видимо». Разрешение AppOp не используется в этом случае.</p>
+            <p>Для получения более подробной информации смотрите официальную документацию <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/permission/Permissions.md#background-access">доступ в фоне</a> и <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/app/AppOps.md#foreground">доступ переднего плана (в активном режиме)</a>.</p>
+            <p>Для простоты PMX в данный момент не следит за флагами разрешений. Но в будущем может быть добавлена возможность также отслеживать изменения флагов разрешений, даже если предоставленный/отозванный режим остается неизменным.</p>
 
             <hr class="dim" />
 
@@ -694,12 +694,12 @@
             <hr class="dim" />
 
             <p id="faq39" class="high-bottom"><b>Могу ли я управлять функцией «Удалить разрешения, если приложение не используется» с помощью PMX?</b></p>
-            <p>Да. Эта функция доступна с <a href="https://developer.android.com/about/versions/11/privacy/permissions#auto-reset">Android 11</a>. It's also labeled as "Pause app activity if unused" on some devices.</p>
+            <p>Да. Эта функция доступна с <a href="https://developer.android.com/about/versions/11/privacy/permissions#auto-reset">Android 11</a>. На некоторых устройствах эта функция называется «Приостановить активити приложения, если оно не используется».</p>
             <img class="small" src="../en/img/remove_unused_perms.webp" />
-            <p>To change this option from PMX:</p>
+            <p>Чтобы изменить этот параметр из PMX:</p>
             <ul>
                 <li>Перейдите в <i>Фильтры исключения</i> -> <i>Список дополнительных AppOps</i> и отметьте "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>".</li>
-                <li>Вернувшись на основной экран, наберите "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>" вверху, в строке поиска. Make sure that deep search is enabled in search settings.</li>
+                <li>Вернувшись на основной экран, наберите "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>" вверху, в строке поиска. Убедитесь, что в настройках поиска включена опция "Глубокий поиск".</li>
                 <li>Установите режим <i>Разрешить</i> или <i>Игнорировать</i> для требуемых приложений.</li>
             </ul>
 
@@ -727,8 +727,8 @@
             <hr class="dim" />
 
             <p id="faq21" class="high-bottom"><b>Есть ли полный список всех разрешений с пояснениями?</b></p>
-            <p>Нет полного списка разрешений с описанием, по крайней мере, насколько мне известно. PMX Pro version shows a brief description of common manifest and AppOp permissions.</p>
-            <p>There are third party resources like <a href="https://android.izzysoft.de/applists.php?topic=perms">this one</a> by Izzy. Официальный сайт <a href="https://developer.android.com">разработки Андроид</a> и <a href="https://cs.android.com">исходного кода</a> также являются хорошими источниками для обучения.</p>
+            <p>Нет полного списка разрешений с описанием, по крайней мере, насколько мне известно. Версия PMX Pro показывает краткое описание общих разрешений манифеста и AppOp.</p>
+            <p>Есть сторонние ресурсы, такие как <a href="https://android.izzysoft.de/applists.php?topic=perms">этот</a> от Izzy. Официальный сайт <a href="https://developer.android.com">разработки Андроид</a> и <a href="https://cs.android.com">исходного кода</a> также являются хорошими источниками для обучения.</p>
             <p>С каждой новой версией Android добавляются новые разрешения, а некоторые  устаревают. Кроме того, не все разрешения необходимы каждому пользователю.</p>
 
             <hr class="dim" />
@@ -746,7 +746,7 @@
             <hr class="dim" />
 
             <p id="faq30" class="high-bottom"><b>Собираетесь ли вы добавить поддержку Shizuku в PMX?</b></p>
-            <p>Нет. Shizuku is not supported. It adds unnecessary design complexity. And we lose the freedom to develop our app independently without heavily relying on an additional third party app. PMX natively supports root and <a href="#adb_help">ADB</a>.</p>
+            <p>Нет. Shizuku не поддерживается. Это добавляет ненужную сложность в разработку. Полагаясь на дополнительное стороннее приложение, мы теряем свободу самостоятельной разработки нашего приложения. PMX изначально поддерживает рут и <a href="#adb_help">ADB</a>.</p>
 
             <hr class="dim" />
 
@@ -778,7 +778,7 @@
             <hr class="dim" />
 
             <p id="faq25" class="high-bottom"><b>Почему PMX требует разрешение INTERNET?</b></p>
-            <p>Автономная <a href="https://mirfatif.github.io/mirfatif/getpro">Pro</a> версия требует подключения к Интернету для проверки лицензии. Две другие <a href="#versions">версии</a> — бесплатная и Pro из Play Маркет могут работать полностью в автономном режиме.</p>
+            <p>Автономная <a href="https://mirfatif.github.io/mirfatif/getpro">Pro</a> версия требует подключения к Интернету для проверки лицензии. Две другие <a href="#versions">версии</a> — бесплатная и Pro из Play Маркет могут работать полностью в автономном режиме. Though Play Store app needs internet connection for license verification.</p>
 
             <p><b>Необязательное использование</b> разрешения <code>android.permission.INTERNET</code>:</p>
             <ul>
