@@ -10,7 +10,7 @@ android {
 }
 
 dependencies {
-    compileOnly 'androidx.annotation:annotation:1.5.0'
+    compileOnly 'androidx.annotation:annotation:1.6.0'
 
     // Just to resolve APIs in editor
     compileOnly project(path: ':hidden_apis')

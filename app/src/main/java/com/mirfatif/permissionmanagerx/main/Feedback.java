@@ -21,6 +21,10 @@ class Feedback {
   private boolean mFeedbackSwiped = false;
 
   void askForFeedback() {
+    if (mA.mB == null) {
+      return;
+    }
+
     if (!mFeedbackSwiped && MySettings.INS.shouldAskForFeedback()) {
       mA.mB.movCont.feedbackCont.setVisibility(View.VISIBLE);
       MySettings.INS.setAskForFeedbackTs(false);
