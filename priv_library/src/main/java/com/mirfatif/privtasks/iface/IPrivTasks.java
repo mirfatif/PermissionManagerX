@@ -10,7 +10,6 @@ import com.mirfatif.privtasks.bind.AppOpsLists;
 import com.mirfatif.privtasks.bind.MyPackageOps;
 import com.mirfatif.privtasks.bind.PermFixedFlags;
 import com.mirfatif.privtasks.bind.PrivsStatus;
-import com.mirfatif.privtasks.util.Util;
 import java.util.List;
 
 public interface IPrivTasks extends IInterface {
@@ -676,18 +675,22 @@ public interface IPrivTasks extends IInterface {
       reply.writeSerializable(t);
     }
 
-    private static void readException(Parcel reply) throws RemoteException {
-      if (reply.readInt() == ERROR) {
-        Throwable t = Util.readSerializable(reply, Throwable.class);
-        if (t instanceof HiddenAPIsException) {
-          throw (HiddenAPIsException) t;
-        } else if (t instanceof RemoteException) {
-          throw (RemoteException) t;
-        } else {
-          RemoteException re = new RemoteException();
-          re.initCause(t);
-          throw re;
-        }
+    public static void readException(Parcel reply) throws RemoteException {
+      if (reply.readInt() != ERROR) {
+        return;
+      }
+
+      Throwable t = (Throwable) reply.readSerializable();
+
+      if (t instanceof HiddenAPIsException) {
+        throw (HiddenAPIsException) t;
+      } else if (t instanceof RemoteException) {
+        throw (RemoteException) t;
+      } else {
+
+        RemoteException re = new RemoteException();
+        re.initCause(t);
+        throw re;
       }
     }
 

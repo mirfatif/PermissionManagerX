@@ -69,8 +69,13 @@ public class AdbConnManager extends AbsAdbConnectionManager {
   }
 
   private void init()
-      throws NoSuchAlgorithmException, IOException, CertificateException, InvalidKeySpecException,
-          InvalidKeyException, NoSuchProviderException, SignatureException {
+      throws NoSuchAlgorithmException,
+          IOException,
+          CertificateException,
+          InvalidKeySpecException,
+          InvalidKeyException,
+          NoSuchProviderException,
+          SignatureException {
 
     setApi(Build.VERSION.SDK_INT);
 

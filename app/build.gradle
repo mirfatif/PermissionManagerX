@@ -10,8 +10,8 @@ android {
     defaultConfig {
         applicationId APP_ID
 
-        versionCode 118
-        versionName 'v1.18'
+        versionCode 119
+        versionName 'v1.19'
 
         // Flavor-independent and BuildType-independent BuildConfig.APPLICATION_ID
         buildConfigField 'String', 'APP_ID', '"' + APP_ID + '"'
@@ -107,6 +107,7 @@ android {
     buildFeatures {
         viewBinding true
         dataBinding true
+        buildConfig = true
     }
 }
 
@@ -134,11 +135,11 @@ dependencies {
     implementation 'androidx.browser:browser:1.5.0'
     implementation 'androidx.room:room-runtime:2.5.1'
     implementation 'androidx.security:security-crypto:1.1.0-alpha06'
-    implementation 'androidx.webkit:webkit:1.6.1'
+    implementation 'androidx.webkit:webkit:1.7.0'
     annotationProcessor 'androidx.room:room-compiler:2.5.1'
 
     // For SnackBar and NavigationView. Also includes CoordinatorLayout
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.android.material:material:1.9.0'
 
     // To handle hyperlink onClick in TextView
     implementation 'me.saket:better-link-movement-method:2.2.0'

@@ -23,9 +23,6 @@ android {
     }
 }
 
-apply plugin: 'io.michaelrocks.paranoid'
-paranoid.enabled = false
-
 apply plugin: 'com.diffplug.spotless'
 spotless {
     java {
@@ -35,4 +32,5 @@ spotless {
 }
 if (!noPro) {
     preBuild.dependsOn(spotlessCheck)
+	apply from: '../configs/base-pro.gradle'
 }

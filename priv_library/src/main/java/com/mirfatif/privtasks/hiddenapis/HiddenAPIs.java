@@ -1,9 +1,5 @@
 package com.mirfatif.privtasks.hiddenapis;
 
-import static com.mirfatif.privtasks.hiddenapis.HiddenAPIsConstants.PKG_URI;
-import static com.mirfatif.privtasks.hiddenapis.HiddenAPIsConstants.START_SVC_ERR;
-import static com.mirfatif.privtasks.hiddenapis.HiddenAPIsConstants.getString;
-
 import android.app.AppOpsManager;
 import android.app.AppOpsManager.OpEntry;
 import android.app.AppOpsManager.PackageOps;
@@ -205,7 +201,7 @@ public enum HiddenAPIs {
   public int openAppInfo(String pkgName, int userId) throws RemoteException {
     Intent intent =
         new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-            .setData(Uri.parse(getString(PKG_URI, pkgName)))
+            .setData(Uri.parse("package:" + pkgName))
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     return SysSvcFactory.INS
         .getIActMgr()
@@ -224,7 +220,7 @@ public enum HiddenAPIs {
     }
 
     if (cn == null || !cn.getPackageName().equals(appId)) {
-      throw new HiddenAPIsException(getString(START_SVC_ERR, svcClass));
+      throw new HiddenAPIsException("Could not start " + svcClass);
     }
   }
 

@@ -15,3 +15,6 @@
 
 # Throwable names must not be obfuscated to correctly print e.toString()
 -keepnames class com.mirfatif.err.*
+
+-dontwarn io.github.muntashirakon.adb.AdbProtocol$AuthType
+-dontwarn jakarta.annotation.Nullable

@@ -7,6 +7,10 @@ android {
             consumerProguardFiles 'proguard-rules.pro', 'proguard-rules-pro.pro'
         }
     }
+
+    buildFeatures {
+        aidl = true
+    }
 }
 
 dependencies {

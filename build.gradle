@@ -4,14 +4,14 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.1'
-        classpath 'io.michaelrocks:paranoid-gradle-plugin:0.3.7'
+        classpath 'com.android.tools.build:gradle:8.0.2'
+        classpath 'org.lsposed.lsparanoid:gradle-plugin:0.5.2'
     }
 }
 
 plugins {
-    id 'com.diffplug.spotless' version '6.12.0'
-    id 'com.dorongold.task-tree' version '2.1.0'
+    id 'com.diffplug.spotless' version '6.19.0'
+    id 'com.dorongold.task-tree' version '2.1.1'
 }
 
 allprojects {
@@ -21,7 +21,7 @@ allprojects {
 
     project.ext {
         compileSdkVer = 33
-        buildToolsVer = '33.0.0'
+        buildToolsVer = '34.0.0'
         minSdkVer = 24
         targetSdkVer = 33
 
@@ -36,5 +36,15 @@ allprojects {
         nativeDir = rootDir.absolutePath + '/native'
 
         noPro = !new File(rootDir, 'configs/pro-app.gradle').isFile()
+    }
+}
+
+// https://github.com/diffplug/spotless/issues/1380#issuecomment-1405392506
+spotless {
+    predeclareDeps()
+}
+spotlessPredeclare {
+    java {
+        googleJavaFormat()
     }
 }

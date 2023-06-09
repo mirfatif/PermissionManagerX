@@ -165,6 +165,7 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
   private void setPackageEnabledState(Package pkg, boolean enabled) {
     DaemonIface.INS.setPkgState(!enabled, pkg.getName(), UserUtils.getUserId(pkg.getUid()));
     PackageParser.INS.updatePackage(pkg, true);
+    PackageParser.INS.clearPkgInfoList();
   }
 
   private void openAppInfo() {

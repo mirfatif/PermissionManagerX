@@ -1,0 +1,3 @@
+- Fixed crashes
+- Bumped libraries and build plugins
+- Minor improvements

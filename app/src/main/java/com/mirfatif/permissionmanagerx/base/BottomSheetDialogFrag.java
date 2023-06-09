@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentActivity;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.mirfatif.permissionmanagerx.R;
 
 public class BottomSheetDialogFrag extends BottomSheetDialogFragment {
 
@@ -40,7 +39,7 @@ public class BottomSheetDialogFrag extends BottomSheetDialogFragment {
   }
 
   public int getTheme() {
-    return R.style.Theme_Design_BottomSheetDialog;
+    return com.google.android.material.R.style.Theme_Design_BottomSheetDialog;
   }
 
   public void onSaveInstanceState(Bundle outState) {}

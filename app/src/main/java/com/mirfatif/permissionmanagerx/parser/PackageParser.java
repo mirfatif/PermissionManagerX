@@ -192,7 +192,7 @@ public enum PackageParser {
                         }));
   }
 
-  private void clearPkgInfoList() {
+  public void clearPkgInfoList() {
     if (ThreadUtils.isMainThread()) {
       BgRunner.execute(this::clearPkgInfoList);
       return;
