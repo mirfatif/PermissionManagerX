@@ -1,0 +1,2 @@
+- Fixed crashes
+- Minor improvements

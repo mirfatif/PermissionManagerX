@@ -21,10 +21,13 @@ import androidx.fragment.app.Fragment;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.privtasks.Constants;
+import com.mirfatif.privtasks.util.MyLog;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ApiUtils {
+
+  private static final String TAG = "ApiUtils";
 
   private ApiUtils() {}
 
@@ -159,10 +162,14 @@ public class ApiUtils {
   public static <T extends Parcelable> ArrayList<T> getParcelableArrayListExtra(
       Intent intent, String name, Class<T> cls) {
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-      return intent.getParcelableArrayListExtra(name, cls);
-    } else {
-      return intent.getParcelableArrayListExtra(name);
+      try {
+        return intent.getParcelableArrayListExtra(name, cls);
+      } catch (NullPointerException e) {
+        MyLog.e(TAG, "getParcelableArrayListExtra", e);
+      }
     }
+
+    return intent.getParcelableArrayListExtra(name);
   }
 
   public static boolean hasAppOpsPerm() {

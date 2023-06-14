@@ -10,8 +10,8 @@ android {
     defaultConfig {
         applicationId APP_ID
 
-        versionCode 119
-        versionName 'v1.19'
+        versionCode 120
+        versionName 'v1.20'
 
         // Flavor-independent and BuildType-independent BuildConfig.APPLICATION_ID
         buildConfigField 'String', 'APP_ID', '"' + APP_ID + '"'
