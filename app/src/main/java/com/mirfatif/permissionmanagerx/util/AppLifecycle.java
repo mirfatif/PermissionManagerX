@@ -47,13 +47,13 @@ public class AppLifecycle {
     public void onActivityPaused(Activity activity) {}
 
     public void onActivityStopped(Activity activity) {
-      mVisibleRemover.schedule(2, TimeUnit.SECONDS);
+      mVisibleRemover.schedule(1, TimeUnit.SECONDS);
     }
 
     public void onActivitySaveInstanceState(Activity activity, Bundle outState) {}
 
     public void onActivityDestroyed(Activity activity) {
-      mLiveRemover.schedule(2, TimeUnit.SECONDS);
+      mLiveRemover.schedule(1, TimeUnit.SECONDS);
     }
   }
 }

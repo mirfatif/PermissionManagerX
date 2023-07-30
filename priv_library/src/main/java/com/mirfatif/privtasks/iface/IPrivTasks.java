@@ -5,7 +5,7 @@ import android.os.IBinder;
 import android.os.IInterface;
 import android.os.Parcel;
 import android.os.RemoteException;
-import com.mirfatif.err.HiddenAPIsException;
+import com.mirfatif.err.ContainerException;
 import com.mirfatif.privtasks.bind.AppOpsLists;
 import com.mirfatif.privtasks.bind.MyPackageOps;
 import com.mirfatif.privtasks.bind.PermFixedFlags;
@@ -668,29 +668,17 @@ public interface IPrivTasks extends IInterface {
     private static final int ERROR = 1;
 
     private static void writeException(Parcel reply, Throwable t) {
+
       reply.setDataSize(0);
       reply.setDataPosition(0);
 
       reply.writeInt(ERROR);
-      reply.writeSerializable(t);
+      reply.writeString(ContainerException.toStackTrace(t));
     }
 
     public static void readException(Parcel reply) throws RemoteException {
-      if (reply.readInt() != ERROR) {
-        return;
-      }
-
-      Throwable t = (Throwable) reply.readSerializable();
-
-      if (t instanceof HiddenAPIsException) {
-        throw (HiddenAPIsException) t;
-      } else if (t instanceof RemoteException) {
-        throw (RemoteException) t;
-      } else {
-
-        RemoteException re = new RemoteException();
-        re.initCause(t);
-        throw re;
+      if (reply.readInt() == ERROR) {
+        throw new ContainerException(reply.readString());
       }
     }
 

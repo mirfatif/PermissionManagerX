@@ -39,6 +39,7 @@ import java.io.PrintWriter;
 import java.net.Inet4Address;
 import java.net.Socket;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -382,7 +383,8 @@ public enum DaemonHandler {
   static {
     VM_NAME = APPLICATION_ID.replace(APP_ID, DAEMON_PACKAGE_NAME + ".pmx");
     String dex = VM_NAME + ".dex";
-    String sharedDir = App.getCxt().getExternalFilesDir(null).getAbsolutePath();
+    String sharedDir =
+        Objects.requireNonNull(App.getCxt().getExternalFilesDir(null)).getAbsolutePath();
     SHARED_DIR_DEX_PATH = new File(sharedDir, dex).getAbsolutePath();
     TMP_DIR_DEX_PATH = new File(TMP_DIR, dex).getAbsolutePath();
   }

@@ -35,12 +35,10 @@ import com.mirfatif.privtasks.bind.MyPackageOps;
 import com.mirfatif.privtasks.bind.PermFixedFlags;
 import com.mirfatif.privtasks.util.MyLog;
 import com.mirfatif.privtasks.util.Util;
-import com.mirfatif.privtasks.util.bg.BgRunner;
 import com.mirfatif.privtasks.util.bg.RateLimitedTaskTyped;
 import com.mirfatif.privtasks.util.bg.SingleParamTask;
 import com.mirfatif.privtasks.util.bg.SingleSchedTaskExecutor;
 import com.mirfatif.privtasks.util.bg.SingleTaskExecutorTyped;
-import com.mirfatif.privtasks.util.bg.ThreadUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -122,6 +120,11 @@ public enum PackageParser {
       setProgress(i, false, false);
       PackageInfo pkgInfo = pkgInfoList.get(i);
 
+      if (pkgInfo == null) {
+
+        continue;
+      }
+
       Package pkg = new Package();
       if (isPkgUpdated(pkgInfo, pkg, true)) {
         pkgList.add(pkg);
@@ -193,11 +196,6 @@ public enum PackageParser {
   }
 
   public void clearPkgInfoList() {
-    if (ThreadUtils.isMainThread()) {
-      BgRunner.execute(this::clearPkgInfoList);
-      return;
-    }
-
     synchronized (mPkgInfoList) {
       mPkgInfoList.clear();
     }
@@ -410,12 +408,12 @@ public enum PackageParser {
   }
 
   boolean isPkgUpdated(PackageInfo pkgInfo, Package pkg, boolean filterPerms) {
-    Boolean out = PkgParserFlavor.INS.isFilteredOut(pkgInfo, pkg);
-    if (Boolean.TRUE.equals(out)) {
+    Boolean filteredOut = PkgParserFlavor.INS.isFilteredOut(pkgInfo, pkg);
+    if (Boolean.TRUE.equals(filteredOut)) {
       return false;
     }
 
-    boolean filterPkg = out == null;
+    boolean filterPkg = filteredOut == null;
 
     if (filterPkg && isFilteredOutPkgName(pkgInfo.packageName)) {
       return false;

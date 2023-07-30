@@ -276,6 +276,10 @@ public enum BackupRestore {
     Result res;
 
     try (InputStream is = App.getCxt().getContentResolver().openInputStream(file)) {
+      if (is == null) {
+        MyLog.e(TAG, "restore", "Failed to get InputStream");
+        return null;
+      }
       res = restore(is, skipUninstalledApps, swapUserIds);
     } catch (IOException | SecurityException e) {
 
@@ -284,7 +288,7 @@ public enum BackupRestore {
     }
 
     if (res != null) {
-      ExcFiltersData.INS.populateLists();
+      ExcFiltersData.INS.populateLists(true);
       PermsDb.INS.buildRefs();
       BackupRestoreFlavor.onRestoreDone();
     }

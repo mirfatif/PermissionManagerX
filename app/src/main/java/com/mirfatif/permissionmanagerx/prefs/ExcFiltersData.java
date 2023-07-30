@@ -64,9 +64,9 @@ public enum ExcFiltersData {
 
   private final Object EXCLUDED_APPS_LOCK = new Object();
 
-  private void populateExcludedAppsList(boolean update, boolean loadDefaults) {
+  private void populateExcludedAppsList(boolean force, boolean loadDefaults) {
     synchronized (EXCLUDED_APPS_LOCK) {
-      if (!update && mExcludedAppsLabels != null) {
+      if (!force && mExcludedAppsLabels != null) {
         return;
       }
 
@@ -158,9 +158,9 @@ public enum ExcFiltersData {
 
   private final Object EXCLUDED_PERMS_LOCK = new Object();
 
-  private void populateExcludedPermsList(boolean update) {
+  private void populateExcludedPermsList(boolean force) {
     synchronized (EXCLUDED_PERMS_LOCK) {
-      if (!update && mExcludedPerms != null) {
+      if (!force && mExcludedPerms != null) {
         return;
       }
 
@@ -194,9 +194,9 @@ public enum ExcFiltersData {
 
   private final Object EXTRA_APP_OPS_LOCK = new Object();
 
-  public void populateExtraAppOpsList(boolean update, boolean loadDefaults) {
+  public void populateExtraAppOpsList(boolean force, boolean loadDefaults) {
     synchronized (EXTRA_APP_OPS_LOCK) {
-      if (!update && mExtraAppOps != null) {
+      if (!force && mExtraAppOps != null) {
         return;
       }
 
@@ -240,10 +240,10 @@ public enum ExcFiltersData {
     }
   }
 
-  public void populateLists() {
-    BgRunner.execute(() -> populateExcludedAppsList(false, false));
-    BgRunner.execute(() -> populateExcludedPermsList(false));
-    BgRunner.execute(() -> populateExtraAppOpsList(false, false));
+  public void populateLists(boolean force) {
+    BgRunner.execute(() -> populateExcludedAppsList(force, false));
+    BgRunner.execute(() -> populateExcludedPermsList(force));
+    BgRunner.execute(() -> populateExtraAppOpsList(force, false));
   }
 
   public void resetExcFilters() {
@@ -274,7 +274,7 @@ public enum ExcFiltersData {
     prefEditor.apply();
     MyLog.i(TAG, "resetExcFilters", count + " preferences removed");
 
-    BgRunner.execute(() -> populateExcludedAppsList(true, true));
-    BgRunner.execute(() -> populateExtraAppOpsList(true, true));
+    populateExcludedAppsList(true, true);
+    populateExtraAppOpsList(true, true);
   }
 }

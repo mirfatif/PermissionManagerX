@@ -10,8 +10,8 @@ android {
     defaultConfig {
         applicationId APP_ID
 
-        versionCode 120
-        versionName 'v1.20'
+        versionCode 121
+        versionName 'v1.21'
 
         // Flavor-independent and BuildType-independent BuildConfig.APPLICATION_ID
         buildConfigField 'String', 'APP_ID', '"' + APP_ID + '"'
@@ -64,7 +64,7 @@ android {
         }
     }
 
-    applicationVariants.all { variant ->
+    applicationVariants.configureEach { variant ->
         def mf = variant.mergedFlavor
         if (variant.flavorName == 'psPro' && variant.buildType.name == 'release') {
             // No .ps.pro suffix for Play Store Pro release
@@ -80,7 +80,7 @@ android {
         // println()
     }
 
-    sourceSets.all { sc ->
+    sourceSets.configureEach { sc ->
         // These combinations are not created by default (required for daemon dex).
         def dir
         if (sc.name.matches('(self|ps)ProDebug')) {
@@ -112,7 +112,7 @@ android {
 }
 
 configurations {
-    all {
+    configureEach {
         // To avoid duplicate class version conflict.
         exclude group: 'androidx.lifecycle', module: 'lifecycle-viewmodel-ktx'
     }
@@ -128,15 +128,15 @@ dependencies {
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.recyclerview:recyclerview:1.3.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01'
-    implementation 'androidx.preference:preference:1.2.0'
+    implementation 'androidx.preference:preference:1.2.1'
     implementation 'androidx.browser:browser:1.5.0'
-    implementation 'androidx.room:room-runtime:2.5.1'
+    implementation 'androidx.room:room-runtime:2.5.2'
     implementation 'androidx.security:security-crypto:1.1.0-alpha06'
     implementation 'androidx.webkit:webkit:1.7.0'
-    annotationProcessor 'androidx.room:room-compiler:2.5.1'
+    annotationProcessor 'androidx.room:room-compiler:2.5.2'
 
     // For SnackBar and NavigationView. Also includes CoordinatorLayout
     implementation 'com.google.android.material:material:1.9.0'
@@ -206,7 +206,7 @@ def createTasksForDaemonBuild = () -> {
             File srcFile = new File(rootDir, src)
             File dstFile = new File(rootDir, 'app/src/' + dir + '/assets/' + daemonDex)
 
-            tasks.create('buildDaemon' + task) {
+            tasks.register('buildDaemon' + task) {
                 dependsOn(':priv_daemon:' + dexTaskDep)
 
                 if (foss) {
@@ -222,7 +222,7 @@ def createTasksForDaemonBuild = () -> {
     }
 }
 
-task buildNativeFoss(type: Exec) {
+tasks.register('buildNativeFoss', Exec) {
     environment 'ANDROID_NDK', ndkDir
     workingDir nativeDir
     commandLine './build_native.sh'
@@ -238,16 +238,20 @@ def setExtSrcDependencies(String type, String version) {
     for (boolean debug : new boolean[]{true, false}) {
         String build = debug ? 'Debug' : 'Release'
 
-        Task task = tasks.findByName('merge' + type + version + build + 'Assets')
+        TaskProvider task = tasks.named('merge' + type + version + build + 'Assets')
 
-        task.dependsOn('buildDaemon' + version + build)
+        task.configure {
+            dependsOn('buildDaemon' + version + build)
+        }
 
-        task = tasks.findByName('merge' + type + version + build + 'JniLibFolders')
+        task = tasks.named('merge' + type + version + build + 'JniLibFolders')
 
-        if (version == 'Foss') {
-            task.dependsOn('buildNativeFoss')
-        } else {
-            task.dependsOn('buildNative' + type + version + build)
+        task.configure {
+            if (version == 'Foss') {
+                dependsOn('buildNativeFoss')
+            } else {
+                dependsOn('buildNative' + type + version + build)
+            }
         }
     }
 }

@@ -15,7 +15,7 @@ plugins {
 }
 
 allprojects {
-    tasks.withType(JavaCompile) {
+    tasks.withType(JavaCompile).configureEach {
         options.compilerArgs << '-Xlint:all,-processing'
     }
 

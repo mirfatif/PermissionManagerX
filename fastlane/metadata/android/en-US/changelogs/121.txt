@@ -1,0 +1,8 @@
+- Fix Excluded Apps and AppOps not Restored from backup
+- Add 'All users' options in Main Activity menu
+- Add option to notify only red states in Scheduled Checks
+- Remove watcher notifications if an app is uninstalled
+- Increase permission switch padding
+- Fixed crashes
+- Minor improvements
+- Bump libraries

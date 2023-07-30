@@ -161,7 +161,7 @@ public class ApiUtils {
 
   public static <T extends Parcelable> ArrayList<T> getParcelableArrayListExtra(
       Intent intent, String name, Class<T> cls) {
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       try {
         return intent.getParcelableArrayListExtra(name, cls);
       } catch (NullPointerException e) {
