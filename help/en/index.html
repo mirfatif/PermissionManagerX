@@ -47,11 +47,18 @@
                 <li>
                     <a href="#perm_watcher" class="no-underline"><b>Permission Watcher</b></a>
                     <ul>
-                        <li><a href="#perm_watcher_fails" class="no-underline"><b>Why starting Permission Watcher fails?</b></a></li>
+                        <li><a href="#perm_watcher_fails" class="no-underline">Why starting Permission Watcher fails?</a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#perm_view" class="no-underline"><b>Permission View</b></a>
+                </li>
+                <li>
+                    <a href="#batch-ops" class="no-underline"><b>Batch Operations</b></a>
+                    <ul>
+                        <li><a href="#perm-profiles" class="no-underline">Permission Profiles</a></li>
+                        <li><a href="#refs-ops" class="no-underline">Operations with References</a></li>
+                    </ul>
                 </li>
                 <li><a href="#wrun-integration" class="no-underline"><b>Integration with WhatsRunning</b></a></li>
                 <li>
@@ -66,7 +73,7 @@
                 <li>
                     <a href="#versions" class="no-underline"><b>PMX Versions</b></a>
                     <ul>
-                        <li><a href="#paid_features" class="no-underline"><b>Paid Features</b></a></li>
+                        <li><a href="#paid_features" class="no-underline">Paid Features</a></li>
                     </ul>
                 </li>
                 <li><a href="#faq" class="no-underline"><b>FAQs</b></a></li>
@@ -132,7 +139,7 @@
             <p>Using PMX you can:</p>
             <ul>
                 <li>View / grant / revoke all the <i>manifest permissions</i> which <b><i>can or cannot</i></b> be set using app's settings screen. The list of permissions which cannot be set from GUI is very long.</li>
-                <li>View all the <i>AppOp permissions</i> which usually don't have any GUI setting. E.g. VIBRATE and READ_CLIPBOARD AppOp permissions. You can set the desired AppOps mode e.g. <b><i>Foreground</i></b>.</li>
+                <li>View all the <i>AppOp permissions</i> which usually don't have any GUI setting. E.g. <span class="code">VIBRATE</span> and <span class="code">READ_CLIPBOARD</span> AppOp permissions. You can set the desired AppOps mode e.g. <b><i>Foreground</i></b>.</li>
                 <li>View all permissions requested by an app which are <b><i>not changeable</i></b>.</li>
                 <li>View last used time for many AppOp permissions.</li>
                 <li>Change <b><i>System-Fixed</i></b> permissions which cannot be changed by any other means.</li>
@@ -160,9 +167,7 @@
                 <li>Or you granted a few permissions, as requested by the apps.</li>
             </ul>
             <p>Will you go through the whole hassle once again?</p>
-            <p>No you don't need to. You can make PMX remember your desired permission states. Set a permission, make it <i>GREEN</i>, and done. It will take only a few moments to look at all installed packages and figure out which permissions aren't correctly set e.g. by making a quick search: "<i>:RED|:ORANGE</i>" or "<i>!:GREEN</i>". See <a href="#search">Search</a> for more details.</p>
-            <p>Reference states can be backed up and restored conveniently.</p>
-            <p>Long press a permission to set or clear its reference state.</p>
+            <p>No you don't need to. You can make PMX remember your desired permission states. Set a permission, make it <font color="#90EE90"><b>GREEN</b></font>, and done. It will take only a few moments to look at all installed packages and figure out which permissions aren't correctly set e.g. by making a quick search: <span class="code">:RED|:ORANGE</span> or <span class="code">!:GREEN</span>. See <a href="#search">Search</a> for more details.</p>
             <p>Three reference states are:</p>
             <ul>
                 <li>
@@ -181,6 +186,9 @@
                     </p>
                 </li>
             </ul>
+
+            <p>Reference states can be backed up and restored conveniently. After a restore, there's a convenient way to set all permissions according to restored references. See <a href="#refs-ops">Batch Operations</a>.</p>
+            <p>Long press a permission to set or clear its reference state. There's also a top menu option on every app's permission list screen to set or clear all references. Or set references in bulk with <a href="#refs-ops">Batch Operations</a>.</p>
         </div>
 
         <div class="card">
@@ -236,32 +244,32 @@
             <ul>
                 <li>
                     <p>App state:</p>
-                    <p><b><i>:Critical :Framework :System :User :Disabled</i></b></p>
+                    <p><span class="code">:Critical</span> <span class="code">:Framework</span> <span class="code">:System</span> <span class="code">:User</span> <span class="code">:Disabled</span></p>
                 </li>
                 <li>
                     <p>Reference state:</p>
-                    <p><b><i>:ORANGE :GREEN :RED</i></b></p>
+                    <p><span class="code">:ORANGE</span> <span class="code">:GREEN</span> <span class="code">:RED</span></p>
                 </li>
                 <li>
                     <p>Permissions <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a>:</p>
-                    <p><b><i>:Normal :Dangerous :Signature :Internal :Development :Privileged :Fixed :AppOps :Unknown</i></b></p>
+                    <p><span class="code">:Normal</span> <span class="code">:Dangerous</span> <span class="code">:Signature</span> <span class="code">:Internal</span> <span class="code">:Development</span> <span class="code">:Privileged</span> <span class="code">:Fixed</span> <span class="code">:AppOps</span> <span class="code">:Unknown</span></p>
                 </li>
                 <li>
                     <p>Per UID AppOps:</p>
-                    <p><b><i>:UID</i></b></p>
+                    <p><span class="code">:UID</span></p>
                 </li>
                 <li>
                     <p>AppOps with last access time:</p>
-                    <p><b><i>:TIME</i></b></p>
+                    <p><span class="code">:TIME</span></p>
                 </li>
                 <li>
                     <p>Extra AppOps (never excluded in filter settings):</p>
-                    <p><b><i>:EXTRA</i></b></p>
+                    <p><span class="code">:EXTRA</span></p>
                 </li>
                 <li>
-                    <p>&amp; (AND), | (OR) and ! (NOT) operators:</p>
-                    <p><b><i>Foo|Bar&amp;Baz</i></b></p>
-                    <p><b><i>Foo&amp;!Bar&amp!Baz</i></b></p>
+                    <p><span class="code">&amp;</span> (AND), <span class="code">|</span> (OR) and <span class="code">!</span> (NOT) operators:</p>
+                    <p><span class="code">Foo|Bar&amp;Baz</span></p>
+                    <p><span class="code">Foo&!Bar&amp;!Baz</span></p>
                 </li>
             </ul>
             <p>Paid version also shows search suggestions (if set in preferences) to ease the search process.</p>
@@ -272,7 +280,7 @@
             <hr />
 
             <p>Do you want to keep track of any unwanted changes to the permissions for all the installed apps? <i>Scheduled Check</i> can do this for you at regular intervals (in minutes, hour or days).</p>
-            <p>Set <a href="#perm_ref">Permission References</a> to <i>GREEN</i> and leave the rest to PMX. If any permission is found changed (with <i>RED</i> state) or when a new app is found installed (with <i>ORANGE</i> state permissions), PMX reminds you that something needs your attention.</p>
+            <p>Set <a href="#perm_ref">Permission References</a> to <i>GREEN</i> and leave the rest to PMX. If any permission is found changed (with <font color="#FF0000"><b>RED</b></font> state) or when a new app is found installed (with <font color="#FFC107"><b>ORANGE</b></font> state permissions), PMX reminds you that something needs your attention.</p>
             <p>Additionally, if configured in preferences, Scheduled Check can auto-revoke granted permissions with an informatory notification.</p>
         </div>
 
@@ -289,7 +297,7 @@
             <p><b>Note:</b></p>
             <ul>
                 <li>
-                    <p>Only the permissions with "<i>RED</i>" reference state are revoked, not those with the "<i>ORANGE</i>" state. So you <b>MUST</b> first set the reference states. See <a href="#perm_ref">Permission References</a>.</p>
+                    <p>Only the permissions with <font color="#FF0000"><b>RED</b></font> reference state are revoked, not those with the <font color="#FFC107"><b>ORANGE</b></font> state. So you <b>MUST</b> first set the reference states. See <a href="#perm_ref">Permission References</a>.</p>
                 </li>
                 <li>
                     <p>Manifest permissions only with <i>Dangerous</i> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a> are watched. Those are the ones usually changed. Permissions with <i>Signature</i>|<i>Development</i> protection level or those with <i>System-Fixed</i> flag set are not watched, though they are changeable.</p>
@@ -302,7 +310,7 @@
                 </li>
             </ul>
             <p id="perm_watcher_fails"><b>Why starting Permission Watcher fails?</b></p>
-            <p>Are you using ADB? Some OEMs remove permission <i>OBSERVE_GRANT_REVOKE_PERMISSIONS</i> or <i>SET_ACTIVITY_WATCHER</i> from <i>Shell</i> package. If this is the case with you, we are sorry. This is something we cannot fix. On such devices Permission Watcher can work only with root. See the note at the start of <a href="#adb_help">Using PMX with ADB</a>.</p>
+            <p>Are you using ADB? Some OEMs remove permission <span class="code">OBSERVE_GRANT_REVOKE_PERMISSIONS</span> or <span class="code">SET_ACTIVITY_WATCHER</span> from <i>Shell</i> package. If this is the case with you, we are sorry. This is something we cannot fix. On such devices Permission Watcher can work only with root. See the note at the start of <a href="#adb_help">Using PMX with ADB</a>.</p>
         </div>
 
         <div class="card">
@@ -336,6 +344,46 @@
         </div>
 
         <div class="card">
+            <h2 id="batch-ops">Batch Operations (Pro only)</h2>
+            <hr />
+
+            <h3 class="high-top" id="perm-profiles">Permission Profiles</h3>
+            <ul>
+                <li>Create and edit permission profiles (templates).</li>
+                <li>Apply a profile to a selected list of apps.</li>
+                <li>Select a <b>Default Profile</b> to apply on newly installed apps (if <a href="#perm_watcher">Permission Watcher</a> is enabled).</li>
+            </ul>
+
+            <img class="small" src="../en/img/perm_profiles.webp" />
+
+            <h3 class="high-top" id="refs-ops">Operations with References</h3>
+            <ul>
+                <li>
+                    <p><b>Set Permissions</b></p>
+                    <p>Go through a list of selected apps and make <font color="#FF0000"><b>RED</b></font> permissions <font color="#90EE90"><b>GREEN</b></font> by setting their states according to the <a href="#perm_ref">reference values</a>. Permissions with Green and Orange states are ignored.</p>
+                    <p>This option is usually helpful when you have just restored a backup and there are many permissions with RED state.</p>
+                </li>
+                <li>
+                    <p><b>Set References</b></p>
+                    <p>Go through a list of selected apps and make <font color="#FF0000"><b>RED</b></font> and <font color="#FFC107"><b>ORANGE</b></font> permissions <font color="#90EE90"><b>GREEN</b></font> by setting their <a href="#perm_ref">reference values</a> according to the permission states.</p>
+                    <p>This option is usually helpful during an initial setup. You have just installed the PMX app and spent a few hours setting permissions. This option will make them all GREEN in a single tap.</p>
+                </li>
+                <li>
+                    <p><b>Cleanup References</b></p>
+                    <p>Cleanup permissions references database. Unused references will be removed.</p>
+                    <p>If there's a huge list of unused references, a cleanup may improve loading of app list.</p>
+                </li>
+                <li>
+                    <p><b>Reset References</b></p>
+                    <p>Reset permissions references database. All references will be removed.</p>
+                    <p>Not meant to be used normally. But in case if you want to start from scratch.</p>
+                </li>
+            </ul>
+
+            <img class="small" src="../en/img/set_refs.webp" />
+        </div>
+
+        <div class="card">
             <h2 id="wrun-integration">Integration with WhatsRunning</h2>
             <hr />
 
@@ -344,7 +392,7 @@
             <img class="small" src="../en/img/wrun_integration2.webp" />
             <p>So from PMX you can switch to WhatsRunning to find out if an app with restricted permissions is still running. If yes, in what state it is and how much resources it is using.</p>
             <p>Similarly, from WhatsRunning you can switch to PMX to find out what permissions a running (or dead) app is granted.</p>
-            <p>This is particularly helpful when analyzing the effect of permissions like <code>RUN_IN_BACKGROUND</code>.</p>
+            <p>This is particularly helpful when analyzing the effect of permissions like <span class="code">RUN_IN_BACKGROUND</span>.</p>
         </div>
 
         <div class="card">
@@ -391,8 +439,8 @@
                 </li>
                 <li>
                     <p>On PC open a terminal window (or command prompt on Windows) and run:</p>
-                    <p><code>adb tcpip 5555</code></p>
-                    <p>You must have <code>adb</code> executable available on your PC to run the above command. If not, here's the <a href="https://developer.android.com/studio/releases/platform-tools#downloads">download link</a>.</p>
+                    <p><span class="code">adb tcpip 5555</span></p>
+                    <p>You must have <span class="code">adb</span> executable available on your PC to run the above command. If not, here's the <a href="https://developer.android.com/studio/releases/platform-tools#downloads">download link</a>.</p>
                 </li>
             </ol>
 
@@ -406,16 +454,16 @@
                     <p>Connect your device and PC to a common Wi-Fi network.</p>
                 </li>
                 <li>
-                    <p>Get the IP address of the device (usually in Wi-Fi settings or in <b>Settings</b> -> <b>About</b>), say it's <code>192.168.1.1</code>.</p>
+                    <p>Get the IP address of the device (usually in Wi-Fi settings or in <b>Settings</b> -> <b>About</b>), say it's <span class="code">192.168.1.1</span>.</p>
                 </li>
                 <li>
                     <p>On PC run:</p>
-                    <p><code>adb connect 192.168.1.1</code></p>
+                    <p><span class="code">adb connect 192.168.1.1</span></p>
                 </li>
                 <li>
                     <p>Run again:</p>
-                    <p><code>adb shell id -u</code></p>
-                    <p>It should print <code>2000</code> (or <code>0</code>).</p>
+                    <p><span class="code">adb shell id -u</span></p>
+                    <p>It should print <span class="code">2000</span> (or <span class="code">0</span>).</p>
                 </li>
             </ol>
 
@@ -423,7 +471,7 @@
 
             <ol start="10">
                 <li>
-                    <p>Run PMX app and check <b><i>ADB Shell</i></b> in drawer. Enter port <code>5555</code> and tap connect.</p>
+                    <p>Run PMX app and check <b><i>ADB Shell</i></b> in drawer. Enter port <span class="code">5555</span> and tap connect.</p>
                     <img alt="ADB developer options" class="medium" src="../en/img/adb_in_dev_options_2.webp" />
                 </li>
                 <li>
@@ -474,11 +522,11 @@
 
             <h3 class="high-top" id="adb_connect_svc">ADB Connect Service</h3>
             <p>If <a href="#perm_watcher">Permission Watcher</a> or <a href="#scheduled_checker">Scheduled Checks</a> are enabled, PMX connects to ADB on device boot. But if ADB has not been enabled by then, PMX will no more try to connect to ADB unless explicitly done by opening the app.</p>
-            <p>But if you enable ADB on boot in an automated way, you can notify PMX by sending the following <code>Intent</code> that ADB has been enabled:</p>
+            <p>But if you enable ADB on boot in an automated way, you can notify PMX by sending the following <span class="code">Intent</span> that ADB has been enabled:</p>
 
-            <p class="horizontal-scroll"><code>am startservice -n com.mirfatif.permissionmanagerx/.fwk.AdbConnectSvcM --ei "com.mirfatif.pmx.extra.ADB_PORT" 5555</code></p>
+            <p class="horizontal-scroll"><span class="code">am startservice -n com.mirfatif.permissionmanagerx/.fwk.AdbConnectSvcM --ei "com.mirfatif.pmx.extra.ADB_PORT" 5555</span></p>
 
-            <p>Make sure to use the correct package name depending on the app version. Read <a href="https://developer.android.com/studio/command-line/adb#am">here</a> how to use <code>am</code> tool to start an app's service.</p>
+            <p>Make sure to use the correct package name depending on the app version. Read <a href="https://developer.android.com/studio/command-line/adb#am">here</a> how to use <span class="code">am</span> tool to start an app's service.</p>
         </div>
 
         <div class="card">
@@ -502,7 +550,7 @@
             <p>One can purchase the paid version just to make a donation and/or to use the paid-only features. Other methods of making a donation are available in the Free / Pro version under <b>Donate</b> section. Developers can also <b>support the app development</b> by contributing to the source code e.g. by fixing a bug. Users can help us make the app better by testing the beta releases, reporting any crashes or glitches, suggesting improvements and new features, or translating the app to their native language.</p>
 
             <h3 id="paid_features">Paid Features</h3>
-            <p>Paid version includes everything that's in the Free version, plus the following <b>extra features</b> which are also listed in the app under <b>About</b> section and in the Play Store description:</p>
+            <p>Paid version includes everything that's in the Free version, plus the following <b>extra features</b> which are also listed in the Play Store description:</p>
             <ul>
                 <li>Sort apps and permissions by different parameters</li>
                 <li>Scheduled check to notify bad reference states</li>
@@ -511,11 +559,11 @@
                 <li>Make changes to critical apps and permissions</li>
                 <li>Multiple users / work profile support</li>
                 <li>Auto create backup file on changes</li>
+                <li>Batch Operations (Profiles)</li>
                 <li>Permissions description</li>
                 <li>Search suggestions</li>
                 <li>Theming options</li>
-                <li>Permission Summary View</li>
-                <li>Batch operations (profiles) (upcoming)</li>
+                <li>Permissions View</li>
             </ul>
         </div>
 
@@ -540,7 +588,7 @@
             <p id="faq1" class="high-bottom"><b>Why PMX requires root or ADB access?</b></p>
             <p>Android won't allow a normal user app to change other apps' manifest or AppOp permissions, even its own. Only reading AppOps without root or ADB is possible provided that hidden APIs are not blacklisted on your device, which is <a href="https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces">very unlikely</a> on Android 9+.</p>
             <p>That's why we run a separate process with high privileges to circumvent the restrictions.</p>
-            <p>By default, the background process (daemon) is run with ADB UID (<code>2000</code>) or (if rooted) System UID (<code>1000</code>). On rooted devices UID can be changed in <b><i>Advanced Settings</i></b>.</p>
+            <p>By default, the background process (daemon) is run with ADB UID (<span class="code">2000</span>) or (if rooted) System UID (<span class="code">1000</span>). On rooted devices UID can be changed in <b><i>Advanced Settings</i></b>.</p>
 
             <hr class="dim" />
 
@@ -585,8 +633,8 @@
             <p id="faq3" class="high-bottom"><b>Why do some AppOps cannot be changed?</b></p>
             <p>Sometimes you see "AppOp mode not changed". It means that Android rejected the request to change the AppOp mode. You cannot change it no matter what method or app you use. There could be multiple possible reasons.</p>
             <ul>
-                <li>Some AppOps are dependent on their corresponding manifest permissions. So they cannot be changed independently. For instance you may not be able to deny <code>READ_CONTACTS</code> AppOp if <code>android.permission.READ_CONTACTS</code> manifest permission is granted.</li>
-                <li>Some AppOps are only used by Android for compatibility (e.g. <code>LEGACY_STORAGE</code>) and they don't actually control anything. If we explore their underlying working it's revealed that granting / revoking such permissions doesn't make sense.</li>
+                <li>Some AppOps are dependent on their corresponding manifest permissions. So they cannot be changed independently. For instance you may not be able to deny <span class="code">READ_CONTACTS</span> AppOp if <span class="code">android.permission.READ_CONTACTS</span> manifest permission is granted.</li>
+                <li>Some AppOps are only used by Android for compatibility (e.g. <span class="code">LEGACY_STORAGE</span>) and they don't actually control anything. If we explore their underlying working it's revealed that granting / revoking such permissions doesn't make sense.</li>
                 <li>Some permissions cannot be changed if the app is targeting old Android version.</li>
                 <li>Some OEM ROMs behave weird when it comes to AppOps. We do not know exactly what changes your OEM has made to the stock AOSP code. That's why the statement on Github and Play Store: <i>"The app is tested on stock Android 7-11. Some highly customized ROMs may behave unexpectedly."</i></li>
             </ul>
@@ -612,19 +660,19 @@
             <p id="faq8" class="high-bottom"><b>Why don't I see XYZ AppOp in ABC package?</b></p>
             <p>Please check <i>Exclusion Filters</i> if XYZ AppOp is excluded from the visible list. Or ABC package might not be using XYZ operation. You don't need to be worried about this.</p>
             <p>But if you want to see the XYZ AppOp for all apps, go to <b>Exclusion Filters</b> -> <b>Extra AppOps, never excluded</b> and check XYZ AppOp in the list.</p>
-            <p>For instance, write <i>_CLIPBOARD</i> in search box (with <i>Deep Search</i> box checked) and you'll get all apps which used (or tried to use) <i>READ_CLIPBOARD</i> or <i>WRITE_CLIPBOARD</i> permission. Timestamp is also shown (but not for all AppOps).</p>
+            <p>For instance, write <span class="code">_CLIPBOARD</span> in search box (with <i>Deep Search</i> box checked) and you'll get all apps which used (or tried to use) <span class="code">READ_CLIPBOARD</span> or <span class="code">WRITE_CLIPBOARD</span> permission. Timestamp is also shown (but not for all AppOps).</p>
             <p>So if the app you are concerned about isn't in the search results, check both AppOps in the <i>Exclusion Filters</i> list mentioned above.</p>
 
             <hr class="dim" />
 
             <p id="faq5" class="high-bottom"><b>What should I select for Privileged Daemon UID in Advanced Settings? System or ADB?</b></p>
             <p>It matters only if you are using root, or ADBD on your device is running with root (which is not the case with the final user devices).</p>
-            <p>Preferably use <b>System</b> (UID 1000) as it allows more privileges than <b>ADB</b> (UID 2000). E.g. changing <i>"System-Fixed"</i> permissions is possible only when running as system.</p>
+            <p>Preferably use <b>System</b> (UID <span class="code">1000</span>) as it allows more privileges than <b>ADB</b> (UID <span class="code">2000</span>). E.g. changing <i>"System-Fixed"</i> permissions is possible only when running as system.</p>
 
             <hr class="dim" />
 
             <p id="faq9" class="high-bottom"><b>What are <i>invalid permissions</i> in Exclusion Filters?</b></p>
-            <p>If an app is requesting a manifest permission but it's not declared (provided) by Android framework or any of the installed packages, it's an invalid permission. For instance "<i>com.android.vending.BILLING</i>" is an invalid permission if Play Store app is not installed on your device.</p>
+            <p>If an app is requesting a manifest permission but it's not declared (provided) by Android framework or any of the installed packages, it's an invalid permission. For instance <span class="code">com.android.vending.BILLING</span> is an invalid permission if Play Store app is not installed on your device.</p>
 
             <hr class="dim" />
 
@@ -635,7 +683,7 @@
 
             <p id="faq11" class="high-bottom"><b>What are different AppOp modes and which one should I use?</b></p>
             <p>Normally you should <i>Allow</i> or <i>Ignore</i>. Or you may want to allow an operation only when the app is in <i>Foreground</i> (only on Pie+). <i>Deny</i> is the intense version of <i>Ignore</i> which may crash the requesting app. <i>Default</i> is the system's default behavior which differs for different AppOps.</p>
-            <p>Please note that not every AppOp mode can be possibly set on every AppOp for every app. For instance on recent Android releases CAMERA and MICROPHONE are allowed to be used by user apps only in foreground (even if set mode is <i>Allow</i>). Similarly, some AppOps can never be set to <i>Foreground</i> mode.</p>
+            <p>Please note that not every AppOp mode can be possibly set on every AppOp for every app. For instance on recent Android releases <span class="code">CAMERA</span> and <span class="code">MICROPHONE</span> are allowed to be used by user apps only in foreground (even if set mode is <i>Allow</i>). Similarly, some AppOps can never be set to <i>Foreground</i> mode.</p>
             <p>Related: <a href="#faq3">Why do some AppOps cannot be changed?</a></p>
             <p>Official documentation: <a href="https://developer.android.com/reference/android/app/AppOpsManager#access-control">AppOpsManager</a>.</p>
 
@@ -662,7 +710,7 @@
             <hr class="dim" />
 
             <p id="faq13" class="high-bottom"><b>What does READ_MEDIA_AUDIO permission do?</b></p>
-            <p>READ_MEDIA_[AUDIO|VIDEO|IMAGES] are recent addition to AppOps list, added in Android 10 (IIRC) as a part of Android's <i>Scoped Storage</i> implementation. Source code <a href="https://cs.android.com/android/platform/superproject/+/android-11.0.0_r1:frameworks/base/core/java/android/app/AppOpsManager.java;l=1065">states</a>: <i>Read media of audio type</i>. In simple terms it controls apps (which use <a href="https://developer.android.com/training/data-storage/shared/media">MediaStore</a>) access to audio files in external shared storage.</p>
+            <p><span class="code">READ_MEDIA_[AUDIO|VIDEO|IMAGES]</span> are recent addition to AppOps list, added in Android 10 (IIRC) as a part of Android's <i>Scoped Storage</i> implementation. Source code <a href="https://cs.android.com/android/platform/superproject/+/android-11.0.0_r1:frameworks/base/core/java/android/app/AppOpsManager.java;l=1065">states</a>: <i>Read media of audio type</i>. In simple terms it controls apps (which use <a href="https://developer.android.com/training/data-storage/shared/media">MediaStore</a>) access to audio files in external shared storage.</p>
 
             <hr class="dim" />
 
@@ -672,7 +720,7 @@
             <hr class="dim" />
 
             <p id="faq16" class="high-bottom"><b>How can I change INTERNET permission?</b></p>
-            <p>Android doesn't allow changing all permissions, like those with the <b>Normal</b> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a> (e.g. INTERNET) or those with <b>Fixed</b> flag or <b>Signature</b> protection level (usually System or Framework apps). See <a href="#perms_types">Manifest permissions and AppOps</a>.</p>
+            <p>Android doesn't allow changing all permissions, like those with the <b>Normal</b> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a> (e.g. <span class="code">INTERNET</span>) or those with <b>Fixed</b> flag or <b>Signature</b> protection level (usually System or Framework apps). See <a href="#perms_types">Manifest permissions and AppOps</a>.</p>
 
             <hr class="dim" />
 
@@ -698,8 +746,8 @@
             <img class="small" src="../en/img/remove_unused_perms.webp" />
             <p>To change this option from PMX:</p>
             <ul>
-                <li>Go to <i>Exclusion Filters</i> -> <i>Extra AppOps list</i> and check "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>".</li>
-                <li>Back on the main screen, type "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>" in the top search bar. Make sure that deep search is enabled in search settings.</li>
+                <li>Go to <i>Exclusion Filters</i> -> <i>Extra AppOps list</i> and check <span class="code">AUTO_REVOKE_PERMISSIONS_IF_UNUSED</span>.</li>
+                <li>Back on the main screen, type <span class="code">AUTO_REVOKE_PERMISSIONS_IF_UNUSED</span> in the top search bar. Make sure that deep search is enabled in search settings.</li>
                 <li>Set the mode <i>Allow</i> or <i>Ignore</i> for whichever apps you want.</li>
             </ul>
 
@@ -734,7 +782,7 @@
             <hr class="dim" />
 
             <p id="faq22" class="high-bottom"><b>How to use the app in work profile / multi-user environment?</b></p>
-            <p>Paid version supports work profiles and multiple users. Select a user from drop-down menu.</p>
+            <p>Pro version supports work profiles and multiple users. Select a user from drop-down menu.</p>
             <img class="small" src="../en/img/multi_users.webp" />
 
             <hr class="dim" />
@@ -772,29 +820,29 @@
             <hr class="dim" />
 
             <p id="faq38" class="high-bottom"><b>When a new app is installed, can PMX drop its permissions by default?</b></p>
-            <p>Yes. But there's nothing to drop. All the revocable manifest permissions are already revoked and stay revoked unless the user grants them explicitly. As far as AppOps are concerned, many of them don't appear until at least once used by the app e.g. VIBRATION and READ_CLIPBOARD. Many others (e.g. READ_CONTACTS) have their corresponding manifest permissions already dropped, as pointed out. So it's not predictable at the time of app installation which AppOps should be removed.</p>
-            <p>But a notification is displayed when a new app is installed (if using <a href="#perm_watcher">Permission Watcher</a>) so the user can set permissions one by one or apply a profile (upcoming feature).</p>
+            <p>Yes. But there's nothing to drop. All the revocable manifest permissions are already revoked and stay revoked unless the user grants them explicitly. As far as AppOps are concerned, many of them don't appear until at least once used by the app e.g. <span class="code">VIBRATE</span> and <span class="code">READ_CLIPBOARD</span>. Many others (e.g. <span class="code">READ_CONTACTS</span>) have their corresponding manifest permissions already dropped, as pointed out. So it's not predictable at the time of app installation which AppOps should be removed.</p>
+            <p>But a notification is displayed when a new app is installed (if using <a href="#perm_watcher">Permission Watcher</a>) so the user can set permissions one by one or <a href="#perm-profiles">apply a profile</a>.</p>
 
             <hr class="dim" />
 
             <p id="faq25" class="high-bottom"><b>Why PMX requires INTERNET permission?</b></p>
             <p>The standalone <a href="https://mirfatif.github.io/mirfatif/getpro">Pro</a> version requires internet connection for license verification. The other two <a href="#versions">versions</a> - Free and Play Store Pro - can work completely offline. Though Play Store app needs internet connection for license verification.</p>
 
-            <p><b>Optional use</b> of <code>android.permission.INTERNET</code> permission:</p>
+            <p><b>Optional use</b> of <span class="code">android.permission.INTERNET</span> permission:</p>
             <ul>
                 <li>Check for app updates. You can disable this in app settings.</li>
                 <li>Fetch help contents of this webpage that you view in drawer -> Help.</li>
             </ul>
 
-            <p><b>Local (on-device) use</b> of <code>android.permission.INTERNET</code> permission:</p>
-            <p>Android does not allow apps to create network sockets without having the <a href="https://developer.android.com/reference/android/Manifest.permission#INTERNET">INTERNET</a> permission even if they are meant to be used only locally and not for an internet connection. PMX has two uses of local (on-device) connections (the ability to create <code>localhost</code> sockets at <code>127.0.0.1</code>) for Inter Process Communication (IPC):</p>
+            <p><b>Local (on-device) use</b> of <span class="code">android.permission.INTERNET</span> permission:</p>
+            <p>Android does not allow apps to create network sockets without having the <a href="https://developer.android.com/reference/android/Manifest.permission#INTERNET">INTERNET</a> permission even if they are meant to be used only locally and not for an internet connection. PMX has two uses of local (on-device) connections (the ability to create <span class="code">localhost</span> sockets at <span class="code">127.0.0.1</span>) for Inter Process Communication (IPC):</p>
 
             <ul>
                 <li>PMX starts a background process with root / ADB privileges and talks to that process over network socket. After the initial handshake, both processes start talking over Binder. We have no better way to do this because Android doesn't allow apps to talk over UNIX domain sockets either.</li>
-                <li>If your device is not rooted and you <a href="#adb_help">use PMX with ADB</a>, then connecting to <code>adbd</code> requires internet permissions. See <a href="#faq27">Is PMX spying on me using ADB over network?</a>.</li>
+                <li>If your device is not rooted and you <a href="#adb_help">use PMX with ADB</a>, then connecting to <span class="code">adbd</span> requires internet permissions. See <a href="#faq27">Is PMX spying on me using ADB over network?</a>.</li>
             </ul>
 
-            <p>So if the app is unable to create or use local network sockets, it will fail. And if you want to stop PMX from using internet, it must not stop the app from talking to on-device processes over <a href="https://superuser.com/questions/263142">loopback interface for IPC</a>. This is usually the case with <code>iptables</code>-based firewalls like AFWall+ and VPN based firewalls like NetGuard. But some ROMs have a built-in feature to disallow network access:</p>
+            <p>So if the app is unable to create or use local network sockets, it will fail. And if you want to stop PMX from using internet, it must not stop the app from talking to on-device processes over <a href="https://superuser.com/questions/263142">loopback interface for IPC</a>. This is usually the case with <span class="code">iptables</span>-based firewalls like AFWall+ and VPN based firewalls like NetGuard. But some ROMs have a built-in feature to disallow network access:</p>
             <img class="small" src="../en/img/allow_network_access.webp" />
             <p>This not only prevents the app from using internet but also disables its ability to create loopback sockets for IPC. So PMX won't be able to get root / ADB privileges if this permission is denied.</p>
 
@@ -808,8 +856,8 @@
 
             <p id="faq27" class="high-bottom"><b>Is PMX spying on me using ADB over network?</b></p>
             <p>No.</p>
-            <p>PMX talks to <code>adbd</code> process over localhost (<code>127.0.0.1</code>). But there's no way to start <code>adbd</code> listen on localhsot only, and not on other network interfaces (because ADB is meant to be used externally from a PC). You can surely stop <code>adbd</code> listening from external IP addresses, if you can. PMX would still work, without any port being exposed externally.</p>
-            <p>Also you can change <code>5555</code> port to whatever number you want in <b>Advanced Settings</b>. It's not hard-coded.</p>
+            <p>PMX talks to <span class="code">adbd</span> process over localhost (<span class="code">127.0.0.1</span>). But there's no way to start <span class="code">adbd</span> listen on localhsot only, and not on other network interfaces (because ADB is meant to be used externally from a PC). You can surely stop <span class="code">adbd</span> listening from external IP addresses, if you can. PMX would still work, without any port being exposed externally.</p>
+            <p>Also you can change <span class="code">5555</span> port to whatever number you want in <b>Advanced Settings</b>. It's not hard-coded.</p>
             <p>Also ADB since Android 4.2 is meant to be protected with <b>RSA key authentication</b> (one of the strongest authentication mechanism). So even if the device is accessible from internet (which is highly <a href="https://android.stackexchange.com/a/205807/218526">unlikely</a>), no one can make an ADB connection without authentication.</p>
             <p>You can verify these claims in whatever way you want. We are here to assist you technically.</p>
 

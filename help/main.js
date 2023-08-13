@@ -31,6 +31,20 @@
 
     const getHeaderHeight = () => Math.min(screen.availHeight / 4.5, screen.availWidth / 3);
 
+    const mixColors = (base, other, percentage) => {
+        const red = parseInt(base.substring(1, 3), 16);
+        const green = parseInt(base.substring(3, 5), 16);
+        const blue = parseInt(base.substring(5, 7), 16);
+
+        const mixAmount = percentage / 100;
+
+        const mixedRed = Math.round((1 - mixAmount) * red + mixAmount * other);
+        const mixedGreen = Math.round((1 - mixAmount) * green + mixAmount * other);
+        const mixedBlue = Math.round((1 - mixAmount) * blue + mixAmount * other);
+
+        return `#${mixedRed.toString(16)}${mixedGreen.toString(16)}${mixedBlue.toString(16)}`;
+    };
+
     addStyleSheet(null, [
         ['body',
             ['color', Android ? Android.getTextColor() : ''],
@@ -51,6 +65,10 @@
 
         ['body *',
             ['scroll-margin-top', getHeaderHeight() / 3 + 5 + 'px']
+        ],
+
+        ['span.code',
+            ['background-color', Android ? mixColors(Android.getBgColor(), Android.isDarkTheme() ? 255 : 0, Android.isDarkTheme() ? 15 : 10) : '']
         ]
     ]);
 

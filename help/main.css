@@ -89,3 +89,10 @@ div.langs-cont {
     overflow-x: scroll;
     -webkit-overflow-scrolling: touch;
 }
+
+span.code {
+    background-color: rgb(235, 235, 235);
+    font-family: monospace;
+    padding: 3px;
+    border-radius: 3px;
+}
