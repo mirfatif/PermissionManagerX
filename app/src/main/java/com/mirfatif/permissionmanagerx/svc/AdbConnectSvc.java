@@ -96,14 +96,10 @@ public class AdbConnectSvc {
     int res = DaemonStarter.INS.startPrivDaemon(false, false);
 
     switch (res) {
-      case DaemonStarter.DaemonStartStatus.NO_PRIVS:
-        MyLog.e(TAG, null, "Failed to get privileges");
-        break;
-      case DaemonStarter.DaemonStartStatus.FAILED:
-        MyLog.e(TAG, null, "Failed to start daemon");
-        break;
-      default:
-        MyLog.i(TAG, null, "Daemon started");
+      case DaemonStarter.DaemonStartStatus.NO_PRIVS -> MyLog.e(
+          TAG, null, "Failed to get privileges");
+      case DaemonStarter.DaemonStartStatus.FAILED -> MyLog.e(TAG, null, "Failed to start daemon");
+      default -> MyLog.i(TAG, null, "Daemon started");
     }
   }
 }

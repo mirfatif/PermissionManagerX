@@ -99,8 +99,8 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="end"
-          android:paddingHorizontal="4dp"
-          android:paddingVertical="6dp"
+          android:paddingHorizontal="6dp"
+          android:paddingVertical="8dp"
           android:thumb="@drawable/slim_switch_thumb"
           app:switchMinWidth="30dp"
           app:track="@drawable/slim_switch_track" />

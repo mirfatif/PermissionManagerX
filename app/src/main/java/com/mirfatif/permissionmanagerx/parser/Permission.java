@@ -2,6 +2,7 @@ package com.mirfatif.permissionmanagerx.parser;
 
 import static com.mirfatif.permissionmanagerx.util.ApiUtils.getString;
 
+import android.app.AppOpsManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import com.mirfatif.permissionmanagerx.R;
@@ -11,8 +12,11 @@ import com.mirfatif.permissionmanagerx.prefs.MySettingsFlavor;
 import com.mirfatif.permissionmanagerx.privs.DaemonHandler;
 import com.mirfatif.permissionmanagerx.privs.DaemonIface;
 import com.mirfatif.permissionmanagerx.util.UserUtils;
+import com.mirfatif.privtasks.Constants;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Permission {
 
@@ -22,10 +26,10 @@ public class Permission {
   public static final String PROTECTION_SIGNATURE = "PROTECTION_SIGNATURE";
   public static final String PROTECTION_INTERNAL = "PROTECTION_INTERNAL";
 
-  public static final String GRANTED = "GRANTED";
-  public static final String REVOKED = "REVOKED";
+  private static final String GRANTED = "GRANTED";
+  private static final String REVOKED = "REVOKED";
 
-  private static final String APP_OPS = "APP_OPS";
+  public static final String PROTECTION_APP_OPS = "APP_OPS";
 
   private final int mGroupId;
   private final int mIconResId;
@@ -124,7 +128,7 @@ public class Permission {
     mExtraAppOp = isExtraAppOp;
 
     mAppOp = true;
-    mProtectionLevel = APP_OPS;
+    mProtectionLevel = PROTECTION_APP_OPS;
     mPrivileged = false;
     mDevelopment = false;
     mManifestPermAppOp = false;
@@ -250,7 +254,7 @@ public class Permission {
       return false;
     }
     if (mAppOp) {
-      return !hasDependsOnPerm();
+      return isAppOpPermChangeable(mDependsOn);
     } else {
 
       return (mProtectionLevel.equals(PROTECTION_DANGEROUS) || mDevelopment)
@@ -262,65 +266,24 @@ public class Permission {
 
   public boolean isChangeableForDump() {
     if (mAppOp) {
-      return !hasDependsOnPerm();
+      return isAppOpPermChangeable(mDependsOn);
     }
 
-    return (mProtectionLevel.equals(PROTECTION_DANGEROUS) || mDevelopment)
+    return isManifestPermChangeable(mProtectionLevel, mDevelopment)
         && !mPolicyFixed
         && !mSystemFixed;
   }
 
-  public CharSequence getPermNameString() {
-    CharSequence permName = PkgParserFlavor.INS.getPermName(this);
-    if (mAppOp && hasDependsOnPerm()) {
-      permName = TextUtils.concat(permName, " (", getDependsOnName(), ")");
-    }
-    return permName;
+  public static boolean isManifestPermChangeable(String protLevel, boolean isDevelopment) {
+    return PROTECTION_DANGEROUS.equals(protLevel) || isDevelopment;
   }
 
-  private String getLocalizedProtectionLevel() {
-    switch (mProtectionLevel) {
-      case PROTECTION_UNKNOWN:
-      default:
-        return SearchConstants.INS.SEARCH_PROT_UNKNOWN;
-      case PROTECTION_NORMAL:
-        return SearchConstants.INS.SEARCH_PROT_NORMAL;
-      case PROTECTION_DANGEROUS:
-        return SearchConstants.INS.SEARCH_PROT_DANGEROUS;
-      case PROTECTION_SIGNATURE:
-        return SearchConstants.INS.SEARCH_PROT_SIGNATURE;
-      case PROTECTION_INTERNAL:
-        return SearchConstants.INS.SEARCH_PROT_INTERNAL;
-      case APP_OPS:
-        return SearchConstants.INS.SEARCH_APP_OPS;
-    }
+  public static boolean isAppOpPermChangeable(int op) {
+    return isAppOpPermChangeable(AppOpsParser.INS.getDependsOn(op));
   }
 
-  public String getProtLevelString() {
-    String protectionLevel = getLocalizedProtectionLevel().replaceFirst("^:", "");
-
-    if (mAppOp) {
-      if (mPerUid) {
-        protectionLevel = getString(R.string.prot_lvl_uid_mode, protectionLevel);
-      }
-      if (mExtraAppOp) {
-        protectionLevel = getString(R.string.prot_lvl_extra, protectionLevel);
-      }
-    } else {
-      if (mDevelopment) {
-        protectionLevel = getString(R.string.prot_lvl_development2, protectionLevel);
-      }
-      if (mManifestPermAppOp) {
-        protectionLevel = getString(R.string.prot_lvl_app_ops2, protectionLevel);
-      }
-      if (mPrivileged) {
-        protectionLevel = getString(R.string.prot_lvl_privileged2, protectionLevel);
-      }
-      if (mSystemFixed || mPolicyFixed) {
-        protectionLevel = getString(R.string.prot_lvl_fixed2, protectionLevel);
-      }
-    }
-    return protectionLevel;
+  public static boolean isAppOpPermChangeable(String dependsOn) {
+    return dependsOn == null;
   }
 
   public boolean contains(Package pkg, String queryText, boolean caseSensitive) {
@@ -375,7 +338,7 @@ public class Permission {
     for (String field :
         new String[] {
           PkgParserFlavor.INS.getPermName(this).toString(),
-          ":" + getLocalizedProtectionLevel(),
+          ":" + getLocalizedProtectionLevel(mProtectionLevel),
           ((mAppOp || mManifestPermAppOp) ? SearchConstants.INS.SEARCH_APP_OPS : ""),
           ((mAppOp && mPerUid) ? SearchConstants.INS.SEARCH_UID : ""),
           (mPrivileged ? SearchConstants.INS.SEARCH_PRIVILEGED : ""),
@@ -436,7 +399,7 @@ public class Permission {
       DaemonIface.INS.setAppOpMode(
           pkg.getUid(),
           isPerUid() ? null : pkg.getName(),
-          AppOpsParser.INS.getAppOpsNames().indexOf(getName()),
+          AppOpsParser.INS.getAppOpCode(getName()),
           mode);
     }
   }
@@ -448,23 +411,188 @@ public class Permission {
     }
   }
 
-  public String refString() {
-    return isAppOp() ? refString(getAppOpMode()) : refString(isGranted());
+  public String createRefStringForDb() {
+    return isAppOp() ? createRefStringForDb(getAppOpMode()) : createRefStringForDb(isGranted());
   }
 
-  public static String refString(boolean granted) {
+  public static String createRefStringForDb(boolean isAppOp, boolean granted) {
+    if (isAppOp) {
+      return createRefStringForDb(getAppOpMode(granted));
+    } else {
+      return createRefStringForDb(granted);
+    }
+  }
+
+  public static String createRefStringForDb(boolean granted) {
     return granted ? Permission.GRANTED : Permission.REVOKED;
   }
 
-  public static String refString(int appOpMode) {
-    return AppOpsParser.INS.getAppOpsModes().get(appOpMode);
+  public static String createRefStringForDb(int appOpMode) {
+    return AppOpsParser.INS.opModeToName(appOpMode);
   }
 
-  public static Boolean isReferenced(String savedRef, boolean granted) {
-    return savedRef == null ? null : savedRef.equals(refString(granted));
+  public static boolean isGranted(String dbRefString, boolean isAppOp) {
+    if (isAppOp) {
+      Integer mode = getAppOpMode(dbRefString);
+      return mode != null && isAppOpGranted(mode);
+    } else {
+      return Permission.GRANTED.equals(dbRefString);
+    }
   }
 
-  public static Boolean isReferenced(String savedRef, int appOpMode) {
-    return savedRef == null ? null : savedRef.equals(refString(appOpMode));
+  public static boolean isAppOpGranted(int appOpMode) {
+    return appOpMode >= 0
+        && appOpMode != AppOpsManager.MODE_IGNORED
+        && appOpMode != AppOpsManager.MODE_ERRORED;
+  }
+
+  public static int getAppOpMode(boolean granted) {
+    return granted ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED;
+  }
+
+  public static boolean isAppOpInGrantedNonGrantedState(String dbRefString) {
+    Integer mode = getAppOpMode(dbRefString);
+    return mode == null || mode == AppOpsManager.MODE_ALLOWED || mode == AppOpsManager.MODE_IGNORED;
+  }
+
+  public static Integer getAppOpMode(String dbRefString) {
+    return AppOpsParser.INS.nameToOpMode(dbRefString);
+  }
+
+  public static Boolean isReferenced(String dbRefString, boolean granted) {
+    return dbRefString == null ? null : dbRefString.equals(createRefStringForDb(granted));
+  }
+
+  public static Boolean isReferenced(String dbRefString, int appOpMode) {
+    return dbRefString == null ? null : dbRefString.equals(createRefStringForDb(appOpMode));
+  }
+
+  public CharSequence getPermNameString() {
+    CharSequence permName = PkgParserFlavor.INS.getPermName(this);
+    if (mAppOp && hasDependsOnPerm()) {
+      permName = TextUtils.concat(permName, " (", getDependsOnName(), ")");
+    }
+    return permName;
+  }
+
+  private static String getLocalizedProtectionLevel(String protectionLevel) {
+    return switch (protectionLevel) {
+      default -> SearchConstants.INS.SEARCH_PROT_UNKNOWN;
+      case PROTECTION_NORMAL -> SearchConstants.INS.SEARCH_PROT_NORMAL;
+      case PROTECTION_DANGEROUS -> SearchConstants.INS.SEARCH_PROT_DANGEROUS;
+      case PROTECTION_SIGNATURE -> SearchConstants.INS.SEARCH_PROT_SIGNATURE;
+      case PROTECTION_INTERNAL -> SearchConstants.INS.SEARCH_PROT_INTERNAL;
+      case PROTECTION_APP_OPS -> SearchConstants.INS.SEARCH_APP_OPS;
+    };
+  }
+
+  public static String getLocalizedProtLevelString(
+      boolean isAppOp,
+      String protection,
+      boolean privileged,
+      boolean development,
+      boolean manifestPermAppOp,
+      boolean perUid,
+      boolean extraAppOp,
+      boolean systemPolicyFixed) {
+    String protectionLevel = getLocalizedProtectionLevel(protection).replaceFirst("^:", "");
+
+    if (isAppOp) {
+      if (perUid) {
+        protectionLevel = getString(R.string.prot_lvl_uid_mode, protectionLevel);
+      }
+      if (extraAppOp) {
+        protectionLevel = getString(R.string.prot_lvl_extra, protectionLevel);
+      }
+    } else {
+      if (development) {
+        protectionLevel = getString(R.string.prot_lvl_development2, protectionLevel);
+      }
+      if (manifestPermAppOp) {
+        protectionLevel = getString(R.string.prot_lvl_app_ops2, protectionLevel);
+      }
+      if (privileged) {
+        protectionLevel = getString(R.string.prot_lvl_privileged2, protectionLevel);
+      }
+      if (systemPolicyFixed) {
+        protectionLevel = getString(R.string.prot_lvl_fixed2, protectionLevel);
+      }
+    }
+    return protectionLevel;
+  }
+
+  public String getLocalizedProtLevelString() {
+    return getLocalizedProtLevelString(
+        isAppOp(),
+        getProtectionLevel(),
+        isPrivileged(),
+        mDevelopment,
+        mManifestPermAppOp,
+        mPerUid,
+        mExtraAppOp,
+        mSystemFixed || mPolicyFixed);
+  }
+
+  public String getLocalizedPermStateName() {
+    if (isAppOp()) {
+      return getLocalizedAppOpModeName(AppOpsParser.INS.opModeToName(getAppOpMode()));
+    } else {
+      return getLocalizedPermStateName(isGranted());
+    }
+  }
+
+  public static String getLocalizedAppOpModeName(String appOpModeName) {
+    if (appOpModeName == null) {
+      return null;
+    }
+    return switch (appOpModeName) {
+      case Constants.APP_OP_MODE_ALLOW -> getString(R.string.app_op_mode_allow);
+      case Constants.APP_OP_MODE_IGNORE -> getString(R.string.app_op_mode_ignore);
+      case Constants.APP_OP_MODE_DENY -> getString(R.string.app_op_mode_deny);
+      case Constants.APP_OP_MODE_DEFAULT -> getString(R.string.app_op_mode_default);
+      case Constants.APP_OP_MODE_FG -> getString(R.string.app_op_mode_foreground);
+      default -> appOpModeName;
+    };
+  }
+
+  public static String getLocalizedPermStateName(boolean granted) {
+    return granted ? getString(R.string.perm_mode_granted) : getString(R.string.perm_mode_revoked);
+  }
+
+  public static void getLocalizedPermStateNames(
+      List<CharSequence> names,
+      List<Boolean> states,
+      AtomicInteger preCheckedIndex,
+      boolean granted) {
+    for (boolean b : new Boolean[] {true, false}) {
+      names.add(getLocalizedPermStateName(b));
+      states.add(b);
+    }
+
+    preCheckedIndex.set(granted ? 0 : 1);
+  }
+
+  public static void getLocalizedAppOpModeNames(
+      List<CharSequence> names,
+      List<Integer> modes,
+      AtomicInteger preCheckedIndex,
+      int appOpMode,
+      String appOpName) {
+    boolean noFg =
+        appOpName.equals("RUN_IN_BACKGROUND") || appOpName.equals("RUN_ANY_IN_BACKGROUND");
+
+    int modeCount = AppOpsParser.INS.getAppOpModeCount();
+
+    for (int mode = 0; mode < modeCount; mode++) {
+      String modeName = AppOpsParser.INS.opModeToName(mode);
+      if (noFg && Constants.APP_OP_MODE_FG.equals(modeName)) {
+        continue;
+      }
+
+      names.add(getLocalizedAppOpModeName(modeName));
+      modes.add(mode);
+    }
+
+    preCheckedIndex.set(modes.indexOf(appOpMode));
   }
 }

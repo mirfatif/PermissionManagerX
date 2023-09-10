@@ -80,7 +80,7 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
       if (pkg.shouldShowRefs()) {
         if (pkg.isReferenced() == null) {
           mB.refIndicationV.setBackgroundColor(ORANGE);
-        } else if (!pkg.isReferenced()) {
+        } else if (Boolean.FALSE.equals(pkg.isReferenced())) {
           mB.refIndicationV.setBackgroundColor(Color.RED);
         } else {
           mB.refIndicationV.setBackgroundColor(Color.GREEN);

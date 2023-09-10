@@ -31,7 +31,7 @@ public class StrIntMap implements Parcelable {
   }
 
   public static final Creator<StrIntMap> CREATOR =
-      new Creator<StrIntMap>() {
+      new Creator<>() {
 
         public StrIntMap createFromParcel(Parcel in) {
           return new StrIntMap(in);

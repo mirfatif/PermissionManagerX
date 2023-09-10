@@ -1,0 +1,2 @@
+- Added 'Batch Operations' / 'Permission Profiles'
+- Updates translations

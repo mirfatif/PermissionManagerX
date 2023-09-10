@@ -12,6 +12,7 @@ import com.mirfatif.permissionmanagerx.parser.permsdb.PermsDb;
 import com.mirfatif.permissionmanagerx.prefs.BackupRestoreFlavor;
 import com.mirfatif.permissionmanagerx.prefs.ExcFiltersData;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import com.mirfatif.permissionmanagerx.profile.PermProfileBackupRestore;
 import com.mirfatif.permissionmanagerx.util.ApiUtils;
 import com.mirfatif.privtasks.util.MyLog;
 import java.io.ByteArrayInputStream;
@@ -48,17 +49,17 @@ public enum BackupRestore {
 
   private static final String TAG = "BackupRestore";
 
-  private static final String ROOT = "PermissionManagerX";
+  private static final String TAG_ROOT = "PermissionManagerX";
 
-  private static final String PREFERENCES = "preferences";
-  private static final String PREF = "pref";
+  private static final String TAG_PREFERENCES = "preferences";
+  private static final String TAG_PREF = "pref";
 
-  private static final String PERMISSIONS = "permissions";
-  private static final String PERM = "perm";
+  private static final String TAG_PERMISSIONS = "permissions";
+  private static final String TAG_PERM = "perm";
 
-  private static final String KEY = "key";
-  private static final String VALUE = "value";
-  private static final String TYPE = "type";
+  private static final String ATTR_KEY = "key";
+  private static final String ATTR_VALUE = "value";
+  private static final String ATTR_TYPE = "type";
 
   private static final String BOOLEAN = "boolean";
   private static final String FLOAT = "float";
@@ -132,8 +133,8 @@ public enum BackupRestore {
     try {
       serializer.setOutput(stringWriter);
       serializer.startDocument("UTF-8", true);
-      serializer.startTag(null, ROOT);
-      serializer.startTag(null, PREFERENCES);
+      serializer.startTag(null, TAG_ROOT);
+      serializer.startTag(null, TAG_PREFERENCES);
     } catch (IOException e) {
       MyLog.e(TAG, "backup", e);
       return null;
@@ -185,11 +186,11 @@ public enum BackupRestore {
         }
 
         try {
-          serializer.startTag(null, PREF);
-          serializer.attribute(null, KEY, key);
-          serializer.attribute(null, VALUE, value.toString());
-          serializer.attribute(null, TYPE, type);
-          serializer.endTag(null, PREF);
+          serializer.startTag(null, TAG_PREF);
+          serializer.attribute(null, ATTR_KEY, key);
+          serializer.attribute(null, ATTR_VALUE, value.toString());
+          serializer.attribute(null, ATTR_TYPE, type);
+          serializer.endTag(null, TAG_PREF);
         } catch (IOException e) {
           MyLog.e(TAG, "backup", e);
           return null;
@@ -198,8 +199,8 @@ public enum BackupRestore {
     }
 
     try {
-      serializer.endTag(null, PREFERENCES);
-      serializer.startTag(null, PERMISSIONS);
+      serializer.endTag(null, TAG_PREFERENCES);
+      serializer.startTag(null, TAG_PERMISSIONS);
     } catch (IOException e) {
       MyLog.e(TAG, "backup", e);
       return null;
@@ -223,7 +224,7 @@ public enum BackupRestore {
       }
 
       try {
-        serializer.startTag(null, PERM);
+        serializer.startTag(null, TAG_PERM);
 
         serializer.attribute(null, ATTR_PKG, entity.pkgName);
         serializer.attribute(null, ATTR_PERM, entity.permName);
@@ -232,7 +233,7 @@ public enum BackupRestore {
         serializer.attribute(null, ATTR_PER_UID, String.valueOf(entity.isPerUid));
         serializer.attribute(null, ATTR_USER_ID, String.valueOf(entity.userId));
 
-        serializer.endTag(null, PERM);
+        serializer.endTag(null, TAG_PERM);
       } catch (IOException e) {
         MyLog.e(TAG, "backup", e);
         return null;
@@ -240,8 +241,23 @@ public enum BackupRestore {
     }
 
     try {
-      serializer.endTag(null, PERMISSIONS);
-      serializer.endTag(null, ROOT);
+      serializer.endTag(null, TAG_PERMISSIONS);
+    } catch (IOException e) {
+      MyLog.e(TAG, "backup", e);
+      return null;
+    }
+
+    int profileCount;
+
+    try {
+      profileCount = PermProfileBackupRestore.backup(serializer);
+    } catch (IOException e) {
+      MyLog.e(TAG, "backup", e);
+      return null;
+    }
+
+    try {
+      serializer.endTag(null, TAG_ROOT);
       serializer.endDocument();
       serializer.flush();
     } catch (IOException e) {
@@ -269,7 +285,7 @@ public enum BackupRestore {
 
     MyLog.i(TAG, "backup", "Succeeded");
 
-    return new Result(prefCount, permCount, invalidPrefs, skippedApps);
+    return new Result(prefCount, permCount, profileCount, invalidPrefs, skippedApps);
   }
 
   public Result restore(Uri file, boolean skipUninstalledApps, SwapUserIds swapUserIds) {
@@ -298,8 +314,6 @@ public enum BackupRestore {
 
   public Result restore(InputStream is, boolean skipUninstalledApps, SwapUserIds swap) {
 
-    ExcFiltersData.INS.resetExcFilters();
-
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
     byte[] buffer = new byte[1024];
     int len;
@@ -315,11 +329,12 @@ public enum BackupRestore {
 
     InputStream inputStream1 = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
     InputStream inputStream2 = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+    InputStream inputStream3 = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
 
     int invalidPrefs = 0;
 
-    String[] attrNames = new String[] {KEY, VALUE, TYPE};
-    List<String[]> entries = getKeyValueEntries(inputStream1, PREFERENCES, PREF, attrNames);
+    String[] attrNames = new String[] {ATTR_KEY, ATTR_VALUE, ATTR_TYPE};
+    List<String[]> entries = getKeyValueEntries(inputStream1, TAG_PREFERENCES, TAG_PREF, attrNames);
 
     if (entries == null) {
       return null;
@@ -342,43 +357,41 @@ public enum BackupRestore {
       }
 
       switch (type) {
-        case BOOLEAN:
-          prefEdit.putBoolean(key, Boolean.parseBoolean(value));
-          break;
-        case FLOAT:
-          prefEdit.putFloat(key, Float.parseFloat(value));
-          break;
-        case INT:
-          prefEdit.putInt(key, Integer.parseInt(value));
-          break;
-        case LONG:
-          prefEdit.putLong(key, Long.parseLong(value));
-          break;
-        case SET:
+        case BOOLEAN -> prefEdit.putBoolean(key, Boolean.parseBoolean(value));
+        case FLOAT -> prefEdit.putFloat(key, Float.parseFloat(value));
+        case INT -> prefEdit.putInt(key, Integer.parseInt(value));
+        case LONG -> prefEdit.putLong(key, Long.parseLong(value));
+        case SET -> {
           if (value.length() == 0) {
 
             prefEdit.putStringSet(key, new HashSet<>());
           } else {
             prefEdit.putStringSet(key, new HashSet<>(Arrays.asList(value.split(SEPARATOR))));
           }
-          break;
-        case STRING:
-          prefEdit.putString(key, value);
-          break;
-        default:
+        }
+        case STRING -> prefEdit.putString(key, value);
+        default -> {
           MyLog.e(TAG, "restore", "Unknown preference type: " + type);
           invalidPrefs++;
-          break;
+        }
       }
       prefEdit.apply();
     }
 
     attrNames =
         new String[] {
-          ATTR_PKG, ATTR_PERM, ATTR_STATE, ATTR_APP_OP, ATTR_PER_UID, ATTR_USER_ID, KEY, VALUE, TYPE
+          ATTR_PKG,
+          ATTR_PERM,
+          ATTR_STATE,
+          ATTR_APP_OP,
+          ATTR_PER_UID,
+          ATTR_USER_ID,
+          ATTR_KEY,
+          ATTR_VALUE,
+          ATTR_TYPE
         };
 
-    entries = getKeyValueEntries(inputStream2, PERMISSIONS, PERM, attrNames);
+    entries = getKeyValueEntries(inputStream2, TAG_PERMISSIONS, TAG_PERM, attrNames);
     if (entries == null) {
       return null;
     }
@@ -429,12 +442,20 @@ public enum BackupRestore {
       }
     }
 
+    int profileCount;
+
+    try {
+      profileCount = PermProfileBackupRestore.restore(inputStream3);
+    } catch (Exception ignored) {
+      return null;
+    }
+
     MyLog.i(TAG, "restore", "Succeeded");
 
-    return new Result(prefCount, permCount, invalidPrefs, skippedApps);
+    return new Result(prefCount, permCount, profileCount, invalidPrefs, skippedApps);
   }
 
-  private List<String[]> getKeyValueEntries(
+  public static List<String[]> getKeyValueEntries(
       InputStream inputStream, String mainTag, String entryTag, String[] attrNames) {
     XmlPullParser xmlParser = Xml.newPullParser();
 
@@ -453,7 +474,7 @@ public enum BackupRestore {
         }
 
         String tagName = xmlParser.getName();
-        if (eventType == XmlPullParser.START_TAG && tagName.equals(ROOT)) {
+        if (eventType == XmlPullParser.START_TAG && tagName.equals(TAG_ROOT)) {
           rootTagFound = true;
         }
         if (eventType == XmlPullParser.START_TAG && tagName.equals(mainTag)) {
@@ -522,11 +543,12 @@ public enum BackupRestore {
 
   public static class Result {
 
-    public final int prefs, perms, invalidPrefs, skippedApps;
+    public final int prefs, perms, profiles, invalidPrefs, skippedApps;
 
-    private Result(int prefs, int perms, int invalidPrefs, int skippedApps) {
+    private Result(int prefs, int perms, int profiles, int invalidPrefs, int skippedApps) {
       this.prefs = prefs;
       this.perms = perms;
+      this.profiles = profiles;
       this.invalidPrefs = invalidPrefs;
       this.skippedApps = skippedApps;
     }

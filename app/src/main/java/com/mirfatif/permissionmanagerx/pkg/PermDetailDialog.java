@@ -1,7 +1,5 @@
 package com.mirfatif.permissionmanagerx.pkg;
 
-import static com.mirfatif.permissionmanagerx.util.ApiUtils.getString;
-
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -11,15 +9,13 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.base.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.databinding.PermDetailsDialogBinding;
 import com.mirfatif.permissionmanagerx.fwk.MyLinearLayout;
-import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
 import com.mirfatif.permissionmanagerx.parser.Permission;
 import com.mirfatif.permissionmanagerx.parser.PkgParserFlavor;
 import com.mirfatif.permissionmanagerx.util.UiUtils;
 import com.mirfatif.permissionmanagerx.util.bg.LiveTasksQueueTyped;
-import com.mirfatif.privtasks.Constants;
-import com.mirfatif.privtasks.util.Util;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 class PermDetailDialog {
 
@@ -29,8 +25,8 @@ class PermDetailDialog {
     mA = act;
   }
 
-  private int mPreChecked, mChecked;
-  private int[] mAppOpModes;
+  private int mPreCheckedIndex, mCheckedIndex;
+  private final List<Integer> mAppOpModes = new ArrayList<>();
 
   void show(Permission perm, int yLocation) {
     PermDetailsDialogBinding b = PermDetailsDialogBinding.inflate(mA.mA.getLayoutInflater());
@@ -51,7 +47,7 @@ class PermDetailDialog {
       b.dependsPermNameCont.setVisibility(View.VISIBLE);
     }
 
-    b.protLevelV.setText(perm.getProtLevelString());
+    b.protLevelV.setText(perm.getLocalizedProtLevelString());
 
     new LiveTasksQueueTyped<>(mA.mA, () -> PkgParserFlavor.INS.getPermDesc(perm))
         .onUiWith(
@@ -63,50 +59,31 @@ class PermDetailDialog {
             })
         .start();
 
-    CharSequence[] permList = null;
+    List<CharSequence> permList = new ArrayList<>();
+    AtomicInteger preCheckedIndex = new AtomicInteger();
 
     if (perm.isChangeable()) {
-      if (!perm.isAppOp()) {
-        permList =
-            new CharSequence[] {
-              getString(R.string.perm_mode_granted), getString(R.string.perm_mode_revoked)
-            };
-        mPreChecked = perm.isGranted() ? 0 : 1;
-      } else if (!perm.hasDependsOnPerm()) {
-        boolean noFg =
-            perm.getName().equals("RUN_IN_BACKGROUND")
-                || perm.getName().equals("RUN_ANY_IN_BACKGROUND");
-
-        List<String> modeNames = new ArrayList<>(AppOpsParser.INS.getAppOpsModes());
-
-        List<String> localized = new ArrayList<>();
-        List<Integer> modes = new ArrayList<>();
-
-        for (int mode = 0; mode < modeNames.size(); mode++) {
-          String modeName = modeNames.get(mode);
-          if (noFg && modeName.equals(Constants.APP_OP_MODE_FG)) {
-            continue;
-          }
-
-          localized.add(PermissionAdapter.getLocalizedMode(modeNames.get(mode)));
-          modes.add(mode);
-        }
-
-        permList = localized.toArray(new CharSequence[0]);
-        mAppOpModes = Util.getArray(modes);
-        mPreChecked = modes.indexOf(perm.getAppOpMode());
+      if (perm.isAppOp()) {
+        Permission.getLocalizedAppOpModeNames(
+            permList, mAppOpModes, preCheckedIndex, perm.getAppOpMode(), perm.getName());
+      } else {
+        Permission.getLocalizedPermStateNames(
+            permList, new ArrayList<>(), preCheckedIndex, perm.isGranted());
       }
     }
 
-    mChecked = mPreChecked;
+    mCheckedIndex = mPreCheckedIndex = preCheckedIndex.get();
 
     AlertDialog.Builder builder = new AlertDialog.Builder(mA.mA).setCustomTitle(b.getRoot());
 
-    if (permList != null) {
+    if (!permList.isEmpty()) {
       builder
           .setPositiveButton(R.string.ok_button, (d, w) -> setPerm(perm))
           .setNegativeButton(R.string.cancel_button, null)
-          .setSingleChoiceItems(permList, mPreChecked, (d, which) -> mChecked = which);
+          .setSingleChoiceItems(
+              permList.toArray(new CharSequence[0]),
+              mPreCheckedIndex,
+              (d, which) -> mCheckedIndex = which);
     } else {
       MyLinearLayout v = b.getRoot();
       v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), UiUtils.dpToPx(20));
@@ -125,13 +102,13 @@ class PermDetailDialog {
   }
 
   private void setPerm(Permission perm) {
-    if (mPreChecked == mChecked) {
+    if (mPreCheckedIndex == mCheckedIndex) {
       return;
     }
     if (!perm.isAppOp()) {
       mA.onManifestPermStateChanged(perm);
     } else {
-      mA.onAppOpModeSelect(perm, mAppOpModes[mChecked]);
+      mA.onAppOpModeSelect(perm, mAppOpModes.get(mCheckedIndex));
     }
   }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-  <!-- CHAR_LIMIT
+  <!-- Character Limits:
        Button: 10
        Toast/SnackBar: 20
        Preference title: 20
@@ -13,6 +13,8 @@
   <string name="yes">Ναι</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="no">Όχι</string>
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
   <!-- CHAR LIMIT: 10 -->
   <!-- CHAR LIMIT: 10 -->
   <string name="open_drawer">Άνοιγμα</string>
@@ -68,10 +70,6 @@
   <plurals name="backup_restore_processed_prefs">
     <item quantity="one">Επεξεργασία προτίμησης %1$d</item>
     <item quantity="other">Επεξεργασμένες %1$d προτιμήσεις</item>
-  </plurals>
-  <plurals name="backup_restore_processed_refs">
-    <item quantity="one">%1$s και %2$d αναφορά δικαιωμάτων.</item>
-    <item quantity="other">%1$s και %2$d αναφορές δικαιωμάτων.</item>
   </plurals>
   <plurals name="backup_restore_invalid_prefs">
     <item quantity="one">%1$s\nΠαράλειψη %2$d μη έγκυρη προτίμηση.</item>
@@ -193,7 +191,7 @@
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
-  <!--NativeDaemon-->
+  <!-- NativeDaemon -->
   <!-- CHAR LIMIT: 20 -->
   <!-- LogcatSvc -->
   <!-- CHAR LIMIT: 10 -->

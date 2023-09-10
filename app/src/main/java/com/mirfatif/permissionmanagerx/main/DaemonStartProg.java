@@ -5,13 +5,13 @@ import static com.mirfatif.permissionmanagerx.main.MainActivity.TAG_GRANT_ROOT_O
 import static com.mirfatif.permissionmanagerx.main.MainActivity.TAG_PRIVS_REQ_FOR_DAEMON;
 import static com.mirfatif.permissionmanagerx.util.ApiUtils.getString;
 
-import android.os.Build;
 import androidx.appcompat.app.AlertDialog;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.base.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.DaemonStarter;
+import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.permissionmanagerx.util.bg.LiveSchedTask;
 import java.util.concurrent.TimeUnit;
 
@@ -34,7 +34,7 @@ public class DaemonStartProg {
           new AlertDialog.Builder(mA.mA)
               .setTitle(R.string.unsupported_sdk_warning_title)
               .setMessage(
-                  getString(R.string.unsupported_sdk_warning_message, Build.VERSION.SDK_INT))
+                  getString(R.string.unsupported_sdk_warning_message, Utils.getAndroidVersionInt()))
               .setPositiveButton(
                   R.string.unsupported_sdk_warning_button,
                   (d, w) -> MySettings.INS.onUnsupportedSdkWarningShown())

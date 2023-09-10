@@ -21,12 +21,10 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.base.MyListAdapter;
 import com.mirfatif.permissionmanagerx.databinding.RvItemPermBinding;
 import com.mirfatif.permissionmanagerx.main.PackageAdapter;
-import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
 import com.mirfatif.permissionmanagerx.parser.Permission;
 import com.mirfatif.permissionmanagerx.pkg.PermissionAdapter.ItemViewHolder;
 import com.mirfatif.permissionmanagerx.util.StringUtils;
 import com.mirfatif.permissionmanagerx.util.UiUtils;
-import com.mirfatif.privtasks.Constants;
 
 public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder> {
 
@@ -85,10 +83,10 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
       mB.appOpsRefStateV.setVisibility(View.GONE);
       if (perm.isReferenced() == null) {
         mB.refIndicationV.setBackgroundColor(PackageAdapter.ORANGE);
-      } else if (!perm.isReferenced()) {
+      } else if (Boolean.FALSE.equals(perm.isReferenced())) {
         mB.refIndicationV.setBackgroundColor(Color.RED);
         if (perm.isAppOp()) {
-          String state = getLocalizedMode(perm.getReference());
+          String state = Permission.getLocalizedAppOpModeName(perm.getReference());
           mB.appOpsRefStateV.setText(
               StringUtils.htmlToString(getString(R.string.should_be, state)));
           mB.appOpsRefStateV.setVisibility(View.VISIBLE);
@@ -105,13 +103,13 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
       if (perm.isCritical() && perm.isChangeable()) {
         mB.protLevelV.setText(
             StringUtils.getHighlightString(
-                perm.getProtLevelString(),
+                perm.getLocalizedProtLevelString(),
                 mRedTextSpan,
                 true,
                 getString(R.string.prot_lvl_fixed),
                 getString(R.string.prot_lvl_privileged)));
       } else {
-        mB.protLevelV.setText(perm.getProtLevelString());
+        mB.protLevelV.setText(perm.getLocalizedProtLevelString());
       }
 
       mB.permStateSwitch.setChecked(perm.isGranted());
@@ -136,7 +134,7 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
 
           if (mode != AppOpsManager.MODE_ALLOWED && mode != AppOpsManager.MODE_IGNORED) {
             mB.appOpModeV.setVisibility(View.VISIBLE);
-            mB.appOpModeV.setText(getLocalizedMode(AppOpsParser.INS.getAppOpsModes().get(mode)));
+            mB.appOpModeV.setText(perm.getLocalizedPermStateName());
           } else {
             mB.appOpModeV.setVisibility(View.GONE);
           }
@@ -186,23 +184,6 @@ public class PermissionAdapter extends MyListAdapter<Permission, ItemViewHolder>
         mCallback.onPermLongClick(perm);
       }
       return true;
-    }
-  }
-
-  static String getLocalizedMode(String appOpMode) {
-    switch (appOpMode) {
-      case Constants.APP_OP_MODE_ALLOW:
-        return getString(R.string.app_op_mode_allow);
-      case Constants.APP_OP_MODE_IGNORE:
-        return getString(R.string.app_op_mode_ignore);
-      case Constants.APP_OP_MODE_DENY:
-        return getString(R.string.app_op_mode_deny);
-      case Constants.APP_OP_MODE_DEFAULT:
-        return getString(R.string.app_op_mode_default);
-      case Constants.APP_OP_MODE_FG:
-        return getString(R.string.app_op_mode_foreground);
-      default:
-        return appOpMode;
     }
   }
 

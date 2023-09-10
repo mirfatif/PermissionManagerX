@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-  <!-- CHAR_LIMIT
+  <!-- Character Limits:
        Button: 10
        Toast/SnackBar: 20
        Preference title: 20
@@ -9,7 +9,7 @@
        Menu item: 15 -->
 
   <!-- General strings -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_1" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="yes">Yes</string>
   <!-- CHAR LIMIT: 10 -->
@@ -18,6 +18,10 @@
   <string name="ok_button">OK</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="cancel_button">Cancel</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="go_button">Go</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="dismiss_button">Dismiss</string>
   <string name="open_drawer">Open</string>
   <string name="close_drawer">Close</string>
   <!-- CHAR LIMIT: 10 -->
@@ -32,12 +36,20 @@
     <item quantity="one">%d app</item>
     <item quantity="other">%d apps</item>
   </plurals>
+  <plurals name="perm_count">
+    <item quantity="one">%d permission</item>
+    <item quantity="other">%d permissions</item>
+  </plurals>
+  <plurals name="ref_count">
+    <item quantity="one">%d reference</item>
+    <item quantity="other">%d references</item>
+  </plurals>
 
   <!-- CHAR LIMIT: 20 -->
   <string name="copied_to_clipboard_toast">Copied to clipboard</string>
 
   <!-- MainActivity Navigation Drawer / menu items -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_2" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="search_menu_item">Search</string>
   <!-- CHAR LIMIT: 15 -->
@@ -62,7 +74,7 @@
   <string name="advanced_settings_menu_item">Advanced Settings</string>
 
   <!-- MainActivity strings -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_3" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="primary_account">Primary Account</string>
   <string name="primary_profile_only">Permission Manager X can run only in primary user account / device owner profile.</string>
@@ -84,9 +96,13 @@
     <item quantity="one">Processed %1$d preference</item>
     <item quantity="other">Processed %1$d preferences</item>
   </plurals>
+  <plurals name="backup_restore_processed_profiles">
+    <item quantity="one">%1$s, %2$d permission profile</item>
+    <item quantity="other">%1$s, %2$d permission profiles</item>
+  </plurals>
   <plurals name="backup_restore_processed_refs">
-    <item quantity="one">%1$s and %2$d permission reference.</item>
-    <item quantity="other">%1$s and %2$d permission references.</item>
+    <item quantity="one">%1$s, and %2$d permission reference.</item>
+    <item quantity="other">%1$s, and %2$d permission references.</item>
   </plurals>
   <plurals name="backup_restore_invalid_prefs">
     <item quantity="one">%1$s\nSkipped %2$d invalid preference.</item>
@@ -110,11 +126,11 @@
   <string name="pkg_state_disabled2" searchStr="true">%s, Disabled</string>
 
   <string name="unsupported_sdk_warning_title">Android version unsupported</string>
-  <string name="unsupported_sdk_warning_message">Your device is running Android SDK %d which has not been tested so far. PMX may crash or may behave in unexpected way.</string>
+  <string name="unsupported_sdk_warning_message">Your device is running Android %s which has not been tested so far. PMX may crash or may behave in unexpected way.</string>
   <string name="unsupported_sdk_warning_button">I Understand</string>
 
   <!-- Crash Report -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_4" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="crash_report">Crash Report</string>
   <!-- CHAR LIMIT: 30 -->
@@ -141,7 +157,7 @@
   <string name="crash_file_delete_confirmation">If the crash report is sent, delete the old file on device?</string>
 
   <!-- Progress -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_5" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="prog_msg_checking_privs">Checking privileges…</string>
   <!-- CHAR LIMIT: 20 -->
@@ -165,7 +181,7 @@
   <string name="creating_app_ops_lists">Preparing AppOps data…</string>
 
   <!-- AdvancedSettings Activity -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_6" translatable="false">Crowdin comment break</string>
   <string name="daemon_dex_location_tmp">Temporary directory</string>
   <string name="daemon_dex_location_external">External storage</string>
   <string name="daemon_dex_location_tmp_val" translatable="false">data_local_tmp</string>
@@ -204,7 +220,7 @@
   </plurals>
 
   <!-- Privileges -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_7" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="privileges_title">Privileges</string>
   <!-- CHAR LIMIT: 20 -->
@@ -251,7 +267,7 @@
   <string name="adb_connect_help_msg"><![CDATA[<ul><li>Enable <b><i>ADB Over Network</i></b>.</li><li>Enter port and tap connect button.</li><li>Allow ADB authentication when prompted.</li></ul>]]></string>
 
   <!-- Feedback -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_8" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="love_using_app">Liking Permission Manager X?</string>
   <string name="purchase_and_rate_the_app">You can help us improve the app by making a small donation or leaving a good app review so that we are able to better serve your needs.</string>
@@ -284,7 +300,7 @@
   <string name="ignore_for_now">Ignore for now</string>
 
   <!-- Links -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_9" translatable="false">Crowdin comment break</string>
   <string name="source_url" translatable="false">https://github.com/mirfatif/PermissionManagerX</string>
   <string name="issues_url" translatable="false">https://github.com/mirfatif/PermissionManagerX/issues</string>
   <string name="purchase_pro_url" translatable="false">https://mirfatif.github.io/mirfatif/getpro</string>
@@ -299,13 +315,13 @@
 
   <string name="contact_us_url" translatable="false">https://mirfatif.github.io/PermissionManagerX/#want-to-reach-us</string>
   <string name="github_help_url" translatable="false">https://mirfatif.github.io/PermissionManagerX/help</string>
-  <string name="adb_connect_help_href" translatable="false">adb-help</string>
-  <string name="adb_connect_help_href_11" translatable="false" tools:ignore="Typos">adb-help-11</string>
+  <string name="adb_connect_help_href_10" translatable="false">adb-help-10</string>
+  <string name="adb_connect_help_href_11" translatable="false" tools:ignore="Typos">adb_help_11</string>
   <string name="rate_review_help_href" translatable="false">rate-review-help</string>
   <string name="paid_features_href" translatable="false">paid_features</string>
 
   <!-- DaemonHandler -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_10" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="dex_location_changed_toast">Switching daemon load location</string>
   <!-- CHAR LIMIT: 20 -->
@@ -321,12 +337,12 @@
   <string name="granting_permissions_failed_toast">Granting permissions failed</string>
 
   <!-- Daemon callback errors  -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_11" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="daemon_err_bad_rom_toast">Bad ROM</string>
 
   <!-- Daemon binder calls errors -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_12" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="daemon_set_exit_on_app_death_failed_toast">Setting preference failed</string>
   <!-- CHAR LIMIT: 20 -->
@@ -360,14 +376,14 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="daemon_open_app_info_failed_toast">Opening app info failed</string>
 
-  <!--NativeDaemon-->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <!-- NativeDaemon -->
+  <string name="crowdin_comment_break_strings_13" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="native_daemon_died_toast">Native daemon died</string>
   <string name="native_daemon_restarted_toast">Native daemon restarted</string>
 
   <!-- LogcatSvc -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_14" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="stop_button">Stop</string>
   <!-- CHAR LIMIT: 20 -->
@@ -377,18 +393,19 @@
   <string name="logging_warning_msg">App may respond slow due to log collection and log file may grow up to very large size. Logging is auto-stopped after 5 minutes.</string>
 
   <!-- AdbConnectSvc -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_15" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="adb_conn_notif_title">ADB Connection</string>
   <string name="adb_conn_notif_text">Connecting…</string>
 
   <!-- DaemonRcvSvc -->
+  <string name="crowdin_comment_break_strings_16" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="daemon_connection_title">Daemon Connection</string>
   <string name="daemon_connection_text">Connecting…</string>
 
   <!-- PackageActivity menu items -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_17" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="reset_app_ops">Reset AppOps</string>
   <string name="reset_app_ops_confirmation">Reset all AppOps to default modes?</string>
@@ -403,7 +420,7 @@
   <string name="menu_item_show_all_perms">Show all</string>
 
   <!-- MainActivity Dialogs -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_18" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="exclude_app_from_visible_list">Hide app from list</string>
   <!-- CHAR LIMIT: 15 -->
@@ -420,7 +437,7 @@
   <string name="wrun_not_installed">WhatsRunning not installed</string>
 
   <!-- PackageActivity -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_19" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="something_went_wrong">Something went wrong</string>
   <string name="grant_root_or_adb_to_change_perms">Root or ADB access is required to change permissions state.</string>
@@ -479,7 +496,7 @@
   <string name="depends_on">Depends on:</string>
 
   <!-- FilterSettingsActivity -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_20" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="filter_settings">Filter Settings</string>
   <string name="excluded_apps_summary">Long press on a package name to exclude it</string>
@@ -497,7 +514,7 @@
   </plurals>
 
   <!-- SettingsActivity -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_21" translatable="false">Crowdin comment break</string>
   <string name="locale_system">System</string>
   <string name="locale_en">English</string>
   <string name="locale_ru">Russian</string>
@@ -525,7 +542,7 @@
   <string name="dark_theme_mode_dark_val" translatable="false">dark</string>
 
   <!-- PreferenceActivity menu items -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_22" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="filter_settings_reset_defaults_menu_item">Reset To Defaults</string>
   <string name="filter_settings_reset_confirmation">Reset filter settings to default values?</string>
@@ -540,7 +557,7 @@
   <string name="filter_settings_clear_app_ops_confirmation">Clear all extra (always shown) AppOps?</string>
 
   <!-- AboutActivity -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_23" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="source">Source</string>
   <!-- CHAR LIMIT: 15 -->
@@ -618,7 +635,7 @@
   <string name="permissions">Permissions</string>
 
   <!-- ActivityNotFoundException -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_24" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="no_email_app_installed">No email app installed</string>
   <!-- CHAR LIMIT: 20 -->
@@ -627,7 +644,7 @@
   <string name="no_file_picker_installed">"No file picker app installed"</string>
 
   <!-- Notification Channels -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_25" translatable="false">Crowdin comment break</string>
   <string name="channel_app_update">App Updates</string>
   <integer name="channel_app_update">100</integer>
 
@@ -644,7 +661,7 @@
   <integer name="channel_daemon_connection">500</integer>
 
   <!-- Notification permission -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_26" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="notif_perm_dialog_title">Notification permission</string>
   <string name="notif_perm_dialog_text"><![CDATA[PMX needs notification permission to show:<ul><li>Permission watcher status</li><li>Scheduled checks status</li><li>Available app updates</li><li>Logcat collection status</li><li>Crash events</li></ul>]]></string>
@@ -652,7 +669,7 @@
   <string name="notif_perm_missing_toast">Notification permission not granted</string>
 
   <!-- HelpActivity -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_27" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="open_browser_menu_item">Open in browser</string>
   <!-- CHAR LIMIT: 15 -->
@@ -665,7 +682,7 @@
   <string name="outdated_web_view">Outdated WebView</string>
 
   <!-- Locale -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_strings_28" translatable="false">Crowdin comment break</string>
   <string name="help_dir_name">en</string>
 
 </resources>

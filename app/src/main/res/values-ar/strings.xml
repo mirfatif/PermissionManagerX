@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-  <!-- CHAR_LIMIT
+  <!-- Character Limits:
        Button: 10
        Toast/SnackBar: 20
        Preference title: 20
@@ -13,6 +13,8 @@
   <string name="yes">نعم</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="no">لا</string>
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
   <!-- CHAR LIMIT: 10 -->
   <!-- CHAR LIMIT: 10 -->
   <string name="open_drawer">فتح</string>
@@ -77,14 +79,6 @@
     <item quantity="few">تم معالجة %1$d تفضيلات</item>
     <item quantity="many">تم معالجة %1$d تفضيلات</item>
     <item quantity="other">تمت معالجة %1$d تفضيلات</item>
-  </plurals>
-  <plurals name="backup_restore_processed_refs">
-    <item quantity="zero">%1$s و %2$d إذن مرجع.</item>
-    <item quantity="one">%1$s و %2$d إذن مرجعي.</item>
-    <item quantity="two">%1$s و %2$d إذن مرجعي.</item>
-    <item quantity="few">%1$s و %2$d إذن مرجعي.</item>
-    <item quantity="many">%1$s و %2$d مرجع الإذن.</item>
-    <item quantity="other">%1$s و %2$d من مراجع الأذونات.</item>
   </plurals>
   <plurals name="backup_restore_invalid_prefs">
     <item quantity="zero">%1$s\nتخطي %2$d تفضيلات غير صالحة.</item>
@@ -230,7 +224,7 @@
   <string name="daemon_disable_pkg_failed_toast">فشل تعطيل التطبيق</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="daemon_open_app_info_failed_toast">فشل في فتح معلومات التطبيق</string>
-  <!--NativeDaemon-->
+  <!-- NativeDaemon -->
   <!-- CHAR LIMIT: 20 -->
   <string name="native_daemon_died_toast">موت daemon الاصلي</string>
   <!-- LogcatSvc -->

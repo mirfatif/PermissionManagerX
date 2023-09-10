@@ -64,7 +64,7 @@
       android:title="@string/backup_restore_menu_item" />
 
     <item
-      android:id="@+id/action_perm_profiles"
+      android:id="@+id/action_batch_ops"
       android:enabled="false"
       android:orderInCategory="13"
       android:visible="false" />

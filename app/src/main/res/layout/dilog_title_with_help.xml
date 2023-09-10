@@ -14,7 +14,7 @@
     android:layout_gravity="center_vertical"
     android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-  <ImageView
+  <com.mirfatif.permissionmanagerx.fwk.DialogHelpIcon
     android:id="@+id/help_v"
     android:layout_width="32dp"
     android:layout_height="32dp"

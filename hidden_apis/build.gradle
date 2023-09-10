@@ -1,9 +1,0 @@
-apply from: '../configs/lib.gradle'
-
-android {
-    namespace 'com.mirfatif.hiddenapis'
-}
-
-dependencies {
-    compileOnly 'androidx.annotation:annotation:1.6.0'
-}

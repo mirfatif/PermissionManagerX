@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-  <!-- CHAR_LIMIT
+  <!-- Character Limits:
        Button: 10
        Toast/SnackBar: 20
        Preference title: 20
@@ -17,6 +17,10 @@
   <string name="ok_button">OK</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="cancel_button">Отмена</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="go_button">Вперед</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="dismiss_button">Закрыть</string>
   <string name="open_drawer">Открыть</string>
   <string name="close_drawer">Закрыть</string>
   <!-- CHAR LIMIT: 10 -->
@@ -32,6 +36,18 @@
     <item quantity="few">%d приложения</item>
     <item quantity="many">%d приложений</item>
     <item quantity="other">%d приложений</item>
+  </plurals>
+  <plurals name="perm_count">
+    <item quantity="one">%d разрешение</item>
+    <item quantity="few">%d разрешения</item>
+    <item quantity="many">%d разрешений</item>
+    <item quantity="other">%d разрешений</item>
+  </plurals>
+  <plurals name="ref_count">
+    <item quantity="one">%d значение</item>
+    <item quantity="few">%d значения</item>
+    <item quantity="many">%d значений</item>
+    <item quantity="other">%d значений</item>
   </plurals>
   <!-- CHAR LIMIT: 20 -->
   <string name="copied_to_clipboard_toast">Скопировано в буфер обмена</string>
@@ -62,6 +78,7 @@
   <!-- CHAR LIMIT: 15 -->
   <string name="primary_account">Основной аккаунт</string>
   <string name="primary_profile_only">Permission Manager X может работать только в основном аккаунте / профиле владельца устройства.</string>
+  <string name="grant_root_or_adb">Root или ADB доступ требуется для получения разрешений AppOp и для изменения состояния разрешений.</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="backup">Бэкап</string>
   <!-- CHAR LIMIT: 10 -->
@@ -79,11 +96,11 @@
     <item quantity="many">Обработано %1$d настроек</item>
     <item quantity="other">Обработано %1$d настроек</item>
   </plurals>
-  <plurals name="backup_restore_processed_refs">
-    <item quantity="one">%1$s и 1 целевое значение.</item>
-    <item quantity="few">%1$s и %2$d целевых значения.</item>
-    <item quantity="many">%1$s и %2$d целевых значений.</item>
-    <item quantity="other">%1$s и %2$d целевых значений.</item>
+  <plurals name="backup_restore_processed_profiles">
+    <item quantity="one">%1$s, %2$d профиль разрешения</item>
+    <item quantity="few">%1$s, %2$d профиль разрешений</item>
+    <item quantity="many">%1$s, %2$d профиль разрешений</item>
+    <item quantity="other">%1$s, %2$d профиль разрешений</item>
   </plurals>
   <plurals name="backup_restore_invalid_prefs">
     <item quantity="one">%1$s\nПропущено недействительное разрешение: %2$d</item>
@@ -108,7 +125,7 @@
   <string name="disable_pkg_warning" comment="'system' or 'framework'">Заморозка приложения %1$s является опасным действием. Это может нанести вред вплоть до сбоя работы системы Android.\nВы уверены что хотите продолжить?</string>
   <string name="pkg_state_disabled2" searchStr="true">%s, заморожено</string>
   <string name="unsupported_sdk_warning_title">Неподдерживаемая версия Android</string>
-  <string name="unsupported_sdk_warning_message">Ваше устройство работает под управлением ОС Android SDK %d, которая пока не тестировалась. WhatsRunning может аварийно завершать работу или вести себя непредсказуемо.</string>
+  <string name="unsupported_sdk_warning_message">Ваше устройство работает под управлением ОС Android %s, которая пока не тестировалась. WhatsRunning может аварийно завершать работу или вести себя непредсказуемо.</string>
   <string name="unsupported_sdk_warning_button">Я понимаю</string>
   <!-- Crash Report -->
   <!-- CHAR LIMIT: 15 -->
@@ -302,7 +319,7 @@
   <string name="daemon_disable_pkg_failed_toast">Сбой заморозки приложения</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="daemon_open_app_info_failed_toast">Сбой открытия сведений о приложении</string>
-  <!--NativeDaemon-->
+  <!-- NativeDaemon -->
   <!-- CHAR LIMIT: 20 -->
   <string name="native_daemon_died_toast">Нативный демон умер</string>
   <string name="native_daemon_restarted_toast">Нативный демон перезапущен</string>
@@ -320,6 +337,7 @@
   <string name="adb_conn_notif_text">Подключение…</string>
   <!-- DaemonRcvSvc -->
   <!-- CHAR LIMIT: 15 -->
+  <string name="daemon_connection_title">Подключение к демону</string>
   <string name="daemon_connection_text">Подключение…</string>
   <!-- PackageActivity menu items -->
   <!-- CHAR LIMIT: 15 -->
@@ -351,6 +369,7 @@
   <!-- PackageActivity -->
   <!-- CHAR LIMIT: 20 -->
   <string name="something_went_wrong">Что-то пошло не так</string>
+  <string name="grant_root_or_adb_to_change_perms">Для изменения состояния разрешений требуется Root или ADB.</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="app_op_mode_not_chaged_toast">Режим AppOp не изменён</string>
   <string name="change_perms_warning" comment="'system' or 'framework'">Изменение разрешений приложения %1$s — потенциально опасное действие вплоть до сбоя системы Android.\nВы уверены, что хотите продолжить?</string>
@@ -525,6 +544,7 @@
   <string name="channel_crash_report">Отчёт о падении</string>
   <string name="channel_logcat_collection">Сбор лога</string>
   <string name="channel_adb_connection">ADB подключение</string>
+  <string name="channel_daemon_connection">Подключение к демону</string>
   <!-- Notification permission -->
   <!-- CHAR LIMIT: 15 -->
   <string name="notif_perm_dialog_title">Доступ к уведомлениям</string>

@@ -42,39 +42,25 @@ public enum HiddenSdkConstants {
 
     try {
       switch (ordinal) {
-        case 0:
+        case 0 -> {
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             value = HiddenAPIs.getNumOps();
           } else {
             value = getStaticIntField("_NUM_OP", AppOpsManager.class);
           }
-          break;
-        case 1:
-          value = HiddenAPIs.getOpModeNamesSize();
-          break;
-        case 2:
-          value = getStaticIntField("OP_NONE", AppOpsManager.class);
-          break;
-        case 3:
+        }
+        case 1 -> value = HiddenAPIs.getOpModeNamesSize();
+        case 2 -> value = getStaticIntField("OP_NONE", AppOpsManager.class);
+        case 3 -> {
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             value = getStaticIntField("OP_FLAGS_ALL", AppOpsManager.class);
           }
-          break;
-        case 4:
-          value = getStaticIntField("OP_RUN_IN_BACKGROUND", AppOpsManager.class);
-          break;
-        case 5:
-          value = getStaticIntField("OP_RUN_ANY_IN_BACKGROUND", AppOpsManager.class);
-          break;
-        case 6:
-          value = getStaticIntField("FLAG_PERMISSION_SYSTEM_FIXED", PackageManager.class);
-          break;
-        case 7:
-          value = getStaticIntField("FLAG_PERMISSION_POLICY_FIXED", PackageManager.class);
-          break;
-        case 8:
-          value = getStaticIntField("START_SUCCESS", ActivityManager.class);
-          break;
+        }
+        case 4 -> value = getStaticIntField("OP_RUN_IN_BACKGROUND", AppOpsManager.class);
+        case 5 -> value = getStaticIntField("OP_RUN_ANY_IN_BACKGROUND", AppOpsManager.class);
+        case 6 -> value = getStaticIntField("FLAG_PERMISSION_SYSTEM_FIXED", PackageManager.class);
+        case 7 -> value = getStaticIntField("FLAG_PERMISSION_POLICY_FIXED", PackageManager.class);
+        case 8 -> value = getStaticIntField("START_SUCCESS", ActivityManager.class);
       }
     } catch (NoSuchFieldError | NoSuchMethodError e) {
       if (wrapHiddenSdkErrors) {

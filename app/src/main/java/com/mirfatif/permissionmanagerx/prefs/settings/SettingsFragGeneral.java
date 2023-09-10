@@ -15,6 +15,7 @@ import com.mirfatif.permissionmanagerx.parser.SearchConstants;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.fwk.CustomPrefDialogFrag;
 import com.mirfatif.permissionmanagerx.util.ApiUtils;
+import java.util.Objects;
 
 public class SettingsFragGeneral extends PreferenceFragmentCompat
     implements OnSharedPreferenceChangeListener {
@@ -53,7 +54,7 @@ public class SettingsFragGeneral extends PreferenceFragmentCompat
   }
 
   public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-    if (key.equals(ApiUtils.getString(R.string.pref_settings_locale_key))) {
+    if (Objects.requireNonNull(key).equals(ApiUtils.getString(R.string.pref_settings_locale_key))) {
       App.setLocale();
       SearchConstants.INS.recreate();
       mA.recreate();

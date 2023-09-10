@@ -45,6 +45,7 @@ import com.mirfatif.privtasks.util.bg.BgRunner;
 import com.mirfatif.privtasks.util.bg.SingleSchedTaskExecutor;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class AboutActivity {
@@ -267,7 +268,7 @@ public class AboutActivity {
 
     System.gc();
 
-    String directory = App.getCxt().getExternalCacheDir().getAbsolutePath();
+    String directory = Objects.requireNonNull(App.getCxt().getExternalCacheDir()).getAbsolutePath();
 
     File dir = new File(directory);
     if (!dir.isDirectory()) {

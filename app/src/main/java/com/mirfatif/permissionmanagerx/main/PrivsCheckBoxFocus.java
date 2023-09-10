@@ -21,6 +21,7 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.fwk.LifecycleWatcher;
 import com.mirfatif.permissionmanagerx.util.UiUtilsFlavor;
 import com.mirfatif.permissionmanagerx.util.bg.LiveSchedTask;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -99,18 +100,15 @@ public class PrivsCheckBoxFocus {
     private void scrollToCheckBoxes() {
       View v = mA.mB.navV.getChildAt(0);
 
-      if (!(v instanceof RecyclerView)) {
+      if (!(v instanceof RecyclerView rv)) {
         return;
       }
 
-      RecyclerView rv = ((RecyclerView) v);
       RecyclerView.LayoutManager lm = rv.getLayoutManager();
 
-      if (!(lm instanceof LinearLayoutManager)) {
+      if (!(lm instanceof LinearLayoutManager llm)) {
         return;
       }
-
-      LinearLayoutManager llm = (LinearLayoutManager) lm;
 
       int first = llm.findFirstCompletelyVisibleItemPosition();
       int last = llm.findLastCompletelyVisibleItemPosition();
@@ -140,14 +138,14 @@ public class PrivsCheckBoxFocus {
       View view = mA.mB.navV.getMenu().findItem(R.id.action_root).getActionView();
       int[] loc = new int[2];
 
-      view.getLocationInWindow(loc);
+      Objects.requireNonNull(view).getLocationInWindow(loc);
       mX = loc[0];
       mY = loc[1];
 
       mW = view.getWidth();
 
       view = mA.mB.navV.getMenu().findItem(R.id.action_adb).getActionView();
-      view.getLocationInWindow(loc);
+      Objects.requireNonNull(view).getLocationInWindow(loc);
 
       mH = loc[1] + view.getHeight() - mY;
 

@@ -12,6 +12,7 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.fwk.CustomPrefDialogFrag;
 import com.mirfatif.permissionmanagerx.util.Utils;
+import java.util.Objects;
 
 public class SettingsFragTheme extends PreferenceFragmentCompat
     implements OnSharedPreferenceChangeListener {
@@ -49,7 +50,7 @@ public class SettingsFragTheme extends PreferenceFragmentCompat
   }
 
   public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-    if (key.equals(getString(R.string.pref_settings_theme_color_key))
+    if (Objects.requireNonNull(key).equals(getString(R.string.pref_settings_theme_color_key))
         || key.equals(getString(R.string.pref_settings_dark_theme_key))) {
       mA.recreate();
       MySettings.INS.recreateMainActivity();

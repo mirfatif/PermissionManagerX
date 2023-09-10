@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-  <!--
-  NOTE:
-  If pref name equals its value + "_key":
-  - Pref values starting with "pref_filter_" are cleared on "Reset to Defaults".
-  - Pref values starting with "pref_" and not ending with "_enc" are backed up and restored.
-  -->
+  <!-- NOTE:
+    If pref name equals its value + "_key":
+    - Pref values starting with "pref_filter_" are cleared on "Reset to Defaults".
+    - Pref values starting with "pref_" and not ending with "_enc" are backed up and restored. -->
   <!-- MainActivity Preferences -->
   <!-- MainActivity Preferences corresponding to default values -->
   <!-- CHAR LIMIT: 20 -->

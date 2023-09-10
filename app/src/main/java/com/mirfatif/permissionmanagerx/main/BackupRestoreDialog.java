@@ -146,6 +146,12 @@ public class BackupRestoreDialog {
       String message =
           ApiUtils.getQtyString(R.plurals.backup_restore_processed_prefs, res.prefs, res.prefs);
 
+      if (res.profiles >= 0) {
+        message =
+            ApiUtils.getQtyString(
+                R.plurals.backup_restore_processed_profiles, res.profiles, message, res.profiles);
+      }
+
       message =
           ApiUtils.getQtyString(
               R.plurals.backup_restore_processed_refs, res.perms, message, res.perms);

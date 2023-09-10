@@ -48,7 +48,7 @@ public class PrivsStatus implements Parcelable {
   }
 
   public static final Creator<PrivsStatus> CREATOR =
-      new Creator<PrivsStatus>() {
+      new Creator<>() {
 
         public PrivsStatus createFromParcel(Parcel in) {
           return new PrivsStatus(in);
@@ -84,7 +84,7 @@ public class PrivsStatus implements Parcelable {
     }
 
     public static final Creator<PermStatus> CREATOR =
-        new Creator<PermStatus>() {
+        new Creator<>() {
 
           public PermStatus createFromParcel(Parcel in) {
             return new PermStatus(in);

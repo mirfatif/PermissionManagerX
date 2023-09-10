@@ -1,5 +1,6 @@
 package com.mirfatif.permissionmanagerx.util;
 
+import android.os.Build;
 import androidx.lifecycle.Lifecycle.State;
 import androidx.lifecycle.LifecycleOwner;
 import com.mirfatif.permissionmanagerx.BuildConfig;
@@ -49,5 +50,22 @@ public class Utils {
 
   public static boolean isFdroidVersion() {
     return BuildConfig.VERSION_NAME.contains("-fd");
+  }
+
+  public static String getAndroidVersionInt() {
+    return switch (Build.VERSION.SDK_INT) {
+      case 24 -> "7";
+      case 25 -> "7.1";
+      case 26 -> "8";
+      case 27 -> "8.1";
+      case 28 -> "9";
+      case 29 -> "10";
+      case 30 -> "11";
+      case 31 -> "12";
+      case 32 -> "12.1";
+      case 33 -> "13";
+      case 34 -> "14";
+      default -> "???";
+    };
   }
 }

@@ -15,6 +15,7 @@ import com.mirfatif.privtasks.util.MyLog;
 import com.mirfatif.privtasks.util.bg.RateLimitedTask;
 import com.mirfatif.privtasks.util.bg.ThreadUtils;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public enum DaemonIface {
@@ -91,7 +92,8 @@ public enum DaemonIface {
     synchronized (this) {
       if (isDaemonAlive()) {
         try {
-          mPrivTasks.dumpHeap(App.getCxt().getExternalCacheDir().getAbsolutePath());
+          mPrivTasks.dumpHeap(
+              Objects.requireNonNull(App.getCxt().getExternalCacheDir()).getAbsolutePath());
           return true;
         } catch (RemoteException e) {
           MyLog.e(TAG, "dumpHeap", e);
