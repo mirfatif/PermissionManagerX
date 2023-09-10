@@ -47,11 +47,18 @@
                 <li>
                     <a href="#perm_watcher" class="no-underline"><b>权限监控</b></a>
                     <ul>
-                        <li><a href="#perm_watcher_fails" class="no-underline"><b>为什么会启动权限监控失败？</b></a></li>
+                        <li><a href="#perm_watcher_fails" class="no-underline">为什么会启动权限监控失败？</a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#perm_view" class="no-underline"><b>Permission View</b></a>
+                </li>
+                <li>
+                    <a href="#batch-ops" class="no-underline"><b>Batch Operations</b></a>
+                    <ul>
+                        <li><a href="#perm-profiles" class="no-underline">权限配置</a></li>
+                        <li><a href="#refs-ops" class="no-underline">Operations with References</a></li>
+                    </ul>
                 </li>
                 <li><a href="#wrun-integration" class="no-underline"><b>与 WhatsRunning 整合</b></a></li>
                 <li>
@@ -66,7 +73,7 @@
                 <li>
                     <a href="#versions" class="no-underline"><b>权限管理 X 的不同版本</b></a>
                     <ul>
-                        <li><a href="#paid_features" class="no-underline"><b>付费功能</b></a></li>
+                        <li><a href="#paid_features" class="no-underline">付费功能</a></li>
                     </ul>
                 </li>
                 <li><a href="#faq" class="no-underline"><b>常见问题</b></a></li>
@@ -132,7 +139,7 @@
             <p>使用权限管理 X，您可以：</p>
             <ul>
                 <li>查看 / 授予/撤销所有 <i>清单权限</i> <b><i>可以或不可以</i></b> 使用系统设置调整的权限， 无法从系统设置中修改的权限由很多</li>
-                <li>查看所有 <i>AppOp权限</i> （通常不存在于任何系统设置中） 例如， 振动和读取剪切板的 AppOps 权限 您可以设置所需的 AppOps 模式，例如： <b><i>前台允许</i></b></li>
+                <li>查看所有 <i>AppOp权限</i> （通常不存在于任何系统设置中） 例如， <span class="code">VIBRATE</span> and <span class="code">READ_CLIPBOARD</span> AppOp permissions. 您可以设置所需的 AppOps 模式，例如： <b><i>前台允许</i></b></li>
                 <li>查看应用请求的所有权限，这些权限是 <b><i>不可更改的</i></b></li>
                 <li>查看上次使用这些AppOps的时间</li>
                 <li>更改 <b><i>System-Fixed</i></b> 权限（无法通过任何其他方式更改）<1></li>
@@ -160,10 +167,8 @@
                 <li>或者您按照应用请求授予了几个权限</li>
             </ul>
             <p>Will you go through the whole hassle once again?</p>
-            <p>您不需要， 您可以让权限管理 X 记住您想要的权限。 设置一个权限，让它变成 <i>绿色</i>， 看看所有已安装的软件包并找出哪些权限设置不正确。 通过快速搜索: "<i>:RED|:ORANGE</i>" 或 "<i>!:GREEN</i>" 查看 <a href="#search">搜索</a> 了解更多</p>
-            <p>参考状态下您可以便捷的备份和恢复</p>
-            <p>长按设置权限或清除其参考状态</p>
-            <p>三个参考状态：</p>
+            <p>您不需要， 您可以让权限管理 X 记住您想要的权限。 Set a permission, make it <font color="#90EE90"><b>GREEN</b></font>, and done. It will take only a few moments to look at all installed packages and figure out which permissions aren't correctly set e.g. by making a quick search: <span class="code">:RED|:ORANGE</span> or <span class="code">!:GREEN</span>. 查看 <a href="#search">搜索</a> 了解更多</p>
+            <p>Three <b>reference states</b> are:</p>
             <ul>
                 <li>
                     <p>
@@ -180,6 +185,15 @@
                         <font color="#FF0000"><b>红色</b></font> ：该参考值和设置值不同
                     </p>
                 </li>
+            </ul>
+
+            <p>Reference states can be <b>backed up</b> and <b>restored</b> conveniently. After a restore, there's a convenient way to set all permissions according to restored references. See <a href="#refs-ops">Batch Operations</a>.</p>
+            <p>There are multiple ways you can <b>set a reference</b>:</p>
+            <ul>
+                <li>Long press a permission and tap the "Set Reference " / "Clear Reference" button.</li>
+                <li>There's a top menu option on every app's permission list screen to set or clear all references.</li>
+                <li>(Pro only) Set references in bulk with <a href="#refs-ops">Batch Operations</a>.</li>
+                <li>(Pro only) Enable the "Auto-set reference" preference under Settings -> General settings. So whenever you change a permission state, it's also set as a reference.</li>
             </ul>
         </div>
 
@@ -236,32 +250,32 @@
             <ul>
                 <li>
                     <p>应用状态：</p>
-                    <p><b><i>:Critical :Framework :System :User :Disabled</i></b></p>
+                    <p><span class="code">:Critical</span> <span class="code">:Framework</span> <span class="code">:System</span> <span class="code">:User</span> <span class="code">:Disabled</span></p>
                 </li>
                 <li>
                     <p>参考状态：</p>
-                    <p><b><i>:ORANGE :GREEN :RED</i></b></p>
+                    <p><span class="code">:ORANGE</span> <span class="code">:GREEN</span> <span class="code">:RED</span></p>
                 </li>
                 <li>
                     <p>权限 <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">保护级别</a>:</p>
-                    <p><b><i>:Normal :Dangerous :Signature :Internal :Development :Privileged :Fixed :AppOps :Unknown</i></b></p>
+                    <p><span class="code">:Normal</span> <span class="code">:Dangerous</span> <span class="code">:Signature</span> <span class="code">:Internal</span> <span class="code">:Development</span> <span class="code">:Privileged</span> <span class="code">:Fixed</span> <span class="code">:AppOps</span> <span class="code">:Unknown</span></p>
                 </li>
                 <li>
                     <p>每个UID应用：</p>
-                    <p><b><i>:UID</i></b></p>
+                    <p><span class="code">:UID</span></p>
                 </li>
                 <li>
                     <p>AppOps上次使用时间</p>
-                    <p><b><i>:TIME</i></b></p>
+                    <p><span class="code">:TIME</span></p>
                 </li>
                 <li>
                     <p>额外的 AppOps (未在过滤器设置中排除)：</p>
-                    <p><b><i>:EXTRA</i></b></p>
+                    <p><span class="code">:EXTRA</span></p>
                 </li>
                 <li>
-                    <p>&amp; (AND), | (OR) and ! (NOT) operators:</p>
-                    <p><b><i>Foo|Bar&amp;Baz</i></b></p>
-                    <p><b><i>Foo&amp;!Bar&amp!Baz</i></b></p>
+                    <p><span class="code">&amp;</span> (AND), <span class="code">|</span> (OR) and <span class="code">!</span> (NOT) operators:</p>
+                    <p><span class="code">Foo|Bar&amp;Baz</span></p>
+                    <p><span class="code">Foo&!Bar&amp;!Baz</span></p>
                 </li>
             </ul>
             <p>付费版本还会显示搜索建议（如果已设置首选项）优化搜索过程</p>
@@ -272,7 +286,7 @@
             <hr />
 
             <p>您想跟踪所有已安装应用权限所发生的任何不必要的更改吗？ <i>计划检查</i> 可以为您定期检查(分钟、小时或天)。</p>
-            <p>设置 <a href="#perm_ref">权限参考</a> 为 <i>绿色</i>， 如果发现任何权限更改( <i>红色</i> 状态)，或安装新应用(<i>橙色</i> 状态)， 权限管理 X 会发出通知提示您</p>
+            <p>设置 <a href="#perm_ref">权限参考</a> 为 <i>绿色</i>， If any permission is found changed (with <font color="#FF0000"><b>RED</b></font> state) or when a new app is found installed (with <font color="#FFC107"><b>ORANGE</b></font> state permissions), PMX reminds you that something needs your attention.</p>
             <p>此外，如果在模版中配置，计划检查可以自动撤销已授予的权限，并发出信息通知。</p>
         </div>
 
@@ -289,7 +303,7 @@
             <p><b>注意：</b></p>
             <ul>
                 <li>
-                    <p>只有带有"<i>红色</i>"参考状态的权限会被撤销，带有"<i>橙色</i>"状态的权限不会， 因此您<b>必须</b>先设置权限参考。 查看 <a href="#perm_ref">权限参考</a>。</p>
+                    <p>Only the permissions with <font color="#FF0000"><b>RED</b></font> reference state are revoked, not those with the <font color="#FFC107"><b>ORANGE</b></font> state. 因此您<b>必须</b>先设置权限参考。 查看 <a href="#perm_ref">权限参考</a>。</p>
                 </li>
                 <li>
                     <p>只有 <i>危险</i> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">保护级别</a> 才会被监视， 这些是经常会变化的内容。 带有 <i>签名</i>|<i>开发</i> 保护级别或 <i>System-Fixed</i> 标记设置的权限未被监视， 即便可以修改</p>
@@ -302,7 +316,7 @@
                 </li>
             </ul>
             <p id="perm_watcher_fails"><b>为什么会启动权限监控失败？</b></p>
-            <p>您用的是 ADB 激活的吗？ 一些设备制造商从 <i>Shell</i> 中删除了权限 <i>OBSERVE_GRANT_REVOKE_PERMISSIONS</i> 或 <i>SET_ACTIVITY_WATCHER</i>， 如果你的情况如此，我们很抱歉。 我们无法修复该问题。 在这些设备上，权限监控只能使用 root 功能。 查看 <a href="#adb_help">使用权限管理 X 与 ADB</a> 开始处的注释。</p>
+            <p>您用的是 ADB 激活的吗？ 一些设备制造商从 <span class="code">Shell</span> 中删除了权限 <span class="code">OBSERVE_GRANT_REVOKE_PERMISSIONS</span> 或 <i>SET_ACTIVITY_WATCHER</i>， 如果你的情况如此，我们很抱歉。 我们无法修复该问题。 在这些设备上，权限监控只能使用 root 功能。 查看 <a href="#adb_help">使用权限管理 X 与 ADB</a> 开始处的注释。</p>
         </div>
 
         <div class="card">
@@ -336,6 +350,46 @@
         </div>
 
         <div class="card">
+            <h2 id="batch-ops">Batch Operations (Pro only)</h2>
+            <hr />
+
+            <h3 class="high-top" id="perm-profiles">权限配置</h3>
+            <ul>
+                <li>Create and edit permission profiles (templates).</li>
+                <li>Apply a profile to a selected list of apps.</li>
+                <li>Select a <b>Default Profile</b> to apply on newly installed apps (if <a href="#perm_watcher">Permission Watcher</a> is enabled).</li>
+            </ul>
+
+            <img class="small" src="../en/img/perm_profiles.webp" />
+
+            <h3 class="high-top" id="refs-ops">Operations with References</h3>
+            <ul>
+                <li>
+                    <p><b>Set Permissions</b></p>
+                    <p>Go through a list of selected apps and make <font color="#FF0000"><b>RED</b></font> permissions <font color="#90EE90"><b>GREEN</b></font> by setting their states according to the <a href="#perm_ref">reference values</a>. Permissions with Green and Orange states are ignored.</p>
+                    <p>This option is usually helpful when you have just restored a backup and there are many permissions with RED state.</p>
+                </li>
+                <li>
+                    <p><b>设置模板</b></p>
+                    <p>Go through a list of selected apps and make <font color="#FF0000"><b>RED</b></font> and <font color="#FFC107"><b>ORANGE</b></font> permissions <font color="#90EE90"><b>GREEN</b></font> by setting their <a href="#perm_ref">reference values</a> according to the permission states.</p>
+                    <p>This option is usually helpful during an initial setup. You have just installed the PMX app and spent a few hours setting permissions. This option will make them all GREEN in a single tap.</p>
+                </li>
+                <li>
+                    <p><b>Cleanup References</b></p>
+                    <p>Cleanup permissions references database. Unused references will be removed.</p>
+                    <p>If there's a huge list of unused references, a cleanup may improve loading of app list.</p>
+                </li>
+                <li>
+                    <p><b>Reset References</b></p>
+                    <p>Reset permissions references database. All references will be removed.</p>
+                    <p>Not meant to be used normally. But in case if you want to start from scratch.</p>
+                </li>
+            </ul>
+
+            <img class="small" src="../en/img/set_refs.webp" />
+        </div>
+
+        <div class="card">
             <h2 id="wrun-integration">与 WhatsRunning 整合</h2>
             <hr />
 
@@ -344,7 +398,7 @@
             <img class="small" src="../en/img/wrun_integration2.webp" />
             <p>所以从权限管理 X ，您可以切换到 WhatsRunning 来找出一个拥有受限权限的应用是否仍在运行。 如果是，它是以何种状态以及它正在使用多少资源。</p>
             <p>同样，从 WhatsRunning 你可以切换到 PMX 来找出正在运行(或过期) 的应用被授予的权限。</p>
-            <p>这在分析权限效果时特别有用，如 <code>RUN_IN_BACKGROUND</code>。</p>
+            <p>这在分析权限效果时特别有用，如 <span class="code">RUN_IN_BACKGROUND</span>。</p>
         </div>
 
         <div class="card">
@@ -391,8 +445,8 @@
                 </li>
                 <li>
                     <p>在电脑上打开终端 (或 Windows 命令提示窗) 并运行下述指令：</p>
-                    <p><code>adb tcpip 5555</code></p>
-                    <p>您必须先行下载 <code>adb</code> 工具才能运行该指令， <a href="https://developer.android.com/studio/releases/platform-tools#downloads">下载链接</a></p>
+                    <p><span class="code">adb tcpip 5555</span></p>
+                    <p>您必须先行下载 <span class="code">adb</span> 工具才能运行该指令， <a href="https://developer.android.com/studio/releases/platform-tools#downloads">下载链接</a></p>
                 </li>
             </ol>
 
@@ -406,16 +460,16 @@
                     <p>将您的设备和电脑连接到同一个 Wi-Fi </p>
                 </li>
                 <li>
-                    <p>Get the IP address of the device (usually in Wi-Fi settings or in <b>Settings</b> -> <b>About</b>), say it's <code>192.168.1.1</code>.</p>
+                    <p>Get the IP address of the device (usually in Wi-Fi settings or in <b>Settings</b> -> <b>About</b>), say it's <span class="code">192.168.1.1</span>.</p>
                 </li>
                 <li>
                     <p>在电脑上运行：</p>
-                    <p><code>adb connect 192.168.1.1</code></p>
+                    <p><span class="code">adb connect 192.168.1.1</span></p>
                 </li>
                 <li>
                     <p>再次运行：</p>
-                    <p><code>adb shell id -u</code></p>
-                    <p>输出应为 <code>2000</code>（或 <code>0</code>）</p>
+                    <p><span class="code">adb shell id -u</span></p>
+                    <p>输出应为 <span class="code">2000</span>（或 <span class="code">0</span>）</p>
                 </li>
             </ol>
 
@@ -423,7 +477,7 @@
 
             <ol start="10">
                 <li>
-                    <p>运行权限管理 X 并检查 <b><i>ADB Shell</i></b>， Enter port <code>5555</code> and tap connect.</p>
+                    <p>运行权限管理 X 并检查 <b><i>ADB Shell</i></b>， Enter port <span class="code">5555</span> and tap connect.</p>
                     <img alt="ADB developer options" class="medium" src="../en/img/adb_in_dev_options_2.webp" />
                 </li>
                 <li>
@@ -474,11 +528,11 @@
 
             <h3 class="high-top" id="adb_connect_svc">ADB Connect Service</h3>
             <p>If <a href="#perm_watcher">Permission Watcher</a> or <a href="#scheduled_checker">Scheduled Checks</a> are enabled, PMX connects to ADB on device boot. But if ADB has not been enabled by then, PMX will no more try to connect to ADB unless explicitly done by opening the app.</p>
-            <p>But if you enable ADB on boot in an automated way, you can notify PMX by sending the following <code>Intent</code> that ADB has been enabled:</p>
+            <p>But if you enable ADB on boot in an automated way, you can notify PMX by sending the following <span class="code">Intent</span> that ADB has been enabled:</p>
 
-            <p class="horizontal-scroll"><code>am startservice -n com.mirfatif.permissionmanagerx/.fwk.AdbConnectSvcM --ei "com.mirfatif.pmx.extra.ADB_PORT" 5555</code></p>
+            <p class="horizontal-scroll"><span class="code">am startservice -n com.mirfatif.permissionmanagerx/.fwk.AdbConnectSvcM --ei "com.mirfatif.pmx.extra.ADB_PORT" 5555</span></p>
 
-            <p>Make sure to use the correct package name depending on the app version. Read <a href="https://developer.android.com/studio/command-line/adb#am">here</a> how to use <code>am</code> tool to start an app's service.</p>
+            <p>Make sure to use the correct package name depending on the app version. Read <a href="https://developer.android.com/studio/command-line/adb#am">here</a> how to use <span class="code">am</span> tool to start an app's service.</p>
         </div>
 
         <div class="card">
@@ -502,7 +556,7 @@
             <p>可以购买付费版本，以示捐赠和使用付费的功能。 其他捐赠方法可在免费/专业版的 <b>捐赠</b> 选项中查看， 开发者也可以 <b>通过为源代码做出贡献</b>来支持应用程序开发。例如，通过修复bug。 用户可以通过测试版，反馈崩溃问题， 建议改进和新功能，或将应用翻译成其母语。</p>
 
             <h3 id="paid_features">付费功能</h3>
-            <p>付费版本包括免费版本中的所有功能， 外加下面的 <b>额外功能</b> ，这些功能也可以在 <b>关于</b> 部分和 Play 商店 描述中查看：</p>
+            <p>Paid version includes everything that's in the Free version, plus the following <b>extra features</b> which are also listed in the Play Store description:</p>
             <ul>
                 <li>不同的应用和权限排序方式</li>
                 <li>预定检查通知错误的参考状态</li>
@@ -511,11 +565,11 @@
                 <li>修改关键应用的权限</li>
                 <li>多用户/工作资料支持</li>
                 <li>更改时自动创建备份文件</li>
+                <li>Batch Operations (Profiles)</li>
                 <li>Permissions description</li>
                 <li>搜索建议</li>
                 <li>主题选项</li>
-                <li>权限概览视图</li>
-                <li>批量操作配置文件(开发中)</li>
+                <li>Permissions View</li>
             </ul>
         </div>
 
@@ -540,7 +594,7 @@
             <p id="faq1" class="high-bottom"><b>为什么权限管理 X 需要 Root 或 ADB 权限？</b></p>
             <p>Android系统不允许普通用户应用更改其他应用的清单或应用权限，甚至自己的权限。 如果隐藏的 API 未在您的设备上列入黑名单，则只能在没有 root 或 ADB 的情况下读取 AppOps，这在 Android 9+ 上<a href="https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces">不太可能</a>。</p>
             <p>这就是为什么我们要单独加入一个具有高度特权的进程，以规避限制。</p>
-            <p>默认， 后台进程 (daemon) 使用 ADB UID (<code>2000</code>) 或 (如果root) 系统 UID (<code>1000</code>) 运行。 在已root的设备上，UID可以在 <b><i>高级设置</i></b> 中更改。</p>
+            <p>默认， 后台进程 (daemon) 使用 ADB UID (<span class="code">2000</span>) 或 (如果root) 系统 UID (<span class="code">1000</span>) 运行。 在已root的设备上，UID可以在 <b><i>高级设置</i></b> 中更改。</p>
 
             <hr class="dim" />
 
@@ -585,8 +639,8 @@
             <p id="faq3" class="high-bottom"><b>Why do some AppOps cannot be changed?</b></p>
             <p>Sometimes you see "AppOp mode not changed". It means that Android rejected the request to change the AppOp mode. You cannot change it no matter what method or app you use. There could be multiple possible reasons.</p>
             <ul>
-                <li>Some AppOps are dependent on their corresponding manifest permissions. So they cannot be changed independently. For instance you may not be able to deny <code>READ_CONTACTS</code> AppOp if <code>android.permission.READ_CONTACTS</code> manifest permission is granted.</li>
-                <li>Some AppOps are only used by Android for compatibility (e.g. <code>LEGACY_STORAGE</code>) and they don't actually control anything. 如果我们了解工作原理，就会发现授予/撤销这种权限是没有必要的。</li>
+                <li>Some AppOps are dependent on their corresponding manifest permissions. So they cannot be changed independently. For instance you may not be able to deny <span class="code">READ_CONTACTS</span> AppOp if <span class="code">android.permission.READ_CONTACTS</span> manifest permission is granted.</li>
+                <li>Some AppOps are only used by Android for compatibility (e.g. <span class="code">LEGACY_STORAGE</span>) and they don't actually control anything. 如果我们了解工作原理，就会发现授予/撤销这种权限是没有必要的。</li>
                 <li>如果应用版本过旧，则无法更改某些权限。</li>
                 <li>Some OEM ROMs behave weird when it comes to AppOps. 我们不知道您的 OEM 对AOSP代码做了什么修改。 这就是为什么Github 和 Play Store上是这样描述的： <i>"应用程序在原生 Android 7-11上测试可用， 一些高度定制的ROM可能无法使用“</i></li>
             </ul>
@@ -612,19 +666,19 @@
             <p id="faq8" class="high-bottom"><b>为什么在某些应用中看不到部分AppOps 权限？</b></p>
             <p>如果某个 AppOps 被排除在可见列表之外，请检查 <i>排除过滤</i>。 或者某应用可能没有使用该权限， 您无需考虑这些。</p>
             <p>但如果您想要看到所有应用的 AppOps 权限，前往 <b>排除筛选</b> -> <b>额外应用权限, 从不排除</b> 并在列表中检查该 AppOps 是否存在。</p>
-            <p>例如， 在搜索框中输入 <i>_CLIPBOARD</i> ( <i>深度搜索</i>)，你会得到所有使用过(或试图使用) <i>READ_CLIPBOARD</i> 或 <i>WRITE_CLIPBOARD</i> 权限的应用， 时间戳也显会示(但不显示所有AppOps)。</p>
+            <p>例如， 在搜索框中输入 <span class="code">_CLIPBOARD</span> ( <i>深度搜索</i>)，你会得到所有使用过(或试图使用) <span class="code">READ_CLIPBOARD</span> 或 <span class="code">WRITE_CLIPBOARD</span> 权限的应用， 时间戳也显会示(但不显示所有AppOps)。</p>
             <p>因此，如果您查找的应用不在搜索结果中，请在上面提到的 <i>排除过滤</i> 列表中检查AppOps 。</p>
 
             <hr class="dim" />
 
             <p id="faq5" class="high-bottom"><b>我应该在高级设置中选择哪个特权守护进程 UID ？ 系统还是ADB？</b></p>
             <p>只有当你正在使用 root 权限时它才很重要， 或者您设备上的 ADBD 正在以 root 运行(最终用户设备的情况不是如此)。</p>
-            <p>最好使用 <b>系统</b> (UID 1000) ，因为它优先级比 <b>ADB</b> (UID 2000) 更高。 例如， 更改 <i>"System-Fixed"</i> 权限只有在系统运行时才可用。</p>
+            <p>Preferably use <b>System</b> (UID <span class="code">1000</span>) as it allows more privileges than <b>ADB</b> (UID <span class="code">2000</span>). 例如， 更改 <i>"System-Fixed"</i> 权限只有在系统运行时才可用。</p>
 
             <hr class="dim" />
 
             <p id="faq9" class="high-bottom"><b>过滤列表中的<i>无效的权限</i>是什么？</b></p>
-            <p>如果一个应用正在请求一个清单权限，但它没有由 Android 框架或任何已安装的软件包请求(提供)， 它是无效的权限。 例如，如果您的设备上没有安装Play商店应用，“<i>com.android.vending.BILLING</i>”是无效的权限。</p>
+            <p>如果一个应用正在请求一个清单权限，但它没有由 Android 框架或任何已安装的软件包请求(提供)， 它是无效的权限。 For instance <span class="code">com.android.vending.BILLING</span> is an invalid permission if Play Store app is not installed on your device.</p>
 
             <hr class="dim" />
 
@@ -635,7 +689,7 @@
 
             <p id="faq11" class="high-bottom"><b>什么是不同的 AppOps 模式，我应该使用哪些模式？</b></p>
             <p>通常您应该 <i>允许</i> 或 <i>忽略</i>。 或者您可能只想在应用程序在 <i>前台</i> (仅支持安卓 9+) 时允许操作。 <i>拒绝</i> 是比 <i>忽略</i> 更严格的版本，可能导致请求应用崩溃。 <i>默认</i> 是系统的默认行为，不同的AppOps行为不同。</p>
-            <p>请注意，并非每个AppOps模式都可以设置在任何应用上。 例如，在最近的 Android 版本中，只允许用户应用在前台使用 CAMERA 和 MICROPHONE (即使设置模式是 <i>允许</i>)。 同样，一些AppOps 永远不能设置为 <i>Foreground</i> 模式。</p>
+            <p>请注意，并非每个AppOps模式都可以设置在任何应用上。 For instance on recent Android releases <span class="code">CAMERA</span> and <span class="code">MICROPHONE</span> are allowed to be used by user apps only in foreground (even if set mode is <i>Allow</i>). 同样，一些AppOps 永远不能设置为 <i>Foreground</i> 模式。</p>
             <p>Related: <a href="#faq3">Why do some AppOps cannot be changed?</a></p>
             <p>官方文档： <a href="https://developer.android.com/reference/android/app/AppOpsManager#access-control">AppOpsManager</a>。</p>
 
@@ -662,7 +716,7 @@
             <hr class="dim" />
 
             <p id="faq13" class="high-bottom"><b>READ_MEDIA_AUDIO 权限是什么？</b></p>
-            <p>READ_MEDIA_[AUDIO|VIDEO|IMAGES] 是最近添加到 Android 10 (IIRC) 的 AppOps 列表中，作为Android的 <i>扩展存储</i> 实现的一部分。 源代码 <a href="https://cs.android.com/android/platform/superproject/+/android-11.0.0_r1:frameworks/base/core/java/android/app/AppOpsManager.java;l=1065">表明</a>: 该权限用于 <i>读取音频类型</i> 的媒体。 简单地说，它控制应用(使用 <a href="https://developer.android.com/training/data-storage/shared/media">MediaStore</a>) 访问外部共享存储中的音频文件。</p>
+            <p><span class="code">READ_MEDIA_[AUDIO|VIDEO|IMAGES]</span> are recent addition to AppOps list, added in Android 10 (IIRC) as a part of Android's <i>Scoped Storage</i> implementation. 源代码 <a href="https://cs.android.com/android/platform/superproject/+/android-11.0.0_r1:frameworks/base/core/java/android/app/AppOpsManager.java;l=1065">表明</a>: 该权限用于 <i>读取音频类型</i> 的媒体。 简单地说，它控制应用(使用 <a href="https://developer.android.com/training/data-storage/shared/media">MediaStore</a>) 访问外部共享存储中的音频文件。</p>
 
             <hr class="dim" />
 
@@ -672,7 +726,7 @@
             <hr class="dim" />
 
             <p id="faq16" class="high-bottom"><b>如何修改 INTERNET 权限？</b></p>
-            <p>Android 不允许更改所有权限，如那些有 <b>正常</b> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">保护级别</a> 的权限(例如) INTNET或那些有 <b>固定</b> 标志或 <b>签名</b> 保护级别(通常是系统或框架应用)。 相关: <a href="#perms_types">清单权限和 AppOps</a>。</p>
+            <p>Android doesn't allow changing all permissions, like those with the <b>Normal</b> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a> (e.g. <span class="code">INTERNET</span>) or those with <b>Fixed</b> flag or <b>Signature</b> protection level (usually System or Framework apps). 相关: <a href="#perms_types">清单权限和 AppOps</a>。</p>
 
             <hr class="dim" />
 
@@ -698,8 +752,8 @@
             <img class="small" src="../en/img/remove_unused_perms.webp" />
             <p>To change this option from PMX:</p>
             <ul>
-                <li>前往 <i>排除过滤</i> -> <i>额外AppOps 列表</i> 并检查 "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>".</li>
-                <li>返回主屏幕，在顶部搜索栏中输入 "<i>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</i>" 。 Make sure that deep search is enabled in search settings.</li>
+                <li>Go to <i>Exclusion Filters</i> -> <i>Extra AppOps list</i> and check <span class="code">AUTO_REVOKE_PERMISSIONS_IF_UNUSED</span>.</li>
+                <li>Back on the main screen, type <span class="code">AUTO_REVOKE_PERMISSIONS_IF_UNUSED</span> in the top search bar. Make sure that deep search is enabled in search settings.</li>
                 <li>将您想要使用的应用设置为 <i>允许</i> 或 <i>忽略</i>。</li>
             </ul>
 
@@ -734,7 +788,7 @@
             <hr class="dim" />
 
             <p id="faq22" class="high-bottom"><b>如何在工作资料/多用户环境中使用本应用？</b></p>
-            <p>付费版本支持工作资料和多用户。 您可以在下拉菜单中进行选择</p>
+            <p>Pro version supports work profiles and multiple users. 您可以在下拉菜单中进行选择</p>
             <img class="small" src="../en/img/multi_users.webp" />
 
             <hr class="dim" />
@@ -772,29 +826,29 @@
             <hr class="dim" />
 
             <p id="faq38" class="high-bottom"><b>安装新应用时，权限管理 X 是否可以默认禁用其权限？</b></p>
-            <p>可以， 但没有什么可以撤销的。 所有可撤销的清单权限都已被撤销并保持撤销，除非用户明确授予。 就AppOps而言，许多它们至少要到应用程序使用一次才能出现，例如，VIBRATION 和 READ_CLIPBOARD。 正如所指出的那样，许多其他人(例如READ_CONTACTS)已经放弃了相应的清单权限。 所以在安装应用时不可预测应该移除哪些 AppOps 。</p>
-            <p>但当安装了新的应用时会显示通知(如果使用 <a href="#perm_watcher">权限监视器</a>)，这样用户就可以通过一个方法设置权限或应用配置(即将使用的功能)。</p>
+            <p>可以， 但没有什么可以撤销的。 所有可撤销的清单权限都已被撤销并保持撤销，除非用户明确授予。 As far as AppOps are concerned, many of them don't appear until at least once used by the app e.g. <span class="code">VIBRATE</span> and <span class="code">READ_CLIPBOARD</span>. Many others (e.g. <span class="code">READ_CONTACTS</span>) have their corresponding manifest permissions already dropped, as pointed out. 所以在安装应用时不可预测应该移除哪些 AppOps 。</p>
+            <p>But a notification is displayed when a new app is installed (if using <a href="#perm_watcher">Permission Watcher</a>) so the user can set permissions one by one or <a href="#perm-profiles">apply a profile</a>.</p>
 
             <hr class="dim" />
 
             <p id="faq25" class="high-bottom"><b>为什么权限管理 X 需要互联网权限？</b></p>
             <p>The standalone <a href="https://mirfatif.github.io/mirfatif/getpro">Pro</a> version requires internet connection for license verification. The other two <a href="#versions">versions</a> - Free and Play Store Pro - can work completely offline. Though Play Store app needs internet connection for license verification.</p>
 
-            <p><b>Optional use</b> of <code>android.permission.INTERNET</code> permission:</p>
+            <p><b>Optional use</b> of <span class="code">android.permission.INTERNET</span> permission:</p>
             <ul>
                 <li>检查更新. You can disable this in app settings.</li>
                 <li>Fetch help contents of this webpage that you view in drawer -> Help.</li>
             </ul>
 
-            <p><b>Local (on-device) use</b> of <code>android.permission.INTERNET</code> permission:</p>
-            <p>Android does not allow apps to create network sockets without having the <a href="https://developer.android.com/reference/android/Manifest.permission#INTERNET">INTERNET</a> permission even if they are meant to be used only locally and not for an internet connection. PMX has two uses of local (on-device) connections (the ability to create <code>localhost</code> sockets at <code>127.0.0.1</code>) for Inter Process Communication (IPC):</p>
+            <p><b>Local (on-device) use</b> of <span class="code">android.permission.INTERNET</span> permission:</p>
+            <p>Android does not allow apps to create network sockets without having the <a href="https://developer.android.com/reference/android/Manifest.permission#INTERNET">INTERNET</a> permission even if they are meant to be used only locally and not for an internet connection. PMX has two uses of local (on-device) connections (the ability to create <span class="code">localhost</span> sockets at <span class="code">127.0.0.1</span>) for Inter Process Communication (IPC):</p>
 
             <ul>
                 <li>PMX starts a background process with root / ADB privileges and talks to that process over network socket. After the initial handshake, both processes start talking over Binder. We have no better way to do this because Android doesn't allow apps to talk over UNIX domain sockets either.</li>
-                <li>If your device is not rooted and you <a href="#adb_help">use PMX with ADB</a>, then connecting to <code>adbd</code> requires internet permissions. See <a href="#faq27">Is PMX spying on me using ADB over network?</a>.</li>
+                <li>If your device is not rooted and you <a href="#adb_help">use PMX with ADB</a>, then connecting to <span class="code">adbd</span> requires internet permissions. See <a href="#faq27">Is PMX spying on me using ADB over network?</a>.</li>
             </ul>
 
-            <p>So if the app is unable to create or use local network sockets, it will fail. And if you want to stop PMX from using internet, it must not stop the app from talking to on-device processes over <a href="https://superuser.com/questions/263142">loopback interface for IPC</a>. This is usually the case with <code>iptables</code>-based firewalls like AFWall+ and VPN based firewalls like NetGuard. But some ROMs have a built-in feature to disallow network access:</p>
+            <p>So if the app is unable to create or use local network sockets, it will fail. And if you want to stop PMX from using internet, it must not stop the app from talking to on-device processes over <a href="https://superuser.com/questions/263142">loopback interface for IPC</a>. This is usually the case with <span class="code">iptables</span>-based firewalls like AFWall+ and VPN based firewalls like NetGuard. But some ROMs have a built-in feature to disallow network access:</p>
             <img class="small" src="../en/img/allow_network_access.webp" />
             <p>This not only prevents the app from using internet but also disables its ability to create loopback sockets for IPC. So PMX won't be able to get root / ADB privileges if this permission is denied.</p>
 
@@ -808,8 +862,8 @@
 
             <p id="faq27" class="high-bottom"><b>权限管理 X 是否会通过网络 ADB 窃取我的隐私？</b></p>
             <p>不会。</p>
-            <p>PMX 在本地主机上使用 <code>adbd</code> 进程(<code>127.0.0.1</code>)。 但无法仅在本地启动 <code>adbd</code> 。 而不依赖在其他网络接口(因为ADB是指从PC外部使用)。 如果您愿意，您肯定可以停止 <code>adbd</code> 监听外部IP地址。 权限管理 X 仍然可以工作，没有任何对外接口。</p>
-            <p>您也可以在 <b>高级设置</b> 中将 <code>5555</code> 端口更改为您想要的数字。 它不是硬编码的。</p>
+            <p>PMX 在本地主机上使用 <span class="code">adbd</span> 进程(<span class="code">127.0.0.1</span>)。 但无法仅在本地启动 <span class="code">adbd</span> 。 而不依赖在其他网络接口(因为ADB是指从PC外部使用)。 如果您愿意，您肯定可以停止 <span class="code">adbd</span> 监听外部IP地址。 权限管理 X 仍然可以工作，没有任何对外接口。</p>
+            <p>您也可以在 <b>高级设置</b> 中将 <span class="code">5555</span> 端口更改为您想要的数字。 它不是硬编码的。</p>
             <p>另外，自Android 4.2以来，ADB是以<b>RSA密钥认证</b>（最强的认证机制之一）来保护的。 所以，即使该设备可以通过网络控制( <a href="https://android.stackexchange.com/a/205807/218526">极不可能</a>)，任何人都不能在没有身份验证的情况下进行ADB连接。</p>
             <p>无论你想以何种方式验证这些说法。 我们都可以帮助到你。</p>
 
