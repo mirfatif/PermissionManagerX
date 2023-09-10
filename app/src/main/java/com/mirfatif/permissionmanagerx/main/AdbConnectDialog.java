@@ -195,7 +195,7 @@ public class AdbConnectDialog {
   public AlertDialog createDialog() {
     int helpHrefRes;
     if (VERSION.SDK_INT <= VERSION_CODES.Q) {
-      helpHrefRes = R.string.adb_connect_help_href;
+      helpHrefRes = R.string.adb_connect_help_href_10;
     } else {
       helpHrefRes = R.string.adb_connect_help_href_11;
     }

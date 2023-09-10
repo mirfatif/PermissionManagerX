@@ -220,8 +220,7 @@ public enum DaemonHandler {
     String jniLib =
         new File(ApiUtils.getMyAppInfo().nativeLibraryDir, "libpmxd.so").getAbsolutePath();
 
-    try {
-      StdErrLogServer server = new StdErrLogServer(TAG, null);
+    try (StdErrLogServer server = new StdErrLogServer(TAG, null)) {
       privTasks.sendStdErr(server.getLocalPort(), jniLib);
       server.waitForConn();
       privTasks.hello(new IPrivTasksCb(privTasks), LogUtils.createCrashLogFile().getAbsolutePath());
@@ -359,14 +358,10 @@ public enum DaemonHandler {
 
   public void showError(int error) {
     switch (error) {
-      case PrivTasksError.OP_NUM_INCONSISTENCY:
-      case PrivTasksError.OP_MODE_INCONSISTENCY:
-      case PrivTasksError.APP_OPS_IMPL:
-        UiUtils.showToast(R.string.daemon_err_bad_rom_toast);
-        break;
-      default:
-        MyLog.e(TAG, "", "Bad error code: " + error);
-        break;
+      case PrivTasksError.OP_NUM_INCONSISTENCY,
+          PrivTasksError.OP_MODE_INCONSISTENCY,
+          PrivTasksError.APP_OPS_IMPL -> UiUtils.showToast(R.string.daemon_err_bad_rom_toast);
+      default -> MyLog.e(TAG, "", "Bad error code: " + error);
     }
   }
 

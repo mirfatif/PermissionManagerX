@@ -68,6 +68,7 @@ import com.mirfatif.privtasks.util.bg.BgRunner;
 import com.mirfatif.privtasks.util.bg.NotifyWaiter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity {
@@ -458,14 +459,8 @@ public class MainActivity {
 
   private void onPrefChanged(Integer pref) {
     switch (pref) {
-      case MySettings.PREF_DRAWER_CHANGED:
-        setBoxesChecked();
-        break;
-      case MySettings.PREF_UI_CHANGED:
-        mA.recreate();
-        break;
-      default:
-        break;
+      case MySettings.PREF_DRAWER_CHANGED -> setBoxesChecked();
+      case MySettings.PREF_UI_CHANGED -> mA.recreate();
     }
   }
 
@@ -640,14 +635,14 @@ public class MainActivity {
     Menu menu = mB.navV.getMenu();
     for (int id : new int[] {R.id.action_root, R.id.action_adb}) {
       MenuItem menuItem = menu.findItem(id);
-      menuItem.getActionView().setOnClickListener(v -> handleNavigationItemChecked(menuItem));
+      Objects.requireNonNull(menuItem.getActionView())
+          .setOnClickListener(v -> handleNavigationItemChecked(menuItem));
     }
   }
 
   private boolean handleNavigationItemSelected(MenuItem item) {
     View view = item.getActionView();
-    if (view instanceof CheckBox) {
-      CheckBox checkBox = (CheckBox) view;
+    if (view instanceof CheckBox checkBox) {
       checkBox.setChecked(!checkBox.isChecked());
     }
     return handleNavigationItemChecked(item);
@@ -672,12 +667,12 @@ public class MainActivity {
     }
 
     if (item.getItemId() == R.id.action_root) {
-      handleRootCheckBox(((CheckBox) item.getActionView()).isChecked());
+      handleRootCheckBox(((CheckBox) Objects.requireNonNull(item.getActionView())).isChecked());
       return true;
     }
 
     if (item.getItemId() == R.id.action_adb) {
-      handleAdbCheckBox(((CheckBox) item.getActionView()).isChecked());
+      handleAdbCheckBox(((CheckBox) Objects.requireNonNull(item.getActionView())).isChecked());
       return true;
     }
 
@@ -725,7 +720,7 @@ public class MainActivity {
 
   private void setRootCheckBox(boolean checked, boolean enabled) {
     CheckBox rootCheckBox = (CheckBox) mB.navV.getMenu().findItem(R.id.action_root).getActionView();
-    rootCheckBox.setChecked(checked);
+    Objects.requireNonNull(rootCheckBox).setChecked(checked);
     rootCheckBox.setEnabled(enabled);
   }
 
@@ -756,7 +751,7 @@ public class MainActivity {
 
   public void setAdbCheckBox(boolean checked, boolean enabled) {
     CheckBox adbCheckBox = (CheckBox) mB.navV.getMenu().findItem(R.id.action_adb).getActionView();
-    adbCheckBox.setChecked(checked);
+    Objects.requireNonNull(adbCheckBox).setChecked(checked);
     adbCheckBox.setEnabled(enabled);
   }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-  <!-- CHAR_LIMIT
+  <!-- Character Limits:
        Button: 10
        Toast/SnackBar: 20
        Preference title: 20
@@ -17,6 +17,8 @@
   <string name="ok_button">确定</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="cancel_button">取消</string>
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
   <string name="open_drawer">打开</string>
   <string name="close_drawer">关闭</string>
   <!-- CHAR LIMIT: 10 -->
@@ -71,9 +73,6 @@
   <!-- CHAR LIMIT: 15 -->
   <plurals name="backup_restore_processed_prefs">
     <item quantity="other">已处理 %1$d 个模板</item>
-  </plurals>
-  <plurals name="backup_restore_processed_refs">
-    <item quantity="other">%1$s 和 %2$d 权限模板</item>
   </plurals>
   <plurals name="backup_restore_invalid_prefs">
     <item quantity="other">%1$s\n跳过 %2$d 个无效的模板</item>
@@ -227,7 +226,7 @@
   <string name="daemon_disable_pkg_failed_toast">禁用应用失败</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="daemon_open_app_info_failed_toast">打开应用信息失败</string>
-  <!--NativeDaemon-->
+  <!-- NativeDaemon -->
   <!-- CHAR LIMIT: 20 -->
   <string name="native_daemon_died_toast">Native 守护进程丢失</string>
   <!-- LogcatSvc -->

@@ -94,27 +94,26 @@ public enum NativeDaemon {
       OutputStream os = socket.getOutputStream();
       PrintWriter writer = new PrintWriter(os, true);
 
-      StdErrLogServer server = new StdErrLogServer(TAG, () -> daemonStopped(true));
+      try (StdErrLogServer server = new StdErrLogServer(TAG, () -> daemonStopped(true))) {
+        writer.println(CMD_HELLO + server.getLocalPort());
+        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        socket.setSoTimeout(5000);
+        String resp = reader.readLine();
+        socket.setSoTimeout(0);
 
-      writer.println(CMD_HELLO + server.getLocalPort());
+        String[] respSplit;
+        int uid;
+        if (resp == null
+            || !resp.startsWith(RESP_UID)
+            || ((respSplit = resp.split(" ")).length) != 2
+            || (uid = Integer.parseInt(respSplit[1])) < 0) {
+          return;
+        }
 
-      BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      socket.setSoTimeout(5000);
-      String resp = reader.readLine();
-      socket.setSoTimeout(0);
+        server.waitForConn();
 
-      String[] respSplit;
-      int uid;
-      if (resp == null
-          || !resp.startsWith(RESP_UID)
-          || ((respSplit = resp.split(" ")).length) != 2
-          || (uid = Integer.parseInt(respSplit[1])) < 0) {
-        return;
+        mState = new State(uid, reader, writer, os);
       }
-
-      server.waitForConn();
-
-      mState = new State(uid, reader, writer, os);
     } catch (IOException | NumberFormatException | InterruptedException | ExecutionException e) {
       MyLog.e(TAG, "connectToDaemon", e);
     } finally {
@@ -229,7 +228,7 @@ public enum NativeDaemon {
   }
 
   private void waitForPort(BufferedReader reader) {
-    try {
+    try (reader) {
       String resp = reader.readLine();
 
       String[] respSplit;
@@ -248,11 +247,6 @@ public enum NativeDaemon {
       }
     } catch (IOException e) {
       MyLog.e(TAG, "waitForPort", e);
-    } finally {
-      try {
-        reader.close();
-      } catch (IOException ignored) {
-      }
     }
   }
 

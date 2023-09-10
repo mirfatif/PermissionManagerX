@@ -135,7 +135,7 @@ public class AdvSettingsActivity {
         .start();
   }
 
-  private int doPermDbCleanup(List<Package> pkgList) {
+  public static int doPermDbCleanup(List<Package> pkgList) {
     List<String> perms = new ArrayList<>();
 
     for (Package pkg : pkgList) {
@@ -148,7 +148,7 @@ public class AdvSettingsActivity {
                     perm.isPerUid(),
                     UserUtils.getUserId(pkg.getUid()))
                 + "_"
-                + perm.refString());
+                + perm.createRefStringForDb());
       }
     }
 

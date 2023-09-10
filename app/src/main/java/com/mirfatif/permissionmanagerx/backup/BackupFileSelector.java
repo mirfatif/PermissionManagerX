@@ -14,6 +14,10 @@ public class BackupFileSelector {
 
   public static final String BACKUP_FILE_MIME = "text/xml";
 
+  public static String backupFileName() {
+    return "PermissionManagerX_" + Util.getCurrDateTime(false, false) + ".xml";
+  }
+
   private final ActivityResultLauncher<String> mBackupLauncher;
   private final ActivityResultLauncher<String[]> mRestoreLauncher;
 
@@ -37,7 +41,7 @@ public class BackupFileSelector {
 
     try {
       if (mBackupLauncher != null) {
-        mBackupLauncher.launch("PermissionManagerX_" + Util.getCurrDateTime(false, false) + ".xml");
+        mBackupLauncher.launch(backupFileName());
       } else {
         mRestoreLauncher.launch(new String[] {"text/xml"});
       }

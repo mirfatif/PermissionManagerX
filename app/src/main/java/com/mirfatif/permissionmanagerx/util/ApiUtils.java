@@ -11,6 +11,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Parcelable;
@@ -128,6 +129,24 @@ public class ApiUtils {
       return App.getPm().getPackageInfo(pkg, flags);
     } else {
       return App.getPm().getPackageInfo(pkg, PackageManager.PackageInfoFlags.of(flags));
+    }
+  }
+
+  public static CharSequence getAppLabel(String pkg) {
+    try {
+      int flags = PackageManager.MATCH_UNINSTALLED_PACKAGES;
+      return getAppInfo(pkg, flags).loadLabel(App.getPm());
+    } catch (PackageManager.NameNotFoundException ignored) {
+      return null;
+    }
+  }
+
+  public static Drawable getAppIcon(String pkg) {
+    try {
+      int flags = PackageManager.MATCH_UNINSTALLED_PACKAGES;
+      return getAppInfo(pkg, flags).loadIcon(App.getPm());
+    } catch (PackageManager.NameNotFoundException ignored) {
+      return null;
     }
   }
 

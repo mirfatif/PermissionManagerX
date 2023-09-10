@@ -30,7 +30,7 @@ public enum PermGroupsMapping {
     }
   }
 
-  PermGroupInfo get(String perm, boolean isAppOp) {
+  public PermGroupInfo get(String perm, boolean isAppOp) {
     int id = getGroupId(perm, isAppOp);
     return new PermGroupInfo(
         id, id < ICONS.length && ICONS[id] != 0 ? ICONS[id] : R.drawable.g_others);
@@ -41,7 +41,7 @@ public enum PermGroupsMapping {
     return i >= 0 ? i : ICONS.length;
   }
 
-  static class PermGroupInfo {
+  public static class PermGroupInfo {
 
     public final int groupId;
     public final int icon;

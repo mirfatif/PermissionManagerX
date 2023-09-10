@@ -142,16 +142,38 @@ public enum AppOpsParser {
     return mAppOpsNames;
   }
 
-  public List<String> getAppOpsModes() {
-    return mAppOpsModes;
+  public int getAppOpCount() {
+    return mAppOpsNames.size();
+  }
+
+  public String getAppOpName(int op) {
+    return mAppOpsNames.get(op);
+  }
+
+  public Integer getAppOpCode(String opName) {
+    return mAppOpsNames.indexOf(opName);
+  }
+
+  public int getAppOpModeCount() {
+    return mAppOpsModes.size();
   }
 
   public boolean isValidAppOpMode(int opMode) {
     return opMode >= 0 && opMode < mAppOpsModes.size();
   }
 
-  int getOpSwitch(int op) {
-    return mOpSwitchList.get(op);
+  public String opModeToName(int opMode) {
+    return isValidAppOpMode(opMode) ? mAppOpsModes.get(opMode) : null;
+  }
+
+  public Integer nameToOpMode(String modeName) {
+    int mode = mAppOpsModes.indexOf(modeName);
+    return mode >= 0 ? mode : null;
+  }
+
+  public String getDependsOn(int op) {
+    int opSwitch = mOpSwitchList.get(op);
+    return op == opSwitch ? null : mAppOpsNames.get(opSwitch);
   }
 
   int getOpDefMode(int op) {

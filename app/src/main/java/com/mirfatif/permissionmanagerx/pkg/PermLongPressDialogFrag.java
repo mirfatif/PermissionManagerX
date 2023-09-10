@@ -79,19 +79,12 @@ public class PermLongPressDialogFrag extends BottomSheetDialogFrag {
 
     if (mPerm.isChangeable()) {
       boolean isReferenced = Boolean.TRUE.equals(mPerm.isReferenced());
-      String permState = mPerm.refString();
+      String permState = mPerm.createRefStringForDb();
 
       if (isReferenced) {
         b.refButton.setText(R.string.clear_reference);
       } else {
-        String permStateStr;
-        if (mPerm.isAppOp()) {
-          permStateStr = PermissionAdapter.getLocalizedMode(permState);
-        } else if (permState.equals(Permission.GRANTED)) {
-          permStateStr = getString(R.string.perm_mode_granted);
-        } else {
-          permStateStr = getString(R.string.perm_mode_revoked);
-        }
+        String permStateStr = mPerm.getLocalizedPermStateName();
         b.refButton.setText(
             StringUtils.htmlToString(getString(R.string.set_perm_state_reference, permStateStr)));
       }

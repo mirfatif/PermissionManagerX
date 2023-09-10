@@ -1,20 +1,24 @@
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.regex.Pattern
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
+import java.util.zip.ZipOutputStream
 
-apply from: '../configs/apk.gradle'
+apply plugin: 'apk-conventions'
+apply from: "$rootDir/configs/foss-pro-flavors.gradle"
 
 android {
-    String APP_ID = 'com.mirfatif.permissionmanagerx'
-    namespace APP_ID
+    namespace 'com.mirfatif.permissionmanagerx'
 
     defaultConfig {
-        applicationId APP_ID
+        applicationId namespace
 
-        versionCode 121
-        versionName 'v1.21'
+        versionCode libs.versions.app.code.get().toInteger()
+        versionName libs.versions.app.name.get()
 
         // Flavor-independent and BuildType-independent BuildConfig.APPLICATION_ID
-        buildConfigField 'String', 'APP_ID', '"' + APP_ID + '"'
+        buildConfigField 'String', 'APP_ID', '"' + namespace + '"'
 
         // Daemon dex file to be saved in assets directory.
         buildConfigField 'String', 'DAEMON_DEX', '"' + daemonDex + '"'
@@ -68,7 +72,7 @@ android {
         def mf = variant.mergedFlavor
         if (variant.flavorName == 'psPro' && variant.buildType.name == 'release') {
             // No .ps.pro suffix for Play Store Pro release
-            mf.setApplicationId(APP_ID)
+            mf.setApplicationId(namespace)
         }
 
         String lfp = variant.applicationId + '.LogFileProvider'
@@ -103,12 +107,6 @@ android {
             useLegacyPackaging true
         }
     }
-
-    buildFeatures {
-        viewBinding true
-        dataBinding true
-        buildConfig = true
-    }
 }
 
 configurations {
@@ -121,34 +119,66 @@ configurations {
 dependencies {
     implementation project(path: ':priv_library')
 
-    implementation 'com.github.MuntashirAkon:libadb-android:2.2.0'
+    implementation libs.libadb.android
     // To generate X509Certificate
-    implementation 'com.github.MuntashirAkon:sun-security-android:1.1'
+    implementation libs.sun.security.android
     // For conscrypt
-    implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
+    implementation libs.hiddenapibypass
 
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.recyclerview:recyclerview:1.3.1'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01'
-    implementation 'androidx.preference:preference:1.2.1'
-    implementation 'androidx.browser:browser:1.5.0'
-    implementation 'androidx.room:room-runtime:2.5.2'
-    implementation 'androidx.security:security-crypto:1.1.0-alpha06'
-    implementation 'androidx.webkit:webkit:1.7.0'
-    annotationProcessor 'androidx.room:room-compiler:2.5.2'
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.recyclerview
+    implementation libs.androidx.lifecycle.extensions
+    implementation libs.androidx.swiperefreshlayout
+    implementation libs.androidx.preference
+    implementation libs.androidx.browser
+    implementation libs.androidx.room.runtime
+    implementation libs.androidx.security.crypto
+    implementation libs.androidx.webkit
+    annotationProcessor libs.androidx.room.compiler
 
     // For SnackBar and NavigationView. Also includes CoordinatorLayout
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation libs.material
 
     // To handle hyperlink onClick in TextView
-    implementation 'me.saket:better-link-movement-method:2.2.0'
+    implementation libs.better.link.movement.method
 
     // To use Iterables for splitting Collections
-    implementation("com.google.guava:guava:31.1-android")
+    implementation(libs.guava)
 
     // Let's behave responsibly
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
+    debugImplementation libs.leakcanary.android
+}
+
+lsparanoid {
+    variantFilter {
+        !it.name.contains('Foss')
+    }
+}
+
+def createJarFromApk(String apkFile, String jarFile) {
+    try (ZipInputStream apk = new ZipInputStream(new FileInputStream(apkFile))) {
+        try (ZipOutputStream jar = new ZipOutputStream(new FileOutputStream(jarFile))) {
+            ZipEntry entry
+            Pattern clsDex = Pattern.compile("classes[0-9]*.dex")
+            int len
+            byte[] buf = new byte[1024]
+
+            while ((entry = apk.nextEntry) != null) {
+                if (entry.name.matches(clsDex)) {
+                    jar.putNextEntry(new ZipEntry(entry.name))
+                    while ((len = apk.read(buf)) > 0) {
+                        jar.write(buf, 0, len)
+                    }
+                    jar.closeEntry()
+                }
+                apk.closeEntry()
+            }
+        }
+    }
+
+    if (!noPro) {
+        println("Jar created: $jarFile")
+    }
 }
 
 def copyFileIfChanged(File src, File dst) {
@@ -173,7 +203,9 @@ def copyFileIfChanged(File src, File dst) {
     }
 
     if (dst.exists()) {
-        println('Creating: ' + dst.absolutePath)
+        if (!noPro) {
+            println('Creating: ' + dst.absolutePath)
+        }
     } else {
         throw new GradleException('Failed to create: ' + dst.absolutePath)
     }
@@ -192,30 +224,34 @@ def createTasksForDaemonBuild = () -> {
             String dir = foss ? 'foss' : 'pro'
             dir += debug ? 'Debug' : 'Release'
 
-            String dexTaskDep
+            String dexTaskDep = 'assemble' + task
 
-            if (!debug) {
-                dexTaskDep = 'minify' + task + 'WithR8'
-            } else {
-                dexTaskDep = 'mergeDex' + task
-            }
+            boolean signed = project.hasProperty('android.injected.signing.store.file')
 
-            String src = 'priv_daemon/build/intermediates/dex/'
-            src += dir + '/' + dexTaskDep + '/classes.dex'
+            String apk = 'priv_daemon/build/outputs/apk/' + (foss ? 'foss' : 'pro') + '/'
+            apk += (debug ? 'debug' : 'release') + '/priv_daemon-' + (foss ? 'foss' : 'pro')
+            apk += (debug ? '-debug' : ('-release' + (signed ? '' : '-unsigned'))) + '.apk'
 
-            File srcFile = new File(rootDir, src)
+            String jar = apk.replace('.apk', '.jar')
+
+            File srcFile = new File(rootDir, jar)
             File dstFile = new File(rootDir, 'app/src/' + dir + '/assets/' + daemonDex)
 
-            tasks.register('buildDaemon' + task) {
+            Task t = tasks.register('buildDaemon' + task) {
                 dependsOn(':priv_daemon:' + dexTaskDep)
+                mustRunAfter(':priv_daemon:' + dexTaskDep)
 
-                if (foss) {
-                    doLast {
-                        copyFileIfChanged(srcFile, dstFile)
-                    }
-                } else {
-                    ext.srcFile = srcFile
-                    ext.dstFile = dstFile
+                ext.srcFile = srcFile
+                ext.dstFile = dstFile
+
+                doLast {
+                    createJarFromApk(apk, jar)
+                }
+            }.get()
+
+            if (foss) {
+                t.doLast {
+                    copyFileIfChanged(srcFile, dstFile)
                 }
             }
         }
@@ -242,6 +278,7 @@ def setExtSrcDependencies(String type, String version) {
 
         task.configure {
             dependsOn('buildDaemon' + version + build)
+            mustRunAfter('buildDaemon' + version + build)
         }
 
         task = tasks.named('merge' + type + version + build + 'JniLibFolders')
@@ -249,8 +286,10 @@ def setExtSrcDependencies(String type, String version) {
         task.configure {
             if (version == 'Foss') {
                 dependsOn('buildNativeFoss')
+                mustRunAfter('buildNativeFoss')
             } else {
                 dependsOn('buildNative' + type + version + build)
+                mustRunAfter('buildNative' + type + version + build)
             }
         }
     }

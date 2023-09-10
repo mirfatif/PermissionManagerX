@@ -29,7 +29,6 @@ import com.mirfatif.permissionmanagerx.util.ApiUtils;
 import com.mirfatif.permissionmanagerx.util.SmallDimMarginSpan;
 import com.mirfatif.permissionmanagerx.util.bg.LiveTasksQueueTyped;
 import com.mirfatif.privtasks.Constants;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -188,9 +187,7 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
 
     Set<String> excPerms = ExcFiltersData.INS.getExcludedPerms();
 
-    new LiveTasksQueueTyped<>(
-            this,
-            () -> buildExcPermNames(excPerms, new ArrayList<>(AppOpsParser.INS.getAppOpsNames())))
+    new LiveTasksQueueTyped<>(this, () -> buildExcPermNames(excPerms))
         .onUiWith(excPermsLabels -> updateExcludedPermsView(excPermsLabels, excPerms))
         .start();
 
@@ -237,7 +234,8 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     }
   }
 
-  private CharSequence[] buildExcPermNames(Set<String> excludedPerms, List<String> appOpsNames) {
+  private CharSequence[] buildExcPermNames(Set<String> excludedPerms) {
+    List<String> appOpsNames = AppOpsParser.INS.getAppOpsNames();
     return excludedPerms.stream()
         .map(
             perm ->
@@ -251,7 +249,7 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
       CharSequence name =
           PkgParserFlavor.INS.getPermName(
               permName, PermGroupsMapping.INS.getGroupId(permName, isAppOp));
-      if (!name.equals(permName)) {
+      if (!name.toString().equals(permName)) {
         SpannableString ss = new SpannableString(permName);
         ss.setSpan(
             new SmallDimMarginSpan(), 0, permName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

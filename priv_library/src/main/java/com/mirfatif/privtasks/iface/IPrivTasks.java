@@ -664,10 +664,10 @@ public interface IPrivTasks extends IInterface {
       reply.writeInt(NO_ERROR);
     }
 
-    private static final int NO_ERROR = 0;
-    private static final int ERROR = 1;
+    public static final int NO_ERROR = 0;
+    public static final int ERROR = 1;
 
-    private static void writeException(Parcel reply, Throwable t) {
+    public static void writeException(Parcel reply, Throwable t) {
 
       reply.setDataSize(0);
       reply.setDataPosition(0);

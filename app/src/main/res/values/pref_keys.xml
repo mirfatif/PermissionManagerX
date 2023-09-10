@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-  <!--
-  NOTE:
-  If pref name equals its value + "_key":
-  - Pref values starting with "pref_filter_" are cleared on "Reset to Defaults".
-  - Pref values starting with "pref_" and not ending with "_enc" are backed up and restored.
-  -->
+  <!-- NOTE:
+    If pref name equals its value + "_key":
+    - Pref values starting with "pref_filter_" are cleared on "Reset to Defaults".
+    - Pref values starting with "pref_" and not ending with "_enc" are backed up and restored. -->
 
   <!-- MainActivity Preferences -->
   <eat-comment />
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_pref_keys_1" translatable="false">Crowdin comment break</string>
   <string name="pref_main_crash_report_ts_enc_key" translatable="false">pref_main_crash_report_ts_enc</string>
   <string name="pref_main_ask_for_feedback_ts_enc_key" translatable="false">pref_main_ask_for_feedback_ts_enc</string>
   <string name="pref_main_warned_unsupported_sdk_enc_key" translatable="false">pref_main_warned_unsupported_sdk_enc</string>
 
   <!-- MainActivity Preferences corresponding to default values -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_pref_keys_2" translatable="false">Crowdin comment break</string>
   <string name="pref_main_app_launch_count_enc_key" translatable="false">pref_main_app_launch_count_enc</string>
   <integer name="pref_main_app_launch_count_enc_default">0</integer>
   <string name="pref_main_ask_for_notif_perm_ts_enc_key" translatable="false">pref_main_ask_for_notif_perm_ts_enc</string>
@@ -38,7 +36,7 @@
   <bool name="pref_main_warn_dang_change_enc_default">true</bool>
 
   <!-- Privileges / Daemon -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_pref_keys_3" translatable="false">Crowdin comment break</string>
   <string name="pref_privs_root_daemon_port_enc_key" translatable="false">pref_privs_root_daemon_port_enc</string>
   <integer name="pref_privs_root_daemon_port_enc_default">0</integer>
 
@@ -62,7 +60,7 @@
   <string name="pref_privs_app_privs_check_ts_enc_key" translatable="false">pref_privs_app_privs_check_ts_enc</string>
 
   <!-- Advanced Settings -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_pref_keys_4" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_adv_settings_allow_critical_changes_title">Allow critical changes</string>
   <string name="pref_adv_settings_allow_critical_changes_summary">Make changes to critical permissions and framework apps</string>
@@ -127,7 +125,7 @@
   <string name="pref_adv_settings_su_exe_path_default" translatable="false" />
 
   <!-- FilterSettingsActivity -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_pref_keys_5" translatable="false">Crowdin comment break</string>
   <string name="pref_filter_master_switch_key" translatable="false">pref_filter_master_switch</string>
   <bool name="pref_filter_master_switch_default">true</bool>
   <!-- CHAR LIMIT: 20 -->
@@ -165,7 +163,7 @@
   <string name="pref_filter_excluded_apps_title">Manually excluded apps list</string>
 
   <!-- PreferencesActivity permissions titles, keys and defaults -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_pref_keys_6" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_filter_permissions_cat_title">Permissions</string>
   <string name="pref_filter_exclude_not_changeable_perms_key" translatable="false">pref_filter_exclude_not_changeable_perms</string>
@@ -185,7 +183,7 @@
   <string name="pref_filter_excluded_perms_title">Manually excluded permissions list</string>
 
   <!-- PreferencesActivity manifest permissions titles, keys and defaults -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_pref_keys_7" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_filter_man_permissions_cat_title">Manifest Permissions</string>
   <string name="pref_filter_exclude_invalid_perms_key" translatable="false">pref_filter_exclude_invalid_perms</string>
@@ -210,7 +208,7 @@
   <string name="pref_filter_exclude_privileged_perms_title">Exclude privileged permissions</string>
 
   <!-- PreferencesActivity AppOps permissions titles, keys and defaults -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_pref_keys_8" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_filter_app_ops_permissions_cat_title">AppOps Permissions</string>
   <string name="pref_filter_exclude_appops_perms_key" translatable="false">pref_filter_exclude_appops_perms</string>
@@ -230,7 +228,7 @@
   <string name="pref_filter_extra_appops_title">Extra AppOps list</string>
 
   <!-- SettingsActivity -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_pref_keys_9" translatable="false">Crowdin comment break</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_settings_general_cat_title">General settings</string>
   <string name="pref_settings_general_cat_key" translatable="false">pref_settings_general_cat</string>
@@ -301,13 +299,13 @@
   <string name="pref_settings_perm_watcher_cat_title">Permission watcher</string>
 
   <!-- HelpActivity -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_pref_keys_10" translatable="false">Crowdin comment break</string>
   <string name="pref_help_font_size_key" translatable="false">pref_help_font_size</string>
   <integer name="pref_help_font_size_default">14</integer>
   <string name="pref_help_web_view_clear_cache_ts_enc_key" translatable="false">pref_help_web_view_clear_cache_ts_enc</string>
 
   <!-- PackageActivity -->
-  <string translatable="false" tools:ignore="MissingTranslation">Crowdin comment break</string>
+  <string name="crowdin_comment_break_pref_keys_11" translatable="false">Crowdin comment break</string>
   <string name="pref_package_warn_dang_change_enc_key" translatable="false">pref_package_warn_dang_change_enc</string>
   <bool name="pref_package_warn_dang_change_enc_default">true</bool>
 

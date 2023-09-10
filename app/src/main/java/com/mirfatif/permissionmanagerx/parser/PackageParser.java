@@ -42,7 +42,9 @@ import com.mirfatif.privtasks.util.bg.SingleTaskExecutorTyped;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -394,17 +396,13 @@ public enum PackageParser {
   private static final int APP_OPS_LISTS = -4;
 
   public int getProgMsg(int progMax) {
-    switch (progMax) {
-      case CREATE_LIST:
-        return R.string.creating_packages_list;
-      case SORT_LIST:
-        return R.string.sorting_packages_list;
-      case REF_PERMS_LIST:
-        return R.string.reading_reference_perms;
-      case APP_OPS_LISTS:
-        return R.string.creating_app_ops_lists;
-    }
-    return 0;
+    return switch (progMax) {
+      case CREATE_LIST -> R.string.creating_packages_list;
+      case SORT_LIST -> R.string.sorting_packages_list;
+      case REF_PERMS_LIST -> R.string.reading_reference_perms;
+      case APP_OPS_LISTS -> R.string.creating_app_ops_lists;
+      default -> 0;
+    };
   }
 
   boolean isPkgUpdated(PackageInfo pkgInfo, Package pkg, boolean filterPerms) {
@@ -564,7 +562,7 @@ public enum PackageParser {
 
         List<Integer> ops1 = new ArrayList<>();
         for (String opName : ExcFiltersData.INS.getExtraAppOps()) {
-          int op = AppOpsParser.INS.getAppOpsNames().indexOf(opName);
+          int op = AppOpsParser.INS.getAppOpCode(opName);
           if (!processedAppOps.contains(op)) {
             ops1.add(op);
           }
@@ -633,62 +631,19 @@ public enum PackageParser {
       boolean filterPerms,
       List<Permission> permList) {
     int[] requestedPermissionsFlags = pkgInfo.requestedPermissionsFlags;
-    String protection = Permission.PROTECTION_UNKNOWN;
-    boolean isPrivileged = false;
-    boolean isDevelopment = false;
-    boolean isManifestPermAppOp = false;
-    boolean isSystemFixed = false, isPolicyFixed = false;
-    String providerPkg;
 
     boolean isGranted =
         (requestedPermissionsFlags[count] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0;
 
-    try {
-      PermissionInfo permInfo = mPm.getPermissionInfo(permName, 0);
-
-      int protectionLevel = getProtectionLevel(permInfo) & PI_PROTECTION_MASK_BASE;
-      int protectionFlags = getProtectionLevel(permInfo) & ~PI_PROTECTION_MASK_BASE;
-
-      int PROTECTION_SIGNATURE_OR_SYSTEM = PermissionInfo.PROTECTION_SIGNATURE_OR_SYSTEM;
-
-      if (protectionLevel == PermissionInfo.PROTECTION_NORMAL) {
-        protection = Permission.PROTECTION_NORMAL;
-      } else if (protectionLevel == PermissionInfo.PROTECTION_DANGEROUS) {
-        protection = Permission.PROTECTION_DANGEROUS;
-      } else if (protectionLevel == PermissionInfo.PROTECTION_SIGNATURE) {
-        protection = Permission.PROTECTION_SIGNATURE;
-      } else if (protectionLevel == PROTECTION_SIGNATURE_OR_SYSTEM) {
-        protection = Permission.PROTECTION_SIGNATURE;
-      } else if (VERSION.SDK_INT >= VERSION_CODES.S && protectionLevel == PROTECTION_INTERNAL) {
-        protection = Permission.PROTECTION_INTERNAL;
-      } else {
-        MyLog.e(
-            TAG,
-            "createPerm",
-            "Protection level for "
-                + pkgInfo.packageName
-                + ": "
-                + permInfo.name
-                + ": "
-                + protectionLevel);
-      }
-
-      isPrivileged = (protectionFlags & PermissionInfo.PROTECTION_FLAG_PRIVILEGED) != 0;
-      isDevelopment =
-          protectionLevel == PermissionInfo.PROTECTION_SIGNATURE
-              && (protectionFlags & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0;
-      isManifestPermAppOp = (protectionFlags & PermissionInfo.PROTECTION_FLAG_APPOP) != 0;
-
-      providerPkg = permInfo.packageName;
-    } catch (NameNotFoundException ignored) {
-
-      providerPkg = null;
-    }
+    ManifestPermFlags flags = getManifestPermFlags(permName);
 
     PermGroupInfo permGroupInfo = PermGroupsMapping.INS.get(permName, false);
 
     boolean isSystemApp = isSystemApp(pkgInfo);
     boolean isFrameworkApp = isFrameworkApp(pkgInfo);
+
+    boolean isSystemFixed = false, isPolicyFixed = false;
+
     if (isSystemApp || isFrameworkApp) {
       int permFlags = getPermissionFlags(permName, pkgInfo);
       if (permFlags >= 0 && SYSTEM_FIXED_FLAG != null) {
@@ -708,13 +663,13 @@ public enum PackageParser {
             isGranted,
             isSystemApp,
             isFrameworkApp,
-            protection,
-            isPrivileged,
-            isDevelopment,
-            isManifestPermAppOp,
+            flags.protection,
+            flags.isPrivileged,
+            flags.isDevelopment,
+            flags.isManifestPermAppOp,
             isSystemFixed,
             isPolicyFixed,
-            providerPkg);
+            flags.providerPkg);
 
     if (!filterPerms || isNotFilteredOut(perm)) {
       String refState =
@@ -877,7 +832,7 @@ public enum PackageParser {
       long accessTime,
       List<String> filter,
       boolean filterPerms) {
-    String opName = AppOpsParser.INS.getAppOpsNames().get(op);
+    String opName = AppOpsParser.INS.getAppOpName(op);
     if (filter != null && !filter.contains(opName)) {
       return new int[] {1, 0};
     }
@@ -886,8 +841,7 @@ public enum PackageParser {
       return new int[] {0, 0};
     }
 
-    int opSwitch = AppOpsParser.INS.getOpSwitch(op);
-    String dependsOn = op == opSwitch ? null : AppOpsParser.INS.getAppOpsNames().get(opSwitch);
+    String dependsOn = AppOpsParser.INS.getDependsOn(op);
 
     boolean opModeSet = true, validMode = true;
     if (opMode == null) {
@@ -913,7 +867,7 @@ public enum PackageParser {
             permGroupInfo.icon,
             pkgInfo.packageName,
             opName,
-            opMode != AppOpsManager.MODE_IGNORED && opMode != AppOpsManager.MODE_ERRORED,
+            Permission.isAppOpGranted(opMode),
             isSystemApp(pkgInfo),
             isFrameworkApp(pkgInfo),
             isPerUid,
@@ -965,6 +919,65 @@ public enum PackageParser {
 
   public static int getProtectionLevel(PermissionInfo permInfo) {
     return permInfo.protectionLevel;
+  }
+
+  private final Map<String, ManifestPermFlags> mManifestFlags = new HashMap<>();
+
+  private ManifestPermFlags getManifestPermFlags(String permName) {
+    ManifestPermFlags flags = mManifestFlags.get(permName);
+
+    if (flags == null) {
+      try {
+        flags = getManifestPermFlags(PackageParser.INS.mPm.getPermissionInfo(permName, 0));
+      } catch (NameNotFoundException ignored) {
+
+        flags = new ManifestPermFlags();
+      }
+      mManifestFlags.put(permName, flags);
+    }
+
+    return flags;
+  }
+
+  public static ManifestPermFlags getManifestPermFlags(PermissionInfo permInfo) {
+    ManifestPermFlags flags = new ManifestPermFlags();
+
+    int protectionLevel = getProtectionLevel(permInfo) & PI_PROTECTION_MASK_BASE;
+    int protectionFlags = getProtectionLevel(permInfo) & ~PI_PROTECTION_MASK_BASE;
+
+    int PROTECTION_SIGNATURE_OR_SYSTEM = PermissionInfo.PROTECTION_SIGNATURE_OR_SYSTEM;
+
+    if (protectionLevel == PermissionInfo.PROTECTION_NORMAL) {
+      flags.protection = Permission.PROTECTION_NORMAL;
+    } else if (protectionLevel == PermissionInfo.PROTECTION_DANGEROUS) {
+      flags.protection = Permission.PROTECTION_DANGEROUS;
+    } else if (protectionLevel == PermissionInfo.PROTECTION_SIGNATURE) {
+      flags.protection = Permission.PROTECTION_SIGNATURE;
+    } else if (protectionLevel == PROTECTION_SIGNATURE_OR_SYSTEM) {
+      flags.protection = Permission.PROTECTION_SIGNATURE;
+    } else if (VERSION.SDK_INT >= VERSION_CODES.S && protectionLevel == PROTECTION_INTERNAL) {
+      flags.protection = Permission.PROTECTION_INTERNAL;
+    } else {
+      MyLog.e(TAG, "createPerm", "Protection level for " + permInfo.name + ": " + protectionLevel);
+    }
+
+    flags.isPrivileged = (protectionFlags & PermissionInfo.PROTECTION_FLAG_PRIVILEGED) != 0;
+    flags.isDevelopment =
+        protectionLevel == PermissionInfo.PROTECTION_SIGNATURE
+            && (protectionFlags & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0;
+    flags.isManifestPermAppOp = (protectionFlags & PermissionInfo.PROTECTION_FLAG_APPOP) != 0;
+
+    flags.providerPkg = permInfo.packageName;
+
+    return flags;
+  }
+
+  public static class ManifestPermFlags {
+    public String protection = Permission.PROTECTION_UNKNOWN;
+    public boolean isPrivileged = false;
+    public boolean isDevelopment = false;
+    public boolean isManifestPermAppOp = false;
+    public String providerPkg = null;
   }
 
   private @interface PostListStatus {

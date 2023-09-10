@@ -3,6 +3,7 @@ package com.mirfatif.privtasks.bind;
 import android.os.Parcel;
 import android.os.Parcelable;
 import java.util.List;
+import java.util.Objects;
 
 public class MyPackageOps implements Parcelable {
 
@@ -16,7 +17,7 @@ public class MyPackageOps implements Parcelable {
 
   protected MyPackageOps(Parcel in) {
     pkgName = in.readString();
-    opEntryList = in.createTypedArrayList(MyOpEntry.CREATOR);
+    opEntryList = Objects.requireNonNull(in.createTypedArrayList(MyOpEntry.CREATOR));
   }
 
   public void writeToParcel(Parcel dest, int flags) {
@@ -29,7 +30,7 @@ public class MyPackageOps implements Parcelable {
   }
 
   public static final Creator<MyPackageOps> CREATOR =
-      new Creator<MyPackageOps>() {
+      new Creator<>() {
 
         public MyPackageOps createFromParcel(Parcel in) {
           return new MyPackageOps(in);
@@ -65,7 +66,7 @@ public class MyPackageOps implements Parcelable {
     }
 
     public static final Creator<MyOpEntry> CREATOR =
-        new Creator<MyOpEntry>() {
+        new Creator<>() {
 
           public MyOpEntry createFromParcel(Parcel in) {
             return new MyOpEntry(in);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-  <!-- CHAR_LIMIT
+  <!-- Character Limits:
        Button: 10
        Toast/SnackBar: 20
        Preference title: 20
@@ -13,6 +13,8 @@
   <string name="yes">Sí</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="no">No</string>
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
   <!-- CHAR LIMIT: 10 -->
   <!-- CHAR LIMIT: 10 -->
   <string name="open_drawer">Abrir</string>
@@ -68,10 +70,6 @@
   <plurals name="backup_restore_processed_prefs">
     <item quantity="one">%1$d preferencia procesada</item>
     <item quantity="other">%1$d preferencias procesadas</item>
-  </plurals>
-  <plurals name="backup_restore_processed_refs">
-    <item quantity="one">Referencia de permiso %1$s y %2$d.</item>
-    <item quantity="other">Referencias de permisos %1$s y %2$d.</item>
   </plurals>
   <plurals name="backup_restore_invalid_prefs">
     <item quantity="one">%1$s\n%2$d preferencia inválida omitida.</item>
@@ -203,7 +201,7 @@
   <string name="daemon_disable_pkg_failed_toast">Deshabilitación de aplicación fallida</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="daemon_open_app_info_failed_toast">Apertura de información de aplicación fallida</string>
-  <!--NativeDaemon-->
+  <!-- NativeDaemon -->
   <!-- CHAR LIMIT: 20 -->
   <string name="native_daemon_died_toast">Murió el daemon nativo</string>
   <!-- LogcatSvc -->

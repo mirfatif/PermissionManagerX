@@ -39,6 +39,10 @@ public class UiUtils {
             TypedValue.COMPLEX_UNIT_DIP, dp, Resources.getSystem().getDisplayMetrics());
   }
 
+  public static int pxToDp(float px) {
+    return (int) (px / Resources.getSystem().getDisplayMetrics().density);
+  }
+
   public static String colorIntToRGB(int color, boolean retainAlpha) {
     if (retainAlpha) {
       return String.format("#%08X", color);

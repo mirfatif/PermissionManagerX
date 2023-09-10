@@ -61,19 +61,18 @@ public class StringUtils {
 
       d.setTint(getAccentColor());
       d.setBounds(0, 0, UiUtils.dpToPx(12), UiUtils.dpToPx(12));
-    }
 
-    for (URLSpan span : string.getSpans(0, string.length(), URLSpan.class)) {
-      int start = string.getSpanStart(span);
-      int end = string.getSpanEnd(span);
-      if (!string.toString().substring(start, end).equals("LINK")) {
-        continue;
+      for (URLSpan span : string.getSpans(0, string.length(), URLSpan.class)) {
+        int start = string.getSpanStart(span);
+        int end = string.getSpanEnd(span);
+        if (!string.toString().substring(start, end).equals("LINK")) {
+          continue;
+        }
+        string.setSpan(new ImageSpan(d, ALIGN_BASELINE), start, end, SPAN_EXCLUSIVE_EXCLUSIVE);
       }
-      string.setSpan(new ImageSpan(d, ALIGN_BASELINE), start, end, SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
-    breakParas(string);
-    return string;
+    return breakParas(string);
   }
 
   public static SpannableStringBuilder breakParas(String string) {

@@ -32,6 +32,7 @@
     app:title="@string/pref_adv_settings_unique_ref_sec_users_title" />
 
   <Preference
+    app:isPreferenceVisible="false"
     app:key="@string/pref_adv_settings_reset_perm_db_key"
     app:singleLineTitle="false"
     app:summary="@string/pref_adv_settings_reset_perm_db_summary"

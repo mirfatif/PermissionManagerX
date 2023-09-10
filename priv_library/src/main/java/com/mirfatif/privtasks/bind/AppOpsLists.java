@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import com.mirfatif.privtasks.util.Util;
 import java.util.List;
+import java.util.Objects;
 
 public class AppOpsLists implements Parcelable {
 
@@ -31,15 +32,15 @@ public class AppOpsLists implements Parcelable {
   }
 
   protected AppOpsLists(Parcel in) {
-    appOpsNames = in.createStringArrayList();
-    appOpsModes = in.createStringArrayList();
+    appOpsNames = Objects.requireNonNull(in.createStringArrayList());
+    appOpsModes = Objects.requireNonNull(in.createStringArrayList());
     opDefModeList = Util.getList(in.createIntArray());
     opSwitchList = Util.getList(in.createIntArray());
-    permToOpMap = in.readTypedObject(StrIntMap.CREATOR);
+    permToOpMap = Objects.requireNonNull(in.readTypedObject(StrIntMap.CREATOR));
   }
 
   public static final Creator<AppOpsLists> CREATOR =
-      new Creator<AppOpsLists>() {
+      new Creator<>() {
 
         public AppOpsLists createFromParcel(Parcel in) {
           return new AppOpsLists(in);

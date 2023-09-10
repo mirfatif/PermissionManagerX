@@ -3,7 +3,6 @@ package com.mirfatif.permissionmanagerx.pkg;
 import static com.mirfatif.permissionmanagerx.util.ApiUtils.getString;
 
 import android.app.Activity;
-import android.app.AppOpsManager;
 import android.content.Intent;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
@@ -50,6 +49,7 @@ import com.mirfatif.privtasks.util.bg.BgRunner;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -140,7 +140,7 @@ public class PackageActivity implements PermAdapterCallback {
 
     MenuItem searchMenuItem = menu.findItem(R.id.action_search);
     mSearchView = (SearchView) searchMenuItem.getActionView();
-    mSearchView.setMaxWidth(Integer.MAX_VALUE);
+    Objects.requireNonNull(mSearchView).setMaxWidth(Integer.MAX_VALUE);
 
     mSearchView.setOnQueryTextListener(
         new SearchView.OnQueryTextListener() {
@@ -293,8 +293,7 @@ public class PackageActivity implements PermAdapterCallback {
 
   public void onPermSwitchToggle(Permission perm) {
     if (perm.isAppOp()) {
-      onAppOpModeSelect(
-          perm, perm.isGranted() ? AppOpsManager.MODE_IGNORED : AppOpsManager.MODE_ALLOWED);
+      onAppOpModeSelect(perm, Permission.getAppOpMode(!perm.isGranted()));
     } else if (mActFlavor.onPermClick(perm)) {
       onManifestPermStateChanged(perm);
     }
@@ -420,32 +419,33 @@ public class PackageActivity implements PermAdapterCallback {
 
   private void setAllReferences() {
     List<PermissionEntity> entities = new ArrayList<>();
-
-    String permState;
-    boolean isPerUid;
-    int userId = PermsDbFlavor.getUserIdForPermRefs(mPkg.getUid());
-
-    synchronized (mSortedPermList) {
-      for (Permission perm : mSortedPermList) {
-        if (!perm.isChangeable()) {
-          continue;
-        }
-
-        permState = perm.refString();
-        isPerUid = MySettings.INS.useUniqueRefForAppOpUidMode() && perm.isPerUid();
-
-        PermsDb.INS.updateRefs(
-            mPkg.getName(), perm.getName(), permState, perm.isAppOp(), isPerUid, userId);
-
-        entities.add(
-            new PermissionEntity(
-                mPkg.getName(), perm.getName(), permState, perm.isAppOp(), isPerUid, userId));
-      }
-    }
+    buildRefsFromCurrentPermStates(mPkg, mSortedPermList, entities);
 
     PermsDb.INS.updateRefsDb(entities.toArray(new PermissionEntity[0]));
+    for (PermissionEntity e : entities) {
+      PermsDb.INS.updateRefs(e.pkgName, e.permName, e.state, e.isAppOps, e.isPerUid, e.userId);
+    }
+
     mActFlavor.pkgRefChanged(mPkg);
     updatePkg();
+  }
+
+  public static void buildRefsFromCurrentPermStates(
+      Package pkg, List<Permission> permList, List<PermissionEntity> entities) {
+    int userId = PermsDbFlavor.getUserIdForPermRefs(pkg.getUid());
+
+    for (Permission perm : permList) {
+      if (!Boolean.TRUE.equals(perm.isReferenced()) && perm.isChangeable()) {
+        entities.add(
+            new PermissionEntity(
+                pkg.getName(),
+                perm.getName(),
+                perm.createRefStringForDb(),
+                perm.isAppOp(),
+                MySettings.INS.useUniqueRefForAppOpUidMode() && perm.isPerUid(),
+                userId));
+      }
+    }
   }
 
   private void clearReferences() {

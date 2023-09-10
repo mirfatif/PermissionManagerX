@@ -1,0 +1,15 @@
+// Arbitrary objects configuration is not possible in .gradle.kts
+// So the script cannot be shared with app and libraries.
+// https://docs.gradle.org/current/userguide/writing_build_scripts.html#sec:configuring_arbitrary_objects_using_an_external_script
+
+android {
+    flavorDimensions 'version'
+    productFlavors {
+        foss {
+            dimension 'version'
+        }
+        pro {
+            dimension 'version'
+        }
+    }
+}
