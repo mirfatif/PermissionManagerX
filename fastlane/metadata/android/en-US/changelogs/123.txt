@@ -1,0 +1,1 @@
+- Added 'Clone' button to profile permission long press menu (pro)
