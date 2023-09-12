@@ -59,7 +59,7 @@
             ['box-shadow', '0 2px 12px 0 ' + shadowColor]
         ],
 
-        ['img',
+        ['img, video',
             ['box-shadow', '0 2px 10px 0 ' + shadowColor]
         ],
 
@@ -114,15 +114,15 @@
             ],
 
             // Subtract img margin from card width.
-            ['img',
+            ['img, video',
                 ['max-width', Math.min(cardWidth - 10, 500) + 'px'],
             ],
 
-            ['img.medium',
+            ['img.medium, video.medium',
                 ['max-width', Math.min(cardWidth / 1.25, 400) + 'px'],
             ],
 
-            ['img.small',
+            ['img.small, video.small',
                 ['max-width', Math.min(cardWidth / 1.5, 350) + 'px'],
             ],
 

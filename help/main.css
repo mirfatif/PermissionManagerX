@@ -72,7 +72,8 @@ hr.dim {
     border-bottom: 1px solid rgba(255, 255, 255, 0.25);
 }
 
-img {
+img,
+video {
     width: 100%;
     height: auto;
     border-radius: 10px;
