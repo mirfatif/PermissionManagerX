@@ -51,10 +51,10 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#perm_view" class="no-underline"><b>Permission View</b></a>
+                    <a href="#perm_view" class="no-underline"><b>权限视图</b></a>
                 </li>
                 <li>
-                    <a href="#batch-ops" class="no-underline"><b>Batch Operations</b></a>
+                    <a href="#batch-ops" class="no-underline"><b>批量操作</b></a>
                     <ul>
                         <li><a href="#perm-profiles" class="no-underline">权限配置</a></li>
                         <li><a href="#refs-ops" class="no-underline">Operations with References</a></li>
@@ -64,10 +64,15 @@
                 <li>
                     <a href="#adb_help" class="no-underline"><b>使用 ADB 授权权限管理 X</b></a>
                     <ul>
-                        <li><a href="#adb-limits" class="no-underline">Limitations of ADB</a></li>
-                        <li><a href="#adb-help-10" class="no-underline">Android 10 and below</a></li>
-                        <li><a href="#adb_help_11" class="no-underline">Android 11 and above</a></li>
-                        <li><a href="#adb_connect_svc" class="no-underline">ADB Connect Service</a></li>
+                        <li><a href="#adb-limits" class="no-underline">ADB 的局限性</a></li>
+                        <li><a href="#adb-help-10" class="no-underline">Android 10 及更低版本</a></li>
+                        <li>
+                            <a href="#adb_help_11" class="no-underline">Android 11 及以上版本</a>
+                            <ul>
+                                <li><a href="#adb-pair-video">视频教程</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#adb_connect_svc" class="no-underline">ADB 连接服务</a></li>
                     </ul>
                 </li>
                 <li>
@@ -81,12 +86,12 @@
                     <li><a href="#faq36" class="no-underline">-为何需要使用权限管理X？</a></li>
                     <li><a href="#faq1" class="no-underline">为什么权限管理 X 需要 Root 或 ADB 权限？</a></li>
                     <li><a href="#faq33" class="no-underline">设备尚未Root， 如何使用权限管理 X？</a></li>
-                    <li><a href="#faq4" class="no-underline">What are hidden APIs?</a></li>
+                    <li><a href="#faq4" class="no-underline">什么是隐藏的 API？</a></li>
                     <li><a href="#faq2" class="no-underline">权限管理 X 是如何修改其他应用的权限的？</a></li>
                     <li><a href="#faq34" class="no-underline">在关闭 ADB、拒绝 Root 权限或卸载权限管理 X 后，之前修改过的权限是否仍然有效？</a></li>
                     <li><a href="#faq15" class="no-underline">为什么不能更改某些权限？</a></li>
                     <li><a href="#faq37" class="no-underline">为什么修改了对应权限但没有生效 ？</a></li>
-                    <li><a href="#faq3" class="no-underline">Why do some AppOps cannot be changed?</a></li>
+                    <li><a href="#faq3" class="no-underline">为什么有些AppOps无法更改？</a></li>
                     <li><a href="#faq6" class="no-underline">为什么我在应用列表中看不到某些应用？</a></li>
                     <li><a href="#faq7" class="no-underline">为什么在某些应用中看不到部分权限？</a></li>
                     <li><a href="#faq8" class="no-underline">为什么在某些应用中看不到部分AppOps 权限？</a></li>
@@ -123,11 +128,11 @@
                     <li><a href="#faq29" class="no-underline">我觉得权限管理 X 毫无用处， 你为什么要开发这个软件？</a></li>
                 </ul>
                 <li><a href="#download" class="no-underline"><b>下载地址 / 应用截图</b></a></li>
-                <li><a href="#rate-review-help" class="no-underline"><b>Ratings / Reviews</b></a></li>
+                <li><a href="#rate-review-help" class="no-underline"><b>评分和评价</b></a></li>
                 <li><a href="#contact-us" class="no-underline"><b>联系我们</b></a></li>
             </ul>
 
-            <h3><a href="https://mirfatif.github.io/IAnswers" class="no-underline">More FAQs</a></h3>
+            <h3><a href="https://mirfatif.github.io/IAnswers" class="no-underline">更多常见问题</a></h3>
         </div>
 
         <div class="card">
@@ -139,7 +144,7 @@
             <p>使用权限管理 X，您可以：</p>
             <ul>
                 <li>查看 / 授予/撤销所有 <i>清单权限</i> <b><i>可以或不可以</i></b> 使用系统设置调整的权限， 无法从系统设置中修改的权限由很多</li>
-                <li>查看所有 <i>AppOp权限</i> （通常不存在于任何系统设置中） 例如， <span class="code">VIBRATE</span> and <span class="code">READ_CLIPBOARD</span> AppOp permissions. 您可以设置所需的 AppOps 模式，例如： <b><i>前台允许</i></b></li>
+                <li>查看所有 <i>AppOp权限</i> （通常不存在于任何系统设置中） 例如， <span class="code">VIBRATE</span> and <span class="code">READ_CLIPBOARD</span> AppOp权限。 您可以设置所需的 AppOps 模式，例如： <b><i>前台允许</i></b></li>
                 <li>查看应用请求的所有权限，这些权限是 <b><i>不可更改的</i></b></li>
                 <li>查看上次使用这些AppOps的时间</li>
                 <li>更改 <b><i>System-Fixed</i></b> 权限（无法通过任何其他方式更改）<1></li>
@@ -152,7 +157,7 @@
         </div>
 
         <div class="card">
-            <h2 id="perms_types">Manifest permissions and AppOps</h2>
+            <h2 id="perms_types">清单权限和 AppOps</h2>
             <p>Please check <a href="https://mirfatif.github.io/IAnswers/android_appop_manifest_permissions">What are manifest permissions and AppOps?</a></p>
         </div>
 
@@ -166,8 +171,8 @@
                 <li>或者您由于某种原因卸载并重新安装了一些应用</li>
                 <li>或者您按照应用请求授予了几个权限</li>
             </ul>
-            <p>Will you go through the whole hassle once again?</p>
-            <p>您不需要， 您可以让权限管理 X 记住您想要的权限。 Set a permission, make it <font color="#90EE90"><b>GREEN</b></font>, and done. It will take only a few moments to look at all installed packages and figure out which permissions aren't correctly set e.g. by making a quick search: <span class="code">:RED|:ORANGE</span> or <span class="code">!:GREEN</span>. 查看 <a href="#search">搜索</a> 了解更多</p>
+            <p>您还想再设置一遍吗？</p>
+            <p>您不必这样， 只需让权限管理 X 记住您想要的权限。 设置一个权限，让它变成 <font color="#90EE90"><b>绿色</b></font>，然后就完成了。 看看所有已安装的软件包并找出哪些权限设置不正确。 通过快速搜索: "<span class="code">:RED|:ORANGE</span>" 或 "<span class="code">!:GREEN</span>" 更多详细信息请参阅 <a href="#search">搜索</a></p>
             <p>Three <b>reference states</b> are:</p>
             <ul>
                 <li>
@@ -187,7 +192,7 @@
                 </li>
             </ul>
 
-            <p>Reference states can be <b>backed up</b> and <b>restored</b> conveniently. After a restore, there's a convenient way to set all permissions according to restored references. See <a href="#refs-ops">Batch Operations</a>.</p>
+            <p>可以方便地<b>备份</b>和<b>恢复</b>参考状态。 After a restore, there's a convenient way to set all permissions according to restored references. See <a href="#refs-ops">Batch Operations</a>.</p>
             <p>There are multiple ways you can <b>set a reference</b>:</p>
             <ul>
                 <li>Long press a permission and tap the "Set Reference " / "Clear Reference" button.</li>
@@ -204,17 +209,17 @@
             <img src="../en/img/pkg.webp">
             <ol>
                 <li>左侧彩色条纹表示 <b>参考状态</b></li>
-                <li>App <b>icon</b></li>
+                <li>应用 <b>图标</b></li>
                 <li>第一行显示软件 <b>名称</b></li>
-                <li>Second line shows package <b>name</b> and</li>
+                <li>第二行显示软件包 <b>名称</b> 和</li>
                 <li><b>UID</b></li>
                 <li>第三行 (可选) 显示软件的状态： <b>核心</b> (框架)、 <b>框架</b> 或 <b>系统</b> 应用， 同时如果应用程序是 <b>禁用</b>状态， <b>已启用</b> 和 <b>用户</b> 应用不会有显示状态</li>
                 <li>Last line shows <b>count</b> of visible out of total manifest permissions and </li>
                 <li>
-                    <p>AppOps permissions.</p>
+                    <p>AppOps 权限.</p>
                     <p>不可见的权限是在 <i>排除过滤器</i> 中排除的权限。</p>
                 </li>
-                <li>If sorted by install or update time, the last line also shows date or time on the right side.</li>
+                <li>如果按安装或更新时间排序，最后一行也会在右侧显示日期或时间。</li>
             </ol>
         </div>
 
@@ -226,8 +231,8 @@
             <img src="img/perm2.webp">
             <ol>
                 <li>左侧彩色条纹表示 <b>参考状态</b></li>
-                <li>Manifest permissions show a flag in the upper right corner</li>
-                <li>Permission <b>icon</b></li>
+                <li>清单权限在右上角显示一个标志</li>
+                <li>权限 <b>图标</b></li>
                 <li>第一行显示 <b>权限名称</b></li>
                 <li>第二行显示权限 <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">保护等级</a>: <b>普通</b>, <b>危险</b>, <b>签名</b>, <b>开发</b>, <b>特权</b>, <b>修复</b>, <b>AppOps</b> 或 <b>未知</b>。 以及 AppOps 是 <b>同包名</b> 或 <b>同UID</b>， 是 <b>额外的</b> AppOps(未在过滤设置中排除)</li>
                 <li>第三行(例如AppOps) 显示 <b>最后使用的时间</b></li>
@@ -273,7 +278,7 @@
                     <p><span class="code">:EXTRA</span></p>
                 </li>
                 <li>
-                    <p><span class="code">&amp;</span> (AND), <span class="code">|</span> (OR) and <span class="code">!</span> (NOT) operators:</p>
+                    <p><span class="code">&amp;</span> (AND), <span class="code">|</span> (OR) 和 <span class="code">!</span> (NOT) 操作符：</p>
                     <p><span class="code">Foo|Bar&amp;Baz</span></p>
                     <p><span class="code">Foo&!Bar&amp;!Baz</span></p>
                 </li>
@@ -291,7 +296,7 @@
         </div>
 
         <div class="card">
-            <h2 id="perm_watcher">Permission Watcher (Pro only)</h2>
+            <h2 id="perm_watcher">权限监控 (高级版)</h2>
             <hr />
 
             <p>部分应用缺少相关权限可能无法正常运行， 而您希望仅在该应用运行时授予相关权限，关闭该应用后移除相关权限</p>
@@ -328,8 +333,8 @@
             <img src="../en/img/perm_view.webp" />
             <ol>
                 <li>Permission name</li>
-                <li>Protection level</li>
-                <li>App count</li>
+                <li>保护级别</li>
+                <li>应用数量</li>
                 <li>Granted permission count out of total permission count. The latter can be bigger than the app count because some apps may use an AppOp permission twice (in <a href="#faq18">UID mode</a>).</li>
             </ol>
 
@@ -365,7 +370,7 @@
             <h3 class="high-top" id="refs-ops">Operations with References</h3>
             <ul>
                 <li>
-                    <p><b>Set Permissions</b></p>
+                    <p><b>设置权限</b></p>
                     <p>Go through a list of selected apps and make <font color="#FF0000"><b>RED</b></font> permissions <font color="#90EE90"><b>GREEN</b></font> by setting their states according to the <a href="#perm_ref">reference values</a>. Permissions with Green and Orange states are ignored.</p>
                     <p>This option is usually helpful when you have just restored a backup and there are many permissions with RED state.</p>
                 </li>
@@ -405,23 +410,23 @@
             <h2 id="adb_help">使用 ADB 授权权限管理 X</h2>
             <hr />
 
-            <h3 class="high-top" id="adb-limits">Limitations of ADB</h3>
+            <h3 class="high-top" id="adb-limits">ADB 的局限性</h3>
             <p>ADB 不像 Root 那么强大。 例如，使用 ADB 时，权限管理 X 需要更多的时间来加载应用列表</p>
             <p>此外，在某些OEM ROM中，ADB 功能可能因缺乏权限或其他限制而受到破坏。 您可以在 <b>关于</b> -> <b>权限</b> (菜单项) 中检查ADB 权限和状态：</p>
             <img alt="PMX privileges" class="medium" src="../en/img/privs.webp" />
             <p>不幸的是，我们对此无能为力。 因此，某些功能只能在 Root 设备上使用。</p>
             <p>Specifically the following actions are possible only on rooted devices:</p>
             <ul>
-                <li>Changing <a href="#faq17">system-fixed</a> permissions</li>
+                <li>更改 <a href="#faq17">系统固定</a> 权限</li>
             </ul>
             <p>然而，一些OEM会添加额外的设置来控制 ADB 权限。 例如，在Oppo手机上您需要取消勾选"<i>禁用权限监控</i>"; 在小米手机上则需要允许 "<i>Usb 调试（安全设置）</i>"。 更多详情请参阅 <a href="https://stackoverflow.com/q/52079343/9165920">此问题</a>。</p>
             <p>以下说明适用于类  AOSP ROM， 定制 ROM 可能有不同或缺失的设置</p>
 
             <hr class="dim">
 
-            <h3 class="high-top" id="adb-help-10">Android 10 and below</h3>
+            <h3 class="high-top" id="adb-help-10">Android 10 及更低版本</h3>
 
-            <p>So here we start how you can make PMX work with ADB.</p>
+            <p>所以我们会尝试让 PMX 依靠 ADB 工作。</p>
             <p>如果您的设备没有Root，您需要在使用权限管理 X 之前打开 <b>无线ADB</b>， <b><i>ADB 网络</i></b> 或 <b><i>无线调试</i></b> ，一般位于 <b>开发者选项</b> 中：</p>
             <img alt="ADB developer options" class="medium" src="../en/img/adb_in_dev_options_1.webp" />
 
@@ -460,7 +465,7 @@
                     <p>将您的设备和电脑连接到同一个 Wi-Fi </p>
                 </li>
                 <li>
-                    <p>Get the IP address of the device (usually in Wi-Fi settings or in <b>Settings</b> -> <b>About</b>), say it's <span class="code">192.168.1.1</span>.</p>
+                    <p>获取设备的 IP 地址 (通常在 Wi-Fi 设置中或 <b>设置</b> -> <b>关于</b>)， 比如 <span class="code">192.168.1.1</span>.</p>
                 </li>
                 <li>
                     <p>在电脑上运行：</p>
@@ -473,15 +478,15 @@
                 </li>
             </ol>
 
-            <p class="high-top"><b><u>Connect PMX to ADB:</u></b></p>
+            <p class="high-top"><b><u>将 PMX 连接到 ADB：</u></b></p>
 
             <ol start="10">
                 <li>
-                    <p>运行权限管理 X 并检查 <b><i>ADB Shell</i></b>， Enter port <span class="code">5555</span> and tap connect.</p>
+                    <p>运行权限管理 X 并检查 <b><i>ADB Shell</i></b>， 输入端口 <span class="code">5555</span> 然后点击连接。</p>
                     <img alt="ADB developer options" class="medium" src="../en/img/adb_in_dev_options_2.webp" />
                 </li>
                 <li>
-                    <p><i>Allow USB Debugging</i> if asked.</p>
+                    <p>如果出现授权弹窗，请<i>允许 USB 调试</i></p>
                     <img alt="ADB developer options" class="medium" src="../en/img/adb_in_dev_options_3.webp" />
                 </li>
             </ol>
@@ -491,34 +496,34 @@
 
             <hr class="dim">
 
-            <h3 class="high-top" id="adb_help_11">Android 11 and above</h3>
-            <p>On Android 11 and above, it's possible to turn on Wireless Debugging without connecting to a PC.</p>
+            <h3 class="high-top" id="adb_help_11">Android 11 及以上版本</h3>
+            <p>在 Android 11 及以上版本上，可以在无需连接到 PC 的情况下打开无线调试功能。</p>
 
             <ol>
                 <li>
                     <p>将您的设备连接到 Wi-Fi</p>
                 </li>
                 <li>
-                    <p>Open PMX and Developer Options in <a href="https://developer.android.com/guide/topics/large-screens/multi-window-support#split-screen_mode_activation">Split-Screen</a> mode. See instructions above how to unhide Developer Options.</p>
+                    <p>在 <a href="https://developer.android.com/guide/topics/large-screens/multi-window-support#split-screen_mode_activation">分屏</a> 模式中打开 PMX 和开发者选项。 查看上面关于如何取消隐藏开发者选项的说明。</p>
                 </li>
                 <li>
-                    <p>Enable <b><i>Wireless debugging</i></b> and <b><i>Disable ADB authorization timeout</i></b> in Developer Options. The latter ensures that you don't have to repeat the next two steps (pairing) again and again.</p>
+                    <p>启用 <b><i>无线调试</i></b> 和 <b><i>禁用 ADB 授权超时</i></b> 后者确保你不必重复接下来的两个步骤 (配对)。</p>
                     <img alt="Android 11 wireless ADB" class="medium" src="../en/img/adb_in_dev_options_11_1.webp" />
                 </li>
                 <li>
-                    <p>打开 <b><i>无线调试</i></b> 并点击 <i>"使用配对码配对设备"</i>， Note the <b><i>pairing code</i></b> and <b><i>port number</i></b>.</p>
+                    <p>打开 <b><i>无线调试</i></b> 并点击 <i>"使用配对码配对设备"</i>， 注意 <b><i>配对码</i></b> 和 <b><i>端口号</i></b>.</p>
                 </li>
                 <li>
-                    <p>In PMX check <b><i>ADB Shell</i></b> in drawer, enter both parameters in the shown fields, and tap pair.</p>
+                    <p>在PMX中检查 <b><i>ADB Shell</i></b> 在抽屉中输入两个参数，然后点击配对。</p>
                     <img alt="Android 11 wireless ADB" class="medium" src="../en/img/adb_in_dev_options_11_2.webp" />
                 </li>
                 <li>
-                    <p>After successful pairing now it's time to connect. Enter the new <b><i>port number</i></b> from Wireless debugging in the shown field and tap connect.</p>
+                    <p>在成功配对之后即可连接。 Enter the new <b><i>port number</i></b> from Wireless debugging in the shown field and tap connect.</p>
                     <img alt="Android 11 wireless ADB" class="medium" src="../en/img/adb_in_dev_options_11_3.webp" />
                 </li>
             </ol>
 
-            <p>Now you can leave the <b><i>Wireless debugging</i></b> enabled. Or better disable it and leave the <b><i>USB debugging</i></b> enabled.</p>
+            <p>现在您可以保持 <b><i>无线调试</i></b> 开启。 Or better disable it and leave the <b><i>USB debugging</i></b> enabled.</p>
 
             <p>If you entirely turn off the debugging in Developer options, or after every reboot, you need to repeat the last step.</p>
 
@@ -526,8 +531,17 @@
 
             <hr class="dim">
 
-            <h3 class="high-top" id="adb_connect_svc">ADB Connect Service</h3>
-            <p>If <a href="#perm_watcher">Permission Watcher</a> or <a href="#scheduled_checker">Scheduled Checks</a> are enabled, PMX connects to ADB on device boot. But if ADB has not been enabled by then, PMX will no more try to connect to ADB unless explicitly done by opening the app.</p>
+            <p id="adb-pair-video">这里有一个1分钟视频指南：</p>
+
+            <video class="medium" controls autoplay muted loop>
+                <source src="img/adb_pairing.mp4" type="video/webm">
+                ADB pairing
+            </video>
+
+            <hr class="dim">
+
+            <h3 class="high-top" id="adb_connect_svc">ADB 连接服务</h3>
+            <p>如果 <a href="#perm_watcher">权限监视器</a> 或 <a href="#scheduled_checker">计划检查</a> 已启用，PMX 将在设备启动时连接到 ADB。 But if ADB has not been enabled by then, PMX will no more try to connect to ADB unless explicitly done by opening the app.</p>
             <p>But if you enable ADB on boot in an automated way, you can notify PMX by sending the following <span class="code">Intent</span> that ADB has been enabled:</p>
 
             <p class="horizontal-scroll"><span class="code">am startservice -n com.mirfatif.permissionmanagerx/.fwk.AdbConnectSvcM --ei "com.mirfatif.pmx.extra.ADB_PORT" 5555</span></p>
@@ -556,7 +570,7 @@
             <p>可以购买付费版本，以示捐赠和使用付费的功能。 其他捐赠方法可在免费/专业版的 <b>捐赠</b> 选项中查看， 开发者也可以 <b>通过为源代码做出贡献</b>来支持应用程序开发。例如，通过修复bug。 用户可以通过测试版，反馈崩溃问题， 建议改进和新功能，或将应用翻译成其母语。</p>
 
             <h3 id="paid_features">付费功能</h3>
-            <p>Paid version includes everything that's in the Free version, plus the following <b>extra features</b> which are also listed in the Play Store description:</p>
+            <p>付费版本包括免费版本中的所有功能， 外加下面的 <b>额外功能</b> ，这些功能也可以在Play 商店的描述中查看：</p>
             <ul>
                 <li>不同的应用和权限排序方式</li>
                 <li>预定检查通知错误的参考状态</li>
@@ -566,10 +580,10 @@
                 <li>多用户/工作资料支持</li>
                 <li>更改时自动创建备份文件</li>
                 <li>Batch Operations (Profiles)</li>
-                <li>Permissions description</li>
+                <li>权限描述</li>
                 <li>搜索建议</li>
                 <li>主题选项</li>
-                <li>Permissions View</li>
+                <li>权限视图</li>
             </ul>
         </div>
 
@@ -603,7 +617,7 @@
 
             <hr class="dim" />
 
-            <p id="faq4" class="high-bottom"><b>What are hidden APIs?</b></p>
+            <p id="faq4" class="high-bottom"><b>什么是隐藏的 API？</b></p>
             <p>权限管理 X 的核心功能围绕 <b>隐藏API</b>。 这些是执行操作所需的能力(如授予/撤销权限)，而这些操作只能由特权系统应用（privileged system apps）来执行。 所以这些功能不适用于普通用户应用。 但权限管理 X 在 Root 或 ADB 的帮助下使用这些能力。 通常，用户不应考虑该功能。</p>
             <p>如果您对基本细节感兴趣，请参阅 <a href="https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces">此文档</a>。</p>
 
@@ -630,13 +644,13 @@
             <p>After changing a permission successfully, if you are not getting the desired results i.e. it reverts back immediately or after some hours or days, it's the Android operating system to be blamed. Please see:</p>
             <ul>
                 <li><a href="#faq2">权限管理 X 是如何修改其他应用的权限的？</a></li>
-                <li><a href="#faq3">Why do some AppOps cannot be changed?</a></li>
+                <li><a href="#faq3">为什么有些AppOps无法更改？</a></li>
             </ul>
             <p>As you use apps, Android may change their permissions. And unfortunately we do not have a way to prevent this. <a href="#perm_watcher">Permission Watcher</a> and <a href="#scheduled_checker">Scheduled Checker</a> may help in this regard.</p>
 
             <hr class="dim" />
 
-            <p id="faq3" class="high-bottom"><b>Why do some AppOps cannot be changed?</b></p>
+            <p id="faq3" class="high-bottom"><b>为什么有些AppOps无法更改？</b></p>
             <p>Sometimes you see "AppOp mode not changed". It means that Android rejected the request to change the AppOp mode. You cannot change it no matter what method or app you use. There could be multiple possible reasons.</p>
             <ul>
                 <li>Some AppOps are dependent on their corresponding manifest permissions. So they cannot be changed independently. For instance you may not be able to deny <span class="code">READ_CONTACTS</span> AppOp if <span class="code">android.permission.READ_CONTACTS</span> manifest permission is granted.</li>
@@ -678,7 +692,7 @@
             <hr class="dim" />
 
             <p id="faq9" class="high-bottom"><b>过滤列表中的<i>无效的权限</i>是什么？</b></p>
-            <p>如果一个应用正在请求一个清单权限，但它没有由 Android 框架或任何已安装的软件包请求(提供)， 它是无效的权限。 For instance <span class="code">com.android.vending.BILLING</span> is an invalid permission if Play Store app is not installed on your device.</p>
+            <p>如果一个应用正在请求一个清单权限，但它没有由 Android 框架或任何已安装的软件包请求(提供)， 它是无效的权限。 例如， <span class="code">com.android.vending.BILLING</span> 将是无效的权限，如果您的设备上没有安装Play商店应用的话。</p>
 
             <hr class="dim" />
 
@@ -705,7 +719,7 @@
             <p>Related:</p>
             <ul>
                 <li><a href="#faq11">什么是不同的 AppOps 模式，我应该使用哪些模式？</a></li>
-                <li><a href="#faq3">Why do some AppOps cannot be changed?</a></li>
+                <li><a href="#faq3">为什么有些AppOps无法更改？</a></li>
             </ul>
             <p>Please note that the permission mode "Allow only while using the app" does not alway set the AppOp mode to "Foreground":</p>
             <img class="small" src="../en/img/fg_and_one_time_perm_modes.webp" />
@@ -748,7 +762,7 @@
             <hr class="dim" />
 
             <p id="faq39" class="high-bottom"><b>可以在权限管理 X 中控制“长期未使用时撤消权限”吗？</b></p>
-            <p>可以， This feature is available since <a href="https://developer.android.com/about/versions/11/privacy/permissions#auto-reset">Android 11</a>. It's also labeled as "Pause app activity if unused" on some devices.</p>
+            <p>可以， 此功能于 <a href="https://developer.android.com/about/versions/11/privacy/permissions#auto-reset">Android 11</a>可用。 It's also labeled as "Pause app activity if unused" on some devices.</p>
             <img class="small" src="../en/img/remove_unused_perms.webp" />
             <p>To change this option from PMX:</p>
             <ul>

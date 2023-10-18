@@ -66,7 +66,12 @@
                     <ul>
                         <li><a href="#adb-limits" class="no-underline">Ограничения ADB</a></li>
                         <li><a href="#adb-help-10" class="no-underline">Android 10 и ниже</a></li>
-                        <li><a href="#adb_help_11" class="no-underline">Андроид 11 и выше</a></li>
+                        <li>
+                            <a href="#adb_help_11" class="no-underline">Андроид 11 и выше</a>
+                            <ul>
+                                <li><a href="#adb-pair-video">Видеоинструкция</a></li>
+                            </ul>
+                        </li>
                         <li><a href="#adb_connect_svc" class="no-underline">Служба подключения ADB</a></li>
                     </ul>
                 </li>
@@ -168,7 +173,7 @@
             </ul>
             <p>Пройдете ли вы через эту возню еще раз?</p>
             <p>Вам это не требуется. Вы можете заставить PMX запоминать желаемые состояния разрешений. Задайте разрешение, установите его состояние <font color="#90EE90"><b>ЗЕЛЕНЫМ</b></font>, готово. Понадобится пара мгновений, чтобы просмотреть все установленные пакеты и выяснить, какие разрешения установлены неправильно, например произведя быстрый поиск по запросу: <span class="code">:КРАСНЫЙ|:ОРАНЖЕВЫЙ</span> или <span class="code">!:ЗЕЛЕНЫЙ</span>. Смотрите <a href="#search">Поиск</a> для получения более подробной информации.</p>
-            <p>Three <b>reference states</b> are:</p>
+            <p>Есть три <b>целевых значения</b>:</p>
             <ul>
                 <li>
                     <p>
@@ -187,13 +192,13 @@
                 </li>
             </ul>
 
-            <p>Reference states can be <b>backed up</b> and <b>restored</b> conveniently. После восстановления есть удобный способ установки всех разрешений в соответствии с восстановленными целевыми значениями. См. <a href="#refs-ops">Пакетные операции</a>.</p>
-            <p>There are multiple ways you can <b>set a reference</b>:</p>
+            <p>Целевые значение можно удобно <b>бэкапить</b> и <b>восстанавливать</b>. После восстановления есть удобный способ установки всех разрешений в соответствии с восстановленными целевыми значениями. См. <a href="#refs-ops">Пакетные операции</a>.</p>
+            <p>Вы можете установить <b>целевое значение</b> несколькими способами:</p>
             <ul>
-                <li>Long press a permission and tap the "Set Reference " / "Clear Reference" button.</li>
-                <li>There's a top menu option on every app's permission list screen to set or clear all references.</li>
-                <li>(Pro only) Set references in bulk with <a href="#refs-ops">Batch Operations</a>.</li>
-                <li>(Pro only) Enable the "Auto-set reference" preference under Settings -> General settings. So whenever you change a permission state, it's also set as a reference.</li>
+                <li>Долгое нажатие на разрешение и нажатие кнопки "Установить целевое значение" / "Очистить целевые значения".</li>
+                <li>Также в правом верхнем углу экрана списка разрешений каждого приложения есть пункт меню, позволяющий установить или очистить все целевые значения.</li>
+                <li>(Только Pro версия) Массовая установка целевых значений с помощью <a href="#refs-ops">Пакетных операций</a>.</li>
+                <li>(Только Pro версия) Включите опцию "Автоустановка целевых значений" в меню Настройки -> Общие настройки. Таким образом, всякий раз, когда вы меняете состояние разрешения, оно также устанавливается как целевое значение.</li>
             </ul>
         </div>
 
@@ -523,6 +528,15 @@
             <p>Если вы полностью отключите отладку в настройке "Для разработчиков", или после каждой перезагрузки, вам нужно будет повторить последний шаг.</p>
 
             <p>Для получения дополнительной информации смотрите <a href="https://developer.android.com/studio/command-line/adb#connect-to-a-device-over-wi-fi-android-11+">это</a>.</p>
+
+            <hr class="dim">
+
+            <p id="adb-pair-video">Вот 1 минутное видео-руководство:</p>
+
+            <video class="medium" controls autoplay muted loop>
+                <source src="img/adb_pairing.mp4" type="video/webm">
+                ADB pairing
+            </video>
 
             <hr class="dim">
 
