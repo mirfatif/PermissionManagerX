@@ -422,6 +422,7 @@
     <item order="104">android.permission.MANAGE_NOTIFICATIONS</item>
     <item order="105">android.permission.SUBSTITUTE_NOTIFICATION_APP_NAME</item>
     <item order="105.1">android.permission.POST_NOTIFICATIONS</item>
+    <item order="105.2">android.permission.USE_FULL_SCREEN_INTENT</item>
     <item order="106">android.permission.ACCESS_INSTANT_APPS</item>
     <item order="107">android.permission.CHANGE_COMPONENT_ENABLED_STATE</item>
     <item order="108">android.permission.CLEAR_APP_CACHE</item>
@@ -525,6 +526,7 @@
     <item order="202" />
     <item order="203" />
     <item order="204" />
+    <item order="204.1">android.permission.READ_MEDIA_VISUAL_USER_SELECTED</item>
     <item order="205">android.permission.VIBRATE</item>
     <item order="206">android.permission.ACCESS_WIFI_STATE</item>
     <item order="207">android.permission.CHANGE_WIFI_MULTICAST_STATE</item>
@@ -534,6 +536,7 @@
     <item order="211">android.permission.BIND_ACCESSIBILITY_SERVICE</item>
     <item order="211.1" />
     <item order="211.2" />
+    <item order="211.3">android.permission.USE_ICC_AUTH_WITH_DEVICE_IDENTIFIER</item>
     <item order="212">android.permission.INSTANT_APP_FOREGROUND_SERVICE</item>
     <item order="213">android.permission.MANAGE_IPSEC_TUNNELS</item>
     <item order="215" />
@@ -652,6 +655,7 @@
     <item order="104" />
     <item order="105" />
     <item order="105.1">POST_NOTIFICATION</item>
+    <item order="105.2">USE_FULL_SCREEN_INTENT</item>
     <item order="106" />
     <item order="107" />
     <item order="108" />
@@ -755,6 +759,7 @@
     <item order="202">WRITE_MEDIA_AUDIO</item>
     <item order="203">WRITE_MEDIA_IMAGES</item>
     <item order="204">WRITE_MEDIA_VIDEO</item>
+    <item order="204.1">READ_MEDIA_VISUAL_USER_SELECTED</item>
     <item order="205">VIBRATE</item>
     <item order="206">WIFI_SCAN</item>
     <item order="207" />
@@ -764,6 +769,7 @@
     <item order="211">BIND_ACCESSIBILITY_SERVICE</item>
     <item order="211.1">ACCESS_ACCESSIBILITY</item>
     <item order="211.2">READ_DEVICE_IDENTIFIERS</item>
+    <item order="211.3">USE_ICC_AUTH_WITH_DEVICE_IDENTIFIER</item>
     <item order="212">INSTANT_APP_START_FOREGROUND</item>
     <item order="213">MANAGE_IPSEC_TUNNELS</item>
     <item order="215">PROJECT_MEDIA</item>
@@ -882,6 +888,7 @@
     <item order="104">@drawable/g_notif</item>
     <item order="105">@drawable/g_notif</item>
     <item order="105.1">@drawable/g_notif</item>
+    <item order="105.2">@drawable/g_notif</item>
     <item order="106">@drawable/g_package</item>
     <item order="107">@drawable/g_package</item>
     <item order="108">@drawable/g_package</item>
@@ -985,6 +992,7 @@
     <item order="202">@drawable/g_storage</item>
     <item order="203">@drawable/g_storage</item>
     <item order="204">@drawable/g_storage</item>
+    <item order="204.1">@drawable/g_storage</item>
     <item order="205">@drawable/g_vibration</item>
     <item order="206">@drawable/g_wifi</item>
     <item order="207">@drawable/g_wifi</item>
@@ -994,6 +1002,7 @@
     <item order="211">@drawable/accessibility</item>
     <item order="211.1">@drawable/accessibility</item>
     <item order="211.2">@drawable/privacy_policy</item>
+    <item order="211.3">@drawable/privacy_policy</item>
     <item order="212">0</item>
     <item order="213">0</item>
     <item order="215">0</item>

@@ -535,6 +535,11 @@ public class PackageActivity implements PermAdapterCallback {
   }
 
   private void setAppOpMode(Permission appOp, int mode) {
+    if (!AppOpsParser.INS.isValidAppOpMode(mode)) {
+      UiUtils.showToast(R.string.something_went_wrong);
+      return;
+    }
+
     mActFlavor.beforeAppOpChange(mPkg, appOp, mode);
 
     appOp.setAppOpMode(mPkg, mode);

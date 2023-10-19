@@ -16,18 +16,29 @@
   <!-- Advanced Settings -->
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_exit_on_app_death_title">自动停止守护进程</string>
+  <string name="pref_adv_settings_exit_on_app_death_summary">当应用程序被杀死时停止特权守护进程</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_adv_settings_perm_refs_cat_title">权限模板</string>
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_daemon_dex_location_title">守护进程文件位置</string>
+  <string name="pref_adv_settings_daemon_dex_location_summary">从: %s 加载守护进程</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_adv_settings_root_cat_title">Root</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_daemon_uid_title">守护进程 UID</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_daemon_uid_title2">守护进程 UID: %s</string>
+  <string name="pref_adv_settings_daemon_uid_summary">守护进程的 UNIX 用户标识符</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_daemon_context_title">守护进程上下文</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_daemon_context_title2">守护进程上下文： %s</string>
+  <string name="pref_adv_settings_daemon_context_summary">守护进程的 SELinux 上下文</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_su_exe_path_title">超级用户二进制的位置</string>
   <!-- FilterSettingsActivity -->
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_filter_packages_cat_title">应用</string>
@@ -93,6 +104,7 @@
   <string name="pref_settings_privileges_reminder_summary">缺少 Root 和 ADB 权限时显示提示对话框</string>
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
+  <string name="pref_settings_show_fwk_perm_name_title">框架权限名称</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_settings_special_search_title">综合搜索</string>
   <string name="pref_settings_special_search_summary">使用 AND (&amp;), OR (|) 和 nt (!) 操作员搜索合并查询</string>

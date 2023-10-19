@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
@@ -93,7 +92,7 @@ public class LogUtils {
             .setAutoCancel(true);
 
     NotifUtils.createNotifChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
-    NotificationManagerCompat.from(App.getCxt()).notify(UNIQUE_ID, builder.build());
+    NotifUtils.notify(UNIQUE_ID, builder.build());
   }
 
   public static String getDeviceInfo() {

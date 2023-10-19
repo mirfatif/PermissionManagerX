@@ -182,7 +182,7 @@ public class AppUpdate {
         .setAutoCancel(true)
         .addAction(0, getString(R.string.download), pi);
 
-    mNotificationManager.notify(UNIQUE_ID, notificationBuilder.build());
+    NotifUtils.notify(UNIQUE_ID, notificationBuilder.build());
   }
 
   public static class AppUpdateResult {

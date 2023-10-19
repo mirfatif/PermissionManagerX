@@ -78,7 +78,9 @@ public class LogcatSvc {
       LIVE.set(false);
     }
 
-    mLogExecutor.cancel(true);
+    if (mLogExecutor != null) {
+      mLogExecutor.cancel(true);
+    }
 
     if (DaemonHandler.INS.isDaemonAlive()) {
       BgRunner.execute(() -> DaemonIface.INS.setDebug(null));
@@ -205,7 +207,7 @@ public class LogcatSvc {
 
       synchronized (LIVE) {
         if (LIVE.get()) {
-          mNotifMgr.notify(UNIQUE_ID, mNotifBuilder.build());
+          NotifUtils.notify(UNIQUE_ID, mNotifBuilder.build());
         }
       }
     }

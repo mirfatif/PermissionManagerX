@@ -85,8 +85,12 @@ public class PermLongPressDialogFrag extends BottomSheetDialogFrag {
         b.refButton.setText(R.string.clear_reference);
       } else {
         String permStateStr = mPerm.getLocalizedPermStateName();
-        b.refButton.setText(
-            StringUtils.htmlToString(getString(R.string.set_perm_state_reference, permStateStr)));
+        if (permStateStr != null) {
+          b.refButton.setText(
+              StringUtils.htmlToString(getString(R.string.set_perm_state_reference, permStateStr)));
+        } else {
+          UiUtils.showToast(R.string.something_went_wrong);
+        }
       }
 
       b.refButton.setOnClickListener(

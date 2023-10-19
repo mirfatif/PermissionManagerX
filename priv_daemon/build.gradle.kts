@@ -15,4 +15,4 @@ android {
 
 dependencies { implementation(project(path = ":priv_library")) }
 
-lsparanoid { variantFilter = { !it.name.startsWith("foss") } }
+lsparanoid { variantFilter = { !it.name.startsWith("foss") && it.buildType != "debug" } }

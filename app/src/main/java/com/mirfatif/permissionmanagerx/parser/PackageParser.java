@@ -562,8 +562,8 @@ public enum PackageParser {
 
         List<Integer> ops1 = new ArrayList<>();
         for (String opName : ExcFiltersData.INS.getExtraAppOps()) {
-          int op = AppOpsParser.INS.getAppOpCode(opName);
-          if (!processedAppOps.contains(op)) {
+          Integer op = AppOpsParser.INS.getAppOpCode(opName);
+          if (op != null && !processedAppOps.contains(op)) {
             ops1.add(op);
           }
         }
@@ -833,6 +833,11 @@ public enum PackageParser {
       List<String> filter,
       boolean filterPerms) {
     String opName = AppOpsParser.INS.getAppOpName(op);
+
+    if (opName == null) {
+      return new int[] {1, 0};
+    }
+
     if (filter != null && !filter.contains(opName)) {
       return new int[] {1, 0};
     }
@@ -853,7 +858,7 @@ public enum PackageParser {
 
     if (!opModeSet || !validMode) {
       opMode = AppOpsParser.INS.getOpDefMode(op);
-      if (!AppOpsParser.INS.isValidAppOpMode(opMode)) {
+      if (opMode == null || !AppOpsParser.INS.isValidAppOpMode(opMode)) {
         opMode = AppOpsManager.MODE_DEFAULT;
         mOpModesConsistent = validMode = false;
       }
@@ -1027,6 +1032,10 @@ public enum PackageParser {
         }
 
         Package pkg = origPkgList.get(i);
+
+        if (pkg == null) {
+          continue;
+        }
 
         if (MySettings.INS.isDeepSearching()) {
           if (!sendProgress) {

@@ -151,7 +151,7 @@ dependencies {
 
 lsparanoid {
     variantFilter {
-        !it.name.contains('Foss')
+        !it.name.contains('Foss') && it.buildType != 'debug'
     }
 }
 
@@ -212,6 +212,8 @@ def copyFileIfChanged(File src, File dst) {
 }
 
 def createTasksForDaemonBuild = () -> {
+    boolean signed = project.hasProperty('android.injected.signing.store.file')
+
     for (boolean foss : new boolean[]{true, false}) {
         if (noPro && !foss) {
             continue
@@ -225,8 +227,6 @@ def createTasksForDaemonBuild = () -> {
             dir += debug ? 'Debug' : 'Release'
 
             String dexTaskDep = 'assemble' + task
-
-            boolean signed = project.hasProperty('android.injected.signing.store.file')
 
             String apk = 'priv_daemon/build/outputs/apk/' + (foss ? 'foss' : 'pro') + '/'
             apk += (debug ? 'debug' : 'release') + '/priv_daemon-' + (foss ? 'foss' : 'pro')

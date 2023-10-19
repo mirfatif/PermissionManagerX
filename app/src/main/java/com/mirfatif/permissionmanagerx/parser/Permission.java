@@ -11,6 +11,7 @@ import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.MySettingsFlavor;
 import com.mirfatif.permissionmanagerx.privs.DaemonHandler;
 import com.mirfatif.permissionmanagerx.privs.DaemonIface;
+import com.mirfatif.permissionmanagerx.util.UiUtils;
 import com.mirfatif.permissionmanagerx.util.UserUtils;
 import com.mirfatif.privtasks.Constants;
 import java.util.List;
@@ -182,8 +183,9 @@ public class Permission {
   }
 
   public CharSequence getDependsOnName() {
+    String dependsOn = Objects.requireNonNull(mDependsOn);
     return PkgParserFlavor.INS.getPermName(
-        mDependsOn, PermGroupsMapping.INS.getGroupId(mDependsOn, true));
+        mDependsOn, PermGroupsMapping.INS.getGroupId(dependsOn, true));
   }
 
   public void setExtraAppOp() {
@@ -396,11 +398,12 @@ public class Permission {
 
   public void setAppOpMode(Package pkg, int mode) {
     if (isAppOp()) {
-      DaemonIface.INS.setAppOpMode(
-          pkg.getUid(),
-          isPerUid() ? null : pkg.getName(),
-          AppOpsParser.INS.getAppOpCode(getName()),
-          mode);
+      Integer op = AppOpsParser.INS.getAppOpCode(getName());
+      if (op != null) {
+        DaemonIface.INS.setAppOpMode(pkg.getUid(), isPerUid() ? null : pkg.getName(), op, mode);
+      } else {
+        UiUtils.showToast(R.string.something_went_wrong);
+      }
     }
   }
 
@@ -585,7 +588,7 @@ public class Permission {
 
     for (int mode = 0; mode < modeCount; mode++) {
       String modeName = AppOpsParser.INS.opModeToName(mode);
-      if (noFg && Constants.APP_OP_MODE_FG.equals(modeName)) {
+      if (modeName == null || (noFg && Constants.APP_OP_MODE_FG.equals(modeName))) {
         continue;
       }
 

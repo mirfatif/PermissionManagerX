@@ -13,6 +13,7 @@ import com.mirfatif.permissionmanagerx.util.ApiUtils;
 import com.mirfatif.privtasks.AppPrivTasks;
 import com.mirfatif.privtasks.bind.AppOpsLists;
 import com.mirfatif.privtasks.bind.MyPackageOps;
+import com.mirfatif.privtasks.util.CloseableReadWriteLock;
 import com.mirfatif.privtasks.util.MyLog;
 import com.mirfatif.privtasks.util.bg.BgRunner;
 import java.util.ArrayList;
@@ -55,6 +56,8 @@ public enum AppOpsParser {
   private final Map<String, Integer> mPermToOpCodeMap =
       Collections.synchronizedMap(new ArrayMap<>());
 
+  private final CloseableReadWriteLock mListsLock = new CloseableReadWriteLock();
+
   private @interface ListsStatus {
     int NOT_BUILT = 0;
     int BUILT_IN_APP = 1;
@@ -63,7 +66,11 @@ public enum AppOpsParser {
 
   private int mListsStatus = ListsStatus.NOT_BUILT;
 
-  public synchronized void buildAppOpsList() {
+  public void buildAppOpsList() {
+    mListsLock.withWriteLock(this::buildAppOpsListInternal);
+  }
+
+  private void buildAppOpsListInternal() {
     if (mListsStatus == ListsStatus.BUILT_WITH_DAEMON) {
       return;
     }
@@ -124,7 +131,8 @@ public enum AppOpsParser {
 
     List<PermissionEntity> entities = PermsDb.INS.getDb().getAll();
 
-    entities.removeIf(entity -> entity.isAppOps || !mAppOpsNames.contains(entity.permName));
+    mListsLock.withReadLock(
+        () -> entities.removeIf(e -> e.isAppOps || !mAppOpsNames.contains(e.permName)));
     entities.forEach(entity -> entity.isAppOps = true);
 
     PermsDb.INS.getDb().insertAll(entities.toArray(new PermissionEntity[0]));
@@ -139,49 +147,61 @@ public enum AppOpsParser {
   }
 
   public List<String> getAppOpsNames() {
-    return mAppOpsNames;
+    return mListsLock.withReadLock(() -> new ArrayList<>(mAppOpsNames));
   }
 
   public int getAppOpCount() {
-    return mAppOpsNames.size();
+    return mListsLock.withReadLock(mAppOpsNames::size);
   }
 
   public String getAppOpName(int op) {
-    return mAppOpsNames.get(op);
+    return mListsLock.withReadLock(
+        () -> op >= 0 && op < mAppOpsNames.size() ? mAppOpsNames.get(op) : null);
   }
 
   public Integer getAppOpCode(String opName) {
-    return mAppOpsNames.indexOf(opName);
+    int i = mListsLock.withReadLock(() -> mAppOpsNames.indexOf(opName));
+    return i >= 0 ? i : null;
   }
 
   public int getAppOpModeCount() {
-    return mAppOpsModes.size();
+    return mListsLock.withReadLock(mAppOpsModes::size);
   }
 
   public boolean isValidAppOpMode(int opMode) {
-    return opMode >= 0 && opMode < mAppOpsModes.size();
+    return mListsLock.withReadLock(() -> opMode >= 0 && opMode < mAppOpsModes.size());
   }
 
   public String opModeToName(int opMode) {
-    return isValidAppOpMode(opMode) ? mAppOpsModes.get(opMode) : null;
+    return mListsLock.withReadLock(
+        () -> isValidAppOpMode(opMode) ? mAppOpsModes.get(opMode) : null);
   }
 
   public Integer nameToOpMode(String modeName) {
-    int mode = mAppOpsModes.indexOf(modeName);
-    return mode >= 0 ? mode : null;
+    int i = mListsLock.withReadLock(() -> mAppOpsModes.indexOf(modeName));
+    return i >= 0 ? i : null;
   }
 
   public String getDependsOn(int op) {
-    int opSwitch = mOpSwitchList.get(op);
-    return op == opSwitch ? null : mAppOpsNames.get(opSwitch);
+    return mListsLock.withReadLock(
+        () -> {
+          Integer opSwitch = op >= 0 && op < mOpSwitchList.size() ? mOpSwitchList.get(op) : null;
+          return opSwitch == null
+                  || opSwitch < 0
+                  || opSwitch >= mAppOpsNames.size()
+                  || op == opSwitch
+              ? null
+              : mAppOpsNames.get(opSwitch);
+        });
   }
 
-  int getOpDefMode(int op) {
-    return mOpDefModeList.get(op);
+  Integer getOpDefMode(int op) {
+    return mListsLock.withReadLock(
+        () -> op >= 0 && op < mOpDefModeList.size() ? mOpDefModeList.get(op) : null);
   }
 
   Integer getPermToOpCode(String perm) {
-    return mPermToOpCodeMap.get(perm);
+    return mListsLock.withReadLock(() -> mPermToOpCodeMap.get(perm));
   }
 
   private boolean mWorksWithNoDaemon = true;

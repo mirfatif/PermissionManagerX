@@ -1,0 +1,3 @@
+- Added new permission names / descriptions for Android 14
+- Updated translations
+- Fixed crashes, random improvements

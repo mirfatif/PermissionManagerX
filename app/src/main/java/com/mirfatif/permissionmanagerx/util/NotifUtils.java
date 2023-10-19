@@ -3,6 +3,7 @@ package com.mirfatif.permissionmanagerx.util;
 import static android.app.PendingIntent.FLAG_IMMUTABLE;
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static com.mirfatif.permissionmanagerx.util.ApiUtils.getString;
+import static com.mirfatif.permissionmanagerx.util.ApiUtils.hasNotifPerm;
 
 import android.Manifest;
 import android.app.Notification;
@@ -74,5 +75,11 @@ public class NotifUtils {
         .setColor(UiUtilsFlavor.getAccentColor());
 
     return builder.build();
+  }
+
+  public static void notify(int id, Notification notif) {
+    if (hasNotifPerm()) {
+      NotificationManagerCompat.from(App.getCxt()).notify(id, notif);
+    }
   }
 }

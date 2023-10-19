@@ -125,7 +125,7 @@
   <string name="disable_pkg_warning" comment="'system' or 'framework'">Заморозка приложения %1$s является опасным действием. Это может нанести вред вплоть до сбоя работы системы Android.\nВы уверены что хотите продолжить?</string>
   <string name="pkg_state_disabled2" searchStr="true">%s, заморожено</string>
   <string name="unsupported_sdk_warning_title">Неподдерживаемая версия Android</string>
-  <string name="unsupported_sdk_warning_message">Ваше устройство работает под управлением ОС Android %s, которая пока не тестировалась. WhatsRunning может аварийно завершать работу или вести себя непредсказуемо.</string>
+  <string name="unsupported_sdk_warning_message">Ваше устройство работает под управлением ОС Android %s, которая пока не тестировалась. PMX может аварийно завершать работу или вести себя непредсказуемо.</string>
   <string name="unsupported_sdk_warning_button">Я понимаю</string>
   <!-- Crash Report -->
   <!-- CHAR LIMIT: 15 -->

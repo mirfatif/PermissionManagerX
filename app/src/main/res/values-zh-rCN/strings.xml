@@ -32,6 +32,9 @@
   <plurals name="apps_count">
     <item quantity="other">%d 个应用</item>
   </plurals>
+  <plurals name="perm_count">
+    <item quantity="other">%d 权限</item>
+  </plurals>
   <!-- CHAR LIMIT: 20 -->
   <string name="copied_to_clipboard_toast">已复制到剪贴板</string>
   <!-- MainActivity Navigation Drawer / menu items -->
@@ -61,6 +64,7 @@
   <!-- CHAR LIMIT: 15 -->
   <string name="primary_account">主用户</string>
   <string name="primary_profile_only">权限管理 X 只能在主用户帐户/设备所有者配置文件中运行</string>
+  <string name="grant_root_or_adb">Root 或 ADB 访问权限是获取AppOp权限和更改权限状态所必需的。</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="backup">备份</string>
   <!-- CHAR LIMIT: 10 -->
@@ -71,6 +75,7 @@
   <!-- CHAR LIMIT: 15 -->
   <string name="backup_in_progress">正在备份…</string>
   <!-- CHAR LIMIT: 15 -->
+  <string name="restore_in_progress">正在恢复…</string>
   <plurals name="backup_restore_processed_prefs">
     <item quantity="other">已处理 %1$d 个模板</item>
   </plurals>
@@ -113,7 +118,7 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="prog_msg_checking_adb_access">正在检查 ADB 权限</string>
   <!-- CHAR LIMIT: 20 -->
-  <string name="prog_msg_starting_daemon">正在启动守护进程</string>
+  <string name="prog_msg_starting_daemon">正在启动守护进程...</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="creating_packages_list">正在创建应用列表…</string>
   <!-- CHAR LIMIT: 15 -->
@@ -129,11 +134,17 @@
   <string name="daemon_context_default">默认</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="bad_path_toast">路径错误</string>
+  <string name="reset_perm_db_dialog_reset_button">重置</string>
+  <string name="reset_perm_db_dialog_cleanup_button">清除</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="reset_perm_db_backup_failed_toast">备份失败</string>
   <string name="reset_perm_db_building_app_list">构建应用列表…</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="reset_perm_db_pkg_list_failed_toast">建立应用列表失败</string>
   <!-- CHAR LIMIT: 20 -->
+  <plurals name="reset_perm_db_removed_count_toast">
+    <item quantity="other">已从数据库中删除 %d 项</item>
+  </plurals>
   <!-- Privileges -->
   <!-- CHAR LIMIT: 15 -->
   <string name="privileges_title">权限</string>
@@ -147,11 +158,15 @@
   <!-- CHAR LIMIT: 15 -->
   <string name="adb_title">ADB</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="adb_pairing_failed_toast">配对失败</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="adb_connect_failed_toast">连接失败</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="connected_to_adb_toast">连接到 ADB</string>
   <!-- CHAR LIMIT: 10 -->
+  <string name="pair_button">配对</string>
   <!-- CHAR LIMIT: 10 -->
+  <string name="pairing_button">正在配对</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="connect_button">连接</string>
   <!-- CHAR LIMIT: 10 -->
@@ -159,6 +174,8 @@
   <!-- CHAR LIMIT: 10 -->
   <string name="connection_title">连接</string>
   <string name="pairing_code_hint">配对码</string>
+  <string name="ip_address_hint">IP 地址</string>
+  <string name="socket_port_hint">端口</string>
   <!-- CHAR LIMIT: 10 -->
   <!-- CHAR LIMIT: 10 -->
   <!-- Feedback -->
@@ -184,7 +201,9 @@
   <!-- CHAR LIMIT: 15 -->
   <string name="rate_on_ps">在 Play 商店评价</string>
   <!-- CHAR LIMIT: 15 -->
+  <string name="share_with_others">与好友分享</string>
   <!-- CHAR LIMIT: 15 -->
+  <string name="rating_options">评分选项</string>
   <!-- CHAR LIMIT: 15 -->
   <!-- CHAR LIMIT: 15 -->
   <!-- Links -->
@@ -192,7 +211,7 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="dex_location_changed_toast">切换守护进程负载位置</string>
   <!-- CHAR LIMIT: 20 -->
-  <string name="files_not_extracted_accessible_toast">无法提取或无法访问文件</string>
+  <string name="files_not_extracted_accessible_toast">无法解压或无法访问文件</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="priv_daemon_died_toast">特权守护进程丢失</string>
   <!-- CHAR LIMIT: 20 -->
@@ -273,6 +292,7 @@
   <!-- PackageActivity -->
   <!-- CHAR LIMIT: 20 -->
   <string name="something_went_wrong">出错了</string>
+  <string name="grant_root_or_adb_to_change_perms">要更改权限状态，需要Root或 ADB 权限。</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="app_op_mode_not_chaged_toast">AppOp 模式未更改</string>
   <string name="change_perms_warning" comment="'system' or 'framework'">禁用 %1$s 的权限十分危险。可能使您的设备变砖。\n是否继续？</string>
@@ -300,7 +320,7 @@
   <string name="prot_lvl_extra" searchStr="true">%s, 额外</string>
   <string name="prot_lvl_development2" searchStr="true">%s，开发</string>
   <string name="prot_lvl_privileged2" searchStr="true">%s，特权</string>
-  <string name="prot_lvl_fixed2" searchStr="true">%s，修复</string>
+  <string name="prot_lvl_fixed2" searchStr="true">%s, 固定</string>
   <string name="app_op_mode_allow">允许</string>
   <string name="app_op_mode_ignore">忽略</string>
   <string name="app_op_mode_deny">拒绝</string>
@@ -313,6 +333,7 @@
   <!-- CHAR LIMIT: 15 -->
   <string name="protection_level">保护级别：</string>
   <!-- CHAR LIMIT: 15 -->
+  <string name="depends_on">依赖于：</string>
   <!-- FilterSettingsActivity -->
   <!-- CHAR LIMIT: 15 -->
   <string name="filter_settings">筛选设置</string>
@@ -389,6 +410,7 @@
   <!-- CHAR LIMIT: 15 -->
   <string name="about_dump_title">转储信息</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="about_dump_summary">导出缺少的权限图标、名称和描述</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="update">更新</string>
   <!-- CHAR LIMIT: 20 -->
@@ -434,9 +456,12 @@
   <string name="channel_crash_report">崩溃报告</string>
   <string name="channel_logcat_collection">日志收集</string>
   <string name="channel_adb_connection">ADB 连接</string>
+  <string name="channel_daemon_connection">守护进程连接</string>
   <!-- Notification permission -->
   <!-- CHAR LIMIT: 15 -->
+  <string name="notif_perm_dialog_title">通知权限</string>
   <!-- CHAR LIMIT: 15 -->
+  <string name="notif_perm_missing_toast">未授予通知权限</string>
   <!-- HelpActivity -->
   <!-- CHAR LIMIT: 15 -->
   <string name="open_browser_menu_item">在浏览器中打开</string>
