@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
@@ -71,13 +72,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity {
+public class MainActivity extends OnBackPressedCallback {
 
   private static final String TAG = "MainActivity";
 
   public final MainActivityM mA;
 
   public MainActivity(MainActivityM activity) {
+    super(true);
     mA = activity;
 
     mPkgCountNotifier =
@@ -199,6 +201,8 @@ public class MainActivity {
     if (ApiUtils.hasNotifPerm()) {
       BgRunner.execute(() -> AppUpdate.check(true));
     }
+
+    mA.getOnBackPressedDispatcher().addCallback(mA, this);
   }
 
   public void onNewIntent(Intent intent) {
@@ -246,17 +250,17 @@ public class MainActivity {
     return mActFlavor.onOptionsItemSelected(item) || mDrawerToggle.onOptionsItemSelected(item);
   }
 
-  public boolean onBackPressed() {
+  public void handleOnBackPressed() {
     mCheckBoxFocus.endFocus();
 
     if (mB != null && mB.getRoot().isDrawerOpen(GravityCompat.START)) {
       mB.getRoot().closeDrawer(GravityCompat.START, true);
-      return true;
+      return;
     }
 
     if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
       collapseSearchView();
-      return true;
+      return;
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -264,13 +268,7 @@ public class MainActivity {
       mActFlavor.onBackPressed();
     }
 
-    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
-      mA.finishAfterTransition();
-    } else {
-      return false;
-    }
-
-    return true;
+    mA.finishAfterTransition();
   }
 
   private boolean mExited = false;

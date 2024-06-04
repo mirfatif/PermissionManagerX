@@ -24,12 +24,15 @@ fun createTasksForHiddenAPIs() {
       val task = tasks.named("compile" + variant + "JavaWithJavac").get()
       task.dependsOn(":hidden_apis:sync" + variant + "LibJars")
 
+      var hiddenAPIsJarFile = variant.replaceFirstChar { it.lowercaseChar() }
+      hiddenAPIsJarFile += "/sync" + variant + "LibJars" + "/classes.jar"
+
       task.doFirst {
         this as JavaCompile
         // dependencies.compileOnly() appends the jar but we need to the
         // hidden APIs jar so that to override the Android SDK classes.
         val cp = project.objects.fileCollection()
-        cp.from(File(dir, variant.replaceFirstChar { it.lowercaseChar() } + "/classes.jar"))
+        cp.from(File(dir, hiddenAPIsJarFile))
         cp.from(classpath)
         classpath = cp
       }

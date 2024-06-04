@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
@@ -53,7 +54,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class PackageActivity implements PermAdapterCallback {
+public class PackageActivity extends OnBackPressedCallback implements PermAdapterCallback {
 
   private static final String TAG = "PackageActivity";
 
@@ -73,6 +74,7 @@ public class PackageActivity implements PermAdapterCallback {
   private boolean mFilterPerms = true;
 
   public PackageActivity(PackageActivityM activity) {
+    super(true);
     mA = activity;
     mRefreshStopper =
         new LiveSchedTask(
@@ -127,6 +129,8 @@ public class PackageActivity implements PermAdapterCallback {
     mPermListSortTask.execute();
 
     mB.refreshLayout.setOnRefreshListener(() -> BgRunner.execute(this::updatePkg));
+
+    mA.getOnBackPressedDispatcher().addCallback(mA, this);
   }
 
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -173,7 +177,7 @@ public class PackageActivity implements PermAdapterCallback {
   }
 
   public boolean onPrepareOptionsMenu(Menu menu) {
-    boolean havePerms = mSortedPermList.size() > 0;
+    boolean havePerms = !mSortedPermList.isEmpty();
     menu.findItem(R.id.action_search).setVisible(havePerms);
     menu.findItem(R.id.action_reset_app_ops).setVisible(havePerms);
     menu.findItem(R.id.action_set_all_references).setVisible(havePerms);
@@ -222,12 +226,12 @@ public class PackageActivity implements PermAdapterCallback {
     mActFlavor.onStop();
   }
 
-  public boolean onBackPressed() {
+  public void handleOnBackPressed() {
     if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
       collapseSearchView();
-      return true;
+    } else {
+      mA.finishAfterTransition();
     }
-    return false;
   }
 
   private static final String TAG_GRANT_ROOT_OR_ADB = CLASS + ".GRANT_ROOT_OR_ADB";

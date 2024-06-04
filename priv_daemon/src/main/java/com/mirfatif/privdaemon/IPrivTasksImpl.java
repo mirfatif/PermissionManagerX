@@ -29,10 +29,11 @@ public class IPrivTasksImpl extends IPrivTasks.Stub {
   private final IPrivTasksFlavorImpl mIPrivTasksFlavor;
   private final AppPrivTasks mAppPrivTasks;
 
+  private final AppPrivTasks.AppPrivTasksCallback mCallback = new AppPrivTasksCallbackImpl();
+
   IPrivTasksImpl() {
-    AppPrivTasks.AppPrivTasksCallback cb = new AppPrivTasksCallbackImpl();
-    mAppPrivTasks = new AppPrivTasks(cb, true);
-    mIPrivTasksFlavor = new IPrivTasksFlavorImpl(cb);
+    mAppPrivTasks = new AppPrivTasks(mCallback, true);
+    mIPrivTasksFlavor = new IPrivTasksFlavorImpl(mCallback);
   }
 
   public void sendStdErr(int port, String jniLibPath) throws RemoteException {
@@ -96,10 +97,11 @@ public class IPrivTasksImpl extends IPrivTasks.Stub {
 
     HiddenAPIs.INS.addPowerSaveWhitelistApp(pkgName);
 
-    HiddenAPIs.INS.grantRuntimePermission(pkgName, Constants.PERM_GET_APP_OPS_STATS, 0);
+    HiddenAPIs.INS.grantRuntimePermission(pkgName, Constants.PERM_GET_APP_OPS_STATS, 0, mCallback);
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-      HiddenAPIs.INS.grantRuntimePermission(pkgName, Manifest.permission.POST_NOTIFICATIONS, 0);
+      HiddenAPIs.INS.grantRuntimePermission(
+          pkgName, Manifest.permission.POST_NOTIFICATIONS, 0, mCallback);
     }
   }
 
@@ -126,15 +128,15 @@ public class IPrivTasksImpl extends IPrivTasks.Stub {
   }
 
   public int getPermFlags(String permName, String pkgName, int userId) throws RemoteException {
-    return HiddenAPIs.INS.getPermFlags(permName, pkgName, userId);
+    return HiddenAPIs.INS.getPermFlags(permName, pkgName, userId, mCallback);
   }
 
   public void setPermState(boolean grant, String pkgName, String permName, int userId)
       throws RemoteException {
     if (grant) {
-      HiddenAPIs.INS.grantRuntimePermission(pkgName, permName, userId);
+      HiddenAPIs.INS.grantRuntimePermission(pkgName, permName, userId, mCallback);
     } else {
-      HiddenAPIs.INS.revokeRuntimePermission(pkgName, permName, userId);
+      HiddenAPIs.INS.revokeRuntimePermission(pkgName, permName, userId, mCallback);
     }
   }
 

@@ -3,6 +3,7 @@ package com.mirfatif.permissionmanagerx.about;
 import static com.mirfatif.permissionmanagerx.util.ApiUtils.getString;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Debug;
@@ -117,7 +118,13 @@ public class AboutActivity {
 
       mB.dumpCont.setVisibility(View.VISIBLE);
       mB.dumpV.setOnClickListener(
-          v -> mDumpLauncher.launch("PMX_Dump_" + Util.getCurrDateTime(false, true) + ".txt"));
+          v -> {
+            try {
+              mDumpLauncher.launch("PMX_Dump_" + Util.getCurrDateTime(false, true) + ".txt");
+            } catch (ActivityNotFoundException ignored) {
+              UiUtils.showToast(R.string.no_file_picker_installed);
+            }
+          });
 
       PackageParser.INS
           .getListInProg()
@@ -154,7 +161,11 @@ public class AboutActivity {
 
     if (notifPermGranted) {
       UiUtils.showToast(R.string.select_log_file);
-      mLoggingLauncher.launch("PermissionManagerX_" + Util.getCurrDateTime(false, true) + ".log");
+      try {
+        mLoggingLauncher.launch("PermissionManagerX_" + Util.getCurrDateTime(false, true) + ".log");
+      } catch (ActivityNotFoundException ignored) {
+        UiUtils.showToast(R.string.no_file_picker_installed);
+      }
     }
   }
 

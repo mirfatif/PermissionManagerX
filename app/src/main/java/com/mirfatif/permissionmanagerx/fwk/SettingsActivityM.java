@@ -15,12 +15,6 @@ public class SettingsActivityM extends BaseActivity
     mA.onCreated(savedInstanceState);
   }
 
-  public void onBackPressed() {
-    if (!mA.onBackPressed()) {
-      super.onBackPressed();
-    }
-  }
-
   protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     mA.onSaveInstanceState(outState);

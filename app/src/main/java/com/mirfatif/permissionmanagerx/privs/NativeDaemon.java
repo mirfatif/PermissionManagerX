@@ -16,6 +16,7 @@ import com.mirfatif.permissionmanagerx.util.StdErrLogServer;
 import com.mirfatif.permissionmanagerx.util.UiUtils;
 import com.mirfatif.privtasks.util.MyLog;
 import com.mirfatif.privtasks.util.Util;
+import io.github.muntashirakon.adb.AdbPairingRequiredException;
 import io.github.muntashirakon.adb.AdbStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -45,7 +46,7 @@ public enum NativeDaemon {
 
     String suffix = APPLICATION_ID.replace(APP_ID, "");
     suffix = suffix.replaceFirst("^\\.", "");
-    if (suffix.length() != 0) {
+    if (!suffix.isEmpty()) {
       suffix += "-";
     }
 
@@ -193,7 +194,10 @@ public enum NativeDaemon {
             err = true;
           }
 
-        } catch (AdbException | InterruptedException | IOException e) {
+        } catch (AdbException
+            | InterruptedException
+            | IOException
+            | AdbPairingRequiredException e) {
           exception = e;
         }
 

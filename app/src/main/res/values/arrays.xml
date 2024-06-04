@@ -207,6 +207,7 @@
     <item order="4">@string/locale_ar</item>
     <item order="5">@string/locale_el</item>
     <item order="6">@string/locale_cn</item>
+    <item order="7">@string/locale_tr</item>
   </string-array>
 
   <string-array name="locale_codes">
@@ -217,6 +218,7 @@
     <item order="4">ar</item>
     <item order="5">el</item>
     <item order="6">zh</item>
+    <item order="7">tr</item>
   </string-array>
 
   <array name="locale_contributor_name_arrays">
@@ -227,6 +229,7 @@
     <item order="4">@array/locale_contributor_names_ar</item>
     <item order="5">@array/locale_contributor_names_el</item>
     <item order="6">@array/locale_contributor_names_cn</item>
+    <item order="7">@array/locale_contributor_names_tr</item>
   </array>
 
   <array name="locale_contributor_link_arrays">
@@ -237,6 +240,7 @@
     <item order="4">@array/locale_contributor_links_ar</item>
     <item order="5">@array/locale_contributor_links_el</item>
     <item order="6">@array/locale_contributor_links_cn</item>
+    <item order="7">@array/locale_contributor_links_tr</item>
   </array>
 
   <string-array name="locale_contributor_names_ru">
@@ -279,6 +283,18 @@
 
   <string-array name="locale_contributor_links_cn">
     <item order="0">https://crowdin.com/profile/wushidia</item>
+  </string-array>
+
+  <string-array name="locale_contributor_names_tr">
+    <item order="0">TolDYuThad</item>
+    <item order="1">preZZente</item>
+    <item order="2">Erkn08</item>
+  </string-array>
+
+  <string-array name="locale_contributor_links_tr">
+    <item order="0">https://crowdin.com/profile/toldyuthad</item>
+    <item order="0">https://crowdin.com/profile/prezzente</item>
+    <item order="0">https://crowdin.com/profile/erkn08</item>
   </string-array>
 
   <string-array name="theme_colors">

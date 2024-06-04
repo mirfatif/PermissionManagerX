@@ -19,6 +19,7 @@
   <string name="cancel_button">取消</string>
   <!-- CHAR LIMIT: 10 -->
   <!-- CHAR LIMIT: 10 -->
+  <string name="dismiss_button">关闭</string>
   <string name="open_drawer">打开</string>
   <string name="close_drawer">关闭</string>
   <!-- CHAR LIMIT: 10 -->
@@ -89,9 +90,11 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="skip_uninstalled_packages">跳过已卸载的软件</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="swap_user_ids">交换用户 ID</string>
   <string name="replace_user_id_from_hint">替换</string>
   <string name="disable_pkg_warning" comment="'system' or 'framework'">禁用 %1$s 十分危险。可能使您的设备变砖。\n是否继续？</string>
   <string name="pkg_state_disabled2" searchStr="true">%s，已禁用</string>
+  <string name="unsupported_sdk_warning_title">不支持的 Android 版本</string>
   <string name="unsupported_sdk_warning_button">我了解</string>
   <!-- Crash Report -->
   <!-- CHAR LIMIT: 15 -->
@@ -101,16 +104,26 @@
   <!-- CHAR LIMIT: 10 -->
   <string name="send_report">发送报告</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="crash_log_file_not_exists_toast">崩溃日志文件不存在</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="crash_log_file_read_failed_toast">读取崩溃日志文件失败</string>
   <!-- CHAR LIMIT: 10 -->
+  <string name="submit_report_button">提交报告</string>
   <!-- CHAR LIMIT: 10 -->
+  <string name="submitting_report_button">提交中…</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="send_email_button">发送电子邮件</string>
+  <string name="send_crash_report_email_desc">* 如果提交不成功，您可以发送电子邮件。</string>
+  <string name="reading_crash_log_file">正在读取崩溃日志文件…</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="submit_crash_report_failed_toast">提交崩溃报告失败</string>
   <!-- CHAR LIMIT: 15 -->
+  <string name="delete_crash_report_file_title">删除文件</string>
   <!-- Progress -->
   <!-- CHAR LIMIT: 20 -->
+  <string name="prog_msg_checking_privs">正在检查权限…</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="prog_msg_stopping_daemon">正在停止守护进程...</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="prog_msg_connecting_to_daemon">正在连接守护进程…</string>
   <!-- CHAR LIMIT: 20 -->
@@ -125,7 +138,9 @@
   <string name="sorting_packages_list">正在排序应用列表…</string>
   <!-- CHAR LIMIT: 15 -->
   <!-- CHAR LIMIT: 15 -->
+  <string name="creating_app_ops_lists">正在准备 AppOps 数据…</string>
   <!-- AdvancedSettings Activity -->
+  <string name="daemon_dex_location_tmp">临时目录</string>
   <string name="daemon_dex_location_external">外部存储</string>
   <string name="daemon_uid_system">系统</string>
   <string name="daemon_uid_root">Root</string>
@@ -177,7 +192,9 @@
   <string name="ip_address_hint">IP 地址</string>
   <string name="socket_port_hint">端口</string>
   <!-- CHAR LIMIT: 10 -->
+  <string name="required_field_error">必填</string>
   <!-- CHAR LIMIT: 10 -->
+  <string name="invalid_field_error">无效</string>
   <!-- Feedback -->
   <!-- CHAR LIMIT: 20 -->
   <string name="love_using_app">喜欢权限管理 X？</string>
@@ -205,7 +222,9 @@
   <!-- CHAR LIMIT: 15 -->
   <string name="rating_options">评分选项</string>
   <!-- CHAR LIMIT: 15 -->
+  <string name="other_rating_options">其他评价选项</string>
   <!-- CHAR LIMIT: 15 -->
+  <string name="ignore_for_now">暂时忽略</string>
   <!-- Links -->
   <!-- DaemonHandler -->
   <!-- CHAR LIMIT: 20 -->
@@ -215,17 +234,24 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="priv_daemon_died_toast">特权守护进程丢失</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="priv_daemon_restarted_toast">特权守护进程已重启</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_not_running_toast">守护进程未运行</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="granting_permissions_failed_toast">授予权限失败</string>
   <!-- Daemon callback errors  -->
   <!-- CHAR LIMIT: 20 -->
   <string name="daemon_err_bad_rom_toast">ROM 错误</string>
   <!-- Daemon binder calls errors -->
   <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_set_exit_on_app_death_failed_toast">设置首选项失败</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_get_priv_status_failed_toast">获取权限状态失败</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_set_debug_failed_toast">守护进程日志记录失败</string>
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
-  <!-- CHAR LIMIT: 20 -->
-  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_get_app_ops_lists_failed_toast">获取 AppOps 数据失败</string>
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
@@ -248,6 +274,7 @@
   <!-- NativeDaemon -->
   <!-- CHAR LIMIT: 20 -->
   <string name="native_daemon_died_toast">Native 守护进程丢失</string>
+  <string name="native_daemon_restarted_toast">原生守护进程已重启</string>
   <!-- LogcatSvc -->
   <!-- CHAR LIMIT: 10 -->
   <string name="stop_button">停止</string>
@@ -262,6 +289,7 @@
   <string name="adb_conn_notif_text">正在连接…</string>
   <!-- DaemonRcvSvc -->
   <!-- CHAR LIMIT: 15 -->
+  <string name="daemon_connection_title">守护进程连接</string>
   <string name="daemon_connection_text">正在连接…</string>
   <!-- PackageActivity menu items -->
   <!-- CHAR LIMIT: 15 -->
@@ -274,6 +302,7 @@
   <string name="set_references">设置模板</string>
   <string name="set_references_confirmation">是否将当前所有权限状态设置为模板状态？</string>
   <!-- CHAR LIMIT: 15 -->
+  <string name="menu_item_show_all_perms">全部显示</string>
   <!-- MainActivity Dialogs -->
   <!-- CHAR LIMIT: 15 -->
   <string name="exclude_app_from_visible_list">从列表中隐藏应用</string>

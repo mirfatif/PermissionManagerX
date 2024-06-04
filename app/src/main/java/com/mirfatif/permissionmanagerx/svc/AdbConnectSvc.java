@@ -17,6 +17,7 @@ import com.mirfatif.permissionmanagerx.util.AppLifecycle;
 import com.mirfatif.permissionmanagerx.util.NotifUtils;
 import com.mirfatif.privtasks.util.MyLog;
 import com.mirfatif.privtasks.util.bg.BgRunner;
+import io.github.muntashirakon.adb.AdbPairingRequiredException;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -85,7 +86,7 @@ public class AdbConnectSvc {
           startDaemon();
         }
       }
-    } catch (AdbException | InterruptedException | IOException e) {
+    } catch (AdbException | InterruptedException | IOException | AdbPairingRequiredException e) {
       MyLog.e(TAG, null, e);
     }
 
@@ -96,8 +97,8 @@ public class AdbConnectSvc {
     int res = DaemonStarter.INS.startPrivDaemon(false, false);
 
     switch (res) {
-      case DaemonStarter.DaemonStartStatus.NO_PRIVS -> MyLog.e(
-          TAG, null, "Failed to get privileges");
+      case DaemonStarter.DaemonStartStatus.NO_PRIVS ->
+          MyLog.e(TAG, null, "Failed to get privileges");
       case DaemonStarter.DaemonStartStatus.FAILED -> MyLog.e(TAG, null, "Failed to start daemon");
       default -> MyLog.i(TAG, null, "Daemon started");
     }

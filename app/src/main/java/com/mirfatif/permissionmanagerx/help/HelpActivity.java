@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import androidx.activity.OnBackPressedCallback;
 import androidx.webkit.WebViewClientCompat;
 import androidx.webkit.WebViewCompat;
 import com.mirfatif.permissionmanagerx.R;
@@ -26,11 +27,12 @@ import com.mirfatif.permissionmanagerx.util.bg.LiveTasksQueue;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HelpActivity {
+public class HelpActivity extends OnBackPressedCallback {
 
   private final HelpActivityM mA;
 
   public HelpActivity(HelpActivityM activity) {
+    super(true);
     mA = activity;
   }
 
@@ -79,14 +81,16 @@ public class HelpActivity {
           mB.webV.clearCache(true);
           mB.webV.reload();
         });
+
+    mA.getOnBackPressedDispatcher().addCallback(mA, this);
   }
 
-  public boolean onBackPressed() {
+  public void handleOnBackPressed() {
     if (mB != null && mB.webV.canGoBack()) {
       mB.webV.goBack();
-      return true;
+    } else {
+      mA.finishAfterTransition();
     }
-    return false;
   }
 
   private void enableJs() {

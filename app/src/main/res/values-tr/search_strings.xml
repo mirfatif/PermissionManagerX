@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="pkg_state_system">Sistem</string>
+  <string name="pkg_state_user">Kullanıcı</string>
+  <string name="prot_lvl_unknown">Bilinmeyen</string>
+</resources>

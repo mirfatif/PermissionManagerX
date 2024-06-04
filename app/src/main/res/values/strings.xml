@@ -139,7 +139,7 @@
   <!-- CHAR LIMIT: 10 -->
   <string name="send_report">Send Report</string>
   <!-- CHAR LIMIT: 20 -->
-  <string name="crash_log_file_not_exists_toast">Crash log file not exists</string>
+  <string name="crash_log_file_not_exists_toast">Crash logs do not exist</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="crash_log_file_read_failed_toast">Failed to read crash log file</string>
   <!-- CHAR LIMIT: 10 -->
@@ -522,6 +522,7 @@
   <string name="locale_ar">Arabic</string>
   <string name="locale_el">Greek</string>
   <string name="locale_cn">Chinese</string>
+  <string name="locale_tr">Turkish</string>
 
   <string name="theme_color_green">Green</string>
   <string name="theme_color_blue">Blue</string>

@@ -43,12 +43,6 @@ public class PackageActivityM extends BaseActivity {
     super.onStop();
   }
 
-  public void onBackPressed() {
-    if (!mA.onBackPressed()) {
-      super.onBackPressed();
-    }
-  }
-
   public AlertDialog createDialog(String tag, AlertDialogFragment dialogFragment) {
     AlertDialog d = mA.createDialog(tag);
     return d != null ? d : super.createDialog(tag, dialogFragment);

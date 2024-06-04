@@ -34,12 +34,6 @@ public class MainActivityM extends BaseActivity {
     return mA.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
   }
 
-  public void onBackPressed() {
-    if (!mA.onBackPressed()) {
-      super.onBackPressed();
-    }
-  }
-
   protected void onResume() {
     super.onResume();
     mA.onResume();

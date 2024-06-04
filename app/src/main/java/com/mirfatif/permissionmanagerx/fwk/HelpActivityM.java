@@ -14,12 +14,6 @@ public class HelpActivityM extends BaseActivity {
     mA.onCreated();
   }
 
-  public void onBackPressed() {
-    if (!mA.onBackPressed()) {
-      super.onBackPressed();
-    }
-  }
-
   public boolean onCreateOptionsMenu(Menu menu) {
     return mA.onCreateOptionsMenu(menu);
   }

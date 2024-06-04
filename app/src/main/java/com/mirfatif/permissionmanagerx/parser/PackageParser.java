@@ -568,7 +568,7 @@ public enum PackageParser {
           }
         }
 
-        if (ops1.size() != 0) {
+        if (!ops1.isEmpty()) {
           int[] ops2 = new int[ops1.size()];
           for (int i = 0; i < ops1.size(); i++) {
             ops2[i] = ops1.get(i);
@@ -1070,6 +1070,9 @@ public enum PackageParser {
 
   private void updateSearchLists(Package pkg, boolean removeOnly) {
     String queryText = MySettings.INS.getQueryText();
+    if (queryText == null) {
+      return;
+    }
     if (!MySettings.INS.isDeepSearching()) {
       if (pkg.contains(queryText)) {
         if (!removeOnly) {

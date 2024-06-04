@@ -4,6 +4,7 @@ import static com.mirfatif.permissionmanagerx.util.ApiUtils.getString;
 
 import android.content.Intent;
 import android.os.Bundle;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -12,11 +13,12 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.fwk.SettingsActivityM;
 import java.util.Objects;
 
-public class SettingsActivity {
+public class SettingsActivity extends OnBackPressedCallback {
 
   public final SettingsActivityM mA;
 
   public SettingsActivity(SettingsActivityM activity) {
+    super(true);
     mA = activity;
   }
 
@@ -40,7 +42,13 @@ public class SettingsActivity {
       title = savedInstanceState.getString(SAVED_STATE_TITLE);
     }
 
-    mCloseOnBackPressed = SettingsActivityFlavor.shouldCloseOnBackPressed(mA.getIntent());
+    boolean closeOnBackPressed = SettingsActivityFlavor.shouldCloseOnBackPressed(mA.getIntent());
+
+    if (closeOnBackPressed) {
+      mA.getOnBackPressedDispatcher().addCallback(mA, this);
+    } else {
+      super.setEnabled(false);
+    }
 
     ActionBar actionBar = mA.getSupportActionBar();
     if (actionBar != null) {
@@ -55,15 +63,8 @@ public class SettingsActivity {
     mActFlavor.onCreate();
   }
 
-  private boolean mCloseOnBackPressed = false;
-
-  public boolean onBackPressed() {
-    if (mCloseOnBackPressed) {
-      mA.finishAfterTransition();
-      return true;
-    } else {
-      return false;
-    }
+  public void handleOnBackPressed() {
+    mA.finishAfterTransition();
   }
 
   public void onSaveInstanceState(Bundle outState) {

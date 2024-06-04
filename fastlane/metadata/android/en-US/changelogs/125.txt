@@ -1,0 +1,4 @@
+- Target Android 14
+- Make Perm Watcher more aggressive
+- Add Turkish translation
+- Bug fixes and improvements

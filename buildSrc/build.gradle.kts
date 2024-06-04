@@ -1,14 +1,9 @@
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+
 plugins {
   `kotlin-dsl`
-  id("com.diffplug.spotless").version("6.21.0").apply(true)
-}
-
-// This block goes under pluginManagement {} in settings.gradle.kts
-repositories {
-  maven { url = uri("/tmp/maven-repo/") }
-  mavenCentral()
-  google()
-  gradlePluginPortal()
+  id("com.diffplug.spotless").version("6.25.0").apply(true)
+  id("com.github.ben-manes.versions").version("0.51.0").apply(true)
 }
 
 // This is a replacement of plugins {} block in root build.gradle.kts
@@ -38,3 +33,11 @@ spotless {
 }
 
 tasks.named("jar").get().dependsOn("spotlessApply")
+
+fun isStableVersion(version: String): Boolean {
+  return ".*-(rc|beta|alpha)(|-)[0-9]*$".toRegex().matches(version.lowercase()).not()
+}
+
+tasks.withType<DependencyUpdatesTask> {
+  rejectVersionIf { !isStableVersion(candidate.version) && isStableVersion(currentVersion) }
+}

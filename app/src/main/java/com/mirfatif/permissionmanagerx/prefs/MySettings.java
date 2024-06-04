@@ -8,6 +8,7 @@ import android.os.Build;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import androidx.preference.PreferenceManager;
+import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.util.ApiUtils;
@@ -191,30 +192,35 @@ public enum MySettings {
     }
 
     long lastTS = getLongPref(R.string.pref_main_ask_for_feedback_ts_enc_key);
+
     if (lastTS == 0) {
       setAskForFeedbackTs(false);
+      savePref(R.string.pref_main_feedback_app_version_enc_key, BuildConfig.VERSION_CODE);
       return false;
     }
 
-    if (lastTS - System.currentTimeMillis() > DateUtils.WEEK_IN_MILLIS * 8) {
-      setAskForFeedbackTs(true);
+    if (getIntegerPref(R.string.pref_main_feedback_app_version_enc_key, 0)
+        < BuildConfig.VERSION_CODE) {
+      setAskForFeedbackTs(false);
+      savePref(R.string.pref_main_feedback_app_version_enc_key, BuildConfig.VERSION_CODE);
+      return false;
     }
 
-    boolean ask =
-        getIntPref(
-                R.string.pref_main_app_launch_count_enc_key,
-                R.integer.pref_main_app_launch_count_enc_default)
-            >= 10;
-    ask = ask && (System.currentTimeMillis() - lastTS) >= TimeUnit.DAYS.toMillis(10);
+    if (getIntPref(
+            R.string.pref_main_app_launch_count_enc_key,
+            R.integer.pref_main_app_launch_count_enc_default)
+        < 10) {
+      return false;
+    }
 
-    return ask;
+    return System.currentTimeMillis() >= lastTS;
   }
 
   public void setAskForFeedbackTs(boolean longTs) {
     savePref(R.string.pref_main_app_launch_count_enc_key, 0);
     savePref(
         R.string.pref_main_ask_for_feedback_ts_enc_key,
-        System.currentTimeMillis() + (longTs ? DateUtils.WEEK_IN_MILLIS * 8 : 0));
+        System.currentTimeMillis() + (DateUtils.WEEK_IN_MILLIS * (longTs ? 24 : 2)));
   }
 
   public boolean shouldGrantAppPrivs() {
@@ -431,7 +437,7 @@ public enum MySettings {
     savePref(R.string.pref_tmp_fix_perm_db_enc_key, fixPermDb);
   }
 
-  private String mQueryText;
+  private volatile String mQueryText;
 
   public String getQueryText() {
     return mQueryText;

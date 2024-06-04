@@ -359,8 +359,9 @@ public enum DaemonHandler {
   public void showError(int error) {
     switch (error) {
       case PrivTasksError.OP_NUM_INCONSISTENCY,
-          PrivTasksError.OP_MODE_INCONSISTENCY,
-          PrivTasksError.APP_OPS_IMPL -> UiUtils.showToast(R.string.daemon_err_bad_rom_toast);
+              PrivTasksError.OP_MODE_INCONSISTENCY,
+              PrivTasksError.APP_OPS_IMPL ->
+          UiUtils.showToast(R.string.daemon_err_bad_rom_toast);
       default -> MyLog.e(TAG, "", "Bad error code: " + error);
     }
   }

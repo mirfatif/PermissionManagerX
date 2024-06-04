@@ -10,6 +10,7 @@
   <string name="crowdin_comment_break_pref_keys_1" translatable="false">Crowdin comment break</string>
   <string name="pref_main_crash_report_ts_enc_key" translatable="false">pref_main_crash_report_ts_enc</string>
   <string name="pref_main_ask_for_feedback_ts_enc_key" translatable="false">pref_main_ask_for_feedback_ts_enc</string>
+  <string name="pref_main_feedback_app_version_enc_key" translatable="false">pref_main_feedback_app_version_enc</string>
   <string name="pref_main_warned_unsupported_sdk_enc_key" translatable="false">pref_main_warned_unsupported_sdk_enc</string>
 
   <!-- MainActivity Preferences corresponding to default values -->

@@ -36,6 +36,7 @@ import com.mirfatif.permissionmanagerx.util.UiUtils;
 import com.mirfatif.permissionmanagerx.util.bg.LiveTasksQueueTyped;
 import com.mirfatif.privtasks.util.MyLog;
 import com.mirfatif.privtasks.util.NonBlockingReader;
+import io.github.muntashirakon.adb.AdbPairingRequiredException;
 import io.github.muntashirakon.adb.AdbStream;
 import io.github.muntashirakon.adb.android.AdbMdns;
 import java.io.IOException;
@@ -311,7 +312,10 @@ public class AdbConnectDialog {
           } else {
             MyLog.e(TAG, "connToAdbAndRestartDaemon", "Adb connect for tcpip failed");
           }
-        } catch (AdbException | InterruptedException | IOException e) {
+        } catch (AdbException
+            | InterruptedException
+            | IOException
+            | AdbPairingRequiredException e) {
           MyLog.e(TAG, "connToAdbAndRestartDaemon", e);
         }
       }
