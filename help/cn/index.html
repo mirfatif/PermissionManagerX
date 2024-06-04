@@ -104,7 +104,7 @@
                     <li><a href="#faq13" class="no-underline">READ_MEDIA_AUDIO 权限是什么？</a></li>
                     <li><a href="#faq14" class="no-underline">WAKE_LOCK 权限是什么？</a></li>
                     <li><a href="#faq16" class="no-underline">如何修改 INTERNET 权限？</a></li>
-                    <li><a href="#faq40" class="no-underline">What are <i>Fixed</i> permissions?</a></li>
+                    <li><a href="#faq40" class="no-underline"><i>固定</i> 权限是什么？</a></li>
                     <li><a href="#faq17" class="no-underline">我能更改 <i>System-Fixed</i> 权限吗？</a></li>
                     <li><a href="#faq17" class="no-underline">如何更改 <i>签名</i>|<i>特许</i> 权限？</a></li>
                     <li><a href="#faq17" class="no-underline">如何更改框架应用的权限？</a></li>
@@ -263,7 +263,7 @@
                 </li>
                 <li>
                     <p>权限 <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">保护级别</a>:</p>
-                    <p><span class="code">:Normal</span> <span class="code">:Dangerous</span> <span class="code">:Signature</span> <span class="code">:Internal</span> <span class="code">:Development</span> <span class="code">:Privileged</span> <span class="code">:Fixed</span> <span class="code">:AppOps</span> <span class="code">:Unknown</span></p>
+                    <p><span class="code">:普通</span> <span class="code">:危险</span> <span class="code">:签名</span> <span class="code">:内部</span> <span class="code">:开发</span> <span class="code">:特权</span> <span class="code">:固定</span> <span class="code">:AppOps</span> <span class="code">:未知</span></p>
                 </li>
                 <li>
                     <p>每个UID应用：</p>
@@ -655,8 +655,9 @@
             <ul>
                 <li>Some AppOps are dependent on their corresponding manifest permissions. So they cannot be changed independently. For instance you may not be able to deny <span class="code">READ_CONTACTS</span> AppOp if <span class="code">android.permission.READ_CONTACTS</span> manifest permission is granted.</li>
                 <li>Some AppOps are only used by Android for compatibility (e.g. <span class="code">LEGACY_STORAGE</span>) and they don't actually control anything. 如果我们了解工作原理，就会发现授予/撤销这种权限是没有必要的。</li>
-                <li>如果应用版本过旧，则无法更改某些权限。</li>
+                <li>Some permissions cannot be changed if the app is running on or is targeting an older or newer Android version.</li>
                 <li>Some OEM ROMs behave weird when it comes to AppOps. 我们不知道您的 OEM 对AOSP代码做了什么修改。 这就是为什么Github 和 Play Store上是这样描述的： <i>"应用程序在原生 Android 7-11上测试可用， 一些高度定制的ROM可能无法使用“</i></li>
+                <li>Many AppOps can have 2 modes: package mode and UID mode. It's possible that one can be changed while the other cannot be.</li>
             </ul>
             <p>事实上，如果我们个别挖掘每个应用和权限（这种情况不实际），就会有更多的解释。 As stated above, PMX doesn't change other apps' permissions on its own. So even if for some unknown reason Android doesn't change a permission, or reverts it back immediately, there's nothing we can do to force it because these are the limitations at Android end. 相反，我应该说这是Android系统的工作方式。</p>
             <p>Related:</p>
@@ -687,7 +688,7 @@
 
             <p id="faq5" class="high-bottom"><b>我应该在高级设置中选择哪个特权守护进程 UID ？ 系统还是ADB？</b></p>
             <p>只有当你正在使用 root 权限时它才很重要， 或者您设备上的 ADBD 正在以 root 运行(最终用户设备的情况不是如此)。</p>
-            <p>Preferably use <b>System</b> (UID <span class="code">1000</span>) as it allows more privileges than <b>ADB</b> (UID <span class="code">2000</span>). 例如， 更改 <i>"System-Fixed"</i> 权限只有在系统运行时才可用。</p>
+            <p>Preferably use <b>System</b> (UID <span class="code">1000</span>) as it allows more privileges than <b>ADB</b> (UID <span class="code">2000</span>). 例如， 运行在系统级别才能更改 <i>系统固定"</i> 权限。</p>
 
             <hr class="dim" />
 
@@ -740,19 +741,19 @@
             <hr class="dim" />
 
             <p id="faq16" class="high-bottom"><b>如何修改 INTERNET 权限？</b></p>
-            <p>Android doesn't allow changing all permissions, like those with the <b>Normal</b> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a> (e.g. <span class="code">INTERNET</span>) or those with <b>Fixed</b> flag or <b>Signature</b> protection level (usually System or Framework apps). 相关: <a href="#perms_types">清单权限和 AppOps</a>。</p>
+            <p>Android 并未允许更改所有权限，<b>普通</b><a href="https://developer.android.com/reference/android/R.attr#protectionLevel">保护级别</a>（例如<span class="code">互联网</span>）可以随意修改，而<b>固定</b>或<b>签名</b>保护级别（通常是系统或框架应用）则不能。 相关: <a href="#perms_types">清单权限和 AppOps</a>。</p>
 
             <hr class="dim" />
 
-            <p id="faq40" class="high-bottom"><b>What are <i>Fixed</i> permissions?</b></p>
-            <p><b>System-fixed</b> permissions are granted to the preinstalled apps by the OEMs or ROM developers. They are not meant to be changed. But if your device is rooted, PMX can change system-fixed permissions.</p>
-            <p><b>Policy-fixed</b> permissions are granted (or denied) by the IT admins on managed devices. They cannot be changed.</p>
-            <p><b>User-fixed</b> permissions are fixed by the user. If a user denies a permission a few times when the app requests for it, the operating system marks the permission as user-fixed and shows no more prompts to the user to grant the permission if the app asks for the same permission again. This kind of fixed permissions can be changed easily whenever the user wants.</p>
+            <p id="faq40" class="high-bottom"><b><i>固定</i> 权限是什么？</b></p>
+            <p><b>系统固定</b> 权限由 OEM 厂商或 ROM 开发者授予给预装应用程序。 因此不应该被更改。 不过如果您的设备已 root，本应用可以更改这种权限。</p>
+            <p><b>策略固定</b> 权限是由 IT 管理员在受管理的设备上授予或拒绝。 不能更改。</p>
+            <p><b>用户固定</b> 的权限由用户所固定。 如果用户多次拒绝了一个应用请求的某个权限，系统会将该权限标记为用户固定，应用再次请求时不会询问用户是否授予该权限。 用户可以随意更改这种固定的权限。</p>
 
             <hr class="dim" />
 
-            <p id="faq17" class="high-bottom"><b>我如何更改 <i>System-Fixed</i> 权限， <i>签名</i>|<i>特权</i> 权限，或框架应用的权限？</b></p>
-            <p>如果您的设备已root， 在付费版本中，您可以"<b>在 <b>高级设置</b> 中允许修改关键应用</b>"，用 <i>System-Fixed</i> 标志更改权限， 保护级别 <i>签名</i>|<i>特权</i>或框架应用的权限。 但不建议同时修改系统和框架应用， 否则可能使你的设备变砖。</p>
+            <p id="faq17" class="high-bottom"><b>怎样才能更改 <i>系统固定</i>权限，<i>签名</i>|<i>特权</i> 权限，或者框架应用的权限？</b></p>
+            <p>如果您的设备已 root，在付费版本中，您可以"<b>在 <b>高级设置</b> 中允许修改有 <i>系统固定</i> 标记、保护级别 <i>签名</i>|<i>特权</i>或框架应用的权限。 但不建议同时修改系统和框架应用， 否则可能使你的设备变砖。</p>
 
             <hr class="dim" />
 
@@ -765,11 +766,13 @@
             <p>可以， 此功能于 <a href="https://developer.android.com/about/versions/11/privacy/permissions#auto-reset">Android 11</a>可用。 It's also labeled as "Pause app activity if unused" on some devices.</p>
             <img class="small" src="../en/img/remove_unused_perms.webp" />
             <p>To change this option from PMX:</p>
-            <ul>
+            <ol>
                 <li>Go to <i>Exclusion Filters</i> -> <i>Extra AppOps list</i> and check <span class="code">AUTO_REVOKE_PERMISSIONS_IF_UNUSED</span>.</li>
                 <li>Back on the main screen, type <span class="code">AUTO_REVOKE_PERMISSIONS_IF_UNUSED</span> in the top search bar. Make sure that deep search is enabled in search settings.</li>
                 <li>将您想要使用的应用设置为 <i>允许</i> 或 <i>忽略</i>。</li>
-            </ul>
+            </ol>
+
+            <p>You can also use <a href="#perm_view">Permission View</a> or <a href="#batch-ops">Batch Operations</a> in place of step 2 and 3.</p>
 
             <hr class="dim" />
 
@@ -821,7 +824,7 @@
             <p id="faq24" class="high-bottom"><b>权限管理 X 和 XPrivacyLua 相比如何， 可以相互替代吗？</b></p>
             <p>权限管理 X 不是为了替换XPL，而是为了补充XPrivacyLua等项目的功能， 它们的设计目标不同。</p>
             <p>XPrivacyLua通过使用Xposed劫持内部API，将一些Android系统库替换成修改过的库，来修改Android的标准功能。 因此，我们得到了额外的功能，如向应用程序提供虚假数据，并得到与权限有关的事件的通知，而这是我们无法通过任何其他正常手段知道的。</p>
-            <p>另一方面，权限管理 X 并不是以修改系统框架为目的， 它可以方便地访问某些正常应用无法使用的特权API。 它不会以任何方式修改Android系统的标准功能。 权限管理 X 执行的大多数操作也可以从命令行执行，但少数操作类似于更改System-Fixed权限。</p>
+            <p>另一方面，权限管理 X 并不是以修改系统框架为目的， 它可以方便地访问某些正常应用无法使用的特权API。 它不会以任何方式修改Android系统的标准功能。 权限管理 X 执行的大多数任务也可从命令行完成，少数的类似更改 系统固定 权限的操作除外。</p>
             <p>Root和Xposed是使用XPrivacyLua的两项必须要求。 权限管理X 不需要两者兼有。 这两样东西对许多设备来说都是不可用的，或者由于所涉及的技术困难、保修失效、SafetyNet失效和其他问题，许多用户不考虑将其作为一种选择。</p>
             <p>这里有相关 <a href="https://github.com/mirfatif/PermissionManagerX/issues/9">问题</a>。</p>
 

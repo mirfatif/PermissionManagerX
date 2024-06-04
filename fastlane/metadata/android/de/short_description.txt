@@ -1,1 +1,1 @@
-eXtended Permission Manager - eine kleine App zur App-Berechtigungs-Verwaltung
+eXtended Permission Manager - eine App zum Verwalten von Berechtigungen u.v.m
