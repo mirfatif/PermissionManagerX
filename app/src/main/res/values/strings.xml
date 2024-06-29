@@ -435,6 +435,8 @@
   <string name="install">Install</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="wrun_not_installed">WhatsRunning not installed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="opening_app_info_failed_toast">Android failed to open app info</string>
 
   <!-- PackageActivity -->
   <string name="crowdin_comment_break_strings_19" translatable="false">Crowdin comment break</string>

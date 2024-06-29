@@ -92,7 +92,10 @@ public class LogcatSvc {
 
     mTimer.cancel();
 
-    mLogWriter.close();
+    var logWriter = mLogWriter;
+    if (logWriter != null) {
+      logWriter.close();
+    }
 
     MySettings.INS.setDebugLog(false);
   }

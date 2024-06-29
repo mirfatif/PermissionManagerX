@@ -174,9 +174,13 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
     }
     int pkgUserId = UserUtils.getUserId(mPkg.getUid());
     if (UserUtils.getUserId() == pkgUserId) {
-      startActivity(
-          new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-              .setData(Uri.parse("package:" + mPkg.getName())));
+      try {
+        startActivity(
+            new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                .setData(Uri.parse("package:" + mPkg.getName())));
+      } catch (ActivityNotFoundException ignored) {
+        UiUtils.showToast(R.string.opening_app_info_failed_toast);
+      }
     } else if (DaemonHandler.INS.isDaemonAlive()) {
       BgRunner.execute(() -> DaemonIface.INS.openAppInfo(mPkg.getName(), pkgUserId));
     } else {
