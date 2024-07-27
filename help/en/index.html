@@ -87,6 +87,8 @@
                     <li><a href="#faq1" class="no-underline">Why PMX requires root or ADB access?</a></li>
                     <li><a href="#faq33" class="no-underline">My device isn't rooted. How can I use PMX?</a></li>
                     <li><a href="#faq4" class="no-underline">What are hidden APIs?</a></li>
+                    <li><a href="#faq42" class="no-underline">Why does PMX not run or work properly on the latest Android?</a></li>
+                    <li><a href="#faq43" class="no-underline">Why does PMX not work properly on OEM operating systems or custom ROMs?</a></li>
                     <li><a href="#faq2" class="no-underline">How does PMX change other apps permissions?</a></li>
                     <li><a href="#faq34" class="no-underline">Do the permissions remain changed after ADB is turned off, or root is denied, or PMX is uninstalled?</a></li>
                     <li><a href="#faq15" class="no-underline">Why can't I change XYZ permission?</a></li>
@@ -421,6 +423,7 @@
             </ul>
             <p>However some OEMs add extra settings to control ADB's privileges. For instance you need to uncheck "<i>Disable Permission Monitoring</i>" on Oppo phones and "<i>Allow granting permissions</i>" in Security Settings on Xiaomi phones. See <a href="https://stackoverflow.com/q/52079343/9165920">this question</a> for more details.</p>
             <p>The following instructions apply to near-AOSP ROMs. Customized ROMs might have different or missing settings.</p>
+            <p>See <a href="#faq43">Why does PMX not work properly on OEM operating systems or custom ROMs?</a></p>
 
             <hr class="dim">
 
@@ -623,6 +626,21 @@
 
             <hr class="dim" />
 
+            <p id="faq42" class="high-bottom"><b>Why does PMX not run or work properly on the latest Android?</b></p>
+            <p>PMX relies on Android's hidden APIs or non-SDK interfaces (see <a href="#faq4">What are hidden APIs?</a>) which are not documented (on <a href="https://developer.android.com/">Android Developers</a>) unlike standard APIs. So with every new Android release, we have to go through the Android source code to find out which APIs have broken (changed or removed).</p>
+            <p>Also, it takes time to fix the broken APIs; sometimes weeks, sometime months. And it's not guaranteed that we'll always be able to fix the broken APIs. Sometimes Google on purpose makes it difficult or impossible for us to keep using the hidden APIs.</p>
+            <p>Therefore it's not possible for us to make the PMX immediately work on every new Android release (particularly in beta phase) as long as the final AOSP source code is not publicly released (on <a href="https://cs.android.com/">Code Search</a> or <a href="https://android.googlesource.com/">Git Repository</a>).</p>
+            <p>PMX's final supported Android version is stated in app description on GitHub and Play Store. When you run the app on an unsupported version for the first time, it shows a warning like this:</p>
+            <img class="small" src="../en/img/unsupported_android_version_warning.webp" />
+
+            <hr class="dim" />
+
+            <p id="faq43" class="high-bottom"><b>Why does PMX not work properly on OEM operating systems or custom ROMs?</b></p>
+            <p>PMX relies on Android's hidden APIs or non-SDK interfaces (see <a href="#faq4">What are hidden APIs?</a>) which are not documented (on <a href="https://developer.android.com/">Android Developers</a>) unlike standard APIs. So we need access to the source code of your ROM to know exactly how the hidden APIs work.</p>
+            <p>Well, AOSP (which is developed by Google) is open-source. But if your OEM or ROM developer makes some changes to AOSP for the customization purpose, we've no way to know exactly what changes they have made to the stock AOSP code. We're quite helpless here. And this fact is stated in app description on GitHub and Play Store. Sorry.</p>
+
+            <hr class="dim" />
+
             <p id="faq2" class="high-bottom"><b>How does PMX change other apps permissions?</b></p>
             <p>PMX itself cannot and does not grant or revoke other apps' permissions. In fact no third party app is privileged to do that. It's the Android OS which controls apps' permissions. PMX just sends a request to the Android framework to change a permission's state. Now it's entirely up to Android how much it honors our request. Not all permissions are changeable. And if you are not able to change a permission's state using PMX, you won't be able to change it in any other way either.</p>
 
@@ -656,7 +674,7 @@
                 <li>Some AppOps are dependent on their corresponding manifest permissions. So they cannot be changed independently. For instance you may not be able to deny <span class="code">READ_CONTACTS</span> AppOp if <span class="code">android.permission.READ_CONTACTS</span> manifest permission is granted.</li>
                 <li>Some AppOps are only used by Android for compatibility (e.g. <span class="code">LEGACY_STORAGE</span>) and they don't actually control anything. If we explore their underlying working it's revealed that granting / revoking such permissions doesn't make sense.</li>
                 <li>Some permissions cannot be changed if the app is running on or is targeting an older or newer Android version.</li>
-                <li>Some OEM ROMs behave weird when it comes to AppOps. We do not know exactly what changes your OEM has made to the stock AOSP code. That's why the statement on Github and Play Store: <i>"The app is tested on stock Android 7-11. Some highly customized ROMs may behave unexpectedly."</i></li>
+                <li>Some OEM ROMs behave weird when it comes to AppOps. See <a href="#faq43">Why does PMX not work properly on OEM operating systems or custom ROMs?</a></i></li>
                 <li>Many AppOps can have 2 modes: package mode and UID mode. It's possible that one can be changed while the other cannot be.</li>
             </ul>
             <p>Actually there come many more explanations if we dig every app and permission individually (which doesn't sound practical). As stated above, PMX doesn't change other apps' permissions on its own. So even if for some unknown reason Android doesn't change a permission, or reverts it back immediately, there's nothing we can do to force it because these are the limitations at Android end. Rather, I should say this is how Android works.</p>
@@ -778,6 +796,7 @@
 
             <p id="faq31" class="high-bottom"><b>Why do I get a lot of <i>Bad ROM</i> popups?</b></p>
             <p>OEMs make huge changes to stock AOSP code (which is developed by Google). So the AppOps framework on some custom / OEM ROMs returns unexpected results which PMX cannot understand. You can ignore these popups, but they mean that the functionality is somewhat limited.</p>
+            <p>See <a href="#faq43">Why does PMX not work properly on OEM operating systems or custom ROMs?</a></p>
 
             <hr class="dim" />
 
