@@ -65,6 +65,9 @@
                     <a href="#adb_help" class="no-underline"><b>Using PMX with ADB</b></a>
                     <ul>
                         <li><a href="#adb-limits" class="no-underline">Limitations of ADB</a></li>
+                        <ul>
+                            <li><a href="#fire-tv-adb-not-working" class="no-underline">Why does ADB not work on Amazon Fire TV?</a></li>
+                        </ul>
                         <li><a href="#adb-help-10" class="no-underline">Android 10 and below</a></li>
                         <li>
                             <a href="#adb_help_11" class="no-underline">Android 11 and above</a>
@@ -424,6 +427,9 @@
             <p>However some OEMs add extra settings to control ADB's privileges. For instance you need to uncheck "<i>Disable Permission Monitoring</i>" on Oppo phones and "<i>Allow granting permissions</i>" in Security Settings on Xiaomi phones. See <a href="https://stackoverflow.com/q/52079343/9165920">this question</a> for more details.</p>
             <p>The following instructions apply to near-AOSP ROMs. Customized ROMs might have different or missing settings.</p>
             <p>See <a href="#faq43">Why does PMX not work properly on OEM operating systems or custom ROMs?</a></p>
+
+            <p id="fire-tv-adb-not-working"><b>Why does ADB not work on Amazon Fire TV?</b></p>
+            <p>Amazon has blocked the ability for apps to establish a local ADB connection (see details <a href="https://www.aftvnews.com/amazon-blocks-long-running-fire-tv-capability-breaking-popular-apps-with-no-warning-and-giving-developers-the-runaround/">here</a>). So PMX won't work on these devices without root, unfortunately.</p>
 
             <hr class="dim">
 
