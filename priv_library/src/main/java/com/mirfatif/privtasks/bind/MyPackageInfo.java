@@ -29,7 +29,6 @@ public class MyPackageInfo implements Parcelable {
 
   public static final Creator<MyPackageInfo> CREATOR =
       new Creator<>() {
-
         public MyPackageInfo createFromParcel(Parcel in) {
           return new MyPackageInfo(in);
         }

@@ -14,8 +14,11 @@
   <!-- CHAR LIMIT: 10 -->
   <string name="no">No</string>
   <!-- CHAR LIMIT: 10 -->
+  <string name="ok_button">OK</string>
   <!-- CHAR LIMIT: 10 -->
+  <string name="cancel_button">Cancelar</string>
   <!-- CHAR LIMIT: 10 -->
+  <string name="go_button">Siga</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="open_drawer">Abrir</string>
   <string name="close_drawer">Cerrar</string>
@@ -119,6 +122,7 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="bad_path_toast">Ruta incorrecta</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="reset_perm_db_backup_failed_toast">La copia de seguridad ha fallado</string>
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
   <!-- Privileges -->
@@ -206,6 +210,7 @@
   <string name="native_daemon_died_toast">Murió el daemon nativo</string>
   <!-- LogcatSvc -->
   <!-- CHAR LIMIT: 10 -->
+  <string name="stop_button">Parar</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="logging_failed_toast">Registro fallido</string>
   <!-- CHAR LIMIT: 15 -->
@@ -235,6 +240,7 @@
   <!-- CHAR LIMIT: 15 -->
   <!-- CHAR LIMIT: 15 -->
   <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
   <!-- PackageActivity -->
   <!-- CHAR LIMIT: 20 -->
@@ -384,7 +390,9 @@
   <string name="channel_logcat_collection">Recolección de Registros</string>
   <!-- Notification permission -->
   <!-- CHAR LIMIT: 15 -->
+  <string name="notif_perm_dialog_title">Permiso de notificaciones</string>
   <!-- CHAR LIMIT: 15 -->
+  <string name="notif_perm_missing_toast">Permiso de notificaciones no concedido</string>
   <!-- HelpActivity -->
   <!-- CHAR LIMIT: 15 -->
   <string name="open_browser_menu_item">Abrir en navegador</string>

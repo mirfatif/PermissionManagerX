@@ -170,7 +170,6 @@ public class PackageAdapter extends MyListAdapter<Package, ItemViewHolder> {
   }
 
   private static class DiffUtilItemCallBack extends DiffUtil.ItemCallback<Package> {
-
     public boolean areItemsTheSame(Package oldItem, Package newItem) {
       return oldItem.getName().equals(newItem.getName());
     }

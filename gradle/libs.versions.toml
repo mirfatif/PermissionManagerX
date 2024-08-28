@@ -10,8 +10,8 @@ sdk-tools-build = "34.0.0"
 sdk-min = "24"
 sdk-ndk = "25.1.8937393"
 
-app-code = "125"
-app-name = "v1.25"
+app-code = "127"
+app-name = "v1.27"
 
 [libraries]
 plugin-android-application = { module = "com.android.application:com.android.application.gradle.plugin", version.ref = "android-plugins" }

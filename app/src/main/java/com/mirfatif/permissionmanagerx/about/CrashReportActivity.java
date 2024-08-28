@@ -73,7 +73,6 @@ public class CrashReportActivity {
   }
 
   private String getFileContents() {
-
     NotificationManagerCompat.from(App.getCxt())
         .cancel(ApiUtils.getInt(R.integer.channel_crash_report));
 

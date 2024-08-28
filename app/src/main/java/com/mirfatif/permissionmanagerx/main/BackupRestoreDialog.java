@@ -80,7 +80,6 @@ public class BackupRestoreDialog {
 
   private void doBackupRestore(boolean isBackup, Uri uri) {
     if (uri == null) {
-
       return;
     }
 

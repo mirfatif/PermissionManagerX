@@ -108,7 +108,6 @@ public class PermLongPressDialogFrag extends BottomSheetDialogFrag {
 
   public Dialog onCreateDialog(Bundle savedInstanceState) {
     if (mPerm == null) {
-
       dismissAllowingStateLoss();
     }
     return super.onCreateDialog(savedInstanceState);

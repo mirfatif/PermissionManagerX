@@ -137,7 +137,6 @@ public enum NativeDaemon {
       String su = MySettings.INS.getSuExePath();
       Process proc = Util.runProc(TAG, "startRootDaemon", false, su);
       if (proc == null) {
-
         MySettings.INS.setRootEnabled(false);
         return false;
       }

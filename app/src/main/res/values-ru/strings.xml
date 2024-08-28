@@ -366,6 +366,7 @@
   <string name="install">Установить</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="wrun_not_installed">WhatsRunning не установлено</string>
+  <!-- CHAR LIMIT: 20 -->
   <!-- PackageActivity -->
   <!-- CHAR LIMIT: 20 -->
   <string name="something_went_wrong">Что-то пошло не так</string>

@@ -34,7 +34,6 @@ enum SysSvcFactory {
   IPackageManager getIPkgMgr() throws HiddenAPIsException {
     try {
       if (mPkgMgr == null) {
-
         mPkgMgr = IPackageManager.Stub.asInterface(ServiceManager.getService("package"));
       }
     } catch (NoSuchMethodError e) {
@@ -64,7 +63,6 @@ enum SysSvcFactory {
     try {
       if (mIActMgr == null) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
           mIActMgr =
               IActivityManager.Stub.asInterface(
                   ServiceManager.getService(Context.ACTIVITY_SERVICE));

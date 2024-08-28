@@ -41,7 +41,6 @@ public class AppOpsLists implements Parcelable {
 
   public static final Creator<AppOpsLists> CREATOR =
       new Creator<>() {
-
         public AppOpsLists createFromParcel(Parcel in) {
           return new AppOpsLists(in);
         }

@@ -8,8 +8,12 @@ android {
   defaultConfig { applicationId = namespace }
 
   buildFeatures {
-    buildConfig = false
     resValues = false
+
+    viewBinding = false
+    dataBinding = false
+    buildConfig = false
+    compose = false
   }
 }
 

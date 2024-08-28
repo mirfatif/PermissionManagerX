@@ -304,7 +304,6 @@ public class AdbConnectDialog {
       if (buttonPressed
           && VERSION.SDK_INT >= VERSION_CODES.R
           && port != MySettings.INS.getAdbPort()) {
-
         try (AdbConnManager connMgr = new AdbConnManager()) {
           connMgr.setTimeout(10, TimeUnit.SECONDS);
           if (connMgr.connect(port)) {
@@ -418,7 +417,6 @@ public class AdbConnectDialog {
   private static String getHost(CharSequence ipStr, TextInputLayout container) {
     if (!TextUtils.isEmpty(ipStr)) {
       String host = ipStr.toString().trim();
-
       if (Os.inet_pton(OsConstants.AF_INET, host) != null) {
         return host;
       }

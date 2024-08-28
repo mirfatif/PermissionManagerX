@@ -119,7 +119,6 @@ public class MainActivity extends OnBackPressedCallback {
   private final Class<?> mSnackBarLayoutCls = Snackbar.SnackbarLayout.class;
 
   public void onCreated() {
-
     if (isSecondaryUser()) {
       return;
     }
@@ -211,7 +210,6 @@ public class MainActivity extends OnBackPressedCallback {
 
   public boolean onCreateOptionsMenu(Menu menu) {
     if (UserUtils.getUserId() != 0) {
-
       return false;
     }
 
@@ -408,7 +406,6 @@ public class MainActivity extends OnBackPressedCallback {
   private final LiveSchedParamTask<Integer> mPkgCountNotifier;
 
   private void onListCompleted(int pkgCount) {
-
     setProgVisible(false);
 
     if (pkgCount >= 0) {
@@ -525,10 +522,8 @@ public class MainActivity extends OnBackPressedCallback {
   }
 
   private void setUpSearchView() {
-
     mSearchView.setOnQueryTextListener(
         new OnQueryTextListener() {
-
           public boolean onQueryTextSubmit(String query) {
             handleSearchQuery();
             return true;
@@ -573,7 +568,6 @@ public class MainActivity extends OnBackPressedCallback {
     FragmentManager fm = mA.getSupportFragmentManager();
     Fragment frag = fm.findFragmentById(R.id.search_settings_frag);
     if (frag != null) {
-
       fm.beginTransaction().remove(frag).commit();
       delay = 50;
     }

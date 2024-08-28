@@ -30,7 +30,7 @@ import com.mirfatif.permissionmanagerx.util.UserUtils;
 import com.mirfatif.permissionmanagerx.util.bg.LiveEvent;
 import com.mirfatif.permissionmanagerx.util.bg.UiRunner;
 import com.mirfatif.privtasks.Constants;
-import com.mirfatif.privtasks.HiddenSdkConstants;
+import com.mirfatif.privtasks.HiddenSdkIntConstants;
 import com.mirfatif.privtasks.bind.MyPackageOps;
 import com.mirfatif.privtasks.bind.PermFixedFlags;
 import com.mirfatif.privtasks.util.MyLog;
@@ -123,7 +123,6 @@ public enum PackageParser {
       PackageInfo pkgInfo = pkgInfoList.get(i);
 
       if (pkgInfo == null) {
-
         continue;
       }
 
@@ -233,7 +232,7 @@ public enum PackageParser {
         }
       } else if (mAppCanReadFlags) {
         try {
-          flags = HiddenSdkConstants.getPermFixedFlags();
+          flags = HiddenSdkIntConstants.getPermFixedFlags();
         } catch (RemoteException e) {
           mAppCanReadFlags = false;
           MyLog.e(TAG, "buildRequiredData", e.toString());
@@ -587,7 +586,6 @@ public enum PackageParser {
   }
 
   private boolean isNotFilteredOut(Permission perm) {
-
     if (perm.isExtraAppOp()) {
       return true;
     }
@@ -852,7 +850,6 @@ public enum PackageParser {
     if (opMode == null) {
       opModeSet = false;
     } else if (!AppOpsParser.INS.isValidAppOpMode(opMode)) {
-
       mOpModesConsistent = validMode = false;
     }
 
@@ -935,7 +932,6 @@ public enum PackageParser {
       try {
         flags = getManifestPermFlags(PackageParser.INS.mPm.getPermissionInfo(permName, 0));
       } catch (NameNotFoundException ignored) {
-
         flags = new ManifestPermFlags();
       }
       mManifestFlags.put(permName, flags);
@@ -949,7 +945,6 @@ public enum PackageParser {
 
     int protectionLevel = getProtectionLevel(permInfo) & PI_PROTECTION_MASK_BASE;
     int protectionFlags = getProtectionLevel(permInfo) & ~PI_PROTECTION_MASK_BASE;
-
     int PROTECTION_SIGNATURE_OR_SYSTEM = PermissionInfo.PROTECTION_SIGNATURE_OR_SYSTEM;
 
     if (protectionLevel == PermissionInfo.PROTECTION_NORMAL) {
@@ -1000,7 +995,6 @@ public enum PackageParser {
 
   private void handleSearchQuery(int isFinal) {
     if (isFinal == PostListStatus.NOT_FINAL && mSearchQueryExecutor.hasRunningOrPendingTasks()) {
-
       return;
     }
 

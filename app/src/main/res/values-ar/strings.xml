@@ -14,8 +14,11 @@
   <!-- CHAR LIMIT: 10 -->
   <string name="no">لا</string>
   <!-- CHAR LIMIT: 10 -->
+  <string name="ok_button">موافق</string>
   <!-- CHAR LIMIT: 10 -->
+  <string name="cancel_button">إلغاء</string>
   <!-- CHAR LIMIT: 10 -->
+  <string name="go_button">اذهب</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="open_drawer">فتح</string>
   <string name="close_drawer">إغلاق</string>
@@ -136,6 +139,7 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="bad_path_toast">مسار خاطئ</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="reset_perm_db_backup_failed_toast">فشل النسخ الاحتياطي</string>
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
   <!-- Privileges -->
@@ -229,6 +233,7 @@
   <string name="native_daemon_died_toast">موت daemon الاصلي</string>
   <!-- LogcatSvc -->
   <!-- CHAR LIMIT: 10 -->
+  <string name="stop_button">توقف</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="logging_failed_toast">فشل التسجيل</string>
   <!-- CHAR LIMIT: 15 -->
@@ -264,6 +269,7 @@
   <string name="install">تثبيت</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="wrun_not_installed">WhatsRunning غير مثبت</string>
+  <!-- CHAR LIMIT: 20 -->
   <!-- PackageActivity -->
   <!-- CHAR LIMIT: 20 -->
   <string name="something_went_wrong">لقد حدث خطأ ما</string>
@@ -434,7 +440,9 @@
   <string name="channel_logcat_collection">مجموعة السجلات</string>
   <!-- Notification permission -->
   <!-- CHAR LIMIT: 15 -->
+  <string name="notif_perm_dialog_title">إذن الإشعارات</string>
   <!-- CHAR LIMIT: 15 -->
+  <string name="notif_perm_missing_toast">لم يتم منح أذن الموقع</string>
   <!-- HelpActivity -->
   <!-- CHAR LIMIT: 15 -->
   <string name="open_browser_menu_item">فتح في المتصفح</string>

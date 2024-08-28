@@ -48,12 +48,10 @@ public class FilterSettingsActivity {
     mB.excFiltersMasterSwitch.setOnClickListener(
         v -> {
           if (mB.excFiltersMasterSwitch.isChecked()) {
-
             MySettings.INS.setExcFiltersEnabled(true);
             addFrag(savedInstanceState);
           } else {
             removeFrag();
-
             MySettings.INS.setExcFiltersEnabled(false);
           }
           PackageParser.INS.updatePkgList();

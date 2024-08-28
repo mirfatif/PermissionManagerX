@@ -27,7 +27,6 @@ public class CustomButton extends AppCompatButton {
     normalBg.setColor(UiUtils.getDimBgColor((Activity) context));
     normalBg.setCornerRadius(DP4_TO_PX * 3f / 2);
     if (VERSION.SDK_INT >= VERSION_CODES.Q) {
-
       normalBg.setPadding(2 * DP4_TO_PX, DP4_TO_PX, 2 * DP4_TO_PX, DP4_TO_PX);
     }
 
@@ -35,11 +34,9 @@ public class CustomButton extends AppCompatButton {
     ColorStateList colorStateList =
         new ColorStateList(new int[][] {new int[] {}}, new int[] {rippleColor});
     mRipple = new RippleDrawable(colorStateList, null, normalBg);
-
     mRipple.setPadding(2 * DP4_TO_PX, DP4_TO_PX, 2 * DP4_TO_PX, DP4_TO_PX);
 
     StateListDrawable d = new StateListDrawable();
-
     d.addState(new int[] {android.R.attr.state_pressed}, new InsetDrawable(mRipple, DP4_TO_PX));
     d.addState(new int[] {}, new InsetDrawable(normalBg, DP4_TO_PX));
     setBackground(d);

@@ -21,7 +21,6 @@ public class PermFixedFlags implements Parcelable {
 
   public static final Creator<PermFixedFlags> CREATOR =
       new Creator<>() {
-
         public PermFixedFlags createFromParcel(Parcel in) {
           return new PermFixedFlags(in);
         }

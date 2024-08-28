@@ -57,7 +57,6 @@ public enum Callbacks {
   }
 
   void sendStdErr(int port) throws HiddenAPIsException {
-
     if (!Jni.INS.sendStdErr(port)) {
       throw new HiddenAPIsException("Filed to redirect STDERR");
     }
@@ -89,11 +88,9 @@ public enum Callbacks {
   }
 
   void exit() {
-
     System.err.close();
 
     DaemonLog.i(TAG, "exit", "Bye bye from PID " + Process.myPid());
-
     System.exit(0);
   }
 

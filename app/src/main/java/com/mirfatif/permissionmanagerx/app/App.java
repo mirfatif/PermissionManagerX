@@ -50,7 +50,6 @@ public class App {
   }
 
   public static Context getCxt() {
-
     while (sContext == null) {
       SystemClock.sleep(100);
     }

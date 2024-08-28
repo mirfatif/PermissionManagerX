@@ -306,15 +306,11 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
 
   private void updateExtraAppOpsView(
       String[] appOps, CharSequence[] appOpsLabels, Set<String> extraAppOps) {
-
     int appOpsCount = appOpsLabels.length;
 
     if (appOpsCount != 0) {
-
       extraAppOpsListView.setEntries(appOpsLabels);
-
       extraAppOpsListView.setEntryValues(appOps);
-
       extraAppOpsListView.setValues(extraAppOps);
     }
 
@@ -329,7 +325,6 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     } else {
       message = (String) extraAppOps.toArray()[0];
       extraAppOpsCount--;
-
       if (extraAppOpsCount > 0) {
         message =
             ApiUtils.getQtyString(
@@ -347,7 +342,6 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
   }
 
   public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
     ExcFiltersData.INS.updateList(key);
 
     updateViews();

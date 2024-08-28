@@ -51,7 +51,6 @@ public abstract class SingleTaskExecutorAbstract {
 
           timeout = getTimeoutMillis();
           if (timeout < 0) {
-
             continue;
           }
 

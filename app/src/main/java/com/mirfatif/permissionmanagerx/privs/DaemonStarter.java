@@ -45,7 +45,6 @@ public enum DaemonStarter {
       boolean restart, boolean wasAlive, boolean preferRoot) {
     if (wasAlive && !restart) {
       if (PackageParser.INS.getPkgList().isEmpty()) {
-
         setProgress(R.string.prog_msg_checking_privs);
       }
       return DaemonStartStatus.STARTED;
@@ -87,7 +86,6 @@ public enum DaemonStarter {
     if (!hasPrivs) {
       MyLog.w(TAG, "connectOrStartDaemon", "Root / ABD access unavailable");
       if (!PackageParser.INS.getPkgList().isEmpty()) {
-
         mProgress.postValue(null);
       }
       return DaemonStartStatus.NO_PRIVS;

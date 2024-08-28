@@ -139,7 +139,6 @@ public class HelpActivity extends OnBackPressedCallback {
       return true;
     }
     if (item.getItemId() == android.R.id.home) {
-
       mA.finishAfterTransition();
       return true;
     }

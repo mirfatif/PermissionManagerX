@@ -51,7 +51,6 @@ public class LogUtils {
   }
 
   public static void showCrashNotification(String stackTrace, boolean isDaemon) {
-
     MySettings.INS.setAskForFeedbackTs(false);
 
     File logFile = createCrashLogFile();

@@ -318,6 +318,7 @@
   <string name="install">安装</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="wrun_not_installed">WhatsRunning 未安装</string>
+  <!-- CHAR LIMIT: 20 -->
   <!-- PackageActivity -->
   <!-- CHAR LIMIT: 20 -->
   <string name="something_went_wrong">出错了</string>

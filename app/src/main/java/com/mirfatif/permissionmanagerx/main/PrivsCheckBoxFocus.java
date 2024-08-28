@@ -166,7 +166,6 @@ public class PrivsCheckBoxFocus {
 
       mAnim.addListener(
           new Animator.AnimatorListener() {
-
             public void onAnimationStart(Animator animation) {}
 
             public void onAnimationEnd(Animator animation) {
@@ -182,7 +181,6 @@ public class PrivsCheckBoxFocus {
       mOverlay.setOnClickListener(v -> endFocus());
 
       if (!mDrawerLayout.isOpen()) {
-
         endFocus();
       } else {
         mDecorView.addView(mOverlay);

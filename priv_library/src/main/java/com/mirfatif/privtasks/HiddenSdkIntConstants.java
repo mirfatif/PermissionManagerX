@@ -8,26 +8,18 @@ import com.mirfatif.err.HiddenAPIsException;
 import com.mirfatif.privtasks.bind.PermFixedFlags;
 import com.mirfatif.privtasks.hiddenapis.HiddenAPIs;
 
-public enum HiddenSdkConstants {
-  _NUM_OP(0),
-  MODE_NAMES_SIZE(1),
-  OP_NONE(2),
+public enum HiddenSdkIntConstants {
+  _NUM_OP,
+  MODE_NAMES_SIZE,
+  OP_NONE,
+  OP_FLAGS_ALL,
+  OP_RUN_IN_BACKGROUND,
+  OP_RUN_ANY_IN_BACKGROUND,
 
-  OP_FLAGS_ALL(3),
-  OP_RUN_IN_BACKGROUND(4),
+  FLAG_PERMISSION_SYSTEM_FIXED,
+  FLAG_PERMISSION_POLICY_FIXED,
 
-  OP_RUN_ANY_IN_BACKGROUND(5),
-
-  FLAG_PERMISSION_SYSTEM_FIXED(6),
-  FLAG_PERMISSION_POLICY_FIXED(7),
-
-  START_SUCCESS(8);
-
-  private final int ordinal;
-
-  HiddenSdkConstants(int value) {
-    this.ordinal = value;
-  }
+  START_SUCCESS;
 
   private Integer value;
 
@@ -41,33 +33,35 @@ public enum HiddenSdkConstants {
     }
 
     try {
-      switch (ordinal) {
-        case 0 -> {
+      switch (this) {
+        case _NUM_OP -> {
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             value = HiddenAPIs.getNumOps();
           } else {
             value = getStaticIntField("_NUM_OP", AppOpsManager.class);
           }
         }
-        case 1 -> value = HiddenAPIs.getOpModeNamesSize();
-        case 2 -> value = getStaticIntField("OP_NONE", AppOpsManager.class);
-        case 3 -> {
+        case MODE_NAMES_SIZE -> value = HiddenAPIs.getOpModeNamesSize();
+        case OP_NONE -> value = getStaticIntField("OP_NONE", AppOpsManager.class);
+        case OP_FLAGS_ALL -> {
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             value = getStaticIntField("OP_FLAGS_ALL", AppOpsManager.class);
           }
         }
-        case 4 -> value = getStaticIntField("OP_RUN_IN_BACKGROUND", AppOpsManager.class);
-        case 5 -> value = getStaticIntField("OP_RUN_ANY_IN_BACKGROUND", AppOpsManager.class);
-        case 6 -> value = getStaticIntField("FLAG_PERMISSION_SYSTEM_FIXED", PackageManager.class);
-        case 7 -> value = getStaticIntField("FLAG_PERMISSION_POLICY_FIXED", PackageManager.class);
-        case 8 -> value = getStaticIntField("START_SUCCESS", ActivityManager.class);
+        case OP_RUN_IN_BACKGROUND ->
+            value = getStaticIntField("OP_RUN_IN_BACKGROUND", AppOpsManager.class);
+        case OP_RUN_ANY_IN_BACKGROUND ->
+            value = getStaticIntField("OP_RUN_ANY_IN_BACKGROUND", AppOpsManager.class);
+        case FLAG_PERMISSION_SYSTEM_FIXED ->
+            value = getStaticIntField("FLAG_PERMISSION_SYSTEM_FIXED", PackageManager.class);
+        case FLAG_PERMISSION_POLICY_FIXED ->
+            value = getStaticIntField("FLAG_PERMISSION_POLICY_FIXED", PackageManager.class);
+        case START_SUCCESS -> value = getStaticIntField("START_SUCCESS", ActivityManager.class);
       }
     } catch (NoSuchFieldError | NoSuchMethodError e) {
       if (wrapHiddenSdkErrors) {
-
         throw new HiddenAPIsException(e);
       } else {
-
         throw e;
       }
     }

@@ -87,7 +87,6 @@ public enum ExcFiltersData {
           int flags = PackageManager.MATCH_UNINSTALLED_PACKAGES;
           pkgLabel = ApiUtils.getAppInfo(pkgName, flags).loadLabel(App.getPm()).toString();
         } catch (PackageManager.NameNotFoundException e) {
-
           continue;
         }
 
@@ -108,7 +107,6 @@ public enum ExcFiltersData {
       excAppsTmpList.sort(Comparator.comparing(o -> o.label.toString().toUpperCase()));
 
       CharSequence[] excAppsLabels = new CharSequence[excAppsTmpList.size()];
-
       mExcludedApps = Collections.synchronizedSet(new LinkedHashSet<>());
 
       for (int i = 0; i < excAppsTmpList.size(); i++) {
@@ -206,7 +204,6 @@ public enum ExcFiltersData {
       Set<String> extraAppOps;
 
       if (savedExtraAppOps == null || loadDefaults) {
-
         String[] defaultExtraAppOps =
             App.getCxt().getResources().getStringArray(R.array.extra_app_ops);
         extraAppOps = new HashSet<>(Arrays.asList(defaultExtraAppOps));
@@ -217,7 +214,6 @@ public enum ExcFiltersData {
       List<String> appOpsList = AppOpsParser.INS.getAppOpsNames();
 
       if (!appOpsList.isEmpty()) {
-
         extraAppOps.removeIf(appOp -> !appOpsList.contains(appOp));
       }
 
@@ -247,7 +243,6 @@ public enum ExcFiltersData {
   }
 
   public void resetExcFilters() {
-
     SharedPreferences.Editor prefEditor = MySettings.getDefPrefs().edit();
     int count = 0;
 

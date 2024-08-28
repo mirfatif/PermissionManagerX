@@ -668,7 +668,6 @@ public interface IPrivTasks extends IInterface {
     public static final int ERROR = 1;
 
     public static void writeException(Parcel reply, Throwable t) {
-
       reply.setDataSize(0);
       reply.setDataPosition(0);
 

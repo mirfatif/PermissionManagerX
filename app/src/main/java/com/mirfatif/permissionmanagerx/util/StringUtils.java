@@ -58,7 +58,6 @@ public class StringUtils {
 
     Drawable d = ResourcesCompat.getDrawable(App.getRes(), R.drawable.link, null);
     if (d != null) {
-
       d.setTint(getAccentColor());
       d.setBounds(0, 0, UiUtils.dpToPx(12), UiUtils.dpToPx(12));
 
@@ -93,9 +92,7 @@ public class StringUtils {
     Matcher matcher = Pattern.compile("\n").matcher(string);
     int from = 0;
     while (matcher.find(from)) {
-
       string.replace(matcher.start(), matcher.end(), "\n\n");
-
       from = matcher.end() + 1;
 
       string.setSpan(

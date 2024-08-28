@@ -109,7 +109,6 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
 
   public Dialog onCreateDialog(Bundle savedInstanceState) {
     if (mPkg == null) {
-
       dismissAllowingStateLoss();
     }
     return super.onCreateDialog(savedInstanceState);

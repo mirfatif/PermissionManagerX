@@ -171,7 +171,6 @@ public enum BackupRestore {
           StringBuilder stringBuilder = new StringBuilder();
           for (Object object : (Set<?>) value) {
             if (stringBuilder.length() != 0) {
-
               stringBuilder.append(SEPARATOR);
             }
             stringBuilder.append(object.toString());
@@ -298,7 +297,6 @@ public enum BackupRestore {
       }
       res = restore(is, skipUninstalledApps, swapUserIds);
     } catch (IOException | SecurityException e) {
-
       MyLog.e(TAG, "restore", e);
       return null;
     }
@@ -313,7 +311,6 @@ public enum BackupRestore {
   }
 
   public Result restore(InputStream is, boolean skipUninstalledApps, SwapUserIds swap) {
-
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
     byte[] buffer = new byte[1024];
     int len;
@@ -363,7 +360,6 @@ public enum BackupRestore {
         case LONG -> prefEdit.putLong(key, Long.parseLong(value));
         case SET -> {
           if (value.length() == 0) {
-
             prefEdit.putStringSet(key, new HashSet<>());
           } else {
             prefEdit.putStringSet(key, new HashSet<>(Arrays.asList(value.split(SEPARATOR))));
@@ -436,7 +432,6 @@ public enum BackupRestore {
     PermsDb.INS.updateRefsDb(entities.toArray(new PermissionEntity[0]));
 
     if (!entries.isEmpty() && entries.get(0)[0] == null) {
-
       if (!AppOpsParser.INS.fixPermDb()) {
         MySettings.INS.setFixPermDb(true);
       }

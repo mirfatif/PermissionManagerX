@@ -11,7 +11,7 @@ import android.os.RemoteException;
 import com.mirfatif.err.HiddenAPIsException;
 import com.mirfatif.privtasks.AppPrivTasks;
 import com.mirfatif.privtasks.Constants;
-import com.mirfatif.privtasks.HiddenSdkConstants;
+import com.mirfatif.privtasks.HiddenSdkIntConstants;
 import com.mirfatif.privtasks.bind.AppOpsLists;
 import com.mirfatif.privtasks.bind.DaemonState;
 import com.mirfatif.privtasks.bind.IPrivTasksCallback;
@@ -75,7 +75,6 @@ public class IPrivTasksImpl extends IPrivTasks.Stub {
 
     File file = new File(dir, "com.mirfatif.privdaemon.pmx.hprof");
     try {
-
       Debug.dumpHprofData(file.getAbsolutePath());
     } catch (IOException e) {
       throw new HiddenAPIsException(e);
@@ -83,15 +82,14 @@ public class IPrivTasksImpl extends IPrivTasks.Stub {
   }
 
   public void grantAppPrivileges(String pkgName, int uid) throws RemoteException {
-
     setAppOpMode(
-        uid, pkgName, HiddenSdkConstants.OP_RUN_IN_BACKGROUND.get(), AppOpsManager.MODE_ALLOWED);
+        uid, pkgName, HiddenSdkIntConstants.OP_RUN_IN_BACKGROUND.get(), AppOpsManager.MODE_ALLOWED);
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
       setAppOpMode(
           uid,
           pkgName,
-          HiddenSdkConstants.OP_RUN_ANY_IN_BACKGROUND.get(),
+          HiddenSdkIntConstants.OP_RUN_ANY_IN_BACKGROUND.get(),
           AppOpsManager.MODE_ALLOWED);
     }
 
@@ -115,7 +113,7 @@ public class IPrivTasksImpl extends IPrivTasks.Stub {
   }
 
   public PermFixedFlags getPermFixedFlags() throws RemoteException {
-    return HiddenSdkConstants.getPermFixedFlags();
+    return HiddenSdkIntConstants.getPermFixedFlags();
   }
 
   public String[] getPackagesForUid(int uid) throws RemoteException {
@@ -167,7 +165,7 @@ public class IPrivTasksImpl extends IPrivTasks.Stub {
 
   public void openAppInfo(String pkgName, int userId) throws RemoteException {
     int res = HiddenAPIs.INS.openAppInfo(pkgName, userId);
-    if (res != HiddenSdkConstants.START_SUCCESS.get()) {
+    if (res != HiddenSdkIntConstants.START_SUCCESS.get()) {
       throw new HiddenAPIsException("Failed to open app info. Result code: " + res);
     }
   }

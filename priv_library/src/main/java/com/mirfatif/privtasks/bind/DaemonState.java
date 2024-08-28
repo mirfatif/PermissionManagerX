@@ -51,7 +51,6 @@ public class DaemonState implements Parcelable {
 
   public static final Creator<DaemonState> CREATOR =
       new Creator<>() {
-
         public DaemonState createFromParcel(Parcel in) {
           return new DaemonState(in);
         }

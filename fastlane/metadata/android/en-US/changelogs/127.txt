@@ -1,0 +1,3 @@
+- Fixed a crash due to internal API changes in Android 14
+- Updated translations
+- Minor fixes and improvements

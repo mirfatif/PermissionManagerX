@@ -4,7 +4,6 @@ import android.app.AppOpsManager;
 import android.app.AppOpsManager.OpEntry;
 import android.app.AppOpsManager.PackageOps;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ParceledListSlice;
 import android.net.Uri;
@@ -14,7 +13,7 @@ import android.os.RemoteException;
 import android.provider.Settings;
 import com.mirfatif.err.HiddenAPIsException;
 import com.mirfatif.privtasks.AppPrivTasks;
-import com.mirfatif.privtasks.HiddenSdkConstants;
+import com.mirfatif.privtasks.HiddenSdkIntConstants;
 import com.mirfatif.privtasks.bind.MyPackageOps;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +60,6 @@ public enum HiddenAPIs {
   }
 
   public void setAppOpMode(String pkgName, int uid, int op, int mode) throws RemoteException {
-
     SysSvcFactory.INS.getIAppOpsSvc().setMode(op, uid, pkgName, mode);
   }
 
@@ -102,14 +100,14 @@ public enum HiddenAPIs {
 
         myOpEntry.op = opEntry.getOp();
 
-        if (myOpEntry.op >= HiddenSdkConstants._NUM_OP.get()) {
+        if (myOpEntry.op >= HiddenSdkIntConstants._NUM_OP.get()) {
           cb.onInvalidOpCode(myOpEntry.op, pkgOps.getPackageName());
           continue;
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
           myOpEntry.lastAccessTime =
-              opEntry.getLastAccessTime(HiddenSdkConstants.OP_FLAGS_ALL.get());
+              opEntry.getLastAccessTime(HiddenSdkIntConstants.OP_FLAGS_ALL.get());
         } else {
           myOpEntry.lastAccessTime = opEntry.getTime();
         }
@@ -136,7 +134,7 @@ public enum HiddenAPIs {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
       pls = SysSvcFactory.INS.getIPermMgr().getAllPermissionGroups(0);
     } else {
-      pls = (ParceledListSlice<?>) SysSvcFactory.INS.getIPkgMgr().getAllPermissionGroups(0);
+      pls = SysSvcFactory.INS.getIPkgMgr().getAllPermissionGroups(0);
     }
 
     return pls != null ? pls.getList() : new ArrayList<>();
@@ -147,97 +145,27 @@ public enum HiddenAPIs {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
       pls = SysSvcFactory.INS.getIPermMgr().queryPermissionsByGroup(permGroup, 0);
     } else {
-      pls =
-          (ParceledListSlice<?>)
-              SysSvcFactory.INS.getIPkgMgr().queryPermissionsByGroup(permGroup, 0);
+      pls = SysSvcFactory.INS.getIPkgMgr().queryPermissionsByGroup(permGroup, 0);
     }
     return pls != null ? pls.getList() : new ArrayList<>();
   }
 
-  private boolean isU30Plus = false;
-
   public int getPermFlags(
       String permName, String pkgName, int userId, AppPrivTasks.AppPrivTasksCallback cb)
       throws RemoteException {
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-      return SysSvcFactory.INS
-          .getIPermMgr()
-          .getPermissionFlags(pkgName, permName, Context.DEVICE_ID_DEFAULT, userId);
-    } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-      if (isU30Plus) {
-        return SysSvcFactory.INS
-            .getIPermMgr()
-            .getPermissionFlags(pkgName, permName, Context.DEVICE_ID_DEFAULT, userId);
-      } else {
-        try {
-          return SysSvcFactory.INS.getIPermMgr().getPermissionFlags(pkgName, permName, userId);
-        } catch (NoSuchMethodError e) {
-          cb.logErr(TAG, "getPermFlags", e.toString());
-          isU30Plus = true;
-          return getPermFlags(permName, pkgName, userId, cb);
-        }
-      }
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-      return SysSvcFactory.INS.getIPermMgr().getPermissionFlags(pkgName, permName, userId);
-    } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.R) {
-      return SysSvcFactory.INS.getIPermMgr().getPermissionFlags(permName, pkgName, userId);
-    } else {
-      return SysSvcFactory.INS.getIPkgMgr().getPermissionFlags(permName, pkgName, userId);
-    }
+    return MidReleaseBrokenAPIsDelegate.INSTANCE.getPermFlags(permName, pkgName, userId, cb);
   }
 
   public void grantRuntimePermission(
       String pkgName, String permName, int userId, AppPrivTasks.AppPrivTasksCallback cb)
       throws RemoteException {
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-      SysSvcFactory.INS
-          .getIPermMgr()
-          .grantRuntimePermission(pkgName, permName, Context.DEVICE_ID_DEFAULT, userId);
-    } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-      if (isU30Plus) {
-        SysSvcFactory.INS
-            .getIPermMgr()
-            .grantRuntimePermission(pkgName, permName, Context.DEVICE_ID_DEFAULT, userId);
-      } else {
-        try {
-          SysSvcFactory.INS.getIPermMgr().grantRuntimePermission(pkgName, permName, userId);
-        } catch (NoSuchMethodError e) {
-          cb.logErr(TAG, "grantRuntimePermission", e.toString());
-          isU30Plus = true;
-          grantRuntimePermission(pkgName, permName, userId, cb);
-        }
-      }
-    } else {
-      SysSvcFactory.INS.getIPkgMgr().grantRuntimePermission(pkgName, permName, userId);
-    }
+    MidReleaseBrokenAPIsDelegate.INSTANCE.grantRuntimePermission(pkgName, permName, userId, cb);
   }
 
   public void revokeRuntimePermission(
       String pkgName, String permName, int userId, AppPrivTasks.AppPrivTasksCallback cb)
       throws RemoteException {
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-      SysSvcFactory.INS
-          .getIPermMgr()
-          .revokeRuntimePermission(pkgName, permName, Context.DEVICE_ID_DEFAULT, userId, null);
-    } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-      if (isU30Plus) {
-        SysSvcFactory.INS
-            .getIPermMgr()
-            .revokeRuntimePermission(pkgName, permName, Context.DEVICE_ID_DEFAULT, userId, null);
-      } else {
-        try {
-          SysSvcFactory.INS.getIPermMgr().revokeRuntimePermission(pkgName, permName, userId, null);
-        } catch (NoSuchMethodError e) {
-          cb.logErr(TAG, "revokeRuntimePermission", e.toString());
-          isU30Plus = true;
-          revokeRuntimePermission(pkgName, permName, userId, cb);
-        }
-      }
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-      SysSvcFactory.INS.getIPermMgr().revokeRuntimePermission(pkgName, permName, userId, null);
-    } else {
-      SysSvcFactory.INS.getIPkgMgr().revokeRuntimePermission(pkgName, permName, userId);
-    }
+    MidReleaseBrokenAPIsDelegate.INSTANCE.revokeRuntimePermission(pkgName, permName, userId, cb);
   }
 
   public int checkPermission(String perm, int pid, int uid) throws RemoteException {
@@ -251,7 +179,6 @@ public enum HiddenAPIs {
           .getIPkgMgr()
           .setApplicationEnabledSetting(pkg, state, flags, userId, callingPkg);
     } catch (IllegalArgumentException e) {
-
       throw new HiddenAPIsException(e);
     }
   }

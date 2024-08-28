@@ -76,14 +76,12 @@ public class AdbConnManager extends AbsAdbConnectionManager {
           InvalidKeyException,
           NoSuchProviderException,
           SignatureException {
-
     setApi(Build.VERSION.SDK_INT);
 
     mPrivateKey = readPrivateKeyFromFile();
     mCertificate = readCertificateFromFile();
 
     if (mPrivateKey == null || mCertificate == null) {
-
       int keySize = 2048;
       KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
       keyPairGenerator.initialize(keySize, SecureRandom.getInstance("SHA1PRNG"));

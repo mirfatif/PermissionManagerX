@@ -31,7 +31,6 @@ public class MyPackageOps implements Parcelable {
 
   public static final Creator<MyPackageOps> CREATOR =
       new Creator<>() {
-
         public MyPackageOps createFromParcel(Parcel in) {
           return new MyPackageOps(in);
         }
@@ -67,7 +66,6 @@ public class MyPackageOps implements Parcelable {
 
     public static final Creator<MyOpEntry> CREATOR =
         new Creator<>() {
-
           public MyOpEntry createFromParcel(Parcel in) {
             return new MyOpEntry(in);
           }

@@ -148,7 +148,6 @@ public class PackageActivity extends OnBackPressedCallback implements PermAdapte
 
     mSearchView.setOnQueryTextListener(
         new SearchView.OnQueryTextListener() {
-
           public boolean onQueryTextSubmit(String query) {
             submitPermList();
             return true;

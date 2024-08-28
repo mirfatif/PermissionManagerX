@@ -27,7 +27,6 @@ public abstract class BaseActivity extends AppCompatActivity {
   protected abstract void onCreated(Bundle savedInstanceState);
 
   public boolean onOptionsItemSelected(MenuItem item) {
-
     if (item.getItemId() == android.R.id.home) {
       getOnBackPressedDispatcher().onBackPressed();
       return true;

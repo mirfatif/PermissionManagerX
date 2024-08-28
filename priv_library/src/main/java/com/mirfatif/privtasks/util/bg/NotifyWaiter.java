@@ -33,7 +33,6 @@ public class NotifyWaiter {
     try {
       waitForNotify(true, condition);
     } catch (InterruptedException ignored) {
-
     }
   }
 

@@ -18,7 +18,6 @@ public class LocaleUtils {
     Locale.setDefault(locale);
     sNumFmt = NumberFormat.getIntegerInstance(Locale.getDefault());
     Configuration config = setLocale(context.getResources().getConfiguration(), locale);
-
     updateConfiguration(context.getResources(), config, context.getResources().getDisplayMetrics());
     return context;
   }

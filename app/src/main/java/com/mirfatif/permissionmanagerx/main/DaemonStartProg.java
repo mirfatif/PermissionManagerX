@@ -56,7 +56,6 @@ public class DaemonStartProg {
   }
 
   private void startDaemon(String intentAction) {
-
     DaemonStarter.INS.startPrivDaemon(false, true, true, !ACTION_SHOW_DRAWER.equals(intentAction));
   }
 
@@ -88,13 +87,10 @@ public class DaemonStartProg {
     }
 
     if (res.isFirstRun) {
-
       mA.setLiveDataObservers();
     } else if (res.wasAlive || res.daemonStarted == DaemonStarter.DaemonStartStatus.STARTED) {
-
       PackageParser.INS.updatePkgList();
     } else {
-
       mA.setBigProgVisible(false);
     }
 

@@ -16,14 +16,12 @@ public class MyLog {
 
   public static void e(String tag, String method, String msg, Throwable e) {
     Log.e(tag, makeMsg(method, msg), e);
-
-    e.printStackTrace();
+    e.printStackTrace(System.err);
   }
 
   public static void e(String tag, String method, String err) {
     err = makeMsg(method, err);
     Log.e(tag, err);
-
     System.err.println(tag + ": " + err);
   }
 

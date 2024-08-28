@@ -62,7 +62,7 @@ public class AppPrivTasks {
   private List<String> buildAppOpsNames() throws HiddenAPIsException {
     List<String> appOpsNames = new ArrayList<>();
     boolean failed = false;
-    for (int i = 0; i < HiddenSdkConstants._NUM_OP.get(!mDaemon); i++) {
+    for (int i = 0; i < HiddenSdkIntConstants._NUM_OP.get(!mDaemon); i++) {
       if (failed) {
         appOpsNames.add(Constants.UNKNOWN_OP);
         continue;
@@ -76,7 +76,6 @@ public class AppPrivTasks {
         }
         appOpsNames.add(opName);
       } catch (ArrayIndexOutOfBoundsException e) {
-
         failed = true;
         opToNameWorks = opNumConsistent = false;
         mAppOpsErrorCb.mOpNumErrSender.run();
@@ -105,7 +104,7 @@ public class AppPrivTasks {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
       String mode;
-      for (int i = 0; i < HiddenSdkConstants.MODE_NAMES_SIZE.get(!mDaemon); i++) {
+      for (int i = 0; i < HiddenSdkIntConstants.MODE_NAMES_SIZE.get(!mDaemon); i++) {
         try {
           mode = HiddenAPIs.modeToName(i);
           mode = Character.toUpperCase(mode.charAt(0)) + mode.substring(1);
@@ -153,7 +152,7 @@ public class AppPrivTasks {
   private List<Integer> buildOpDefModeList() throws HiddenAPIsException {
     List<Integer> opToDefModeList = new ArrayList<>();
     boolean failed = false;
-    for (int i = 0; i < HiddenSdkConstants._NUM_OP.get(!mDaemon); i++) {
+    for (int i = 0; i < HiddenSdkIntConstants._NUM_OP.get(!mDaemon); i++) {
       if (failed) {
         opToDefModeList.add(AppOpsManager.MODE_DEFAULT);
         continue;
@@ -161,14 +160,12 @@ public class AppPrivTasks {
       try {
         opToDefModeList.add(HiddenAPIs.opToDefaultMode(i, mUseOpToDefLOS));
       } catch (ArrayIndexOutOfBoundsException e) {
-
         failed = true;
         opToDefModeWorks = opNumConsistent = false;
         mAppOpsErrorCb.mOpNumErrSender.run();
         mCallback.logErr(TAG, "buildOpDefModeList", e);
       } catch (NoSuchMethodError e) {
         if (mUseOpToDefLOS) {
-
           if (mDaemon) {
             throw e;
           } else {
@@ -188,7 +185,7 @@ public class AppPrivTasks {
   private List<Integer> buildOpSwitchList() throws HiddenAPIsException {
     List<Integer> opToSwitchList = new ArrayList<>();
     boolean failed = false;
-    for (int i = 0; i < HiddenSdkConstants._NUM_OP.get(!mDaemon); i++) {
+    for (int i = 0; i < HiddenSdkIntConstants._NUM_OP.get(!mDaemon); i++) {
       if (failed) {
         opToSwitchList.add(i);
         continue;
@@ -196,7 +193,6 @@ public class AppPrivTasks {
       try {
         opToSwitchList.add(HiddenAPIs.opToSwitch(i));
       } catch (ArrayIndexOutOfBoundsException e) {
-
         failed = true;
         opToSwitchWorks = opNumConsistent = false;
         mAppOpsErrorCb.mOpNumErrSender.run();
@@ -248,7 +244,6 @@ public class AppPrivTasks {
         try {
           permInfoList.addAll(pm.queryPermissionsByGroup(permGroup, 0));
         } catch (NameNotFoundException e) {
-
           mCallback.logErr(TAG, "buildPermToOpMap", e.toString());
         }
       } else {
@@ -274,10 +269,9 @@ public class AppPrivTasks {
     }
 
     final StrIntMap permToOpMap = new StrIntMap();
-    final int OP_NONE = HiddenSdkConstants.OP_NONE.get(!mDaemon);
+    final int OP_NONE = HiddenSdkIntConstants.OP_NONE.get(!mDaemon);
 
     for (PermissionInfo permInfo : permInfoList) {
-
       if (!permInfo.packageName.equals("android")) {
         continue;
       }
@@ -331,14 +325,12 @@ public class AppPrivTasks {
     private final RateLimiter mOpCodeLogLimiter = new RateLimiter(1, TimeUnit.SECONDS);
 
     public void onGetUidOpsNpException(Exception e) {
-
       getOpsWorks = false;
       mNPELogger.run(e);
       mAppOpsImplErrSender.run();
     }
 
     public void onInvalidOpCode(int opCode, String pkgName) {
-
       opNumConsistent = false;
       if (mOpCodeLogLimiter.can(true)) {
         mCallback.logErr(TAG, "getOpsForPkg", "Bad op: " + opCode + " for package: " + pkgName);

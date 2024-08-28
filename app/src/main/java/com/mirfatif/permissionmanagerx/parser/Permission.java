@@ -167,7 +167,6 @@ public class Permission {
   }
 
   public String getAppOpAccessTime() {
-
     if (System.currentTimeMillis() - mAppOpAccessTime > TimeUnit.DAYS.toMillis(365)) {
       return null;
     }
@@ -258,7 +257,6 @@ public class Permission {
     if (mAppOp) {
       return isAppOpPermChangeable(mDependsOn);
     } else {
-
       return (mProtectionLevel.equals(PROTECTION_DANGEROUS) || mDevelopment)
           && (!mSystemApp || !mPrivileged || allowCriticChanges)
           && !mPolicyFixed
