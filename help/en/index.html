@@ -555,7 +555,11 @@
 
             <p class="horizontal-scroll"><span class="code">am startservice -n com.mirfatif.permissionmanagerx/.fwk.AdbConnectSvcM --ei "com.mirfatif.pmx.extra.ADB_PORT" 5555</span></p>
 
-            <p>Make sure to use the correct package name depending on the app version. Read <a href="https://developer.android.com/studio/command-line/adb#am">here</a> how to use <span class="code">am</span> tool to start an app's service.</p>
+            <p>Make sure to use the correct package name depending on the app version (see <a href="#versions">PMX versions</a>). For the standalone Pro version, the command should be:</p>
+
+            <p class="horizontal-scroll"><span class="code">am startservice -n com.mirfatif.permissionmanagerx.pro/com.mirfatif.permissionmanagerx.fwk.AdbConnectSvcM --ei "com.mirfatif.pmx.extra.ADB_PORT" 5555</span></p>
+
+            <p>Read <a href="https://developer.android.com/studio/command-line/adb#am">here</a> how to use the <span class="code">am</span> tool to start an app's service.</p>
         </div>
 
         <div class="card">
