@@ -65,6 +65,9 @@
                     <a href="#adb_help" class="no-underline"><b>Использование PMX с помощью ADB</b></a>
                     <ul>
                         <li><a href="#adb-limits" class="no-underline">Ограничения ADB</a></li>
+                        <ul>
+                            <li><a href="#fire-tv-adb-not-working" class="no-underline">Why does ADB not work on Amazon Fire TV?</a></li>
+                        </ul>
                         <li><a href="#adb-help-10" class="no-underline">Android 10 и ниже</a></li>
                         <li>
                             <a href="#adb_help_11" class="no-underline">Андроид 11 и выше</a>
@@ -87,6 +90,8 @@
                     <li><a href="#faq1" class="no-underline">Почему PMX требует root или ADB доступ?</a></li>
                     <li><a href="#faq33" class="no-underline">Мое устройство без root. Как я могу использовать PMX?</a></li>
                     <li><a href="#faq4" class="no-underline">Что такое скрытые API?</a></li>
+                    <li><a href="#faq42" class="no-underline">Why does PMX not run or work properly on the latest Android?</a></li>
+                    <li><a href="#faq43" class="no-underline">Why does PMX not work properly on OEM operating systems or custom ROMs?</a></li>
                     <li><a href="#faq2" class="no-underline">Как PMX изменяет разрешения других приложений?</a></li>
                     <li><a href="#faq34" class="no-underline">Разрешения остаются измененными после отключения ADB, отказа root или удаления PMX?</a></li>
                     <li><a href="#faq15" class="no-underline">Почему я не могу изменить разрешение XYZ?</a></li>
@@ -421,6 +426,10 @@
             </ul>
             <p>Однако некоторые OEM-производители добавляют дополнительные настройки для управления привилегиями ADB. Например, вам нужно снять флажок "<i>Отключить Мониторинг разрешений</i>" на телефонах Oppo и "<i>Разрешить предоставление разрешений</i>" в настройках безопасности на телефонах Xiaomi. Смотрите <a href="https://stackoverflow.com/q/52079343/9165920">этот вопрос</a> для более детальной информации.</p>
             <p>Следующие инструкции относятся к прошивкам, близким к AOSP. Кастомные прошивки могут иметь другие или отсутствующие настройки.</p>
+            <p>See <a href="#faq43">Why does PMX not work properly on OEM operating systems or custom ROMs?</a></p>
+
+            <p id="fire-tv-adb-not-working"><b>Why does ADB not work on Amazon Fire TV?</b></p>
+            <p>Amazon has blocked the ability for apps to establish a local ADB connection (see details <a href="https://www.aftvnews.com/amazon-blocks-long-running-fire-tv-capability-breaking-popular-apps-with-no-warning-and-giving-developers-the-runaround/">here</a>). So PMX won't work on these devices without root, unfortunately.</p>
 
             <hr class="dim">
 
@@ -546,7 +555,11 @@
 
             <p class="horizontal-scroll"><span class="code">am startservice -n com.mirfatif.permissionmanagerx/.fwk.AdbConnectSvcM --ei "com.mirfatif.pmx.extra.ADB_PORT" 5555</span></p>
 
-            <p>Убедитесь, что вы используете правильное имя пакета в зависимости от версии приложения. Прочтите <a href="https://developer.android.com/studio/command-line/adb#am">здесь</a> как использовать инструмент <span class="code">am</span> для запуска службы приложения.</p>
+            <p>Make sure to use the correct package name depending on the app version (see <a href="#versions">PMX versions</a>). For the standalone Pro version, the command should be:</p>
+
+            <p class="horizontal-scroll"><span class="code">am startservice -n com.mirfatif.permissionmanagerx.pro/com.mirfatif.permissionmanagerx.fwk.AdbConnectSvcM --ei "com.mirfatif.pmx.extra.ADB_PORT" 5555</span></p>
+
+            <p>Read <a href="https://developer.android.com/studio/command-line/adb#am">here</a> how to use the <span class="code">am</span> tool to start an app's service.</p>
         </div>
 
         <div class="card">
@@ -623,6 +636,21 @@
 
             <hr class="dim" />
 
+            <p id="faq42" class="high-bottom"><b>Why does PMX not run or work properly on the latest Android?</b></p>
+            <p>PMX relies on Android's hidden APIs or non-SDK interfaces (see <a href="#faq4">What are hidden APIs?</a>) which are not documented (on <a href="https://developer.android.com/">Android Developers</a>) unlike standard APIs. So with every new Android release, we have to go through the Android source code to find out which APIs have broken (changed or removed).</p>
+            <p>Also, it takes time to fix the broken APIs; sometimes weeks, sometime months. And it's not guaranteed that we'll always be able to fix the broken APIs. Sometimes Google on purpose makes it difficult or impossible for us to keep using the hidden APIs.</p>
+            <p>Therefore it's not possible for us to make the PMX immediately work on every new Android release (particularly in beta phase) as long as the final AOSP source code is not publicly released (on <a href="https://cs.android.com/">Code Search</a> or <a href="https://android.googlesource.com/">Git Repository</a>).</p>
+            <p>PMX's final supported Android version is stated in app description on GitHub and Play Store. When you run the app on an unsupported version for the first time, it shows a warning like this:</p>
+            <img class="small" src="../en/img/unsupported_android_version_warning.webp" />
+
+            <hr class="dim" />
+
+            <p id="faq43" class="high-bottom"><b>Why does PMX not work properly on OEM operating systems or custom ROMs?</b></p>
+            <p>PMX relies on Android's hidden APIs or non-SDK interfaces (see <a href="#faq4">What are hidden APIs?</a>) which are not documented (on <a href="https://developer.android.com/">Android Developers</a>) unlike standard APIs. So we need access to the source code of your ROM to know exactly how the hidden APIs work.</p>
+            <p>Well, AOSP (which is developed by Google) is open-source. But if your OEM or ROM developer makes some changes to AOSP for the customization purpose, we've no way to know exactly what changes they have made to the stock AOSP code. We're quite helpless here. And this fact is stated in app description on GitHub and Play Store. Sorry.</p>
+
+            <hr class="dim" />
+
             <p id="faq2" class="high-bottom"><b>Как PMX изменяет разрешения других приложений?</b></p>
             <p>PMX не может и не предоставляет и не отменяет разрешения других приложений. Фактически, ни одно стороннее приложение не имеет права сделать это. Это делает ОС Android, которая контролирует разрешения приложений. PMX просто отправляет запрос в платформу Android на изменение состояния разрешения. Теперь все зависит от ОС Android, насколько она выполнит наш запрос. Не все разрешения изменяются. И если вы не можете изменить состояние разрешения используя PMX, то вы не сможете изменить его другим способом.</p>
 
@@ -656,7 +684,7 @@
                 <li>Некоторые AppOps зависят от соответствующих разрешений манифеста. Некоторые AppOps зависят от соответствующих разрешений манифеста. Например, вы не сможете отклонить <span class="code">READ_CONTACTS</span> AppOp, если предоставлено разрешение манифеста <span class="code">android.permission.READ_CONTACTS</span>.</li>
                 <li>Некоторые AppOps используются только для совместимости (например, <span class="code">LEGACY_STORAGE</span>) и на самом деле они ничего не контролируют. Если мы исследуем их основную работу, выяснится, что предоставление/отмена таких разрешений не имеет смысла.</li>
                 <li>Some permissions cannot be changed if the app is running on or is targeting an older or newer Android version.</li>
-                <li>Также некоторые OEM прошивки ведут себя странно, когда дело доходит до AppOps. Мы не знаем, какие именно изменения ваш OEM-производитель внес в стандартный код AOSP. Вот почему есть заявление на Github и в Play Маркет: <i>Приложение протестировано на стоковом Android 7-11. Некоторые прошивки с большим количеством настроек могут вести себя непредсказуемо."</i></li>
+                <li>Также некоторые OEM прошивки ведут себя странно, когда дело доходит до AppOps. See <a href="#faq43">Why does PMX not work properly on OEM operating systems or custom ROMs?</a></i></li>
                 <li>Many AppOps can have 2 modes: package mode and UID mode. It's possible that one can be changed while the other cannot be.</li>
             </ul>
             <p>На самом деле, если мы исследуем каждое приложение и разрешение по отдельности, то мы получим еще много объяснений (что звучит непрактично). Как было сказано выше, PMX не меняет разрешения других приложений самостоятельно. Таким образом, даже если по какой-то неизвестной причине Android не меняет разрешение или сразу же возвращает его обратно, мы ничего не можем сделать, чтобы заставить его, потому что это ограничения со стороны Android. Скорее всего, я должен сказать, что именно так работает Android.</p>
@@ -778,6 +806,7 @@
 
             <p id="faq31" class="high-bottom"><b>Почему я получаю много всплывающих окон <i>Потенциально неподдерживаемая прошивка</i>?</b></p>
             <p>OEM-производители вносят огромные изменения в стандартный код AOSP (разработанный Google). Таким образом, AppOps на некоторых кастомных или стоковых прошивках возвращает неожиданные результаты, которые PMX не может понять. Вы можете игнорировать эти всплывающие окна, но это означает, что функциональность несколько ограничена.</p>
+            <p>See <a href="#faq43">Why does PMX not work properly on OEM operating systems or custom ROMs?</a></p>
 
             <hr class="dim" />
 

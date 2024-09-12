@@ -1,0 +1,10 @@
+使用<p>权限管理X<b>调整每个已安装的应用，您可以：
+<ul><li>查看、授予或撤销普通权限</li><li>查看AppOps权限并选择多种模式之一</li><li>为每个可更改权限设置所需的参考值</li></ul>
+<p><b>清单权限</b> 也就是普通权限，例如存储、相机等权限。 <b>AppOps</b> 是 Android 系统服务，可以用于更便捷的管理应用权限。 随着 Android 版本更新，清单权限渐渐更加依赖 AppOps。 因此同时查看并管理这些权限就显得尤为重要</p>
+<p>简而言之，AppOps 提供了对许多普通权限的精细控制。 并额外提供了控制权限的能力，例如后台运行、振动、读取剪切板等， 安装本应用后即可自行探索</p>
+<p>当您重新安装应用、更改设备或升级系统时，审查所有已安装应用的权限并撤销不必要的权限是一个耗时的过程(毕竟<b><i>隐私很重要</i></b>) 而权限管理X可以帮助您调整这一切。 设置 <b>权限引用状态</b> ，可以快速备份和恢复权限。您可以在侧边栏查看安装包和权限。</p>
+<p>存在问题？ 我们将竭诚为您服务。 请从:</p> 开始
+<ul><li><a href="https://mirfatif.github.io/PermissionManagerX/help/en#intro">权限管理X是什么？</a></li><li><a href="https://mirfatif.github.io/PermissionManagerX/help/en#faq36">我为什么要使用权限管理X？</a></li><li><a href="https://mirfatif.github.io/PermissionManagerX/help/en#perms_types">什么是清单权限和AppOps？</a></li><li><a href="https://mirfatif.github.io/PermissionManagerX/help/en#perm_ref">什么是权限参考?</a></li></ul>
+<p>付费版本 (可作为 <a href="https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx">Play Store</a> 和 <a href="https://mirfatif.github.io/mirfatif/getpro">Pro</a> flavors) 提供额外的功能，包括 <a href="https://mirfatif.github.io/PermissionManagerX/help/en#perm_watcher">权限监视器</a> <a href="https://mirfatif.github.io/PermissionManagerX/help/en#scheduled_checker">定期检查</a>, <a href="https://mirfatif.github.io/PermissionManagerX/help/en#perm_view">权限视图</a> 和 <a href="https://mirfatif.github.io/PermissionManagerX/help/en#batch-ops">批处理操作/配置文件</a></p>
+<p>Beta 版本发布在 <a href="https://t.me/mirfatifApps">Telegram 頻道</a>。</p>
+<p>指南：https://mirfatif.github.io/PermissionManagerX/help</p>

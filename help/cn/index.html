@@ -65,6 +65,9 @@
                     <a href="#adb_help" class="no-underline"><b>使用 ADB 授权权限管理 X</b></a>
                     <ul>
                         <li><a href="#adb-limits" class="no-underline">ADB 的局限性</a></li>
+                        <ul>
+                            <li><a href="#fire-tv-adb-not-working" class="no-underline">Why does ADB not work on Amazon Fire TV?</a></li>
+                        </ul>
                         <li><a href="#adb-help-10" class="no-underline">Android 10 及更低版本</a></li>
                         <li>
                             <a href="#adb_help_11" class="no-underline">Android 11 及以上版本</a>
@@ -87,6 +90,8 @@
                     <li><a href="#faq1" class="no-underline">为什么权限管理 X 需要 Root 或 ADB 权限？</a></li>
                     <li><a href="#faq33" class="no-underline">设备尚未Root， 如何使用权限管理 X？</a></li>
                     <li><a href="#faq4" class="no-underline">什么是隐藏的 API？</a></li>
+                    <li><a href="#faq42" class="no-underline">Why does PMX not run or work properly on the latest Android?</a></li>
+                    <li><a href="#faq43" class="no-underline">Why does PMX not work properly on OEM operating systems or custom ROMs?</a></li>
                     <li><a href="#faq2" class="no-underline">权限管理 X 是如何修改其他应用的权限的？</a></li>
                     <li><a href="#faq34" class="no-underline">在关闭 ADB、拒绝 Root 权限或卸载权限管理 X 后，之前修改过的权限是否仍然有效？</a></li>
                     <li><a href="#faq15" class="no-underline">为什么不能更改某些权限？</a></li>
@@ -421,6 +426,10 @@
             </ul>
             <p>然而，一些OEM会添加额外的设置来控制 ADB 权限。 例如，在Oppo手机上您需要取消勾选"<i>禁用权限监控</i>"; 在小米手机上则需要允许 "<i>Usb 调试（安全设置）</i>"。 更多详情请参阅 <a href="https://stackoverflow.com/q/52079343/9165920">此问题</a>。</p>
             <p>以下说明适用于类  AOSP ROM， 定制 ROM 可能有不同或缺失的设置</p>
+            <p>See <a href="#faq43">Why does PMX not work properly on OEM operating systems or custom ROMs?</a></p>
+
+            <p id="fire-tv-adb-not-working"><b>Why does ADB not work on Amazon Fire TV?</b></p>
+            <p>Amazon has blocked the ability for apps to establish a local ADB connection (see details <a href="https://www.aftvnews.com/amazon-blocks-long-running-fire-tv-capability-breaking-popular-apps-with-no-warning-and-giving-developers-the-runaround/">here</a>). So PMX won't work on these devices without root, unfortunately.</p>
 
             <hr class="dim">
 
@@ -546,7 +555,11 @@
 
             <p class="horizontal-scroll"><span class="code">am startservice -n com.mirfatif.permissionmanagerx/.fwk.AdbConnectSvcM --ei "com.mirfatif.pmx.extra.ADB_PORT" 5555</span></p>
 
-            <p>Make sure to use the correct package name depending on the app version. Read <a href="https://developer.android.com/studio/command-line/adb#am">here</a> how to use <span class="code">am</span> tool to start an app's service.</p>
+            <p>Make sure to use the correct package name depending on the app version (see <a href="#versions">PMX versions</a>). For the standalone Pro version, the command should be:</p>
+
+            <p class="horizontal-scroll"><span class="code">am startservice -n com.mirfatif.permissionmanagerx.pro/com.mirfatif.permissionmanagerx.fwk.AdbConnectSvcM --ei "com.mirfatif.pmx.extra.ADB_PORT" 5555</span></p>
+
+            <p>Read <a href="https://developer.android.com/studio/command-line/adb#am">here</a> how to use the <span class="code">am</span> tool to start an app's service.</p>
         </div>
 
         <div class="card">
@@ -623,6 +636,21 @@
 
             <hr class="dim" />
 
+            <p id="faq42" class="high-bottom"><b>Why does PMX not run or work properly on the latest Android?</b></p>
+            <p>PMX relies on Android's hidden APIs or non-SDK interfaces (see <a href="#faq4">What are hidden APIs?</a>) which are not documented (on <a href="https://developer.android.com/">Android Developers</a>) unlike standard APIs. So with every new Android release, we have to go through the Android source code to find out which APIs have broken (changed or removed).</p>
+            <p>Also, it takes time to fix the broken APIs; sometimes weeks, sometime months. And it's not guaranteed that we'll always be able to fix the broken APIs. Sometimes Google on purpose makes it difficult or impossible for us to keep using the hidden APIs.</p>
+            <p>Therefore it's not possible for us to make the PMX immediately work on every new Android release (particularly in beta phase) as long as the final AOSP source code is not publicly released (on <a href="https://cs.android.com/">Code Search</a> or <a href="https://android.googlesource.com/">Git Repository</a>).</p>
+            <p>PMX's final supported Android version is stated in app description on GitHub and Play Store. When you run the app on an unsupported version for the first time, it shows a warning like this:</p>
+            <img class="small" src="../en/img/unsupported_android_version_warning.webp" />
+
+            <hr class="dim" />
+
+            <p id="faq43" class="high-bottom"><b>Why does PMX not work properly on OEM operating systems or custom ROMs?</b></p>
+            <p>PMX relies on Android's hidden APIs or non-SDK interfaces (see <a href="#faq4">What are hidden APIs?</a>) which are not documented (on <a href="https://developer.android.com/">Android Developers</a>) unlike standard APIs. So we need access to the source code of your ROM to know exactly how the hidden APIs work.</p>
+            <p>Well, AOSP (which is developed by Google) is open-source. But if your OEM or ROM developer makes some changes to AOSP for the customization purpose, we've no way to know exactly what changes they have made to the stock AOSP code. We're quite helpless here. And this fact is stated in app description on GitHub and Play Store. Sorry.</p>
+
+            <hr class="dim" />
+
             <p id="faq2" class="high-bottom"><b>权限管理 X 是如何修改其他应用的权限的？</b></p>
             <p>权限管理 X 本身不能、也不会授予或撤销其他应用的权限。 事实上，没有第三方应用程序有权这样做。 本应用只能控制应用权限。 本软件只是发送请求到 Android 框架以更改权限状态。 操作能否成功完全取决于Android系统能否满足我们的请求。 并非所有权限都可以更改。 如果您无法使用 权限管理 X 更改权限状态，您也将无法以任何其他方式更改它。</p>
 
@@ -656,7 +684,7 @@
                 <li>Some AppOps are dependent on their corresponding manifest permissions. So they cannot be changed independently. For instance you may not be able to deny <span class="code">READ_CONTACTS</span> AppOp if <span class="code">android.permission.READ_CONTACTS</span> manifest permission is granted.</li>
                 <li>Some AppOps are only used by Android for compatibility (e.g. <span class="code">LEGACY_STORAGE</span>) and they don't actually control anything. 如果我们了解工作原理，就会发现授予/撤销这种权限是没有必要的。</li>
                 <li>Some permissions cannot be changed if the app is running on or is targeting an older or newer Android version.</li>
-                <li>Some OEM ROMs behave weird when it comes to AppOps. 我们不知道您的 OEM 对AOSP代码做了什么修改。 这就是为什么Github 和 Play Store上是这样描述的： <i>"应用程序在原生 Android 7-11上测试可用， 一些高度定制的ROM可能无法使用“</i></li>
+                <li>Some OEM ROMs behave weird when it comes to AppOps. See <a href="#faq43">Why does PMX not work properly on OEM operating systems or custom ROMs?</a></i></li>
                 <li>Many AppOps can have 2 modes: package mode and UID mode. It's possible that one can be changed while the other cannot be.</li>
             </ul>
             <p>事实上，如果我们个别挖掘每个应用和权限（这种情况不实际），就会有更多的解释。 As stated above, PMX doesn't change other apps' permissions on its own. So even if for some unknown reason Android doesn't change a permission, or reverts it back immediately, there's nothing we can do to force it because these are the limitations at Android end. 相反，我应该说这是Android系统的工作方式。</p>
@@ -778,6 +806,7 @@
 
             <p id="faq31" class="high-bottom"><b>为何收到大量<i>系统错误</i>提示？</b></p>
             <p>设备制造商会对AOSP 代码 (由Google开发) 做出大量更改。 所以一些自定义的 AppOps 框架/ OEM ROM 返回了权限管理 X 无法处理的结果。 您可以忽略这些警告，但部分功能可能失效。</p>
+            <p>See <a href="#faq43">Why does PMX not work properly on OEM operating systems or custom ROMs?</a></p>
 
             <hr class="dim" />
 
