@@ -770,6 +770,7 @@
 
             <p id="faq16" class="high-bottom"><b>How can I change INTERNET permission?</b></p>
             <p>Android doesn't allow changing all permissions, like those with the <b>Normal</b> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a> (e.g. <span class="code">INTERNET</span>) or those with <b>Fixed</b> flag or <b>Signature</b> protection level (usually System or Framework apps). See <a href="#perms_types">Manifest permissions and AppOps</a>.</p>
+            <p>But if you are rooted, <a href="https://github.com/mirfatif/Fyrypt">Fyrypt</a> gives you very strong control over network activity happening on your device.</p>
 
             <hr class="dim" />
 
@@ -894,7 +895,7 @@
                 <li>If your device is not rooted and you <a href="#adb_help">use PMX with ADB</a>, then connecting to <span class="code">adbd</span> requires internet permissions. See <a href="#faq27">Is PMX spying on me using ADB over network?</a>.</li>
             </ul>
 
-            <p>So if the app is unable to create or use local network sockets, it will fail. And if you want to stop PMX from using internet, it must not stop the app from talking to on-device processes over <a href="https://superuser.com/questions/263142">loopback interface for IPC</a>. This is usually the case with <span class="code">iptables</span>-based firewalls like AFWall+ and VPN based firewalls like NetGuard. But some ROMs have a built-in feature to disallow network access:</p>
+            <p>So if the app is unable to create or use local network sockets, it will fail. And if you want to stop PMX from using internet, it must not stop the app from talking to on-device processes over <a href="https://superuser.com/questions/263142">loopback interface for IPC</a>. This is usually the case with <span class="code">iptables</span>-based firewalls like <a href="https://github.com/mirfatif/Fyrypt">Fyrypt</a> and VPN based firewalls like NetGuard. But some ROMs have a built-in feature to disallow network access:</p>
             <img class="small" src="../en/img/allow_network_access.webp" />
             <p>This not only prevents the app from using internet but also disables its ability to create loopback sockets for IPC. So PMX won't be able to get root / ADB privileges if this permission is denied.</p>
 
