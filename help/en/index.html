@@ -240,7 +240,7 @@
                 <li>Permission <b>icon</b></li>
                 <li>First line shows <b>permission name</b></li>
                 <li>Second line shows permission's <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a>: <b>Normal</b>, <b>Dangerous</b>, <b>Signature</b>, <b>Development</b>, <b>Privileged</b>, <b>Fixed</b>, <b>AppOps</b> or <b>Unknown</b>. Also if AppOp is <b>per Package</b> or <b>per UID</b>. And if it is an <b>Extra</b> AppOp (never excluded in filter settings).</li>
-                <li>Third line (in case of AppOp) shows <b>last access time</b></li>
+                <li>Third line (in case of AppOp) shows <b>last access or reject time</b></li>
                 <li>Fourth line (in case of AppOp) shows the referenced value if it doesn't match the current set value.</li>
                 <li>Switch to change the permission state</li>
                 <li>Current state (in case of AppOp)</li>
@@ -275,7 +275,7 @@
                     <p><span class="code">:UID</span></p>
                 </li>
                 <li>
-                    <p>AppOps with last access time:</p>
+                    <p>AppOps with last access or reject time:</p>
                     <p><span class="code">:TIME</span></p>
                 </li>
                 <li>
@@ -416,150 +416,19 @@
             <hr />
 
             <h3 class="high-top" id="adb-limits">Limitations of ADB</h3>
-            <p>ADB is not as powerful as root is. In our case, for instance, PMX takes more time to build the list of apps when it's running with ADB.</p>
-            <p>Additionally, on some OEM ROMs the ADB functionality might be crippled due to lacking permissions or other restrictions. You can check the current status of what ADB can do in <b>About</b> -> <b>Privileges</b> (menu item):</p>
+            <p>You can check the current status of what ADB can do in <b>About</b> -> <b>Privileges</b> (menu item):</p>
             <img alt="PMX privileges" class="medium" src="../en/img/privs.webp" />
-            <p>Unfortunately we cannot do anything about it. And therefore some features are available only on rooted devices.</p>
-            <p>Specifically the following actions are possible only on rooted devices:</p>
+            <p>See more details <a href="https://mirfatif.github.io/adb-guide/adb-limits">here</a>. Also see <a href="#faq43">Why does PMX not work properly on OEM operating systems or custom ROMs?</a></p>
+
+            <p>Please follow the <a href="https://mirfatif.github.io/adb-guide"><b>ADB Guide</b></a> for step-by-step instructions.</p>
+
             <ul>
-                <li>Changing <a href="#faq17">system-fixed</a> permissions</li>
+                <li id="fire-tv-adb-not-working"><a href="https://www.aftvnews.com/amazon-blocks-long-running-fire-tv-capability-breaking-popular-apps-with-no-warning-and-giving-developers-the-runaround/">Why does ADB not work on Amazon Fire TV?</a></li>
+                <li id="adb-help-10"><a href="https://mirfatif.github.io/adb-guide/android-10">Android 10 and below</a></li>
+                <li id="adb_help_11"><a href="https://mirfatif.github.io/adb-guide/android-11">Android 11 and above</a></li>
+                <li id="adb-pair-video"><a href="https://mirfatif.github.io/adb-guide/android-11/#pair-svc">1 minute video guide</a></li>
+                <li id="adb_connect_svc"><a href="https://mirfatif.github.io/adb-guide/adb-connect-svc">ADB Connect Service</a></li>
             </ul>
-            <p>However some OEMs add extra settings to control ADB's privileges. For instance you need to uncheck "<i>Disable Permission Monitoring</i>" on Oppo phones and "<i>Allow granting permissions</i>" in Security Settings on Xiaomi phones. See <a href="https://stackoverflow.com/q/52079343/9165920">this question</a> for more details.</p>
-            <p>The following instructions apply to near-AOSP ROMs. Customized ROMs might have different or missing settings.</p>
-            <p>See <a href="#faq43">Why does PMX not work properly on OEM operating systems or custom ROMs?</a></p>
-
-            <p id="fire-tv-adb-not-working"><b>Why does ADB not work on Amazon Fire TV?</b></p>
-            <p>Amazon has blocked the ability for apps to establish a local ADB connection (see details <a href="https://www.aftvnews.com/amazon-blocks-long-running-fire-tv-capability-breaking-popular-apps-with-no-warning-and-giving-developers-the-runaround/">here</a>). So PMX won't work on these devices without root, unfortunately.</p>
-
-            <hr class="dim">
-
-            <h3 class="high-top" id="adb-help-10">Android 10 and below</h3>
-
-            <p>So here we start how you can make PMX work with ADB.</p>
-            <p>If your device is not rooted, you need to turn <b>Wireless ADB</b> on before using PMX. Some devices have <b><i>ADB over Network</i></b> or <b><i>Wireless Debugging</i></b> setting available in <b>Developer options</b>:</p>
-            <img alt="ADB developer options" class="medium" src="../en/img/adb_in_dev_options_1.webp" />
-
-            <p>If you don't have this setting on your device, you need to connect the device to a USB host like PC <b><i>once after every reboot</i></b>.</p>
-
-            <p class="high-top"><b><u>Unhide Developer options screen:</u></b></p>
-            <ol>
-                <li>
-                    <p>Go to <b>Settings</b> -> <b>About</b> and tap <b>Build number</b> five to seven times.</p>
-                    <p><b>Developer options</b> should appear directly under <b>Settings</b> or in <b>Settings</b> -> <b>System</b> at the bottom.</p>
-                </li>
-            </ol>
-
-            <p class="high-top"><b><u>Enable wireless debugging:</u></b></p>
-            <ol start="2">
-                <li>
-                    <p>Enable <b>Android debugging</b> in <b>Developer options</b>.</p>
-                </li>
-                <li>
-                    <p>Connect the device to the PC with a USB cable.</p>
-                </li>
-                <li>
-                    <p>On PC open a terminal window (or command prompt on Windows) and run:</p>
-                    <p><span class="code">adb tcpip 5555</span></p>
-                    <p>You must have <span class="code">adb</span> executable available on your PC to run the above command. If not, here's the <a href="https://developer.android.com/studio/releases/platform-tools#downloads">download link</a>.</p>
-                </li>
-            </ol>
-
-            <p class="high-top"><b><u>Optional steps for verification:</u></b></p>
-
-            <ol start="5">
-                <li>
-                    <p>Disconnect the USB cable from the device.</p>
-                </li>
-                <li>
-                    <p>Connect your device and PC to a common Wi-Fi network.</p>
-                </li>
-                <li>
-                    <p>Get the IP address of the device (usually in Wi-Fi settings or in <b>Settings</b> -> <b>About</b>), say it's <span class="code">192.168.1.1</span>.</p>
-                </li>
-                <li>
-                    <p>On PC run:</p>
-                    <p><span class="code">adb connect 192.168.1.1</span></p>
-                </li>
-                <li>
-                    <p>Run again:</p>
-                    <p><span class="code">adb shell id -u</span></p>
-                    <p>It should print <span class="code">2000</span> (or <span class="code">0</span>).</p>
-                </li>
-            </ol>
-
-            <p class="high-top"><b><u>Connect PMX to ADB:</u></b></p>
-
-            <ol start="10">
-                <li>
-                    <p>Run PMX app and check <b><i>ADB Shell</i></b> in drawer. Enter port <span class="code">5555</span> and tap connect.</p>
-                    <img alt="ADB developer options" class="medium" src="../en/img/adb_in_dev_options_2.webp" />
-                </li>
-                <li>
-                    <p><i>Allow USB Debugging</i> if asked.</p>
-                    <img alt="ADB developer options" class="medium" src="../en/img/adb_in_dev_options_3.webp" />
-                </li>
-            </ol>
-
-            <p>Leave the <b>Android debugging</b> enabled.</p>
-            <p>For more details see <a href="https://developer.android.com/studio/command-line/adb#wireless">this</a>.</p>
-
-            <hr class="dim">
-
-            <h3 class="high-top" id="adb_help_11">Android 11 and above</h3>
-            <p>On Android 11 and above, it's possible to turn on Wireless Debugging without connecting to a PC.</p>
-
-            <ol>
-                <li>
-                    <p>Connect your device to a Wi-Fi network.</p>
-                </li>
-                <li>
-                    <p>Open PMX and Developer Options in <a href="https://developer.android.com/guide/topics/large-screens/multi-window-support#split-screen_mode_activation">Split-Screen</a> mode. See instructions above how to unhide Developer Options.</p>
-                </li>
-                <li>
-                    <p>Enable <b><i>Wireless debugging</i></b> and <b><i>Disable ADB authorization timeout</i></b> in Developer Options. The latter ensures that you don't have to repeat the next two steps (pairing) again and again.</p>
-                    <img alt="Android 11 wireless ADB" class="medium" src="../en/img/adb_in_dev_options_11_1.webp" />
-                </li>
-                <li>
-                    <p>Open <b><i>Wireless debugging</i></b> and tap on <i>"Pair device with pairing code"</i>. Note the <b><i>pairing code</i></b> and <b><i>port number</i></b>.</p>
-                </li>
-                <li>
-                    <p>In PMX check <b><i>ADB Shell</i></b> in drawer, enter both parameters in the shown fields, and tap pair.</p>
-                    <img alt="Android 11 wireless ADB" class="medium" src="../en/img/adb_in_dev_options_11_2.webp" />
-                </li>
-                <li>
-                    <p>After successful pairing now it's time to connect. Enter the new <b><i>port number</i></b> from Wireless debugging in the shown field and tap connect.</p>
-                    <img alt="Android 11 wireless ADB" class="medium" src="../en/img/adb_in_dev_options_11_3.webp" />
-                </li>
-            </ol>
-
-            <p>Now you can leave the <b><i>Wireless debugging</i></b> enabled. Or better disable it and leave the <b><i>USB debugging</i></b> enabled.</p>
-
-            <p>If you entirely turn off the debugging in Developer options, or after every reboot, you need to repeat the last step.</p>
-
-            <p>For more details see <a href="https://developer.android.com/studio/command-line/adb#connect-to-a-device-over-wi-fi-android-11+">this</a>.</p>
-
-            <hr class="dim">
-
-            <p id="adb-pair-video">Here's a 1 minute video guide:</p>
-
-            <video class="medium" controls autoplay muted loop>
-                <source src="img/adb_pairing.mp4" type="video/webm">
-                ADB pairing
-            </video>
-
-            <hr class="dim">
-
-            <h3 class="high-top" id="adb_connect_svc">ADB Connect Service</h3>
-            <p>If <a href="#perm_watcher">Permission Watcher</a> or <a href="#scheduled_checker">Scheduled Checks</a> are enabled, PMX connects to ADB on device boot. But if ADB has not been enabled by then, PMX will no more try to connect to ADB unless explicitly done by opening the app.</p>
-            <p>But if you enable ADB on boot in an automated way, you can notify PMX by sending the following <span class="code">Intent</span> that ADB has been enabled:</p>
-
-            <p class="horizontal-scroll"><span class="code">am startservice -n com.mirfatif.permissionmanagerx/.fwk.AdbConnectSvcM --ei "com.mirfatif.pmx.extra.ADB_PORT" 5555</span></p>
-
-            <p>Make sure to use the correct package name depending on the app version (see <a href="#versions">PMX versions</a>). For the standalone Pro version, the command should be:</p>
-
-            <p class="horizontal-scroll"><span class="code">am startservice -n com.mirfatif.permissionmanagerx.pro/com.mirfatif.permissionmanagerx.fwk.AdbConnectSvcM --ei "com.mirfatif.pmx.extra.ADB_PORT" 5555</span></p>
-
-            <p>Read <a href="https://developer.android.com/studio/command-line/adb#am">here</a> how to use the <span class="code">am</span> tool to start an app's service.</p>
         </div>
 
         <div class="card">
@@ -585,17 +454,12 @@
             <h3 id="paid_features">Paid Features</h3>
             <p>Paid version includes everything that's in the Free version, plus the following <b>extra features</b> which are also listed in the Play Store description:</p>
             <ul>
-                <li>Sort apps and permissions by different parameters</li>
                 <li>Scheduled check to notify bad reference states</li>
                 <li>Watch for changes to permissions and revert them</li>
                 <li>Auto revoke granted permissions with RED states</li>
                 <li>Make changes to critical apps and permissions</li>
                 <li>Multiple users / work profile support</li>
-                <li>Auto create backup file on changes</li>
                 <li>Batch Operations (Profiles)</li>
-                <li>Permissions description</li>
-                <li>Search suggestions</li>
-                <li>Theming options</li>
                 <li>Permissions View</li>
             </ul>
         </div>
@@ -665,6 +529,8 @@
             <p id="faq15" class="high-bottom"><b>Why can't I change XYZ permission?</b></p>
             <p>Manifest permissions with only <i>Dangerous</i> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a> (and a few others) are changeable. AppOps not dependent on some other AppOp are changeable. That's how Android works, we can't change the behavior. See <a href="#perms_types">Manifest permissions and AppOps</a>.</p>
             <p>Additionally, PMX protects some critical framework apps and permissions; changing them might brick the device. See the <a href="#faq17">related question</a>.</p>
+            <p>Also see <a href="#faq3">Why do some AppOps cannot be changed?</a></p>
+            <p>Note that starting with Android 15, manifest permissions of system apps with <i>Development</i> protection level cannot be revoked. Android silently ignores the request.</p>
 
             <hr class="dim" />
 
@@ -681,11 +547,18 @@
             <p id="faq3" class="high-bottom"><b>Why do some AppOps cannot be changed?</b></p>
             <p>Sometimes you see "AppOp mode not changed". It means that Android rejected the request to change the AppOp mode. You cannot change it no matter what method or app you use. There could be multiple possible reasons.</p>
             <ul>
-                <li>Some AppOps are dependent on their corresponding manifest permissions. So they cannot be changed independently. For instance you may not be able to deny <span class="code">READ_CONTACTS</span> AppOp if <span class="code">android.permission.READ_CONTACTS</span> manifest permission is granted.</li>
+                <li>
+                    <p>Some AppOps are dependent on their corresponding manifest permissions. So they cannot be changed independently. For instance you may not be able to deny <span class="code">READ_CONTACTS</span> AppOp if <span class="code">android.permission.READ_CONTACTS</span> manifest permission is granted.</p>
+                    <p>Also if the app has not requested the manifest permission in its manifest file, its AppOp permission can also not be granted. But it may still appear in the app's permission list if the app has tried to use it (and got rejected). <span class="code">SYSTEM_ALERT_WINDOW</span> is one such example.</p>
+                </li>
                 <li>Some AppOps are only used by Android for compatibility (e.g. <span class="code">LEGACY_STORAGE</span>) and they don't actually control anything. If we explore their underlying working it's revealed that granting / revoking such permissions doesn't make sense.</li>
                 <li>Some permissions cannot be changed if the app is running on or is targeting an older or newer Android version.</li>
                 <li>Some OEM ROMs behave weird when it comes to AppOps. See <a href="#faq43">Why does PMX not work properly on OEM operating systems or custom ROMs?</a></i></li>
-                <li>Many AppOps can have 2 modes: package mode and UID mode. It's possible that one can be changed while the other cannot be.</li>
+                <li>
+                    <p>Many AppOps can have 2 modes: package mode and UID mode. It's possible that one can be changed while the other cannot be.</p>
+                    <p>Usually UID AppOps take precedence over their package AppOp counterparts. In this case the effective mode of the package AppOp is same as that of its UID AppOps. So you cannot change the package AppOp alone.</p>
+                    <p>Some AppOps prefer to be set in package mode, not UID mode. But if it's wrongly set in UID mode (with commandline tool or by some other app), it becomes non-responsive to any changes. Do "Reset AppOps" from top right menu to make it work again. This is also the case with other AppOps which have a corresponding manifest permission with <i>AppOp</i> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level<a>.</p>
+                </li>
             </ul>
             <p>Actually there come many more explanations if we dig every app and permission individually (which doesn't sound practical). As stated above, PMX doesn't change other apps' permissions on its own. So even if for some unknown reason Android doesn't change a permission, or reverts it back immediately, there's nothing we can do to force it because these are the limitations at Android end. Rather, I should say this is how Android works.</p>
             <p>Related:</p>
@@ -788,6 +661,7 @@
 
             <p id="faq18" class="high-bottom"><b>What is <i>UID mode</i> in AppOp permissions?</b></p>
             <p>It's a mode of an AppOp permission which indicates that changing this AppOp will also affect other apps (with the same UID), if installed. See <a href="https://developer.android.com/guide/topics/manifest/manifest-element#uid">sharedUserId</a>.</p>
+            <p>Note that UID mode takes precedence over package mode for many AppOps.</p>
 
             <hr class="dim" />
 
