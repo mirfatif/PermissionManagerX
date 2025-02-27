@@ -11,7 +11,6 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.fwk.CustomPrefDialogFrag;
-import com.mirfatif.permissionmanagerx.util.Utils;
 import java.util.Objects;
 
 public class SettingsFragTheme extends PreferenceFragmentCompat
@@ -38,7 +37,7 @@ public class SettingsFragTheme extends PreferenceFragmentCompat
     setPreferencesFromResource(R.xml.settings_prefs_theming, rootKey);
     Preference pref = findPreference(getString(R.string.pref_settings_theme_color_key));
     if (pref != null) {
-      pref.setEnabled(!Utils.isFreeVersion());
+      pref.setEnabled(false);
       pref.setSummaryProvider(SimpleSummaryProvider.getInstance());
     }
   }

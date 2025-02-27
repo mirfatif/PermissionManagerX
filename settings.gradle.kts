@@ -11,10 +11,6 @@ dependencyResolutionManagement {
   }
 }
 
-if (File(rootDir, "configs/settings-pro.gradle.kts").isFile) {
-  apply(from = "configs/settings-pro.gradle.kts")
-}
-
 include(":hidden_apis")
 
 include(":priv_library")

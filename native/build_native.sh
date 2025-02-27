@@ -9,7 +9,7 @@ cd "$(dirname "$0")"
 
 [ "$SRC_FILE" ] || SRC_FILE="pmxe.c"
 SRC_FILES="$SRC_FILES $SRC_FILE"
-[ "$OUT_DIR" ] || OUT_DIR='../app/src/foss/jniLibs'
+[ "$OUT_DIR" ] || OUT_DIR='../app/src/main/jniLibs'
 ARM_PMXE_LIB="$OUT_DIR/armeabi-v7a/libpmxe.so"
 ARM64_PMXE_LIB="$OUT_DIR/arm64-v8a/libpmxe.so"
 X86_PMXE_LIB="$OUT_DIR/x86/libpmxe.so"

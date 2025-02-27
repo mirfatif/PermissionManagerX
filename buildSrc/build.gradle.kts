@@ -13,7 +13,6 @@ dependencies {
   implementation(libs.plugin.jetbrains.kotlin.android)
 
   implementation(libs.plugin.spotless)
-  implementation(libs.plugin.lsparanoid)
 
   // Make version catalogs available to convention plugins
   // https://github.com/gradle/gradle/issues/15383

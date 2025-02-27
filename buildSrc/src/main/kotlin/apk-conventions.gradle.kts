@@ -2,7 +2,6 @@ import org.gradle.accessors.dm.LibrariesForLibs
 
 plugins {
   id("com.android.application")
-  id("org.lsposed.lsparanoid")
   id("android-base-conventions")
 }
 
@@ -49,11 +48,6 @@ android {
   composeOptions {
     kotlinCompilerExtensionVersion = libs.versions.compose.kotlin.compiler.ext.get()
   }
-}
-
-lsparanoid {
-  includeDependencies = true
-  classFilter = { it.startsWith("com.mirfatif.") }
 }
 
 dependencies {

@@ -17,7 +17,6 @@ import com.mirfatif.permissionmanagerx.databinding.BackupRestoreDialogBinding;
 import com.mirfatif.permissionmanagerx.databinding.ProgressDialogBinding;
 import com.mirfatif.permissionmanagerx.util.ApiUtils;
 import com.mirfatif.permissionmanagerx.util.StringUtils;
-import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.permissionmanagerx.util.bg.LiveTasksQueueTyped;
 import com.mirfatif.privtasks.util.MyLog;
 import java.util.Objects;
@@ -49,19 +48,6 @@ public class BackupRestoreDialog {
     CheckBox cb = b.skipUninstalledPackages;
     cb.setChecked(mSkipUninstalledApps);
     cb.setOnClickListener(v -> mSkipUninstalledApps = cb.isChecked());
-
-    if (!Utils.isFreeVersion()) {
-      b.swapUserIds.setVisibility(View.VISIBLE);
-
-      b.swapUserIds.setOnClickListener(
-          v -> {
-            mSwapUserIds = b.swapUserIds.isChecked();
-            b.userIdsCont.setVisibility(mSwapUserIds ? View.VISIBLE : View.GONE);
-          });
-
-      b.userIdFrom.addTextChangedListener((UserIdWatcher) s -> mSwapUserIdFrom = s);
-      b.userIdTo.addTextChangedListener((UserIdWatcher) s -> mSwapUserIdTo = s);
-    }
 
     return new Builder(mA.mA)
         .setPositiveButton(R.string.backup, (d, w) -> mBackupLauncher.launch())

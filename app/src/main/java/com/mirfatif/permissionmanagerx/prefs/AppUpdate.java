@@ -18,7 +18,6 @@ import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.util.ApiUtils;
 import com.mirfatif.permissionmanagerx.util.NotifUtils;
 import com.mirfatif.permissionmanagerx.util.UiUtilsFlavor;
-import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.util.MyLog;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -64,11 +63,7 @@ public class AppUpdate {
                       && newIsBeta
                       && getBetaSubVersion(newVerStr) > getBetaSubVersion(oldVerStr))))) {
         MyLog.i(TAG, "check", "New update is available: " + oldVerStr + " -> " + newVerStr);
-        if (Utils.isPsProVersion()) {
-          updateUrl = getString(R.string.play_store_url);
-        } else {
-          updateUrl = getString(R.string.source_url);
-        }
+        updateUrl = getString(R.string.source_url);
       } else if (newVer > oldVer && !oldIsBeta && newIsBeta) {
         MyLog.i(TAG, "check", "New update is available: " + oldVerStr + " -> " + newVerStr);
         if (notify) {

@@ -59,7 +59,6 @@ import com.mirfatif.permissionmanagerx.util.LocaleUtils;
 import com.mirfatif.permissionmanagerx.util.NotifUtils;
 import com.mirfatif.permissionmanagerx.util.UiUtils;
 import com.mirfatif.permissionmanagerx.util.UserUtils;
-import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.permissionmanagerx.util.bg.LiveMinDelayParamTask;
 import com.mirfatif.permissionmanagerx.util.bg.LiveSchedParamTask;
 import com.mirfatif.permissionmanagerx.util.bg.LiveSchedTask;
@@ -607,8 +606,7 @@ public class MainActivity extends OnBackPressedCallback {
     mB.navV.invalidate();
     setBoxesChecked();
     setCheckBoxListeners();
-    boolean showDonate = !Utils.isPsProVersion() && !Utils.isAmazonVersion();
-    mB.navV.getMenu().findItem(R.id.action_donate).setVisible(showDonate);
+    mB.navV.getMenu().findItem(R.id.action_donate).setVisible(true);
 
     mActFlavor.setNavMenu();
   }

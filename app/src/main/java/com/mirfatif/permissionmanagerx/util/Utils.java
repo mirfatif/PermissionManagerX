@@ -3,7 +3,6 @@ package com.mirfatif.permissionmanagerx.util;
 import android.os.Build;
 import androidx.lifecycle.Lifecycle.State;
 import androidx.lifecycle.LifecycleOwner;
-import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.privtasks.util.MyLog;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,26 +29,6 @@ public class Utils {
       MyLog.e(tag, "copyStream", e);
       return false;
     }
-  }
-
-  public static boolean isPsProVersion() {
-    return BuildConfig.VERSION_NAME.contains("-ps-pro");
-  }
-
-  public static boolean isSelfProVersion() {
-    return BuildConfig.VERSION_NAME.contains("-pro") && !isPsProVersion();
-  }
-
-  public static boolean isFreeVersion() {
-    return !isPsProVersion() && !isSelfProVersion();
-  }
-
-  public static boolean isAmazonVersion() {
-    return BuildConfig.VERSION_NAME.contains("-amaz");
-  }
-
-  public static boolean isFdroidVersion() {
-    return BuildConfig.VERSION_NAME.contains("-fd");
   }
 
   public static String getAndroidVersionInt() {

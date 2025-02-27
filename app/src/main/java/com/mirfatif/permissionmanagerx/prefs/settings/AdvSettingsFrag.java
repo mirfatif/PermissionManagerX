@@ -24,7 +24,6 @@ import com.mirfatif.permissionmanagerx.privs.DaemonStarter;
 import com.mirfatif.permissionmanagerx.privs.NativeDaemon;
 import com.mirfatif.permissionmanagerx.util.ApiUtils;
 import com.mirfatif.permissionmanagerx.util.UiUtils;
-import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.util.bg.BgRunner;
 import java.io.File;
 import java.util.Objects;
@@ -76,15 +75,13 @@ public class AdvSettingsFrag extends PreferenceFragmentCompat
     mSecUserPermRefValue = mSecUserPermRefPref.isChecked();
 
     Preference pref = findPref(R.string.pref_adv_settings_reset_perm_db_key);
-    if (Utils.isFreeVersion()) {
-      pref.setVisible(true);
-      pref.setEnabled(DaemonHandler.INS.isDaemonAlive());
-      pref.setOnPreferenceClickListener(
-          p -> {
-            mA.mA.showPermDbResetDialog();
-            return true;
-          });
-    }
+    pref.setVisible(true);
+    pref.setEnabled(DaemonHandler.INS.isDaemonAlive());
+    pref.setOnPreferenceClickListener(
+        p -> {
+          mA.mA.showPermDbResetDialog();
+          return true;
+        });
 
     mDaemonDexLocPref = findPref(R.string.pref_adv_settings_daemon_dex_location_key);
     mDaemonDexLocVal = mDaemonDexLocPref.getValue();

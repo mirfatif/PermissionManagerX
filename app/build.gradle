@@ -6,7 +6,6 @@ import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
 apply plugin: 'apk-conventions'
-apply from: "$rootDir/configs/foss-pro-flavors.gradle"
 
 android {
     namespace 'com.mirfatif.permissionmanagerx'
@@ -22,43 +21,8 @@ android {
 
         // Daemon dex file to be saved in assets directory.
         buildConfigField 'String', 'DAEMON_DEX', '"' + daemonDex + '"'
-    }
 
-    flavorDimensions.add(0, 'type')
-    productFlavors {
-        self {
-            dimension 'type'
-        }
-        ps {
-            dimension 'type'
-            applicationIdSuffix '.ps'
-            versionNameSuffix '-ps'
-        }
-        fdroid {
-            dimension 'type'
-            versionNameSuffix '-fd'
-        }
-        amaz {
-            dimension 'type'
-            versionNameSuffix '-amaz'
-        }
-        pro {
-            applicationIdSuffix '.pro'
-            versionNameSuffix '-pro'
-        }
-    }
-
-    variantFilter { variant ->
-        List names = variant.flavors*.name
-        if (noPro) {
-            if (!names.contains('fdroid') || !names.contains('foss')) {
-                variant.setIgnore(true)
-            }
-        } else if (names.contains('ps') && names.contains('foss')) {
-            variant.setIgnore(true)
-        } else if ((names.contains('fdroid') || names.contains('amaz')) && names.contains('pro')) {
-            variant.setIgnore(true)
-        }
+        versionNameSuffix '-foss'
     }
 
     buildTypes {
@@ -70,35 +34,9 @@ android {
 
     applicationVariants.configureEach { variant ->
         def mf = variant.mergedFlavor
-        if (variant.flavorName == 'psPro' && variant.buildType.name == 'release') {
-            // No .ps.pro suffix for Play Store Pro release
-            mf.setApplicationId(namespace)
-        }
-
         String lfp = variant.applicationId + '.LogFileProvider'
         mf.addManifestPlaceholders(LOG_FILE_PROVIDER: lfp)
         variant.buildConfigField 'String', 'LOG_FILE_PROVIDER', '"' + lfp + '"'
-
-        // print(variant.name + ' ' + variant.applicationId + ' ')
-        // print(mf.manifestPlaceholders)
-        // println()
-    }
-
-    sourceSets.configureEach { sc ->
-        // These combinations are not created by default (required for daemon dex).
-        def dir
-        if (sc.name.matches('(self|ps)ProDebug')) {
-            dir = 'proDebug'
-        } else if (sc.name.matches('(self|ps)ProRelease')) {
-            dir = 'proRelease'
-        } else if (sc.name.matches('(self|fdroid|amaz)FossDebug')) {
-            dir = 'fossDebug'
-        } else if (sc.name.matches('(self|fdroid|amaz)FossRelease')) {
-            dir = 'fossRelease'
-        } else {
-            return
-        }
-        sc.assets.srcDirs += ["$projectDir/src/$dir/assets"]
     }
 
     packagingOptions {
@@ -153,12 +91,6 @@ dependencies {
     debugImplementation libs.leakcanary.android
 }
 
-lsparanoid {
-    variantFilter {
-        !it.name.contains('Foss') && it.buildType != 'debug'
-    }
-}
-
 def createJarFromApk(String apkFile, String jarFile) {
     try (ZipInputStream apk = new ZipInputStream(new FileInputStream(apkFile))) {
         try (ZipOutputStream jar = new ZipOutputStream(new FileOutputStream(jarFile))) {
@@ -180,9 +112,7 @@ def createJarFromApk(String apkFile, String jarFile) {
         }
     }
 
-    if (!noPro) {
-        println("Jar created: $jarFile")
-    }
+    println("Jar created: $jarFile")
 }
 
 def copyFileIfChanged(File src, File dst) {
@@ -207,9 +137,7 @@ def copyFileIfChanged(File src, File dst) {
     }
 
     if (dst.exists()) {
-        if (!noPro) {
-            println('Creating: ' + dst.absolutePath)
-        }
+        println('Creating: ' + dst.absolutePath)
     } else {
         throw new GradleException('Failed to create: ' + dst.absolutePath)
     }
@@ -218,114 +146,84 @@ def copyFileIfChanged(File src, File dst) {
 def createTasksForDaemonBuild = () -> {
     boolean signed = project.hasProperty('android.injected.signing.store.file')
 
-    for (boolean foss : new boolean[]{true, false}) {
-        if (noPro && !foss) {
-            continue
-        }
+    for (boolean debug : new boolean[]{true, false}) {
+        String task = debug ? 'Debug' : 'Release'
 
-        for (boolean debug : new boolean[]{true, false}) {
-            String task = foss ? 'Foss' : 'Pro'
-            task += debug ? 'Debug' : 'Release'
+        String dir = debug ? 'debug' : 'release'
 
-            String dir = foss ? 'foss' : 'pro'
-            dir += debug ? 'Debug' : 'Release'
+        String dexTaskDep = 'assemble' + task
 
-            String dexTaskDep = 'assemble' + task
+        String apk = 'priv_daemon/build/outputs/apk/'
+        apk += (debug ? 'debug' : 'release') + '/priv_daemon'
+        apk += (debug ? '-debug' : ('-release' + (signed ? '' : '-unsigned'))) + '.apk'
 
-            String apk = 'priv_daemon/build/outputs/apk/' + (foss ? 'foss' : 'pro') + '/'
-            apk += (debug ? 'debug' : 'release') + '/priv_daemon-' + (foss ? 'foss' : 'pro')
-            apk += (debug ? '-debug' : ('-release' + (signed ? '' : '-unsigned'))) + '.apk'
+        String jar = apk.replace('.apk', '.jar')
 
-            String jar = apk.replace('.apk', '.jar')
+        File srcFile = new File(rootDir, jar)
+        File dstFile = new File(rootDir, 'app/src/' + dir + '/assets/' + daemonDex)
 
-            File srcFile = new File(rootDir, jar)
-            File dstFile = new File(rootDir, 'app/src/' + dir + '/assets/' + daemonDex)
+        Task t = tasks.register('buildDaemon' + task) {
+            dependsOn(':priv_daemon:' + dexTaskDep)
+            mustRunAfter(':priv_daemon:' + dexTaskDep)
 
-            Task t = tasks.register('buildDaemon' + task) {
-                dependsOn(':priv_daemon:' + dexTaskDep)
-                mustRunAfter(':priv_daemon:' + dexTaskDep)
+            ext.srcFile = srcFile
+            ext.dstFile = dstFile
 
-                ext.srcFile = srcFile
-                ext.dstFile = dstFile
-
-                doLast {
-                    createJarFromApk(apk, jar)
-                }
-            }.get()
-
-            if (foss) {
-                t.doLast {
-                    copyFileIfChanged(srcFile, dstFile)
-                }
+            doLast {
+                createJarFromApk(apk, jar)
             }
+        }.get()
+
+        t.doLast {
+            copyFileIfChanged(srcFile, dstFile)
         }
     }
 }
 
-tasks.register('buildNativeFoss', Exec) {
+tasks.register('buildNative', Exec) {
     environment 'ANDROID_NDK', ndkDir
     workingDir nativeDir
     commandLine './build_native.sh'
 
     doLast {
         if (executionResult.get().exitValue != 0) {
-            throw new GradleException('buildNativeFoss failed')
+            throw new GradleException('buildNative failed')
         }
     }
 }
 
-def setExtSrcDependencies(String type, String version) {
+def setExtSrcDependencies() {
     for (boolean debug : new boolean[]{true, false}) {
         String build = debug ? 'Debug' : 'Release'
 
-        TaskProvider task = tasks.named('merge' + type + version + build + 'Assets')
+        TaskProvider task = tasks.named('merge' + build + 'Assets')
 
         task.configure {
-            dependsOn('buildDaemon' + version + build)
-            mustRunAfter('buildDaemon' + version + build)
+            dependsOn('buildDaemon' + build)
+            mustRunAfter('buildDaemon' + build)
         }
 
-        task = tasks.named('merge' + type + version + build + 'JniLibFolders')
+        task = tasks.named('merge' + build + 'JniLibFolders')
 
         task.configure {
-            if (version == 'Foss') {
-                dependsOn('buildNativeFoss')
-                mustRunAfter('buildNativeFoss')
-            } else {
-                dependsOn('buildNative' + type + version + build)
-                mustRunAfter('buildNative' + type + version + build)
-            }
+            dependsOn('buildNative')
+            mustRunAfter('buildNative')
         }
     }
 }
 
 createTasksForDaemonBuild()
 
-if (!noPro) {
-    apply from: '../configs/pro-app.gradle'
-}
-
 afterEvaluate {
-    setExtSrcDependencies('Fdroid', 'Foss')
-
-    if (!noPro) {
-        setExtSrcDependencies('Self', 'Foss')
-        setExtSrcDependencies('Amaz', 'Foss')
-        setExtSrcDependencies('Self', 'Pro')
-        setExtSrcDependencies('Ps', 'Pro')
-    }
+    setExtSrcDependencies()
 }
 
 clean.doLast {
     // Delete daemon dex
-    for (String variant in new String[]{'fossRelease', 'fossDebug', 'proRelease', 'proDebug'}) {
+    for (String variant in new String[]{'release', 'debug'}) {
         Paths.get(projectDir.absolutePath, 'src/' + variant + '/assets').deleteDir()
     }
-    // Delete native libraries
-    for (String variant in new String[]{'main', 'foss', 'selfProRelease',
-            'psProRelease', 'selfProDebug', 'psProDebug'}) {
-        Paths.get(projectDir.absolutePath, 'src/' + variant + '/jniLibs').deleteDir()
-    }
+    Paths.get(projectDir.absolutePath, 'src/main/jniLibs').deleteDir()
 }
 
 preBuild.doFirst {

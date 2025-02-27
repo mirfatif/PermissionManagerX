@@ -56,8 +56,7 @@ Confused? We are here to explain. Please start with:
 ## How to Build
 `build.gradle` calls a shell script to build native binaries. So a Linux environment is expected with all standard tools.
 * Download code: `git clone --depth=1 --recurse-submodules https://github.com/mirfatif/PermissionManagerX.git && cd PermissionManagerX`
-* Set `sdk.dir` in `local.properties` to the directory containing Android SDK API level (platform) 33, build-tools 33.0.0 (and the latest SDK `tools` and `platform-tools`), and Android NDK 25.1.
-* Set `JAVA_HOME` environment variable to JDK 11.
+* Set `sdk.dir` in `local.properties` to the directory containing Android SDK
 * Run `./gradlew :app:assembleRelease`. Or use IntelliJ IDEA / Android Studio.
 
 ## Translations [![Crowdin](https://badges.crowdin.net/pmx/localized.svg)](https://crowdin.com/project/pmx)

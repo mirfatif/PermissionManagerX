@@ -1,8 +1,6 @@
 package com.mirfatif.permissionmanagerx.main;
 
 import static com.mirfatif.permissionmanagerx.util.ApiUtils.openWebUrl;
-import static com.mirfatif.permissionmanagerx.util.Utils.isPsProVersion;
-import static com.mirfatif.permissionmanagerx.util.Utils.isSelfProVersion;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -61,13 +59,8 @@ public class FeedbackDialogFrag extends BottomSheetDialogFrag {
     int msgResId, buttonResId;
 
     if (isYes) {
-      if (isPsProVersion() || isSelfProVersion()) {
-        msgResId = R.string.rate_the_app;
-        buttonResId = R.string.rate_now;
-      } else {
-        msgResId = R.string.purchase_and_rate_the_app;
-        buttonResId = R.string.how_do_i;
-      }
+      msgResId = R.string.purchase_and_rate_the_app;
+      buttonResId = R.string.how_do_i;
     } else {
       msgResId = R.string.ask_to_provide_feedback;
       buttonResId = R.string.contact;
@@ -109,13 +102,13 @@ public class FeedbackDialogFrag extends BottomSheetDialogFrag {
     } else {
       b2 = R.string.rating_options;
 
-      if (isPsProVersion() || type == FeedbackType.RATE) {
+      if (type == FeedbackType.RATE) {
         b1 = R.string.rate_on_ps;
         l1 = new ButtonListener(() -> openWebUrl(mA, getString(R.string.play_store_url)));
 
         b2 = R.string.other_rating_options;
 
-      } else if (type == FeedbackType.RATE_DONATE && !isSelfProVersion()) {
+      } else if (type == FeedbackType.RATE_DONATE) {
         b1 = R.string.purchase_donate;
         l1 =
             new ButtonListener(() -> ApiUtils.openWebUrl(mA, getString(R.string.purchase_pro_url)));

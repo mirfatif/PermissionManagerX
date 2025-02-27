@@ -23,7 +23,4 @@ android {
   buildFeatures { buildConfig = false }
 }
 
-dependencies {
-  implementation(libs.androidx.annotation)
-  compileOnly(libs.lsparanoid.core)
-}
+dependencies { implementation(libs.androidx.annotation) }

@@ -27,8 +27,6 @@ import com.mirfatif.permissionmanagerx.fwk.AboutActivityM;
 import com.mirfatif.permissionmanagerx.help.HelpActivity;
 import com.mirfatif.permissionmanagerx.main.FeedbackDialogFrag;
 import com.mirfatif.permissionmanagerx.main.FeedbackDialogFrag.FeedbackType;
-import com.mirfatif.permissionmanagerx.parser.PackageParser;
-import com.mirfatif.permissionmanagerx.parser.PkgParserFlavor;
 import com.mirfatif.permissionmanagerx.prefs.AppUpdate;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.prefs.settings.SettingsActivity;
@@ -38,11 +36,9 @@ import com.mirfatif.permissionmanagerx.svc.LogcatSvc;
 import com.mirfatif.permissionmanagerx.util.ApiUtils;
 import com.mirfatif.permissionmanagerx.util.NotifUtils;
 import com.mirfatif.permissionmanagerx.util.UiUtils;
-import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.permissionmanagerx.util.bg.LiveTasksQueueTyped;
 import com.mirfatif.privtasks.util.MyLog;
 import com.mirfatif.privtasks.util.Util;
-import com.mirfatif.privtasks.util.bg.BgRunner;
 import com.mirfatif.privtasks.util.bg.SingleSchedTaskExecutor;
 import java.io.File;
 import java.io.IOException;
@@ -111,32 +107,6 @@ public class AboutActivity {
         };
 
     mLoggingLauncher = mA.registerForActivityResult(new CreateDocument("text/plain"), callback);
-
-    if (!Utils.isFreeVersion() && DaemonHandler.INS.isDaemonAlive()) {
-      callback = fileUri -> BgRunner.execute(() -> PkgParserFlavor.INS.dumpPerms(fileUri));
-      mDumpLauncher = mA.registerForActivityResult(new CreateDocument("text/plain"), callback);
-
-      mB.dumpCont.setVisibility(View.VISIBLE);
-      mB.dumpV.setOnClickListener(
-          v -> {
-            try {
-              mDumpLauncher.launch("PMX_Dump_" + Util.getCurrDateTime(false, true) + ".txt");
-            } catch (ActivityNotFoundException ignored) {
-              UiUtils.showToast(R.string.no_file_picker_installed);
-            }
-          });
-
-      PackageParser.INS
-          .getListInProg()
-          .observe(
-              mA,
-              inProg -> {
-                mB.dumpV.setEnabled(!inProg);
-                mB.dumpIconV.setEnabled(!inProg);
-                mB.dumpTitleV.setEnabled(!inProg);
-                mB.dumpSummaryV.setEnabled(!inProg);
-              });
-    }
   }
 
   private void openWebUrl(View view, int linkResId) {

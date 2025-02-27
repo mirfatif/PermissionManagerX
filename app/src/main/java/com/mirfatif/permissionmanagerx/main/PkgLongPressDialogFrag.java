@@ -29,7 +29,6 @@ import com.mirfatif.permissionmanagerx.util.ApiUtils;
 import com.mirfatif.permissionmanagerx.util.StringUtils;
 import com.mirfatif.permissionmanagerx.util.UiUtils;
 import com.mirfatif.permissionmanagerx.util.UserUtils;
-import com.mirfatif.permissionmanagerx.util.Utils;
 import com.mirfatif.privtasks.util.bg.BgRunner;
 
 public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
@@ -92,10 +91,9 @@ public class PkgLongPressDialogFrag extends BottomSheetDialogFrag {
           openAppInfo();
         });
 
-    if (!Utils.isFdroidVersion()
-        || ApiUtils.resolveActivity(
-                new Intent(WRUN_ACTION_SEARCH_PKG), PackageManager.MATCH_DEFAULT_ONLY)
-            != null) {
+    if (ApiUtils.resolveActivity(
+            new Intent(WRUN_ACTION_SEARCH_PKG), PackageManager.MATCH_DEFAULT_ONLY)
+        != null) {
       b.findPkgProc.setVisibility(View.VISIBLE);
       b.findPkgProc.setOnClickListener(
           v -> {

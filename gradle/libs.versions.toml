@@ -19,12 +19,10 @@ plugin-android-library = { module = "com.android.library:com.android.library.gra
 plugin-jetbrains-kotlin-android = { module = "org.jetbrains.kotlin.android:org.jetbrains.kotlin.android.gradle.plugin", version = "1.9.23" }
 
 plugin-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "6.25.0" }
-plugin-lsparanoid = { module = "org.lsposed.lsparanoid:gradle-plugin", version = "0.6.0" }
 
 desugar_jdk = { module = "com.android.tools:desugar_jdk_libs", version = "2.0.4" }
 androidx-annotation = { module = "androidx.annotation:annotation", version = "1.7.1" }
 jetbrains-annotations = { module = "org.jetbrains:annotations", version = "24.1.0" }
-lsparanoid-core = { module = "org.lsposed.lsparanoid:core", version = "0.6.0" }
 
 libadb-android = { module = "com.github.MuntashirAkon:libadb-android", version = "3.0.0" }
 sun-security-android = { module = "com.github.MuntashirAkon:sun-security-android", version = "1.1" }
