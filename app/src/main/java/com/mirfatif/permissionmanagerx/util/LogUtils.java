@@ -1,14 +1,11 @@
 package com.mirfatif.permissionmanagerx.util;
 
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.os.Build;
 import androidx.core.app.NotificationCompat;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
-import com.mirfatif.permissionmanagerx.fwk.CrashReportActivityM;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.DaemonHandler;
 import com.mirfatif.permissionmanagerx.privs.NativeDaemon;
@@ -68,13 +65,6 @@ public class LogUtils {
     final String CHANNEL_NAME = ApiUtils.getString(R.string.channel_crash_report);
     final int UNIQUE_ID = ApiUtils.getInt(R.integer.channel_crash_report);
 
-    PendingIntent pi =
-        PendingIntent.getActivity(
-            App.getCxt(),
-            UNIQUE_ID,
-            new Intent(App.getCxt(), CrashReportActivityM.class),
-            NotifUtils.PI_FLAGS);
-
     NotificationCompat.Builder builder =
         new NotificationCompat.Builder(App.getCxt(), CHANNEL_ID)
             .setSmallIcon(R.drawable.notification_icon)
@@ -83,8 +73,6 @@ public class LogUtils {
             .setStyle(
                 new NotificationCompat.BigTextStyle()
                     .bigText(ApiUtils.getString(R.string.ask_to_report_crash)))
-            .setContentIntent(pi)
-            .addAction(0, ApiUtils.getString(R.string.send_report), pi)
             .setColor(UiUtilsFlavor.getAccentColor())
             .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
