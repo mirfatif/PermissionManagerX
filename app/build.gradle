@@ -101,7 +101,9 @@ def createJarFromApk(String apkFile, String jarFile) {
 
             while ((entry = apk.nextEntry) != null) {
                 if (entry.name.matches(clsDex)) {
-                    jar.putNextEntry(new ZipEntry(entry.name))
+                    ZipEntry zipEntry = new ZipEntry(entry.name)
+                    zipEntry.setTime(0)
+                    jar.putNextEntry(zipEntry)
                     while ((len = apk.read(buf)) > 0) {
                         jar.write(buf, 0, len)
                     }
