@@ -34,6 +34,7 @@ import com.mirfatif.permissionmanagerx.privs.DaemonHandler;
 import com.mirfatif.permissionmanagerx.privs.DaemonIface;
 import com.mirfatif.permissionmanagerx.svc.LogcatSvc;
 import com.mirfatif.permissionmanagerx.util.ApiUtils;
+import com.mirfatif.permissionmanagerx.util.LogUtils;
 import com.mirfatif.permissionmanagerx.util.NotifUtils;
 import com.mirfatif.permissionmanagerx.util.UiUtils;
 import com.mirfatif.permissionmanagerx.util.bg.LiveTasksQueueTyped;
@@ -83,7 +84,12 @@ public class AboutActivity {
             NotifUtils.askForNotifPerm(mA, mNotifPermReqLauncher);
           }
         });
-    mB.sendCrashReport.setOnClickListener(v -> CrashReportActivity.start(mA));
+
+    if (LogUtils.isOfficialRelease()) {
+      mB.sendCrashReport.setOnClickListener(v -> CrashReportActivity.start(mA));
+    } else {
+      mB.sendCrashReport.setEnabled(false);
+    }
 
     openWebUrl(mB.privacyPolicy, R.string.privacy_policy_link);
     mB.checkUpdate.setOnClickListener(v -> checkForUpdates());
