@@ -25,15 +25,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 public class AppUpdate {
 
   private static final String TAG = "AppUpdate";
 
-  private static final String CHECK_URL = "https://mirfatif.github.io/mirfatif/pmx_version.json";
-  private static final String VERSION_TAG = "message";
+  private static final String URL =
+      "https://api.github.com/repos/mirfatif/PermissionManagerX/releases";
+  private static final String NAME_FIELD = "name";
+  private static final String FOSS_SUFFIX = "-foss";
 
   private AppUpdate() {}
 
@@ -49,7 +51,7 @@ public class AppUpdate {
       String oldVerStr = BuildConfig.VERSION_NAME;
       int oldVer = getVersion(oldVerStr);
 
-      String newVerStr = new JSONObject(getData()).getString(VERSION_TAG);
+      String newVerStr = getLatestFossVersion();
       int newVer = getVersion(newVerStr);
 
       boolean oldIsBeta = oldVerStr.contains("-beta");
@@ -108,11 +110,11 @@ public class AppUpdate {
     return Integer.parseInt(version);
   }
 
-  private static String getData() throws IOException {
+  private static String getLatestFossVersion() throws IOException, JSONException {
     HttpURLConnection connection = null;
     InputStream inputStream = null;
     try {
-      connection = (HttpURLConnection) new URL(CHECK_URL).openConnection();
+      connection = (HttpURLConnection) new URL(URL).openConnection();
       connection.setConnectTimeout(60000);
       connection.setReadTimeout(60000);
       connection.setUseCaches(false);
@@ -133,7 +135,16 @@ public class AppUpdate {
       while ((line = reader.readLine()) != null) {
         builder.append(line);
       }
-      return builder.toString();
+
+      var json = new JSONArray(builder.toString());
+      String name;
+      for (int i = 0; i < json.length(); i++) {
+        name = json.getJSONObject(i).getString(NAME_FIELD);
+        if (name.endsWith(FOSS_SUFFIX)) {
+          return name;
+        }
+      }
+      throw new JSONException("No foss release found");
     } finally {
       try {
         if (inputStream != null) {
