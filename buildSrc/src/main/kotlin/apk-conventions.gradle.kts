@@ -1,4 +1,5 @@
 import org.gradle.accessors.dm.LibrariesForLibs
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
   id("com.android.application")
@@ -25,7 +26,7 @@ android {
     isCoreLibraryDesugaringEnabled = true
   }
 
-  kotlinOptions { jvmTarget = "17" }
+  kotlin.compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
 
   buildTypes {
     release {
@@ -42,15 +43,10 @@ android {
     viewBinding = true
     dataBinding = true
     buildConfig = true
-    compose = true
-  }
-
-  composeOptions {
-    kotlinCompilerExtensionVersion = libs.versions.compose.kotlin.compiler.ext.get()
   }
 }
 
 dependencies {
   implementation(libs.androidx.annotation)
-  coreLibraryDesugaring(libs.desugar.jdk)
+  coreLibraryDesugaring(libs.desugar.jdk.nio)
 }

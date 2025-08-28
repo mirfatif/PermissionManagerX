@@ -11,7 +11,6 @@ android {
     viewBinding = false
     dataBinding = false
     buildConfig = false
-    compose = false
   }
 }
 

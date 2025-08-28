@@ -13,10 +13,7 @@ java {
   targetCompatibility = JavaVersion.VERSION_17
 }
 
-tasks.withType<KotlinCompile> {
-  kotlinOptions.jvmTarget = "17"
-  compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
-}
+tasks.withType<KotlinCompile> { compilerOptions.jvmTarget.set(JvmTarget.JVM_17) }
 
 val libs = the<LibrariesForLibs>()
 

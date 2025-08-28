@@ -2,11 +2,10 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
   `kotlin-dsl`
-  id("com.diffplug.spotless").version("6.25.0").apply(true)
-  id("com.github.ben-manes.versions").version("0.51.0").apply(true)
+  id("com.diffplug.spotless").version("7.2.1").apply(true)
+  id("com.github.ben-manes.versions").version("0.52.0").apply(true)
 }
 
-// This is a replacement of plugins {} block in root build.gradle.kts
 dependencies {
   implementation(libs.plugin.android.application)
   implementation(libs.plugin.android.library)
@@ -22,12 +21,12 @@ dependencies {
 spotless {
   java {
     target("src/**/*.java")
-    googleJavaFormat()
+    googleJavaFormat(libs.versions.google.java.format.get())
   }
 
   kotlin {
     target("src/**/*.kt", "src/**/*.kts", "*.kts")
-    ktfmt()
+    ktfmt(libs.versions.ktfmt.get())
   }
 }
 

@@ -5,10 +5,15 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
-apply plugin: 'apk-conventions'
+plugins {
+    id('apk-conventions')
+    alias(libs.plugins.gradle.versions)
+}
+
+def daemonDex = "daemon.dx"
 
 android {
-    namespace 'com.mirfatif.permissionmanagerx'
+    namespace = 'com.mirfatif.permissionmanagerx'
 
     defaultConfig {
         applicationId namespace
@@ -42,7 +47,7 @@ android {
     packagingOptions {
         jniLibs {
             // Due to android:extractNativeLibs set to 'true' in AndroidManifest.
-            useLegacyPackaging true
+            useLegacyPackaging = true
         }
 
         // Exclude large files.
@@ -183,6 +188,11 @@ def createTasksForDaemonBuild = () -> {
 }
 
 tasks.register('buildNative', Exec) {
+    def props = new Properties()
+    props.load(new FileInputStream(new File(rootDir, "local.properties")))
+    def ndkDir = new File(props.get("sdk.dir").toString(), "ndk/28.2.13676358").absolutePath
+    def nativeDir = rootDir.absolutePath + "/native"
+
     environment 'ANDROID_NDK', ndkDir
     workingDir nativeDir
     commandLine './build_native.sh'

@@ -1,16 +1,19 @@
+import org.gradle.accessors.dm.LibrariesForLibs
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins { id("com.diffplug.spotless") }
 
+val libs = the<LibrariesForLibs>()
+
 spotless {
   java {
     target("src/**/*.java")
-    googleJavaFormat()
+    googleJavaFormat(libs.versions.google.java.format.get())
   }
 
   kotlin {
     target("src/**/*.kt", "src/**/*.kts", "*.kts")
-    ktfmt()
+    ktfmt(libs.versions.ktfmt.get())
   }
 }
 

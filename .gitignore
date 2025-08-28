@@ -3,6 +3,8 @@
 
 **/build/
 
+**/.kotlin/
+
 /local.properties
 
 /out/
