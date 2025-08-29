@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mirfatif.permissionmanagerx.fwk.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <View
+    android:id="@+id/status_bar_bg"
+    style="@style/ListSeparator"
+    android:background="?attr/accentTrans10Color" />
+
+<!--  <include-->
+<!--    android:id="@+id/activity_main"-->
+<!--    layout="@layout/activity_main" />-->
+
+</com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>

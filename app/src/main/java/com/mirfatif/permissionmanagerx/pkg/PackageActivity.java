@@ -107,7 +107,7 @@ public class PackageActivity extends OnBackPressedCallback implements PermAdapte
     mPkg.setPkgRemoved(false);
 
     mB = ActivityPackageBinding.inflate(mA.getLayoutInflater());
-    mA.setContentView(mB.getRoot());
+    UiUtils.setContentView(mA, mB);
 
     ActionBar actionBar = mA.getSupportActionBar();
     if (actionBar != null) {

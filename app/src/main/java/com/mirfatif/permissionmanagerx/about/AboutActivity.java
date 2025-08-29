@@ -61,7 +61,7 @@ public class AboutActivity {
 
   public void onCreated() {
     mB = ActivityAboutBinding.inflate(mA.getLayoutInflater());
-    mA.setContentView(mB.getRoot());
+    UiUtils.setContentView(mA, mB);
 
     ActionBar actionBar = mA.getSupportActionBar();
     if (actionBar != null) {

@@ -8,6 +8,7 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.backup.BackupFileSelector;
 import com.mirfatif.permissionmanagerx.backup.BackupRestore;
 import com.mirfatif.permissionmanagerx.base.AlertDialogFragment;
+import com.mirfatif.permissionmanagerx.databinding.ActivityFragmentContainerBinding;
 import com.mirfatif.permissionmanagerx.databinding.ProgressDialogBinding;
 import com.mirfatif.permissionmanagerx.fwk.AdvSettingsActivityM;
 import com.mirfatif.permissionmanagerx.parser.Package;
@@ -36,7 +37,7 @@ public class AdvSettingsActivity {
   private BackupFileSelector mCleanupLauncher, mResetLauncher;
 
   public void onCreate(Bundle savedInstanceState) {
-    mA.setContentView(R.layout.activity_fragment_container);
+    UiUtils.setContentView(mA, ActivityFragmentContainerBinding.inflate(mA.getLayoutInflater()));
 
     ActionBar actionBar = mA.getSupportActionBar();
     if (actionBar != null) {

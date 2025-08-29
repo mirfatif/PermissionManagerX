@@ -124,7 +124,7 @@ public class MainActivity extends OnBackPressedCallback {
 
     mB = ActivityMainBinding.inflate(mA.getLayoutInflater());
     mB.movCont.setData(new Data());
-    mA.setContentView(mB.getRoot());
+    UiUtils.setContentView(mA, mB);
 
     ((CoordinatorLayout.LayoutParams) mB.moveUpCont.getLayoutParams())
         .setBehavior(new MoveUpBehavior(mSnackBarLayoutCls, mB.movCont.getRoot()));
