@@ -31,8 +31,6 @@ import java.util.Objects;
 public class AdvSettingsFrag extends PreferenceFragmentCompat
     implements OnSharedPreferenceChangeListener {
 
-  private final AdvSettingsFlavor mAdvFlav = new AdvSettingsFlavor();
-
   private AdvSettingsActivityM mA;
 
   public void onAttach(Context context) {
@@ -55,15 +53,14 @@ public class AdvSettingsFrag extends PreferenceFragmentCompat
   }
 
   private SwitchPreferenceCompat mAllowCriticalPref, mPerUidPermRefPref, mSecUserPermRefPref;
-  private ListPreference mDaemonDexLocPref, mDaemonUidPref, mDaemonContextPref;
+  private ListPreference mDaemonUidPref, mDaemonContextPref;
   private EditTextPreference mSuPathPref;
 
   private boolean mAllowCriticalValue, mPerUidPermRefValue, mSecUserPermRefValue;
-  private String mDaemonDexLocVal, mDaemonUidValue, mDaemonContextValue, mSuPathValue;
+  private String mDaemonUidValue, mDaemonContextValue, mSuPathValue;
 
   public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     setPreferencesFromResource(R.xml.adv_settings_prefs, rootKey);
-    mAdvFlav.onCreatePrefs(mA, this);
 
     mAllowCriticalPref = findPref(R.string.pref_adv_settings_allow_critical_changes_key);
     mAllowCriticalValue = mAllowCriticalPref.isChecked();
@@ -83,9 +80,6 @@ public class AdvSettingsFrag extends PreferenceFragmentCompat
           return true;
         });
 
-    mDaemonDexLocPref = findPref(R.string.pref_adv_settings_daemon_dex_location_key);
-    mDaemonDexLocVal = mDaemonDexLocPref.getValue();
-
     mDaemonUidPref = findPref(R.string.pref_adv_settings_daemon_uid_key);
     mDaemonUidValue = mDaemonUidPref.getValue();
 
@@ -104,9 +98,6 @@ public class AdvSettingsFrag extends PreferenceFragmentCompat
   }
 
   private void updateUi() {
-    mDaemonDexLocPref.setSummary(
-        ApiUtils.getString(
-            R.string.pref_adv_settings_daemon_dex_location_summary, mDaemonDexLocPref.getEntry()));
     mDaemonUidPref.setTitle(
         ApiUtils.getString(
             R.string.pref_adv_settings_daemon_uid_title2, mDaemonUidPref.getEntry()));
@@ -149,8 +140,7 @@ public class AdvSettingsFrag extends PreferenceFragmentCompat
   }
 
   public void onDestroy() {
-    if (!Objects.equals(mDaemonDexLocVal, mDaemonDexLocPref.getValue())
-        || !Objects.equals(mDaemonUidValue, mDaemonUidPref.getValue())
+    if (!Objects.equals(mDaemonUidValue, mDaemonUidPref.getValue())
         || !Objects.equals(mDaemonContextValue, mDaemonContextPref.getValue())
         || !Objects.equals(mSuPathValue, mSuPathPref.getText())) {
       DaemonStarter.INS.startPrivDaemon(true, false, true, true);
@@ -179,8 +169,6 @@ public class AdvSettingsFrag extends PreferenceFragmentCompat
         mSuPathPref.setText(mSuPathValue);
         UiUtils.showToast(R.string.bad_path_toast);
       }
-    } else {
-      mAdvFlav.onPrefChanged(key);
     }
     updateUi();
   }

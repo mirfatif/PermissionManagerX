@@ -1,17 +1,9 @@
-plugins { id("apk-conventions") }
+plugins { id("android-lib-conventions") }
 
 android {
   namespace = "com.mirfatif.privdaemon"
 
-  defaultConfig { applicationId = namespace }
-
-  buildFeatures {
-    resValues = false
-
-    viewBinding = false
-    dataBinding = false
-    buildConfig = false
-  }
+  buildTypes { release { consumerProguardFiles("daemon-proguard-rules.pro") } }
 }
 
 dependencies { implementation(project(path = ":priv_library")) }

@@ -53,7 +53,7 @@
   <string name="pref_privs_adb_enabled_enc_key" translatable="false">pref_privs_adb_enabled_enc</string>
   <bool name="pref_privs_adb_enabled_enc_default">false</bool>
 
-  <string name="pref_privs_dex_extraction_ts_enc_key" translatable="false">pref_privs_dex_extraction_ts_enc</string>
+  <string name="pref_privs_daemon_start_ts_enc_key" translatable="false">pref_privs_daemon_start_ts_enc</string>
 
   <string name="pref_privs_daemon_port_enc_key" translatable="false">pref_privs_daemon_port_enc</string>
   <integer name="pref_privs_daemon_port_enc_default">0</integer>
@@ -94,12 +94,6 @@
   <string name="pref_adv_settings_reset_perm_db_title">Reset / cleanup references</string>
   <string name="pref_adv_settings_reset_perm_db_summary">Reset or cleanup permissions references database</string>
   <string name="pref_adv_settings_reset_perm_db_key" translatable="false">pref_adv_settings_reset_perm_db</string>
-
-  <!-- CHAR LIMIT: 20 -->
-  <string name="pref_adv_settings_daemon_dex_location_title">Daemon file location</string>
-  <string name="pref_adv_settings_daemon_dex_location_summary">Load daemon from: %s</string>
-  <string name="pref_adv_settings_daemon_dex_location_key" translatable="false">pref_adv_settings_daemon_dex_location</string>
-  <string name="pref_adv_settings_daemon_dex_location_default" translatable="false">@string/daemon_dex_location_tmp_val</string>
 
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_adv_settings_root_cat_title">Root</string>

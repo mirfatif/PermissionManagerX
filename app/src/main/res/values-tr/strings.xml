@@ -126,7 +126,6 @@
   <!-- CHAR LIMIT: 15 -->
   <!-- CHAR LIMIT: 15 -->
   <!-- AdvancedSettings Activity -->
-  <string name="daemon_dex_location_external">Harici depolama</string>
   <string name="daemon_uid_system">Sistem</string>
   <string name="daemon_uid_root">Root</string>
   <string name="daemon_uid_adb">ADB</string>
@@ -185,8 +184,6 @@
   <!-- Links -->
   <!-- DaemonHandler -->
   <!-- CHAR LIMIT: 20 -->
-  <!-- CHAR LIMIT: 20 -->
-  <string name="files_not_extracted_accessible_toast">Dosyalar çıkarılmadı veya erişilebilir değil</string>
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->

@@ -140,8 +140,6 @@
   <!-- CHAR LIMIT: 15 -->
   <string name="creating_app_ops_lists">正在准备 AppOps 数据…</string>
   <!-- AdvancedSettings Activity -->
-  <string name="daemon_dex_location_tmp">临时目录</string>
-  <string name="daemon_dex_location_external">外部存储</string>
   <string name="daemon_uid_system">系统</string>
   <string name="daemon_uid_root">Root</string>
   <string name="daemon_uid_adb">ADB</string>
@@ -228,10 +226,6 @@
   <!-- Links -->
   <!-- DaemonHandler -->
   <!-- CHAR LIMIT: 20 -->
-  <string name="dex_location_changed_toast">切换守护进程负载位置</string>
-  <!-- CHAR LIMIT: 20 -->
-  <string name="files_not_extracted_accessible_toast">无法解压或无法访问文件</string>
-  <!-- CHAR LIMIT: 20 -->
   <string name="priv_daemon_died_toast">特权守护进程丢失</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="priv_daemon_restarted_toast">特权守护进程已重启</string>
@@ -271,10 +265,6 @@
   <string name="daemon_disable_pkg_failed_toast">禁用应用失败</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="daemon_open_app_info_failed_toast">打开应用信息失败</string>
-  <!-- NativeDaemon -->
-  <!-- CHAR LIMIT: 20 -->
-  <string name="native_daemon_died_toast">Native 守护进程丢失</string>
-  <string name="native_daemon_restarted_toast">原生守护进程已重启</string>
   <!-- LogcatSvc -->
   <!-- CHAR LIMIT: 10 -->
   <string name="stop_button">停止</string>

@@ -392,30 +392,13 @@ public enum MySettings {
     savePref(R.string.pref_privs_daemon_port_enc_key, port);
   }
 
-  public boolean loadDexFromTmpDir() {
-    return getString(R.string.daemon_dex_location_tmp_val)
-        .equals(
-            getStringPref(
-                R.string.pref_adv_settings_daemon_dex_location_key,
-                R.string.pref_adv_settings_daemon_dex_location_default));
-  }
-
-  public void setLoadDexFromTmpDir(boolean fromTmpDir) {
-    savePref(
-        R.string.pref_adv_settings_daemon_dex_location_key,
-        getString(
-            fromTmpDir
-                ? R.string.daemon_dex_location_tmp_val
-                : R.string.daemon_dex_location_external_val));
-  }
-
-  public boolean shouldExtractFiles() {
+  public boolean shouldRestartDaemon() {
     return ApiUtils.getMyPkgInfo().lastUpdateTime
-        > getLongPref(R.string.pref_privs_dex_extraction_ts_enc_key);
+        > getLongPref(R.string.pref_privs_daemon_start_ts_enc_key);
   }
 
-  public void setFileExtractionTs(long ts) {
-    savePref(R.string.pref_privs_dex_extraction_ts_enc_key, ts);
+  public void setDaemonStartTs(long ts) {
+    savePref(R.string.pref_privs_daemon_start_ts_enc_key, ts);
   }
 
   public String getSuExePath() {

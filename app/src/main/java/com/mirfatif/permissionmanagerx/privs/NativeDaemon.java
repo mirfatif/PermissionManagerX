@@ -2,18 +2,15 @@ package com.mirfatif.permissionmanagerx.privs;
 
 import static com.mirfatif.permissionmanagerx.BuildConfig.APPLICATION_ID;
 import static com.mirfatif.permissionmanagerx.BuildConfig.APP_ID;
-import static com.mirfatif.permissionmanagerx.privs.DaemonHandler.UID_ROOT;
 import static java.lang.System.currentTimeMillis;
 
 import android.os.SystemClock;
 import com.mirfatif.err.AdbException;
 import com.mirfatif.permissionmanagerx.BuildConfig;
-import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.util.ApiUtils;
 import com.mirfatif.permissionmanagerx.util.StdErrLogServer;
-import com.mirfatif.permissionmanagerx.util.UiUtils;
 import com.mirfatif.privtasks.util.MyLog;
 import com.mirfatif.privtasks.util.Util;
 import io.github.muntashirakon.adb.AdbPairingRequiredException;
@@ -58,7 +55,7 @@ public enum NativeDaemon {
 
   private void connectToCheckAlive() {
     synchronized (LOCK) {
-      if (MySettings.INS.shouldExtractFiles()) {
+      if (MySettings.INS.shouldRestartDaemon()) {
         savePort(0);
         return;
       }
@@ -102,18 +99,13 @@ public enum NativeDaemon {
         String resp = reader.readLine();
         socket.setSoTimeout(0);
 
-        String[] respSplit;
-        int uid;
-        if (resp == null
-            || !resp.startsWith(RESP_UID)
-            || ((respSplit = resp.split(" ")).length) != 2
-            || (uid = Integer.parseInt(respSplit[1])) < 0) {
+        if (resp == null || !resp.startsWith(RESP_OK)) {
           return;
         }
 
         server.waitForConn();
 
-        mState = new State(uid, reader, writer, os);
+        mState = new State(writer);
       }
     } catch (IOException | NumberFormatException | InterruptedException | ExecutionException e) {
       MyLog.e(TAG, "connectToDaemon", e);
@@ -262,7 +254,7 @@ public enum NativeDaemon {
   }
 
   private void stopDaemonUnlocked() {
-    sendCmd(CMD_EXIT, null);
+    sendCmd(CMD_EXIT);
     daemonStopped(false);
   }
 
@@ -282,21 +274,6 @@ public enum NativeDaemon {
 
   public static final int NATIVE_DAEMON_RESTART_WAIT = 5000;
 
-  private void restartDaemon() {
-    daemonStopped(true);
-    MyLog.e(TAG, "restartDaemon", (mAdb ? "ADB" : "Root") + " daemon died");
-    UiUtils.showToast(R.string.native_daemon_died_toast);
-
-    SystemClock.sleep(NATIVE_DAEMON_RESTART_WAIT);
-
-    MyLog.i(TAG, "restartDaemon", "Restarting native daemon");
-    if (mAdb
-        ? startAdbDaemon(false, true, MySettings.INS.getAdbHost(), MySettings.INS.getAdbPort())
-        : startRootDaemon()) {
-      UiUtils.showToast(R.string.native_daemon_restarted_toast);
-    }
-  }
-
   private void savePort(int port) {
     if (mAdb) {
       MySettings.INS.saveAdbDaemonPort(port);
@@ -314,7 +291,7 @@ public enum NativeDaemon {
   }
 
   public void setExitOnAppDeathUnlocked() {
-    sendCmd(CMD_AUTO_EXIT + " " + MySettings.INS.shouldDaemonExitOnAppDeath(), null);
+    sendCmd(CMD_AUTO_EXIT + " " + MySettings.INS.shouldDaemonExitOnAppDeath());
   }
 
   private boolean isAlive(boolean tryConnect) {
@@ -330,146 +307,56 @@ public enum NativeDaemon {
     return mState != null;
   }
 
-  public Boolean isRoot() {
-    synchronized (LOCK) {
-      if (mState == null) {
-        return null;
-      }
-      return mState.mUid == UID_ROOT;
-    }
-  }
-
   private static final String CMD_HELLO = "hello ";
   private static final String CMD_EXIT = "exit";
   private static final String CMD_AUTO_EXIT = "auto_exit";
   private static final String CMD_RUN = "run ";
   private static final String CMD_RUN_BG = "run_bg ";
   private static final String CMD_RUN_DMN = "run_dmn ";
-  private static final String CMD_FILE_EXIST = "exist ";
-  private static final String CMD_SET_PERM = "perm ";
 
   private static final String RESP_PORT = "PORT:";
-  private static final String RESP_UID = "UID:";
-  private static final String RESP_EXIST = "EXIST";
-  private static final String RESP_SAVED = "SAVED";
-
-  private static final String SELABEL_PARENT = "PARENT";
-
-  public boolean fileExists(String path) {
-    return sendCommandLocked(CMD_FILE_EXIST + path, RESP_EXIST);
-  }
-
-  public void setPerm(String file, int uid, int gid, String mode, String seLabel) {
-    if (seLabel == null) {
-      seLabel = SELABEL_PARENT;
-    }
-    sendCommand(CMD_SET_PERM + uid + " " + gid + " " + mode + " " + seLabel + " " + file);
-  }
+  private static final String RESP_OK = "OK";
 
   public void run(String cmd, boolean background) {
     sendCommand((background ? CMD_RUN_BG : CMD_RUN) + cmd);
   }
 
-  public void runDaemon(
-      String cp, int guid, String seLabel, String niceName, String cls, String... args) {
-    StringBuilder argStr = new StringBuilder();
-    for (String s : args) {
-      argStr.append(" ").append(s);
-    }
-    sendCommand(
-        CMD_RUN_DMN + cp + " " + guid + " " + seLabel + " " + niceName + " " + cls + argStr);
-  }
-
-  public boolean extractDex(String path) {
-    synchronized (LOCK) {
-      if (!isAlive(false)) {
-        return false;
-      }
-
-      if (!NativeDaemonFlavor.extractDex(path, this, mState.mOutStream)) {
-        return false;
-      }
-      return matchResponse(RESP_SAVED);
-    }
+  public void runDaemon(String codeWord) {
+    var cp = ApiUtils.getMyAppInfo().sourceDir;
+    var guid = MySettings.INS.getDaemonUid();
+    var seLabel = MySettings.INS.getDaemonContext();
+    var appId = App.getCxt().getPackageName();
+    sendCommand(CMD_RUN_DMN + cp + " " + guid + " " + seLabel + " " + appId + " " + codeWord);
   }
 
   private void sendCommand(String cmd) {
-    sendCommandLocked(cmd, null);
+    sendCommandLocked(cmd);
   }
 
-  private boolean sendCommandLocked(String cmd, String match) {
+  private void sendCommandLocked(String cmd) {
     synchronized (LOCK) {
       if (!isAlive(false)) {
-        return false;
+        return;
       }
-      return sendCmd(cmd, match);
+      sendCmd(cmd);
     }
   }
 
-  boolean sendCmd(String cmd, String match) {
-    if (match != null && !cleanResponseReader()) {
-      return false;
-    }
-
+  void sendCmd(String cmd) {
     if (BuildConfig.DEBUG) {
       MyLog.d(TAG, "sendCmd", "Sending command: " + cmd);
     }
-
     mState.mCmdWriter.println(cmd);
-
-    if (match == null) {
-      return true;
-    }
-    return matchResponse(match);
-  }
-
-  private boolean cleanResponseReader() {
-    try {
-      StringBuilder str = new StringBuilder();
-      while (mState.mResponseReader.ready()) {
-        str.append((char) mState.mResponseReader.read());
-      }
-      if (str.length() != 0) {
-        for (String line : str.toString().split("\n")) {
-          MyLog.i(TAG, "cleanResponseReader", line);
-        }
-      }
-      return true;
-    } catch (IOException e) {
-      MyLog.e(TAG, "cleanResponseReader", e);
-      restartDaemon();
-      return false;
-    }
-  }
-
-  private boolean matchResponse(String match) {
-    try {
-      String resp = mState.mResponseReader.readLine();
-      if (BuildConfig.DEBUG) {
-        MyLog.d(TAG, "matchResponse", "Response: " + resp);
-      }
-      return match.equals(resp);
-    } catch (IOException e) {
-      MyLog.e(TAG, "matchResponse", e);
-      restartDaemon();
-      return false;
-    }
   }
 
   private State mState;
 
   private static class State {
 
-    private final int mUid;
-    private final BufferedReader mResponseReader;
     private final PrintWriter mCmdWriter;
-    private final OutputStream mOutStream;
 
-    private State(int uid, BufferedReader reader, PrintWriter writer, OutputStream os) {
-      mUid = uid;
-      mResponseReader = reader;
+    private State(PrintWriter writer) {
       mCmdWriter = writer;
-      mOutStream = os;
     }
   }
 

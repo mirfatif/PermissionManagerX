@@ -167,16 +167,6 @@
     <item>RUN_IN_BACKGROUND</item>
   </string-array>
 
-  <string-array name="daemon_locations">
-    <item>@string/daemon_dex_location_tmp</item>
-    <item>@string/daemon_dex_location_external</item>
-  </string-array>
-
-  <string-array name="daemon_location_values">
-    <item>@string/daemon_dex_location_tmp_val</item>
-    <item>@string/daemon_dex_location_external_val</item>
-  </string-array>
-
   <string-array name="daemon_uids">
     <item>@string/daemon_uid_system</item>
     <item>@string/daemon_uid_root</item>

@@ -182,11 +182,6 @@
 
   <!-- AdvancedSettings Activity -->
   <string name="crowdin_comment_break_strings_6" translatable="false">Crowdin comment break</string>
-  <string name="daemon_dex_location_tmp">Temporary directory</string>
-  <string name="daemon_dex_location_external">External storage</string>
-  <string name="daemon_dex_location_tmp_val" translatable="false">data_local_tmp</string>
-  <string name="daemon_dex_location_external_val" translatable="false">ext_storage</string>
-
   <string name="daemon_uid_system">System</string>
   <string name="daemon_uid_root">Root</string>
   <string name="daemon_uid_adb">ADB</string>
@@ -322,11 +317,6 @@
 
   <!-- DaemonHandler -->
   <string name="crowdin_comment_break_strings_10" translatable="false">Crowdin comment break</string>
-  <!-- CHAR LIMIT: 20 -->
-  <string name="dex_location_changed_toast">Switching daemon load location</string>
-  <!-- CHAR LIMIT: 20 -->
-  <string name="files_not_extracted_accessible_toast">Files not extracted or not accessible</string>
-  <!-- CHAR LIMIT: 20 -->
   <string name="priv_daemon_died_toast">Privileged daemon died</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="priv_daemon_restarted_toast">Privileged daemon restarted</string>
@@ -375,12 +365,6 @@
   <string name="daemon_disable_pkg_failed_toast">Disabling app failed</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="daemon_open_app_info_failed_toast">Opening app info failed</string>
-
-  <!-- NativeDaemon -->
-  <string name="crowdin_comment_break_strings_13" translatable="false">Crowdin comment break</string>
-  <!-- CHAR LIMIT: 20 -->
-  <string name="native_daemon_died_toast">Native daemon died</string>
-  <string name="native_daemon_restarted_toast">Native daemon restarted</string>
 
   <!-- LogcatSvc -->
   <string name="crowdin_comment_break_strings_14" translatable="false">Crowdin comment break</string>

@@ -28,21 +28,17 @@ class PrivDaemon {
   }
 
   void start(String[] args) {
-    if (args.length != 3
-        || !args[0].startsWith("com.mirfatif.")
-        || !args[1].startsWith("com.mirfatif.")
-        || !Server.isUUID(args[2])) {
+    if (args.length != 2 || !args[0].startsWith("com.mirfatif.") || !Server.isUUID(args[1])) {
       DaemonLog.e(null, "start", "Bad args: " + Arrays.toString(args));
       System.exit(1);
       return;
     }
 
     String appId = args[0];
-    String binderSvc = args[1];
-    String codeWord = args[2];
+    String codeWord = args[1];
 
     try {
-      Callbacks.INS.talkToApp(appId, binderSvc, codeWord);
+      Callbacks.INS.talkToApp(appId, codeWord);
     } catch (RemoteException e) {
       DaemonLog.e(null, "start", e);
       System.exit(1);

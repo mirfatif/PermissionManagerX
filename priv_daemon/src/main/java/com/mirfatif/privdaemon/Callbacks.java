@@ -25,12 +25,13 @@ public enum Callbacks {
 
   private static final String TAG = "Callbacks";
 
-  private String mAppId, mBinderSvc;
+  private String mAppId;
+  private static final String BINDER_SVC = "com.mirfatif.permissionmanagerx.fwk.DaemonRcvSvcM";
   private IPrivTasks mIPrivTasks;
 
-  void talkToApp(String appId, String binderSvc, String codeWord) throws RemoteException {
+  void talkToApp(String appId, String codeWord) throws RemoteException {
     mAppId = appId;
-    mBinderSvc = binderSvc;
+
     mIPrivTasks = new IPrivTasksImpl();
 
     UncaughtExceptionHandler defExcHandler = Thread.getDefaultUncaughtExceptionHandler();
@@ -53,7 +54,7 @@ public enum Callbacks {
     Intent intent = new Intent();
     intent.putExtra(Constants.EXTRA_CODE_WORD, codeWord);
     intent.putExtra(Constants.EXTRA_BINDER, bundle);
-    fireSvcIntent(intent, mBinderSvc, false);
+    fireSvcIntent(intent, BINDER_SVC, false);
   }
 
   void sendStdErr(int port) throws HiddenAPIsException {

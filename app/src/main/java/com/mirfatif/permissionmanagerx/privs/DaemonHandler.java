@@ -1,22 +1,17 @@
 package com.mirfatif.permissionmanagerx.privs;
 
-import static android.os.Build.VERSION.SDK_INT;
 import static com.mirfatif.permissionmanagerx.BuildConfig.APPLICATION_ID;
-import static com.mirfatif.permissionmanagerx.BuildConfig.APP_ID;
 import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.INS_A;
 import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.INS_R;
 import static com.mirfatif.permissionmanagerx.privs.NativeDaemon.NATIVE_DAEMON_RESTART_WAIT;
 import static java.lang.System.currentTimeMillis;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import com.mirfatif.permissionmanagerx.R;
-import com.mirfatif.permissionmanagerx.app.App;
-import com.mirfatif.permissionmanagerx.fwk.DaemonRcvSvcM;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.svc.LogcatSvc;
 import com.mirfatif.permissionmanagerx.util.ApiUtils;
@@ -39,7 +34,6 @@ import java.io.PrintWriter;
 import java.net.Inet4Address;
 import java.net.Socket;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -52,10 +46,6 @@ public enum DaemonHandler {
   private static final String TAG = "DaemonHandler";
 
   public static final int UID_SYSTEM = android.os.Process.SYSTEM_UID;
-  public static final int UID_ROOT =
-      SDK_INT >= Build.VERSION_CODES.Q ? android.os.Process.ROOT_UID : 0;
-  public static final int UID_SHELL =
-      SDK_INT >= Build.VERSION_CODES.Q ? android.os.Process.SHELL_UID : 2000;
 
   private Boolean mPreferRoot;
 
@@ -70,27 +60,13 @@ public enum DaemonHandler {
       if (isDaemonAlive()) {
         MyLog.w(TAG, "startDaemon", "Daemon already running");
         return true;
+      } else {
+        return startDaemonInternal(preferRoot != Boolean.FALSE);
       }
-
-      if (preferRoot == null) {
-        preferRoot = true;
-      }
-
-      boolean dexInTmpDir = MySettings.INS.loadDexFromTmpDir();
-      boolean res = startDaemon(preferRoot, dexInTmpDir);
-      if (res) {
-        return true;
-      }
-      res = startDaemon(preferRoot, !dexInTmpDir);
-      if (res) {
-        UiUtils.showToast(R.string.dex_location_changed_toast);
-        MySettings.INS.setLoadDexFromTmpDir(!dexInTmpDir);
-      }
-      return res;
     }
   }
 
-  private boolean startDaemon(boolean preferRoot, boolean dexInTmpDir) {
+  private boolean startDaemonInternal(boolean preferRoot) {
     boolean hasRoot = false, hasAdb = false;
 
     if (!preferRoot) {
@@ -112,40 +88,15 @@ public enum DaemonHandler {
 
     mPreferRoot = (preferRoot || !hasAdb) && hasRoot;
 
-    boolean extractDex = MySettings.INS.shouldExtractFiles();
-    if (extractDex) {
-      extractDexFile();
+    var daemon = mPreferRoot ? INS_R : INS_A;
+    daemon.runDaemon(CODE_WORD);
+
+    if (waitForHello()) {
+      MySettings.INS.setDaemonStartTs(currentTimeMillis());
+      return true;
+    } else {
+      return false;
     }
-
-    String dexFilePath = dexInTmpDir ? TMP_DIR_DEX_PATH : SHARED_DIR_DEX_PATH;
-
-    if (!dexExists(dexFilePath)) {
-      if (!extractDex) {
-        MySettings.INS.setFileExtractionTs(0);
-        return startDaemon(preferRoot, dexInTmpDir);
-      } else {
-        UiUtils.showToast(R.string.files_not_extracted_accessible_toast);
-        return false;
-      }
-    } else if (extractDex) {
-      MySettings.INS.setFileExtractionTs(currentTimeMillis());
-    }
-
-    String cxt = MySettings.INS.getDaemonContext();
-    String vmClass = DAEMON_PACKAGE_NAME + "." + DAEMON_CLASS_NAME;
-
-    (mPreferRoot ? INS_R : INS_A)
-        .runDaemon(
-            dexFilePath,
-            MySettings.INS.getDaemonUid(),
-            cxt,
-            VM_NAME,
-            vmClass,
-            APPLICATION_ID,
-            DaemonRcvSvcM.class.getName(),
-            CODE_WORD);
-
-    return waitForHello();
   }
 
   private static final String CODE_WORD = UUID.randomUUID().toString();
@@ -156,7 +107,7 @@ public enum DaemonHandler {
         return true;
       }
 
-      if (MySettings.INS.shouldExtractFiles()) {
+      if (MySettings.INS.shouldRestartDaemon()) {
         savePort(0);
         return false;
       }
@@ -366,63 +317,6 @@ public enum DaemonHandler {
     }
   }
 
-  private static final String DAEMON_PACKAGE_NAME = "com.mirfatif.privdaemon";
-  private static final String DAEMON_CLASS_NAME = "Main";
-
-  private static final String TMP_DIR = "/data/local/tmp/";
-
-  private static final String VM_NAME;
-
-  private static final String SHARED_DIR_DEX_PATH;
-  private static final String TMP_DIR_DEX_PATH;
-
-  static {
-    VM_NAME = APPLICATION_ID.replace(APP_ID, DAEMON_PACKAGE_NAME + ".pmx");
-    String dex = VM_NAME + ".dex";
-    String sharedDir =
-        Objects.requireNonNull(App.getCxt().getExternalFilesDir(null)).getAbsolutePath();
-    SHARED_DIR_DEX_PATH = new File(sharedDir, dex).getAbsolutePath();
-    TMP_DIR_DEX_PATH = new File(TMP_DIR, dex).getAbsolutePath();
-  }
-
-  private final Object EXTRACT_DEX_LOCK = new Object();
-
-  private void extractDexFile() {
-    synchronized (EXTRACT_DEX_LOCK) {
-      NativeDaemon daemon;
-      if (NativeDaemon.hasRoot(false)) {
-        daemon = INS_R;
-      } else if (NativeDaemon.hasAdb(false)) {
-        daemon = INS_A;
-      } else {
-        return;
-      }
-
-      for (String file : new String[] {SHARED_DIR_DEX_PATH, TMP_DIR_DEX_PATH}) {
-        if (!daemon.extractDex(file)) {
-          MyLog.e(TAG, "extractDexFile", "Extracting failed: " + file);
-          return;
-        }
-
-        if (file.equals(TMP_DIR_DEX_PATH) && Boolean.TRUE.equals(daemon.isRoot())) {
-          daemon.setPerm(TMP_DIR_DEX_PATH, UID_SHELL, UID_SHELL, "0644", null);
-        }
-
-        MyLog.i(TAG, "extractDexFile", "Extracted successfully: " + file);
-      }
-    }
-  }
-
-  private boolean dexExists(String dexPath) {
-    if (NativeDaemon.hasRoot(false)) {
-      return INS_R.fileExists(dexPath);
-    } else if (NativeDaemon.hasAdb(false)) {
-      return INS_A.fileExists(dexPath);
-    } else {
-      return false;
-    }
-  }
-
   public boolean isDaemonAlive() {
     return isDaemonAlive(false, false);
   }
@@ -448,27 +342,6 @@ public enum DaemonHandler {
     return res;
   }
 
-  public boolean makeDaemonAlive() {
-    if (!isDaemonAlive(false, true)) {
-      if (!NativeDaemon.getRoot() && !NativeDaemon.getAdb()) {
-        if (AppLifecycle.isAppVisible()) {
-          UiUtils.showToast(R.string.daemon_not_running_toast);
-        }
-        return false;
-      }
-
-      if (!startDaemon()) {
-        MyLog.e(TAG, "makeDaemonAlive", "Starting privileged daemon failed");
-        if (AppLifecycle.isAppVisible()) {
-          UiUtils.showToast(R.string.daemon_failed_toast);
-        }
-        return false;
-      }
-    }
-
-    return true;
-  }
-
   public Boolean isPreferRoot() {
     if (!isDaemonAlive()) {
       return null;
@@ -488,11 +361,6 @@ public enum DaemonHandler {
   public boolean isSystemUid() {
     Integer uid = getUid();
     return uid != null && uid == UID_SYSTEM;
-  }
-
-  public boolean isRootUid() {
-    Integer uid = getUid();
-    return uid != null && uid == UID_ROOT;
   }
 
   public String getContext() {

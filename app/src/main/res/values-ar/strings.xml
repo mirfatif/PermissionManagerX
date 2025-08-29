@@ -194,10 +194,6 @@
   <!-- Links -->
   <!-- DaemonHandler -->
   <!-- CHAR LIMIT: 20 -->
-  <string name="dex_location_changed_toast">تبديل موقع تحميل Didemon</string>
-  <!-- CHAR LIMIT: 20 -->
-  <string name="files_not_extracted_accessible_toast">الملفات غير المستخرجة أو غير متاحة</string>
-  <!-- CHAR LIMIT: 20 -->
   <string name="priv_daemon_died_toast">موت daemon المميز</string>
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
@@ -228,9 +224,6 @@
   <string name="daemon_disable_pkg_failed_toast">فشل تعطيل التطبيق</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="daemon_open_app_info_failed_toast">فشل في فتح معلومات التطبيق</string>
-  <!-- NativeDaemon -->
-  <!-- CHAR LIMIT: 20 -->
-  <string name="native_daemon_died_toast">موت daemon الاصلي</string>
   <!-- LogcatSvc -->
   <!-- CHAR LIMIT: 10 -->
   <string name="stop_button">توقف</string>

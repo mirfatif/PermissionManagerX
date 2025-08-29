@@ -23,9 +23,6 @@
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
-  <string name="pref_adv_settings_daemon_dex_location_title">守护进程文件位置</string>
-  <string name="pref_adv_settings_daemon_dex_location_summary">从: %s 加载守护进程</string>
-  <!-- CHAR LIMIT: 20 -->
   <string name="pref_adv_settings_root_cat_title">Root</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_adv_settings_daemon_uid_title">守护进程 UID</string>

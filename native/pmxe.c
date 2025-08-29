@@ -545,29 +545,24 @@ static void run_cmd(int argc, char *cmd, bool wait_for_child)
     signal(SIGCHLD, SIG_IGN);
 }
 
-#define RUN_DAEMON_MIN_ARGS 5
 #define NO_SELABEL "null"
 #define DAEMON_GROUPS "2000,3003,3009,1015,1023,1078,9997"
 
-static void run_daemon(int argc, char *args)
+static void run_daemon(char *args)
 {
     char *cp = strtok(args, " ");
     char *uid_str = strtok(0, " ");
     char *context = strtok(0, " ");
-    char *nice_name = strtok(0, " ");
-    char *class = strtok(0, " ");
+    char *app_id = strtok(0, " ");
+    char *code_word = strtok(0, " ");
 
-    char nice_name_str[256];
-    snprintf(nice_name_str, sizeof(nice_name_str), "--nice-name=%s", nice_name);
-
-    char *argv[argc];
-    argv[0] = "app_process";
-    argv[1] = "/";
-    argv[2] = nice_name_str;
-    argv[3] = class;
-    for (int i = 4; i < argc - 1; i++)
-        argv[i] = strtok(0, " ");
-    argv[argc - 1] = NULL;
+    char *argv[] = {"app_process",
+                    "/",
+                    "--nice-name=com.mirfatif.privdaemon.pmx",
+                    "com.mirfatif.privdaemon.Main",
+                    app_id,
+                    code_word,
+                    NULL};
 
     if (access(cp, F_OK))
         return (void)print_err_code("%s does not exists", cp);
@@ -630,133 +625,6 @@ static int send_stderr(int port)
     return err;
 }
 
-static int save_file(size_t size, char *path)
-{
-    FILE *file = fopen(path, "w");
-    if (!file)
-        return print_err_code("Failed to create file");
-
-    clearerr(stdin);
-    clearerr(file);
-
-    size_t buf_size = 8192;
-    unsigned char buf[buf_size];
-
-    size_t to_read = size;
-    int err = 0;
-
-    while (to_read > 0)
-    {
-        if (to_read < buf_size)
-            buf_size = to_read;
-
-        size_t read = fread(buf, 1, buf_size, stdin);
-
-        if (read == 0 || ferror(stdin))
-        {
-            err = print_err("Failed to read data for %s", path);
-            break;
-        }
-
-        if (fwrite(buf, read, 1, file) != 1 || ferror(file))
-        {
-            err = print_err("Failed to write to %s", path);
-            break;
-        }
-
-        to_read -= read;
-    }
-
-    fclose(file);
-
-    if (to_read != 0)
-        err = 1;
-
-    if (!err)
-    {
-        struct stat sbuf;
-        if (stat(path, &sbuf))
-            err = print_err_code("Failed to get file size");
-        else if (sbuf.st_size != size)
-            err = print_err("Saved file size is different");
-        else
-            log_android_info("Successfully saved %s", path);
-    }
-
-    if (err)
-        unlink(path);
-
-    return err;
-}
-
-#define SELINUX_XATTR "security.selinux"
-#define SELABEL_PARENT "PARENT"
-
-static int set_perms(char *cmd)
-{
-    char *col;
-
-    if (!(col = strtok(cmd, " ")))
-        return print_err("perm requires uid");
-    if (!is_number(col, "uid"))
-        return 1;
-    uid_t uid = strtoul(col, NULL, 10);
-
-    if (!(col = strtok(0, " ")))
-        return print_err("perm requires gid");
-    if (!is_number(col, "gid"))
-        return 1;
-    gid_t gid = strtoul(col, NULL, 10);
-
-    if (!(col = strtok(0, " ")))
-        return print_err("perm requires mode");
-    if (!is_number(col, "mode"))
-        return 1;
-    mode_t mode = strtoul(col, NULL, 8);
-
-    if (!(col = strtok(0, " ")))
-        return print_err("perm requires context");
-    char *context = col;
-
-    if (!(col = strtok(0, " ")))
-        return print_err("perm requires path");
-    char *path = col;
-
-    int err = 0;
-
-    if (chown(path, uid, gid))
-        err = print_err_code("Failed to set owner");
-
-    if (chmod(path, mode))
-        err = print_err_code("Failed to set mode");
-
-    char *val = NULL;
-
-    if (!strcmp(context, SELABEL_PARENT))
-    {
-        context = NULL;
-        size_t len = getxattr(dirname(path), SELINUX_XATTR, val, 0);
-        if (len == -1)
-            err = print_err_code("Failed to get parent context length");
-        else if (len == 0)
-            err = print_err("No context set on parent");
-        else
-        {
-            val = malloc(len);
-            if (getxattr(dirname(path), SELINUX_XATTR, val, len) != len)
-                err = print_err_code("Failed to get parent context");
-            else
-                context = val;
-        }
-    }
-
-    if (context && setxattr(path, SELINUX_XATTR, context, strlen(context), 0))
-        err = print_err_code("Failed to set context");
-
-    free(val);
-    return err;
-}
-
 static bool exit_on_app_died = false;
 
 #define CMD_HELLO "hello"
@@ -765,14 +633,9 @@ static bool exit_on_app_died = false;
 #define CMD_RUN "run"
 #define CMD_RUN_BG "run_bg"
 #define CMD_RUN_DMN "run_dmn"
-#define CMD_SAVE_FILE "save_file"
-#define CMD_FILE_EXIST "exist"
-#define CMD_SET_PERM "perm"
 
 #define RESP_PORT "PORT:"
-#define RESP_UID "UID:"
-#define RESP_EXIST "EXIST"
-#define RESP_SAVED "SAVED"
+#define RESP_OK "OK"
 
 static void wait_for_commands()
 {
@@ -797,35 +660,8 @@ static void wait_for_commands()
             if (!col)
                 print_err("%s requires port", CMD_HELLO);
             else if (is_number(col, "port") && !send_stderr(strtol(col, NULL, 10)))
-                print_out("%s %d", RESP_UID, getuid());
+                print_out("%s", RESP_OK);
         }
-
-        else if (!strcmp(col, CMD_FILE_EXIST))
-        {
-            col = strtok(0, " ");
-            if (!col)
-                print_err("%s requires path", CMD_FILE_EXIST);
-            else
-                print_out((access(col, F_OK) ? "" : RESP_EXIST));
-        }
-
-        else if (!strcmp(col, CMD_SAVE_FILE))
-        {
-            col = strtok(0, " ");
-            if (!col)
-                print_err("%s requires file name", CMD_SAVE_FILE);
-            else if (is_number(col, "size"))
-            {
-                size_t size = strtoul(col, NULL, 10);
-                if (!(col = strtok(0, " ")))
-                    print_err("%s requires file path", CMD_SAVE_FILE);
-                else
-                    print_out(save_file(size, col) ? "" : RESP_SAVED);
-            }
-        }
-
-        else if (!strcmp(col, CMD_SET_PERM))
-            set_perms(line_cpy + 1 + strlen(col));
 
         else if (!strcmp(col, CMD_RUN) || !strcmp(col, CMD_RUN_BG) || !strcmp(col, CMD_RUN_DMN))
         {
@@ -837,10 +673,10 @@ static void wait_for_commands()
 
             if (!strcmp(cmd, CMD_RUN_DMN))
             {
-                if (cnt < RUN_DAEMON_MIN_ARGS)
-                    print_err("%s requires at least %d arguments", CMD_RUN_DMN, RUN_DAEMON_MIN_ARGS);
+                if (cnt != 5)
+                    print_err("%s requires 5 arguments", CMD_RUN_DMN);
                 else
-                    run_daemon(cnt, line_cpy + 1 + strlen(cmd));
+                    run_daemon(line_cpy + 1 + strlen(cmd));
             }
             else if (cnt == 0)
                 print_err("%s requires argument", cmd);

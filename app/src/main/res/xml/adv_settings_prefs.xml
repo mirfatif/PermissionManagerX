@@ -50,15 +50,6 @@
 
   <PreferenceCategory />
 
-  <ListPreference
-    app:defaultValue="@string/pref_adv_settings_daemon_dex_location_default"
-    app:entries="@array/daemon_locations"
-    app:entryValues="@array/daemon_location_values"
-    app:icon="@drawable/folder"
-    app:key="@string/pref_adv_settings_daemon_dex_location_key"
-    app:singleLineTitle="false"
-    app:title="@string/pref_adv_settings_daemon_dex_location_title" />
-
   <PreferenceCategory
     app:icon="@drawable/root"
     app:title="@string/pref_adv_settings_root_cat_title" />

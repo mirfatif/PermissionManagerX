@@ -174,8 +174,6 @@
   <!-- CHAR LIMIT: 15 -->
   <string name="creating_app_ops_lists">Подготовка данных AppOps…</string>
   <!-- AdvancedSettings Activity -->
-  <string name="daemon_dex_location_tmp">Папка temp</string>
-  <string name="daemon_dex_location_external">Внешнее хранилище</string>
   <string name="daemon_uid_system">Система</string>
   <string name="daemon_uid_root">Root</string>
   <string name="daemon_uid_adb">ADB</string>
@@ -273,10 +271,6 @@
   <!-- Links -->
   <!-- DaemonHandler -->
   <!-- CHAR LIMIT: 20 -->
-  <string name="dex_location_changed_toast">Переключение места запуска демона</string>
-  <!-- CHAR LIMIT: 20 -->
-  <string name="files_not_extracted_accessible_toast">Файлы не извлечены или недоступны</string>
-  <!-- CHAR LIMIT: 20 -->
   <string name="priv_daemon_died_toast">Привилегированный демон умер</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="priv_daemon_restarted_toast">Привилегированный демон перезапущен</string>
@@ -319,10 +313,6 @@
   <string name="daemon_disable_pkg_failed_toast">Сбой заморозки приложения</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="daemon_open_app_info_failed_toast">Сбой открытия сведений о приложении</string>
-  <!-- NativeDaemon -->
-  <!-- CHAR LIMIT: 20 -->
-  <string name="native_daemon_died_toast">Нативный демон умер</string>
-  <string name="native_daemon_restarted_toast">Нативный демон перезапущен</string>
   <!-- LogcatSvc -->
   <!-- CHAR LIMIT: 10 -->
   <string name="stop_button">Остановить</string>

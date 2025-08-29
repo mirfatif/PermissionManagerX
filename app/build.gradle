@@ -1,16 +1,9 @@
-import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.regex.Pattern
-import java.util.zip.ZipEntry
-import java.util.zip.ZipInputStream
-import java.util.zip.ZipOutputStream
 
 plugins {
     id('apk-conventions')
     alias(libs.plugins.gradle.versions)
 }
-
-def daemonDex = "daemon.dx"
 
 android {
     namespace = 'com.mirfatif.permissionmanagerx'
@@ -23,9 +16,6 @@ android {
 
         // Flavor-independent and BuildType-independent BuildConfig.APPLICATION_ID
         buildConfigField 'String', 'APP_ID', '"' + namespace + '"'
-
-        // Daemon dex file to be saved in assets directory.
-        buildConfigField 'String', 'DAEMON_DEX', '"' + daemonDex + '"'
 
         versionNameSuffix '-foss'
     }
@@ -66,6 +56,7 @@ configurations {
 
 dependencies {
     implementation project(path: ':priv_library')
+    runtimeOnly project(path: ':priv_daemon')
 
     implementation libs.libadb.android
     // To generate X509Certificate
@@ -96,97 +87,6 @@ dependencies {
     debugImplementation libs.leakcanary.android
 }
 
-def createJarFromApk(String apkFile, String jarFile) {
-    try (ZipInputStream apk = new ZipInputStream(new FileInputStream(apkFile))) {
-        try (ZipOutputStream jar = new ZipOutputStream(new FileOutputStream(jarFile))) {
-            ZipEntry entry
-            Pattern clsDex = Pattern.compile("classes[0-9]*.dex")
-            int len
-            byte[] buf = new byte[1024]
-
-            while ((entry = apk.nextEntry) != null) {
-                if (entry.name.matches(clsDex)) {
-                    ZipEntry zipEntry = new ZipEntry(entry.name)
-                    zipEntry.setTime(0)
-                    jar.putNextEntry(zipEntry)
-                    while ((len = apk.read(buf)) > 0) {
-                        jar.write(buf, 0, len)
-                    }
-                    jar.closeEntry()
-                }
-                apk.closeEntry()
-            }
-        }
-    }
-
-    println("Jar created: $jarFile")
-}
-
-def copyFileIfChanged(File src, File dst) {
-    assert src.file
-    assert !dst.exists() || dst.file
-
-    if (dst.exists()) {
-        byte[] s = Files.readAllBytes(Paths.get(src.absolutePath))
-        byte[] d = Files.readAllBytes(Paths.get(dst.absolutePath))
-        if (Arrays.equals(s, d)) {
-            println('UP-TO-DATE: ' + dst.absolutePath)
-            return
-        }
-
-        delete dst
-    }
-
-    copy {
-        from src
-        into dst.parentFile
-        rename { fileName -> dst }
-    }
-
-    if (dst.exists()) {
-        println('Creating: ' + dst.absolutePath)
-    } else {
-        throw new GradleException('Failed to create: ' + dst.absolutePath)
-    }
-}
-
-def createTasksForDaemonBuild = () -> {
-    boolean signed = project.hasProperty('android.injected.signing.store.file')
-
-    for (boolean debug : new boolean[]{true, false}) {
-        String task = debug ? 'Debug' : 'Release'
-
-        String dir = debug ? 'debug' : 'release'
-
-        String dexTaskDep = 'assemble' + task
-
-        String apk = 'priv_daemon/build/outputs/apk/'
-        apk += (debug ? 'debug' : 'release') + '/priv_daemon'
-        apk += (debug ? '-debug' : ('-release' + (signed ? '' : '-unsigned'))) + '.apk'
-
-        String jar = apk.replace('.apk', '.jar')
-
-        File srcFile = new File(rootDir, jar)
-        File dstFile = new File(rootDir, 'app/src/' + dir + '/assets/' + daemonDex)
-
-        Task t = tasks.register('buildDaemon' + task) {
-            dependsOn(':priv_daemon:' + dexTaskDep)
-            mustRunAfter(':priv_daemon:' + dexTaskDep)
-
-            ext.srcFile = srcFile
-            ext.dstFile = dstFile
-
-            doLast {
-                createJarFromApk(apk, jar)
-            }
-        }.get()
-
-        t.doLast {
-            copyFileIfChanged(srcFile, dstFile)
-        }
-    }
-}
-
 tasks.register('buildNative', Exec) {
     def props = new Properties()
     props.load(new FileInputStream(new File(rootDir, "local.properties")))
@@ -204,37 +104,16 @@ tasks.register('buildNative', Exec) {
     }
 }
 
-def setExtSrcDependencies() {
-    for (boolean debug : new boolean[]{true, false}) {
-        String build = debug ? 'Debug' : 'Release'
-
-        TaskProvider task = tasks.named('merge' + build + 'Assets')
-
-        task.configure {
-            dependsOn('buildDaemon' + build)
-            mustRunAfter('buildDaemon' + build)
-        }
-
-        task = tasks.named('merge' + build + 'JniLibFolders')
-
-        task.configure {
+afterEvaluate {
+    for (String build : new String[]{'Debug', 'Release'}) {
+        tasks.named('merge' + build + 'JniLibFolders').configure {
             dependsOn('buildNative')
             mustRunAfter('buildNative')
         }
     }
 }
 
-createTasksForDaemonBuild()
-
-afterEvaluate {
-    setExtSrcDependencies()
-}
-
 clean.doLast {
-    // Delete daemon dex
-    for (String variant in new String[]{'release', 'debug'}) {
-        Paths.get(projectDir.absolutePath, 'src/' + variant + '/assets').deleteDir()
-    }
     Paths.get(projectDir.absolutePath, 'src/main/jniLibs').deleteDir()
 }
 

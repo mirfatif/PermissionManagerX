@@ -31,9 +31,6 @@
   <string name="pref_adv_settings_reset_perm_db_title">Сброс / очистка целевых значений</string>
   <string name="pref_adv_settings_reset_perm_db_summary">Сброс или очистка базы данных целевых значений разрешений</string>
   <!-- CHAR LIMIT: 20 -->
-  <string name="pref_adv_settings_daemon_dex_location_title">Расположение файла демона</string>
-  <string name="pref_adv_settings_daemon_dex_location_summary">Загрузить демон из: %s</string>
-  <!-- CHAR LIMIT: 20 -->
   <string name="pref_adv_settings_root_cat_title">Root</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_adv_settings_daemon_uid_title">UID демона</string>
