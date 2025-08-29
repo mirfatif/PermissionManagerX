@@ -13,13 +13,16 @@ app-name = "v1.28"
 
 google-java-format = "1.28.0"
 ktfmt = "0.56"
+gradle-versions = "0.52.0"
+spotless = "7.2.1"
 
 [libraries]
 plugin-android-application = { module = "com.android.application:com.android.application.gradle.plugin", version.ref = "android-plugins" }
 plugin-android-library = { module = "com.android.library:com.android.library.gradle.plugin", version.ref = "android-plugins" }
 plugin-jetbrains-kotlin-android = { module = "org.jetbrains.kotlin.android:org.jetbrains.kotlin.android.gradle.plugin", version = "2.2.10" }
 
-plugin-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "7.2.1" }
+plugin-gradle-versions = { module = "com.github.ben-manes:gradle-versions-plugin", version.ref = "gradle-versions" }
+plugin-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 
 desugar_jdk_nio = { module = "com.android.tools:desugar_jdk_libs_nio", version = "2.1.5" }
 androidx-annotation = { module = "androidx.annotation:annotation", version = "1.9.1" }
@@ -45,6 +48,7 @@ better-link-movement-method = { module = "me.saket:better-link-movement-method",
 leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version = "2.14" }
 
 [plugins]
-gradle-versions = { id = "com.github.ben-manes.versions", version = "0.52.0" }
+gradle-versions = { id = "com.github.ben-manes.versions", version.ref = "gradle-versions" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 
 [bundles]

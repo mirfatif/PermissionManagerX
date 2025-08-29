@@ -1,9 +1,6 @@
 import java.nio.file.Paths
 
-plugins {
-    id('apk-conventions')
-    alias(libs.plugins.gradle.versions)
-}
+apply plugin: 'apk-conventions'
 
 android {
     namespace = 'com.mirfatif.permissionmanagerx'

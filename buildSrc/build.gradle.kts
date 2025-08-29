@@ -2,8 +2,8 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
   `kotlin-dsl`
-  id("com.diffplug.spotless").version("7.2.1").apply(true)
-  id("com.github.ben-manes.versions").version("0.52.0").apply(true)
+  alias(libs.plugins.spotless)
+  alias(libs.plugins.gradle.versions)
 }
 
 dependencies {
@@ -12,6 +12,7 @@ dependencies {
   implementation(libs.plugin.jetbrains.kotlin.android)
 
   implementation(libs.plugin.spotless)
+  implementation(libs.plugin.gradle.versions)
 
   // Make version catalogs available to convention plugins
   // https://github.com/gradle/gradle/issues/15383
@@ -32,8 +33,25 @@ spotless {
 
 tasks.named("jar").get().dependsOn("spotlessApply")
 
+object Color {
+  private const val ESC = 27.toChar()
+  const val RED_BOLD = "$ESC[1;91m"
+  const val ESC_END = "$ESC[0m"
+}
+
+val ignoredVersions = mutableSetOf<String>()
+
 fun isStableVersion(version: String): Boolean {
-  return ".*-(rc|beta|alpha)(|-)[0-9]*$".toRegex().matches(version.lowercase()).not()
+  return ".*(-|.)(rc|beta|alpha)[0-9]*(|-|.)[0-9.]*$"
+      .toRegex()
+      .matches(version.lowercase())
+      .not()
+      .also {
+        if (!it && !ignoredVersions.contains(version)) {
+          println("${Color.RED_BOLD}Unstable${Color.ESC_END}: $version")
+          ignoredVersions.add(version)
+        }
+      }
 }
 
 tasks.withType<DependencyUpdatesTask> {
