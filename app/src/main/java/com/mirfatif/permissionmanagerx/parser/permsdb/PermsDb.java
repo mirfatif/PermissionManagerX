@@ -8,6 +8,7 @@ import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.privtasks.util.bg.BgRunner;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public enum PermsDb {
@@ -45,13 +46,21 @@ public enum PermsDb {
     return mRefsBuilt;
   }
 
-  public void buildRefs() {
+  public boolean buildRefs() {
     synchronized (mRefs) {
       mRefs.clear();
 
       String key;
 
-      for (PermissionEntity entity : mPermDb.getAll()) {
+      List<PermissionEntity> entities;
+
+      try {
+        entities = mPermDb.getAll();
+      } catch (Exception e) { // InterruptedException
+        return false;
+      }
+
+      for (PermissionEntity entity : entities) {
         key = createKey(entity.pkgName, entity.permName, entity.isAppOps, entity.isPerUid);
 
         mRefs.put(key, entity.state);
@@ -61,6 +70,8 @@ public enum PermsDb {
     }
 
     BgRunner.execute(mPermDb::deleteDuplicates);
+
+    return true;
   }
 
   public static String createKey(

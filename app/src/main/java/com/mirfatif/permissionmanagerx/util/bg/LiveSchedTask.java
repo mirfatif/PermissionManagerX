@@ -31,11 +31,12 @@ public class LiveSchedTask {
       boolean oneShot,
       String threadName) {
     Task callback = new Task(oneShot ? () -> runAndShutdown(task) : task);
-    LifecycleWatcher.addOnDestroyed(owner, callback);
 
     mE = new SingleSchedTaskExecutor(callback, threadName);
     mDelayMillis = unit.toMillis(delay);
     mUi = onUi;
+
+    LifecycleWatcher.addOnDestroyed(owner, callback);
 
     if (oneShot) {
       mE.schedule(mDelayMillis, TimeUnit.MILLISECONDS);

@@ -35,7 +35,11 @@ public class LogUtils {
 
   public static File getCrashLogFile() {
     String file = "PMXCrash-" + BuildConfig.VERSION_CODE + "-" + Build.VERSION.SDK_INT + ".log";
-    return new File(App.getCxt().getExternalFilesDir(null), file);
+    var filesDir = App.getCxt().getExternalFilesDir(null);
+    if (filesDir == null) {
+      filesDir = App.getCxt().getExternalFilesDir(null);
+    }
+    return new File(filesDir, file);
   }
 
   public static final int CRASH_FILE_HEADER_LINES = 8;

@@ -43,6 +43,13 @@ public class HelpActivity extends OnBackPressedCallback {
   private String mUrl;
 
   public void onCreated() {
+    mUrl = mA.getIntent().getStringExtra(EXTRA_URL);
+
+    // We've been launched in unexpected way (after rotation???)
+    if (mUrl == null) {
+      mA.finishAfterTransition();
+    }
+
     mB = ActivityHelpBinding.inflate(mA.getLayoutInflater());
 
     App.setLocale();
@@ -53,8 +60,6 @@ public class HelpActivity extends OnBackPressedCallback {
     if (mA.getSupportActionBar() != null) {
       mA.getSupportActionBar().setTitle(R.string.help_menu_item);
     }
-
-    mUrl = mA.getIntent().getStringExtra(EXTRA_URL);
 
     mWebSettings = mB.webV.getSettings();
 

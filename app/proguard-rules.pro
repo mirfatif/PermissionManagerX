@@ -14,7 +14,7 @@
 }
 
 # Throwable names must not be obfuscated to correctly print e.toString()
--keepnames class com.mirfatif.err.*
+-keepnames class ** extends java.lang.Throwable
 
 -dontwarn io.github.muntashirakon.adb.AdbProtocol$AuthType
 -dontwarn jakarta.annotation.Nullable

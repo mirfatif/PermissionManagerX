@@ -112,7 +112,7 @@ public enum PackageParser {
 
     setProgress(pkgInfoList.size(), true, true);
 
-    List<Package> pkgList = new ArrayList<>();
+    final List<Package> pkgList = Collections.synchronizedList(new ArrayList<>());
 
     int size = pkgInfoList.size();
 
@@ -211,7 +211,10 @@ public enum PackageParser {
     synchronized (BUILD_DATA_LOCK) {
       if (!PermsDb.INS.refsBuilt()) {
         setProgress(REF_PERMS_LIST, true, false);
-        PermsDb.INS.buildRefs();
+        if (!PermsDb.INS.buildRefs()) {
+          // We've been interrupted
+          return;
+        }
       }
 
       setProgress(APP_OPS_LISTS, true, false);
