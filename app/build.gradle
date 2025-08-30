@@ -2,6 +2,8 @@ import java.nio.file.Paths
 
 apply plugin: 'apk-conventions'
 
+final NDK_VER = '28.2.13676358'
+
 android {
     namespace = 'com.mirfatif.permissionmanagerx'
 
@@ -87,11 +89,14 @@ dependencies {
 tasks.register('buildNative', Exec) {
     def props = new Properties()
     props.load(new FileInputStream(new File(rootDir, "local.properties")))
-    def ndkDir = new File(props.get("sdk.dir").toString(), "ndk/28.2.13676358").absolutePath
-    def nativeDir = rootDir.absolutePath + "/native"
+    def ndkDir = new File(props.get("sdk.dir").toString(), "ndk/" + NDK_VER)
 
-    environment 'ANDROID_NDK', ndkDir
-    workingDir nativeDir
+    if (!ndkDir.exists()) {
+        throw new GradleException('NDK ' + NDK_VER + ' not installed')
+    }
+
+    environment 'ANDROID_NDK', ndkDir.absolutePath
+    workingDir rootDir.absolutePath + "/native"
     commandLine './build_native.sh'
 
     doLast {
