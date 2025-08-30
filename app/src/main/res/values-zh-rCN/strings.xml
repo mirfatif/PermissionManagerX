@@ -18,8 +18,6 @@
   <!-- CHAR LIMIT: 10 -->
   <string name="cancel_button">取消</string>
   <!-- CHAR LIMIT: 10 -->
-  <!-- CHAR LIMIT: 10 -->
-  <string name="dismiss_button">关闭</string>
   <string name="open_drawer">打开</string>
   <string name="close_drawer">关闭</string>
   <!-- CHAR LIMIT: 10 -->
@@ -32,9 +30,6 @@
   <string name="help_button">帮助</string>
   <plurals name="apps_count">
     <item quantity="other">%d 个应用</item>
-  </plurals>
-  <plurals name="perm_count">
-    <item quantity="other">%d 权限</item>
   </plurals>
   <!-- CHAR LIMIT: 20 -->
   <string name="copied_to_clipboard_toast">已复制到剪贴板</string>
@@ -197,7 +192,6 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="love_using_app">喜欢权限管理 X？</string>
   <string name="purchase_and_rate_the_app">您可以通过捐赠或给个好评，帮助我们改进应用，以便更好地满足您的需要。</string>
-  <string name="rate_the_app">好评可以帮助我们改进应用，更好地满足您的需要</string>
   <string name="ask_to_provide_feedback">抱歉，您可以通过电子邮件或 Telegram 联系我们来帮助改进，便于更好地满足您的需求。</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="thank_you">非常感谢！</string>
@@ -207,8 +201,6 @@
   <string name="contact_on_telegram">在 Telegram 上发送反馈</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="contact_on_email">发送邮件</string>
-  <!-- CHAR LIMIT: 15 -->
-  <string name="rate_now">立即评价</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="how_do_i">我该怎么做？</string>
   <!-- CHAR LIMIT: 15 -->

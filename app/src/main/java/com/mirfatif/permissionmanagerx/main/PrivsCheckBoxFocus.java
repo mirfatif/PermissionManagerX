@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.fwk.LifecycleWatcher;
-import com.mirfatif.permissionmanagerx.util.UiUtilsFlavor;
+import com.mirfatif.permissionmanagerx.util.UiUtils;
 import com.mirfatif.permissionmanagerx.util.bg.LiveSchedTask;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -209,7 +209,7 @@ public class PrivsCheckBoxFocus {
 
       {
         accent.setStyle(Paint.Style.FILL);
-        accent.setColor(UiUtilsFlavor.getAccentColor());
+        accent.setColor(UiUtils.getAccentColor());
 
         clear.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
       }

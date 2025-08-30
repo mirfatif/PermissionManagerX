@@ -3,7 +3,6 @@ package com.mirfatif.permissionmanagerx.util;
 import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import static android.text.style.DynamicDrawableSpan.ALIGN_BASELINE;
 import static com.mirfatif.permissionmanagerx.util.ApiUtils.getString;
-import static com.mirfatif.permissionmanagerx.util.UiUtilsFlavor.getAccentColor;
 
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
@@ -58,7 +57,7 @@ public class StringUtils {
 
     Drawable d = ResourcesCompat.getDrawable(App.getRes(), R.drawable.link, null);
     if (d != null) {
-      d.setTint(getAccentColor());
+      d.setTint(UiUtils.getAccentColor());
       d.setBounds(0, 0, UiUtils.dpToPx(12), UiUtils.dpToPx(12));
 
       for (URLSpan span : string.getSpans(0, string.length(), URLSpan.class)) {
@@ -105,49 +104,6 @@ public class StringUtils {
     }
 
     return string;
-  }
-
-  public static String capitalizeWords(String str) {
-    StringBuilder stringBuilder = new StringBuilder();
-    for (String word : str.split(" ")) {
-      if (stringBuilder.length() != 0) {
-        stringBuilder.append(" ");
-      }
-      stringBuilder.append(capitalizeString(word));
-    }
-    return stringBuilder.toString();
-  }
-
-  public static String capitalizeString(String str) {
-    final int strLen = str.length();
-    if (strLen == 0) {
-      return str;
-    }
-
-    str = str.toLowerCase();
-
-    final int firstCodepoint = str.codePointAt(0);
-    final int newCodePoint = Character.toTitleCase(firstCodepoint);
-    if (firstCodepoint == newCodePoint) {
-      return str;
-    }
-
-    final int[] newCodePoints = new int[strLen];
-    int outOffset = 0;
-    newCodePoints[outOffset++] = newCodePoint;
-    for (int inOffset = Character.charCount(firstCodepoint); inOffset < strLen; ) {
-      final int codepoint = str.codePointAt(inOffset);
-      newCodePoints[outOffset++] = codepoint;
-      inOffset += Character.charCount(codepoint);
-    }
-    return new String(newCodePoints, 0, outOffset);
-  }
-
-  public static String ellipsize(String str, int len) {
-    if (str == null || str.length() <= len) {
-      return str;
-    }
-    return str.substring(0, len - 3).concat("…");
   }
 
   public static SpannableString getHighlightString(

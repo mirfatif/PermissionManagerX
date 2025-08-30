@@ -10,9 +10,7 @@ import com.mirfatif.permissionmanagerx.base.AlertDialogFragment;
 import com.mirfatif.permissionmanagerx.databinding.PermDetailsDialogBinding;
 import com.mirfatif.permissionmanagerx.fwk.MyLinearLayout;
 import com.mirfatif.permissionmanagerx.parser.Permission;
-import com.mirfatif.permissionmanagerx.parser.PkgParserFlavor;
 import com.mirfatif.permissionmanagerx.util.UiUtils;
-import com.mirfatif.permissionmanagerx.util.bg.LiveTasksQueueTyped;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,7 +29,7 @@ class PermDetailDialog {
   void show(Permission perm, int yLocation) {
     PermDetailsDialogBinding b = PermDetailsDialogBinding.inflate(mA.mA.getLayoutInflater());
 
-    CharSequence name = PkgParserFlavor.INS.getPermName(perm);
+    CharSequence name = perm.getName();
     b.permNameV.setText(name);
     b.permNameV.setSelected(true);
 
@@ -48,16 +46,6 @@ class PermDetailDialog {
     }
 
     b.protLevelV.setText(perm.getLocalizedProtLevelString());
-
-    new LiveTasksQueueTyped<>(mA.mA, () -> PkgParserFlavor.INS.getPermDesc(perm))
-        .onUiWith(
-            desc -> {
-              if (desc != null) {
-                b.permDescV.setText(desc);
-                b.permDescV.setVisibility(View.VISIBLE);
-              }
-            })
-        .start();
 
     List<CharSequence> permList = new ArrayList<>();
     AtomicInteger preCheckedIndex = new AtomicInteger();

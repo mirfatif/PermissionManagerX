@@ -3,7 +3,6 @@ package com.mirfatif.permissionmanagerx.main;
 import static com.mirfatif.permissionmanagerx.util.ApiUtils.getString;
 
 import android.net.Uri;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CheckBox;
 import androidx.appcompat.app.AlertDialog;
@@ -39,8 +38,7 @@ public class BackupRestoreDialog {
     mRestoreLauncher = new BackupFileSelector(mA.mA, false, uri -> doBackupRestore(false, uri));
   }
 
-  private CharSequence mSwapUserIdFrom, mSwapUserIdTo;
-  private boolean mSkipUninstalledApps = false, mSwapUserIds = false;
+  private boolean mSkipUninstalledApps = false;
 
   public AlertDialog createDialog() {
     BackupRestoreDialogBinding b = BackupRestoreDialogBinding.inflate(mA.mA.getLayoutInflater());
@@ -55,13 +53,6 @@ public class BackupRestoreDialog {
         .setTitle(getString(R.string.backup) + " / " + getString(R.string.restore))
         .setView(b.getRoot())
         .create();
-  }
-
-  private interface UserIdWatcher extends TextWatcher {
-
-    default void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-    default void onTextChanged(CharSequence s, int start, int before, int count) {}
   }
 
   private void doBackupRestore(boolean isBackup, Uri uri) {
@@ -90,10 +81,9 @@ public class BackupRestoreDialog {
                   mA.mA,
                   () -> {
                     if (isBackup) {
-                      return BackupRestore.INS.backupNoThrow(
-                          uri, true, mSkipUninstalledApps, getSwapUserIds());
+                      return BackupRestore.INS.backupNoThrow(uri, true, mSkipUninstalledApps);
                     } else {
-                      return BackupRestore.INS.restore(uri, mSkipUninstalledApps, getSwapUserIds());
+                      return BackupRestore.INS.restore(uri, mSkipUninstalledApps);
                     }
                   })
               .onUiWith(result -> handleResult(isBackup, result, b, dialogFrag))
@@ -101,19 +91,6 @@ public class BackupRestoreDialog {
         });
 
     dialogFrag.show(mA.mA);
-  }
-
-  private BackupRestore.SwapUserIds getSwapUserIds() {
-    if (mSwapUserIds && mSwapUserIdFrom != null && mSwapUserIdTo != null) {
-      try {
-        return new BackupRestore.SwapUserIds(
-            Integer.parseInt(mSwapUserIdFrom.toString().trim()),
-            Integer.parseInt(mSwapUserIdTo.toString().trim()));
-      } catch (NumberFormatException ignored) {
-      }
-    }
-
-    return null;
   }
 
   private void handleResult(
@@ -160,10 +137,6 @@ public class BackupRestoreDialog {
       }
 
       b.progText.setText(StringUtils.breakParas(message));
-
-      if (!isBackup) {
-        dialog.setOnDismissListener(d -> mA.mActFlavor.onRestoreDone());
-      }
     }
   }
 }

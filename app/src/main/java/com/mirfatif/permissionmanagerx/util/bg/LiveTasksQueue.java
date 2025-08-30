@@ -38,11 +38,6 @@ public class LiveTasksQueue {
     return this;
   }
 
-  public LiveTasksQueue inBg(BgTask task) {
-    addTask(task);
-    return this;
-  }
-
   public LiveTasksQueue delay(long msDelay) {
     addTask((BgTask) () -> SystemClock.sleep(msDelay));
     return this;

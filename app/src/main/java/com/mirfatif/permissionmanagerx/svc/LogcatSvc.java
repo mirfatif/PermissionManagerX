@@ -23,7 +23,6 @@ import com.mirfatif.permissionmanagerx.util.ApiUtils;
 import com.mirfatif.permissionmanagerx.util.LogUtils;
 import com.mirfatif.permissionmanagerx.util.NotifUtils;
 import com.mirfatif.permissionmanagerx.util.UiUtils;
-import com.mirfatif.permissionmanagerx.util.UiUtilsFlavor;
 import com.mirfatif.permissionmanagerx.util.bg.UiRunner;
 import com.mirfatif.privtasks.bind.ILogCallback;
 import com.mirfatif.privtasks.util.LogUtil;
@@ -125,7 +124,7 @@ public class LogcatSvc {
         .setOnlyAlertOnce(true)
         .setSmallIcon(R.drawable.notification_icon)
         .setContentTitle(getString(R.string.logging_title))
-        .setColor(UiUtilsFlavor.getAccentColor())
+        .setColor(UiUtils.getAccentColor())
         .setStyle(
             new NotificationCompat.BigTextStyle().bigText(getString(R.string.logging_warning_msg)))
         .addAction(0, getString(R.string.stop_button), pi)

@@ -94,9 +94,7 @@ public class DaemonStartProg {
       mA.setBigProgVisible(false);
     }
 
-    if (res.daemonStarted == DaemonStarter.DaemonStartStatus.STARTED) {
-      mA.mActFlavor.onPrivDaemonStarted();
-    } else if (res.daemonStarted == DaemonStarter.DaemonStartStatus.FAILED) {
+    if (res.daemonStarted == DaemonStarter.DaemonStartStatus.FAILED) {
       mA.showSnackBar(getString(R.string.daemon_failed_toast), 10);
     }
   }

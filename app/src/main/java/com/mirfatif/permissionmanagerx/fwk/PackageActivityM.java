@@ -33,16 +33,6 @@ public class PackageActivityM extends BaseActivity {
     mA.onResume();
   }
 
-  protected void onStart() {
-    super.onStart();
-    mA.onStart();
-  }
-
-  protected void onStop() {
-    mA.onStop();
-    super.onStop();
-  }
-
   public AlertDialog createDialog(String tag, AlertDialogFragment dialogFragment) {
     AlertDialog d = mA.createDialog(tag);
     return d != null ? d : super.createDialog(tag, dialogFragment);

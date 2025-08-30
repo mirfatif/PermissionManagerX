@@ -2,7 +2,6 @@ package com.mirfatif.permissionmanagerx.base;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import androidx.fragment.app.FragmentActivity;
@@ -40,22 +39,5 @@ public class BottomSheetDialogFrag extends BottomSheetDialogFragment {
 
   public int getTheme() {
     return com.google.android.material.R.style.Theme_Design_BottomSheetDialog;
-  }
-
-  public void onSaveInstanceState(Bundle outState) {}
-
-  private DialogInterface.OnDismissListener mDismissListener;
-
-  public BottomSheetDialogFrag setOnDismissListener(
-      DialogInterface.OnDismissListener dismissListener) {
-    mDismissListener = dismissListener;
-    return this;
-  }
-
-  public void onDismiss(DialogInterface dialog) {
-    super.onDismiss(dialog);
-    if (mDismissListener != null) {
-      mDismissListener.onDismiss(dialog);
-    }
   }
 }

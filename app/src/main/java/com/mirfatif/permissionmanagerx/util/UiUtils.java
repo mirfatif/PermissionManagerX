@@ -15,11 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.FragmentActivity;
 import com.google.android.material.color.MaterialColors;
@@ -43,10 +41,6 @@ public class UiUtils {
     return (int)
         TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, dp, Resources.getSystem().getDisplayMetrics());
-  }
-
-  public static int pxToDp(float px) {
-    return (int) (px / Resources.getSystem().getDisplayMetrics().density);
   }
 
   public static String colorIntToRGB(int color, boolean retainAlpha) {
@@ -73,6 +67,10 @@ public class UiUtils {
   public static int getDimBgColor(Activity activity) {
     return ColorUtils.blendARGB(
         getBgColor(activity), isNightMode(activity) ? Color.WHITE : Color.BLACK, 0.05f);
+  }
+
+  public static int getAccentColor() {
+    return App.getCxt().getColor(R.color.green);
   }
 
   public static void onCreateLayout(ViewGroup view) {
@@ -140,9 +138,5 @@ public class UiUtils {
     snackBar.setTextColor(activity.getColor(R.color.sharpText));
     snackBar.getView().setBackgroundColor(getSharpBgColor(activity));
     return snackBar;
-  }
-
-  public static void setTooltip(ImageView imageView) {
-    TooltipCompat.setTooltipText(imageView, imageView.getContentDescription());
   }
 }

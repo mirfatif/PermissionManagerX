@@ -45,8 +45,6 @@ public enum DaemonHandler {
 
   private static final String TAG = "DaemonHandler";
 
-  public static final int UID_SYSTEM = android.os.Process.SYSTEM_UID;
-
   private Boolean mPreferRoot;
 
   private boolean startDaemon() {
@@ -190,7 +188,6 @@ public enum DaemonHandler {
       savePort(state.port);
 
       DaemonIface.INS.onDaemonStarted(state.privTasks);
-      DaemonIfaceFlavor.INS.onDaemonStarted(state.privTasksFlavor);
       if (AppLifecycle.isAppInFg()) {
         LogcatSvc.sendDaemonCallback();
       }
@@ -228,7 +225,6 @@ public enum DaemonHandler {
 
   private void daemonStopped() {
     DaemonIface.INS.onDaemonStopped();
-    DaemonIfaceFlavor.INS.onDaemonStopped();
     DAEMON_LIVE_STATE.set(null);
     savePort(0);
   }
@@ -356,11 +352,6 @@ public enum DaemonHandler {
       }
       return DAEMON_LIVE_STATE.get().uid;
     }
-  }
-
-  public boolean isSystemUid() {
-    Integer uid = getUid();
-    return uid != null && uid == UID_SYSTEM;
   }
 
   public String getContext() {

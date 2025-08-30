@@ -36,8 +36,6 @@ public class App {
     defaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
     Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
 
-    new AppFlavor().onCreated();
-
     AppLifecycle.init(mA);
   }
 

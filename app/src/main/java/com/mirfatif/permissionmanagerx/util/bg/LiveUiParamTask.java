@@ -19,10 +19,6 @@ public class LiveUiParamTask<T> {
     task.run(mParam.get());
   }
 
-  public void post(T param) {
-    post(param, false);
-  }
-
   public void post(T param, boolean waitForCompletion) {
     Runnable task = mTask;
 

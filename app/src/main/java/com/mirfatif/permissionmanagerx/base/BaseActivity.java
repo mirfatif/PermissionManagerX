@@ -19,12 +19,10 @@ import com.mirfatif.permissionmanagerx.databinding.StatusBarBgContBinding;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.util.LocaleUtils;
 import com.mirfatif.permissionmanagerx.util.UiUtils;
-import com.mirfatif.permissionmanagerx.util.UiUtilsFlavor;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
   protected synchronized void onCreate(Bundle savedInstanceState) {
-    UiUtilsFlavor.onCreateStart(this);
     super.onCreate(savedInstanceState);
 
     if (!setNightTheme()) {

@@ -26,14 +26,12 @@ import java.util.List;
 
 public class IPrivTasksImpl extends IPrivTasks.Stub {
 
-  private final IPrivTasksFlavorImpl mIPrivTasksFlavor;
   private final AppPrivTasks mAppPrivTasks;
 
   private final AppPrivTasks.AppPrivTasksCallback mCallback = new AppPrivTasksCallbackImpl();
 
   IPrivTasksImpl() {
     mAppPrivTasks = new AppPrivTasks(mCallback, true);
-    mIPrivTasksFlavor = new IPrivTasksFlavorImpl(mCallback);
   }
 
   public void sendStdErr(int port, String jniLibPath) throws RemoteException {
@@ -46,11 +44,7 @@ public class IPrivTasksImpl extends IPrivTasks.Stub {
     Callbacks.INS.update(callback, crashLogFile);
     callback.hello(
         new DaemonState(
-            Process.myPid(),
-            Process.myUid(),
-            Callbacks.getSEContext(),
-            Server.INS.getPort(),
-            mIPrivTasksFlavor.asBinder()));
+            Process.myPid(), Process.myUid(), Callbacks.getSEContext(), Server.INS.getPort()));
   }
 
   public void setExitOnAppDeath(boolean exitOnAppDeath) {
@@ -104,7 +98,6 @@ public class IPrivTasksImpl extends IPrivTasks.Stub {
   }
 
   public void stopDaemon() {
-    mIPrivTasksFlavor.onDaemonStopped();
     Callbacks.INS.exit();
   }
 

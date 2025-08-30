@@ -32,7 +32,6 @@ import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.parser.Permission;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionEntity;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermsDb;
-import com.mirfatif.permissionmanagerx.parser.permsdb.PermsDbFlavor;
 import com.mirfatif.permissionmanagerx.pkg.PermissionAdapter.PermAdapterCallback;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.privs.DaemonHandler;
@@ -49,6 +48,7 @@ import com.mirfatif.permissionmanagerx.util.bg.LiveUiTask;
 import com.mirfatif.privtasks.util.bg.BgRunner;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -64,7 +64,6 @@ public class PackageActivity extends OnBackPressedCallback implements PermAdapte
 
   public final PackageActivityM mA;
 
-  private final PkgActivityFlavor mActFlavor = new PkgActivityFlavor(this);
   private final LiveSchedTask mRefreshStopper;
   private final LiveUiTask mPostPkgUpdateTask;
   private final LiveUiTask mPostPermListUpdateTask;
@@ -168,10 +167,8 @@ public class PackageActivity extends OnBackPressedCallback implements PermAdapte
 
     mSearchView.setQueryHint(getString(R.string.search_menu_item));
 
-    menu.findItem(R.id.action_show_all_perms)
-        .setVisible(!MySettings.INS.isDeepSearching() && mPkg.getPermFilter() == null);
+    menu.findItem(R.id.action_show_all_perms).setVisible(!MySettings.INS.isDeepSearching());
 
-    mActFlavor.onCreateOptionsMenu(menu);
     return true;
   }
 
@@ -181,7 +178,6 @@ public class PackageActivity extends OnBackPressedCallback implements PermAdapte
     menu.findItem(R.id.action_reset_app_ops).setVisible(havePerms);
     menu.findItem(R.id.action_set_all_references).setVisible(havePerms);
     menu.findItem(R.id.action_clear_references).setVisible(havePerms);
-    mActFlavor.onPrepareOptionsMenu(menu, havePerms);
     return true;
   }
 
@@ -210,19 +206,11 @@ public class PackageActivity extends OnBackPressedCallback implements PermAdapte
       return true;
     }
 
-    return mActFlavor.onOptionsItemSelected(item);
+    return false;
   }
 
   public void onResume() {
     BgRunner.execute(this::updatePkg);
-  }
-
-  public void onStart() {
-    mActFlavor.onStart();
-  }
-
-  public void onStop() {
-    mActFlavor.onStop();
   }
 
   public void handleOnBackPressed() {
@@ -291,13 +279,13 @@ public class PackageActivity extends OnBackPressedCallback implements PermAdapte
   }
 
   public void onPermLongClick(Permission perm) {
-    PermLongPressDialogFrag.show(perm, mPkg, mActFlavor, mA.getSupportFragmentManager());
+    PermLongPressDialogFrag.show(perm, mPkg, mA.getSupportFragmentManager());
   }
 
   public void onPermSwitchToggle(Permission perm) {
     if (perm.isAppOp()) {
       onAppOpModeSelect(perm, Permission.getAppOpMode(!perm.isGranted()));
-    } else if (mActFlavor.onPermClick(perm)) {
+    } else {
       onManifestPermStateChanged(perm);
     }
   }
@@ -328,7 +316,7 @@ public class PackageActivity extends OnBackPressedCallback implements PermAdapte
         mSortedPermList.removeIf(perm -> !perm.getName().equals(mPermFilter));
       }
     }
-    mActFlavor.sortPermsList(mSortedPermList);
+    mSortedPermList.sort(Comparator.comparingInt(Permission::getGroupId));
     mPostPermListUpdateTask.post(true);
   }
 
@@ -387,7 +375,7 @@ public class PackageActivity extends OnBackPressedCallback implements PermAdapte
     synchronized (mSortedPermList) {
       List<Permission> permList =
           mSortedPermList.parallelStream()
-              .filter(perm -> perm.contains(mPkg, queryText, false))
+              .filter(perm -> perm.contains(queryText, false))
               .collect(Collectors.toList());
 
       if (!Thread.interrupted()) {
@@ -426,17 +414,14 @@ public class PackageActivity extends OnBackPressedCallback implements PermAdapte
 
     PermsDb.INS.updateRefsDb(entities.toArray(new PermissionEntity[0]));
     for (PermissionEntity e : entities) {
-      PermsDb.INS.updateRefs(e.pkgName, e.permName, e.state, e.isAppOps, e.isPerUid, e.userId);
+      PermsDb.INS.updateRefs(e.pkgName, e.permName, e.state, e.isAppOps, e.isPerUid);
     }
 
-    mActFlavor.pkgRefChanged(mPkg);
     updatePkg();
   }
 
   public static void buildRefsFromCurrentPermStates(
       Package pkg, List<Permission> permList, List<PermissionEntity> entities) {
-    int userId = PermsDbFlavor.getUserIdForPermRefs(pkg.getUid());
-
     for (Permission perm : permList) {
       if (!Boolean.TRUE.equals(perm.isReferenced()) && perm.isChangeable()) {
         entities.add(
@@ -445,16 +430,13 @@ public class PackageActivity extends OnBackPressedCallback implements PermAdapte
                 perm.getName(),
                 perm.createRefStringForDb(),
                 perm.isAppOp(),
-                MySettings.INS.useUniqueRefForAppOpUidMode() && perm.isPerUid(),
-                userId));
+                MySettings.INS.useUniqueRefForAppOpUidMode() && perm.isPerUid()));
       }
     }
   }
 
   private void clearReferences() {
-    int userId = PermsDbFlavor.getUserIdForPermRefs(mPkg.getUid());
-
-    PermsDb.INS.getDb().deletePkg(mPkg.getName(), userId);
+    PermsDb.INS.getDb().deletePkg(mPkg.getName(), 0);
 
     synchronized (mSortedPermList) {
       mSortedPermList.forEach(
@@ -464,11 +446,9 @@ public class PackageActivity extends OnBackPressedCallback implements PermAdapte
                   perm.getName(),
                   null,
                   perm.isAppOp(),
-                  MySettings.INS.useUniqueRefForAppOpUidMode() && perm.isPerUid(),
-                  userId));
+                  MySettings.INS.useUniqueRefForAppOpUidMode() && perm.isPerUid()));
     }
 
-    mActFlavor.pkgRefChanged(mPkg);
     updatePkg();
   }
 
@@ -543,8 +523,6 @@ public class PackageActivity extends OnBackPressedCallback implements PermAdapte
       return;
     }
 
-    mActFlavor.beforeAppOpChange(mPkg, appOp, mode);
-
     appOp.setAppOpMode(mPkg, mode);
 
     updatePkg();
@@ -603,14 +581,7 @@ public class PackageActivity extends OnBackPressedCallback implements PermAdapte
   }
 
   private void setPermission(Permission perm) {
-    Boolean before = mActFlavor.beforePermChange(mPkg, perm);
-    if (before == null) {
-      return;
-    }
-
     perm.toggleState(mPkg);
-
-    mActFlavor.afterPermChange(mPkg, perm, before);
     updatePkg();
   }
 

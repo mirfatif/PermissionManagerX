@@ -7,9 +7,9 @@ import android.util.Xml;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
+import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionEntity;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermsDb;
-import com.mirfatif.permissionmanagerx.prefs.BackupRestoreFlavor;
 import com.mirfatif.permissionmanagerx.prefs.ExcFiltersData;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.profile.PermProfileBackupRestore;
@@ -17,9 +17,7 @@ import com.mirfatif.permissionmanagerx.util.ApiUtils;
 import com.mirfatif.privtasks.util.MyLog;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -77,44 +75,19 @@ public enum BackupRestore {
   private static final String ATTR_PER_UID = "per_uid";
   private static final String ATTR_USER_ID = "user_id";
 
-  public static class SwapUserIds {
-
-    private final int from, to;
-
-    public SwapUserIds(int from, int to) {
-      this.from = from;
-      this.to = to;
-    }
-  }
-
-  public Result backup(File file) {
-    try (FileOutputStream fos = new FileOutputStream(file, false)) {
-      return backup(fos, true, false, null);
-    } catch (IOException e) {
-      MyLog.e(TAG, "backup", e);
-      return null;
-    }
-  }
-
-  public Result backup(Uri file) throws FileNotFoundException {
-    return backup(file, true, false, null);
-  }
-
-  public Result backupNoThrow(
-      Uri file, boolean backupPrefs, boolean skipUninstalledApps, SwapUserIds swapUserIds) {
+  public Result backupNoThrow(Uri file, boolean backupPrefs, boolean skipUninstalledApps) {
     try {
-      return backup(file, backupPrefs, skipUninstalledApps, swapUserIds);
+      return backup(file, backupPrefs, skipUninstalledApps);
     } catch (FileNotFoundException e) {
       MyLog.e(TAG, "backupNoThrow", e);
       return null;
     }
   }
 
-  private Result backup(
-      Uri file, boolean backupPrefs, boolean skipUninstalledApps, SwapUserIds swapUserIds)
+  private Result backup(Uri file, boolean backupPrefs, boolean skipUninstalledApps)
       throws FileNotFoundException {
     try (OutputStream os = App.getCxt().getContentResolver().openOutputStream(file, "w")) {
-      return backup(os, backupPrefs, skipUninstalledApps, swapUserIds);
+      return backup(os, backupPrefs, skipUninstalledApps);
     } catch (FileNotFoundException e) {
       throw e;
     } catch (IOException e) {
@@ -124,10 +97,7 @@ public enum BackupRestore {
   }
 
   public Result backup(
-      OutputStream outputStream,
-      boolean backupPrefs,
-      boolean skipUninstalledApps,
-      SwapUserIds swap) {
+      OutputStream outputStream, boolean backupPrefs, boolean skipUninstalledApps) {
     XmlSerializer serializer = Xml.newSerializer();
     StringWriter stringWriter = new StringWriter();
     try {
@@ -218,10 +188,6 @@ public enum BackupRestore {
     }
 
     for (PermissionEntity entity : permEntities) {
-      if (swap != null && entity.userId == swap.from) {
-        entity.userId = swap.to;
-      }
-
       try {
         serializer.startTag(null, TAG_PERM);
 
@@ -287,7 +253,7 @@ public enum BackupRestore {
     return new Result(prefCount, permCount, profileCount, invalidPrefs, skippedApps);
   }
 
-  public Result restore(Uri file, boolean skipUninstalledApps, SwapUserIds swapUserIds) {
+  public Result restore(Uri file, boolean skipUninstalledApps) {
     Result res;
 
     try (InputStream is = App.getCxt().getContentResolver().openInputStream(file)) {
@@ -295,7 +261,7 @@ public enum BackupRestore {
         MyLog.e(TAG, "restore", "Failed to get InputStream");
         return null;
       }
-      res = restore(is, skipUninstalledApps, swapUserIds);
+      res = restore(is, skipUninstalledApps);
     } catch (IOException | SecurityException e) {
       MyLog.e(TAG, "restore", e);
       return null;
@@ -304,13 +270,13 @@ public enum BackupRestore {
     if (res != null) {
       ExcFiltersData.INS.populateLists(true);
       PermsDb.INS.buildRefs();
-      BackupRestoreFlavor.onRestoreDone();
+      PackageParser.INS.updatePkgList();
     }
 
     return res;
   }
 
-  public Result restore(InputStream is, boolean skipUninstalledApps, SwapUserIds swap) {
+  public Result restore(InputStream is, boolean skipUninstalledApps) {
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
     byte[] buffer = new byte[1024];
     int len;
@@ -398,7 +364,6 @@ public enum BackupRestore {
 
     String pkgName, permName, state;
     boolean isAppOp, isPerUid;
-    int userId;
 
     for (String[] entry : entries) {
       pkgName = entry[0] != null ? entry[0] : entry[6];
@@ -407,17 +372,7 @@ public enum BackupRestore {
       isAppOp = entry[3] != null && Boolean.parseBoolean(entry[3]);
       isPerUid = entry[4] != null && Boolean.parseBoolean(entry[4]);
 
-      try {
-        userId = entry[5] == null ? 0 : Integer.parseInt(entry[5]);
-      } catch (NumberFormatException ignored) {
-        userId = 0;
-      }
-
-      if (swap != null && userId == swap.from) {
-        userId = swap.to;
-      }
-
-      entities.add(new PermissionEntity(pkgName, permName, state, isAppOp, isPerUid, userId));
+      entities.add(new PermissionEntity(pkgName, permName, state, isAppOp, isPerUid));
     }
 
     int skippedApps = 0;

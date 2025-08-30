@@ -40,10 +40,6 @@ public class RateLimiter {
     }
   }
 
-  public void waitUntilCan() throws InterruptedException {
-    waitUntilCan(false);
-  }
-
   public void waitUntilCan(boolean setTs) throws InterruptedException {
     long sleep = getRemainingMillis();
     if (sleep > 0) {

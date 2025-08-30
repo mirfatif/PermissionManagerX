@@ -17,10 +17,6 @@
   <string name="ok_button">OK</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="cancel_button">Отмена</string>
-  <!-- CHAR LIMIT: 10 -->
-  <string name="go_button">Вперед</string>
-  <!-- CHAR LIMIT: 10 -->
-  <string name="dismiss_button">Закрыть</string>
   <string name="open_drawer">Открыть</string>
   <string name="close_drawer">Закрыть</string>
   <!-- CHAR LIMIT: 10 -->
@@ -36,18 +32,6 @@
     <item quantity="few">%d приложения</item>
     <item quantity="many">%d приложений</item>
     <item quantity="other">%d приложений</item>
-  </plurals>
-  <plurals name="perm_count">
-    <item quantity="one">%d разрешение</item>
-    <item quantity="few">%d разрешения</item>
-    <item quantity="many">%d разрешений</item>
-    <item quantity="other">%d разрешений</item>
-  </plurals>
-  <plurals name="ref_count">
-    <item quantity="one">%d значение</item>
-    <item quantity="few">%d значения</item>
-    <item quantity="many">%d значений</item>
-    <item quantity="other">%d значений</item>
   </plurals>
   <!-- CHAR LIMIT: 20 -->
   <string name="copied_to_clipboard_toast">Скопировано в буфер обмена</string>
@@ -242,7 +226,6 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="love_using_app">Нравится Permission Manager X?</string>
   <string name="purchase_and_rate_the_app">Вы можете помочь нам улучшить приложение путём небольшого пожертвования или оставить хороший отзыв, чтобы мы могли лучше соответствовать вашим потребностям.</string>
-  <string name="rate_the_app">Хорошие рейтинги и отзывы помогают нам улучшить приложение так, чтобы мы могли лучше соответствовать вашим потребностям.</string>
   <string name="ask_to_provide_feedback">Жалко слышать это. Вы можете помочь улучшить приложение, связавшись с нами по email или в Telegram, чтобы мы могли лучше соответствовать вашим потребностям.</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="thank_you">Спасибо</string>
@@ -252,8 +235,6 @@
   <string name="contact_on_telegram">Написать сообщение в Telegram</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="contact_on_email">Написать email</string>
-  <!-- CHAR LIMIT: 15 -->
-  <string name="rate_now">Оценить сейчас</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="how_do_i">Как это сделать?</string>
   <!-- CHAR LIMIT: 15 -->

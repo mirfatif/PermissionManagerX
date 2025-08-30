@@ -27,7 +27,7 @@ public class MainActivityM extends BaseActivity {
   }
 
   public boolean onPrepareOptionsMenu(Menu menu) {
-    return mA.onPrepareOptionsMenu(menu);
+    return false;
   }
 
   public boolean onOptionsItemSelected(MenuItem item) {

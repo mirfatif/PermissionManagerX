@@ -8,8 +8,6 @@ import android.text.format.DateUtils;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.prefs.ExcFiltersData;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
-import com.mirfatif.permissionmanagerx.prefs.MySettingsFlavor;
-import com.mirfatif.permissionmanagerx.privs.DaemonHandler;
 import com.mirfatif.permissionmanagerx.privs.DaemonIface;
 import com.mirfatif.permissionmanagerx.util.UiUtils;
 import com.mirfatif.permissionmanagerx.util.UserUtils;
@@ -182,9 +180,7 @@ public class Permission {
   }
 
   public CharSequence getDependsOnName() {
-    String dependsOn = Objects.requireNonNull(mDependsOn);
-    return PkgParserFlavor.INS.getPermName(
-        mDependsOn, PermGroupsMapping.INS.getGroupId(dependsOn, true));
+    return mDependsOn;
   }
 
   public void setExtraAppOp() {
@@ -215,14 +211,6 @@ public class Permission {
     return mProviderPkg != null;
   }
 
-  public String getProviderPkg() {
-    return mProviderPkg;
-  }
-
-  public boolean isSystemFixed() {
-    return mSystemFixed;
-  }
-
   public void setReference(Boolean isReferenced, String reference) {
     mReferenced = isReferenced;
     mReference = reference;
@@ -250,45 +238,26 @@ public class Permission {
   }
 
   private boolean isChangeableInternal() {
-    boolean allowCriticChanges = MySettingsFlavor.INS.allowCriticalChanges();
-    if ((mFrameworkApp && !allowCriticChanges) || ExcFiltersData.INS.isCriticalApp(mPackageName)) {
+    if (mFrameworkApp || ExcFiltersData.INS.isCriticalApp(mPackageName)) {
       return false;
     }
     if (mAppOp) {
       return isAppOpPermChangeable(mDependsOn);
     } else {
-      return (mProtectionLevel.equals(PROTECTION_DANGEROUS) || mDevelopment)
-          && (!mSystemApp || !mPrivileged || allowCriticChanges)
-          && !mPolicyFixed
-          && (!mSystemFixed || (allowCriticChanges && DaemonHandler.INS.isSystemUid()));
+      if ((!mProtectionLevel.equals(PROTECTION_DANGEROUS) && !mDevelopment)
+          || (mSystemApp && mPrivileged)
+          || mPolicyFixed) return false;
+      return !mSystemFixed;
     }
-  }
-
-  public boolean isChangeableForDump() {
-    if (mAppOp) {
-      return isAppOpPermChangeable(mDependsOn);
-    }
-
-    return isManifestPermChangeable(mProtectionLevel, mDevelopment)
-        && !mPolicyFixed
-        && !mSystemFixed;
-  }
-
-  public static boolean isManifestPermChangeable(String protLevel, boolean isDevelopment) {
-    return PROTECTION_DANGEROUS.equals(protLevel) || isDevelopment;
-  }
-
-  public static boolean isAppOpPermChangeable(int op) {
-    return isAppOpPermChangeable(AppOpsParser.INS.getDependsOn(op));
   }
 
   public static boolean isAppOpPermChangeable(String dependsOn) {
     return dependsOn == null;
   }
 
-  public boolean contains(Package pkg, String queryText, boolean caseSensitive) {
+  public boolean contains(String queryText, boolean caseSensitive) {
     if (!MySettings.INS.isSpecialSearch()) {
-      return containsNot(pkg, queryText, caseSensitive);
+      return containsNot(queryText, caseSensitive);
     }
 
     boolean isEmpty = true;
@@ -297,37 +266,30 @@ public class Permission {
         continue;
       }
       isEmpty = false;
-      if (containsAnd(pkg, str, caseSensitive)) {
+      if (containsAnd(str, caseSensitive)) {
         return true;
       }
     }
     return isEmpty;
   }
 
-  private boolean containsAnd(Package pkg, String queryText, boolean caseSensitive) {
+  private boolean containsAnd(String queryText, boolean caseSensitive) {
     for (String str : queryText.split("&")) {
       if (TextUtils.isEmpty(str)) {
         continue;
       }
-      if (!containsNot(pkg, str, caseSensitive)) {
+      if (!containsNot(str, caseSensitive)) {
         return false;
       }
     }
     return true;
   }
 
-  private boolean containsNot(Package pkg, String queryText, boolean caseSensitive) {
+  private boolean containsNot(String queryText, boolean caseSensitive) {
     boolean contains = true;
     if (MySettings.INS.isSpecialSearch() && queryText.startsWith("!")) {
       queryText = queryText.replaceAll("^!", "");
       contains = false;
-    }
-
-    Boolean handled = MySettingsFlavor.INS.handleSearchQuery(queryText, pkg, this);
-    if (Boolean.TRUE.equals(handled)) {
-      return contains;
-    } else if (Boolean.FALSE.equals(handled)) {
-      return !contains;
     }
 
     caseSensitive = caseSensitive && MySettings.INS.isCaseSensitiveSearch();
@@ -337,7 +299,7 @@ public class Permission {
 
     for (String field :
         new String[] {
-          PkgParserFlavor.INS.getPermName(this).toString(),
+          getName(),
           ":" + getLocalizedProtectionLevel(mProtectionLevel),
           ((mAppOp || mManifestPermAppOp) ? SearchConstants.INS.SEARCH_APP_OPS : ""),
           ((mAppOp && mPerUid) ? SearchConstants.INS.SEARCH_UID : ""),
@@ -416,29 +378,12 @@ public class Permission {
     return isAppOp() ? createRefStringForDb(getAppOpMode()) : createRefStringForDb(isGranted());
   }
 
-  public static String createRefStringForDb(boolean isAppOp, boolean granted) {
-    if (isAppOp) {
-      return createRefStringForDb(getAppOpMode(granted));
-    } else {
-      return createRefStringForDb(granted);
-    }
-  }
-
   public static String createRefStringForDb(boolean granted) {
     return granted ? Permission.GRANTED : Permission.REVOKED;
   }
 
   public static String createRefStringForDb(int appOpMode) {
     return AppOpsParser.INS.opModeToName(appOpMode);
-  }
-
-  public static boolean isGranted(String dbRefString, boolean isAppOp) {
-    if (isAppOp) {
-      Integer mode = getAppOpMode(dbRefString);
-      return mode != null && isAppOpGranted(mode);
-    } else {
-      return Permission.GRANTED.equals(dbRefString);
-    }
   }
 
   public static boolean isAppOpGranted(int appOpMode) {
@@ -451,15 +396,6 @@ public class Permission {
     return granted ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED;
   }
 
-  public static boolean isAppOpInGrantedNonGrantedState(String dbRefString) {
-    Integer mode = getAppOpMode(dbRefString);
-    return mode == null || mode == AppOpsManager.MODE_ALLOWED || mode == AppOpsManager.MODE_IGNORED;
-  }
-
-  public static Integer getAppOpMode(String dbRefString) {
-    return AppOpsParser.INS.nameToOpMode(dbRefString);
-  }
-
   public static Boolean isReferenced(String dbRefString, boolean granted) {
     return dbRefString == null ? null : dbRefString.equals(createRefStringForDb(granted));
   }
@@ -469,7 +405,7 @@ public class Permission {
   }
 
   public CharSequence getPermNameString() {
-    CharSequence permName = PkgParserFlavor.INS.getPermName(this);
+    CharSequence permName = getName();
     if (mAppOp && hasDependsOnPerm()) {
       permName = TextUtils.concat(permName, " (", getDependsOnName(), ")");
     }
@@ -478,12 +414,12 @@ public class Permission {
 
   private static String getLocalizedProtectionLevel(String protectionLevel) {
     return switch (protectionLevel) {
-      default -> SearchConstants.INS.SEARCH_PROT_UNKNOWN;
       case PROTECTION_NORMAL -> SearchConstants.INS.SEARCH_PROT_NORMAL;
       case PROTECTION_DANGEROUS -> SearchConstants.INS.SEARCH_PROT_DANGEROUS;
       case PROTECTION_SIGNATURE -> SearchConstants.INS.SEARCH_PROT_SIGNATURE;
       case PROTECTION_INTERNAL -> SearchConstants.INS.SEARCH_PROT_INTERNAL;
       case PROTECTION_APP_OPS -> SearchConstants.INS.SEARCH_APP_OPS;
+      default -> SearchConstants.INS.SEARCH_PROT_UNKNOWN;
     };
   }
 

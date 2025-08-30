@@ -18,10 +18,6 @@
   <string name="ok_button">OK</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="cancel_button">Cancel</string>
-  <!-- CHAR LIMIT: 10 -->
-  <string name="go_button">Go</string>
-  <!-- CHAR LIMIT: 10 -->
-  <string name="dismiss_button">Dismiss</string>
   <string name="open_drawer">Open</string>
   <string name="close_drawer">Close</string>
   <!-- CHAR LIMIT: 10 -->
@@ -35,14 +31,6 @@
   <plurals name="apps_count">
     <item quantity="one">%d app</item>
     <item quantity="other">%d apps</item>
-  </plurals>
-  <plurals name="perm_count">
-    <item quantity="one">%d permission</item>
-    <item quantity="other">%d permissions</item>
-  </plurals>
-  <plurals name="ref_count">
-    <item quantity="one">%d reference</item>
-    <item quantity="other">%d references</item>
   </plurals>
 
   <!-- CHAR LIMIT: 20 -->
@@ -266,7 +254,6 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="love_using_app">Liking Permission Manager X?</string>
   <string name="purchase_and_rate_the_app">You can help us improve the app by making a small donation or leaving a good app review so that we are able to better serve your needs.</string>
-  <string name="rate_the_app">Good ratings and reviews help us improve the app and we are able to better serve your needs.</string>
   <string name="ask_to_provide_feedback">Sorry to hear that. You can help improve the app by contacting us via email or Telegram so that we are able to better serve your needs.</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="thank_you">Thank you</string>
@@ -277,8 +264,6 @@
   <string name="contact_on_telegram">Write a Message on Telegram</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="contact_on_email">Write an Email</string>
-  <!-- CHAR LIMIT: 15 -->
-  <string name="rate_now">Rate Now</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="how_do_i">How do I?</string>
   <!-- CHAR LIMIT: 15 -->

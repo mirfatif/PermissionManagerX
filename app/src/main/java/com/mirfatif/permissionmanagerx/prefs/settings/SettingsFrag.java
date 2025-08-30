@@ -6,7 +6,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.fwk.SettingsActivityM;
 
-public class SettingsFragFlavor extends PreferenceFragmentCompat {
+public class SettingsFrag extends PreferenceFragmentCompat {
 
   private SettingsActivityM mA;
 

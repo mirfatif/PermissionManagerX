@@ -18,8 +18,6 @@
   <!-- CHAR LIMIT: 10 -->
   <string name="cancel_button">إلغاء</string>
   <!-- CHAR LIMIT: 10 -->
-  <string name="go_button">اذهب</string>
-  <!-- CHAR LIMIT: 10 -->
   <string name="open_drawer">فتح</string>
   <string name="close_drawer">إغلاق</string>
   <!-- CHAR LIMIT: 10 -->
@@ -169,7 +167,6 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="love_using_app">هل أعجبني مدير الأذونات X؟</string>
   <string name="purchase_and_rate_the_app">يمكنك مساعدتنا على تحسين التطبيق عن طريق تبرع صغير أو ترك مراجعة جيدة للتطبيق بحيث نتمكن من تلبية احتياجاتك بشكل أفضل.</string>
-  <string name="rate_the_app">التقييمات الجيدة والمراجعات تساعدنا على تحسين التطبيق ونحن قادرون على خدمة احتياجاتك بشكل أفضل.</string>
   <string name="ask_to_provide_feedback">نأسف لسماع ذلك. يمكنك المساعدة في تحسين التطبيق عن طريق الاتصال بنا عبر البريد الإلكتروني أو تيليجرام حتى نتمكن من خدمة احتياجاتك بشكل أفضل.</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="thank_you">شكرا لك</string>
@@ -179,8 +176,6 @@
   <string name="contact_on_telegram">اكتب رسالة على تيليجرام</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="contact_on_email">كتابة بريد إلكتروني</string>
-  <!-- CHAR LIMIT: 15 -->
-  <string name="rate_now">قيم الآن</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="how_do_i">كيف يمكنني؟</string>
   <!-- CHAR LIMIT: 15 -->

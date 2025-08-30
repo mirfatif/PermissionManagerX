@@ -39,14 +39,6 @@ public class SingleTaskExecutor extends SingleTaskExecutorAbstract {
     }
   }
 
-  public void submitIfNotPending() {
-    synchronized (mAlive) {
-      if (mAlive.get() && !hasPendingTasks()) {
-        addTask(mTask, mQ);
-      }
-    }
-  }
-
   public void cancelAndSubmit(boolean interrupt) {
     synchronized (mAlive) {
       if (mAlive.get()) {

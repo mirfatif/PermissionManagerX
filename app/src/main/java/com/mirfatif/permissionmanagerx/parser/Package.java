@@ -1,18 +1,12 @@
 package com.mirfatif.permissionmanagerx.parser;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import com.mirfatif.permissionmanagerx.prefs.ExcFiltersData;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
-import com.mirfatif.permissionmanagerx.prefs.MySettingsFlavor;
-import com.mirfatif.permissionmanagerx.util.ApiUtils;
 import com.mirfatif.permissionmanagerx.util.LocaleUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 public class Package {
 
@@ -24,15 +18,11 @@ public class Package {
   private boolean mIsEnabled;
   private int mUid;
   private Boolean mIsReferenced;
-  private long mInstallDate;
-  private long mUpdateDate;
 
   private int mTotalPermCount;
   private int mPermCount, mSearchPermCount;
   private int mTotalAppOpsCount;
   private int mAppOpsCount, mSearchAppOpsCount;
-
-  private List<String> mPermFilter;
 
   void updatePackage(
       String label,
@@ -42,9 +32,7 @@ public class Package {
       boolean isSystemApp,
       boolean isEnabled,
       int uid,
-      Boolean reference,
-      long installDate,
-      long updateDate) {
+      Boolean reference) {
     mPackageLabel = label;
     mPackageName = name;
     mPermissionsList = permissionList;
@@ -53,19 +41,6 @@ public class Package {
     mIsEnabled = isEnabled;
     mUid = uid;
     mIsReferenced = reference;
-    mInstallDate = installDate;
-    mUpdateDate = updateDate;
-  }
-
-  private static long BUILD_DATE;
-
-  static {
-    try {
-      PackageInfo pkgInfo = ApiUtils.getPkgInfo("android", 0);
-      BUILD_DATE = Math.max(pkgInfo.firstInstallTime, pkgInfo.lastUpdateTime);
-    } catch (NameNotFoundException ignored) {
-      BUILD_DATE = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(365);
-    }
   }
 
   public String getLabel() {
@@ -112,7 +87,7 @@ public class Package {
   }
 
   public boolean isChangeable() {
-    return !isCriticalApp() && (!mIsFrameworkApp || MySettingsFlavor.INS.allowCriticalChanges());
+    return !isCriticalApp() && !mIsFrameworkApp;
   }
 
   public void setTotalPermCount(int count) {
@@ -149,20 +124,6 @@ public class Package {
       mLastPermCount += " | " + getAppOpsCount();
     }
     return mLastPermCount;
-  }
-
-  public int getTotalPermAppOpCount() {
-    return getTotalAppOpsCount() + getTotalPermCount();
-  }
-
-  public int getGrantedPermAppOpCount() {
-    int granted = 0;
-    for (Permission perm : getPermList()) {
-      if (perm.isGranted()) {
-        granted++;
-      }
-    }
-    return granted;
   }
 
   public void setTotalAppOpsCount(int count) {
@@ -208,26 +169,8 @@ public class Package {
     return mLastShowingRef;
   }
 
-  private String mLastDate;
-
   public String getDate() {
-    Boolean isPkgInstalledDate = MySettingsFlavor.INS.isPkgInstallDate();
-    if (isPkgInstalledDate == null) {
-      mLastDate = null;
-    } else {
-      long date = isPkgInstalledDate ? mInstallDate : mUpdateDate;
-      mLastDate =
-          date > BUILD_DATE
-              ? DateUtils.getRelativeTimeSpanString(
-                      date, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS)
-                  .toString()
-              : null;
-    }
-    return mLastDate;
-  }
-
-  public long getInstallTime() {
-    return mInstallDate;
+    return null;
   }
 
   private boolean mPkgRemoved = false;
@@ -238,14 +181,6 @@ public class Package {
 
   public void setPkgRemoved(boolean isRemoved) {
     mPkgRemoved = isRemoved;
-  }
-
-  public List<String> getPermFilter() {
-    return mPermFilter;
-  }
-
-  public void setPermFilter(List<String> permFilter) {
-    mPermFilter = permFilter;
   }
 
   public boolean contains(String queryText) {
@@ -283,13 +218,6 @@ public class Package {
     if (MySettings.INS.isSpecialSearch() && queryText.startsWith("!")) {
       queryText = queryText.replaceAll("^!", "");
       contains = false;
-    }
-
-    Boolean handled = MySettingsFlavor.INS.handleSearchQuery(queryText, this, null);
-    if (Boolean.TRUE.equals(handled)) {
-      return contains;
-    } else if (Boolean.FALSE.equals(handled)) {
-      return !contains;
     }
 
     boolean isCaseSensitive = MySettings.INS.isCaseSensitiveSearch();
@@ -338,10 +266,6 @@ public class Package {
     }
 
     if (!mLastPermCount.equals(pkg.getPermCount())) {
-      return false;
-    }
-
-    if (!Objects.equals(mLastDate, pkg.getDate())) {
       return false;
     }
 

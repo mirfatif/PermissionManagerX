@@ -2,6 +2,7 @@ package com.mirfatif.permissionmanagerx.prefs;
 
 import static com.mirfatif.permissionmanagerx.util.ApiUtils.getString;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Build;
@@ -35,7 +36,9 @@ public enum MySettings {
   }
 
   public static SharedPreferences getNoBackupPrefs() {
-    return MySettingsFlavor.INS.getNoBackupPrefs();
+    return App.getCxt()
+        .getSharedPreferences(
+            App.getCxt().getPackageName() + "_no_backup_prefs", Context.MODE_PRIVATE);
   }
 
   public boolean getBoolPref(int key, int def) {
@@ -114,15 +117,6 @@ public enum MySettings {
       getNoBackupPrefs().edit().putLong(prefKey, val).apply();
     } else {
       getDefPrefs().edit().putLong(prefKey, val).apply();
-    }
-  }
-
-  public void savePref(int key, String val) {
-    String prefKey = getString(key);
-    if (prefKey.endsWith("_enc")) {
-      getNoBackupPrefs().edit().putString(prefKey, val).apply();
-    } else {
-      getDefPrefs().edit().putString(prefKey, val).apply();
     }
   }
 
@@ -440,10 +434,6 @@ public enum MySettings {
 
   public boolean isDeepSearchEnabled() {
     return getBoolPref(R.string.pref_main_deep_search_key, R.bool.pref_main_deep_search_default);
-  }
-
-  public void setDeepSearchEnabled(boolean enabled) {
-    savePref(R.string.pref_main_deep_search_key, enabled);
   }
 
   public boolean isCaseSensitiveSearch() {

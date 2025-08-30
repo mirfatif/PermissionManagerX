@@ -23,8 +23,6 @@ public class SettingsActivity extends OnBackPressedCallback {
     mA = activity;
   }
 
-  final SettingsActivityFlavor mActFlavor = new SettingsActivityFlavor(this);
-
   private static final String CLASS = SettingsActivity.class.getName();
   public static final String EXTRA_NO_PARENT = CLASS + ".extra.NO_PARENT";
   private static final String SAVED_STATE_TITLE = CLASS + ".TITLE";
@@ -37,19 +35,13 @@ public class SettingsActivity extends OnBackPressedCallback {
     if (savedInstanceState == null) {
       mA.getSupportFragmentManager()
           .beginTransaction()
-          .replace(R.id.fragment_container, new SettingsFragFlavor())
+          .replace(R.id.fragment_container, new SettingsFrag())
           .commit();
     } else {
       title = savedInstanceState.getString(SAVED_STATE_TITLE);
     }
 
-    boolean closeOnBackPressed = SettingsActivityFlavor.shouldCloseOnBackPressed(mA.getIntent());
-
-    if (closeOnBackPressed) {
-      mA.getOnBackPressedDispatcher().addCallback(mA, this);
-    } else {
-      super.setEnabled(false);
-    }
+    super.setEnabled(false);
 
     ActionBar actionBar = mA.getSupportActionBar();
     if (actionBar != null) {
@@ -60,8 +52,6 @@ public class SettingsActivity extends OnBackPressedCallback {
         actionBar.setDisplayHomeAsUpEnabled(false);
       }
     }
-
-    mActFlavor.onCreate();
   }
 
   public void handleOnBackPressed() {

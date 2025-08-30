@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
-import android.text.TextUtils;
 import android.text.style.MetricAffectingSpan;
 import androidx.core.util.Pair;
 import androidx.preference.CheckBoxPreference;
@@ -19,18 +18,13 @@ import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.fwk.FilterSettingsActivityM;
 import com.mirfatif.permissionmanagerx.parser.AppOpsParser;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
-import com.mirfatif.permissionmanagerx.parser.PermGroupsMapping;
-import com.mirfatif.permissionmanagerx.parser.PkgParserFlavor;
 import com.mirfatif.permissionmanagerx.prefs.ExcFiltersData;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
-import com.mirfatif.permissionmanagerx.prefs.MySettingsFlavor;
 import com.mirfatif.permissionmanagerx.prefs.fwk.CustomPrefDialogFrag;
 import com.mirfatif.permissionmanagerx.util.ApiUtils;
-import com.mirfatif.permissionmanagerx.util.SmallDimMarginSpan;
 import com.mirfatif.permissionmanagerx.util.bg.LiveTasksQueueTyped;
 import com.mirfatif.privtasks.Constants;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Set;
 
 public class FilterSettingsFragment extends PreferenceFragmentCompat
@@ -122,7 +116,6 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     extraAppOpsListView = findPreference(getString(R.string.pref_filter_extra_appops_key));
 
     updateViews();
-    FilterSettingsFragFlavor.onCreatePrefs(this);
 
     setHasOptionsMenu(true);
   }
@@ -187,7 +180,7 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
 
     Set<String> excPerms = ExcFiltersData.INS.getExcludedPerms();
 
-    new LiveTasksQueueTyped<>(this, () -> buildExcPermNames(excPerms))
+    new LiveTasksQueueTyped<>(this, () -> excPerms.toArray(CharSequence[]::new))
         .onUiWith(excPermsLabels -> updateExcludedPermsView(excPermsLabels, excPerms))
         .start();
 
@@ -216,7 +209,7 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
         string.setSpan(new RedTextSpan(), 0, string.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         labels[i] = string;
       } else {
-        labels[i] = createPermName(extraAppOp, true);
+        labels[i] = extraAppOp;
       }
     }
 
@@ -232,32 +225,6 @@ public class FilterSettingsFragment extends PreferenceFragmentCompat
     public void updateMeasureState(TextPaint textPaint) {
       updateDrawState(textPaint);
     }
-  }
-
-  private CharSequence[] buildExcPermNames(Set<String> excludedPerms) {
-    List<String> appOpsNames = AppOpsParser.INS.getAppOpsNames();
-    return excludedPerms.stream()
-        .map(
-            perm ->
-                createPermName(
-                    perm, appOpsNames.isEmpty() ? !perm.contains(".") : appOpsNames.contains(perm)))
-        .toArray(CharSequence[]::new);
-  }
-
-  private static CharSequence createPermName(String permName, boolean isAppOp) {
-    if (!MySettingsFlavor.INS.showFrameworkPermNames()) {
-      CharSequence name =
-          PkgParserFlavor.INS.getPermName(
-              permName, PermGroupsMapping.INS.getGroupId(permName, isAppOp));
-      if (!name.toString().equals(permName)) {
-        SpannableString ss = new SpannableString(permName);
-        ss.setSpan(
-            new SmallDimMarginSpan(), 0, permName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return TextUtils.concat(name, "\n", ss);
-      }
-    }
-
-    return permName;
   }
 
   private void updateExcludedAppsView(

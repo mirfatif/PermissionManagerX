@@ -19,10 +19,6 @@ public class LiveUiWaitTask {
     return new LiveUiWaitTask(null, task);
   }
 
-  public static LiveUiWaitTask post(LifecycleOwner owner, Runnable task) {
-    return new LiveUiWaitTask(owner, task);
-  }
-
   private final NotifyWaiter mCompletionWaiter = new NotifyWaiter();
 
   public void waitForMe() {

@@ -1,8 +1,6 @@
 package com.mirfatif.permissionmanagerx.util;
 
 import android.os.Build;
-import androidx.lifecycle.Lifecycle.State;
-import androidx.lifecycle.LifecycleOwner;
 import com.mirfatif.privtasks.util.MyLog;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,10 +9,6 @@ import java.io.OutputStream;
 public class Utils {
 
   private Utils() {}
-
-  public static boolean isAlive(LifecycleOwner lifecycleOwner) {
-    return lifecycleOwner.getLifecycle().getCurrentState().isAtLeast(State.INITIALIZED);
-  }
 
   public static boolean copyStream(String tag, InputStream input, OutputStream output) {
     byte[] buffer = new byte[8192];

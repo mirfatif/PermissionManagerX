@@ -56,7 +56,7 @@ public class AboutActivity {
   }
 
   private ActivityAboutBinding mB;
-  private ActivityResultLauncher<String> mNotifPermReqLauncher, mLoggingLauncher, mDumpLauncher;
+  private ActivityResultLauncher<String> mNotifPermReqLauncher, mLoggingLauncher;
 
   public void onCreated() {
     mB = ActivityAboutBinding.inflate(mA.getLayoutInflater());

@@ -27,12 +27,6 @@ public class SingleParamTask<T> {
     }
   }
 
-  public synchronized void submit(T param) {
-    if (mE.isAlive()) {
-      enqueueParam(param);
-    }
-  }
-
   public synchronized void submitIfIdle(T param) {
     if (mE.isAlive() && !hasRunningOrPendingTasks() && mParam.isEmpty()) {
       enqueueParam(param);

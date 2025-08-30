@@ -1,6 +1,5 @@
 package com.mirfatif.permissionmanagerx.parser.permsdb;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -10,9 +9,6 @@ import java.util.List;
 
 @Dao
 public interface PermissionDao {
-
-  @Query("SELECT * FROM PermissionEntity")
-  LiveData<List<PermissionEntity>> watchAll();
 
   @Query("SELECT * FROM PermissionEntity")
   List<PermissionEntity> getAll();
@@ -58,13 +54,4 @@ public interface PermissionDao {
           + "(SELECT MIN(id) FROM PermissionEntity "
           + "GROUP BY pkgName, permName, isAppOps, isPerUid, userId)")
   void deleteDuplicates();
-
-  @Query(
-      "SELECT state FROM PermissionEntity "
-          + "WHERE pkgName IS :pkgName "
-          + "AND permName IS :permName "
-          + "AND isAppOps IS :isAppOp "
-          + "AND isPerUid IS :isPerUid "
-          + "AND userId IS :userId")
-  String getState(String pkgName, String permName, boolean isAppOp, boolean isPerUid, int userId);
 }

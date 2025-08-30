@@ -150,10 +150,6 @@ public enum AppOpsParser {
     return mListsLock.withReadLock(() -> new ArrayList<>(mAppOpsNames));
   }
 
-  public int getAppOpCount() {
-    return mListsLock.withReadLock(mAppOpsNames::size);
-  }
-
   public String getAppOpName(int op) {
     return mListsLock.withReadLock(
         () -> op >= 0 && op < mAppOpsNames.size() ? mAppOpsNames.get(op) : null);
@@ -175,11 +171,6 @@ public enum AppOpsParser {
   public String opModeToName(int opMode) {
     return mListsLock.withReadLock(
         () -> isValidAppOpMode(opMode) ? mAppOpsModes.get(opMode) : null);
-  }
-
-  public Integer nameToOpMode(String modeName) {
-    int i = mListsLock.withReadLock(() -> mAppOpsModes.indexOf(modeName));
-    return i >= 0 ? i : null;
   }
 
   public String getDependsOn(int op) {

@@ -18,8 +18,6 @@
   <!-- CHAR LIMIT: 10 -->
   <string name="cancel_button">Cancelar</string>
   <!-- CHAR LIMIT: 10 -->
-  <string name="go_button">Siga</string>
-  <!-- CHAR LIMIT: 10 -->
   <string name="open_drawer">Abrir</string>
   <string name="close_drawer">Cerrar</string>
   <!-- CHAR LIMIT: 10 -->
@@ -152,7 +150,6 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="love_using_app">¿Te gusta Permission Manager X?</string>
   <string name="purchase_and_rate_the_app">Puedes ayudarnos a mejorar la aplicación haciendo una pequeña donación o dejando una buena reseña de la aplicación para que podamos atender mejor tus necesidades.</string>
-  <string name="rate_the_app">Las buenas puntuaciones y reseñas nos ayudan a mejorar la aplicación y nos permite atender mejor tus necesidades.</string>
   <string name="ask_to_provide_feedback">Lamentamos oír eso. Puedes ayudarnos a mejorar la aplicación contactándonos por correo electrónico o Telegram para que podamos atender mejor tus necesidades.</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="thank_you">Gracias</string>

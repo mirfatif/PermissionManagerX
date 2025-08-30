@@ -31,17 +31,11 @@ public class PermissionEntity {
   public PermissionEntity() {}
 
   public PermissionEntity(
-      String pkgName,
-      String permName,
-      String state,
-      boolean isAppOp,
-      boolean isPerUid,
-      int userId) {
+      String pkgName, String permName, String state, boolean isAppOp, boolean isPerUid) {
     this.pkgName = pkgName;
     this.permName = permName;
     this.state = state;
     this.isAppOps = isAppOp;
     this.isPerUid = isPerUid;
-    this.userId = userId;
   }
 }

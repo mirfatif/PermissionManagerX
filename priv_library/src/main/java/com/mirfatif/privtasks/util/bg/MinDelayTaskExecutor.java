@@ -12,10 +12,6 @@ public class MinDelayTaskExecutor {
     mE = new SingleSchedTaskExecutor(() -> run(task), threadName);
   }
 
-  public void runOrSchedule() {
-    runOrSchedule(false);
-  }
-
   public void runOrSchedule(boolean cancel) {
     synchronized (this) {
       if (!mE.isAlive() || (!cancel && mE.hasRunningOrPendingTasks())) {

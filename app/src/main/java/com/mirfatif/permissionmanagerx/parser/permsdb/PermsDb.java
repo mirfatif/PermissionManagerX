@@ -52,9 +52,7 @@ public enum PermsDb {
       String key;
 
       for (PermissionEntity entity : mPermDb.getAll()) {
-        key =
-            createKey(
-                entity.pkgName, entity.permName, entity.isAppOps, entity.isPerUid, entity.userId);
+        key = createKey(entity.pkgName, entity.permName, entity.isAppOps, entity.isPerUid);
 
         mRefs.put(key, entity.state);
       }
@@ -66,41 +64,26 @@ public enum PermsDb {
   }
 
   public static String createKey(
-      String pkgName, String permName, boolean isAppOp, boolean isPerUid, int userId) {
-    return pkgName + "_" + permName + "_" + isAppOp + "_" + isPerUid + "_" + userId;
+      String pkgName, String permName, boolean isAppOp, boolean isPerUid) {
+    return pkgName + "_" + permName + "_" + isAppOp + "_" + isPerUid + "_0";
   }
 
   public void updateRefs(
-      String pkgName,
-      String permName,
-      String state,
-      boolean isAppOp,
-      boolean isPerUid,
-      int userId) {
-    String key = createKey(pkgName, permName, isAppOp, isPerUid, userId);
+      String pkgName, String permName, String state, boolean isAppOp, boolean isPerUid) {
+    String key = createKey(pkgName, permName, isAppOp, isPerUid);
     mRefs.remove(key);
     if (state != null) {
       mRefs.put(key, state);
     }
   }
 
-  public String getRef(
-      String pkgName, String permName, boolean isAppOp, boolean isPerUid, int uid) {
+  public String getRef(String pkgName, String permName, boolean isAppOp, boolean isPerUid) {
     isPerUid = isPerUid && MySettings.INS.useUniqueRefForAppOpUidMode();
-    int userId = PermsDbFlavor.getUserIdForPermRefs(uid);
 
-    String ref = mRefs.get(createKey(pkgName, permName, isAppOp, isPerUid, userId));
+    String ref = mRefs.get(createKey(pkgName, permName, isAppOp, isPerUid));
 
     if (ref == null && isPerUid) {
-      ref = mRefs.get(createKey(pkgName, permName, isAppOp, false, userId));
-    }
-
-    if (ref == null && userId != 0) {
-      ref = mRefs.get(createKey(pkgName, permName, isAppOp, isPerUid, 0));
-    }
-
-    if (ref == null && isPerUid && userId != 0) {
-      ref = mRefs.get(createKey(pkgName, permName, isAppOp, false, 0));
+      ref = mRefs.get(createKey(pkgName, permName, isAppOp, false));
     }
 
     return ref;

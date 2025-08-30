@@ -85,7 +85,7 @@ public class CrashReportActivity {
     try (InputStream is = new FileInputStream(logFile)) {
       ByteArrayOutputStream os = new ByteArrayOutputStream();
       if (Utils.copyStream(TAG, is, os)) {
-        String text = new String(os.toByteArray(), StandardCharsets.UTF_8);
+        String text = os.toString(StandardCharsets.UTF_8);
 
         BufferedReader reader = new BufferedReader(new StringReader(text));
         int lineCount = 0;

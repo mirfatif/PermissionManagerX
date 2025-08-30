@@ -1,6 +1,7 @@
 package com.mirfatif.permissionmanagerx.parser;
 
 import static android.content.pm.PermissionInfo.PROTECTION_INTERNAL;
+import static com.mirfatif.privtasks.util.Util.PM_GET_SIGNATURES;
 
 import android.app.AppOpsManager;
 import android.content.pm.ApplicationInfo;
@@ -42,6 +43,7 @@ import com.mirfatif.privtasks.util.bg.SingleTaskExecutorTyped;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -129,7 +131,6 @@ public enum PackageParser {
       Package pkg = new Package();
       if (isPkgUpdated(pkgInfo, pkg, true)) {
         pkgList.add(pkg);
-        PkgParserFlavor.INS.onPkgCreated(pkg);
 
         if (mDoRepeatUpdates) {
           updateAndPostLivePkgList(pkgList, false);
@@ -139,11 +140,7 @@ public enum PackageParser {
 
     setProgress(size, false, true);
 
-    PkgParserFlavor.INS.sortPkgListAgain(pkgList);
-
     updateAndPostLivePkgList(pkgList, true);
-
-    PkgParserFlavor.INS.onPkgListCompleted();
 
     mPkgInfoListCleaner.cancelAndSchedule(false, 30, TimeUnit.SECONDS);
 
@@ -166,10 +163,13 @@ public enum PackageParser {
     setProgress(CREATE_LIST, true, false);
 
     pkgInfoList.clear();
-    pkgInfoList.addAll(PkgParserFlavor.INS.getPackageList());
+    pkgInfoList.addAll(
+        ApiUtils.getInstalledPackages(PackageManager.GET_PERMISSIONS | PM_GET_SIGNATURES));
 
     setProgress(SORT_LIST, true, false);
-    PkgParserFlavor.INS.sortPkgList(pkgInfoList);
+    pkgInfoList.sort(
+        Comparator.comparing(
+            pkgInfo -> pkgInfo.applicationInfo.loadLabel(mPm).toString().toUpperCase()));
 
     pkgInfoList.removeIf(Objects::isNull);
 
@@ -217,8 +217,6 @@ public enum PackageParser {
       setProgress(APP_OPS_LISTS, true, false);
       AppOpsParser.INS.buildAppOpsList();
 
-      PkgParserFlavor.INS.buildRequiredData();
-
       if (SYSTEM_FIXED_FLAG != null && POLICY_FIXED_FLAG != null) {
         return;
       }
@@ -245,10 +243,6 @@ public enum PackageParser {
       SYSTEM_FIXED_FLAG = flags.systemFixed;
       POLICY_FIXED_FLAG = flags.policyFixed;
     }
-  }
-
-  public Integer getSystemFixedFlag() {
-    return SYSTEM_FIXED_FLAG;
   }
 
   public List<Package> getPkgList() {
@@ -279,7 +273,8 @@ public enum PackageParser {
   }
 
   public void updatePackage(Package pkg, boolean filterPerms) {
-    PackageInfo packageInfo = PkgParserFlavor.INS.getPackageInfo(pkg);
+    PackageInfo packageInfo =
+        PackageParser.getPkgInfo(pkg.getName(), PackageManager.GET_PERMISSIONS);
 
     if (packageInfo == null || !isPkgUpdated(packageInfo, pkg, filterPerms)) {
       removePackage(pkg);
@@ -368,14 +363,12 @@ public enum PackageParser {
   private void setProgress(int value, boolean isMax, boolean isFinal) {
     if (isMax) {
       mProgMax.postValue(value, isFinal);
-      PkgParserFlavor.INS.setProgress(true, value);
     } else {
       if (isFinal) {
         mProgNow.postValue(value, true);
       } else {
         mProgPoster.run(value);
       }
-      PkgParserFlavor.INS.setProgress(false, value);
     }
   }
 
@@ -383,10 +376,6 @@ public enum PackageParser {
     if (isFinal == PostListStatus.FINAL || (isFinal == PostListStatus.UNDEFINED && !isUpdating())) {
       mListCompleted.postValue(pkgCount, true);
     }
-  }
-
-  public LiveData<Boolean> getListInProg() {
-    return mListInProgress;
   }
 
   private static final int CREATE_LIST = -1;
@@ -405,43 +394,36 @@ public enum PackageParser {
   }
 
   boolean isPkgUpdated(PackageInfo pkgInfo, Package pkg, boolean filterPerms) {
-    Boolean filteredOut = PkgParserFlavor.INS.isFilteredOut(pkgInfo, pkg);
-    if (Boolean.TRUE.equals(filteredOut)) {
-      return false;
-    }
-
-    boolean filterPkg = filteredOut == null;
-
-    if (filterPkg && isFilteredOutPkgName(pkgInfo.packageName)) {
+    if (isFilteredOutPkgName(pkgInfo.packageName)) {
       return false;
     }
 
     boolean isSystemApp = isSystemApp(pkgInfo);
-    if (filterPkg && isFilteredOutSystemPkg(isSystemApp)) {
+    if (isFilteredOutSystemPkg(isSystemApp)) {
       return false;
     }
 
     boolean isFrameworkApp = isFrameworkApp(pkgInfo);
-    if (filterPkg && isFilteredOutFrameworkPkg(isFrameworkApp)) {
+    if (isFilteredOutFrameworkPkg(isFrameworkApp)) {
       return false;
     }
-    if (filterPkg && isFilteredOutUserPkg(isFrameworkApp, isSystemApp)) {
+    if (isFilteredOutUserPkg(isFrameworkApp, isSystemApp)) {
       return false;
     }
 
     ApplicationInfo appInfo = pkgInfo.applicationInfo;
     boolean isEnabled = appInfo.enabled;
-    if (filterPkg && isFilteredOutDisabledPkg(!isEnabled)) {
+    if (isFilteredOutDisabledPkg(!isEnabled)) {
       return false;
     }
 
-    if (filterPkg && isFilteredOutNoIconPkg(appInfo.icon == 0)) {
+    if (isFilteredOutNoIconPkg(appInfo.icon == 0)) {
       return false;
     }
 
     List<Permission> permList = getPermList(pkgInfo, pkg, filterPerms);
 
-    if (filterPkg && isFilteredOutNoPermPkg(pkg)) {
+    if (isFilteredOutNoPermPkg(pkg)) {
       return false;
     }
 
@@ -462,11 +444,9 @@ public enum PackageParser {
         isSystemApp,
         isEnabled,
         appInfo.uid,
-        pkgIsReferenced,
-        pkgInfo.firstInstallTime,
-        pkgInfo.lastUpdateTime);
+        pkgIsReferenced);
 
-    return !filterPkg || !PkgParserFlavor.INS.isFilteredOut(pkg);
+    return true;
   }
 
   private boolean isSystemApp(PackageInfo packageInfo) {
@@ -529,20 +509,16 @@ public enum PackageParser {
     int[] appOpsCount1 = new int[] {0, 0};
     List<Integer> processedAppOps = new ArrayList<>();
 
-    List<String> filter = pkg.getPermFilter();
-
     if (requestedPerms != null) {
       for (int count = 0; count < requestedPerms.length; count++) {
         String permName = requestedPerms[count].replaceAll("\\s", "");
-        if ((filter == null || filter.contains(permName))
-            && createPerm(pkgInfo, permName, count, filterPerms, permList)) {
+        if (createPerm(pkgInfo, permName, count, filterPerms, permList)) {
           permCount++;
         }
 
         if (AppOpsParser.INS.hasAppOps()) {
           int[] appOpsCount =
-              createPermsAppOpsNotSet(
-                  pkgInfo, permName, permList, processedAppOps, filter, filterPerms);
+              createPermsAppOpsNotSet(pkgInfo, permName, permList, processedAppOps, filterPerms);
           appOpsCount1[0] += appOpsCount[0];
           appOpsCount1[1] += appOpsCount[1];
         }
@@ -552,7 +528,7 @@ public enum PackageParser {
     int[] appOpsCount2 = new int[] {0, 0};
     int[] appOpsCount3 = new int[] {0, 0};
     if (AppOpsParser.INS.hasAppOps()) {
-      appOpsCount2 = createSetAppOps(pkgInfo, permList, processedAppOps, filter, filterPerms);
+      appOpsCount2 = createSetAppOps(pkgInfo, permList, processedAppOps, filterPerms);
 
       if (MySettings.INS.showExtraAppOps()
           && (!MySettings.INS.excludeNoPermsApps()
@@ -572,7 +548,7 @@ public enum PackageParser {
           for (int i = 0; i < ops1.size(); i++) {
             ops2[i] = ops1.get(i);
           }
-          appOpsCount3 = createExtraAppOps(pkgInfo, permList, ops2, filter, filterPerms);
+          appOpsCount3 = createExtraAppOps(pkgInfo, permList, ops2, filterPerms);
         }
       }
     }
@@ -670,9 +646,7 @@ public enum PackageParser {
             flags.providerPkg);
 
     if (!filterPerms || isNotFilteredOut(perm)) {
-      String refState =
-          PermsDb.INS.getRef(
-              pkgInfo.packageName, permName, false, false, pkgInfo.applicationInfo.uid);
+      String refState = PermsDb.INS.getRef(pkgInfo.packageName, permName, false, false);
 
       perm.setReference(Permission.isReferenced(refState, perm.isGranted()), refState);
       permList.add(perm);
@@ -704,7 +678,6 @@ public enum PackageParser {
       String permName,
       List<Permission> permList,
       List<Integer> processedAppOps,
-      List<String> filter,
       boolean filterPerms) {
 
     Integer op = AppOpsParser.INS.getPermToOpCode(permName);
@@ -719,27 +692,20 @@ public enum PackageParser {
       return new int[] {0, 0};
     }
 
-    return createAppOp(
-        pkgInfo, op, null, permList, processedAppOps, false, false, -1, filter, filterPerms);
+    return createAppOp(pkgInfo, op, null, permList, processedAppOps, false, false, -1, filterPerms);
   }
 
   private int[] createSetAppOps(
       PackageInfo packageInfo,
       List<Permission> permissionsList,
       List<Integer> processedAppOps,
-      List<String> filter,
       boolean filterPerms) {
-    return createAppOpsList(
-        packageInfo, permissionsList, processedAppOps, null, filter, filterPerms);
+    return createAppOpsList(packageInfo, permissionsList, processedAppOps, null, filterPerms);
   }
 
   private int[] createExtraAppOps(
-      PackageInfo packageInfo,
-      List<Permission> permissionsList,
-      int[] ops,
-      List<String> filter,
-      boolean filterPerms) {
-    return createAppOpsList(packageInfo, permissionsList, null, ops, filter, filterPerms);
+      PackageInfo packageInfo, List<Permission> permissionsList, int[] ops, boolean filterPerms) {
+    return createAppOpsList(packageInfo, permissionsList, null, ops, filterPerms);
   }
 
   private int[] createAppOpsList(
@@ -747,7 +713,6 @@ public enum PackageParser {
       List<Permission> permissionsList,
       List<Integer> processedAppOps,
       int[] ops,
-      List<String> filter,
       boolean filterPerms) {
 
     List<MyPackageOps> pkgOpsList = new ArrayList<>();
@@ -772,7 +737,6 @@ public enum PackageParser {
                     true,
                     false,
                     -1,
-                    filter,
                     filterPerms);
             totalAppOpsCount += count[0];
             appOpsCount += count[1];
@@ -810,7 +774,6 @@ public enum PackageParser {
                 isExtraAppOp,
                 isPerUid,
                 lastAccessTime,
-                filter,
                 filterPerms);
         totalAppOpsCount += count[0];
         appOpsCount += count[1];
@@ -828,15 +791,10 @@ public enum PackageParser {
       boolean isExtraAppOp,
       boolean isPerUid,
       long accessTime,
-      List<String> filter,
       boolean filterPerms) {
     String opName = AppOpsParser.INS.getAppOpName(op);
 
     if (opName == null) {
-      return new int[] {1, 0};
-    }
-
-    if (filter != null && !filter.contains(opName)) {
       return new int[] {1, 0};
     }
 
@@ -896,9 +854,7 @@ public enum PackageParser {
     }
 
     if (appOpsCount == 1) {
-      String refState =
-          PermsDb.INS.getRef(
-              pkgInfo.packageName, opName, true, isPerUid, pkgInfo.applicationInfo.uid);
+      String refState = PermsDb.INS.getRef(pkgInfo.packageName, opName, true, isPerUid);
 
       perm.setReference(Permission.isReferenced(refState, opMode), refState);
       permList.add(perm);
@@ -1081,7 +1037,7 @@ public enum PackageParser {
     List<Permission> permList = new ArrayList<>();
     int permCount = 0, appOpsCount = 0;
     for (Permission perm : pkg.getFullPermsList()) {
-      if (perm.contains(pkg, queryText, true)) {
+      if (perm.contains(queryText, true)) {
         permList.add(perm);
         if (perm.isAppOp()) {
           appOpsCount++;

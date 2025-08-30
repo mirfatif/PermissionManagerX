@@ -3,18 +3,13 @@ package com.mirfatif.permissionmanagerx.util;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Parcelable;
 import androidx.browser.customtabs.CustomTabColorSchemeParams;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.browser.customtabs.CustomTabsService;
@@ -22,13 +17,9 @@ import androidx.fragment.app.Fragment;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.privtasks.Constants;
-import com.mirfatif.privtasks.util.MyLog;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ApiUtils {
-
-  private static final String TAG = "ApiUtils";
 
   private ApiUtils() {}
 
@@ -132,24 +123,6 @@ public class ApiUtils {
     }
   }
 
-  public static CharSequence getAppLabel(String pkg) {
-    try {
-      int flags = PackageManager.MATCH_UNINSTALLED_PACKAGES;
-      return getAppInfo(pkg, flags).loadLabel(App.getPm());
-    } catch (PackageManager.NameNotFoundException ignored) {
-      return null;
-    }
-  }
-
-  public static Drawable getAppIcon(String pkg) {
-    try {
-      int flags = PackageManager.MATCH_UNINSTALLED_PACKAGES;
-      return getAppInfo(pkg, flags).loadIcon(App.getPm());
-    } catch (PackageManager.NameNotFoundException ignored) {
-      return null;
-    }
-  }
-
   public static List<PackageInfo> getInstalledPackages(int flags) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
       return App.getPm().getInstalledPackages(flags);
@@ -178,19 +151,6 @@ public class ApiUtils {
     source.setTargetFragment(target, 0);
   }
 
-  public static <T extends Parcelable> ArrayList<T> getParcelableArrayListExtra(
-      Intent intent, String name, Class<T> cls) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-      try {
-        return intent.getParcelableArrayListExtra(name, cls);
-      } catch (NullPointerException e) {
-        MyLog.e(TAG, "getParcelableArrayListExtra", e);
-      }
-    }
-
-    return intent.getParcelableArrayListExtra(name);
-  }
-
   public static boolean hasAppOpsPerm() {
     return hasPerm(Constants.PERM_GET_APP_OPS_STATS);
   }
@@ -202,14 +162,5 @@ public class ApiUtils {
 
   public static boolean hasPerm(String perm) {
     return App.getCxt().checkSelfPermission(perm) == PackageManager.PERMISSION_GRANTED;
-  }
-
-  public static boolean copyToClipboard(String text, String label) {
-    ClipboardManager clipboard =
-        (ClipboardManager) App.getCxt().getSystemService(Context.CLIPBOARD_SERVICE);
-    ClipData data = ClipData.newPlainText(label, text);
-    clipboard.setPrimaryClip(data);
-    UiUtils.showToast(R.string.copied_to_clipboard_toast);
-    return true;
   }
 }

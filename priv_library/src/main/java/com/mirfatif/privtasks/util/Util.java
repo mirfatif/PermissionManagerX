@@ -4,13 +4,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Build;
-import android.os.Parcel;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Serializable;
-import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -61,14 +57,6 @@ public class Util {
     return Arrays.stream(array).boxed().collect(Collectors.toList());
   }
 
-  public static <T extends Serializable> T readSerializable(Parcel parcel, Class<T> cls) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-      return parcel.readSerializable(cls.getClassLoader(), cls);
-    } else {
-      return cls.cast(parcel.readSerializable());
-    }
-  }
-
   public static final int PM_GET_SIGNATURES = buildPmSignFlag();
 
   private static int buildPmSignFlag() {
@@ -94,26 +82,5 @@ public class Util {
       }
     }
     return false;
-  }
-
-  public static void printStackTrace(String tag, String method) {
-    StackTraceElement[] elements = Thread.currentThread().getStackTrace();
-    StringWriter sw = new StringWriter();
-    PrintWriter writer = new PrintWriter(sw, true);
-    writer.println();
-    for (int i = 3; i < elements.length; i++) {
-      StackTraceElement s = elements[i];
-      writer.println(
-          "\tat "
-              + s.getClassName()
-              + "."
-              + s.getMethodName()
-              + "("
-              + s.getFileName()
-              + ":"
-              + s.getLineNumber()
-              + ")");
-    }
-    MyLog.e(tag, method, sw.toString());
   }
 }

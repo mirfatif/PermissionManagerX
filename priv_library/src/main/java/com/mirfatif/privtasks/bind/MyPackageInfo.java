@@ -13,13 +13,6 @@ public class MyPackageInfo implements Parcelable {
 
   public final boolean enabled;
 
-  public MyPackageInfo(String pkgName, int[] reqPermsFlags, int uid, boolean enabled) {
-    packageName = pkgName;
-    requestedPermissionsFlags = reqPermsFlags;
-    this.uid = uid;
-    this.enabled = enabled;
-  }
-
   protected MyPackageInfo(Parcel in) {
     packageName = in.readString();
     requestedPermissionsFlags = in.createIntArray();

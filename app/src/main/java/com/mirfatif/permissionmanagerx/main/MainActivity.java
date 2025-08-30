@@ -101,7 +101,7 @@ public class MainActivity extends OnBackPressedCallback {
   public static final String ACTION_SHOW_DRAWER = CLASS + ".action.SHOW_DRAWER";
 
   public final DaemonStartProg mDaemonStartProg = new DaemonStartProg(this);
-  final MainActivityFlavor mActFlavor = new MainActivityFlavor(this);
+  private final Feedback mFeedback = new Feedback(this);
   private final BackupRestoreDialog mBackupRestoreDialog = new BackupRestoreDialog(this);
   private final PrivsCheckBoxFocus mCheckBoxFocus = new PrivsCheckBoxFocus(this);
 
@@ -185,15 +185,9 @@ public class MainActivity extends OnBackPressedCallback {
 
     mNotifPermReqLauncher =
         mA.registerForActivityResult(
-            new ActivityResultContracts.RequestPermission(),
-            granted -> {
-              if (granted) {
-                mActFlavor.onNotifPermGranted();
-              }
-            });
+            new ActivityResultContracts.RequestPermission(), granted -> {});
 
     mDaemonStartProg.onCreated(action);
-    mActFlavor.onCreated();
     mBackupRestoreDialog.onCreated();
 
     if (ApiUtils.hasNotifPerm()) {
@@ -219,13 +213,7 @@ public class MainActivity extends OnBackPressedCallback {
     mSearchView = (SearchView) searchMenuItem.getActionView();
     setUpSearchView();
 
-    mActFlavor.onCreateOptionsMenu(menu);
-
     return true;
-  }
-
-  public boolean onPrepareOptionsMenu(Menu menu) {
-    return mActFlavor.onPrepareOptionsMenu(menu);
   }
 
   public boolean onOptionsItemSelected(MenuItem item) {
@@ -244,7 +232,7 @@ public class MainActivity extends OnBackPressedCallback {
       }
     }
 
-    return mActFlavor.onOptionsItemSelected(item) || mDrawerToggle.onOptionsItemSelected(item);
+    return mDrawerToggle.onOptionsItemSelected(item);
   }
 
   public void handleOnBackPressed() {
@@ -262,7 +250,6 @@ public class MainActivity extends OnBackPressedCallback {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
       mExited = true;
-      mActFlavor.onBackPressed();
     }
 
     mA.finishAfterTransition();
@@ -271,7 +258,7 @@ public class MainActivity extends OnBackPressedCallback {
   private boolean mExited = false;
 
   public void onResume() {
-    mActFlavor.onResumed();
+    mFeedback.askForFeedback();
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && mExited) {
       PackageParser.INS.updatePkgList();
     }
@@ -362,8 +349,6 @@ public class MainActivity extends OnBackPressedCallback {
     PackageParser.INS.getPkgListLive().observe(mA, this::pkgListReceived);
     PackageParser.INS.getChangedPkg().observe(mA, this::pkgChanged);
 
-    mActFlavor.setLiveDataObservers();
-
     mObserversSet = true;
 
     PackageParser.INS.updatePkgListIfChanged();
@@ -406,10 +391,6 @@ public class MainActivity extends OnBackPressedCallback {
 
   private void onListCompleted(int pkgCount) {
     setProgVisible(false);
-
-    if (pkgCount >= 0) {
-      mActFlavor.onPackagesUpdated(pkgCount);
-    }
 
     if (((mB.refreshLayout.isRefreshing() || MySettings.INS.isSearching()) && pkgCount >= 0)
         || pkgCount == 0) {
@@ -475,8 +456,6 @@ public class MainActivity extends OnBackPressedCallback {
     if (action != null) {
       if (action.equals(ACTION_SHOW_DRAWER)) {
         openDrawerForPrivileges();
-      } else {
-        mActFlavor.handleIntentActions(intent);
       }
     }
   }
@@ -514,7 +493,7 @@ public class MainActivity extends OnBackPressedCallback {
   private void askForFeedback() {
     MySettings.INS.setMayAskForFeedback(true);
     LifecycleWatcher.addOnDestroyed(mA, () -> MySettings.INS.setMayAskForFeedback(false));
-    mActFlavor.askForFeedback();
+    mFeedback.askForFeedback();
   }
 
   private void setUpSearchView() {
@@ -556,7 +535,11 @@ public class MainActivity extends OnBackPressedCallback {
     mSearchView.setQuery(null, false);
     handleSearchQuery();
 
-    mActFlavor.resetDrawerIcon();
+    ActionBar actionBar = mA.getSupportActionBar();
+    ActionBarDrawerToggle drawerToggle;
+    if (actionBar != null && (drawerToggle = mDrawerToggle) != null) {
+      actionBar.setHomeAsUpIndicator(drawerToggle.getDrawerArrowDrawable());
+    }
   }
 
   private void hideSearchSettings() {
@@ -604,8 +587,6 @@ public class MainActivity extends OnBackPressedCallback {
     setBoxesChecked();
     setCheckBoxListeners();
     mB.navV.getMenu().findItem(R.id.action_donate).setVisible(true);
-
-    mActFlavor.setNavMenu();
   }
 
   private void setBoxesChecked() {
@@ -684,7 +665,7 @@ public class MainActivity extends OnBackPressedCallback {
       return true;
     }
 
-    return mActFlavor.handleNavItemChecked(item);
+    return false;
   }
 
   private void handleRootCheckBox(boolean enable) {
@@ -695,7 +676,6 @@ public class MainActivity extends OnBackPressedCallback {
             NativeDaemon.INS_R.stopDaemon();
             DaemonStarter.INS.stopDaemon(false);
           });
-      mActFlavor.onRootStopped();
       return;
     }
 
@@ -728,7 +708,6 @@ public class MainActivity extends OnBackPressedCallback {
             NativeDaemon.INS_A.stopDaemon();
             DaemonStarter.INS.stopDaemon(true);
           });
-      mActFlavor.onAdbStopped();
       return;
     }
 
@@ -751,8 +730,6 @@ public class MainActivity extends OnBackPressedCallback {
               if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
                 collapseSearchView();
               }
-              mActFlavor.preOpenDrawer();
-
               mCheckBoxFocus.doFocus();
             })
         .start();

@@ -1,6 +1,5 @@
 package com.mirfatif.privtasks.bind;
 
-import android.os.IBinder;
 import android.os.IBinder.DeathRecipient;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -16,14 +15,11 @@ public class DaemonState implements Parcelable {
 
   public final int port;
 
-  public final IBinder privTasksFlavor;
-
-  public DaemonState(int pid, int uid, String context, int port, IBinder privTasksFlavor) {
+  public DaemonState(int pid, int uid, String context, int port) {
     this.pid = pid;
     this.uid = uid;
     this.context = context;
     this.port = port;
-    this.privTasksFlavor = privTasksFlavor;
   }
 
   public IPrivTasks privTasks;
@@ -34,7 +30,6 @@ public class DaemonState implements Parcelable {
     uid = in.readInt();
     context = in.readString();
     port = in.readInt();
-    privTasksFlavor = in.readStrongBinder();
   }
 
   public void writeToParcel(Parcel dest, int flags) {
@@ -42,7 +37,6 @@ public class DaemonState implements Parcelable {
     dest.writeInt(uid);
     dest.writeString(context);
     dest.writeInt(port);
-    dest.writeStrongBinder(privTasksFlavor);
   }
 
   public int describeContents() {

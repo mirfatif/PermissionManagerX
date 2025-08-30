@@ -23,21 +23,6 @@ public class LiveTasksQueueTyped<T> extends LiveTasksQueue {
     return this;
   }
 
-  public LiveTasksQueueTyped<T> inBg(BgTask task) {
-    super.inBg(task);
-    return this;
-  }
-
-  public LiveTasksQueueTyped<T> inBgFor(BgTaskForResult<T> task) {
-    addTask(task);
-    return this;
-  }
-
-  public LiveTasksQueueTyped<T> inBgWith(BgTaskWithResult<T> task) {
-    addTask(task);
-    return this;
-  }
-
   public LiveTasksQueueTyped<T> inBgWithFor(BgTaskWithForResult<T> task) {
     addTask(task);
     return this;
@@ -49,10 +34,6 @@ public class LiveTasksQueueTyped<T> extends LiveTasksQueue {
   }
 
   private volatile T mResult;
-
-  public T getResult() {
-    return mResult;
-  }
 
   protected void run(Object task) {
     T result = mResult;

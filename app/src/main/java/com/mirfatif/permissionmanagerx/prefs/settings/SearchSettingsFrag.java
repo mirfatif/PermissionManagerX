@@ -1,5 +1,7 @@
 package com.mirfatif.permissionmanagerx.prefs.settings;
 
+import static com.mirfatif.permissionmanagerx.util.ApiUtils.getString;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -9,11 +11,10 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.fwk.MainActivityM;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
+import java.util.Objects;
 
 public class SearchSettingsFrag extends PreferenceFragmentCompat
     implements OnSharedPreferenceChangeListener {
-
-  private final SearchSettingsFragFlavor mSettingsFlavor = new SearchSettingsFragFlavor(this);
 
   private MainActivityM mA;
 
@@ -34,13 +35,14 @@ public class SearchSettingsFrag extends PreferenceFragmentCompat
 
   public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     setPreferencesFromResource(R.xml.settings_prefs_search, rootKey);
-    mSettingsFlavor.onCreatePreferences(mA);
+    Preference pref =
+        findPreference(getString(R.string.pref_settings_search_suggestions_count_key));
+    Objects.requireNonNull(pref)
+        .setTitle(getString(R.string.pref_settings_search_suggestions_count_title2, 0));
   }
 
   public void onDisplayPreferenceDialog(Preference preference) {
-    if (!mSettingsFlavor.onDisplayPreferenceDialog(preference)) {
-      super.onDisplayPreferenceDialog(preference);
-    }
+    super.onDisplayPreferenceDialog(preference);
   }
 
   public void onSaveInstanceState(Bundle outState) {}

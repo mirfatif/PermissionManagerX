@@ -14,10 +14,8 @@ import com.mirfatif.permissionmanagerx.fwk.PackageActivityM;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.parser.Permission;
-import com.mirfatif.permissionmanagerx.parser.PkgParserFlavor;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionEntity;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermsDb;
-import com.mirfatif.permissionmanagerx.parser.permsdb.PermsDbFlavor;
 import com.mirfatif.permissionmanagerx.prefs.ExcFiltersData;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.util.StringUtils;
@@ -28,16 +26,14 @@ public class PermLongPressDialogFrag extends BottomSheetDialogFrag {
 
   private final Permission mPerm;
   private final Package mPkg;
-  private final PkgActivityFlavor mPkgActivityFlavor;
 
-  PermLongPressDialogFrag(Permission perm, Package pkg, PkgActivityFlavor pkgActivityFlavor) {
+  PermLongPressDialogFrag(Permission perm, Package pkg) {
     mPerm = perm;
     mPkg = pkg;
-    mPkgActivityFlavor = pkgActivityFlavor;
   }
 
   public PermLongPressDialogFrag() {
-    this(null, null, null);
+    this(null, null);
   }
 
   private PackageActivityM mA;
@@ -56,7 +52,7 @@ public class PermLongPressDialogFrag extends BottomSheetDialogFrag {
 
     PermLongPressDialogBinding b = PermLongPressDialogBinding.inflate(mA.getLayoutInflater());
 
-    CharSequence label = PkgParserFlavor.INS.getPermName(mPerm);
+    CharSequence label = mPerm.getName();
 
     b.permLabelV.setText(label);
     b.permLabelV.setSelected(true);
@@ -123,43 +119,32 @@ public class PermLongPressDialogFrag extends BottomSheetDialogFrag {
   private void setOrClearRef(boolean isReferenced, String permState) {
     if (isReferenced) {
       boolean isPerUid = MySettings.INS.useUniqueRefForAppOpUidMode() && mPerm.isPerUid();
-      int userID = PermsDbFlavor.getUserIdForPermRefs(mPkg.getUid());
+      PermsDb.INS.getDb().deletePerm(mPkg.getName(), mPerm.getName(), mPerm.isAppOp(), isPerUid, 0);
 
-      PermsDb.INS
-          .getDb()
-          .deletePerm(mPkg.getName(), mPerm.getName(), mPerm.isAppOp(), isPerUid, userID);
+      PermsDb.INS.updateRefs(mPkg.getName(), mPerm.getName(), null, mPerm.isAppOp(), isPerUid);
 
-      PermsDb.INS.updateRefs(
-          mPkg.getName(), mPerm.getName(), null, mPerm.isAppOp(), isPerUid, userID);
-
-      mPkgActivityFlavor.pkgRefChanged(mPkg);
       mA.mA.updatePkg();
     } else {
-      setRef(mPkg, mPerm, permState, mPkgActivityFlavor);
+      setRef(mPkg, mPerm, permState);
       mA.mA.updatePkg();
     }
   }
 
-  static void setRef(Package pkg, Permission perm, String state, PkgActivityFlavor actFlav) {
+  static void setRef(Package pkg, Permission perm, String state) {
     boolean isPerUid = MySettings.INS.useUniqueRefForAppOpUidMode() && perm.isPerUid();
-    int userID = PermsDbFlavor.getUserIdForPermRefs(pkg.getUid());
-
     PermissionEntity entity =
-        new PermissionEntity(
-            pkg.getName(), perm.getName(), state, perm.isAppOp(), isPerUid, userID);
+        new PermissionEntity(pkg.getName(), perm.getName(), state, perm.isAppOp(), isPerUid);
 
     PermsDb.INS.updateRefsDb(entity);
 
-    PermsDb.INS.updateRefs(pkg.getName(), perm.getName(), state, perm.isAppOp(), isPerUid, userID);
-    actFlav.pkgRefChanged(pkg);
+    PermsDb.INS.updateRefs(pkg.getName(), perm.getName(), state, perm.isAppOp(), isPerUid);
   }
 
-  public static void show(
-      Permission perm, Package pkg, PkgActivityFlavor pkgActivityFlavor, FragmentManager fm) {
+  public static void show(Permission perm, Package pkg, FragmentManager fm) {
     if (!ExcFiltersData.INS.canBeExcluded(perm) && !perm.isChangeable()) {
       UiUtils.showToast(R.string.no_action_available);
     } else {
-      new PermLongPressDialogFrag(perm, pkg, pkgActivityFlavor).show(fm, "PERM_OPTIONS");
+      new PermLongPressDialogFrag(perm, pkg).show(fm, "PERM_OPTIONS");
     }
   }
 }

@@ -72,7 +72,7 @@ public class NotifUtils {
         .setContentTitle(getString(title))
         .setContentText(getString(text))
         .setSmallIcon(R.drawable.notification_icon)
-        .setColor(UiUtilsFlavor.getAccentColor());
+        .setColor(UiUtils.getAccentColor());
 
     return builder.build();
   }

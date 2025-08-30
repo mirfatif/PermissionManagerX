@@ -83,7 +83,7 @@ public class LogUtils {
             .setStyle(
                 new NotificationCompat.BigTextStyle()
                     .bigText(ApiUtils.getString(R.string.ask_to_report_crash)))
-            .setColor(UiUtilsFlavor.getAccentColor())
+            .setColor(UiUtils.getAccentColor())
             .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true);

@@ -43,8 +43,6 @@ public class SettingsFragGeneral extends PreferenceFragmentCompat
     if (pref != null) {
       pref.setSummaryProvider(SimpleSummaryProvider.getInstance());
     }
-
-    SettingsFragGeneralFlavor.onCreatePreferences(this);
   }
 
   public void onDisplayPreferenceDialog(Preference preference) {
@@ -60,8 +58,6 @@ public class SettingsFragGeneral extends PreferenceFragmentCompat
       mA.recreate();
       MySettings.INS.recreateMainActivity();
       PackageParser.INS.updatePkgList();
-    } else {
-      SettingsFragGeneralFlavor.onSharedPreferenceChanged(key);
     }
   }
 }

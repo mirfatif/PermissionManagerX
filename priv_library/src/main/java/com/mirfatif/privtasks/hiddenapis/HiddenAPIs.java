@@ -21,8 +21,6 @@ import java.util.List;
 public enum HiddenAPIs {
   INS;
 
-  private static final String TAG = "HiddenAPIs";
-
   public static int getNumOps() {
     return AppOpsManager.getNumOps();
   }
@@ -53,10 +51,6 @@ public enum HiddenAPIs {
 
   public static int permToOpCode(String permName) {
     return AppOpsManager.permissionToOpCode(permName);
-  }
-
-  public static int strDebugOpToOp(String opName) {
-    return AppOpsManager.strDebugOpToOp(opName);
   }
 
   public void setAppOpMode(String pkgName, int uid, int op, int mode) throws RemoteException {

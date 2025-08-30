@@ -14,14 +14,12 @@ import com.mirfatif.permissionmanagerx.fwk.AdvSettingsActivityM;
 import com.mirfatif.permissionmanagerx.parser.Package;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.parser.Permission;
-import com.mirfatif.permissionmanagerx.parser.PkgParserFlavor;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionDao;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermissionEntity;
 import com.mirfatif.permissionmanagerx.parser.permsdb.PermsDb;
 import com.mirfatif.permissionmanagerx.util.ApiUtils;
 import com.mirfatif.permissionmanagerx.util.StringUtils;
 import com.mirfatif.permissionmanagerx.util.UiUtils;
-import com.mirfatif.permissionmanagerx.util.UserUtils;
 import com.mirfatif.permissionmanagerx.util.bg.LiveTasksQueueTyped;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +83,7 @@ public class AdvSettingsActivity {
 
     AlertDialogFragment frag = AlertDialogFragment.show(mA, dialog, "RESET_PERM_DB");
 
-    new LiveTasksQueueTyped<>(frag, () -> BackupRestore.INS.backupNoThrow(uri, false, false, null))
+    new LiveTasksQueueTyped<>(frag, () -> BackupRestore.INS.backupNoThrow(uri, false, false))
         .onUiWith(result -> handleBackupResult(result, b, frag, cleanup))
         .start();
   }
@@ -116,7 +114,7 @@ public class AdvSettingsActivity {
     } else {
       b.progText.setText(R.string.reset_perm_db_building_app_list);
 
-      new LiveTasksQueueTyped<>(frag, PkgParserFlavor.INS::getAllUsersPkgList)
+      new LiveTasksQueueTyped<>(frag, () -> PackageParser.INS.updatePkgListWithResult(false))
           .onUiWith(pkgList -> handlePkgList(pkgList, b, frag))
           .start();
     }
@@ -142,12 +140,7 @@ public class AdvSettingsActivity {
     for (Package pkg : pkgList) {
       for (Permission perm : pkg.getFullPermsList()) {
         perms.add(
-            PermsDb.createKey(
-                    pkg.getName(),
-                    perm.getName(),
-                    perm.isAppOp(),
-                    perm.isPerUid(),
-                    UserUtils.getUserId(pkg.getUid()))
+            PermsDb.createKey(pkg.getName(), perm.getName(), perm.isAppOp(), perm.isPerUid())
                 + "_"
                 + perm.createRefStringForDb());
       }
@@ -157,8 +150,7 @@ public class AdvSettingsActivity {
 
     for (PermissionEntity entity : PermsDb.INS.getDb().getAll()) {
       if (!perms.contains(
-          PermsDb.createKey(
-                  entity.pkgName, entity.permName, entity.isAppOps, entity.isPerUid, entity.userId)
+          PermsDb.createKey(entity.pkgName, entity.permName, entity.isAppOps, entity.isPerUid)
               + "_"
               + entity.state)) {
         ids.add(entity.id);

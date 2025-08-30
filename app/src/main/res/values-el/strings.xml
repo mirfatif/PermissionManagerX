@@ -142,7 +142,6 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="love_using_app">Μου Αρέσει Διαχείριση Δικαιωμάτων X?</string>
   <string name="purchase_and_rate_the_app">Μπορείτε να μας βοηθήσετε να βελτιώσουμε την εφαρμογή κάνοντας μια μικρή δωρεά ή αφήνοντας μια καλή αναθεώρηση της εφαρμογής, έτσι ώστε να είμαστε σε θέση να εξυπηρετήσουμε καλύτερα τις ανάγκες σας.</string>
-  <string name="rate_the_app">Οι καλές αξιολογήσεις και κριτικές μας βοηθούν να βελτιώσουμε την εφαρμογή και είμαστε σε θέση να εξυπηρετούμε καλύτερα τις ανάγκες σας.</string>
   <string name="ask_to_provide_feedback">Λυπάμαι που το ακούω. Μπορείτε να βοηθήσετε στη βελτίωση της εφαρμογής επικοινωνώντας μαζί μας μέσω email ή Telegram, ώστε να μπορέσουμε να εξυπηρετήσουμε καλύτερα τις ανάγκες σας.</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="thank_you">Σας ευχαριστούμε</string>
@@ -152,8 +151,6 @@
   <string name="contact_on_telegram">Γράψτε ένα μήνυμα στο Telegram</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="contact_on_email">Εγγραφή ενός email</string>
-  <!-- CHAR LIMIT: 15 -->
-  <string name="rate_now">Αξιολογήστε Τώρα</string>
   <!-- CHAR LIMIT: 15 -->
   <string name="how_do_i">Πώς μπορώ να?</string>
   <!-- CHAR LIMIT: 15 -->
