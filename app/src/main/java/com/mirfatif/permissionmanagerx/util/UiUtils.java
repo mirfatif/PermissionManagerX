@@ -9,29 +9,26 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.text.style.TextAppearanceSpan;
 import android.util.TypedValue;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
-import androidx.appcompat.app.ActionBar;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.graphics.ColorUtils;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.viewbinding.ViewBinding;
+import androidx.fragment.app.FragmentActivity;
 import com.google.android.material.color.MaterialColors;
+import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
 import com.mirfatif.permissionmanagerx.base.DialogBg;
-import com.mirfatif.permissionmanagerx.databinding.StatusBarBgContBinding;
 import com.mirfatif.permissionmanagerx.util.bg.UiRunner;
+import com.mirfatif.privtasks.util.bg.ThreadUtils;
 
 public class UiUtils {
 
@@ -126,48 +123,26 @@ public class UiUtils {
     }
   }
 
-  public static void setTooltip(ImageView imageView) {
-    TooltipCompat.setTooltipText(imageView, imageView.getContentDescription());
-  }
-
-  public static void setContentView(AppCompatActivity act, ViewBinding binding) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-      act.setContentView(binding.getRoot());
+  public static void showSnackBar(
+      FragmentActivity activity, View parent, @Nullable View anchor, String text, int seconds) {
+    if (!ThreadUtils.isMainThread()) {
+      UiRunner.post(activity, () -> showSnackBar(activity, parent, anchor, text, seconds));
       return;
     }
+    var sb = createSnackBar(activity, parent, anchor, text, seconds);
+    sb.show();
+  }
 
-    var cont = StatusBarBgContBinding.inflate(act.getLayoutInflater());
-    act.setContentView(cont.getRoot());
-    cont.getRoot().addView(binding.getRoot(), cont.getRoot().getLayoutParams());
+  public static Snackbar createSnackBar(
+      Activity activity, View parent, @Nullable View anchor, String text, int seconds) {
+    Snackbar snackBar = Snackbar.make(parent, text, seconds * 1000);
+    snackBar.setAnchorView(anchor);
+    snackBar.setTextColor(activity.getColor(R.color.sharpText));
+    snackBar.getView().setBackgroundColor(getSharpBgColor(activity));
+    return snackBar;
+  }
 
-    WindowCompat.getInsetsController(act.getWindow(), act.getWindow().getDecorView())
-        .setAppearanceLightStatusBars(!isNightMode(act));
-
-    ViewCompat.setOnApplyWindowInsetsListener(
-        cont.getRoot(),
-        (v, insets) -> {
-          var type = WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout();
-          var ins = insets.getInsets(type);
-
-          var mlp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-          mlp.leftMargin = ins.left;
-          mlp.bottomMargin = ins.bottom;
-          mlp.rightMargin = ins.right;
-
-          ActionBar actionBar = act.getSupportActionBar();
-          if (actionBar != null) {
-            actionBar.setBackgroundDrawable(null);
-            var lp = cont.statusBarBg.getLayoutParams();
-            lp.height = ins.top;
-            cont.statusBarBg.setLayoutParams(lp);
-            cont.statusBarBg.setBackgroundColor(getColor(act, R.attr.accentTrans10Color));
-          } else {
-            mlp.topMargin = ins.top;
-          }
-
-          v.setLayoutParams(mlp);
-
-          return WindowInsetsCompat.CONSUMED;
-        });
+  public static void setTooltip(ImageView imageView) {
+    TooltipCompat.setTooltipText(imageView, imageView.getContentDescription());
   }
 }

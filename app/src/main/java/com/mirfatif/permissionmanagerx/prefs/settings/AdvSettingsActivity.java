@@ -37,7 +37,7 @@ public class AdvSettingsActivity {
   private BackupFileSelector mCleanupLauncher, mResetLauncher;
 
   public void onCreate(Bundle savedInstanceState) {
-    UiUtils.setContentView(mA, ActivityFragmentContainerBinding.inflate(mA.getLayoutInflater()));
+    mA.setContentView(ActivityFragmentContainerBinding.inflate(mA.getLayoutInflater()));
 
     ActionBar actionBar = mA.getSupportActionBar();
     if (actionBar != null) {

@@ -48,7 +48,7 @@ public class HelpActivity extends OnBackPressedCallback {
     App.setLocale();
     LocaleUtils.setLocale(mA.getBaseContext());
 
-    UiUtils.setContentView(mA, mB);
+    mA.setContentView(mB);
 
     if (mA.getSupportActionBar() != null) {
       mA.getSupportActionBar().setTitle(R.string.help_menu_item);

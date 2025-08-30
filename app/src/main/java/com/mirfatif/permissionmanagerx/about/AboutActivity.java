@@ -17,7 +17,6 @@ import androidx.activity.result.contract.ActivityResultContracts.CreateDocument;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
-import com.google.android.material.snackbar.Snackbar;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
@@ -61,7 +60,7 @@ public class AboutActivity {
 
   public void onCreated() {
     mB = ActivityAboutBinding.inflate(mA.getLayoutInflater());
-    UiUtils.setContentView(mA, mB);
+    mA.setContentView(mB);
 
     ActionBar actionBar = mA.getSupportActionBar();
     if (actionBar != null) {
@@ -131,7 +130,14 @@ public class AboutActivity {
     if (alreadyLogging()) {
       LogcatSvc.stopSvc();
       setLogTitle(R.string.collect_logs);
-      Snackbar.make(mB.logging, R.string.logging_stopped, 5000).show();
+      // We need an anchor view at the bottom so that the nav bar
+      // doesn't overlap the snack bar due to EdgeToEdge.
+      UiUtils.showSnackBar(
+          mA,
+          mB.snackBarAnchor,
+          mB.snackBarAnchor,
+          App.getCxt().getString(R.string.logging_stopped),
+          5);
       return;
     }
 

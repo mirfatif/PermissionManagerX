@@ -12,7 +12,6 @@ import androidx.preference.Preference;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.databinding.ActivityFragmentContainerBinding;
 import com.mirfatif.permissionmanagerx.fwk.SettingsActivityM;
-import com.mirfatif.permissionmanagerx.util.UiUtils;
 import java.util.Objects;
 
 public class SettingsActivity extends OnBackPressedCallback {
@@ -31,7 +30,7 @@ public class SettingsActivity extends OnBackPressedCallback {
   private static final String SAVED_STATE_TITLE = CLASS + ".TITLE";
 
   public void onCreated(Bundle savedInstanceState) {
-    UiUtils.setContentView(mA, ActivityFragmentContainerBinding.inflate(mA.getLayoutInflater()));
+    mA.setContentView(ActivityFragmentContainerBinding.inflate(mA.getLayoutInflater()));
 
     String title = null;
 

@@ -5,6 +5,7 @@
   <attr name="accentColor" format="color" />
   <attr name="accentTrans5Color" format="color" />
   <attr name="accentTrans10Color" format="color" />
+  <attr name="accentTrans20Color" format="color" />
   <attr name="accentTrans50Color" format="color" />
   <attr name="accentTrans75Color" format="color" />
 

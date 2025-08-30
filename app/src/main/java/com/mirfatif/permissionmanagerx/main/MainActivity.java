@@ -124,7 +124,7 @@ public class MainActivity extends OnBackPressedCallback {
 
     mB = ActivityMainBinding.inflate(mA.getLayoutInflater());
     mB.movCont.setData(new Data());
-    UiUtils.setContentView(mA, mB);
+    mA.setContentView(mB);
 
     ((CoordinatorLayout.LayoutParams) mB.moveUpCont.getLayoutParams())
         .setBehavior(new MoveUpBehavior(mSnackBarLayoutCls, mB.movCont.getRoot()));
@@ -467,10 +467,7 @@ public class MainActivity extends OnBackPressedCallback {
   }
 
   public Snackbar createSnackBar(String text, int sec) {
-    Snackbar snackBar = Snackbar.make(mB.movCont.progBarCont, text, sec * 1000);
-    snackBar.setTextColor(mA.getColor(R.color.sharpText));
-    snackBar.getView().setBackgroundColor(UiUtils.getSharpBgColor(mA));
-    return snackBar;
+    return UiUtils.createSnackBar(mA, mB.movCont.progBarCont, null, text, sec);
   }
 
   private void handleIntentActions(Intent intent) {

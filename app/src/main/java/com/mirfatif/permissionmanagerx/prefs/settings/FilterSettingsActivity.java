@@ -16,7 +16,6 @@ import com.mirfatif.permissionmanagerx.fwk.FilterSettingsActivityM;
 import com.mirfatif.permissionmanagerx.parser.PackageParser;
 import com.mirfatif.permissionmanagerx.prefs.ExcFiltersData;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
-import com.mirfatif.permissionmanagerx.util.UiUtils;
 import com.mirfatif.privtasks.util.bg.BgRunner;
 
 public class FilterSettingsActivity {
@@ -32,7 +31,7 @@ public class FilterSettingsActivity {
 
   public void onCreated(Bundle savedInstanceState) {
     mB = ActivityFragmentContainerBinding.inflate(mA.getLayoutInflater());
-    UiUtils.setContentView(mA, mB);
+    mA.setContentView(mB);
 
     ActionBar actionBar = mA.getSupportActionBar();
     if (actionBar != null) {

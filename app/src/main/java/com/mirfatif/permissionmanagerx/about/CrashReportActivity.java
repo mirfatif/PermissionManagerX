@@ -49,7 +49,7 @@ public class CrashReportActivity {
 
   public void onCreated() {
     mB = ActivityCrashReportBinding.inflate(mA.getLayoutInflater());
-    UiUtils.setContentView(mA, mB);
+    mA.setContentView(mB);
 
     ActionBar actionBar = mA.getSupportActionBar();
     if (actionBar != null) {

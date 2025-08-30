@@ -10,6 +10,7 @@
     android:background="?attr/accentColor" />
 
   <androidx.core.widget.NestedScrollView
+    android:id="@+id/scroll_v"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -417,4 +418,10 @@
 
     </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
   </androidx.core.widget.NestedScrollView>
+
+  <View
+    android:id="@+id/snack_bar_anchor"
+    android:layout_width="match_parent"
+    android:layout_height="0dp" />
+
 </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>

@@ -6,6 +6,7 @@
     <item name="accentColor">@color/green</item>
     <item name="accentTrans5Color">@color/greenTrans5</item>
     <item name="accentTrans10Color">@color/greenTrans10</item>
+    <item name="accentTrans20Color">@color/greenTrans20</item>
     <item name="accentTrans50Color">@color/greenTrans50</item>
     <item name="accentTrans75Color">@color/greenTrans75</item>
 

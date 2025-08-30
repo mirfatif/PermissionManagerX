@@ -7,10 +7,6 @@
   <View
     android:id="@+id/status_bar_bg"
     style="@style/ListSeparator"
-    android:background="?attr/accentTrans10Color" />
-
-<!--  <include-->
-<!--    android:id="@+id/activity_main"-->
-<!--    layout="@layout/activity_main" />-->
+    android:background="?attr/accentTrans20Color" />
 
 </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>

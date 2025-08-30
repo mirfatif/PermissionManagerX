@@ -2,12 +2,20 @@ package com.mirfatif.permissionmanagerx.base;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.viewbinding.ViewBinding;
 import com.mirfatif.permissionmanagerx.R;
+import com.mirfatif.permissionmanagerx.databinding.StatusBarBgContBinding;
 import com.mirfatif.permissionmanagerx.prefs.MySettings;
 import com.mirfatif.permissionmanagerx.util.LocaleUtils;
 import com.mirfatif.permissionmanagerx.util.UiUtils;
@@ -63,5 +71,45 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     return wasNightMode != UiUtils.isNightMode(this);
+  }
+
+  public void setContentView(ViewBinding binding) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+      setContentView(binding.getRoot());
+      return;
+    }
+
+    var cont = StatusBarBgContBinding.inflate(getLayoutInflater());
+    setContentView(cont.getRoot());
+    cont.getRoot().addView(binding.getRoot(), cont.getRoot().getLayoutParams());
+
+    WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView())
+        .setAppearanceLightStatusBars(!UiUtils.isNightMode(this));
+
+    ViewCompat.setOnApplyWindowInsetsListener(
+        cont.getRoot(),
+        (v, insets) -> {
+          var type = WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout();
+          var ins = insets.getInsets(type);
+
+          var mlp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+          mlp.leftMargin = ins.left;
+          mlp.bottomMargin = ins.bottom;
+          mlp.rightMargin = ins.right;
+
+          ActionBar actionBar = getSupportActionBar();
+          if (actionBar != null) {
+            actionBar.setBackgroundDrawable(null);
+            var lp = cont.statusBarBg.getLayoutParams();
+            lp.height = ins.top;
+            cont.statusBarBg.setLayoutParams(lp);
+          } else {
+            mlp.topMargin = ins.top;
+          }
+
+          v.setLayoutParams(mlp);
+
+          return WindowInsetsCompat.CONSUMED;
+        });
   }
 }
