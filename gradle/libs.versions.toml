@@ -8,8 +8,8 @@ sdk-tools-build = "36.0.0"
 sdk-min = "24"
 sdk-ndk = "28.2.13676358"
 
-app-code = "128"
-app-name = "v1.28"
+app-code = "129"
+app-name = "v1.29"
 
 google-java-format = "1.28.0"
 ktfmt = "0.56"
