@@ -1,4 +1,445 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <!-- Character Limits:
+       Button: 10
+       Toast/SnackBar: 20
+       Preference title: 20
+       Single line text: 30
+       Progress: 15
+       Dialog/notification title: 15
+       Menu item: 15 -->
+  <!-- General strings -->
+  <!-- CHAR LIMIT: 10 -->
+  <string name="yes">نعم</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="no">لا</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="ok_button">موافق</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="cancel_button">إلغاء</string>
+  <string name="open_drawer">فتح</string>
+  <string name="close_drawer">إغلاق</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="do_not_remind">عدم التذكير</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="_continue">متابعة؟</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="warning">تحذير</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="help_button">تعليمات</string>
+  <plurals name="apps_count">
+    <item quantity="zero">%d تطبيق</item>
+    <item quantity="one">%d تطبيق</item>
+    <item quantity="two">%d تطبيقات</item>
+    <item quantity="few">%d تطبيقات</item>
+    <item quantity="many">%d تطبيقات</item>
+    <item quantity="other">%d تطبيقات</item>
+  </plurals>
+  <!-- CHAR LIMIT: 20 -->
   <string name="app_name">مدير الصلاحيّات X</string>
+  <!-- MainActivity Navigation Drawer / menu items -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="search_menu_item">بحث</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="settings_menu_item">الاعدادات</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="filter_menu_item">مرشحات الاستبعاد</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="root_menu_item">الوصول إلى الروت</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="adb_menu_item">الوصول إلى ADB</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="backup_restore_menu_item">النسخ الاحتياطي/الاستعادة</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="help_menu_item">تعليمات</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="donate_menu_item">تبرّع</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="license_menu_item">الرخصة</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="about_menu_item">حول البرنامج</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="advanced_settings_menu_item">إعدادات متقدمة</string>
+  <!-- MainActivity strings -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="primary_account">الحساب الرئيسي</string>
+  <string name="primary_profile_only">مدير الأذونات X يمكن تشغيله فقط في حساب المستخدم الرئيسي / ملف تعريف مالك الجهاز.</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="backup">النسخ الاحتياطي</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="restore">إستعادة</string>
+  <string name="choose_backup_restore">النسخ الاحتياطي أو استعادة التفضيلات ومراجع الأذونات.</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="select_backup_file">حدد ملف النسخ الاحتياطي</string>
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <plurals name="backup_restore_processed_prefs">
+    <item quantity="zero">تم معالجة %1$d تفضيل</item>
+    <item quantity="one">تم معالجة %1$d تفضيل</item>
+    <item quantity="two">تم معالجة %1$d تفضيل</item>
+    <item quantity="few">تم معالجة %1$d تفضيلات</item>
+    <item quantity="many">تم معالجة %1$d تفضيلات</item>
+    <item quantity="other">تمت معالجة %1$d تفضيلات</item>
+  </plurals>
+  <plurals name="backup_restore_invalid_prefs">
+    <item quantity="zero">%1$s\nتخطي %2$d تفضيلات غير صالحة.</item>
+    <item quantity="one">%1$s\nتخطي %2$d تفضيلات غير صالحة.</item>
+    <item quantity="two">%1$s\nتخطي %2$d تفضيلات غير صالحة.</item>
+    <item quantity="few">%1$s\nتخطي %2$d تفضيلات غير صالحة.</item>
+    <item quantity="many">%1$s\nتخطي %2$d تفضيلات غير صالحة.</item>
+    <item quantity="other">%1$s\nتخطي %2$d تفضيلات غير صالحة.</item>
+  </plurals>
+  <plurals name="backup_restore_uninstalled_apps">
+    <item quantity="zero">%1$s\nتخطي %2$d تطبيق غير مثبت.</item>
+    <item quantity="one">%1$s\nتخطي %2$d تطبيق غير مثبت.</item>
+    <item quantity="two">%1$s\nتخطي %2$d تطبيق غير مثبت.</item>
+    <item quantity="few">%1$s\nتخطي %2$d تطبيق غير مثبت.</item>
+    <item quantity="many">%1$s\nتخطي %2$d تطبيق غير مثبت.</item>
+    <item quantity="other">%1$s\nتخطي %2$d تطبيقات غير مثبتة.</item>
+  </plurals>
+  <string name="backup_restore_failed">فشل. حدث خطأ ما.</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="skip_uninstalled_packages">تخطي الحزم الغير مثبتة</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="disable_pkg_warning" comment="'system' or 'framework'">تعطيل تطبيق %1$s هو إجراء خطير. في أسوأ سيناريو نظام أندرويد قد يتعطل.\nهل أنت متأكد أنك تريد المتابعة؟</string>
+  <string name="pkg_state_disabled2" searchStr="true">%sمعطل</string>
+  <!-- Crash Report -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="crash_report">تقرير الأعطال</string>
+  <!-- CHAR LIMIT: 30 -->
+  <string name="ask_to_report_crash_small">إرسال تقرير الأعطال إلى المطور</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="send_report">إرسال التقرير</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- Progress -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- AdvancedSettings Activity -->
+  <string name="daemon_uid_system">النظام</string>
+  <string name="daemon_uid_root">الجذر</string>
+  <string name="daemon_uid_adb">ADB</string>
+  <string name="daemon_context_shell">صدفة</string>
+  <string name="daemon_context_default">الافتراضي</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="bad_path_toast">مسار خاطئ</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="reset_perm_db_backup_failed_toast">فشل النسخ الاحتياطي</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- Privileges -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="privileges_title">الامتيازات</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="root_granted_toast">تم منح الروت</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="getting_root_failed">فشل الحصول على امتيازات الجذر. هل أنت متجذر؟</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_failed_toast">فشل بدء العمل daemon المميز</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="adb_title">ADB</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="connected_to_adb_toast">متصل بـ ADB</string>
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- Feedback -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="love_using_app">هل أعجبني مدير الأذونات X؟</string>
+  <string name="purchase_and_rate_the_app">يمكنك مساعدتنا على تحسين التطبيق عن طريق تبرع صغير أو ترك مراجعة جيدة للتطبيق بحيث نتمكن من تلبية احتياجاتك بشكل أفضل.</string>
+  <string name="ask_to_provide_feedback">نأسف لسماع ذلك. يمكنك المساعدة في تحسين التطبيق عن طريق الاتصال بنا عبر البريد الإلكتروني أو تيليجرام حتى نتمكن من خدمة احتياجاتك بشكل أفضل.</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="thank_you">شكرا لك</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="contact">اكتب الآن</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="contact_on_telegram">اكتب رسالة على تيليجرام</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="contact_on_email">كتابة بريد إلكتروني</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="how_do_i">كيف يمكنني؟</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="purchase_donate">شراء / تبرع</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="rate_on_ps">التقييم على متجر Play</string>
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- Links -->
+  <!-- DaemonHandler -->
+  <string name="priv_daemon_died_toast">موت daemon المميز</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- Daemon callback errors  -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_err_bad_rom_toast">الروم سيء</string>
+  <!-- Daemon binder calls errors -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_grant_perm_failed_toast">فشل في منح الإذن</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_revoke_perm_failed_toast">فشل في إلغاء الإذن</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_reset_app_ops_failed_toast">فشل إعادة تعيين اذونات التطبيقات</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_enable_pkg_failed_toast">فشل تمكين التطبيق</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_disable_pkg_failed_toast">فشل تعطيل التطبيق</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_open_app_info_failed_toast">فشل في فتح معلومات التطبيق</string>
+  <!-- LogcatSvc -->
+  <!-- CHAR LIMIT: 10 -->
+  <string name="stop_button">توقف</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="logging_failed_toast">تعذر التسجيل</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="logging_title">تسجيل</string>
+  <string name="logging_warning_msg">قد يستجيب التطبيق ببطء بسبب جمع السجلات، وقد ينمو ملف السجل حتى حجم كبير جدا. يتم إيقاف التسجيل تلقائياً بعد 5 دقائق.</string>
+  <!-- AdbConnectSvc -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- DaemonRcvSvc -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- PackageActivity menu items -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="reset_app_ops">اعادة تعيين الاذونات</string>
+  <string name="reset_app_ops_confirmation">إعادة تعيين كافة الاذونات إلى الوضع الافتراضي؟</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="clear_references">مسح المراجع</string>
+  <string name="clear_references_confirmation">مسح جميع مراجع الأذونات؟</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="set_references">تعيين المراجع</string>
+  <string name="set_references_confirmation">تعيين كافة حالات الصلاحيات الحالية كمراجع؟</string>
+  <!-- CHAR LIMIT: 15 -->
+  <!-- MainActivity Dialogs -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="exclude_app_from_visible_list">إخفاء التطبيق من القائمة</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="enable_app">تمكين التطبيق</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="disable_app">تعطيل التطبيق</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="open_pkg_info">فتح معلومات التطبيق</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="find_pkg_process">العثور على عملية التطبيق</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="install">تثبيت</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="wrun_not_installed">WhatsRunning غير مثبت</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- PackageActivity -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="something_went_wrong">لقد حدث خطأ ما</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="change_perms_warning" comment="'system' or 'framework'">تغيير أذونات تطبيق %1$s إجراء خطير. في أسوأ سيناريو نظام أندرويد قد يتعطل.\nهل أنت متأكد تريد المتابعة؟</string>
+  <string name="system">النظام</string>
+  <string name="framework">الإطار البرمجي</string>
+  <plurals name="uid_mode_app_ops_warning">
+    <item quantity="zero">هذا هو تطبيق وضع UID. تغييره يؤثر أيضا على %1$d حزمة أخرى.</item>
+    <item quantity="one">هذا هو تطبيق وضع UID. تغييره يؤثر أيضا على %1$d حزمة أخرى.</item>
+    <item quantity="two">هذا هو تطبيق وضع UID. تغييره يؤثر أيضا على %1$d حزمة أخرى.</item>
+    <item quantity="few">هذا هو تطبيق وضع UID. تغييره يؤثر أيضا على %1$d حزمة أخرى.</item>
+    <item quantity="many">هذا هو تطبيق وضع UID. تغييره يؤثر أيضا على %1$d حزمة أخرى.</item>
+    <item quantity="other">هذا هو تطبيق وضع UID. تغييره يؤثر أيضًا على %1$d حزم أخرى.</item>
+  </plurals>
+  <string name="exclude_perm_from_list">إخفاء الصلاحيّة من القائمة</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="set_perm_state_reference"><![CDATA[تعيين <b><i>%1$s</i></b> كمرجع]]></string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="set_reference">تعيين مرجع</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="clear_reference">مسح المرجع</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="no_action_available">لا يوجد إجراء متاح</string>
+  <plurals name="count_permissions_filtered_out">
+    <item quantity="zero">تم تصفية الإذن %1$d</item>
+    <item quantity="one">تم تصفية الإذن %1$d</item>
+    <item quantity="two">تم تصفية الإذن %1$d</item>
+    <item quantity="few">تم تصفية الإذن %1$d</item>
+    <item quantity="many">تم تصفية الإذن %1$d</item>
+    <item quantity="other">تم تصفية %1$d أذونات</item>
+  </plurals>
+  <string name="requested_no_permissions">لم يتم طلب أي أذونات</string>
+  <string name="should_be" comment="AppOps or manifest permission state"><![CDATA[يجب أن يكون <b>%1$s</b>]]></string>
+  <string name="prot_lvl_app_ops2" searchStr="true">%s, اذونات التطبيق</string>
+  <string name="prot_lvl_uid_mode" searchStr="true">%s، وضع UID</string>
+  <string name="prot_lvl_extra" searchStr="true">%s, اضافية</string>
+  <string name="prot_lvl_development2" searchStr="true">%s، التطوير</string>
+  <string name="prot_lvl_privileged2" searchStr="true">%s، امتياز</string>
+  <string name="prot_lvl_fixed2" searchStr="true">%sثابت</string>
+  <string name="app_op_mode_allow">السماح</string>
+  <string name="app_op_mode_ignore">تجاهل</string>
+  <string name="app_op_mode_deny">رفض</string>
+  <string name="app_op_mode_default">الافتراضي</string>
+  <string name="app_op_mode_foreground">المقدمة</string>
+  <string name="app_op_mode_unknown">غير معروف</string>
+  <string name="app_op_mode_not_set">الافتراضي</string>
+  <string name="perm_mode_granted">تم المنح</string>
+  <string name="perm_mode_revoked">ملغاة</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="protection_level">مستوى الحماية:</string>
+  <!-- CHAR LIMIT: 15 -->
+  <!-- FilterSettingsActivity -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="filter_settings">إعدادات الفرز</string>
+  <string name="excluded_apps_summary">اضغط مطولاً على اسم الحزمة لاستبعاده</string>
+  <string name="excluded_perms_summary">اضغط مطولاً على اسم الإذن لاستبعاده</string>
+  <string name="extra_app_ops_summary">مدير اذونات التطبيقات يظهر دائما في كل تطبيق</string>
+  <string name="extra_app_ops_summary_count">(المجموع: %1$d)</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="enable_exc_filters">تفعيل الفلاتر</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="disable_exc_filters">تعطيل الفلاتر</string>
+  <plurals name="and_others_count">
+    <item quantity="zero">%1$s و %2$d آخرين</item>
+    <item quantity="one">%1$s و %2$d آخرين</item>
+    <item quantity="two">%1$s و %2$d آخرين</item>
+    <item quantity="few">%1$s و %2$d آخرون</item>
+    <item quantity="many">%1$s و %2$d أخرى</item>
+    <item quantity="other">%1$s و %2$d آخرين</item>
+  </plurals>
+  <!-- SettingsActivity -->
+  <string name="locale_system">النظام</string>
+  <string name="locale_en">الإنجليزية</string>
+  <string name="locale_ru">الروسية</string>
+  <string name="locale_es">الإسبانية</string>
+  <string name="locale_ar">العربية</string>
+  <string name="theme_color_green">أخضر</string>
+  <string name="theme_color_blue">أزرق</string>
+  <string name="theme_color_pink">وردي</string>
+  <string name="theme_color_gray">رمادي</string>
+  <!-- PreferenceActivity menu items -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="filter_settings_reset_defaults_menu_item">إعادة الضبط إلى الافتراضي</string>
+  <string name="filter_settings_reset_confirmation">إعادة تعيين إعدادات الفلتر إلى القيم الافتراضية؟</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="filter_settings_clear_excluded_apps_menu_item">امسح التطبيقات المستبعدة</string>
+  <string name="filter_settings_clear_apps_confirmation">مسح جميع التطبيقات المستبعدة؟</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="filter_settings_clear_excluded_perms_menu_item">مسح الأذونات المستبعدة</string>
+  <string name="filter_settings_clear_perms_confirmation">مسح جميع الأذونات المستبعدة؟</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="filter_settings_clear_extra_app_ops_menu_item">مسح تطبيقات إضافية</string>
+  <string name="filter_settings_clear_app_ops_confirmation">مسح جميع التطبيقات الإضافية (تظهر دائماً)؟</string>
+  <!-- AboutActivity -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="source">المصدر</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="email">البريد الإلكتروني</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="telegram_group">مجموعة التليجرام</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="send_crash_report_title">إرسال التقرير</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="collect_logs">جمع السجلات</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="collect_logs_summary">حفظ سجل شديد التفصيل للملف</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="report_issues">بلغ عن خطأ</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="report_issues_summary">الأخطاء والتحسينات والاقتراحات…</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="select_log_file">حدد ملف لحفظ السجل</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="stop_logging">أيقاف التسجيل</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="logging_stopped">تم إيقاف التسجيل</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="app_rating">قيّمني</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="app_rating_summary">التقييم، المراجعة، والبدء…</string>
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="update">تحديث</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="update_summary">تحقق تحديثات التطبيق</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="check_in_progress">تحقق من التقدم</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="check_for_updates_failed">فشل التحقق من التحديثات</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="app_is_up_to_date">التطبيق محدّث</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="new_version_available">نسخة جديدة من التطبيق متوفرة</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="tap_to_download">إنقر للتحميل</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="download">تحميل</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="privacy_policy">سياسة الخصوصية</string>
+  <string name="translations">الترجمات</string>
+  <string name="translations_summary">هل ترغب في رؤية التطبيق بلغتك؟</string>
+  <string name="share">مشاركة</string>
+  <string name="share_summary">مشاركة التطبيق مع الآخرين</string>
+  <string name="share_text">تحقق من هذا التطبيق الرائع! %1$s</string>
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="perm_status_menu_item">الامتيازات</string>
+  <string name="uid">المعرف الفريد:</string>
+  <string name="app_ops">خيارات التطبيق</string>
+  <string name="op_to_def_mode">اذهب إلى الوضع الافتراضي</string>
+  <string name="op_to_switch">انتقل إلى التبديل</string>
+  <string name="op_to_name">إلى الاسم</string>
+  <string name="permissions">الأذونات</string>
+  <!-- ActivityNotFoundException -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="no_email_app_installed">لا يوجد تطبيق بريد إلكتروني مثبت</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="no_browser_installed">"لا يوجد تطبيق متصفح ويب مثبت"</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="no_file_picker_installed">"لم يتم تثبيت تطبيق منتقي الملفات"</string>
+  <!-- Notification Channels -->
+  <string name="channel_app_update">تحديثات التطبيق</string>
+  <string name="channel_crash_report">تقرير الأعطال</string>
+  <string name="channel_logcat_collection">مجموعة السجلات</string>
+  <!-- Notification permission -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="notif_perm_dialog_title">إذن الإشعارات</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="notif_perm_missing_toast">لم يتم منح أذن الموقع</string>
+  <!-- HelpActivity -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="open_browser_menu_item">فتح في المتصفح</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="zoom_in_menu_item">تكبير</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="zoom_out_menu_item">تصغير</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="no_web_view">لا يوجد عارض ويب</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="outdated_web_view">عارض ويب قديم</string>
+  <!-- Locale -->
 </resources>

@@ -15,13 +15,19 @@
   <!-- Privileges / Daemon -->
   <!-- Advanced Settings -->
   <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_allow_critical_changes_title">Allow critical changes</string>
+  <string name="pref_adv_settings_allow_critical_changes_summary">对关键的权限和框架应用进行更改</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_adv_settings_exit_on_app_death_title">自动停止守护进程</string>
   <string name="pref_adv_settings_exit_on_app_death_summary">当应用程序被杀死时停止特权守护进程</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_adv_settings_perm_refs_cat_title">权限模板</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_unique_ref_app_op_uid_mode_title">AppOp UID模式引用</string>
+  <string name="pref_adv_settings_unique_ref_app_op_uid_mode_summary">在 UID 模式中使用不同的权限参考</string>
   <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_unique_ref_sec_users_title">次要用户参考</string>
+  <string name="pref_adv_settings_unique_ref_sec_users_summary">对次要用户/配置文件使用不同的权限引用</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_adv_settings_root_cat_title">Root</string>
   <!-- CHAR LIMIT: 20 -->
@@ -102,6 +108,7 @@
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_settings_show_fwk_perm_name_title">框架权限名称</string>
+  <string name="pref_settings_show_fwk_perm_name_summary">显示原始权限名称，而不是好看的名字</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_settings_special_search_title">综合搜索</string>
   <string name="pref_settings_special_search_summary">使用 AND (&amp;), OR (|) 和 nt (!) 操作员搜索合并查询</string>

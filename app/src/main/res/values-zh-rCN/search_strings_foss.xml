@@ -4,7 +4,7 @@
   <string name="pkg_state_framework">框架</string>
   <string name="pkg_state_system">系统</string>
   <string name="pkg_state_user">用户</string>
-  <string name="pkg_state_disabled">已冻结</string>
+  <string name="pkg_state_disabled">已停用</string>
   <string name="prot_lvl_unknown">未知</string>
   <string name="prot_lvl_normal">普通</string>
   <string name="prot_lvl_dangerous">危险</string>
@@ -13,7 +13,7 @@
   <string name="prot_lvl_app_ops">AppOps</string>
   <string name="prot_lvl_development">开发</string>
   <string name="prot_lvl_privileged">特权</string>
-  <string name="prot_lvl_fixed">修复</string>
+  <string name="prot_lvl_fixed">固定</string>
   <string name="search_str_uid">UID</string>
   <string name="search_str_time">时间</string>
   <string name="search_str_extra">额外</string>

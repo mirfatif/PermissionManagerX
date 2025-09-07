@@ -7,10 +7,7 @@
   <!-- MainActivity Preferences -->
   <!-- MainActivity Preferences corresponding to default values -->
   <!-- CHAR LIMIT: 20 -->
-  <string name="pref_main_deep_search_title"></string>
-  <string name="pref_main_deep_search_summary">Do search in permissions list instead of apps list</string>
   <!-- CHAR LIMIT: 20 -->
-  <string name="pref_main_case_sensitive_search_title"></string>
   <!-- Privileges / Daemon -->
   <!-- Advanced Settings -->
   <!-- CHAR LIMIT: 20 -->
@@ -19,8 +16,6 @@
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
-  <!-- CHAR LIMIT: 20 -->
-  <string name="pref_adv_settings_root_cat_title">Root</string>
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->

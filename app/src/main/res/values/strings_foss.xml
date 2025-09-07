@@ -1,4 +1,662 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <!-- Character Limits:
+       Button: 10
+       Toast/SnackBar: 20
+       Preference title: 20
+       Single line text: 30
+       Progress: 15
+       Dialog/notification title: 15
+       Menu item: 15 -->
+
+  <!-- General strings -->
+  <string name="crowdin_comment_break_strings_1" translatable="false">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="yes">Yes</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="no">No</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="ok_button">OK</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="cancel_button">Cancel</string>
+  <string name="open_drawer">Open</string>
+  <string name="close_drawer">Close</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="do_not_remind">Don\'t Remind</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="_continue">Continue?</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="warning">Warning</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="help_button">Help</string>
+  <plurals name="apps_count">
+    <item quantity="one">%d app</item>
+    <item quantity="other">%d apps</item>
+  </plurals>
+
+  <!-- CHAR LIMIT: 20 -->
+  <string name="copied_to_clipboard_toast">Copied to clipboard</string>
+
   <string name="app_name">Permission Manager X</string>
+
+  <!-- MainActivity Navigation Drawer / menu items -->
+  <string name="crowdin_comment_break_strings_2" translatable="false">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="search_menu_item">Search</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="settings_menu_item">Settings</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="filter_menu_item">Exclusion Filters</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="root_menu_item">Root Access</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="adb_menu_item">ADB Access</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="backup_restore_menu_item">Backup / Restore</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="help_menu_item">Help</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="donate_menu_item">Donate</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="license_menu_item">License</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="about_menu_item">About</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="advanced_settings_menu_item">Advanced Settings</string>
+
+  <!-- MainActivity strings -->
+  <string name="crowdin_comment_break_strings_3" translatable="false">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="primary_account">Primary Account</string>
+  <string name="primary_profile_only">Permission Manager X can run only in primary user account / device owner profile.</string>
+  <string name="grant_root_or_adb">Root or ADB access is required to get AppOp permissions and to change permissions state.</string>
+
+  <!-- CHAR LIMIT: 10 -->
+  <string name="backup">Backup</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="restore">Restore</string>
+  <string name="choose_backup_restore">Backup or restore preferences and permission references.</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="select_backup_file">Select backup file</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="backup_in_progress">Backing up…</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="restore_in_progress">Restoring …</string>
+
+  <plurals name="backup_restore_processed_prefs">
+    <item quantity="one">Processed %1$d preference</item>
+    <item quantity="other">Processed %1$d preferences</item>
+  </plurals>
+  <plurals name="backup_restore_processed_profiles">
+    <item quantity="one">%1$s, %2$d permission profile</item>
+    <item quantity="other">%1$s, %2$d permission profiles</item>
+  </plurals>
+  <plurals name="backup_restore_processed_refs">
+    <item quantity="one">%1$s, and %2$d permission reference.</item>
+    <item quantity="other">%1$s, and %2$d permission references.</item>
+  </plurals>
+  <plurals name="backup_restore_invalid_prefs">
+    <item quantity="one">%1$s\nSkipped %2$d invalid preference.</item>
+    <item quantity="other">%1$s\nSkipped %2$d invalid preferences.</item>
+  </plurals>
+  <plurals name="backup_restore_uninstalled_apps">
+    <item quantity="one">%1$s\nSkipped %2$d uninstalled app.</item>
+    <item quantity="other">%1$s\nSkipped %2$d uninstalled apps.</item>
+  </plurals>
+
+  <string name="backup_restore_failed">Failed. Some error occurred.</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="skip_uninstalled_packages">Skip uninstalled packages</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="swap_user_ids">Swap user IDs</string>
+  <string name="replace_user_id_from_hint">Replace</string>
+  <string name="replace_user_id_with">with</string>
+  <string name="replace_user_id_to_hint">this</string>
+
+  <string name="disable_pkg_warning" comment="'system' or 'framework'">Disabling a %1$s app is a dangerous action. In worst-case scenario Android system may crash.\nAre you sure you want to continue?</string>
+  <string name="pkg_state_disabled2" searchStr="true">%s, Disabled</string>
+
+  <string name="unsupported_sdk_warning_title">Android version unsupported</string>
+  <string name="unsupported_sdk_warning_message">Your device is running Android %s which has not been tested so far. PMX may crash or may behave in unexpected way.</string>
+  <string name="unsupported_sdk_warning_button">I Understand</string>
+
+  <!-- Crash Report -->
+  <string name="crowdin_comment_break_strings_4" translatable="false">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="crash_report">Crash Report</string>
+  <!-- CHAR LIMIT: 30 -->
+  <string name="ask_to_report_crash_small">Send crash report to the developer</string>
+  <string name="ask_to_report_crash">Sorry, a component of the app had a problem and crashed. Send the log file to the developer so that the bug can be fixed.</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="send_report">Send Report</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="crash_log_file_not_exists_toast">Crash logs do not exist</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="crash_log_file_read_failed_toast">Failed to read crash log file</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="submit_report_button">Submit Report</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="submitting_report_button">Submitting…</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="send_email_button">Send Email</string>
+  <string name="send_crash_report_email_desc">* You can send email if submitting not works.</string>
+  <string name="reading_crash_log_file">Reading crash log file…</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="submit_crash_report_failed_toast">Failed to submit crash report</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="delete_crash_report_file_title">Delete file</string>
+  <string name="crash_file_delete_confirmation">If the crash report is sent, delete the old file on device?</string>
+
+  <!-- Progress -->
+  <string name="crowdin_comment_break_strings_5" translatable="false">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="prog_msg_checking_privs">Checking privileges…</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="prog_msg_stopping_daemon">Stopping daemon…</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="prog_msg_connecting_to_daemon">Connecting to daemon…</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="prog_msg_checking_root_access">Checking root access…</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="prog_msg_checking_adb_access">Checking ADB access…</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="prog_msg_starting_daemon">Starting daemon…</string>
+
+  <!-- CHAR LIMIT: 15 -->
+  <string name="creating_packages_list">Creating apps list…</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="sorting_packages_list">Sorting apps list…</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="reading_reference_perms">Reading references…</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="creating_app_ops_lists">Preparing AppOps data…</string>
+
+  <!-- AdvancedSettings Activity -->
+  <string name="crowdin_comment_break_strings_6" translatable="false">Crowdin comment break</string>
+  <string name="daemon_uid_system">System</string>
+  <string name="daemon_uid_root">Root</string>
+  <string name="daemon_uid_adb">ADB</string>
+  <string name="daemon_uid_system_val" translatable="false">1000</string>
+  <string name="daemon_uid_root_val" translatable="false">0</string>
+  <string name="daemon_uid_adb_val" translatable="false">2000</string>
+
+  <string name="daemon_context_shell">Shell</string>
+  <string name="daemon_context_default">Default</string>
+  <string name="daemon_context_shell_val" translatable="false">u:r:shell:s0</string>
+  <string name="daemon_context_default_val" translatable="false" />
+
+  <string name="su_exe_path_hint" translatable="false">$PATH</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="bad_path_toast">Bad path</string>
+
+  <string name="reset_perm_db_dialog_title">Reset / Cleanup References</string>
+  <string name="reset_perm_db_dialog_detail"><![CDATA[Reset removes all permission references.<br />Cleanup removes all permission references excluding the currently visible list of apps and permissions.<br />To prevent any unexpected loss, a backup file will be created before doing reset / cleanup.]]></string>
+  <string name="reset_perm_db_dialog_reset_button">Reset</string>
+  <string name="reset_perm_db_dialog_cleanup_button">Cleanup</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="reset_perm_db_backup_failed_toast">Backup failed</string>
+  <string name="reset_perm_db_building_app_list">Building apps list…</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="reset_perm_db_pkg_list_failed_toast">Building app list failed</string>
+  <string name="reset_perm_db_optimizing_perm_db">Optimizing permission references…</string>
+  <!-- CHAR LIMIT: 20 -->
+  <plurals name="reset_perm_db_removed_count_toast">
+    <item quantity="one">Removed %d entry from database</item>
+    <item quantity="other">Removed %d entries from database</item>
+  </plurals>
+
+  <!-- Privileges -->
+  <string name="crowdin_comment_break_strings_7" translatable="false">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="privileges_title">Privileges</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="root_granted_toast">Root granted</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="getting_root_failed">Getting root privileges failed. Are you rooted?</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_failed_toast">Starting privileged daemon failed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="no_app_ops_without_daemon_toast">Cannot read AppOps without root / ADB</string>
+
+  <!-- CHAR LIMIT: 15 -->
+  <string name="adb_title">ADB</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="adb_pairing_failed_toast">Pairing failed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="adb_connect_failed_toast">Connection failed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="connected_to_adb_toast">Connected to ADB</string>
+
+  <!-- CHAR LIMIT: 10 -->
+  <string name="pair_button">Pair</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="pairing_button">Pairing</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="connect_button">Connect</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="connecting_button">Connecting</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="connection_title">Connection</string>
+
+  <string name="pairing_code_hint">Pairing code</string>
+  <string name="ip_address_hint">IP address</string>
+  <string name="socket_port_hint">Port</string>
+
+  <!-- CHAR LIMIT: 10 -->
+  <string name="required_field_error">Required</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="invalid_field_error">Invalid</string>
+
+  <string name="adb_pair_help_msg"><![CDATA[<ul><li>Turn on <b><i>Wireless Debugging</i></b> and enable Split-Screen mode.</li><li>Enter pairing code and port, and tap pair button.</li><li>After successful pairing, proceed to connection.</li></ul>]]></string>
+  <string name="adb_connect_help_11_msg"><![CDATA[<ul><li>Enable <b><i>Wireless Debugging</i></b> (pairing) or <b><i>ADB Over Network</i></b>.</li><li>Enter port and tap connect button.</li><li>Allow ADB authentication when prompted.</li></ul>]]></string>
+  <string name="adb_connect_help_after_pair_msg">Pairing successful. Enter port and tap connect button.</string>
+  <string name="adb_connect_help_msg"><![CDATA[<ul><li>Enable <b><i>ADB Over Network</i></b>.</li><li>Enter port and tap connect button.</li><li>Allow ADB authentication when prompted.</li></ul>]]></string>
+
+  <!-- Feedback -->
+  <string name="crowdin_comment_break_strings_8" translatable="false">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="love_using_app">Liking Permission Manager X?</string>
+  <string name="purchase_and_rate_the_app">You can help us improve the app by making a small donation or leaving a good app review so that we are able to better serve your needs.</string>
+  <string name="ask_to_provide_feedback">Sorry to hear that. You can help improve the app by contacting us via email or Telegram so that we are able to better serve your needs.</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="thank_you">Thank you</string>
+
+  <!-- CHAR LIMIT: 15 -->
+  <string name="contact">Write Now</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="contact_on_telegram">Write a Message on Telegram</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="contact_on_email">Write an Email</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="how_do_i">How do I?</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="purchase_donate">Purchase / Donate</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="rate_on_ps">Rate on Play Store</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="share_with_others">Share With Others</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="rating_options">Rating Options</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="other_rating_options">Other Rating Options</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="ignore_for_now">Ignore for now</string>
+
+  <!-- Links -->
+  <string name="crowdin_comment_break_strings_9" translatable="false">Crowdin comment break</string>
+  <string name="source_url" translatable="false">https://github.com/mirfatif/PermissionManagerX</string>
+  <string name="issues_url" translatable="false">https://github.com/mirfatif/PermissionManagerX/issues</string>
+  <string name="purchase_pro_url" translatable="false">https://mirfatif.github.io/mirfatif/getpro</string>
+  <string name="payment_methods_href" translatable="false">%s#payment-methods</string>
+  <string name="paid_features_url" translatable="false">https://mirfatif.github.io/PermissionManagerX/help/help#paid_features</string>
+  <string name="privacy_policy_link" translatable="false">https://mirfatif.github.io/PermissionManagerX/privacy_policy.html</string>
+  <string name="play_store_url" translatable="false">https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx</string>
+  <string name="telegram_mirfatif" translatable="false">https://t.me/mirfatif</string>
+  <string name="telegram_group_link" translatable="false">https://t.me/PermissionManagerX</string>
+  <string name="translation_link" translatable="false">https://crowdin.com/project/pmx</string>
+  <string name="wrun_url" translatable="false">https://github.com/mirfatif/WhatsRunning</string>
+
+  <string name="contact_us_url" translatable="false">https://mirfatif.github.io/PermissionManagerX/#want-to-reach-us</string>
+  <string name="github_help_url" translatable="false">https://mirfatif.github.io/PermissionManagerX/help</string>
+  <string name="adb_connect_help_href_10" translatable="false">adb-help-10</string>
+  <string name="adb_connect_help_href_11" translatable="false" tools:ignore="Typos">adb_help_11</string>
+  <string name="rate_review_help_href" translatable="false">rate-review-help</string>
+  <string name="paid_features_href" translatable="false">paid_features</string>
+
+  <!-- DaemonHandler -->
+  <string name="crowdin_comment_break_strings_10" translatable="false">Crowdin comment break</string>
+  <string name="priv_daemon_died_toast">Privileged daemon died</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="priv_daemon_restarted_toast">Privileged daemon restarted</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_not_running_toast">Daemon not running</string>
+
+  <!-- CHAR LIMIT: 20 -->
+  <string name="granting_permissions_failed_toast">Granting permissions failed</string>
+
+  <!-- Daemon callback errors  -->
+  <string name="crowdin_comment_break_strings_11" translatable="false">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_err_bad_rom_toast">Bad ROM</string>
+
+  <!-- Daemon binder calls errors -->
+  <string name="crowdin_comment_break_strings_12" translatable="false">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_set_exit_on_app_death_failed_toast">Setting preference failed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_get_priv_status_failed_toast">Getting privileges status failed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_set_debug_failed_toast">Daemon logging failed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_dump_heap_failed_toast" translatable="false">Dump heap failed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_get_app_ops_lists_failed_toast">Getting AppOps data failed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_get_perm_fixed_flags_failed_toast">Getting fixed permission flags failed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_get_pkgs_for_uid_failed_toast">Getting packages for UID failed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_get_pkg_ops_failed_toast">Getting AppOps failed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_get_perm_flags_failed_toast">Getting permission flags failed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_grant_perm_failed_toast">Granting permission failed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_revoke_perm_failed_toast">Revoking permission failed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_set_app_ops_mode_failed_toast">Setting AppOp mode failed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_reset_app_ops_failed_toast">Resetting AppOps failed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_enable_pkg_failed_toast">Enabling app failed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_disable_pkg_failed_toast">Disabling app failed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="daemon_open_app_info_failed_toast">Opening app info failed</string>
+
+  <!-- LogcatSvc -->
+  <string name="crowdin_comment_break_strings_14" translatable="false">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="stop_button">Stop</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="logging_failed_toast">Logging failed</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="logging_title">Logging</string>
+  <string name="logging_warning_msg">App may respond slow due to log collection and log file may grow up to very large size. Logging is auto-stopped after 5 minutes.</string>
+
+  <!-- AdbConnectSvc -->
+  <string name="crowdin_comment_break_strings_15" translatable="false">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="adb_conn_notif_title">ADB Connection</string>
+  <string name="adb_conn_notif_text">Connecting…</string>
+
+  <!-- DaemonRcvSvc -->
+  <string name="crowdin_comment_break_strings_16" translatable="false">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="daemon_connection_title">Daemon Connection</string>
+  <string name="daemon_connection_text">Connecting…</string>
+
+  <!-- PackageActivity menu items -->
+  <string name="crowdin_comment_break_strings_17" translatable="false">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="reset_app_ops">Reset AppOps</string>
+  <string name="reset_app_ops_confirmation">Reset all AppOps to default modes?</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="clear_references">Clear References</string>
+  <string name="clear_references_confirmation">Clear all permission references?</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="set_references">Set References</string>
+  <string name="set_references_confirmation">Set all current permission states as references?</string>
+
+  <!-- CHAR LIMIT: 15 -->
+  <string name="menu_item_show_all_perms">Show all</string>
+
+  <!-- MainActivity Dialogs -->
+  <string name="crowdin_comment_break_strings_18" translatable="false">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="exclude_app_from_visible_list">Hide app from list</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="enable_app">Enable app</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="disable_app">Disable app</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="open_pkg_info">Open app info</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="find_pkg_process">Find app process</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="install">Install</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="wrun_not_installed">WhatsRunning not installed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="opening_app_info_failed_toast">Android failed to open app info</string>
+
+  <!-- PackageActivity -->
+  <string name="crowdin_comment_break_strings_19" translatable="false">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="something_went_wrong">Something went wrong</string>
+  <string name="grant_root_or_adb_to_change_perms">Root or ADB access is required to change permissions state.</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="app_op_mode_not_chaged_toast">AppOp mode not changed</string>
+
+  <string name="change_perms_warning" comment="'system' or 'framework'">Changing permissions of a %1$s app is a dangerous action. In worst-case scenario Android system may crash.\nAre you sure you want to continue?</string>
+  <string name="system">system</string>
+  <string name="framework">framework</string>
+
+  <plurals name="uid_mode_app_ops_warning">
+    <item quantity="one">This is a UID mode AppOp. Changing it also affects %1$d other package.</item>
+    <item quantity="other">This is a UID mode AppOp. Changing it also affects %1$d other packages.</item>
+  </plurals>
+
+  <string name="exclude_perm_from_list">Hide Permission From List</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="set_perm_state_reference"><![CDATA[Set <b><i>%1$s</i></b> As Reference]]></string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="set_reference">Set Reference</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="clear_reference">Clear Reference</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="no_action_available">No action available</string>
+
+  <plurals name="count_permissions_filtered_out">
+    <item quantity="one">%1$d permission filtered out</item>
+    <item quantity="other">%1$d permissions filtered out</item>
+  </plurals>
+
+  <string name="requested_no_permissions">No permissions requested</string>
+  <string name="should_be" comment="AppOps or manifest permission state"><![CDATA[Should be <b>%1$s</b>]]></string>
+
+  <string name="prot_lvl_app_ops2" searchStr="true">%s, AppOps</string>
+  <string name="prot_lvl_uid_mode" searchStr="true">%s, UID mode</string>
+  <string name="prot_lvl_extra" searchStr="true">%s, Extra</string>
+  <string name="prot_lvl_development2" searchStr="true">%s, Development</string>
+  <string name="prot_lvl_privileged2" searchStr="true">%s, Privileged</string>
+  <string name="prot_lvl_fixed2" searchStr="true">%s, Fixed</string>
+
+  <string name="app_op_mode_allow">Allow</string>
+  <string name="app_op_mode_ignore">Ignore</string>
+  <string name="app_op_mode_deny">Deny</string>
+  <string name="app_op_mode_default">Default</string>
+  <string name="app_op_mode_foreground">Foreground</string>
+
+  <string name="app_op_mode_unknown">Unknown</string>
+  <string name="app_op_mode_not_set">Default</string>
+
+  <string name="perm_mode_granted">Granted</string>
+  <string name="perm_mode_revoked">Revoked</string>
+
+  <!-- CHAR LIMIT: 15 -->
+  <string name="protection_level">Protection level:</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="depends_on">Depends on:</string>
+
+  <!-- FilterSettingsActivity -->
+  <string name="crowdin_comment_break_strings_20" translatable="false">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="filter_settings">Filter Settings</string>
+  <string name="excluded_apps_summary">Long press on a package name to exclude it</string>
+  <string name="excluded_perms_summary">Long press on a permission name to exclude it</string>
+  <string name="extra_app_ops_summary">AppOps always shown in every app</string>
+  <string name="extra_app_ops_summary_count">(Total: %1$d)</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="enable_exc_filters">Enable Filters</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="disable_exc_filters">Disable Filters</string>
+
+  <plurals name="and_others_count">
+    <item quantity="one">%1$s and %2$d other</item>
+    <item quantity="other">%1$s and %2$d others</item>
+  </plurals>
+
+  <!-- SettingsActivity -->
+  <string name="crowdin_comment_break_strings_21" translatable="false">Crowdin comment break</string>
+  <string name="locale_system">System</string>
+  <string name="locale_en">English</string>
+  <string name="locale_ru">Russian</string>
+  <string name="locale_es">Spanish</string>
+  <string name="locale_ar">Arabic</string>
+  <string name="locale_el">Greek</string>
+  <string name="locale_cn">Chinese</string>
+  <string name="locale_tr">Turkish</string>
+
+  <string name="theme_color_green">Green</string>
+  <string name="theme_color_blue">Blue</string>
+  <string name="theme_color_pink">Pink</string>
+  <string name="theme_color_gray">Gray</string>
+
+  <string name="theme_color_green_val" translatable="false">green</string>
+  <string name="theme_color_blue_val" translatable="false">blue</string>
+  <string name="theme_color_pink_val" translatable="false">pink</string>
+  <string name="theme_color_gray_val" translatable="false">gray</string>
+
+  <string name="dark_theme_mode_system">Follow system</string>
+  <string name="dark_theme_mode_light">Light</string>
+  <string name="dark_theme_mode_dark">Dark</string>
+
+  <string name="dark_theme_mode_system_val" translatable="false">system</string>
+  <string name="dark_theme_mode_light_val" translatable="false">light</string>
+  <string name="dark_theme_mode_dark_val" translatable="false">dark</string>
+
+  <!-- PreferenceActivity menu items -->
+  <string name="crowdin_comment_break_strings_22" translatable="false">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="filter_settings_reset_defaults_menu_item">Reset To Defaults</string>
+  <string name="filter_settings_reset_confirmation">Reset filter settings to default values?</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="filter_settings_clear_excluded_apps_menu_item">Clear Excluded Apps</string>
+  <string name="filter_settings_clear_apps_confirmation">Clear all excluded apps?</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="filter_settings_clear_excluded_perms_menu_item">Clear Excluded Perms</string>
+  <string name="filter_settings_clear_perms_confirmation">Clear all excluded permissions?</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="filter_settings_clear_extra_app_ops_menu_item">Clear Extra AppOps</string>
+  <string name="filter_settings_clear_app_ops_confirmation">Clear all extra (always shown) AppOps?</string>
+
+  <!-- AboutActivity -->
+  <string name="crowdin_comment_break_strings_23" translatable="false">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="source">Source</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="email">Email</string>
+  <string name="email_address" translatable="false">mirfatif.dev@gmail.com</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="telegram_group">Telegram Group</string>
+
+  <!-- CHAR LIMIT: 15 -->
+  <string name="send_crash_report_title">Send Report</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="send_crash_report_summary">Send crash logs to the developers</string>
+
+  <!-- CHAR LIMIT: 15 -->
+  <string name="collect_logs">Collect Logs</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="collect_logs_summary">Save highly verbose log to file</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="report_issues">Report Issues</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="report_issues_summary">Bugs, improvements, suggestions…</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="select_log_file">Select file to save log</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="stop_logging">Stop Logging</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="logging_stopped">Logging stopped</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="app_rating">Rate Me</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="app_rating_summary">Rating, reviewing, starring…</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="paid_features">Pro Features</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="about_dump_title">Dump Info</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="about_dump_summary">Dump missing permission icons, names and descriptions</string>
+
+  <!-- CHAR LIMIT: 15 -->
+  <string name="update">Update</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="update_summary">Check for app updates</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="check_in_progress">Check in progress</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="check_for_updates_failed">Check for updates failed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="app_is_up_to_date">App is up-to-date</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="new_version_available">New app version is available</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="tap_to_download">Tap to download</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="download">Download</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="privacy_policy">Privacy Policy</string>
+  <string name="translations">Translations</string>
+  <string name="translations_summary">Want to see the app in your language?</string>
+  <string name="add_my_language" translatable="false">Add My Language</string>
+  <string name="share">Share</string>
+  <string name="share_summary">Share the app with others</string>
+  <string name="share_text">Check out this amazing app! %1$s</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="dump_daemon_heap_menu_item" translatable="false">Dump Heap</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="perm_status_menu_item">Privileges</string>
+  <string name="uid">UID:</string>
+  <string name="app_ops">AppOps</string>
+  <string name="op_to_def_mode">Op To Default Mode</string>
+  <string name="op_to_switch">Op To Switch</string>
+  <string name="op_to_name">Op To Name</string>
+  <string name="get_app_ops">Get AppOps</string>
+  <string name="consistent_app_op_num">Consistent AppOp Num</string>
+  <string name="consistent_app_op_mode">Consistent AppOp Modes</string>
+  <string name="permissions">Permissions</string>
+
+  <!-- ActivityNotFoundException -->
+  <string name="crowdin_comment_break_strings_24" translatable="false">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="no_email_app_installed">No email app installed</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="no_browser_installed">"No web browser app installed"</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="no_file_picker_installed">"No file picker app installed"</string>
+
+  <!-- Notification Channels -->
+  <string name="crowdin_comment_break_strings_25" translatable="false">Crowdin comment break</string>
+  <string name="channel_app_update">App Updates</string>
+  <integer name="channel_app_update">100</integer>
+
+  <string name="channel_crash_report">Crash Report</string>
+  <integer name="channel_crash_report">200</integer>
+
+  <string name="channel_logcat_collection">Log Collection</string>
+  <integer name="channel_logcat_collection">300</integer>
+
+  <string name="channel_adb_connection">ADB Connection</string>
+  <integer name="channel_adb_connection">400</integer>
+
+  <string name="channel_daemon_connection">Daemon Connection</string>
+  <integer name="channel_daemon_connection">500</integer>
+
+  <!-- Notification permission -->
+  <string name="crowdin_comment_break_strings_26" translatable="false">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="notif_perm_dialog_title">Notification permission</string>
+  <string name="notif_perm_dialog_text"><![CDATA[PMX needs notification permission to show:<ul><li>Permission watcher status</li><li>Scheduled checks status</li><li>Available app updates</li><li>Logcat collection status</li><li>Crash events</li></ul>]]></string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="notif_perm_missing_toast">Notification permission not granted</string>
+
+  <!-- HelpActivity -->
+  <string name="crowdin_comment_break_strings_27" translatable="false">Crowdin comment break</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="open_browser_menu_item">Open in browser</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="zoom_in_menu_item">Zoom In</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="zoom_out_menu_item">Zoom Out</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="no_web_view">No WebView</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="outdated_web_view">Outdated WebView</string>
+
+  <!-- Locale -->
+  <string name="crowdin_comment_break_strings_28" translatable="false">Crowdin comment break</string>
+  <string name="help_dir_name">en</string>
+
 </resources>

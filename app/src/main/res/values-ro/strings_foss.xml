@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <!-- Character Limits:
+       Button: 10
+       Toast/SnackBar: 20
+       Preference title: 20
+       Single line text: 30
+       Progress: 15
+       Dialog/notification title: 15
+       Menu item: 15 -->
+  <!-- General strings -->
+  <!-- CHAR LIMIT: 10 -->
+  <string name="yes">Da</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="no">Nu</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="ok_button">OK</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="cancel_button">Anulează</string>
+  <string name="open_drawer">Deschide</string>
+  <string name="close_drawer">Închide</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="do_not_remind">Nu mai aminti</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="_continue">Continuă?</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="warning">Avertisment</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="help_button">Ajutor</string>
+  <plurals name="apps_count">
+    <item quantity="one">Aplicația %d</item>
+    <item quantity="few">Aplicații %d</item>
+    <item quantity="other">Aplicații %d</item>
+  </plurals>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="copied_to_clipboard_toast">Copiat în clipboard</string>
+  <!-- MainActivity Navigation Drawer / menu items -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="search_menu_item">Caută</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="settings_menu_item">Setări</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="filter_menu_item">Filtre de Excepții</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="root_menu_item">Acces Root</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="adb_menu_item">Acces ADB</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="backup_restore_menu_item">Backup / Restaurare</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="help_menu_item">Ajutor</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="donate_menu_item">Donează</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="license_menu_item">Licență</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="about_menu_item">Despre</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="advanced_settings_menu_item">Setări Avansate</string>
+  <!-- MainActivity strings -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="primary_account">Cont Principal</string>
+  <string name="primary_profile_only">Permission Manager X poate dura doar pe contul principal al proprietarului.</string>
+  <string name="grant_root_or_adb">Este necesar accesul Root sau ADB pentru a obține permisiuni AppOp și pentru a modifica starea permisiunilor.</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="backup">Backup</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="restore">Restaurare</string>
+  <string name="choose_backup_restore">Copie de rezervă sau restaurare preferinţe şi permisiuni.</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="select_backup_file">Selectează fișierul de backup</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="backup_in_progress">Backup în curs…</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="restore_in_progress">Se restaurează…</string>
+  <plurals name="backup_restore_processed_prefs">
+    <item quantity="one">Preferințele %1$d au fost procesate</item>
+    <item quantity="few">Preferințele %1$d au fost procesate</item>
+    <item quantity="other">Preferințele %1$d au fost procesate</item>
+  </plurals>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- Crash Report -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 30 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- Progress -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- AdvancedSettings Activity -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- Privileges -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- Feedback -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- Links -->
+  <!-- DaemonHandler -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- Daemon callback errors  -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- Daemon binder calls errors -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- LogcatSvc -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- AdbConnectSvc -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- DaemonRcvSvc -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- PackageActivity menu items -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- MainActivity Dialogs -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- PackageActivity -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- FilterSettingsActivity -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- SettingsActivity -->
+  <!-- PreferenceActivity menu items -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- AboutActivity -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- ActivityNotFoundException -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- Notification Channels -->
+  <!-- Notification permission -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- HelpActivity -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- Locale -->
+</resources>

@@ -23,7 +23,8 @@
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_adv_settings_perm_refs_cat_title">Referencias de Permisos</string>
   <!-- CHAR LIMIT: 20 -->
-  <!-- CHAR LIMIT: 20 -->
+  <string name="pref_adv_settings_unique_ref_app_op_uid_mode_title"></string>
+  <string name="pref_adv_settings_unique_ref_app_op_uid_mode_summary"></string>
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->
   <string name="pref_adv_settings_root_cat_title">Root</string>

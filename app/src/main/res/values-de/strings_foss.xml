@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <!-- Character Limits:
+       Button: 10
+       Toast/SnackBar: 20
+       Preference title: 20
+       Single line text: 30
+       Progress: 15
+       Dialog/notification title: 15
+       Menu item: 15 -->
+  <!-- General strings -->
+  <!-- CHAR LIMIT: 10 -->
+  <string name="yes">Ja</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="no">Nein</string>
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="app_name">Permission Manager X</string>
+  <!-- MainActivity Navigation Drawer / menu items -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="settings_menu_item">Einstellungen</string>
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="donate_menu_item">Spenden</string>
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="about_menu_item">Über</string>
+  <!-- CHAR LIMIT: 15 -->
+  <!-- MainActivity strings -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- Crash Report -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="crash_report">Absturzbericht</string>
+  <!-- CHAR LIMIT: 30 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- Progress -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- AdvancedSettings Activity -->
+  <string name="daemon_uid_system">System</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- Privileges -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- Feedback -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="purchase_and_rate_the_app">Du kannst uns helfen, die App zu verbessern, indem du eine kleine Spende tätigst oder eine gute App-Bewertung schreibst, damit wir deine Bedürfnisse besser erfüllen können.</string>
+  <string name="ask_to_provide_feedback">Tut uns leid, das zu hohen. Du kannst dabei helfen, die App zu verbessern, indem du uns per E-Mail oder Telegram kontaktierst, sodass wir deine Bedürfnisse besser erfüllen können.</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="thank_you">Vielen Dank</string>
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- Links -->
+  <!-- DaemonHandler -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- Daemon callback errors  -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- Daemon binder calls errors -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- LogcatSvc -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- AdbConnectSvc -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- DaemonRcvSvc -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- PackageActivity menu items -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- MainActivity Dialogs -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- PackageActivity -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="system">system</string>
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- FilterSettingsActivity -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- CHAR LIMIT: 10 -->
+  <!-- SettingsActivity -->
+  <string name="locale_system">System</string>
+  <string name="locale_en">Englisch</string>
+  <string name="locale_el">Griechisch</string>
+  <!-- PreferenceActivity menu items -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- AboutActivity -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="source">Quellcode</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="email">E-Mail</string>
+  <!-- CHAR LIMIT: 15 -->
+  <string name="telegram_group">Telegram-Gruppe</string>
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="app_rating">Bewerte mich</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 15 -->
+  <string name="update">Update</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="update_summary">Nach Updates suchen</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 10 -->
+  <string name="download">Herunterladen</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="privacy_policy">Datenschutzerklärung</string>
+  <string name="translations">Übersetzungen</string>
+  <string name="translations_summary">Möchtest du die App in deiner Sprache sehen?</string>
+  <string name="share">Teilen</string>
+  <string name="share_summary">Teile die App mit anderen</string>
+  <string name="share_text">Schau dir diese tolle App an! %1$s</string>
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- ActivityNotFoundException -->
+  <!-- CHAR LIMIT: 20 -->
+  <string name="no_email_app_installed">Keine E-Mail-App</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="no_browser_installed">"Kein Webbrowser"</string>
+  <!-- CHAR LIMIT: 20 -->
+  <!-- Notification Channels -->
+  <string name="channel_crash_report">Absturzbericht</string>
+  <!-- Notification permission -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- HelpActivity -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 15 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- CHAR LIMIT: 20 -->
+  <!-- Locale -->
+</resources>
