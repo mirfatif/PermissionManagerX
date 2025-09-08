@@ -127,15 +127,9 @@
   <string name="submit_report_button">Отправить отчет</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="submitting_report_button">Отправка…</string>
-  <!-- CHAR LIMIT: 10 -->
-  <string name="send_email_button">Отправить email</string>
-  <string name="send_crash_report_email_desc">* Вы можете отправить электронное письмо, если отправка не работает.</string>
   <string name="reading_crash_log_file">Чтение лога сбоя…</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="submit_crash_report_failed_toast">Не удалось отправить отчёт о сбое</string>
-  <!-- CHAR LIMIT: 15 -->
-  <string name="delete_crash_report_file_title">Удалить файл</string>
-  <string name="crash_file_delete_confirmation">Если отчет о сбое отправлен, удалить старый файл на устройстве?</string>
   <!-- Progress -->
   <!-- CHAR LIMIT: 20 -->
   <string name="prog_msg_checking_privs">Проверка привилегий…</string>

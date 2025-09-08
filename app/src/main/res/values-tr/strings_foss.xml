@@ -103,15 +103,9 @@
   <string name="submit_report_button">Raporu Gönder</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="submitting_report_button">Gönderiliyor…</string>
-  <!-- CHAR LIMIT: 10 -->
-  <string name="send_email_button">E-posta Gönder</string>
-  <string name="send_crash_report_email_desc">* Gönderme işlemi çalışmıyorsa e-posta gönderebilirsiniz.</string>
   <string name="reading_crash_log_file">Çökme günlük dosyası okunuyor…</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="submit_crash_report_failed_toast">Çökme raporu gönderilemedi</string>
-  <!-- CHAR LIMIT: 15 -->
-  <string name="delete_crash_report_file_title">Dosyayı sil</string>
-  <string name="crash_file_delete_confirmation">Çökme raporu gönderildiğinde, cihazdaki eski dosya silinsin mi?</string>
   <!-- Progress -->
   <!-- CHAR LIMIT: 20 -->
   <!-- CHAR LIMIT: 20 -->

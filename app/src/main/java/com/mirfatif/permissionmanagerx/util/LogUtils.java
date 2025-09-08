@@ -1,5 +1,7 @@
 package com.mirfatif.permissionmanagerx.util;
 
+import static com.mirfatif.permissionmanagerx.util.ApiUtils.getString;
+
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -24,7 +26,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.MessageDigest;
 import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
 
 public class LogUtils {
@@ -76,23 +77,27 @@ public class LogUtils {
     }
 
     final String CHANNEL_ID = "channel_crash_report";
-    final String CHANNEL_NAME = ApiUtils.getString(R.string.channel_crash_report);
+    final String CHANNEL_NAME = getString(R.string.channel_crash_report);
     final int UNIQUE_ID = ApiUtils.getInt(R.integer.channel_crash_report);
+
+    var isOfficialRelease = isOfficialRelease();
+    var msg =
+        getString(
+            isOfficialRelease ? R.string.ask_to_report_crash_small : R.string.inform_report_crash);
+    var bigMsg = isOfficialRelease ? getString(R.string.ask_to_report_crash) : msg;
 
     NotificationCompat.Builder builder =
         new NotificationCompat.Builder(App.getCxt(), CHANNEL_ID)
             .setSmallIcon(R.drawable.notification_icon)
-            .setContentTitle(ApiUtils.getString(R.string.crash_report))
-            .setContentText(ApiUtils.getString(R.string.ask_to_report_crash_small))
-            .setStyle(
-                new NotificationCompat.BigTextStyle()
-                    .bigText(ApiUtils.getString(R.string.ask_to_report_crash)))
+            .setContentTitle(getString(R.string.crash_report))
+            .setContentText(msg)
+            .setStyle(new NotificationCompat.BigTextStyle().bigText(bigMsg))
             .setColor(UiUtils.getAccentColor())
             .setDefaults(NotificationCompat.DEFAULT_LIGHTS)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true);
 
-    if (isOfficialRelease()) {
+    if (isOfficialRelease) {
       PendingIntent pi =
           PendingIntent.getActivity(
               App.getCxt(),
@@ -100,7 +105,7 @@ public class LogUtils {
               new Intent(App.getCxt(), CrashReportActivityM.class),
               NotifUtils.PI_FLAGS);
 
-      builder.setContentIntent(pi).addAction(0, ApiUtils.getString(R.string.send_report), pi);
+      builder.setContentIntent(pi).addAction(0, getString(R.string.send_report), pi);
     }
 
     NotifUtils.createNotifChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
@@ -173,8 +178,7 @@ public class LogUtils {
       CertificateFactory cf = CertificateFactory.getInstance("X.509");
       MessageDigest md = MessageDigest.getInstance("SHA-256");
       for (Signature sig : signatures) {
-        X509Certificate cert =
-            (X509Certificate) cf.generateCertificate(new ByteArrayInputStream(sig.toByteArray()));
+        var cert = cf.generateCertificate(new ByteArrayInputStream(sig.toByteArray()));
         byte[] digest = md.digest(cert.getEncoded());
         StringBuilder sb = new StringBuilder();
         for (byte b : digest) {

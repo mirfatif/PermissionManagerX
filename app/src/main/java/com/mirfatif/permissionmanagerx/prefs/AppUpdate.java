@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationCompat.Builder;
 import androidx.core.app.NotificationManagerCompat;
@@ -44,7 +45,6 @@ public class AppUpdate {
       return null;
     }
 
-    String updateUrl;
     boolean checkFailed = false;
 
     try {
@@ -65,13 +65,10 @@ public class AppUpdate {
                       && newIsBeta
                       && getBetaSubVersion(newVerStr) > getBetaSubVersion(oldVerStr))))) {
         MyLog.i(TAG, "check", "New update is available: " + oldVerStr + " -> " + newVerStr);
-        updateUrl = getString(R.string.source_url);
       } else if (newVer > oldVer && !oldIsBeta && newIsBeta) {
         MyLog.i(TAG, "check", "New update is available: " + oldVerStr + " -> " + newVerStr);
         if (notify) {
           return null;
-        } else {
-          updateUrl = getString(R.string.source_url);
         }
       } else {
         MyLog.i(TAG, "check", "App is up-to-date: " + oldVerStr + " -> " + newVerStr);
@@ -79,14 +76,14 @@ public class AppUpdate {
       }
 
       if (notify && ApiUtils.hasNotifPerm()) {
-        showNotification(newVerStr, updateUrl);
+        showNotification(newVerStr);
       }
 
-      return new AppUpdateResult(false, newVerStr, updateUrl);
+      return new AppUpdateResult(false, newVerStr);
     } catch (IOException | JSONException | NumberFormatException e) {
       MyLog.e(TAG, "check", e.toString());
       checkFailed = true;
-      return new AppUpdateResult(true, null, null);
+      return new AppUpdateResult(true, null);
     } finally {
       if (notify && !checkFailed) {
         MySettings.INS.setCheckForUpdatesTs(System.currentTimeMillis());
@@ -158,12 +155,12 @@ public class AppUpdate {
     }
   }
 
-  private static void showNotification(String version, String updateUrl) {
+  private static void showNotification(String version) {
     final String CHANNEL_ID = "channel_app_update";
     final String CHANNEL_NAME = getString(R.string.channel_app_update);
     final int UNIQUE_ID = ApiUtils.getInt(R.integer.channel_app_update);
 
-    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(updateUrl));
+    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.source_url)));
     PendingIntent pi =
         PendingIntent.getActivity(App.getCxt(), UNIQUE_ID, intent, NotifUtils.PI_FLAGS);
 
@@ -194,12 +191,11 @@ public class AppUpdate {
   public static class AppUpdateResult {
 
     public final boolean failed;
-    public final String version, updateUrl;
+    @Nullable public final String version;
 
-    private AppUpdateResult(boolean failed, String version, String updateUrl) {
+    private AppUpdateResult(boolean failed, @Nullable String version) {
       this.failed = failed;
       this.version = version;
-      this.updateUrl = updateUrl;
     }
   }
 }

@@ -18,6 +18,8 @@
   <string name="ok_button">OK</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="cancel_button">Cancel</string>
+  <!-- CHAR LIMIT: 10 -->
+  <string name="retry_button">Retry</string>
   <string name="open_drawer">Open</string>
   <string name="close_drawer">Close</string>
   <!-- CHAR LIMIT: 10 -->
@@ -125,7 +127,11 @@
   <string name="crash_report">Crash Report</string>
   <!-- CHAR LIMIT: 30 -->
   <string name="ask_to_report_crash_small">Send crash report to the developer</string>
+  <string name="inform_report_crash">Sorry, a component of the app had a problem and crashed.</string>
   <string name="ask_to_report_crash">Sorry, a component of the app had a problem and crashed. Send the log file to the developer so that the bug can be fixed.</string>
+  <!-- CHAR LIMIT: 20 -->
+  <string name="checking_for_app_update">Checking for app update…</string>
+  <string name="check_for_updates_failed_long">Checking for app update failed. Are you connected to the internet?</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="send_report">Send Report</string>
   <!-- CHAR LIMIT: 20 -->
@@ -136,15 +142,9 @@
   <string name="submit_report_button">Submit Report</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="submitting_report_button">Submitting…</string>
-  <!-- CHAR LIMIT: 10 -->
-  <string name="send_email_button">Send Email</string>
-  <string name="send_crash_report_email_desc">* You can send email if submitting not works.</string>
   <string name="reading_crash_log_file">Reading crash log file…</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="submit_crash_report_failed_toast">Failed to submit crash report</string>
-  <!-- CHAR LIMIT: 15 -->
-  <string name="delete_crash_report_file_title">Delete file</string>
-  <string name="crash_file_delete_confirmation">If the crash report is sent, delete the old file on device?</string>
 
   <!-- Progress -->
   <string name="crowdin_comment_break_strings_5" translatable="false">Crowdin comment break</string>

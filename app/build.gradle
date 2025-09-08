@@ -26,13 +26,6 @@ android {
         }
     }
 
-    applicationVariants.configureEach { variant ->
-        def mf = variant.mergedFlavor
-        String lfp = variant.applicationId + '.LogFileProvider'
-        mf.addManifestPlaceholders(LOG_FILE_PROVIDER: lfp)
-        variant.buildConfigField 'String', 'LOG_FILE_PROVIDER', '"' + lfp + '"'
-    }
-
     packagingOptions {
         jniLibs {
             // Due to android:extractNativeLibs set to 'true' in AndroidManifest.

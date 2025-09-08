@@ -84,16 +84,6 @@
         android:value="This service is explicitly started by the user through commandline to notify the app that ADB has been enabled." />
     </service>
 
-    <provider
-      android:name="androidx.core.content.FileProvider"
-      android:authorities="${LOG_FILE_PROVIDER}"
-      android:exported="false"
-      android:grantUriPermissions="true">
-      <meta-data
-        android:name="android.support.FILE_PROVIDER_PATHS"
-        android:resource="@xml/file_paths" />
-    </provider>
-
   </application>
 
 </manifest>

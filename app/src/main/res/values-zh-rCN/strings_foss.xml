@@ -107,14 +107,9 @@
   <string name="submit_report_button">提交报告</string>
   <!-- CHAR LIMIT: 10 -->
   <string name="submitting_report_button">提交中…</string>
-  <!-- CHAR LIMIT: 10 -->
-  <string name="send_email_button">发送电子邮件</string>
-  <string name="send_crash_report_email_desc">* 如果提交不成功，您可以发送电子邮件。</string>
   <string name="reading_crash_log_file">正在读取崩溃日志文件…</string>
   <!-- CHAR LIMIT: 20 -->
   <string name="submit_crash_report_failed_toast">提交崩溃报告失败</string>
-  <!-- CHAR LIMIT: 15 -->
-  <string name="delete_crash_report_file_title">删除文件</string>
   <!-- Progress -->
   <!-- CHAR LIMIT: 20 -->
   <string name="prog_msg_checking_privs">正在检查权限…</string>

@@ -27,6 +27,7 @@
       android:progressTint="?attr/accentColor" />
 
     <TextView
+      android:id="@+id/prog_msg"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
@@ -66,49 +67,21 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
+    <FrameLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_weight="0"
-      android:orientation="vertical">
+      android:layout_height="wrap_content">
 
-      <com.mirfatif.permissionmanagerx.fwk.MyLinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-          android:id="@+id/send_email_button"
-          style="@style/Widget.AppCompat.Button.Borderless"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center_vertical"
-          android:text="@string/send_email_button"
-          android:textColor="?attr/accentColor" />
-
-        <View
-          android:layout_width="0dp"
-          android:layout_height="0dp"
-          android:layout_weight="1" />
-
-        <Button
-          android:id="@+id/submit_button"
-          style="@style/Widget.AppCompat.Button.Borderless"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center_vertical"
-          android:text="@string/submit_report_button"
-          android:textColor="@color/active_disabled" />
-
-      </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
-
-      <TextView
-        android:id="@+id/email_desc"
+      <Button
+        android:id="@+id/submit_button"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/send_crash_report_email_desc" />
+        android:layout_gravity="center_vertical|end"
+        android:enabled="false"
+        android:text="@string/submit_report_button"
+        android:textColor="@color/active_disabled" />
 
-    </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
+    </FrameLayout>
 
   </com.mirfatif.permissionmanagerx.fwk.MyLinearLayout>
 

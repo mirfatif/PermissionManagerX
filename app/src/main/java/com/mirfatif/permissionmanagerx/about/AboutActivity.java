@@ -17,6 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts.CreateDocument;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
+import androidx.fragment.app.FragmentActivity;
 import com.mirfatif.permissionmanagerx.BuildConfig;
 import com.mirfatif.permissionmanagerx.R;
 import com.mirfatif.permissionmanagerx.app.App;
@@ -167,34 +168,30 @@ public class AboutActivity {
   }
 
   private void handleAppUpdateResult(AppUpdate.AppUpdateResult res) {
-    int msg;
-    boolean showDialog = false;
-
     if (res == null) {
-      msg = R.string.app_is_up_to_date;
+      UiUtils.showToast(R.string.app_is_up_to_date);
     } else if (res.failed) {
-      msg = R.string.check_for_updates_failed;
+      UiUtils.showToast(R.string.check_for_updates_failed);
     } else {
-      msg = R.string.new_version_available;
-      showDialog = true;
+      showAppUpdateDialog(mA, res.version, true);
     }
 
     mB.checkUpdateSummary.setText(R.string.update_summary);
-
-    if (showDialog) {
-      Builder builder =
-          new Builder(mA)
-              .setTitle(R.string.update)
-              .setMessage(getString(msg) + ": " + res.version)
-              .setPositiveButton(
-                  R.string.download, (d, w) -> ApiUtils.openWebUrl(mA, res.updateUrl))
-              .setNegativeButton(R.string.cancel_button, null);
-      AlertDialogFragment.show(mA, builder.create(), "APP_UPDATE");
-    } else {
-      UiUtils.showToast(msg);
-    }
-
     mCheckForUpdateInProgress = false;
+  }
+
+  public static void showAppUpdateDialog(FragmentActivity act, String version, boolean showCancel) {
+    Builder builder =
+        new Builder(act)
+            .setTitle(R.string.update)
+            .setMessage(getString(R.string.new_version_available) + ": " + version)
+            .setPositiveButton(
+                R.string.download,
+                (d, w) -> ApiUtils.openWebUrl(act, getString(R.string.source_url)));
+    if (showCancel) {
+      builder.setNegativeButton(R.string.cancel_button, null);
+    }
+    AlertDialogFragment.show(act, builder.create(), "APP_UPDATE");
   }
 
   public static void sendShareIntent(Activity activity) {
