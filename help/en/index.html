@@ -485,20 +485,19 @@
             <hr class="dim" />
 
             <p id="faq1" class="high-bottom"><b>Why PMX requires root or ADB access?</b></p>
-            <p>Android won't allow a normal user app to change other apps' manifest or AppOp permissions, even its own. Only reading AppOps without root or ADB is possible provided that hidden APIs are not blacklisted on your device, which is <a href="https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces">very unlikely</a> on Android 9+.</p>
-            <p>That's why we run a separate process with high privileges to circumvent the restrictions.</p>
-            <p>By default, the background process (daemon) is run with ADB UID (<span class="code">2000</span>) or (if rooted) System UID (<span class="code">1000</span>). On rooted devices UID can be changed in <b><i>Advanced Settings</i></b>.</p>
+            <p>Android intentionally restricts apps from modifying other apps' manifests or AppOps permissions (and in many cases from changing some of their own). These platform safeguards protect user privacy and system integrity.</p>
+            <p>To perform actions that require elevated privileges, PMX uses a small, separate privileged helper rather than trying to do everything from the normal app process. By default that helper runs under the ADB UID (2000) when started via ADB, or under the System UID (1000) on rooted devices. If you have a rooted device, you can change the helper's UID in <b><i>Advanced Settings</i></b>.</p>
 
             <hr class="dim" />
 
             <p id="faq33" class="high-bottom"><b>My device isn't rooted. How can I use PMX?</b></p>
             <p><a href="#adb_help">Use PMX with ADB</a>. Please do read the note at the start. There might be some limitations on some devices.</p>
 
-            <hr class="dim" />
+            <!-- <hr class="dim" />
 
             <p id="faq4" class="high-bottom"><b>What are hidden APIs?</b></p>
             <p>The core functionality of PMX revolves around <b>Hidden APIs</b>. These are the capabilities required to perform tasks (like granting / revoking permissions) which can only be performed by privileged system apps. So these capabilities aren't available to normal user apps. But PMX uses these capabilities with the help of root or ADB. Usually a user should not be concerned about this.</p>
-            <p>If you are interested in underlying details please read <a href="https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces">here</a>.</p>
+            <p>If you are interested in underlying details please read <a href="https://developer.android.com/distribute/best-practices/develop/restrictions-non-sdk-interfaces">here</a>.</p> -->
 
             <hr class="dim" />
 
