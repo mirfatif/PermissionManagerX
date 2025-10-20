@@ -24,6 +24,8 @@ android {
             applicationIdSuffix '.debug'
             versionNameSuffix '-debug'
         }
+
+        release.postprocessing.obfuscate = false
     }
 
     packagingOptions {

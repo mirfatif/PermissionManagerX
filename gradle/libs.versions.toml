@@ -1,5 +1,5 @@
 [versions]
-android-plugins = "8.12.1"
+android-plugins = "8.12.2"
 android-room = "2.8.0-rc01"
 
 sdk-compile = "36"
@@ -19,7 +19,7 @@ spotless = "7.2.1"
 [libraries]
 plugin-android-application = { module = "com.android.application:com.android.application.gradle.plugin", version.ref = "android-plugins" }
 plugin-android-library = { module = "com.android.library:com.android.library.gradle.plugin", version.ref = "android-plugins" }
-plugin-jetbrains-kotlin-android = { module = "org.jetbrains.kotlin.android:org.jetbrains.kotlin.android.gradle.plugin", version = "2.2.10" }
+plugin-jetbrains-kotlin-android = { module = "org.jetbrains.kotlin.android:org.jetbrains.kotlin.android.gradle.plugin", version = "2.2.20" }
 
 plugin-gradle-versions = { module = "com.github.ben-manes:gradle-versions-plugin", version.ref = "gradle-versions" }
 plugin-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
