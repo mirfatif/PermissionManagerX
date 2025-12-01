@@ -1,0 +1,2027 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="关于 PMX的常见问题解答：为何使用 PMX、 AppOp/manifest 的说明，以及 ADB 针对 Android 权限控制的技巧与故障排除指南。">
+      
+      
+        <meta name="author" content="Irfan Latif">
+      
+      
+        <link rel="canonical" href="https://mirfatif.github.io/PermissionManagerX/help/zh/faqs/">
+      
+      
+        <link rel="prev" href="../versions/">
+      
+      
+      
+        
+          <link rel="alternate" href="../../faqs/" hreflang="en">
+        
+          <link rel="alternate" href="../../de/faqs/" hreflang="de">
+        
+          <link rel="alternate" href="../../es/faqs/" hreflang="es">
+        
+          <link rel="alternate" href="../../fr/faqs/" hreflang="fr">
+        
+          <link rel="alternate" href="../../pt-BR/faqs/" hreflang="pt-BR">
+        
+          <link rel="alternate" href="../../ru/faqs/" hreflang="ru">
+        
+          <link rel="alternate" href="../../ar/faqs/" hreflang="ar">
+        
+          <link rel="alternate" href="./" hreflang="zh">
+        
+      
+      
+      <link rel="icon" href="../../img/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>PMX 常见问题 - Permission Manager X</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#faq36" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../" title="Permission Manager X" class="md-header__button md-logo" aria-label="Permission Manager X" data-md-component="logo">
+      
+  <img src="../../img/logo.webp" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Permission Manager X
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              PMX 常见问题
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="选择当前语言">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../faqs/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../de/faqs/" hreflang="de" class="md-select__link">
+              Deutsch
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../es/faqs/" hreflang="es" class="md-select__link">
+              español
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../fr/faqs/" hreflang="fr" class="md-select__link">
+              français
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../pt-BR/faqs/" hreflang="pt-BR" class="md-select__link">
+              português
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../ru/faqs/" hreflang="ru" class="md-select__link">
+              русский
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../ar/faqs/" hreflang="ar" class="md-select__link">
+              العربية
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="zh" class="md-select__link">
+              中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../" title="Permission Manager X" class="md-nav__button md-logo" aria-label="Permission Manager X" data-md-component="logo">
+      
+  <img src="../../img/logo.webp" alt="logo">
+
+    </a>
+    Permission Manager X
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    什么是权限管理X？
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://mirfatif.github.io/IAnswers/android_appop_manifest_permissions" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    清单权限和 AppOps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../permission-references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    权限引用
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../details/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    用户界面已被解释
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    搜索
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../scheduled-check/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    定期检查
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../permission-watcher/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    权限监控
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../permission-view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    权限视图
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../batch-operations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    批量操作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../whatsrunning-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    与 WhatsRunning 整合
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use-with-adb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    使用 PMX 与 ADB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../versions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PMX 版本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/PermissionManagerX/help/zh/versions/#paid-features" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    付费功能
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PMX 常见问题
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PMX 常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#faq36" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么我需要使用 PMX？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么 PMX 需要 root 权限或 ADB 访问权限？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        设备尚未Root， 如何使用 PMX？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq42" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么 PMX 在最新安卓系统上无法运行或无法正常工作？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq43" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么 PMX 在 OEM 操作系统或自定义 ROMs上无法正常工作？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PMX 如何更改其他应用的权限？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq34" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        在关闭 ADB 、拒绝root权限或卸载 PMX 后，权限设置是否仍保持变更状态？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么不能更改某些权限？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq37" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        我已经更改了权限，但它无法工作。 为什么？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么某些 AppOps 无法更改？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么我在应用列表中看不到某些应用？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么在某些应用中看不到部分权限？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么我在ABC软件包中看不到XYZ（ AppOp）？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        我应该在高级设置中选择哪个特权守护进程 UID ？ 系统还是 ADB？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        在排除过滤器中什么是“无效的权限”？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        在排除过滤器中，“额外的 AppOps”指的是什么？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AppOp 具有哪些不同的模式？我应该使用哪一种？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        “忽略”和“拒绝”模式有何区别？ AppOp
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq41" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么我无法将 AppOp 模式设置为前景？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WAKE_LOCK 权限的作用是什么？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        如何修改 INTERNET 的权限？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq40" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        固定 权限是什么？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        我如何更改系统固定权限、签名/特权权限或框架应用的权限？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        在 AppOp 权限中，"UID模式"指的是什么？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq39" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        我能否通过 PMX控制 Android 的“若应用未被使用则移除权限”功能？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么我总收到大量"Bad ROM"的弹窗？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq19" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ”从列表中隐藏“（长按弹出）功能有何作用？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        是否有包含所有权限及其说明的完整列表？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        如何在工作资料/多用户环境中使用本应用？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PMX 与 XPrivacyLua相比如何？ 可以相互替代吗？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PMX 能否像Bouncer那样在应用关闭时自动撤销权限？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq35" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        安装新应用时是否有通知提示？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq38" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        当安装新应用时， PMX 能否默认取消其权限？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么 PMX 需要互联网权限？
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="为什么 PMX 需要互联网权限？">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#optional-use-of-internet-permission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        可选使用 android.permission.INTERNET 权限
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#on-device-use-of-internet-permission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        本地（设备上）使用 android.permission.INTERNET 权限
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq26" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PMX 对隐私的友好程度如何？ 您是否收集用户数据？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PMX 是否通过 ADB 在网络上监视我？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PMX 是否滥用 root 权限来收集我的数据？
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq29" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        我认为 PMX 毫无用处。 你为什么要开发这个软件？
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://mirfatif.github.io/PermissionManagerX" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    下载
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://mirfatif.github.io/PermissionManagerX/#screenshots" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    屏幕截图
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/PermissionManagerX/help/zh/#rate-review" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    评分/评论/评论/更新/星星
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://mirfatif.github.io/PermissionManagerX/#want-to-reach-us" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    联系我们
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_19" >
+        
+          
+          <label class="md-nav__link" for="__nav_19" id="__nav_19_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    应用程序
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_19_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_19">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    应用程序
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/mirfatif/PermissionManagerX" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    权限管理 X
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/mirfatif/WhatsRunning" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WhatsRuning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/mirfatif/Fyrypt" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fyrypt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/mirfatif/Backopier" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backopier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_20" >
+        
+          
+          <label class="md-nav__link" for="__nav_20" id="__nav_20_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Android 常见问题
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_20_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_20">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Android 常见问题
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://mirfatif.github.io/IAnswers" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_21" >
+        
+          
+          <label class="md-nav__link" for="__nav_21" id="__nav_21_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADB 指南
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_21_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_21">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ADB 指南
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://mirfatif.github.io/adb-guide" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    将应用程序与ADB配对/连接
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>PMX 常见问题</h1>
+
+<h3 id="faq36">为什么我需要使用 PMX？<a class="headerlink" href="#faq36" title="Permanent link">&para;</a></h3>
+<p>因为：</p>
+<ul>
+<li>PMX 将所有分散（或无法获取）的权限相关<strong>信息</strong>和<strong>控制项</strong>整合到单一界面，让您能够以全面便捷的方式查看并管理它们。</li>
+<li>原生Android系统中没有官方工具可用于更改 <strong>AppOps</strong>。 仅部分 <strong>manifest 权限</strong> 会在权限设置中向用户展示。 PMX 以原始形式暴露所有权限。 相关：<a href="https://mirfatif.github.io/IAnswers/android_appop_manifest_permissions">Manifest 权限和 AppOps</a>。</li>
+<li>PMX 让您轻松追踪权限的任何<strong>不必要的更改</strong>。</li>
+<li>通过控制您的设备， PMX 能够帮助您<strong>节省设备资源</strong>（如电池电量和网络带宽），并<strong>保护您的隐私</strong>。 您并非完全受制于应用程序和 ROM 开发者的摆布。 阅读这个 <a href="https://www.buzzfeednews.com/article/nicolenguyen/how-apps-take-your-data-and-sell-it-without-you-even">article</a> 来获得一个想法。</li>
+<li>PMX 能够实时监控权限变更，并在您停止使用应用时自动撤销这些权限。 或者它可以执行 <strong>预定扫描</strong> 的权限。 所以你不必记住一切。</li>
+<li>PMX 让您轻松<strong>备份和恢复已安装应用的权限状态</strong>，从而无需反复调整应用权限。</li>
+</ul>
+<p>另请参阅<a href="../">什么是 PMX</a>？</p>
+<hr />
+<h3 id="faq1">为什么 PMX 需要 root 权限或 ADB 访问权限？<a class="headerlink" href="#faq1" title="Permanent link">&para;</a></h3>
+<p>Android 系统有意限制应用修改其他应用的 manifest 或 AppOps 权限（在许多情况下也限制修改自身部分权限）。 这些平台保护用户隐私和系统完整性。</p>
+<p>为执行需要提升权限的操作， PMX 采用独立的小型特权辅助程序，而非尝试通过常规应用进程完成所有操作。 默认情况下，该辅助程序在通过 ADB 启动时以 ADB 用户标识（<code>2000</code>）运行，而在已获取root权限的设备上则以系统用户标识（<code>1000</code>）运行。 如果你有一个Root设备，你可以在 <em>Advanced Settings</em>中更改助手的 UID。</p>
+<hr />
+<h3 id="faq33">设备尚未Root， 如何使用 PMX？<a class="headerlink" href="#faq33" title="Permanent link">&para;</a></h3>
+<p>使用 <a href="../use-with-adb/">PMX 与 ADB</a>。 请阅读最开始的提示， 某些设备可能有一些限制。</p>
+<hr />
+<h3 id="faq42">为什么 PMX 在最新安卓系统上无法运行或无法正常工作？<a class="headerlink" href="#faq42" title="Permanent link">&para;</a></h3>
+<p>PMX 依赖于Android的隐藏API或非SDK接口，这些接口与标准API不同，未在<a href="https://developer.android.com/">Android开发者</a>上进行文档记录。 所以，在每次新的 Android 版本发布后，我们必须通过 Android 源代码来了解哪些API已经损坏(更改或删除)。</p>
+<p>此外，修复破损的APIs需要时间；有时需要几个星期，有时需要几个月。 而且它不能保证我们总是能够修复损坏的 API。 有时，谷歌目的使我们难以或不可能继续使用隐藏的 API。</p>
+<p>因此，只要最终的AOSP源代码尚未公开发布（在<a href="https://cs.android.com/">代码搜索</a>或<a href="https://android.googlesource.com/">Git仓库</a>上），我们就无法让 PMX 立即在每个新的Android版本（特别是测试阶段）上运行。</p>
+<p>PMX该应用程序在GitHub和Google Play商店的应用描述中注明了其最终支持的Android版本。 当您第一次在不支持的版本上运行应用程序时，它会显示类似于以下的警告：</p>
+<p><img alt="不支持的 Android 版本警告" class="media" src="../../img/unsupported_android_version_warning.webp" /></p>
+<hr />
+<h3 id="faq43">为什么 PMX 在 OEM 操作系统或自定义 ROMs上无法正常工作？<a class="headerlink" href="#faq43" title="Permanent link">&para;</a></h3>
+<p>PMX 依赖于Android的隐藏API或非SDK接口，这些接口与标准API不同，未在<a href="https://developer.android.com/">Android开发者</a>上进行文档记录。 因此我们需要访问您 ROM 的源代码，才能准确了解这些隐藏API的工作原理。</p>
+<p>太好了，AOSP (由Google开发)是开源的。 但如果您的原始设备制造商（OEM）或 ROM 开发者为定制目的对AOSP进行了修改，我们无法确切知晓他们对原生AOSP代码做了哪些改动。 我们在这里非常无能为力。 这个事实在 GitHub 和 Play Store 上的应用程序描述中被说明。 抱歉。</p>
+<hr />
+<h3 id="faq2">PMX 如何更改其他应用的权限？<a class="headerlink" href="#faq2" title="Permanent link">&para;</a></h3>
+<p>PMX 它本身既不能也无法授予或撤销其他应用的权限。 事实上，没有第三方应用程序有权这样做。 它是控制应用权限的 Android 操作系统。 PMX 仅向Android框架发送请求以更改权限状态。 现在完全取决于安卓系统对我们请求的尊重。 并非所有权限都可以更改。 若您无法通过 PMX 修改权限状态，则其他方式也无法实现此操作。</p>
+<hr />
+<h3 id="faq34">在关闭 ADB 、拒绝root权限或卸载 PMX 后，权限设置是否仍保持变更状态？<a class="headerlink" href="#faq34" title="Permanent link">&para;</a></h3>
+<p>PMX 它本身既不能也无法授予或撤销其他应用的权限。 事实上，没有第三方应用程序有权这样做。 它是控制应用权限的 Android 操作系统。 PMX 仅向Android框架发送请求以更改权限状态。</p>
+<p>因此，一旦权限被更改，无论您卸载 PMX 还是撤销其特权，都不会产生任何影响。 除非您或Android系统再次修改，否则该权限将保持在您所修改的状态。</p>
+<hr />
+<h3 id="faq15">为什么不能更改某些权限？<a class="headerlink" href="#faq15" title="Permanent link">&para;</a></h3>
+<p>仅具备危险的<a href="https://developer.android.com/reference/android/R.attr#protectionLevel">保护级别</a> (和其他少数) 的清单权限是可以更改的。 AppOps 不依赖于其他某些 AppOp 可变。 这就是Android的工作方式，我们不能改变其行为。 参见 <a href="https://mirfatif.github.io/IAnswers/android_appop_manifest_permissions">Manifest 权限说明 和 AppOps</a>。</p>
+<p>此外， PMX 文件保护着若干关键框架应用和权限；修改这些内容可能导致设备变砖。 查看<a href="#faq17">相关问题</a>。</p>
+<p>另请参阅<a href="#faq3">为什么某些 AppOps 无法更改？</a></p>
+<p>请注意，从 Android 15 开始，具有 <em>开发</em> 保护级别的系统应用的 manifest 权限将无法撤销。 安卓静默忽略请求。</p>
+<hr />
+<h3 id="faq37">我已经更改了权限，但它无法工作。 为什么？<a class="headerlink" href="#faq37" title="Permanent link">&para;</a></h3>
+<p>成功更改权限后，如果您没有获得所需的结果，即： 它立即还原或在几个小时或几天后恢复，安卓操作系统将被责备。 请查看：</p>
+<ul>
+<li><a href="#faq2"> PMX 如何更改其他应用的权限？</a></li>
+<li><a href="#faq3">为什么某些 AppOps 无法更改？</a></li>
+</ul>
+<p>当您使用应用程序时，安卓系统可能会更改他们的权限。 不幸的是，我们对此无能为力。 <a href="../permission-watcher/">权限监视</a>和<a href="../scheduled-check/">计划的检查者</a>在这方面可能有帮助。</p>
+<hr />
+<h3 id="faq3">为什么某些 AppOps 无法更改？<a class="headerlink" href="#faq3" title="Permanent link">&para;</a></h3>
+<p>有时你会看到“AppOp 模式未更改”。 这意味着Android拒绝了更改 AppOp 模式的请求。 无论您使用何种方法或应用，您都不能更改它。 可能有多种原因。</p>
+<ul>
+<li>
+<p>某些 AppOps 依赖于其对应的 manifest 权限。 因此它们无法独立改变。 例如，若授予 <code>android.permission.READ_CONTACTS</code> manifest 权限，则无法拒绝 <code>READ_CONTACTS</code> AppOp。</p>
+<p>此外，如果应用程序在其 manifest 文件中未请求 manifest 权限，则其 AppOp 权限也无法被授予。 但如果应用程序试图使用它（并被拒绝），它仍可能会出现在应用程序的权限列表中。 <code>SYSTEM_ALERT_WINDOW</code> 就是这样一个例子。</p>
+</li>
+<li>
+<p>某些 AppOps 仅用于兼容性（例如 <code>LEGACY_STORAGE</code>），实际上并不控制任何功能。 如果我们了解工作原理，就会发现授予/撤销这种权限是没有必要的。</p>
+</li>
+<li>
+<p>某些权限无法更改，如果应用程序正在运行或针对旧版本或更新版本的 Android 。</p>
+</li>
+<li>
+<p>某些原始设备制造商（OEM）的 ROMs 在处理 AppOps时会表现异常。 参见<a href="#faq43">为何 PMX 在 OEM 操作系统或自定义 ROMs上无法正常工作？</a></p>
+</li>
+<li>
+<p>许多 AppOps 设备可支持两种模式：包模式和UID模式。 一个可以被更改，而另一个则不能被更改。</p>
+<p>通常，UID AppOps 优先于其对应的包 AppOp 。 在此情况下，包 AppOp 的有效模式与其 UID AppOps的模式相同。 因此，您无法单独修改包 AppOp。</p>
+<p>某些 AppOps 更倾向于设置为包模式，而非UID模式。 但如果它在 UID 模式中设置错误(有命令行工具或其他应用程序)，它就变得无法响应任何更改。 请从右上角菜单执行"重置 AppOps"操作，使其恢复正常。 其他 AppOps 同样如此，它们具有对应的 manifest 权限，该权限包含 <em>AppOp</em> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">保护级别</a>。</p>
+</li>
+</ul>
+<p>事实上，如果我们个别挖掘每个应用和权限（这种情况不实际），就会有更多的解释。 如上所述， PMX 本身不会更改其他应用的权限。 所以，即使由于一些未知原因，安卓系统不会更改权限，或立即还原。 我们没有什么能够强迫它，因为这些都是Android 末端的限制。 相反，我应该说这是Android系统的工作方式。</p>
+<p>关联：</p>
+<ul>
+<li><a href="#faq11"> AppOp 的不同模式有哪些？我该使用哪种模式？</a></li>
+<li><a href="#faq41">为什么我无法将 AppOp 模式设置为前台？</a></li>
+</ul>
+<hr />
+<h3 id="faq6">为什么我在应用列表中看不到某些应用？<a class="headerlink" href="#faq6" title="Permanent link">&para;</a></h3>
+<p>请检查 <strong>Exclusion 过滤器</strong> 。 几乎所有系统应用默认都被排除在外。 您可以排除/包含您想要从 / 到可见列表的任何包。</p>
+<hr />
+<h3 id="faq7">为什么在某些应用中看不到部分权限？<a class="headerlink" href="#faq7" title="Permanent link">&para;</a></h3>
+<p>请检查 <strong>Exclusion 过滤器</strong> 。 不可更改的权限被排除在可见列表的默认值之外。</p>
+<hr />
+<h3 id="faq8">为什么我在ABC软件包中看不到XYZ（ AppOp）？<a class="headerlink" href="#faq8" title="Permanent link">&para;</a></h3>
+<p>请检查<strong>排除过滤器</strong>，如果 XYZ AppOp 被排除在可见列表之外。 或者ABC 软件包可能没有使用 XYZ 操作。 您无需考虑这些。</p>
+<p>但若需查看所有应用的XYZ（ AppOp ）设置，请前往<strong>排除过滤器 → 附加 AppOps，永不排除</strong>，并在列表中勾选XYZ（ AppOp）。</p>
+<p>例如，在搜索框中输入 <code>_CLIPBOARD</code> （同时勾选<strong>深度搜索</strong>框），即可获取所有曾使用（或尝试使用） <code>READ_CLIPBOARD</code> 或 <code>WRITE_CLIPBOARD</code> 权限的应用。 时间戳也会显示（但并非所有 AppOps都会显示）。</p>
+<p>因此，若您关注的应用未出现在搜索结果中，请在上述<strong>排除过滤器</strong>列表中同时勾选 AppOps。</p>
+<hr />
+<h3 id="faq5">我应该在高级设置中选择哪个特权守护进程 UID ？ 系统还是 ADB？<a class="headerlink" href="#faq5" title="Permanent link">&para;</a></h3>
+<p>这仅在您使用root权限时才重要，或者您的设备上运行的 <code>adbd</code> 程序具有root权限（最终用户设备并非如此）。</p>
+<p>建议使用<strong>System</strong>（UID <code>1000</code>），因为它比 <strong>ADB</strong>（UID <code>2000</code>）具有更高的权限。 例如， 只有当系统运行时才能更改"<em>系统固定</em>"的权限。</p>
+<hr />
+<h3 id="faq9">在排除过滤器中什么是“无效的权限”？<a class="headerlink" href="#faq9" title="Permanent link">&para;</a></h3>
+<p>如果某个应用请求了 manifest 权限，但该权限既未在 Android 框架中声明（提供），也未在任何已安装的软件包中声明（提供），则该权限属于无效权限。 例如，如果您的设备上未安装Play商店应用， <code>com.android.vending.BILLING</code> 将是一个无效的权限。</p>
+<hr />
+<h3 id="faq10">在排除过滤器中，“额外的 AppOps”指的是什么？<a class="headerlink" href="#faq10" title="Permanent link">&para;</a></h3>
+<p>并非所有 AppOps 都用于所有已安装的应用程序。 但你可以强制要求任何应用使用 AppOp。 选定附加功能 AppOps 出现在所有应用的权限列表中，以便您进行设置。</p>
+<hr />
+<h3 id="faq11">AppOp 具有哪些不同的模式？我应该使用哪一种？<a class="headerlink" href="#faq11" title="Permanent link">&para;</a></h3>
+<p>通常你应该允许或忽略。 或者您可能只想在应用程序在 <strong>Foreground</strong> (仅在 Android 9 及以上版本上)时允许操作。 <strong>Deny</strong> 是强烈版本的 Ignore 可能导致请求应用崩溃。 <strong>默认值</strong>是系统的默认行为，其具体表现因不同的 AppOps而异。</p>
+<p>请注意，并非所有 AppOp 模式都能在每个 AppOp 上为每个应用程序设置。 例如在近期发布的Android版本中， <code>CAMERA</code> 和 <code>MICROPHONE</code> 仅允许用户应用在前台使用（即使设置模式为<strong>允许</strong>）。 同样地，某些 AppOps 永远无法设置为 <strong>前景</strong> 模式。</p>
+<p>相关阅读：<a href="#faq3">为什么某些 AppOps 无法更改？</a></p>
+<p>官方文档：<a href="https://developer.android.com/reference/android/app/AppOpsManager#access-control">AppOpsManager</a>。</p>
+<hr />
+<h3 id="faq12">“忽略”和“拒绝”模式有何区别？ AppOp<a class="headerlink" href="#faq12" title="Permanent link">&para;</a></h3>
+<p><a href="https://developer.android.com/reference/android/app/AppOpsManager#MODE_IGNORED">Ignore</a> 默默失败。当 <a href="https://developer.android.com/reference/android/app/AppOpsManager#MODE_ERRORED">Deny</a> 向应用程序丢失错误，应用程序可能不会预料到并且可能崩溃。 您通常应该使用 <strong>Ignore</strong>。</p>
+<hr />
+<h3 id="faq41">为什么我无法将 AppOp 模式设置为前景？<a class="headerlink" href="#faq41" title="Permanent link">&para;</a></h3>
+<p>无法为所有 AppOps设置前景模式。 即使设置完毕，也可能无法提供预期结果。</p>
+<p>关联：</p>
+<ul>
+<li><a href="#faq11"> AppOp 的不同模式有哪些？我该使用哪种模式？</a></li>
+<li><a href="#faq3">为什么某些 AppOps 无法更改？</a></li>
+</ul>
+<p>请注意，权限模式"仅在使用应用时允许"并不总是将 AppOp 模式设置为"前台"：</p>
+<p><img alt="前台和一次性权限模式" class="media" src="../../img/fg_and_one_time_perm_modes.webp" /></p>
+<p>通常我们只看到 manifest 权限的两种状态：已授予和已撤销。 但安卓使用 <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/content/pm/PackageManager.java#4655">flags</a> 将这两个状态分割成多个子州。 对于某些权限，相同的现象被用来实现"只有当应用程序可见时才授予"行为。 AppOp 在此情况下，权限未被使用。</p>
+<p>更多详情请参阅官方文档中的<a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/permission/Permissions.md#background-access">后台访问</a>和<a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/app/AppOps.md#foreground">前台访问</a>。</p>
+<p>为简化起见， PMX 目前不监控权限标志。 但将来可能会添加一个选项来跟踪对权限标志的更改，即使授予/撤销模式保持不变。</p>
+<hr />
+<h3 id="faq14"><code>WAKE_LOCK</code> 权限的作用是什么？<a class="headerlink" href="#faq14" title="Permanent link">&para;</a></h3>
+<p>应用程序按住唤醒屏幕以保持设备唤醒，即不进入<a href="https://developer.android.com/training/monitoring-device-state/doze-standby#understand_doze">Doze模式</a>。</p>
+<hr />
+<h3 id="faq16">如何修改 <code>INTERNET</code> 的权限？<a class="headerlink" href="#faq16" title="Permanent link">&para;</a></h3>
+<p>Android 并不允许修改所有权限，例如具有 <strong>普通</strong> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">保护级别</a> 的权限（例如 <code>INTERNET</code>），或具有 <strong>固定</strong> 标记或 <strong>签名</strong> 保护级别的权限（通常是系统或框架应用）。 参见 <a href="https://mirfatif.github.io/IAnswers/android_appop_manifest_permissions">Manifest 权限说明 和 AppOps</a>。</p>
+<p>但是如果您已经根目录， <a href="https://github.com/mirfatif/Fyrypt">Fyrypt</a>可以让您非常强大地控制您设备上发生的网络活动。</p>
+<hr />
+<h3 id="faq40">固定 权限是什么？<a class="headerlink" href="#faq40" title="Permanent link">&para;</a></h3>
+<p><strong>系统固定</strong>权限由原始设备制造商（OEM）或 ROM 开发者授予预装应用。 它们不是要改变的。 但如果您的设备已获取root权限， PMX 可修改系统固定权限。</p>
+<p><strong>政策解决</strong> 权限被管理设备的 IT 管理员授予(或拒绝)。 它们是不能改变的。</p>
+<p><strong>用户修复</strong> 权限由用户固定下来。 如果用户多次拒绝了一个应用请求的某个权限，系统会将该权限标记为用户固定，应用再次请求时不会询问用户是否授予该权限。 用户可以随意更改这种固定的权限。</p>
+<hr />
+<h3 id="faq17">我如何更改系统固定权限、签名/特权权限或框架应用的权限？<a class="headerlink" href="#faq17" title="Permanent link">&para;</a></h3>
+<p>若您的设备已获取root权限，在付费版本中可通过<strong>高级设置</strong>中的<strong>允许关键更改</strong>选项，对带有<strong>系统固定</strong>标记、保护级别为<strong>签名</strong>或<strong>特权</strong>的权限，以及框架应用的权限进行修改。 但它不建议与系统和框架应用一起玩。 你可能会让设备变砖。</p>
+<hr />
+<h3 id="faq18">在 AppOp 权限中，"UID模式"指的是什么？<a class="headerlink" href="#faq18" title="Permanent link">&para;</a></h3>
+<p>这是 AppOp 权限的一种模式，表示修改此 AppOp 时，也会影响其他已安装的应用（具有相同UID的应用）。 参见 <a href="https://developer.android.com/guide/topics/manifest/manifest-element#uid"><code>sharedUserId</code></a>。</p>
+<p>请注意，对于许多 AppOps，UID 模式优先于包模式。</p>
+<hr />
+<h3 id="faq39">我能否通过 PMX控制 Android 的“若应用未被使用则移除权限”功能？<a class="headerlink" href="#faq39" title="Permanent link">&para;</a></h3>
+<p>确定. 此功能自<a href="https://developer.android.com/about/versions/11/privacy/permissions#auto-reset">Android 11</a>起可用。 在某些设备上，该功能也被标记为 <strong>"暂停未使用的应用程序活动"</strong>。</p>
+<p><img alt="自动删除未使用的权限" class="media" src="../../img/remove_unused_perms.webp" /></p>
+<p>要将此选项从 PMX：</p>
+<ol>
+<li>前往<strong>排除过滤器 → 附加 AppOps 列表</strong>，并勾选 <code>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</code>。</li>
+<li>返回主屏幕后，在顶部的搜索栏中输入 <code>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</code>。 请确保在搜索设置中启用深度搜索。</li>
+<li>设置模式<strong>允许</strong> 或 <strong>忽略</strong> 为您想要的应用。</li>
+</ol>
+<p>您也可以使用 <a href="../permission-view/">权限视图</a> 或 <a href="../batch-operations/">批处理操作</a> 来代替步骤 2 和 3 。 下面是使用批处理操作的指南：</p>
+<video class="media" controls muted>
+    <source src="../../img/remove_unused_perms.mp4" type="video/webm">
+    Remove permissions if app isn't used
+</video>
+
+<hr />
+<h3 id="faq31">为什么我总收到大量"Bad ROM"的弹窗？<a class="headerlink" href="#faq31" title="Permanent link">&para;</a></h3>
+<p>设备制造商会对AOSP 代码 (由Google开发) 做出大量更改。 ROMs 因此，在某些定制/OEM设备上， AppOps 框架会返回出乎意料的结果，而 PMX 无法理解这些结果。 您可以忽略这些警告，但部分功能可能失效。</p>
+<p>您可以在<strong>设置</strong> → <strong>常规设置</strong> → <strong>禁用不良 ROM 通知</strong>中关闭这些弹窗。</p>
+<p>参见<a href="#faq43">为何 PMX 在 OEM 操作系统或自定义 ROMs上无法正常工作？</a></p>
+<hr />
+<h3 id="faq19">”从列表中隐藏“（长按弹出）功能有何作用？<a class="headerlink" href="#faq19" title="Permanent link">&para;</a></h3>
+<p>他们都是在可见列表中隐藏应用程序或权限。 如果您不想更改任何应用的权限，您可以隐藏它。 它将不会出现在任何应用中。 若要取消隐藏，请再次到 <strong>排除过滤器</strong> 设置。</p>
+<p>同样，如果您不关心某个应用的权限，您可以将其排除在可见列表之外。</p>
+<p><img alt="从可见列表中隐藏应用" class="media" src="../../img/hide_app_from_list.webp" /> <img alt="从可见列表中隐藏权限" class="media" src="../../img/hide_perm_from_list.webp" /></p>
+<hr />
+<h3 id="faq21">是否有包含所有权限及其说明的完整列表？<a class="headerlink" href="#faq21" title="Permanent link">&para;</a></h3>
+<p>没有完整的权限列表描述，至少据我所知是这样。 PMX 专业版会显示常见权限 manifest 和 AppOp 的简要说明。</p>
+<p>有第三方资源，比如Izzy的<a href="https://android.izzysoft.de/applists.php?topic=perms">这个</a>。 Android的<a href="https://developer.android.com/">官方开发者网站</a>和<a href="https://cs.android.com/">源代码</a>也是很好的学习来源。</p>
+<p>每次新的 Android 版本都会添加一些新的权限，有些权限会过时。 此外，并非所有权限都需要由每个用户处理。</p>
+<hr />
+<h3 id="faq22">如何在工作资料/多用户环境中使用本应用？<a class="headerlink" href="#faq22" title="Permanent link">&para;</a></h3>
+<p>专业版支持工作配置文件和多用户功能。 从下拉菜单中选择一个用户。</p>
+<p><img alt="多用户菜单" class="media" src="../../img/multi_users.webp" /></p>
+<hr />
+<h3 id="faq24">PMX 与 XPrivacyLua相比如何？ 可以相互替代吗？<a class="headerlink" href="#faq24" title="Permanent link">&para;</a></h3>
+<p>PMX 并非旨在取代，而是旨在补充诸如 XPrivacyLua之类的项目。 它们的设计目标不同。</p>
+<p>XPrivacyLua 通过钩入内部API来破解Android的标准功能，使用 Xposed 将部分Android库替换为破解版本。 因此，我们得到了额外的功能，如向应用程序提供虚假数据，并得到与权限有关的事件的通知，而这是我们无法通过任何其他正常手段知道的。</p>
+<p>PMX 另一方面，它并非作为框架模块而设计。 它可以方便地访问某些正常应用无法使用的特权API。 它不会以任何方式修改Android系统的标准功能。 PMX 执行的多数任务也可通过命令行完成，但部分操作除外，例如修改系统固定权限。</p>
+<p>获取root权限和 Xposed 是使用 XPrivacyLua的两个严格要求。 PMX 不需要这两者中的任何一个。 这两样东西对许多设备来说都是不可用的，或者由于所涉及的技术困难、保修失效、SafetyNet失效和其他问题，许多用户不考虑将其作为一种选择。</p>
+<p>更多说明 <a href="https://github.com/mirfatif/PermissionManagerX/issues/9">here</a> 和 <a href="https://github.com/mirfatif/PermissionManagerX/issues/56#issuecomment-2790539931">here</a>.</p>
+<hr />
+<h3 id="faq32">PMX 能否像Bouncer那样在应用关闭时自动撤销权限？<a class="headerlink" href="#faq32" title="Permanent link">&para;</a></h3>
+<p>确定. 参见<a href="../permission-watcher/">权限监视器</a>和<a href="../scheduled-check/">定时检查</a>。 但它不使用 Android 的 <strong>Accessibility</strong> 功能来代表用户在屏幕上进行taps / 点击(尽管这是一个好的功能，无需额外设置)。 PMX 依赖于root或 ADB 权限。 因此它能实现的功能远超辅助功能所能提供的（详见<a href="../">什么是 PMX？</a>）。</p>
+<p>若您使用的是 ADB且非 root 用户，<strong>权限监视器</strong> 在某些设备上可能无法正常工作。 请参阅<a href="../use-with-adb/#limitations-of-adb"> ADB的限制</a>。</p>
+<hr />
+<h3 id="faq35">安装新应用时是否有通知提示？<a class="headerlink" href="#faq35" title="Permanent link">&para;</a></h3>
+<p>确定. 请参阅<a href="../permission-watcher/">权限Watcher</a>。</p>
+<p>因为Android 8无法让后台(无法运行) 应用获得新安装应用的通知。 所以我们必须运行一个前台服务(持续通知) 才能接收此事件。 或者，您可以考虑使用 <a href="../scheduled-check/">计划的检查</a> 来保留物品。</p>
+<hr />
+<h3 id="faq38">当安装新应用时， PMX 能否默认取消其权限？<a class="headerlink" href="#faq38" title="Permanent link">&para;</a></h3>
+<p>确定. 但是没有权限删除。 所有可撤销的 manifest 权限均已撤销，并将保持撤销状态，除非用户明确授予这些权限。 就 AppOps 而言，其中许多文件至少在应用程序使用一次后才会出现，例如 <code>VIBRATE</code> 和 <code>READ_CLIPBOARD</code>。 正如所指出的，许多其他用户（例如 <code>READ_CONTACTS</code>）的 manifest 权限已被降级。 因此在应用安装时无法预知应移除哪个 AppOps。</p>
+<p>但当安装新应用时会显示通知（若使用<a href="../permission-watcher/">权限监视器</a>)，用户可逐项设置权限或<a href="../batch-operations/#permission-profiles">应用配置文件</a>。</p>
+<hr />
+<h3 id="faq25">为什么 PMX 需要互联网权限？<a class="headerlink" href="#faq25" title="Permanent link">&para;</a></h3>
+<p><a href="https://mirfatif.github.io/mirfatif/getpro">独立的专业版</a> 需要互联网连接以验证许可证。 其他 <a href="../versions/">versions</a>可以完全离线工作。 虽然Play Store应用程序需要互联网连接才能验证许可证。</p>
+<h4 id="optional-use-of-internet-permission">可选使用 <code>android.permission.INTERNET</code> 权限<a class="headerlink" href="#optional-use-of-internet-permission" title="Permanent link">&para;</a></h4>
+<ul>
+<li>检查更新. 您可以在应用设置中禁用此功能。</li>
+</ul>
+<h4 id="on-device-use-of-internet-permission">本地（设备上）使用 <code>android.permission.INTERNET</code> 权限<a class="headerlink" href="#on-device-use-of-internet-permission" title="Permanent link">&para;</a></h4>
+<p>Android 系统不允许应用在未获得 <a href="https://developer.android.com/reference/android/Manifest.permission#INTERNET"><code>INTERNET</code></a> 权限的情况下创建网络套接字，即使这些套接字仅用于本地操作而非互联网连接。 PMX 本地（设备内）连接（即在 <code>127.0.0.1</code>创建 <code>localhost</code> 套接字的能力）有两种用途，用于进程间通信（IPC）：</p>
+<ul>
+<li>PMX 启动一个具有 root / ADB 特权的后台进程，并通过网络套接字与该进程通信。 在最初握手后，这两个进程开始在绑定器上交谈。 我们做这件事没有更好的方法，因为安卓系统也不允许应用程序通过 UNIX 域套接字。</li>
+<li>如果您的设备未获取root权限，且您使用 <a href="../use-with-adb/">PMX 配合 ADB</a>，则连接 <code>adbd</code> 需要互联网权限。 <a href="#faq27">PMX 是否通过 ADB 在网络上监视我？</a></li>
+</ul>
+<p>因此，如果应用无法创建或使用本地网络套接字，它将失败。 若需阻止 PMX 访问互联网，必须确保该应用仍能通过 <a href="https://superuser.com/questions/263142">用于进程间通信的回环接口</a> 与设备上的进程进行通信。 这种情况通常出现在基于 <code>iptables</code>的防火墙（如<a href="https://github.com/mirfatif/Fyrypt">Fyrypt</a>）以及基于VPN的防火墙（如NetGuard）中。 但某些 ROMs 内置了禁止网络访问的功能：</p>
+<p><img alt="允许网络访问设置" class="media" src="../../img/allow_network_access.webp" /></p>
+<p>这不仅会阻止应用使用互联网，而且也会禁用其为 IPC 创建循环套接口的能力。 因此，如果拒绝此权限，<strong>PMX 将无法获得root/ ADB 权限</strong>。</p>
+<hr />
+<h3 id="faq26">PMX 对隐私的友好程度如何？ 您是否收集用户数据？<a class="headerlink" href="#faq26" title="Permanent link">&para;</a></h3>
+<p>否. 我们不收集您的数据。 永远没有。 连一个字节都没有。 PMX 拥有开源版本。 我们坚信用户应当充分了解并知晓为何使用 PMX。 我们尊重你的隐私，所以从未收集过任何数据，甚至是崩溃日志。 您可能还想查看我们的<a href="https://mirfatif.github.io/PermissionManagerX/PRIVACY">隐私政策</a>。</p>
+<hr />
+<h3 id="faq27">PMX 是否通过 ADB 在网络上监视我？<a class="headerlink" href="#faq27" title="Permanent link">&para;</a></h3>
+<p>否.</p>
+<p>PMX 通过本地主机（<code>127.0.0.1</code>）与 <code>adbd</code> 进程进行通信。 但无法仅在本地主机监听 <code>adbd</code> ，而不监听其他网络接口（因为 ADB 本应在外部PC上使用）。 您完全可以阻止 <code>adbd</code> 监听外部IP地址，如果可以的话。 PMX 仍可正常运行，且无需向外部暴露任何端口。</p>
+<p>此外，您还可以在<strong>高级设置</strong>中将 <code>5555</code> 端口更改为任意数字。 它不是硬编码的。</p>
+<p>此外， ADB 由于 Android 4.2 旨在通过 <strong>RSA 密钥认证</strong>（最强大的认证机制之一）进行保护。 因此，即使该设备可通过互联网访问（<a href="https://android.stackexchange.com/a/205807/218526">这种情况极不可能发生</a>），在未经身份验证的情况下，任何人都无法建立 ADB 连接。</p>
+<p>无论你想以何种方式验证这些说法。 我们来这里是为了向你提供技术援助。</p>
+<hr />
+<h3 id="faq28">PMX 是否滥用 root 权限来收集我的数据？<a class="headerlink" href="#faq28" title="Permanent link">&para;</a></h3>
+<p>我们坚信<a href="https://wikipedia.org/wiki/Principle_of_least_privilege">最小权限原则</a>。 但由于Android操作系统的限制性， PMX 在没有高权限的情况下无法运行。 我们能提供的是，如果你是一个技术熟练的人，我们可以教你如何使应用程序难以连接到网络，即使有root权限。</p>
+<hr />
+<h3 id="faq29">我认为 PMX 毫无用处。 你为什么要开发这个软件？<a class="headerlink" href="#faq29" title="Permanent link">&para;</a></h3>
+<p>我们尊重你的意见。 PMX 并非适合所有人（正因如此，它多年未打磨发布，因为我们深知受众极其有限）。 它只适用于一些对自己的隐私和设备控制格外关注的熟谙科技的灵魂。 大多数的手机用户只是任他们的设备制造商和应用程序开发人员所把持。 他们不知道他们做了些什么和他们的数据。 多数人更看重便利而非隐私。 这很好。</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+        
+          
+          <a href="../versions/" class="md-footer__link md-footer__link--prev" aria-label="上一页: PMX 版本">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              <div class="md-ellipsis">
+                PMX 版本
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://crowdin.com/project/pmx-help" target="_blank" rel="noopener" title="Translation" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant.progress", "navigation.sections", "navigation.expand", "navigation.path", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "toc.integrate"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="../../javascript/extra.js"></script>
+      
+    
+  </body>
+</html>

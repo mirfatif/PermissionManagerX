@@ -1,0 +1,2027 @@
+
+<!doctype html>
+<html lang="ar" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="أسئلة متكررة حول PMX: لماذا استخدم PMXو AppOp/manifest تفسيرات و ADB نصائح و استكشاف الأخطاء في التحكم في أذونات الأندرويد.">
+      
+      
+        <meta name="author" content="Irfan Latif">
+      
+      
+        <link rel="canonical" href="https://mirfatif.github.io/PermissionManagerX/help/ar/faqs/">
+      
+      
+        <link rel="prev" href="../versions/">
+      
+      
+      
+        
+          <link rel="alternate" href="../../faqs/" hreflang="en">
+        
+          <link rel="alternate" href="../../de/faqs/" hreflang="de">
+        
+          <link rel="alternate" href="../../es/faqs/" hreflang="es">
+        
+          <link rel="alternate" href="../../fr/faqs/" hreflang="fr">
+        
+          <link rel="alternate" href="../../pt-BR/faqs/" hreflang="pt-BR">
+        
+          <link rel="alternate" href="../../ru/faqs/" hreflang="ru">
+        
+          <link rel="alternate" href="./" hreflang="ar">
+        
+          <link rel="alternate" href="../../zh/faqs/" hreflang="zh">
+        
+      
+      
+      <link rel="icon" href="../../img/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>أسئلة PMX المتكررة - Permission Manager X</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="rtl" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#faq36" class="md-skip">
+          انتقل إلى المحتوى
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="عنوان العارضة">
+    <a href="../" title="Permission Manager X" class="md-header__button md-logo" aria-label="Permission Manager X" data-md-component="logo">
+      
+  <img src="../../img/logo.webp" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Permission Manager X
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              أسئلة PMX المتكررة
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="إختر اللغة">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../faqs/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../de/faqs/" hreflang="de" class="md-select__link">
+              Deutsch
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../es/faqs/" hreflang="es" class="md-select__link">
+              español
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../fr/faqs/" hreflang="fr" class="md-select__link">
+              français
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../pt-BR/faqs/" hreflang="pt-BR" class="md-select__link">
+              português
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../ru/faqs/" hreflang="ru" class="md-select__link">
+              русский
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="ar" class="md-select__link">
+              العربية
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../zh/faqs/" hreflang="zh" class="md-select__link">
+              中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="بحث" placeholder="بحث" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="إبحث">
+        
+        <button type="reset" class="md-search__icon md-icon" title="مسح كلي" aria-label="مسح كلي" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            بدء البحث
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="تصفح" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../" title="Permission Manager X" class="md-nav__button md-logo" aria-label="Permission Manager X" data-md-component="logo">
+      
+  <img src="../../img/logo.webp" alt="logo">
+
+    </a>
+    Permission Manager X
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ما هو PMX؟
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://mirfatif.github.io/IAnswers/android_appop_manifest_permissions" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    أذونات البيان والتطبيقات
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../permission-references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    مراجع الصلاحيات
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../details/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    تم شرح واجهة المستخدم
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    بحث
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../scheduled-check/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    الفحص المجدول
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../permission-watcher/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    مراقب الأذونات
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../permission-view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    عرض الإذن
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../batch-operations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    عمليات الدفعات
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../whatsrunning-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    التكامل مع WhatsRunning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use-with-adb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    استخدام PMX مع ADB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../versions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    إصدارات PMX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/PermissionManagerX/help/ar/versions/#paid-features" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ميزات مدفوعة
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    أسئلة PMX المتكررة
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    أسئلة PMX المتكررة
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="جدول المحتويات">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      جدول المحتويات
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#faq36" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        لماذا أحتاج إلى استخدام PMX؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        لماذا يتطلب PMX وصولاً إلى الجذر أو ADB ؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        جهازي غير متجذر. كيف يمكنني استخدام PMX؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq42" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        لماذا لا يعمل PMX أو يعمل بشكل صحيح على أحدث أندرويد؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq43" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        لماذا لا يعمل PMX بشكل صحيح على أنظمة تشغيل OEM أو ROMs المخصصة؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        كيف يغير PMX أذونات التطبيقات الأخرى؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq34" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        هل تبقى الأذونات متغيرة بعد إيقاف تشغيل ADB ، أو تم رفض الجذر، أو تم إلغاء تثبيت PMX؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        لماذا لا يمكنني تغيير أذونات XYZ؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq37" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        لقد غيرت إذنًا لكن ذلك لا يعمل. لماذا؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        لماذا لا يمكن تغيير بعض AppOps؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        لماذا لا أرى تطبيق XYZ في قائمة الحزم؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        لماذا لا أرى إذن XYZ في حزمة ABC ؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        لماذا لا أرى XYZ AppOp في حزمة ABC ؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ما الذي يجب أن أختره لمعرف دايمون المميز في الإعدادات المتقدمة؟ النظام أو ADB؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ما هي "الأذونات غير صالحة" في فلاتر الاستبعاد؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ما هي "إضافية" AppOpsفي فلاتر الاستبعاد؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ما هي أنماط AppOp المختلفة وأيها يجب علي استخدامه؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ما الفرق بين وضعي "تجاهل" و"رفض" AppOp؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq41" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        لماذا لا يمكنني تعيين وضع AppOp إلى المقدمة؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ما هي وظيفة إذن WAKE_LOCK ؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        كيف يمكنني تغيير أذونات INTERNET؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq40" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ما هي الصلاحيات الثابتة؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        كيف يمكنني تغيير أذونات النظام الثابتة أو أذونات التوقيع/الامتيازات أو أذونات تطبيقات إطار العمل؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ما هو "وضع UID" في أذونات AppOp؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq39" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        هل يمكنني التحكم في ميزة أندرويد "إزالة أذونات إذا لم يستخدم التطبيق" من PMX؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        لماذا تظهر لي الكثير من النوافذ المنبثقة "Bad ROM"؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq19" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ما الذي تفعله أزرار "إخفاء من القائمة" (عند الضغط لمدة طويلة)؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        هل هناك قائمة كاملة بجميع الأذونات متاحة مع الشرح؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        كيفية استخدام التطبيق في الملف الشخصي للعمل / بيئة تعدد المستخدمين؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        كيف يقارن PMX بـ XPrivacyLua؟ هل يمكن أن يحل أحدهما محل الآخر؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        هل يمكن أن يقوم PMX بإزالة الأذونات تلقائياً عند إغلاق التطبيق، كما تفعل Bouncer؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq35" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        هل يمكنني الحصول على إشعار عندما يتم تثبيت تطبيق جديد؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq38" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        عند تثبيت تطبيق جديد، هل يمكن لـ PMX إلغاء أذوناته بشكل افتراضي؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        لماذا يحتاج تطبيق PMX إلى إذن الإنترنت؟
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="لماذا يحتاج تطبيق PMX إلى إذن الإنترنت؟">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#optional-use-of-internet-permission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        الاستخدام الاختياري للإذن android.permission.INTERNET
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#on-device-use-of-internet-permission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        الاستخدام المحلي (على الجهاز) للإذن android.permission.INTERNET
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq26" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        كم هو صديق للخصوصية PMX؟ هل تجمع بيانات المستخدمين؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        هل يقوم موقع PMX بالتجسس عليّ باستخدام ADB عبر الشبكة؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        هل يقوم PMX بإساءة استخدام امتيازات الجذر لجمع بياناتي؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq29" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        أعتقد أن PMX عديم الفائدة. لماذا تم إنشاؤها؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://mirfatif.github.io/PermissionManagerX" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    التنزيلات
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://mirfatif.github.io/PermissionManagerX/#screenshots" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    لقطات الشاشة
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/PermissionManagerX/help/ar/#rate-review" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    التقييمات / المراجعات / التعليقات / التصويتات / النجوم
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://mirfatif.github.io/PermissionManagerX/#want-to-reach-us" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    اتصل بنا
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_19" >
+        
+          
+          <label class="md-nav__link" for="__nav_19" id="__nav_19_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    التطبيقات
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_19_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_19">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    التطبيقات
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/mirfatif/PermissionManagerX" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    مدير الصلاحيّات X
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/mirfatif/WhatsRunning" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WhatsRunning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/mirfatif/Fyrypt" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fyrypt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/mirfatif/Backopier" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backopier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_20" >
+        
+          
+          <label class="md-nav__link" for="__nav_20" id="__nav_20_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    أسئلة أندرويد الشائعة
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_20_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_20">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    أسئلة أندرويد الشائعة
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://mirfatif.github.io/IAnswers" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    الأسئلة المتكررة
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_21" >
+        
+          
+          <label class="md-nav__link" for="__nav_21" id="__nav_21_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    دليل ADB
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_21_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_21">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    دليل ADB
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://mirfatif.github.io/adb-guide" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    إقران/ربط التطبيق بـ ADB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>أسئلة PMX المتكررة</h1>
+
+<h3 id="faq36">لماذا أحتاج إلى استخدام PMX؟<a class="headerlink" href="#faq36" title="Permanent link">&para;</a></h3>
+<p>لأن:</p>
+<ul>
+<li>يوفر PMX جميع المعلومات المتفرقة (أو غير المتاحة) المتصلة بالأذونات <strong>المعلومات</strong> و <strong>التحكم</strong> على شاشة واحدة بحيث يمكنك مشاهدتها والتحكم فيها بطريقة شاملة وملائمة.</li>
+<li>لا توجد أداة رسمية متاحة في المخزن أندرويد لتغيير <strong>AppOps</strong>. فقط مجموعة فرعية من <strong>أذونات manifest</strong> معرضة للمستخدم في إعدادات الأذونات. PMX يكشف جميع الأذونات في شكل خام. ذات الصلة: <a href="https://mirfatif.github.io/IAnswers/android_appop_manifest_permissions">Manifest الأذونات و AppOps</a>.</li>
+<li>PMX يجعل من السهل عليك تتبع أي <strong>تغييرات غير مرغوب فيها</strong> إلى الأذونات.</li>
+<li>يتيح لك PMX التحكم على جهازك <strong>حفظ موارد الجهاز</strong> مثل البطارية وعرض النطاق الترددي للشبكة، و <strong>حماية خصوصيتك</strong>. أنت لست متروك بالكامل لرحمة التطبيق والمطورين ROM. اقرأ هذا <a href="https://www.buzzfeednews.com/article/nicolenguyen/how-apps-take-your-data-and-sell-it-without-you-even">article</a> للحصول على فكرة.</li>
+<li>PMX يمكنه <strong>مراقبة تغييرات الأذونات</strong> في الوقت الحقيقي، وعودتها تلقائيًا عند التوقف عن استخدام التطبيق. أو يمكنه إجراء <strong>مسح مجدول</strong> من الأذونات. لذا لا يتوجب عليك أن تتذكر الأشياء.</li>
+<li>PMX يجعل من السهل لك <strong>النسخ الاحتياطي واستعادة الأذونات</strong> حالة التطبيقات المثبتة حتى لا تضطر إلى تعديل أذونات التطبيق مرة تلو الأخرى.</li>
+</ul>
+<p>يرجى أيضا الاطلاع على <a href="../">ما هو PMX</a>؟</p>
+<hr />
+<h3 id="faq1">لماذا يتطلب PMX وصولاً إلى الجذر أو ADB ؟<a class="headerlink" href="#faq1" title="Permanent link">&para;</a></h3>
+<p>يقوم أندرويد عن عمد بتقييد التطبيقات من تعديل أذونات التطبيقات الأخرى manifest أو AppOps (وفي كثير من الحالات من تغيير بعض منها الخاص). وتحمي ضمانات المنصة هذه خصوصية المستعملين وسلامتهم للنظام.</p>
+<p>لتنفيذ الإجراءات التي تتطلب امتيازات مرتفعة، يستخدم PMX مساعداً صغيراً ومتميزاً منفصلاً بدلاً من محاولة فعل كل شيء من عملية التطبيق العادية. بشكل افتراضي أن المساعد يعمل تحت ADB UID (<code>2000</code>) عند بدء تشغيله عبر ADB، أو تحت اسم UID النظام (<code>1000</code>) على الأجهزة ذات الجذر. إذا كان لديك جهاز جذر ، فيمكنك تغيير معرف المستخدم الخاص بالمساعد في <em>إعدادات متقدمة</em>.</p>
+<hr />
+<h3 id="faq33">جهازي غير متجذر. كيف يمكنني استخدام PMX؟<a class="headerlink" href="#faq33" title="Permanent link">&para;</a></h3>
+<p>استخدم <a href="../use-with-adb/">PMX مع ADB</a>. يرجى قراءة الملاحظة في البداية. وقد تكون هناك بعض القيود على بعض الأجهزة.</p>
+<hr />
+<h3 id="faq42">لماذا لا يعمل PMX أو يعمل بشكل صحيح على أحدث أندرويد؟<a class="headerlink" href="#faq42" title="Permanent link">&para;</a></h3>
+<p>PMX يعتمد على واجهات برمجة التطبيقات المخفية في Android أو واجهات غير SDK غير موثقة (على <a href="https://developer.android.com/">Android Developers</a>) على عكس واجهات برمجة التطبيقات القياسية. إذاً مع كل إصدار جديد للأندرويد، يجب أن نمر عبر رمز مصدر Android لمعرفة أي واجهات برمجة التطبيقات التي كسرت (تغيرت أو أزيل).</p>
+<p>كما أن إصلاح واجهات برمجة التطبيقات المعطلة يستغرق وقتًا طويلاً؛ أحيانًا أسابيع، وأحيانًا شهورًا. وليس مضمونا أننا سنكون دائما قادرين على إصلاح API المكسورة. في بعض الأحيان، تعمد Google جعل استمرار استخدامنا للواجهات البرمجية للتطبيقات (APIs) المخفية أمراً صعباً أو مستحيلاً.</p>
+<p>لذلك ليس من الممكن لنا أن نجعل PMX يعمل على الفور على كل إصدار جديد من أندرويد (خاصة في مرحلة بيتا) طالما أن رمز المصدر النهائي AOSP لم يتم نشره علنا (على <a href="https://cs.android.com/">البحث في التعليمات البرمجية</a> أو <a href="https://android.googlesource.com/">مستودع Git Reposy</a>).</p>
+<p>نسخة أندرويد الأخيرة المدعومة من PMXمذكورة في وصف التطبيق على GitHub و Play Store. عند تشغيل التطبيق على إصدار غير مدعوم لأول مرة، يظهر تحذيرا كهذا:</p>
+<p><img alt="تحذير نسخة الأندرويد غير معتمدة" class="media" src="../../img/unsupported_android_version_warning.webp" /></p>
+<hr />
+<h3 id="faq43">لماذا لا يعمل PMX بشكل صحيح على أنظمة تشغيل OEM أو ROMs المخصصة؟<a class="headerlink" href="#faq43" title="Permanent link">&para;</a></h3>
+<p>PMX يعتمد على واجهات برمجة التطبيقات المخفية في Android أو واجهات غير SDK غير موثقة (على <a href="https://developer.android.com/">Android Developers</a>) على عكس واجهات برمجة التطبيقات القياسية. لذا نحن بحاجة إلى الوصول إلى شفرة المصدر الخاصة بك ROM لمعرفة بالضبط كيف تعمل واجهات برمجة التطبيقات المخفية.</p>
+<p>حسناً، AOSP (الذي تطوره جوجل) مفتوح المصدر. ولكن إذا قام مطورك OEM أو ROM بإدخال بعض التغييرات على AOSP لغرض التخصيص، ليس لدينا طريقة لمعرفة ما هي التغييرات التي أدخلوها على رمز AOSP المخزن. نحن عاجزون عن العمل هنا. وهذه الحقيقة مذكورة في وصف التطبيق على GitHub و Play Store. عذراً.</p>
+<hr />
+<h3 id="faq2">كيف يغير PMX أذونات التطبيقات الأخرى؟<a class="headerlink" href="#faq2" title="Permanent link">&para;</a></h3>
+<p>PMX نفسه لا يمكن ولا يمكن منح أو إلغاء أذونات التطبيقات الأخرى. في الواقع لا يوجد تطبيق طرف ثالث مميز للقيام بذلك. هو نظام تشغيل Android الذي يتحكم في أذونات التطبيقات. PMX يرسل فقط طلبًا إلى إطار عمل Android لتغيير حالة الإذن. الآن يتوقف الأمر كليا على أندرويد إلى أي مدى يلبي طلبنا. ليست كل الأذونات قابلة للتغيير. وإذا لم تتمكن من تغيير حالة الصلاحية باستخدام PMX، لن تتمكن من تغييرها بأي طريقة أخرى أيضا.</p>
+<hr />
+<h3 id="faq34">هل تبقى الأذونات متغيرة بعد إيقاف تشغيل ADB ، أو تم رفض الجذر، أو تم إلغاء تثبيت PMX؟<a class="headerlink" href="#faq34" title="Permanent link">&para;</a></h3>
+<p>PMX نفسه لا يمكن ولا يمكن منح أو إلغاء أذونات التطبيقات الأخرى. في الواقع لا يوجد تطبيق طرف ثالث مميز للقيام بذلك. هو نظام تشغيل Android الذي يتحكم في أذونات التطبيقات. PMX يرسل فقط طلبًا إلى إطار عمل Android لتغيير حالة الإذن.</p>
+<p>لذلك بمجرد تغيير الإذن، لن يكون هناك فرق إذا قمت بإلغاء تثبيت PMX أو إسقاط امتيازاته. يبقى الإذن في أي حالة كانت، ما لم يتم تغييره مرة أخرى من قبلك أو من قبل نظام التشغيل.</p>
+<hr />
+<h3 id="faq15">لماذا لا يمكنني تغيير أذونات XYZ؟<a class="headerlink" href="#faq15" title="Permanent link">&para;</a></h3>
+<p>أذونات البيان مع <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">مستوى الحماية</a> الخطير فقط (و بضعة أخرى) قابلة للتغيير. AppOps لا تعتمد على بعض العوامل الأخرى AppOp قابلة للتغيير. هكذا يعمل أندرويد، لا يمكننا تغيير السلوك. انظر <a href="https://mirfatif.github.io/IAnswers/android_appop_manifest_permissions">Manifest الأذونات و AppOps</a>.</p>
+<p>بالإضافة إلى ذلك، يحمي PMX بعض التطبيقات والأذونات الإطارية الحرجة؛ وقد يؤدي تغييرها إلى طوب الجهاز. انظر <a href="#faq17">السؤال ذي الصلة</a>.</p>
+<p>انظر أيضا <a href="#faq3">لماذا لا يمكن تغيير بعض AppOps ؟</a></p>
+<p>لاحظ أنه بدءًا من Android 15، لا يمكن إلغاء أذونات manifest لتطبيقات النظام ذات مستوى الحماية <em>Development</em>. أندرويد يتجاهل الطلب بصمت.</p>
+<hr />
+<h3 id="faq37">لقد غيرت إذنًا لكن ذلك لا يعمل. لماذا؟<a class="headerlink" href="#faq37" title="Permanent link">&para;</a></h3>
+<p>بعد تغيير الإذن بنجاح، إذا لم تحصل على النتائج المطلوبة، أي إنها تعود مباشرة أو بعد بضع ساعات أو أيام، إنه نظام تشغيل أندرويد ليلقى عليه اللوم. رجاءً أرا:</p>
+<ul>
+<li><a href="#faq2">كيف يغير PMX أذونات التطبيقات الأخرى؟</a></li>
+<li><a href="#faq3">لماذا لا يمكن تغيير بعض AppOps ؟</a></li>
+</ul>
+<p>عند استخدام التطبيقات، قد يغير أندرويد أذوناته. ولسوء الطالع، ليس لدينا طريقة لمنع هذا. <a href="../permission-watcher/">مراقب الأذونات</a> و <a href="../scheduled-check/">المدقق المجدول</a> قد يساعد في هذا الصدد.</p>
+<hr />
+<h3 id="faq3">لماذا لا يمكن تغيير بعض AppOps؟<a class="headerlink" href="#faq3" title="Permanent link">&para;</a></h3>
+<p>في بعض الأحيان تظهر عبارة "AppOp mode not changed" (لم يتم تغيير وضع الترجمة). وهذا يعني أن أندرويد رفض طلب تغيير الوضع AppOp. لا يمكنك تغييرها بغض النظر عن الطريقة أو التطبيق الذي تستخدمه. ويمكن أن تكون هناك أسباب محتملة متعددة.</p>
+<ul>
+<li>
+<p>يعتمد بعض AppOps على أذونات manifest المقابلة. لذلك لا يمكن تغييرها بشكل مستقل. على سبيل المثال، قد لا تكون قادراً على رفض <code>READ_CONTACTS</code> AppOp إذا تم منح الإذن <code>android.permission.READ_CONTACTS</code> manifest.</p>
+<p>أيضًا إذا لم يطلب التطبيق الإذن manifest في ملفه manifest ، لا يمكن أيضا منح الإذن AppOp. ولكن قد تظهر في قائمة إذن التطبيق إذا حاول التطبيق استخدامها (وتم رفضها). <code>SYSTEM_ALERT_WINDOW</code> هو أحد هذه الأمثلة.</p>
+</li>
+<li>
+<p>بعض AppOps يستخدم فقط من قبل أندرويد للتوافق (على سبيل المثال <code>LEGACY_STORAGE</code>) ولا يتحكم في أي شيء. إذا استكشفنا عملهم الأساسي فإنه يكشف أن منح/إلغاء هذه الأذونات لا معنى لها.</p>
+</li>
+<li>
+<p>لا يمكن تغيير بعض الأذونات إذا كان التطبيق قيد التشغيل أو يستهدف إصدار أندرويد قديم أو أحدث.</p>
+</li>
+<li>
+<p>بعض OEM ROMs تصرف غريب عندما يتعلق الأمر بـ AppOps. انظر <a href="#faq43">لماذا لا يعمل PMX بشكل صحيح على أنظمة تشغيل OEM أو ROMs?</a></p>
+</li>
+<li>
+<p>يمكن أن يحتوي العديد من AppOps على وضوعين: وضع الحزمة ووضع UID. من الممكن أن يتغير أحدهما بينما الآخر لا يمكن أن يكون كذلك.</p>
+<p>عادة ما يكون UID AppOps له الأسبقية على حزمة AppOp نظرائه. في هذه الحالة، الوضع الفعال للحزمة AppOp هو نفس الوضع الخاص ب UID AppOps الخاص بها. لذلك لا يمكنك تغيير الحزمة AppOp وحدها.</p>
+<p>بعض AppOps يفضل أن يتم تعيينه في وضع الحزمة، وليس وضع UID. لكن إذا تم تعيينه خطأ في وضع UID (مع أداة الأوامر أو بواسطة تطبيق آخر)، فإنه يصبح غير مستجيب لأي تغييرات. قم بإعادة تعيين AppOpsمن القائمة اليمنى العليا لجعلها تعمل مرة أخرى. هذه هي الحالة أيضا مع AppOps الأخرى التي لديها إذن مناظر من manifest مع <em>AppOp</em> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">مستوى الحماية</a>.</p>
+</li>
+</ul>
+<p>في الواقع هناك المزيد من التفسيرات إذا قمنا بحفر كل تطبيق وإذن فردي (والذي لا يبدو عملياً). كما ذكر أعلاه، لا يغير PMX أذونات التطبيقات الأخرى بمفرده. حتى لو كان لسبب غير معروف لا يغير أندرويد إذن, أو يعيدها على الفور، لا يوجد شيء يمكننا فعله لإجباره لأن هذه هي القيود في نهاية اندرويد. بدلاً من ذلك، يجب أن أقول هذه هي الطريقة التي يعمل بها أندرويد.</p>
+<p>ذات الصلة:</p>
+<ul>
+<li><a href="#faq11">ما هي أنماط AppOp المختلفة وأيها يجب علي استخدامه؟</a></li>
+<li><a href="#faq41">لماذا لا يمكنني تعيين وضع AppOp إلى المقدمة؟</a></li>
+</ul>
+<hr />
+<h3 id="faq6">لماذا لا أرى تطبيق XYZ في قائمة الحزم؟<a class="headerlink" href="#faq6" title="Permanent link">&para;</a></h3>
+<p>الرجاء التحقق من <strong>مرشحات الاستبعاد</strong>. يتم استبعاد جميع حزم Android القياسية تقريبًا بشكل افتراضي. يمكنك استبعاد / إدراج أي حزمة تريدها من / إلى قائمة مرئية.</p>
+<hr />
+<h3 id="faq7">لماذا لا أرى إذن XYZ في حزمة ABC ؟<a class="headerlink" href="#faq7" title="Permanent link">&para;</a></h3>
+<p>الرجاء التحقق من <strong>مرشحات الاستبعاد</strong>. الأذونات التي لا يمكن تغييرها مستبعدة من القائمة المرئية الافتراضية.</p>
+<hr />
+<h3 id="faq8">لماذا لا أرى XYZ AppOp في حزمة ABC ؟<a class="headerlink" href="#faq8" title="Permanent link">&para;</a></h3>
+<p>الرجاء التحقق من <strong>مرشحات الاستبعاد</strong> إذا كان XYZ AppOp مستبعداً من القائمة المرئية. أو قد لا تستخدم حزمة ABC عملية XYZ. لست بحاجة إلى أن تكون قلقا حيال هذا.</p>
+<p>ولكن إذا كنت ترغب في رؤية XYZ AppOp لجميع التطبيقات، انتقل إلى <strong>مرشحات الاستبعاد → Extra AppOps، لم تستبعد</strong> و تحقق من XYZ AppOp في القائمة.</p>
+<p>على سبيل المثال، كتابة <code>_CLIPBOARD</code> في مربع البحث (مع <strong>البحث العميق</strong> المربع) وستحصل على جميع التطبيقات التي استخدمت (أو حاولت استخدام) <code>READ_CLIPBOARD</code> أو أذونات <code>WRITE_CLIPBOARD</code>. الطوابع الزمنية معروضة أيضا (ولكن ليس لجميع AppOps).</p>
+<p>لذا إذا كان التطبيق الذي تهتم به ليس في نتائج البحث، تحقق من كل من AppOps في قائمة <strong>مرشحات الاستبعاد</strong> المذكورة أعلاه.</p>
+<hr />
+<h3 id="faq5">ما الذي يجب أن أختره لمعرف دايمون المميز في الإعدادات المتقدمة؟ النظام أو ADB؟<a class="headerlink" href="#faq5" title="Permanent link">&para;</a></h3>
+<p>لا يهم إلا إذا كنت تستخدم الجذر، أو <code>adbd</code> على جهازك يعمل مع الجذر (وهذا ليس هو الحال مع أجهزة المستخدم النهائية).</p>
+<p>يفضل استخدام <strong>النظام</strong> (UID <code>1000</code>) لأنه يسمح بامتيازات أكثر من <strong>ADB</strong> (UID <code>2000</code>). على سبيل المثال. تغيير أذونات "<em>System-Fixed</em>" ممكن فقط عند تشغيل النظام.</p>
+<hr />
+<h3 id="faq9">ما هي "الأذونات غير صالحة" في فلاتر الاستبعاد؟<a class="headerlink" href="#faq9" title="Permanent link">&para;</a></h3>
+<p>إذا كان التطبيق يطلب إذن manifest ولكنه غير معلن (توفر) من خلال إطار أندرويد أو أي من الحزم المثبتة، إنه إذن غير صالح. على سبيل المثال، <code>com.android.vending.BILLING</code> هو إذن غير صالح إذا لم يتم تثبيت تطبيق Play Store على جهازك.</p>
+<hr />
+<h3 id="faq10">ما هي "إضافية" AppOpsفي فلاتر الاستبعاد؟<a class="headerlink" href="#faq10" title="Permanent link">&para;</a></h3>
+<p>ليس كل AppOps يستخدم لجميع التطبيقات المثبتة. ولكن يمكنك فرض AppOp على أي تطبيق. تظهر إضافية AppOps المحددة في قوائم أذونات جميع التطبيقات حتى تتمكن من تعيينها.</p>
+<hr />
+<h3 id="faq11">ما هي أنماط AppOp المختلفة وأيها يجب علي استخدامه؟<a class="headerlink" href="#faq11" title="Permanent link">&para;</a></h3>
+<p>عادة يجب عليك السماح أو تجاهله. أو قد ترغب في السماح بالعملية فقط عندما يكون التطبيق في <strong>Foreground</strong> (فقط على Android 9 وما فوق). <strong>رفض</strong> هو النسخة المكثفة من تجاهل والتي قد تؤدي إلى تعطل التطبيق الطالب. <strong>الافتراضي</strong> هو السلوك الافتراضي للنظام الذي يختلف عن AppOps المختلفة.</p>
+<p>يرجى ملاحظة أنه لا يمكن تعيين كل وضع AppOp على كل AppOp لكل تطبيق. على سبيل المثال في إصدارات الأندرويد الأخيرة يسمح لـ <code>CAMERA</code> و <code>MICROPHONE</code> باستخدام تطبيقات المستخدم فقط في المقدمة (حتى إذا كان وضع التعيين <strong>مسموح</strong>). وبالمثل، لا يمكن أبدًا ضبط بعض AppOps على وضع <strong>Foreground</strong>.</p>
+<p>متصل: <a href="#faq3">لماذا لا يمكن تغيير بعض AppOps ؟</a></p>
+<p>الوثائق الرسمية: <a href="https://developer.android.com/reference/android/app/AppOpsManager#access-control">AppOpsManager</a>.</p>
+<hr />
+<h3 id="faq12">ما الفرق بين وضعي "تجاهل" و"رفض" AppOp؟<a class="headerlink" href="#faq12" title="Permanent link">&para;</a></h3>
+<p><a href="https://developer.android.com/reference/android/app/AppOpsManager#MODE_IGNORED">Ignore</a> فشل صامتا بينما <a href="https://developer.android.com/reference/android/app/AppOpsManager#MODE_ERRORED">Deny</a> يعيد خطأ إلى التطبيق الذي قد لا يتوقعه التطبيق وقد يتعطل. يجب أن تستخدم عادة <strong>التجاهل</strong>.</p>
+<hr />
+<h3 id="faq41">لماذا لا يمكنني تعيين وضع AppOp إلى المقدمة؟<a class="headerlink" href="#faq41" title="Permanent link">&para;</a></h3>
+<p>لا يمكن ضبط وضع المقدمة لجميع AppOps. وحتى عندما يتم تحديده فإنه قد لا يعطي نتائج متوقعة.</p>
+<p>ذات الصلة:</p>
+<ul>
+<li><a href="#faq11">ما هي أنماط AppOp المختلفة وأيها يجب علي استخدامه؟</a></li>
+<li><a href="#faq3">لماذا لا يمكن تغيير بعض AppOps ؟</a></li>
+</ul>
+<p>يرجى ملاحظة أن وضع الإذن "السماح فقط أثناء استخدام التطبيق" لا يقوم دائماً بتعيين وضع AppOp إلى "Foreground":</p>
+<p><img alt="المقدمة و وضع الإذن لمرة واحدة" class="media" src="../../img/fg_and_one_time_perm_modes.webp" /></p>
+<p>عادة ما نرى ولايتين فقط للحصول على إذن manifest : تم منحه وإلغائه. لكن أندرويد يستخدم <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/content/pm/PackageManager.java#4655">flags</a> لتقسيم هاتين الولايتين إلى العديد من الولايات الفرعية. لبعض الأذونات يتم استخدام نفس الظاهرة لتحقيق سلوك "منح فقط عندما يكون التطبيق مرئي". لا يستخدم الإذن AppOp في هذه الحالة.</p>
+<p>لمزيد من التفاصيل، راجع الوثائق الرسمية الخاصة بـ <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/permission/Permissions.md#background-access">الوصول في الخلفية</a> و<a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/app/AppOps.md#foreground">الوصول في المقدمة</a>.</p>
+<p>من أجل البساطة، لا يشاهد PMX أعلام الإذن في الوقت الراهن. ولكن في المستقبل يمكن إضافة خيار لتتبع التغييرات إلى أعلام الأذونات حتى لو بقي الوضع الممنوح / الملغاة دون تغيير.</p>
+<hr />
+<h3 id="faq14">ما هي وظيفة إذن <code>WAKE_LOCK</code> ؟<a class="headerlink" href="#faq14" title="Permanent link">&para;</a></h3>
+<p>تقوم التطبيقات بتشغيل قفل الإيقاظ للحفاظ على الجهاز مستيقظ، أي عدم إدخال <a href="https://developer.android.com/training/monitoring-device-state/doze-standby#understand_doze">وضع الإزاحة</a>.</p>
+<hr />
+<h3 id="faq16">كيف يمكنني تغيير أذونات <code>INTERNET</code>؟<a class="headerlink" href="#faq16" title="Permanent link">&para;</a></h3>
+<p>لا يسمح أندرويد بتغيير جميع الأذونات، مثل تلك التي تحتوي على <strong>عادية</strong> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">مستوى الحماية</a> (e. . <code>INTERNET</code>) أو أولئك الذين لديهم مستوى حماية <strong>ثابت</strong> أو <strong>التوقيع</strong> (عادة النظام أو تطبيقات الإطار). انظر <a href="https://mirfatif.github.io/IAnswers/android_appop_manifest_permissions">Manifest الأذونات و AppOps</a>.</p>
+<p>ولكن إذا كان لديك جذر، <a href="https://github.com/mirfatif/Fyrypt">Fyrypt</a> يمنحك سيطرة قوية جدا على نشاط الشبكة الذي يحدث على جهازك.</p>
+<hr />
+<h3 id="faq40">ما هي الصلاحيات الثابتة؟<a class="headerlink" href="#faq40" title="Permanent link">&para;</a></h3>
+<p>يتم منح أذونات <strong>ثابت النظام</strong> للتطبيقات المثبتة مسبقاً من قبل مطوري OEMS أو ROM. وليس المقصود منها أن تتغير. ولكن إذا كان جهازك متجذرا، يمكن لـ PMX تغيير أذونات النظام الثابتة.</p>
+<p>يتم منح (أو رفض) أذونات <strong>السياسة الثابتة</strong> من قبل مشرفي تكنولوجيا المعلومات على الأجهزة المدارة. ولا يمكن تغييرها.</p>
+<p>يتم تثبيت أذونات <strong>المستخدم الثابتة</strong> من قبل المستخدم. إذا رفض المستخدم الإذن عدة مرات عندما يطلب التطبيق ذلك، نظام التشغيل يشير إلى الإذن كمستخدم ثابت ولا يظهر أي طلبات أخرى للمستخدم لمنح الإذن إذا طلب التطبيق نفس الإذن مرة أخرى. يمكن تغيير هذا النوع من الأذونات الثابتة بسهولة كلما يريد المستخدم.</p>
+<hr />
+<h3 id="faq17">كيف يمكنني تغيير أذونات النظام الثابتة أو أذونات التوقيع/الامتيازات أو أذونات تطبيقات إطار العمل؟<a class="headerlink" href="#faq17" title="Permanent link">&para;</a></h3>
+<p>إذا كان جهازك متجرد، في الإصدار المدفوع يمكنك <strong>السماح للتغييرات الحرجة</strong> في <strong>الإعدادات المتقدمة</strong> لإجراء تغييرات على الأذونات مع علم <strong>إصلاح النظام</strong>، مستوى الحماية <strong>التوقيع</strong> أو <strong>الامتياز</strong>، أو تلك الخاصة بالتطبيق الإطاري. لكن ليس من المستحسن أن تلعب مع تطبيقات النظام والإطار. يمكنك طوب جهازك.</p>
+<hr />
+<h3 id="faq18">ما هو "وضع UID" في أذونات AppOp؟<a class="headerlink" href="#faq18" title="Permanent link">&para;</a></h3>
+<p>إنه وضع للإذن AppOp الذي يشير إلى أن تغيير هذا AppOp سيؤثر أيضًا على تطبيقات أخرى (مع نفس UID)، إذا تم تثبيته. انظر <a href="https://developer.android.com/guide/topics/manifest/manifest-element#uid"><code>sharedUserId</code></a>.</p>
+<p>لاحظ أن وضع UID له الأسبقية على وضع الحزمة لكثير من AppOps.</p>
+<hr />
+<h3 id="faq39">هل يمكنني التحكم في ميزة أندرويد "إزالة أذونات إذا لم يستخدم التطبيق" من PMX؟<a class="headerlink" href="#faq39" title="Permanent link">&para;</a></h3>
+<p>نعم. هذه الميزة متوفرة منذ <a href="https://developer.android.com/about/versions/11/privacy/permissions#auto-reset">Android 11</a>. كما أنه يُسمى <strong>"إيقاف نشاط التطبيق إذا لم يتم استخدامه"</strong> في بعض الأجهزة.</p>
+<p><img alt="الإزالة التلقائية للصلاحيات غير المستخدمة" class="media" src="../../img/remove_unused_perms.webp" /></p>
+<p>لتغيير هذا الخيار من PMX:</p>
+<ol>
+<li>انتقل إلى <strong>مرشحات الاستبعاد → قائمة إضافية AppOps</strong> و تحقق من <code>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</code>.</li>
+<li>العودة على الشاشة الرئيسية، اكتب <code>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</code> في شريط البحث العلوي. تأكد من تمكين البحث العميق في إعدادات البحث.</li>
+<li>عيّن الوضع <strong>السماح</strong> أو <strong>التجاهل</strong> لأي تطبيق تريده.</li>
+</ol>
+<p>يمكنك أيضا استخدام <a href="../permission-view/">عرض الإذن</a> أو <a href="../batch-operations/">عمليات الدفعة</a> بدلا من الخطوة 2 و 3. إليك دليل كيفية القيام بذلك باستخدام عمليات الدفعات:</p>
+<video class="media" controls muted>
+    <source src="../../img/remove_unused_perms.mp4" type="video/webm">
+    Remove permissions if app isn't used
+</video>
+
+<hr />
+<h3 id="faq31">لماذا تظهر لي الكثير من النوافذ المنبثقة "Bad ROM"؟<a class="headerlink" href="#faq31" title="Permanent link">&para;</a></h3>
+<p>يقوم OEMS بتغييرات ضخمة في رمز AOSP (والذي تقوم بتطويره جوجل). لذا فإن إطار العمل AppOps على بعض المخصصات / OEM ROMs يعود بنتائج غير متوقعة لا يمكن أن يفهمها PMX. يمكنك تجاهل هذه النوافذ المنبثقة، لكنها تعني أن الوظيفة محدودة بعض الشيء.</p>
+<p>يمكنك إيقاف تشغيل هذه النوافذ المنبثقة في <strong>الإعدادات</strong> → <strong>الإعدادات العامة</strong> → <strong>تعطيل النوافذ السيئة ROM</strong>.</p>
+<p>انظر <a href="#faq43">لماذا لا يعمل PMX بشكل صحيح على أنظمة تشغيل OEM أو ROMs?</a></p>
+<hr />
+<h3 id="faq19">ما الذي تفعله أزرار "إخفاء من القائمة" (عند الضغط لمدة طويلة)؟<a class="headerlink" href="#faq19" title="Permanent link">&para;</a></h3>
+<p>كل منهما يخفي التطبيق أو الإذن من القائمة المرئية. إذا كنت لا تريد تغيير إذن لأي تطبيق، يمكنك إخفائه. ولن يظهر لأي تطبيق. لفك الإخفاء، انتقل مرة أخرى إلى إعدادات <strong>مرشحات الاستبعاد</strong>.</p>
+<p>وبالمثل، يمكنك استبعاد تطبيق من القائمة المرئية إذا كنت لا تشعر بالقلق إزاء أذوناته.</p>
+<p><img alt="إخفاء التطبيق من القائمة الظاهرة" class="media" src="../../img/hide_app_from_list.webp" /> <img alt="إخفاء الإذن من القائمة الظاهرة" class="media" src="../../img/hide_perm_from_list.webp" /></p>
+<hr />
+<h3 id="faq21">هل هناك قائمة كاملة بجميع الأذونات متاحة مع الشرح؟<a class="headerlink" href="#faq21" title="Permanent link">&para;</a></h3>
+<p>لا توجد قائمة كاملة من الأذونات مع الوصف، على الأقل في معرفتي. PMX تُظهر النسخة الاحترافية وصفًا موجزًا للأذونات الشائعة manifest و AppOp .</p>
+<p>هناك مصادر طرف ثالث مثل <a href="https://android.izzysoft.de/applists.php?topic=perms">هذه</a> بواسطة Izzy. أندرويد <a href="https://developer.android.com/">موقع المطور الرسمي</a> و <a href="https://cs.android.com/">مصدر التعليمة البرمجية</a> هي أيضا مصادر جيدة للتعلم.</p>
+<p>مع كل إصدار جديد من أندرويد يتم إضافة بعض الأذونات الجديدة، وبعضها أيضا يصبح عتيقا. كما أنه ليس هناك حاجة إلى أن يقوم كل مستخدم برعاية جميع الأذونات.</p>
+<hr />
+<h3 id="faq22">كيفية استخدام التطبيق في الملف الشخصي للعمل / بيئة تعدد المستخدمين؟<a class="headerlink" href="#faq22" title="Permanent link">&para;</a></h3>
+<p>النسخة الاحترافية تدعم ملفات تعريف العمل ومستخدمين متعددين. حدد مستخدم من القائمة المنسدلة.</p>
+<p><img alt="قائمة المستخدمين المتعددين" class="media" src="../../img/multi_users.webp" /></p>
+<hr />
+<h3 id="faq24">كيف يقارن PMX بـ XPrivacyLua؟ هل يمكن أن يحل أحدهما محل الآخر؟<a class="headerlink" href="#faq24" title="Permanent link">&para;</a></h3>
+<p>PMX ليس مصمماً ليحل محل بل ليكمل المشاريع مثل XPrivacyLua. لديهم أهداف تصميم مختلفة.</p>
+<p>XPrivacyLua يخترق الوظائف القياسية لنظام Android عن طريق ربطه بواجهات برمجة التطبيقات الداخلية، باستخدام Xposed الذي يستبدل بعض مكتبات Android بمكتبات مخترقة. لذلك نحصل على وظيفة إضافية مثل تغذية البيانات المزيفة للتطبيقات والحصول على إشعار بالأحداث ذات الصلة بالإذن التي لا يمكننا أن نعرف عنها بأي وسيلة عادية أخرى.</p>
+<p>PMX من ناحية أخرى ليس مستهدفاً أن يكون وحدة إطارية. يوفر الوصول المريح إلى بعض واجهات برمجة التطبيقات المتميزة التي لا يمكن للتطبيقات العادية استخدامها. إنها لا تخترق وظائف الأندرويد القياسية بأي وسيلة. يمكن أيضا تنفيذ معظم المهام PMX من القيادة، باستثناء القليل منها مثل تغيير أذونات النظام الثابتة.</p>
+<p>التجذير و Xposed هما شرطان صارمان لاستخدام XPrivacyLua. PMX لا يتطلب أيا من كليهما لمعظم الجهات. وكلاهما غير متاح للعديد من الأجهزة أو أن العديد من المستعملين لا يعتبرونه خياراً بسبب الصعوبات التقنية التي ينطوي عليها الأمر. ضمان الفراغ، و SafetyNet فشلت و مسائل أخرى.</p>
+<p>مزيد من التفسير <a href="https://github.com/mirfatif/PermissionManagerX/issues/9">here</a> و <a href="https://github.com/mirfatif/PermissionManagerX/issues/56#issuecomment-2790539931">here</a>.</p>
+<hr />
+<h3 id="faq32">هل يمكن أن يقوم PMX بإزالة الأذونات تلقائياً عند إغلاق التطبيق، كما تفعل Bouncer؟<a class="headerlink" href="#faq32" title="Permanent link">&para;</a></h3>
+<p>نعم. انظر <a href="../permission-watcher/">مراقب الأذونات</a> و <a href="../scheduled-check/">Scheduled Check</a>. لكنه لا يستخدم ميزة <strong>الوصول إلى الأندرويد</strong> لأداء النقرات / النقرات على الشاشة نيابة عن المستخدم (رغم أنها ميزة جيدة دون الحاجة إلى أي إعداد إضافي). PMX يعتمد على امتيازات الجذر أو ADB. لذا فإنه يمكن أن يفعل أكثر (انظر <a href="../">ما هو PMX?</a>) مما يمكن فعله باستخدام ميزات إمكانية الوصول.</p>
+<p>إذا كنت تستخدم ADB، وليس الجذر، فإن <strong>مراقب الأذونات</strong> قد لا يعمل على بعض الأجهزة. يرجى الاطلاع على <a href="../use-with-adb/#limitations-of-adb">حدود ADB</a>.</p>
+<hr />
+<h3 id="faq35">هل يمكنني الحصول على إشعار عندما يتم تثبيت تطبيق جديد؟<a class="headerlink" href="#faq35" title="Permanent link">&para;</a></h3>
+<p>نعم. انظر <a href="../permission-watcher/">مراقب الأذونات</a>.</p>
+<p>منذ أندرويد 8 من غير الممكن للتطبيقات الخلفية (غير العاملة) الحصول على إشعار بحدث تثبيت التطبيق الجديد. لذا فقد قمنا بتشغيل خدمة أمامية (مع إشعار مستمر) لاستلام هذا الحدث. أو قد تفكر في استخدام <a href="../scheduled-check/">التحقق المجدول</a> للحفاظ على الأمور في مكانها.</p>
+<hr />
+<h3 id="faq38">عند تثبيت تطبيق جديد، هل يمكن لـ PMX إلغاء أذوناته بشكل افتراضي؟<a class="headerlink" href="#faq38" title="Permanent link">&para;</a></h3>
+<p>نعم. ولكن لا توجد أذونات يمكن حذفها. تم إلغاء جميع أذونات manifest القابلة للإلغاء بالفعل والبقاء ملغاة ما لم يمنحها المستخدم صراحة. فيما يتعلق بـ AppOps ، الكثير منها لا يظهر حتى مرة واحدة على الأقل من قبل التطبيق مثل <code>VIBRATE</code> و <code>READ_CLIPBOARD</code>. العديد من الآخرين (على سبيل المثال <code>READ_CONTACTS</code>) لديهم أذونات manifest المقابلة التي تم إسقاطها بالفعل، كما أشير إلى ذلك. لذلك لا يمكن التنبؤ به وقت تثبيت التطبيق الذي يجب إزالته AppOps.</p>
+<p>ولكن يتم عرض إشعار عند تثبيت تطبيق جديد (إذا استخدم <a href="../permission-watcher/">مراقب الأذونات</a>) حتى يتمكن المستخدم من تعيين أذونات واحدة تلو الأخرى أو <a href="../batch-operations/#permission-profiles">تطبيق ملف تعريف</a>.</p>
+<hr />
+<h3 id="faq25">لماذا يحتاج تطبيق PMX إلى إذن الإنترنت؟<a class="headerlink" href="#faq25" title="Permanent link">&para;</a></h3>
+<p>يتطلب <a href="https://mirfatif.github.io/mirfatif/getpro">إصدار برو المستقل</a> الاتصال بالإنترنت للتحقق من الترخيص. أخرى <a href="../versions/">versions</a> يمكن أن تعمل دون اتصال تمامًا. على الرغم من أن تطبيق Play Store يحتاج إلى اتصال بالإنترنت للتحقق من الترخيص.</p>
+<h4 id="optional-use-of-internet-permission">الاستخدام الاختياري للإذن <code>android.permission.INTERNET</code><a class="headerlink" href="#optional-use-of-internet-permission" title="Permanent link">&para;</a></h4>
+<ul>
+<li>التحقق من وجود تحديثات التطبيق. يمكنك تعطيل هذا في إعدادات التطبيق.</li>
+</ul>
+<h4 id="on-device-use-of-internet-permission">الاستخدام المحلي (على الجهاز) للإذن <code>android.permission.INTERNET</code><a class="headerlink" href="#on-device-use-of-internet-permission" title="Permanent link">&para;</a></h4>
+<p>لا يسمح أندرويد للتطبيقات بإنشاء مقابس شبكة بدون الحصول على إذن <a href="https://developer.android.com/reference/android/Manifest.permission#INTERNET"><code>INTERNET</code></a> حتى لو كان المقصود استخدامها فقط محليا وليس للاتصال بالإنترنت. PMX لديه إستخدامان للاتصال المحلي (على الجهاز) (القدرة على إنشاء مقابس <code>localhost</code> في <code>127.0.0.1</code>) للاتصال الداخلي (IPC):</p>
+<ul>
+<li>PMX يبدأ عملية في الخلفية بامتيازات الجذر / ADB ويتواصل مع تلك العملية عبر مقبس الشبكة. بعد المصافحة اليدوية الأولية، تبدأ كلتا العمليتين في التحدث عبر الباندر. ليس لدينا طريقة أفضل للقيام بذلك لأن أندرويد لا يسمح للتطبيقات بالتحدث عبر مقابس نطاقات UNIX أيضا.</li>
+<li>إذا لم يكن جهازك متجذراً و <a href="../use-with-adb/">استخدم PMX مع ADB</a>، فإن الاتصال بـ <code>adbd</code> يتطلب أذونات الإنترنت. انظر <a href="#faq27">هل يقوم موقع PMX بالتجسس عليّ باستخدام ADB عبر الشبكة؟</a></li>
+</ul>
+<p>إذا لم يتمكن التطبيق من إنشاء أو استخدام مقابس الشبكة المحلية، فسيفشل. وإذا كنت ترغب في إيقاف PMX من استخدام الإنترنت، يجب أن لا يوقف التطبيق من التحدث إلى العمليات على الجهاز عبر <a href="https://superuser.com/questions/263142">واجهة التراجع لـ IPC</a>. هذه هي الحالة عادة مع جدران الحماية المستندة إلى <code>iptables</code>مثل <a href="https://github.com/mirfatif/Fyrypt">Fyrypt</a> وجدران الحماية المستندة إلى VPN مثل NetGuard. لكن بعض ROMs لديه ميزة مدمجة لمنع الوصول إلى الشبكة:</p>
+<p><img alt="السماح بإعدادات الوصول إلى الشبكة" class="media" src="../../img/allow_network_access.webp" /></p>
+<p>وهذا لا يمنع التطبيق من استخدام الإنترنت فحسب، بل يعطل أيضا قدرته على إنشاء مناظر لحلقة الارتداد لIPC. لذلك <strong>PMX لن يتمكن من الحصول على امتيازات الجذر / ADB إذا تم رفض هذا الإذن</strong>.</p>
+<hr />
+<h3 id="faq26">كم هو صديق للخصوصية PMX؟ هل تجمع بيانات المستخدمين؟<a class="headerlink" href="#faq26" title="Permanent link">&para;</a></h3>
+<p>لا. نحن لا نجمع بياناتك. أبداً. حتى بايت واحد PMX لديه إصدار مفتوح المصدر. نحن نؤمن بأن مستخدمينا يتم تعليمهم وإطلاعهم جيدا على سبب استخدامهم PMX. نحن نحترم خصوصيتك، لذلك لا يتم جمع أي بيانات على الإطلاق، حتى سجلات الأعطال. قد ترغب أيضا في رؤية <a href="https://mirfatif.github.io/PermissionManagerX/PRIVACY">سياسة الخصوصية</a>.</p>
+<hr />
+<h3 id="faq27">هل يقوم موقع PMX بالتجسس عليّ باستخدام ADB عبر الشبكة؟<a class="headerlink" href="#faq27" title="Permanent link">&para;</a></h3>
+<p>لا.</p>
+<p>PMX يتحدث إلى عملية <code>adbd</code> عبر اللغة المحلية المضيف (<code>127.0.0.1</code>). ولكن لا توجد طريقة لبدء الاستماع ل <code>adbd</code> على اللغة المحلية فقط، وليس على واجهات الشبكة الأخرى (لأن المقصود أن يستخدم ADB خارجيا من جهاز كمبيوتر شخصي). يمكنك بالتأكيد إيقاف الاستماع <code>adbd</code> من عناوين IP الخارجية، إذا استطعت. سيظل PMX يعمل، دون الكشف عن أي منفذ خارجي.</p>
+<p>يمكنك أيضا تغيير منفذ <code>5555</code> إلى أي رقم تريده في <strong>إعدادات متقدمة</strong>. إنه ليس مبرمجًا بشكل ثابت.</p>
+<p>أيضًا ADB منذ أندرويد 4.2 من المفترض أن يكون محميًا بواسطة <strong>مصادقة مفتاح RSA</strong> (واحدة من أقوى آلية المصادقة). لذلك، حتى لو كان الجهاز متاحًا عبر الإنترنت (وهو أمر <a href="https://android.stackexchange.com/a/205807/218526">غير محتمل</a>)، لا يمكن لأحد إجراء اتصال ADB دون مصادقة.</p>
+<p>يمكنك التحقق من هذه الادعاءات بأي طريقة تريدها. نحن هنا لمساعدتكم تقنيا.</p>
+<hr />
+<h3 id="faq28">هل يقوم PMX بإساءة استخدام امتيازات الجذر لجمع بياناتي؟<a class="headerlink" href="#faq28" title="Permanent link">&para;</a></h3>
+<p>ونحن نؤمن بـ <a href="https://wikipedia.org/wiki/Principle_of_least_privilege">مبدأ أقل الامتياز</a>. لكن بسبب الطبيعة المقيدة لنظام تشغيل أندرويد، لا يمكن لـ PMX أن يعمل دون أن يكون لديه امتيازات عالية. ما يمكننا أن نقدمه هو، إذا كنت شخصا محترفا في التكنولوجيا يمكننا أن نعلمكم كيف نجعل من الصعب على التطبيقات إجراء اتصالات بالإنترنت، حتى مع امتيازات الجذر.</p>
+<hr />
+<h3 id="faq29">أعتقد أن PMX عديم الفائدة. لماذا تم إنشاؤها؟<a class="headerlink" href="#faq29" title="Permanent link">&para;</a></h3>
+<p>ونحن نحترم رأيكم. PMX ليس للجميع (ولهذا السبب لم يتم صقله وإصداره للجمهور لسنوات لأننا كنا نعلم أن جمهورنا صغير جدًا). انه فقط لبعض الناس ذوي الخبرة التقنية والذين يهتمون بالخصوصية و التحكم في أجهزتهم. غالبية مستخدمي الهاتف هم فقط في أيدي مستخدمي برمجيات التشغيل ومطوري التطبيقات. إنهم ليسوا على علم بما يتم القيام به لهم و بياناتهم. وتفضل الأغلبية الراحة على الخصوصية. و هذا جيد.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  عد إلى الأعلى
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="هامش سفلي" >
+        
+          
+          <a href="../versions/" class="md-footer__link md-footer__link--prev" aria-label="السابقة: إصدارات PMX">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                السابقة
+              </span>
+              <div class="md-ellipsis">
+                إصدارات PMX
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://crowdin.com/project/pmx-help" target="_blank" rel="noopener" title="Translation" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant.progress", "navigation.sections", "navigation.expand", "navigation.path", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "toc.integrate"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u062a\u0645 \u0627\u0644\u0646\u0633\u062e \u0627\u0644\u0649 \u0627\u0644\u062d\u0627\u0641\u0638\u0629", "clipboard.copy": "\u0646\u0633\u062e \u0625\u0644\u0649 \u0627\u0644\u062d\u0627\u0641\u0638\u0629", "search.result.more.one": "\u0623\u0643\u062b\u0631 \u0645\u0646 1 \u0641\u064a \u0647\u0630\u0647 \u0627\u0644\u0635\u0641\u062d\u0629", "search.result.more.other": "\u0623\u0643\u062b\u0631 \u0645\u0646 # \u0641\u064a \u0647\u0630\u0647 \u0627\u0644\u0635\u0641\u062d\u0629", "search.result.none": "\u0644\u0627 \u062a\u0648\u062c\u062f \u0646\u062a\u0627\u0626\u062c", "search.result.one": "\u0646\u062a\u0627\u0626\u062c \u0627\u0644\u0628\u062d\u062b \u0645\u0633\u062a\u0646\u062f \u0648\u0627\u062d\u062f", "search.result.other": "\u0646\u062a\u0627\u0626\u062c \u0627\u0644\u0628\u062d\u062b # \u0645\u0633\u062a\u0646\u062f\u0627\u062a", "search.result.placeholder": "\u0627\u0643\u062a\u0628 \u0644\u0628\u062f\u0621 \u0627\u0644\u0628\u062d\u062b", "search.result.term.missing": "\u0645\u0641\u0642\u0648\u062f", "select.version": "\u0625\u062e\u062a\u0631 \u0627\u0644\u0625\u0635\u062f\u0627\u0631"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="../../javascript/extra.js"></script>
+      
+    
+  </body>
+</html>

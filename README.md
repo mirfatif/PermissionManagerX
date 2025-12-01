@@ -26,10 +26,10 @@ When you reinstall an app, or change your device, or upgrade your ROM, it's a ti
 
 Confused? We are here to explain. Please start with:
 
-* <a href="https://mirfatif.github.io/PermissionManagerX/help/en#intro">What is PMX?</a>
-* <a href="https://mirfatif.github.io/PermissionManagerX/help/en#faq36">Why do I need to use PMX?</a>
-* <a href="https://mirfatif.github.io/PermissionManagerX/help/en#perms_types">What are manifest permissions and AppOps?</a>
-* <a href="https://mirfatif.github.io/PermissionManagerX/help/en#perm_ref">Permission References</a>
+* <a href="https://mirfatif.github.io/PermissionManagerX/help/">What is PMX?</a>
+* <a href="https://mirfatif.github.io/PermissionManagerX/help/faqs/#faq36">Why do I need to use PMX?</a>
+* <a href="https://mirfatif.github.io/IAnswers/android_appop_manifest_permissions">What are manifest permissions and AppOps?</a>
+* <a href="https://mirfatif.github.io/PermissionManagerX/help/permission-references">Permission References</a>
 
 ## Required Privileges / Permissions
 
@@ -46,7 +46,7 @@ Confused? We are here to explain. Please start with:
 
 ## Paid Features
 
-[Paid Features](https://mirfatif.github.io/PermissionManagerX/help/en#paid_features)
+[Paid Features](https://mirfatif.github.io/PermissionManagerX/help/versions/#paid-features)
 
 ## Screenshots
 
@@ -55,7 +55,7 @@ Confused? We are here to explain. Please start with:
 
 ## How to Build
 `build.gradle` calls a shell script to build native binaries. So a Linux environment is expected with all standard tools.
-* Download code: `git clone --depth=1 --recurse-submodules https://github.com/mirfatif/PermissionManagerX.git && cd PermissionManagerX`
+* Download code: `git clone --depth=1 --recurse-submodules --shallow-submodules https://github.com/mirfatif/PermissionManagerX.git && cd PermissionManagerX`
 * Set `sdk.dir` in `local.properties` to the directory containing Android SDK
 * Run `./gradlew :app:assembleRelease`. Or use IntelliJ IDEA / Android Studio.
 
@@ -93,16 +93,7 @@ You **CANNOT** use and distribute the app icon in anyway, except for **Permissio
 
 ## Need Help?
 
-See [Guide and FAQs](https://mirfatif.github.io/PermissionManagerX/help/help.html).
-
-## Want To Support Us?
-
-<table>
-    <td><a href="https://www.buymeacoffee.com/mirfatif"><img src="https://cdn.buymeacoffee.com/buttons/default-white.png" height="45" width="170" alt="Buy Me A Coffee"/></a></td>
-    <td>&nbsp;<a href="http://mirfatif.github.io/mirfatif/bitcoin_redirect"><img src="http://mirfatif.github.io/mirfatif/logos/btc_button.png" height="37" width="150" alt="Donate Bitcoin"/></a>&nbsp;</td>
-</table>
-
-&nbsp;&nbsp;&nbsp;(`bitcoin:18ijfsv5fcDKQ6CTe4wycKxZMmti4oUXjW`)
+See [Guide and FAQs](https://mirfatif.github.io/PermissionManagerX/help/).
 
 ## Want To Reach Us?
 

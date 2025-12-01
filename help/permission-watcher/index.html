@@ -6,51 +6,53 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Overview of PMX and the Free vs Paid feature set — scheduled checks, permission watcher, auto-revoke, batch operations and advanced permission tools.">
+        <meta name="description" content="Automatically monitor app permission changes with PMX: get notifications, revert unwanted changes or auto-revoke when apps leave foreground.">
       
       
         <meta name="author" content="Irfan Latif">
       
       
-        <link rel="canonical" href="https://mirfatif.github.io/PermissionManagerX/help/">
+        <link rel="canonical" href="https://mirfatif.github.io/PermissionManagerX/help/permission-watcher/">
       
       
-      
-        <link rel="next" href="permission-references/">
-      
-      
-        
-          <link rel="alternate" href="/PermissionManagerX/help/" hreflang="en">
-        
-          <link rel="alternate" href="/PermissionManagerX/help/de/" hreflang="de">
-        
-          <link rel="alternate" href="/PermissionManagerX/help/es/" hreflang="es">
-        
-          <link rel="alternate" href="/PermissionManagerX/help/fr/" hreflang="fr">
-        
-          <link rel="alternate" href="/PermissionManagerX/help/pt-BR/" hreflang="pt-BR">
-        
-          <link rel="alternate" href="/PermissionManagerX/help/ru/" hreflang="ru">
-        
-          <link rel="alternate" href="/PermissionManagerX/help/ar/" hreflang="ar">
-        
-          <link rel="alternate" href="/PermissionManagerX/help/zh/" hreflang="zh">
-        
+        <link rel="prev" href="../scheduled-check/">
       
       
-      <link rel="icon" href="img/favicon.ico">
+        <link rel="next" href="../permission-view/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../de/permission-watcher/" hreflang="de">
+        
+          <link rel="alternate" href="../es/permission-watcher/" hreflang="es">
+        
+          <link rel="alternate" href="../fr/permission-watcher/" hreflang="fr">
+        
+          <link rel="alternate" href="../pt-BR/permission-watcher/" hreflang="pt-BR">
+        
+          <link rel="alternate" href="../ru/permission-watcher/" hreflang="ru">
+        
+          <link rel="alternate" href="../ar/permission-watcher/" hreflang="ar">
+        
+          <link rel="alternate" href="../zh/permission-watcher/" hreflang="zh">
+        
+      
+      
+      <link rel="icon" href="../img/favicon.ico">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
     
     
       
-        <title>Permission Manager X</title>
+        <title>Permission Watcher - Permission Manager X</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -69,9 +71,9 @@
       
     
     
-      <link rel="stylesheet" href="css/extra.css">
+      <link rel="stylesheet" href="../css/extra.css">
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -95,11 +97,6 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#rate-review" class="md-skip">
-          Skip to content
-        </a>
-      
     </div>
     <div data-md-component="announce">
       
@@ -112,9 +109,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="Permission Manager X" class="md-header__button md-logo" aria-label="Permission Manager X" data-md-component="logo">
+    <a href=".." title="Permission Manager X" class="md-header__button md-logo" aria-label="Permission Manager X" data-md-component="logo">
       
-  <img src="img/logo.webp" alt="logo">
+  <img src="../img/logo.webp" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -131,7 +128,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              What is PMX?
+              Permission Watcher
             
           </span>
         </div>
@@ -188,49 +185,49 @@
       <ul class="md-select__list">
         
           <li class="md-select__item">
-            <a href="/PermissionManagerX/help/" hreflang="en" class="md-select__link">
+            <a href="./" hreflang="en" class="md-select__link">
               English
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="/PermissionManagerX/help/de/" hreflang="de" class="md-select__link">
+            <a href="../de/permission-watcher/" hreflang="de" class="md-select__link">
               Deutsch
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="/PermissionManagerX/help/es/" hreflang="es" class="md-select__link">
+            <a href="../es/permission-watcher/" hreflang="es" class="md-select__link">
               español
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="/PermissionManagerX/help/fr/" hreflang="fr" class="md-select__link">
+            <a href="../fr/permission-watcher/" hreflang="fr" class="md-select__link">
               français
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="/PermissionManagerX/help/pt-BR/" hreflang="pt-BR" class="md-select__link">
+            <a href="../pt-BR/permission-watcher/" hreflang="pt-BR" class="md-select__link">
               português
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="/PermissionManagerX/help/ru/" hreflang="ru" class="md-select__link">
+            <a href="../ru/permission-watcher/" hreflang="ru" class="md-select__link">
               русский
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="/PermissionManagerX/help/ar/" hreflang="ar" class="md-select__link">
+            <a href="../ar/permission-watcher/" hreflang="ar" class="md-select__link">
               العربية
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="/PermissionManagerX/help/zh/" hreflang="zh" class="md-select__link">
+            <a href="../zh/permission-watcher/" hreflang="zh" class="md-select__link">
               中文
             </a>
           </li>
@@ -309,9 +306,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="Permission Manager X" class="md-nav__button md-logo" aria-label="Permission Manager X" data-md-component="logo">
+    <a href=".." title="Permission Manager X" class="md-nav__button md-logo" aria-label="Permission Manager X" data-md-component="logo">
       
-  <img src="img/logo.webp" alt="logo">
+  <img src="../img/logo.webp" alt="logo">
 
     </a>
     Permission Manager X
@@ -323,35 +320,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    What is PMX?
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -367,35 +339,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#rate-review" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ratings / Reviews / Comments / Upvotes / Stars
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -434,7 +377,7 @@
   
   
     <li class="md-nav__item">
-      <a href="permission-references/" class="md-nav__link">
+      <a href="../permission-references/" class="md-nav__link">
         
   
   
@@ -461,7 +404,7 @@
   
   
     <li class="md-nav__item">
-      <a href="details/" class="md-nav__link">
+      <a href="../details/" class="md-nav__link">
         
   
   
@@ -488,7 +431,7 @@
   
   
     <li class="md-nav__item">
-      <a href="search/" class="md-nav__link">
+      <a href="../search/" class="md-nav__link">
         
   
   
@@ -515,7 +458,7 @@
   
   
     <li class="md-nav__item">
-      <a href="scheduled-check/" class="md-nav__link">
+      <a href="../scheduled-check/" class="md-nav__link">
         
   
   
@@ -539,10 +482,17 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="permission-watcher/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -558,6 +508,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -569,7 +520,7 @@
   
   
     <li class="md-nav__item">
-      <a href="permission-view/" class="md-nav__link">
+      <a href="../permission-view/" class="md-nav__link">
         
   
   
@@ -596,7 +547,7 @@
   
   
     <li class="md-nav__item">
-      <a href="batch-operations/" class="md-nav__link">
+      <a href="../batch-operations/" class="md-nav__link">
         
   
   
@@ -623,7 +574,7 @@
   
   
     <li class="md-nav__item">
-      <a href="whatsrunning-integration/" class="md-nav__link">
+      <a href="../whatsrunning-integration/" class="md-nav__link">
         
   
   
@@ -650,7 +601,7 @@
   
   
     <li class="md-nav__item">
-      <a href="use-with-adb/" class="md-nav__link">
+      <a href="../use-with-adb/" class="md-nav__link">
         
   
   
@@ -677,7 +628,7 @@
   
   
     <li class="md-nav__item">
-      <a href="versions/" class="md-nav__link">
+      <a href="../versions/" class="md-nav__link">
         
   
   
@@ -731,7 +682,7 @@
   
   
     <li class="md-nav__item">
-      <a href="faqs/" class="md-nav__link">
+      <a href="../faqs/" class="md-nav__link">
         
   
   
@@ -1253,50 +1204,23 @@
 
 
 
-  <h1>What is PMX?</h1>
+  <h1>Permission Watcher</h1>
 
-<p>It's the eXtended Permission Manager app for Android which makes it easy to set and review desired permissions on installed apps, keeping track of any unwanted changes. Giving control on your device, it enables you to protect your privacy and save your resources like battery usage.</p>
-<p>PMX provides all the scattered (or otherwise unavailable) permission-related information and controls on a single screen so that you can watch and control them in a comprehensive and convenient way.</p>
-<p>Using PMX you can:</p>
+<p>Some apps do not work without having a certain permission granted. But you want to grant the permission for the time only when you are using the app, and revoke the permission as soon as you leave the app.</p>
+<p>Permission Watcher does exactly this. As soon as you leave the app, or after the set time has passed, it revokes an app's permissions (manifest and AppOp) on its own, or asks you to do so, depending on the preferences you've set.</p>
+<p><img alt="Permission watcher" class="media" src="../img/perm_watcher.gif" /></p>
+<p>Permission Watcher also notifies you to set permissions on newly installed apps (in primary user / owner profile only).</p>
+<p><img alt="Permission watcher settings" class="media" src="../img/watcher_settings.webp" /></p>
+<p>Note:</p>
 <ul>
-<li>View / grant / revoke all the <strong>manifest permissions</strong> which can or cannot be set using app's settings screen. The list of permissions which cannot be set from GUI is very long.</li>
-<li>View all the <strong>AppOp permissions</strong> which usually don't have any GUI setting. E.g. <code>VIBRATE</code> and <code>READ_CLIPBOARD</code>. You can set the desired AppOps mode e.g. <em>Ignore</em> or <em>Foreground</em>.</li>
-<li>View all permissions requested by an app which are <strong>not changeable</strong>.</li>
-<li>View last used time for many AppOp permissions.</li>
-<li>Change <strong>System-Fixed</strong> permissions which cannot be changed by any other means.</li>
-<li>Real-time watch for permission changes or perform scheduled scans.</li>
-<li>Sort apps and permissions by many parameters including install date and number of permissions.</li>
-<li>Make advanced search queries in apps and their permissions.</li>
-<li>And much more.</li>
-</ul>
-<p>Also see Github <a href="https://mirfatif.github.io/PermissionManagerX">README</a> and <a href="https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx">Play Store</a> description. Or just try it out. We offer a free version and a one month free trial.</p>
-<hr />
-<p><strong>It's amazing na?</strong> Let's get into details.</p>
-<ul>
-<li><a href="https://mirfatif.github.io/IAnswers/android_appop_manifest_permissions">Manifest Permissions and AppOps</a></li>
-<li><a href="permission-references/">Permission References</a></li>
-<li><a href="details/">User interface explained</a></li>
-<li><a href="search/">Search</a></li>
-<li><a href="scheduled-check/">Scheduled Check</a></li>
-<li><a href="permission-watcher/">Permission Watcher</a></li>
-<li><a href="permission-view/">Permission View</a></li>
-<li><a href="batch-operations/">Batch Operations</a></li>
-<li><a href="whatsrunning-integration/">Integration with WhatsRunning</a></li>
-<li><a href="use-with-adb/">Using PMX with ADB</a></li>
-<li><a href="versions/">PMX Versions</a></li>
-<li><a href="/PermissionManagerX/help/versions/#paid-features">Paid features</a></li>
-<li><a href="faqs/">PMX FAQs</a></li>
-<li><a href="https://mirfatif.github.io/PermissionManagerX">Downloads</a></li>
-<li><a href="https://mirfatif.github.io/PermissionManagerX/#screenshots">Screenshots</a></li>
-<li><a href="https://mirfatif.github.io/PermissionManagerX/#want-to-reach-us">Contact Us</a></li>
+<li>Only the permissions with <font color="#FF0000">RED</font> reference state are revoked, not those with the <font color="#FFC107">ORANGE</font> state. So you <strong>MUST</strong> first set the reference states. See <a href="../permission-references/">Permission References</a>.</li>
+<li>Manifest permissions only with <em>Dangerous</em> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">protection level</a> are watched. Those are the ones usually changed. Permissions with <em>Signature</em> or <em>Development</em> protection level or those with <em>System-Fixed</em> flag set are not watched, though they are changeable.</li>
+<li>PMX watches only <em>User</em>-installed or normal <em>System</em> apps, not <em>Framework</em> apps. Changing them might brick the device.</li>
+<li>On some devices Permission Watcher may not work reliably for apps in the secondary user / profile. Using it in combination with Scheduled Checker is recommended.</li>
 </ul>
 <hr />
-<h2 id="rate-review">Ratings / Reviews / Comments / Upvotes / Stars<a class="headerlink" href="#rate-review" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx">Play Store</a></li>
-<li><a href="https://forum.xda-developers.com/t/app-7-0-permission-manager-x-manage-appops-and-manifest-permissions.4187657">XDA</a></li>
-<li><a href="https://github.com/mirfatif/PermissionManagerX">GitHub</a></li>
-</ul>
+<p><strong id="perm-watcher-fails">Why starting Permission Watcher fails?</strong></p>
+<p>Are you using ADB? Some OEMs remove permission <code>OBSERVE_GRANT_REVOKE_PERMISSIONS</code> or <code>SET_ACTIVITY_WATCHER</code> from <em>Shell</em> package. If this is the case with you, we are sorry. This is something we cannot fix. On such devices Permission Watcher can work only with root. See the <a href="../use-with-adb/#limitations-of-adb">Limitations of ADB</a>.</p>
 
 
 
@@ -1334,15 +1258,31 @@
       
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
+          
+          <a href="../scheduled-check/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Scheduled Check">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Scheduled Check
+              </div>
+            </div>
+          </a>
+        
         
           
-          <a href="permission-references/" class="md-footer__link md-footer__link--next" aria-label="Next: Permission References">
+          <a href="../permission-view/" class="md-footer__link md-footer__link--next" aria-label="Next: Permission View">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Permission References
+                Permission View
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -1394,12 +1334,12 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.instant.progress", "navigation.sections", "navigation.expand", "navigation.path", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "toc.integrate"], "search": "assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant.progress", "navigation.sections", "navigation.expand", "navigation.path", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "toc.integrate"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
       
-        <script src="javascript/extra.js"></script>
+        <script src="../javascript/extra.js"></script>
       
     
   </body>

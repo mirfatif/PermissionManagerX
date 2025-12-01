@@ -1,56 +1,58 @@
 
 <!doctype html>
-<html lang="en" class="no-js">
+<html lang="zh" class="no-js">
   <head>
     
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Overview of PMX and the Free vs Paid feature set — scheduled checks, permission watcher, auto-revoke, batch operations and advanced permission tools.">
+        <meta name="description" content="强大的 PMX 搜索功能：通过标签、包名或UID查找应用；利用权限名称深度搜索及布尔运算符实现快速权限审计。">
       
       
         <meta name="author" content="Irfan Latif">
       
       
-        <link rel="canonical" href="https://mirfatif.github.io/PermissionManagerX/help/">
+        <link rel="canonical" href="https://mirfatif.github.io/PermissionManagerX/help/zh/search/">
       
       
-      
-        <link rel="next" href="permission-references/">
-      
-      
-        
-          <link rel="alternate" href="/PermissionManagerX/help/" hreflang="en">
-        
-          <link rel="alternate" href="/PermissionManagerX/help/de/" hreflang="de">
-        
-          <link rel="alternate" href="/PermissionManagerX/help/es/" hreflang="es">
-        
-          <link rel="alternate" href="/PermissionManagerX/help/fr/" hreflang="fr">
-        
-          <link rel="alternate" href="/PermissionManagerX/help/pt-BR/" hreflang="pt-BR">
-        
-          <link rel="alternate" href="/PermissionManagerX/help/ru/" hreflang="ru">
-        
-          <link rel="alternate" href="/PermissionManagerX/help/ar/" hreflang="ar">
-        
-          <link rel="alternate" href="/PermissionManagerX/help/zh/" hreflang="zh">
-        
+        <link rel="prev" href="../details/">
       
       
-      <link rel="icon" href="img/favicon.ico">
+        <link rel="next" href="../scheduled-check/">
+      
+      
+        
+          <link rel="alternate" href="../../search/" hreflang="en">
+        
+          <link rel="alternate" href="../../de/search/" hreflang="de">
+        
+          <link rel="alternate" href="../../es/search/" hreflang="es">
+        
+          <link rel="alternate" href="../../fr/search/" hreflang="fr">
+        
+          <link rel="alternate" href="../../pt-BR/search/" hreflang="pt-BR">
+        
+          <link rel="alternate" href="../../ru/search/" hreflang="ru">
+        
+          <link rel="alternate" href="../../ar/search/" hreflang="ar">
+        
+          <link rel="alternate" href="./" hreflang="zh">
+        
+      
+      
+      <link rel="icon" href="../../img/favicon.ico">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
     
     
       
-        <title>Permission Manager X</title>
+        <title>搜索 - Permission Manager X</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -69,9 +71,9 @@
       
     
     
-      <link rel="stylesheet" href="css/extra.css">
+      <link rel="stylesheet" href="../../css/extra.css">
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -95,11 +97,6 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#rate-review" class="md-skip">
-          Skip to content
-        </a>
-      
     </div>
     <div data-md-component="announce">
       
@@ -111,10 +108,10 @@
   
 
 <header class="md-header md-header--shadow" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="Permission Manager X" class="md-header__button md-logo" aria-label="Permission Manager X" data-md-component="logo">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../" title="Permission Manager X" class="md-header__button md-logo" aria-label="Permission Manager X" data-md-component="logo">
       
-  <img src="img/logo.webp" alt="logo">
+  <img src="../../img/logo.webp" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -131,7 +128,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              What is PMX?
+              搜索
             
           </span>
         </div>
@@ -181,56 +178,56 @@
       <div class="md-header__option">
   <div class="md-select">
     
-    <button class="md-header__button md-icon" aria-label="Select language">
+    <button class="md-header__button md-icon" aria-label="选择当前语言">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
     </button>
     <div class="md-select__inner">
       <ul class="md-select__list">
         
           <li class="md-select__item">
-            <a href="/PermissionManagerX/help/" hreflang="en" class="md-select__link">
+            <a href="../../search/" hreflang="en" class="md-select__link">
               English
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="/PermissionManagerX/help/de/" hreflang="de" class="md-select__link">
+            <a href="../../de/search/" hreflang="de" class="md-select__link">
               Deutsch
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="/PermissionManagerX/help/es/" hreflang="es" class="md-select__link">
+            <a href="../../es/search/" hreflang="es" class="md-select__link">
               español
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="/PermissionManagerX/help/fr/" hreflang="fr" class="md-select__link">
+            <a href="../../fr/search/" hreflang="fr" class="md-select__link">
               français
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="/PermissionManagerX/help/pt-BR/" hreflang="pt-BR" class="md-select__link">
+            <a href="../../pt-BR/search/" hreflang="pt-BR" class="md-select__link">
               português
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="/PermissionManagerX/help/ru/" hreflang="ru" class="md-select__link">
+            <a href="../../ru/search/" hreflang="ru" class="md-select__link">
               русский
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="/PermissionManagerX/help/ar/" hreflang="ar" class="md-select__link">
+            <a href="../../ar/search/" hreflang="ar" class="md-select__link">
               العربية
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="/PermissionManagerX/help/zh/" hreflang="zh" class="md-select__link">
+            <a href="./" hreflang="zh" class="md-select__link">
               中文
             </a>
           </li>
@@ -251,16 +248,16 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
-      <nav class="md-search__options" aria-label="Search">
+      <nav class="md-search__options" aria-label="查找">
         
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
@@ -271,7 +268,7 @@
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            Initializing search
+            正在初始化搜索引擎
           </div>
           <ol class="md-search-result__list" role="presentation"></ol>
         </div>
@@ -307,11 +304,11 @@
 
   
 
-<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="导航栏" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="Permission Manager X" class="md-nav__button md-logo" aria-label="Permission Manager X" data-md-component="logo">
+    <a href="../" title="Permission Manager X" class="md-nav__button md-logo" aria-label="Permission Manager X" data-md-component="logo">
       
-  <img src="img/logo.webp" alt="logo">
+  <img src="../../img/logo.webp" alt="logo">
 
     </a>
     Permission Manager X
@@ -323,42 +320,17 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    What is PMX?
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    What is PMX?
+    什么是权限管理X？
   
 
     
@@ -367,35 +339,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#rate-review" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ratings / Reviews / Comments / Upvotes / Stars
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -414,7 +357,7 @@
   <span class="md-ellipsis">
     
   
-    Manifest Permissions and AppOps
+    清单权限和 AppOps
   
 
     
@@ -434,14 +377,14 @@
   
   
     <li class="md-nav__item">
-      <a href="permission-references/" class="md-nav__link">
+      <a href="../permission-references/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Permission References
+    权限引用
   
 
     
@@ -461,14 +404,76 @@
   
   
     <li class="md-nav__item">
-      <a href="details/" class="md-nav__link">
+      <a href="../details/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    User interface explained
+    用户界面已被解释
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    搜索
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../scheduled-check/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    定期检查
   
 
     
@@ -488,14 +493,14 @@
   
   
     <li class="md-nav__item">
-      <a href="search/" class="md-nav__link">
+      <a href="../permission-watcher/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Search
+    权限监控
   
 
     
@@ -515,14 +520,14 @@
   
   
     <li class="md-nav__item">
-      <a href="scheduled-check/" class="md-nav__link">
+      <a href="../permission-view/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Scheduled Check
+    权限视图
   
 
     
@@ -542,14 +547,14 @@
   
   
     <li class="md-nav__item">
-      <a href="permission-watcher/" class="md-nav__link">
+      <a href="../batch-operations/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Permission Watcher
+    批量操作
   
 
     
@@ -569,14 +574,14 @@
   
   
     <li class="md-nav__item">
-      <a href="permission-view/" class="md-nav__link">
+      <a href="../whatsrunning-integration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Permission View
+    与 WhatsRunning 整合
   
 
     
@@ -596,14 +601,14 @@
   
   
     <li class="md-nav__item">
-      <a href="batch-operations/" class="md-nav__link">
+      <a href="../use-with-adb/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Batch Operations
+    使用 PMX 与 ADB
   
 
     
@@ -623,14 +628,14 @@
   
   
     <li class="md-nav__item">
-      <a href="whatsrunning-integration/" class="md-nav__link">
+      <a href="../versions/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Integration with WhatsRunning
+    PMX 版本
   
 
     
@@ -650,14 +655,14 @@
   
   
     <li class="md-nav__item">
-      <a href="use-with-adb/" class="md-nav__link">
+      <a href="/PermissionManagerX/help/zh/versions/#paid-features" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Using PMX with ADB
+    付费功能
   
 
     
@@ -677,68 +682,14 @@
   
   
     <li class="md-nav__item">
-      <a href="versions/" class="md-nav__link">
+      <a href="../faqs/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PMX Versions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="/PermissionManagerX/help/versions/#paid-features" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Paid features
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="faqs/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    PMX FAQs
+    PMX 常见问题
   
 
     
@@ -765,7 +716,7 @@
   <span class="md-ellipsis">
     
   
-    Downloads
+    下载
   
 
     
@@ -792,7 +743,7 @@
   <span class="md-ellipsis">
     
   
-    Screenshots
+    屏幕截图
   
 
     
@@ -812,14 +763,14 @@
   
   
     <li class="md-nav__item">
-      <a href="/PermissionManagerX/help/#rate-review" class="md-nav__link">
+      <a href="/PermissionManagerX/help/zh/#rate-review" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Ratings / Reviews / Comments / Upvotes / Stars
+    评分/评论/评论/更新/星星
   
 
     
@@ -846,7 +797,7 @@
   <span class="md-ellipsis">
     
   
-    Contact Us
+    联系我们
   
 
     
@@ -901,7 +852,7 @@
   <span class="md-ellipsis">
     
   
-    Apps
+    应用程序
   
 
     
@@ -917,7 +868,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Apps
+    应用程序
   
 
           </label>
@@ -937,7 +888,7 @@
   <span class="md-ellipsis">
     
   
-    Permission Manager X
+    权限管理 X
   
 
     
@@ -965,7 +916,7 @@
   <span class="md-ellipsis">
     
   
-    WhatsRunning
+    WhatsRuning
   
 
     
@@ -1078,7 +1029,7 @@
   <span class="md-ellipsis">
     
   
-    Android FAQs
+    Android 常见问题
   
 
     
@@ -1094,7 +1045,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Android FAQs
+    Android 常见问题
   
 
           </label>
@@ -1114,7 +1065,7 @@
   <span class="md-ellipsis">
     
   
-    Frequently Asked Questions
+    常见问题
   
 
     
@@ -1171,7 +1122,7 @@
   <span class="md-ellipsis">
     
   
-    ADB Guide
+    ADB 指南
   
 
     
@@ -1187,7 +1138,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    ADB Guide
+    ADB 指南
   
 
           </label>
@@ -1207,7 +1158,7 @@
   <span class="md-ellipsis">
     
   
-    Pair/connect the app to ADB
+    将应用程序与ADB配对/连接
   
 
     
@@ -1253,50 +1204,45 @@
 
 
 
-  <h1>What is PMX?</h1>
+  <h1>搜索</h1>
 
-<p>It's the eXtended Permission Manager app for Android which makes it easy to set and review desired permissions on installed apps, keeping track of any unwanted changes. Giving control on your device, it enables you to protect your privacy and save your resources like battery usage.</p>
-<p>PMX provides all the scattered (or otherwise unavailable) permission-related information and controls on a single screen so that you can watch and control them in a comprehensive and convenient way.</p>
-<p>Using PMX you can:</p>
+<p><img alt="搜索" class="media" src="../../img/search.webp" /></p>
+<p>一般在可见列表中搜索包标签、名称和 UID</p>
+<p>通过 <strong>深度搜索</strong>，查询权限名称和其他参数。</p>
+<p>请注意<strong>排除过滤器</strong> 在进行搜索时有效。</p>
+<p>您可以在搜索中使用以下特殊关键字：</p>
 <ul>
-<li>View / grant / revoke all the <strong>manifest permissions</strong> which can or cannot be set using app's settings screen. The list of permissions which cannot be set from GUI is very long.</li>
-<li>View all the <strong>AppOp permissions</strong> which usually don't have any GUI setting. E.g. <code>VIBRATE</code> and <code>READ_CLIPBOARD</code>. You can set the desired AppOps mode e.g. <em>Ignore</em> or <em>Foreground</em>.</li>
-<li>View all permissions requested by an app which are <strong>not changeable</strong>.</li>
-<li>View last used time for many AppOp permissions.</li>
-<li>Change <strong>System-Fixed</strong> permissions which cannot be changed by any other means.</li>
-<li>Real-time watch for permission changes or perform scheduled scans.</li>
-<li>Sort apps and permissions by many parameters including install date and number of permissions.</li>
-<li>Make advanced search queries in apps and their permissions.</li>
-<li>And much more.</li>
+<li>
+<p>应用状态：</p>
+<p><code>:Critical</code> <code>:Framework</code> <code>:System</code> <code>:User</code> <code>:Disabled</code></p>
+</li>
+<li>
+<p>参考状态：</p>
+<p><code>:ORANGE</code> <code>:GREEN</code> <code>:RED</code></p>
+</li>
+<li>
+<p>权限<a href="https://developer.android.com/reference/android/R.attr#protectionLevel">保护级别</a>：</p>
+<p><code>:Normal</code> <code>:Dangerous</code> <code>:Signature</code> <code>:Internal</code> <code>:Development</code> <code>:Privileged</code> <code>:Fixed</code> <code>:AppOps</code> <code>:Unknown</code></p>
+</li>
+<li>
+<p>根据UID AppOps：</p>
+<p><code>:UID</code></p>
+</li>
+<li>
+<p>AppOps 最后访问或拒绝时间：</p>
+<p><code>:TIME</code></p>
+</li>
+<li>
+<p>额外 AppOps （在过滤设置中永不排除）：</p>
+<p><code>:EXTRA</code></p>
+</li>
+<li>
+<p><code>&amp;</code> (AND)、 <code>|</code> (OR) 和 <code>!</code> (NOT) 运算符：</p>
+<p><code>Foo|Bar&amp;Baz</code></p>
+<p><code>Foo&amp;!Bar&amp;!Baz</code></p>
+</li>
 </ul>
-<p>Also see Github <a href="https://mirfatif.github.io/PermissionManagerX">README</a> and <a href="https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx">Play Store</a> description. Or just try it out. We offer a free version and a one month free trial.</p>
-<hr />
-<p><strong>It's amazing na?</strong> Let's get into details.</p>
-<ul>
-<li><a href="https://mirfatif.github.io/IAnswers/android_appop_manifest_permissions">Manifest Permissions and AppOps</a></li>
-<li><a href="permission-references/">Permission References</a></li>
-<li><a href="details/">User interface explained</a></li>
-<li><a href="search/">Search</a></li>
-<li><a href="scheduled-check/">Scheduled Check</a></li>
-<li><a href="permission-watcher/">Permission Watcher</a></li>
-<li><a href="permission-view/">Permission View</a></li>
-<li><a href="batch-operations/">Batch Operations</a></li>
-<li><a href="whatsrunning-integration/">Integration with WhatsRunning</a></li>
-<li><a href="use-with-adb/">Using PMX with ADB</a></li>
-<li><a href="versions/">PMX Versions</a></li>
-<li><a href="/PermissionManagerX/help/versions/#paid-features">Paid features</a></li>
-<li><a href="faqs/">PMX FAQs</a></li>
-<li><a href="https://mirfatif.github.io/PermissionManagerX">Downloads</a></li>
-<li><a href="https://mirfatif.github.io/PermissionManagerX/#screenshots">Screenshots</a></li>
-<li><a href="https://mirfatif.github.io/PermissionManagerX/#want-to-reach-us">Contact Us</a></li>
-</ul>
-<hr />
-<h2 id="rate-review">Ratings / Reviews / Comments / Upvotes / Stars<a class="headerlink" href="#rate-review" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://play.google.com/store/apps/details?id=com.mirfatif.permissionmanagerx">Play Store</a></li>
-<li><a href="https://forum.xda-developers.com/t/app-7-0-permission-manager-x-manage-appops-and-manifest-permissions.4187657">XDA</a></li>
-<li><a href="https://github.com/mirfatif/PermissionManagerX">GitHub</a></li>
-</ul>
+<p>付费版本还会显示搜索建议（如果已设置首选项）优化搜索过程</p>
 
 
 
@@ -1323,7 +1269,7 @@
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
-  Back to top
+  回到页面顶部
 </button>
         
       </main>
@@ -1332,17 +1278,33 @@
   
     
       
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+        
+          
+          <a href="../details/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 用户界面已被解释">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              <div class="md-ellipsis">
+                用户界面已被解释
+              </div>
+            </div>
+          </a>
         
         
           
-          <a href="permission-references/" class="md-footer__link md-footer__link--next" aria-label="Next: Permission References">
+          <a href="../scheduled-check/" class="md-footer__link md-footer__link--next" aria-label="下一页: 定期检查">
             <div class="md-footer__title">
               <span class="md-footer__direction">
-                Next
+                下一页
               </span>
               <div class="md-ellipsis">
-                Permission References
+                定期检查
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -1394,12 +1356,12 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.instant.progress", "navigation.sections", "navigation.expand", "navigation.path", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "toc.integrate"], "search": "assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant.progress", "navigation.sections", "navigation.expand", "navigation.path", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "toc.integrate"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
       
-        <script src="javascript/extra.js"></script>
+        <script src="../../javascript/extra.js"></script>
       
     
   </body>

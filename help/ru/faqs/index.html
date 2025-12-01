@@ -1,0 +1,2027 @@
+
+<!doctype html>
+<html lang="ru" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Часто задаваемые вопросы о PMX: почему использовать PMX, AppOp/manifest пояснения, советы ADB и устранение неполадок для управления разрешениями Android.">
+      
+      
+        <meta name="author" content="Irfan Latif">
+      
+      
+        <link rel="canonical" href="https://mirfatif.github.io/PermissionManagerX/help/ru/faqs/">
+      
+      
+        <link rel="prev" href="../versions/">
+      
+      
+      
+        
+          <link rel="alternate" href="../../faqs/" hreflang="en">
+        
+          <link rel="alternate" href="../../de/faqs/" hreflang="de">
+        
+          <link rel="alternate" href="../../es/faqs/" hreflang="es">
+        
+          <link rel="alternate" href="../../fr/faqs/" hreflang="fr">
+        
+          <link rel="alternate" href="../../pt-BR/faqs/" hreflang="pt-BR">
+        
+          <link rel="alternate" href="./" hreflang="ru">
+        
+          <link rel="alternate" href="../../ar/faqs/" hreflang="ar">
+        
+          <link rel="alternate" href="../../zh/faqs/" hreflang="zh">
+        
+      
+      
+      <link rel="icon" href="../../img/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>PMX FAQ - Permission Manager X</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#faq36" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="../" title="Permission Manager X" class="md-header__button md-logo" aria-label="Permission Manager X" data-md-component="logo">
+      
+  <img src="../../img/logo.webp" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Permission Manager X
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              PMX FAQ
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Выберите язык">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../faqs/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../de/faqs/" hreflang="de" class="md-select__link">
+              Deutsch
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../es/faqs/" hreflang="es" class="md-select__link">
+              español
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../fr/faqs/" hreflang="fr" class="md-select__link">
+              français
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../pt-BR/faqs/" hreflang="pt-BR" class="md-select__link">
+              português
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="ru" class="md-select__link">
+              русский
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../ar/faqs/" hreflang="ar" class="md-select__link">
+              العربية
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../zh/faqs/" hreflang="zh" class="md-select__link">
+              中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Поиск" placeholder="Поиск" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Поиск">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Очистить" aria-label="Очистить" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Инициализация поиска
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../" title="Permission Manager X" class="md-nav__button md-logo" aria-label="Permission Manager X" data-md-component="logo">
+      
+  <img src="../../img/logo.webp" alt="logo">
+
+    </a>
+    Permission Manager X
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Что такое PMX?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://mirfatif.github.io/IAnswers/android_appop_manifest_permissions" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Разрешения манифеста и AppOps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../permission-references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ссылки на разрешения
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../details/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Объяснение пользовательского интерфейса
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Поиск
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../scheduled-check/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Проверка по расписанию
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../permission-watcher/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Наблюдатель разрешений
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../permission-view/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Просмотр разрешений
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../batch-operations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Пакетные операции
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../whatsrunning-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Интеграция с WhatsRunning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use-with-adb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Использование PMX с помощью ADB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../versions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Версии PMX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/PermissionManagerX/help/ru/versions/#paid-features" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Платные функции
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PMX FAQ
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PMX FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#faq36" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Зачем мне нужно использовать PMX?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему PMX требует root доступ или ADB?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Мое устройство без root. Как я могу использовать PMX?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq42" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему PMX не запускает и не работает на последней версии Android?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq43" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему PMX неправильно работает на OEM операционных системах или пользовательских ROMs?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как PMX изменяет права на другие приложения?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq34" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Разрешения остаются измененными после отключения ADB , либо права пользователя root запрещены, либо PMX удаляется?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему я не могу изменить разрешение XYZ?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq37" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Я изменил разрешение, но это не работает. Почему?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему некоторые AppOps не могут быть изменены?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему в списке пакетов я не вижу приложение XYZ?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему я не вижу разрешение XYZ в пакете ABC?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему я не вижу XYZ AppOp в пакете ABC?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что мне следует выбрать для UID привилегированного демона в расширенных настройках? Система или ADB?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что такое «недопустимые права» в Фильтрах исключений?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что такое "дополнительный AppOps" в Фильтрах Исключений?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что такое AppOp режимы и какие я должен использовать?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        В чем разница между режимами "Ignore" и "Deny" AppOp?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq41" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему я не могу установить режим AppOp на передний план?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What does WAKE_LOCK permission do?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как я могу изменить разрешение INTERNET?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq40" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что такое Фиксированные разрешения?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как я могу изменить разрешения на фиксированные системы доступа, подписание/привилегии или разрешения рамочных приложений?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что такое "UID режим" в разрешениях AppOp?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq39" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Можно ли управлять функцией Android «Удалить разрешения, если приложение не используется» из PMX?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему у меня есть много всплывающих окон "Bad ROM"?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq19" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что делает кнопка «Скрыть приложение из списка» (вызывается долгим нажатием)?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Есть ли полный список всех разрешений с пояснениями?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как использовать приложение в рабочем профиле/многопользовательской среде?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как PMX сравнивает с XPrivacyLua? Могут ли они заменить друг друга?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Может ли PMX автоматически удалять разрешения, когда приложение закрывается, как это делает Bouncer?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq35" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Могу ли я получать уведомления о установке нового приложения?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq38" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Когда установлено новое приложение, может ли PMX сбросить свои разрешения по умолчанию?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему PMX требует ИНТЕРНЕТ разрешения?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Почему PMX требует ИНТЕРНЕТ разрешения?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#optional-use-of-internet-permission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Необязательное использование android.permission.INTERNET разрешения
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#on-device-use-of-internet-permission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Локальное (на устройстве) использование android.permission.INTERNET разрешения
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq26" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Сколько PMX поддерживает конфиденциальность? Собираете ли вы данные пользователя?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PMX шпионил за мной с помощью ADB по сети?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PMX использует ли не по назначению права root для сбора моих данных?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq29" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Я думаю, PMX бесполезен. Зачем было создано это приложение?
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://mirfatif.github.io/PermissionManagerX" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Загрузки
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://mirfatif.github.io/PermissionManagerX/#screenshots" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Скриншот
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/PermissionManagerX/help/ru/#rate-review" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Рейтинги / Обзоры / Комментарии / Голоса / Звезды
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://mirfatif.github.io/PermissionManagerX/#want-to-reach-us" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Связаться с нами
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_19" >
+        
+          
+          <label class="md-nav__link" for="__nav_19" id="__nav_19_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Приложения
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_19_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_19">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Приложения
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/mirfatif/PermissionManagerX" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Управление Разрешениями X
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/mirfatif/WhatsRunning" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WhatsRunning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/mirfatif/Fyrypt" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fyrypt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/mirfatif/Backopier" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backopier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_20" >
+        
+          
+          <label class="md-nav__link" for="__nav_20" id="__nav_20_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Часто задаваемые вопросы про Android
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_20_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_20">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Часто задаваемые вопросы про Android
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://mirfatif.github.io/IAnswers" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Часто задаваемые вопросы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_21" >
+        
+          
+          <label class="md-nav__link" for="__nav_21" id="__nav_21_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Руководство ADB
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_21_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_21">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Руководство ADB
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://mirfatif.github.io/adb-guide" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Соединить/подключить приложение к ADB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>PMX FAQ</h1>
+
+<h3 id="faq36">Зачем мне нужно использовать PMX?<a class="headerlink" href="#faq36" title="Permanent link">&para;</a></h3>
+<p>Потому что:</p>
+<ul>
+<li>PMX предоставляет все доступные разрешения <strong>информация</strong> и <strong>управления</strong> на одном экране, чтобы вы могли всесторонне и удобно их просматривать.</li>
+<li>На платформе Android нет официального инструмента, чтобы сменить <strong>AppOps</strong>. Только подмножество <strong>manifest разрешений</strong> подвергаются воздействию на пользователя в настройках разрешений. PMX раскрывает все разрешения в сырой форме. Связанный: <a href="https://mirfatif.github.io/IAnswers/android_appop_manifest_permissions">Manifest разрешения и AppOps</a>.</li>
+<li>PMX позволяет вам легко отслеживать любые <strong>нежелательные изменения</strong> в разрешениях.</li>
+<li>Управление устройством PMX позволяет <strong>сохранить ресурсы устройства</strong>, такие как заряд батареи и пропускную способность сети, и <strong>защитить свою приватность</strong>. Вы не всегда остались на милость приложения и ROM разработчиков. Прочитай эту <a href="https://www.buzzfeednews.com/article/nicolenguyen/how-apps-take-your-data-and-sell-it-without-you-even">статью</a>, чтобы понять, о чем идет речь.</li>
+<li>PMX может <strong>отслеживать изменения прав</strong> в реальном времени, откатить их автоматически при остановке использования приложения. Или он может выполнять <strong>запланированное сканирование</strong> разрешений. Так что вам не нужно что-то запоминать.</li>
+<li>PMX упрощает для вас <strong>резервное копирование и восстановление прав</strong> состояния установленных приложений, чтобы вам не приходилось снова и снова настраивать разрешения приложения.</li>
+</ul>
+<p>Пожалуйста, посмотрите <a href="../">Что такое PMX</a>?</p>
+<hr />
+<h3 id="faq1">Почему PMX требует root доступ или ADB?<a class="headerlink" href="#faq1" title="Permanent link">&para;</a></h3>
+<p>Android намеренно запрещает приложениям изменять права доступа других приложений manifest или AppOps (и во многих случаях изменять права отдельных пользователей). Эти меры безопасности платформы защищают конфиденциальность пользователей и целостность системы.</p>
+<p>Для выполнения действий, требующих повышенных привилегий, PMX использует небольшой, отдельный привилегированный помощник, вместо того, чтобы пытаться сделать все из обычного процесса приложения. По умолчанию этот помощник запускается под ADB UID (<code>2000</code>) при запуске через ADB, или под идентификатором системы (<code>1000</code>) на устройствах с правами root. Если у вас есть рут-устройство, вы можете изменить UID помощника в <em>Дополнительные настройки</em>.</p>
+<hr />
+<h3 id="faq33">Мое устройство без root. Как я могу использовать PMX?<a class="headerlink" href="#faq33" title="Permanent link">&para;</a></h3>
+<p>Используйте <a href="../use-with-adb/">PMX с ADB</a>. Пожалуйста, прочитайте заметку в начале. На некоторых устройствах могут быть некоторые ограничения.</p>
+<hr />
+<h3 id="faq42">Почему PMX не запускает и не работает на последней версии Android?<a class="headerlink" href="#faq42" title="Permanent link">&para;</a></h3>
+<p>PMX опирается на скрытые API Android или не SDK интерфейсы, которые не документированы (на <a href="https://developer.android.com/">разработчиках Android</a>) в отличие от стандартных API. Так что с каждым новым релизом Android, мы должны пройти через исходный код Android, чтобы выяснить, какие API были нарушены (изменены или удалены).</p>
+<p>Кроме того, требуется время на исправление испорченных API, иногда недели, иногда месяцы. И не гарантированно, что мы всегда сможем исправить испорченные API. Иногда Google специально делает так, что нам сложно или вообще невозможно продолжать использовать скрытые API.</p>
+<p>Поэтому мы не можем немедленно заставить PMX работать над каждым новым релизом Android (особенно в бета-фазе) до тех пор, пока окончательный исходный код AOSP публично не будет выпущен (по <a href="https://cs.android.com/">Code Search</a> или <a href="https://android.googlesource.com/">Git Repository</a>).</p>
+<p>Окончательная поддерживаемая PMXверсия описана в описании приложения на GitHub и Play Store. Когда вы запускаете приложение на неподдерживаемой версии в первый раз, оно показывает предупреждение:</p>
+<p><img alt="Неподдерживаемая версия Android" class="media" src="../../img/unsupported_android_version_warning.webp" /></p>
+<hr />
+<h3 id="faq43">Почему PMX неправильно работает на OEM операционных системах или пользовательских ROMs?<a class="headerlink" href="#faq43" title="Permanent link">&para;</a></h3>
+<p>PMX опирается на скрытые API Android или не SDK интерфейсы, которые не документированы (на <a href="https://developer.android.com/">разработчиках Android</a>) в отличие от стандартных API. Поэтому нам нужен доступ к исходному коду вашего ROM , чтобы точно знать, как работают скрытые API.</p>
+<p>Что ж, AOSP (разработанный Google) является открытым исходным кодом. Но если ваш OEM или ROM делает некоторые изменения в AOSP для целей настройки, мы не знаем точно, какие изменения они внесли в стандартный код AOSP. Мы здесь беспомощны. И этот факт описан в описании приложения на GitHub и Play Store. Извините.</p>
+<hr />
+<h3 id="faq2">Как PMX изменяет права на другие приложения?<a class="headerlink" href="#faq2" title="Permanent link">&para;</a></h3>
+<p>Сам PMX не может и не может предоставить или отозвать разрешения других приложений. Фактически, ни одно стороннее приложение не имеет права сделать это. Это ОС Android, которая управляет разрешениями приложений. PMX просто отправляет запрос на Android фреймворк для изменения состояния разрешения. Теперь все зависит от ОС Android, насколько она выполнит наш запрос. Не все разрешения изменяются. И если вы не можете изменить состояние разрешения с помощью PMX, вы также не сможете изменить его каким-либо образом.</p>
+<hr />
+<h3 id="faq34">Разрешения остаются измененными после отключения ADB , либо права пользователя root запрещены, либо PMX удаляется?<a class="headerlink" href="#faq34" title="Permanent link">&para;</a></h3>
+<p>Сам PMX не может и не может предоставить или отозвать разрешения других приложений. Фактически, ни одно стороннее приложение не имеет права сделать это. Это ОС Android, которая управляет разрешениями приложений. PMX просто отправляет запрос на Android фреймворк для изменения состояния разрешения.</p>
+<p>Так что, как только разрешение изменится, уже не имеет значения, удалишь ли ты PMX или откажешься от его привилегий. Разрешение останется в любом состоянии, если оно снова не будет изменено вами или операционной системой.</p>
+<hr />
+<h3 id="faq15">Почему я не могу изменить разрешение XYZ?<a class="headerlink" href="#faq15" title="Permanent link">&para;</a></h3>
+<p>Разрешения манифеста только с опасным <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">уровнем защиты</a> (и несколькими другими) могут быть изменены. AppOps не зависит от каких-то других AppOp могут меняться. Так работает Android, мы не можем изменить его поведение. См. <a href="https://mirfatif.github.io/IAnswers/android_appop_manifest_permissions">Manifest разрешения и AppOps</a>.</p>
+<p>Кроме того, PMX защищает некоторые критические каркасные приложения и разрешения; изменение их может привести к брику устройства. См. <a href="#faq17">Связанный вопрос</a>.</p>
+<p>Также посмотрите <a href="#faq3">Почему некоторые AppOps не могут быть изменены?</a></p>
+<p>Обрати внимание, что начиная с Android 15, разрешения manifest системных приложений с уровнем защиты <em>Разработка</em> нельзя отменить. Android беззвучно игнорирует запрос.</p>
+<hr />
+<h3 id="faq37">Я изменил разрешение, но это не работает. Почему?<a class="headerlink" href="#faq37" title="Permanent link">&para;</a></h3>
+<p>Если вы не получаете желаемых результатов после успешного изменения разрешения, т.е. состояние разрешения возвращается сразу или через несколько часов или дней, в этой ситуации виновата операционная система Android. Пожалуйста, посмотрите:</p>
+<ul>
+<li><a href="#faq2">Как PMX изменяет права доступа других приложений?</a></li>
+<li><a href="#faq3">Почему некоторые AppOps не могут быть изменены?</a></li>
+</ul>
+<p>По мере того, как вы используете приложения, Android может изменять их разрешения. И, к сожалению, у нас нет способа предотвратить это. <a href="../permission-watcher/">Наблюдатель прав</a> и <a href="../scheduled-check/">Запланированный чек</a> могут помочь в этом отношении.</p>
+<hr />
+<h3 id="faq3">Почему некоторые AppOps не могут быть изменены?<a class="headerlink" href="#faq3" title="Permanent link">&para;</a></h3>
+<p>Иногда вы видите "AppOp режим не изменен". Это означает, что Android отклонил запрос на изменение режима AppOp. Вы не можете изменить это независимо от того, какой метод или приложение вы используете. Может быть несколько возможных причин.</p>
+<ul>
+<li>
+<p>Некоторые AppOps зависят от их соответствующих разрешений manifest. Поэтому они не могут быть изменены самостоятельно. Например, вы не можете отклонить <code>READ_CONTACTS</code> AppOp , если предоставлено разрешение <code>android.permission.READ_CONTACTS</code> manifest.</p>
+<p>Также если приложение не запрашивает разрешение manifest в файле manifest , его разрешение AppOp также не может быть предоставлено. Но он все еще может появиться в списке разрешений приложения, если приложение попыталось его использовать (и получило отклонение). <code>SYSTEM_ALERT_WINDOW</code> — это один из таких примеров.</p>
+</li>
+<li>
+<p>Некоторые AppOps используются только для совместимости (например, <code>LEGACY_STORAGE</code>) и на самом деле они ничего не контролируют. Если мы исследуем их основную работу, выяснится, что предоставление/отмена таких разрешений не имеет смысла.</p>
+</li>
+<li>
+<p>Некоторые разрешения невозможно изменить, если приложение работает на более старой или новой версии Android или предназначено для нее.</p>
+</li>
+<li>
+<p>Некоторые OEM ROMs ведут себя странно, когда дело доходит до AppOps. См. <a href="#faq43">Почему PMX не работает правильно на OEM операционных системах или пользовательских ROMs?</a></p>
+</li>
+<li>
+<p>Многие AppOps могут иметь 2 режима: режим пакетов и режим UID. Вполне возможно, что одно можно изменить, а другое нельзя.</p>
+<p>Обычно UID AppOps имеет приоритет над своими аналогами пакета AppOp. В этом случае эффективный режим AppOp такой же, как у пакета UID AppOps. Так что ты не можешь изменить только пакет AppOp .</p>
+<p>Некоторые AppOps предпочитают установить в режиме пакета, а не в режиме UID. Но если он неправильно установлен в UID режиме (с помощью инструмента командной строки или другим приложением), он становится не отвечающим изменениям. Нажми «Сбросить AppOps» в правом верхнем углу, чтобы всё снова заработало. Это также случай с другими AppOps , которые имеют соответствующее разрешение manifest на <em>AppOp</em> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">уровень защиты</a>.</p>
+</li>
+</ul>
+<p>На самом деле, если мы исследуем каждое приложение и разрешение по отдельности, то мы получим еще много объяснений (что звучит непрактично). Как уже говорилось выше, PMX самостоятельно не меняет права других приложений. Таким образом, даже если по какой-то неизвестной причине Android не меняет разрешение или сразу же возвращает его обратно, мы ничего не можем сделать, чтобы заставить его, потому что это ограничения со стороны Android. Скорее всего, я должен сказать, что именно так работает Android.</p>
+<p>Также:</p>
+<ul>
+<li><a href="#faq11">Что такое AppOp режимы и какие я должен использовать?</a></li>
+<li><a href="#faq41">Почему я не могу установить режим AppOp на передний план?</a></li>
+</ul>
+<hr />
+<h3 id="faq6">Почему в списке пакетов я не вижу приложение XYZ?<a class="headerlink" href="#faq6" title="Permanent link">&para;</a></h3>
+<p>Пожалуйста, проверьте <strong>Исключительные фильтры</strong>. По умолчанию практически все стандартные Android приложения исключены. Вы можете исключить/включить любой пакет, который хотите из/в списке видимых.</p>
+<hr />
+<h3 id="faq7">Почему я не вижу разрешение XYZ в пакете ABC?<a class="headerlink" href="#faq7" title="Permanent link">&para;</a></h3>
+<p>Пожалуйста, проверьте <strong>Исключительные фильтры</strong>. Разрешения, которые не могут быть изменены, исключаются из списка видимых по умолчанию.</p>
+<hr />
+<h3 id="faq8">Почему я не вижу XYZ AppOp в пакете ABC?<a class="headerlink" href="#faq8" title="Permanent link">&para;</a></h3>
+<p>Пожалуйста, проверьте <strong>Фильтры исключений</strong>, если XYZ AppOp исключена из видимого списка. Или же пакет ABC может не использовать операцию XYZ. Вам не нужно беспокоиться об этом.</p>
+<p>Но если вы хотите увидеть XYZ AppOp для всех приложений, перейдите в <strong>Exclusion Filters → Extra AppOps, никогда не исключают</strong> и проверьте в списке XYZ AppOp.</p>
+<p>Например, Напишите <code>_CLIPBOARD</code> в поле поиска (с <strong>Глубоким поиском</strong> отмечено), и вы получите все приложения, которые использовались (или пытались использовать) <code>READ_CLIPBOARD</code> или <code>WRITE_CLIPBOARD</code> разрешение. Временная метка также показана (но не для всех AppOps).</p>
+<p>So if the app you are concerned about isn't in the search results, check both AppOps in the <strong>Exclusion Filters</strong> list mentioned above.</p>
+<hr />
+<h3 id="faq5">Что мне следует выбрать для UID привилегированного демона в расширенных настройках? Система или ADB?<a class="headerlink" href="#faq5" title="Permanent link">&para;</a></h3>
+<p>Это важно, только если вы используете root, или <code>adbd</code> на вашем устройстве запущен с правами root (это не так, как в конечных устройствах пользователя).</p>
+<p>Предпочтительно используйте <strong>System</strong> (UID <code>1000</code>), так как это позволяет больше привилегий, чем <strong>ADB</strong> (UID <code>2000</code>). Например, Изменить права доступа «<em>System-Fixed</em>» можно только, если ты запущен как система.</p>
+<hr />
+<h3 id="faq9">Что такое «недопустимые права» в Фильтрах исключений?<a class="headerlink" href="#faq9" title="Permanent link">&para;</a></h3>
+<p>Если приложение запрашивает разрешение manifest , но оно не объявлено (предоставлено) фреймворком Android или любым из установленных пакетов, это неверное разрешение. Например, <code>com.android.vending.BILLING</code> является недопустимым разрешением, если приложение Play Store не установлено на вашем устройстве.</p>
+<hr />
+<h3 id="faq10">Что такое "дополнительный AppOps" в Фильтрах Исключений?<a class="headerlink" href="#faq10" title="Permanent link">&para;</a></h3>
+<p>Не все AppOps используются для всех установленных приложений. Но ты можешь применить AppOp к любому приложению. Выбранные дополнительные AppOps появляются во всех списках разрешений приложений, чтобы вы могли их установить.</p>
+<hr />
+<h3 id="faq11">Что такое AppOp режимы и какие я должен использовать?<a class="headerlink" href="#faq11" title="Permanent link">&para;</a></h3>
+<p>Обычно вы должны разрешать или Игнорировать. Или вы можете разрешить операцию только тогда, когда приложение находится в <strong>Foreground</strong> (только на Android 9 и выше). <strong>Deny</strong> — интенсивная версия игнорирования, которая может вызвать сбой запрашиваемого приложения. <strong>По умолчанию</strong> это поведение системы по умолчанию, которое отличается от других AppOps.</p>
+<p>Обрати внимание, что не каждый режим AppOp можно включить на каждом AppOp для каждого приложения. Например, в последних версиях Android можно использовать <code>CAMERA</code> и <code>MICROPHONE</code> только в Передний план режиме (даже если выбран режим <strong>Разрешить</strong>). Аналогичным образом, некоторые AppOps никогда не могут быть установлены в <strong>Foreground</strong>.</p>
+<p>Связанный: <a href="#faq3">Почему некоторые AppOps не могут быть изменены?</a></p>
+<p>Официальная документация: <a href="https://developer.android.com/reference/android/app/AppOpsManager#access-control">AppOpsManager</a>.</p>
+<hr />
+<h3 id="faq12">В чем разница между режимами "Ignore" и "Deny" AppOp?<a class="headerlink" href="#faq12" title="Permanent link">&para;</a></h3>
+<p><a href="https://developer.android.com/reference/android/app/AppOpsManager#MODE_IGNORED">Ignore</a> Молчально не удается, пока <a href="https://developer.android.com/reference/android/app/AppOpsManager#MODE_ERRORED">Deny</a> возвращает ошибку в приложении, к которой приложение может не ожидать и может произойти сбой. Вы обычно используете <strong>Ignore</strong>.</p>
+<hr />
+<h3 id="faq41">Почему я не могу установить режим AppOp на передний план?<a class="headerlink" href="#faq41" title="Permanent link">&para;</a></h3>
+<p>Режим переднего плана не может быть установлен для всех AppOps. Даже когда он установлен, он может не дать ожидаемых результатов.</p>
+<p>Также:</p>
+<ul>
+<li><a href="#faq11">Что такое AppOp режимы и какие я должен использовать?</a></li>
+<li><a href="#faq3">Почему некоторые AppOps не могут быть изменены?</a></li>
+</ul>
+<p>Пожалуйста, обратите внимание, что режим разрешений "Разрешить только при использовании приложения" не устанавливает режим AppOp в "Foreground":</p>
+<p><img alt="Передний план и режимы одноразовых прав" class="media" src="../../img/fg_and_one_time_perm_modes.webp" /></p>
+<p>Обычно мы видим только два штата для разрешения manifest : предоставлено и отозвано. Но Android использует <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/content/pm/PackageManager.java#4655">flags</a> для разделения этих двух состояний на многие субсостояния. Для некоторых разрешений тот же феномен используется для достижения поведения «предоставлять только тогда, когда приложение видимо». В этом случае разрешение AppOp не используется.</p>
+<p>Дополнительную информацию см. в официальной документации <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/permission/Permissions.md#background-access">фоновый доступ</a> и <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-13.0.0_r1/core/java/android/app/AppOps.md#foreground">foreground access</a>.</p>
+<p>Для простоты PMX в данный момент не видит флаги разрешений. Но в будущем может быть добавлена возможность также отслеживать изменения флагов разрешений, даже если предоставленный/отозванный режим остается неизменным.</p>
+<hr />
+<h3 id="faq14">What does <code>WAKE_LOCK</code> permission do?<a class="headerlink" href="#faq14" title="Permanent link">&para;</a></h3>
+<p>Приложения удерживают вэйклок для продолжения работы устройства, то есть не выходят в режим <a href="https://developer.android.com/training/monitoring-device-state/doze-standby#understand_doze">Doz</a>.</p>
+<hr />
+<h3 id="faq16">Как я могу изменить разрешение <code>INTERNET</code>?<a class="headerlink" href="#faq16" title="Permanent link">&para;</a></h3>
+<p>Андроид не позволяет изменять все разрешения, такие как у <strong>Нормального</strong> <a href="https://developer.android.com/reference/android/R.attr#protectionLevel">уровня защиты</a> (e. . <code>INTERNET</code>) или с флагом <strong>Fixed</strong> или <strong>Подпись</strong> уровня защиты (обычно системные или фреймворки). См. <a href="https://mirfatif.github.io/IAnswers/android_appop_manifest_permissions">Manifest разрешения и AppOps</a>.</p>
+<p>Но если вы корневые, <a href="https://github.com/mirfatif/Fyrypt">Fyrypt</a> дает вам очень сильный контроль над сетевой активностью на вашем устройстве.</p>
+<hr />
+<h3 id="faq40">Что такое Фиксированные разрешения?<a class="headerlink" href="#faq40" title="Permanent link">&para;</a></h3>
+<p>Разрешения, которые закреплены системой, предоставляются предустановленным приложениям производителями или разработчиками ROM . Они не предназначены для изменения. But if your device is rooted, PMX can change system-fixed permissions.</p>
+<p><strong>Установленные политики</strong> разрешения предоставляются (или отклоняются) ИТ-администраторами на управляемых устройствах. Их невозможно изменить.</p>
+<p><strong>User-fixed</strong> permissions are fixed by the user. Если пользователь отказывает в разрешении несколько раз, когда приложение запрашивает его, операционная система помечает разрешение как пользователь-фиксированное и больше не показывает пользователю запросов на предоставление разрешения, если приложение снова запрашивает такое же разрешение. Этот вид фиксированных разрешений может быть легко изменен при желании пользователя.</p>
+<hr />
+<h3 id="faq17">Как я могу изменить разрешения на фиксированные системы доступа, подписание/привилегии или разрешения рамочных приложений?<a class="headerlink" href="#faq17" title="Permanent link">&para;</a></h3>
+<p>Если ваше устройство имеет рут-доступ, в платной версии вы можете <strong>Разрешить критические изменения</strong> в <strong>Дополнительные настройки</strong> для изменения прав с помощью флага <strong>Исправленная система</strong>, уровень защиты <strong>Подпись</strong> или <strong>Привилегированный</strong>, или каркасное приложение. Но не рекомендуется "играть" с системными или фреймворк приложениями. Вы можете "окирпичить" устройство.</p>
+<hr />
+<h3 id="faq18">Что такое "UID режим" в разрешениях AppOp?<a class="headerlink" href="#faq18" title="Permanent link">&para;</a></h3>
+<p>Это режим разрешения AppOp , который указывает, что изменение этого AppOp также повлияет на другие приложения (с тем же UID), если установлено. См. <a href="https://developer.android.com/guide/topics/manifest/manifest-element#uid"><code>sharedUserId</code></a>.</p>
+<p>Заметьте, что режим UID имеет приоритет над режимом пакетов для многих AppOps.</p>
+<hr />
+<h3 id="faq39">Можно ли управлять функцией Android «Удалить разрешения, если приложение не используется» из PMX?<a class="headerlink" href="#faq39" title="Permanent link">&para;</a></h3>
+<p>Да. Эта функция доступна с <a href="https://developer.android.com/about/versions/11/privacy/permissions#auto-reset">Android 11</a>. Также он обозначается как <strong>"Пауза активности приложения, если не используется"</strong> на некоторых устройствах.</p>
+<p><img alt="Автоудаление неиспользованных прав" class="media" src="../../img/remove_unused_perms.webp" /></p>
+<p>Чтобы изменить эту опцию от PMX:</p>
+<ol>
+<li>Перейдите в <strong>Исключающие фильтры → Дополнительный список AppOps</strong> и проверьте <code>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</code>.</li>
+<li>Назад на главном экране наберите <code>AUTO_REVOKE_PERMISSIONS_IF_UNUSED</code> в верхней строке поиска. Убедитесь, что в настройках поиска включена опция "Глубокий поиск".</li>
+<li>Установил режим <strong>Разрешить</strong> или <strong>Игнорировать</strong> для тех приложений, которые вы хотите.</li>
+</ol>
+<p>Вы также можете использовать <a href="../permission-view/">Вид разрешения</a> или <a href="../batch-operations/">Групповые операции</a> вместо шага 2 и 3. Вот руководство, как вы могли бы сделать это с помощью Batch Operations:</p>
+<video class="media" controls muted>
+    <source src="../../img/remove_unused_perms.mp4" type="video/webm">
+    Remove permissions if app isn't used
+</video>
+
+<hr />
+<h3 id="faq31">Почему у меня есть много всплывающих окон "Bad ROM"?<a class="headerlink" href="#faq31" title="Permanent link">&para;</a></h3>
+<p>OEM-производители вносят огромные изменения в стандартный код AOSP (разработанный Google). Таким образом, фреймворк AppOps на некоторых пользовательских / OEM ROMs возвращает неожиданные результаты, которые PMX не понимают. Вы можете игнорировать эти всплывающие окна, но это означает, что функциональность несколько ограничена.</p>
+<p>Вы можете выключить эти всплывающие окна в <strong>Настройка</strong> → <strong>Общие настройки</strong> → <strong>Отключить плохие ROM toasts</strong>.</p>
+<p>См. <a href="#faq43">Почему PMX не работает правильно на OEM операционных системах или пользовательских ROMs?</a></p>
+<hr />
+<h3 id="faq19">Что делает кнопка «Скрыть приложение из списка» (вызывается долгим нажатием)?<a class="headerlink" href="#faq19" title="Permanent link">&para;</a></h3>
+<p>Они оба просто скрывают приложение или разрешение из видимого списка. Если вы не хотите изменять разрешение для любого приложения, вы можете просто «Исключить» его. И он не появится ни для одного приложения. Чтобы снова его показать, зайди в настройки <strong>Фильтры исключений</strong>.</p>
+<p>Точно так же вы можете исключить приложение из списка видимых, если вас не беспокоят его разрешения.</p>
+<p><img alt="Скрыть приложение из видимого списка" class="media" src="../../img/hide_app_from_list.webp" /> <img alt="Скрыть разрешение из видимого списка" class="media" src="../../img/hide_perm_from_list.webp" /></p>
+<hr />
+<h3 id="faq21">Есть ли полный список всех разрешений с пояснениями?<a class="headerlink" href="#faq21" title="Permanent link">&para;</a></h3>
+<p>Нет полного списка разрешений с описанием, по крайней мере, насколько мне известно. Версия PMX Pro показывает краткое описание общих разрешений manifest и AppOp.</p>
+<p>Есть сторонние ресурсы, такие как <a href="https://android.izzysoft.de/applists.php?topic=perms">этой</a> от Izzy. <a href="https://developer.android.com/">Официальный сайт разработчиков</a> Android и <a href="https://cs.android.com/">исходный код</a> тоже классные источники для обучения.</p>
+<p>С каждой новой версией Android добавляются новые разрешения, а некоторые устаревают. Кроме того, не все разрешения необходимы каждому пользователю.</p>
+<hr />
+<h3 id="faq22">Как использовать приложение в рабочем профиле/многопользовательской среде?<a class="headerlink" href="#faq22" title="Permanent link">&para;</a></h3>
+<p>Pro версия поддерживает рабочие профили и несколько пользователей. Выберите пользователя из выпадающего меню.</p>
+<p><img alt="Многопользовательское меню" class="media" src="../../img/multi_users.webp" /></p>
+<hr />
+<h3 id="faq24">Как PMX сравнивает с XPrivacyLua? Могут ли они заменить друг друга?<a class="headerlink" href="#faq24" title="Permanent link">&para;</a></h3>
+<p>PMX не предназначен для замены, а дополняющих проекты типа XPrivacyLua. Они имеют различные цели.</p>
+<p>XPrivacyLua взломает стандартную функциональность Android, подключившись к внутренним API, используя Xposed , который заменяет некоторые библиотеки Android на взломанные. Таким образом, мы получаем дополнительные функции, такие как отправка поддельных данных в приложения и уведомления о событиях, связанных с разрешениями, о которых мы не можем узнать никакими другими обычными способами.</p>
+<p>PMX с другой стороны, не задумывался как модуль фреймворка. Оно обеспечивает удобный доступ к нескольким привилегированным API, которые не могут использовать обычные приложения. Это ни в коем случае не взлом стандартных функций Android. Большинство задач PMX выполняется также из командной строки, за исключением нескольких таких как изменение фиксированных системных разрешений.</p>
+<p>Корень и Xposed являются двумя строгими требованиями для использования XPrivacyLua. PMX в основном не требует ни того, ни другого. Оба эти устройства не доступны для многих устройств или многие пользователи не считают их вариантом из-за технических трудностей, связанных с этим, Гарантийный нотариус, отказ SafetyNet и другие вопросы.</p>
+<p>Больше объяснений <a href="https://github.com/mirfatif/PermissionManagerX/issues/9">here</a> и <a href="https://github.com/mirfatif/PermissionManagerX/issues/56#issuecomment-2790539931">here</a>.</p>
+<hr />
+<h3 id="faq32">Может ли PMX автоматически удалять разрешения, когда приложение закрывается, как это делает Bouncer?<a class="headerlink" href="#faq32" title="Permanent link">&para;</a></h3>
+<p>Да. См. <a href="../permission-watcher/">Наблюдатель прав</a> и <a href="../scheduled-check/">Проверить расписание</a>. Но функция <strong>Доступности</strong> для Android не используется для нажатия / кликов на экран от имени пользователя (хотя это хорошая функция без необходимости дополнительной настройки). PMX полагается на привилегии root или ADB. Таким образом, он может сделать намного больше (см. <a href="../">Что такое PMX?</a>) чем то, что может быть сделано с помощью функций Специальные возможности.</p>
+<p>Если вы используете ADB, а не root, <strong>Permission Watcher</strong> может не работать на некоторых устройствах. См. <a href="../use-with-adb/#limitations-of-adb">Ограничения для ADB</a>.</p>
+<hr />
+<h3 id="faq35">Могу ли я получать уведомления о установке нового приложения?<a class="headerlink" href="#faq35" title="Permanent link">&para;</a></h3>
+<p>Да. Смотрите <a href="../permission-watcher/">Наблюдатель Разрешений</a>.</p>
+<p>Начиная с Android 8, фоновые (не работающие) приложения не могут получать уведомления об установке нового приложения. Поэтому мы должны запустить службу переднего плана (с постоянным уведомлением), чтобы получить это уведомление. Или вы можете использовать <a href="../scheduled-check/">Запланированная проверка</a> чтобы сохранить вещи на месте.</p>
+<hr />
+<h3 id="faq38">Когда установлено новое приложение, может ли PMX сбросить свои разрешения по умолчанию?<a class="headerlink" href="#faq38" title="Permanent link">&para;</a></h3>
+<p>Да. Но нет разрешения на сброс. Все аннулируемые manifest разрешения уже отозваны и остаются отозваны, если пользователь не предоставит им явно. Что касается AppOps , то многие из них не появляются хотя бы раз и после их использования приложением, например <code>VIBRATE</code> и <code>READ_CLIPBOARD</code>. Many others (e.g. <code>READ_CONTACTS</code>) have their corresponding manifest permissions already dropped, as pointed out. Так что на момент установки приложения не прогнозируется, что AppOps следует удалить.</p>
+<p>Но уведомление отображается при установке нового приложения (если используется <a href="../permission-watcher/">Permission Watcher</a>), чтобы пользователь мог установить разрешения по одному или <a href="../batch-operations/#permission-profiles">применить профиль</a>.</p>
+<hr />
+<h3 id="faq25">Почему PMX требует ИНТЕРНЕТ разрешения?<a class="headerlink" href="#faq25" title="Permanent link">&para;</a></h3>
+<p><a href="https://mirfatif.github.io/mirfatif/getpro">standalone Pro версия</a> требует подключение к Интернету для проверки лицензии. Другие <a href="../versions/">versions</a> могут работать полностью оффлайн. Хотя приложению Play Маркет для проверки лицензии требуется подключение к Интернету.</p>
+<h4 id="optional-use-of-internet-permission">Необязательное использование <code>android.permission.INTERNET</code> разрешения<a class="headerlink" href="#optional-use-of-internet-permission" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Проверка обновления приложения. Вы можете отключить это в настройках.</li>
+</ul>
+<h4 id="on-device-use-of-internet-permission">Локальное (на устройстве) использование <code>android.permission.INTERNET</code> разрешения<a class="headerlink" href="#on-device-use-of-internet-permission" title="Permanent link">&para;</a></h4>
+<p>Android не разрешает приложениям создавать сетевые сокеты без разрешения <a href="https://developer.android.com/reference/android/Manifest.permission#INTERNET"><code>INTERNET</code></a>, даже если они предназначены только локально и не для подключения к Интернету. PMX использует два локальных (на устройстве) соединения (возможность создания <code>localhost</code> сокетов в <code>127.0.0.1</code>) для коммуникации между процессами (IPC):</p>
+<ul>
+<li>PMX запускает фоновый процесс с привилегиями root / ADB и разговаривает с этим процессом через сетевой сокет. После первоначального "рукопожатия" оба процесса начинают обмен данными через binder. У нас нет лучшего способа сделать это, потому что Android также не позволяет приложениям общаться через сокеты домена UNIX.</li>
+<li>Если твое устройство не рутировано и ты <a href="../use-with-adb/">используешь PMX с ADB</a>, то для подключения к <code>adbd</code> нужны разрешения на доступ к Интернету. См. <a href="#faq27"> PMX шпионил за мной с помощью ADB по сети?</a></li>
+</ul>
+<p>Поэтому, если приложение не может создавать или использовать сокеты локальной сети, оно не будет работать. И если ты хочешь запретить приложению PMX использовать интернет, оно не должно блокировать взаимодействие приложения с процессами на устройстве через <a href="https://superuser.com/questions/263142">интерфейс обратной связи для IPC</a>. Как правило, это относится к таким брандмауэрам на основе <code>iptables</code>как <a href="https://github.com/mirfatif/Fyrypt">Fyrypt</a> и брандмауэрам на основе VPN, как NetGuard. Но некоторые ROMs имеют встроенную функцию для запрещения доступа к сети:</p>
+<p><img alt="Разрешить настройки сетевого доступа" class="media" src="../../img/allow_network_access.webp" /></p>
+<p>Это не только запрещает приложению использовать Интернет, но и отключает его возможность создавать петлевые (loopback) сокеты для IPC. Таким образом, <strong>PMX не сможет получить привилегии root / ADB , если этому разрешению будет отказано</strong>.</p>
+<hr />
+<h3 id="faq26">Сколько PMX поддерживает конфиденциальность? Собираете ли вы данные пользователя?<a class="headerlink" href="#faq26" title="Permanent link">&para;</a></h3>
+<p>Нет. Мы не собираем ваши данные. Никогда. Даже не один байт. PMX есть версия с открытым исходным кодом. Мы верим, что наши пользователи хорошо осведомлены о том, почему они используют PMX. Мы уважаем вашу конфиденциальность, поэтому никакие данные не собираются, даже логи сбоев. Вы также можете посмотреть нашу <a href="https://mirfatif.github.io/PermissionManagerX/PRIVACY">Политику конфиденциальности</a>.</p>
+<hr />
+<h3 id="faq27">PMX шпионил за мной с помощью ADB по сети?<a class="headerlink" href="#faq27" title="Permanent link">&para;</a></h3>
+<p>Нет.</p>
+<p>PMX общается с процессом <code>adbd</code> через localhost (<code>127.0.0.1</code>). Но невозможно запустить <code>adbd</code> только для localhsot, а не на других сетевых интерфейсах (потому что ADB предназначен для использования с ПК). Ты можешь легко запретить <code>adbd</code> слушать с внешних IP-адресов, если у тебя есть такая возможность. PMX по-прежнему будет работать, без каких бы то ни было внешних портов.</p>
+<p>Также вы можете изменить порт <code>5555</code> на любой номер в разделе <strong>Дополнительные настройки</strong>. Это не жестко запрограммировано.</p>
+<p>Также ADB с Android 4.2 должен быть защищен <strong>RSA ключом аутентификации</strong> (одним из самых сильных механизмов аутентификации). Таким образом, даже если устройство доступно из интернета (что в высшей степени <a href="https://android.stackexchange.com/a/205807/218526">unlikely</a>), никто не может сделать ADB соединение без аутентификации.</p>
+<p>Вы можете проверить эти утверждения любым способом. Мы готовы оказать Вам техническую помощь.</p>
+<hr />
+<h3 id="faq28">PMX использует ли не по назначению права root для сбора моих данных?<a class="headerlink" href="#faq28" title="Permanent link">&para;</a></h3>
+<p>Мы верим в <a href="https://wikipedia.org/wiki/Principle_of_least_privilege">принцип наименьшей привилегии</a>. Но из-за ограниченного характера операционной системы Android, PMX не может функционировать без высоких привилегий. Что мы можем предложить, так это то, что если вы технически подкованный человек, мы можем научить вас, как затруднить подключение приложений к Интернету, даже с root правами.</p>
+<hr />
+<h3 id="faq29">Я думаю, PMX бесполезен. Зачем было создано это приложение?<a class="headerlink" href="#faq29" title="Permanent link">&para;</a></h3>
+<p>Мы уважаем Ваше мнение. PMX не для всех (и поэтому он не был отполирован и выпущен для публики в течение многих лет, потому что мы знали, что у нас очень маленькая аудитория). Оно только для некоторых технически подкованных людей, которые тщательно заботятся о своей конфиденциальности и контроле над устройствами. Большинство пользователей телефонов находится в руках своих OEMs и разработчиков приложений. Им не известно о том, что делается с ними и их данными. Большинство предпочитает удобство по отношению к конфиденциальности. И это хорошо.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  К началу
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Нижний колонтитул" >
+        
+          
+          <a href="../versions/" class="md-footer__link md-footer__link--prev" aria-label="Назад: Версии PMX">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Назад
+              </span>
+              <div class="md-ellipsis">
+                Версии PMX
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://crowdin.com/project/pmx-help" target="_blank" rel="noopener" title="Translation" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant.progress", "navigation.sections", "navigation.expand", "navigation.path", "navigation.indexes", "navigation.top", "navigation.footer", "toc.follow", "toc.integrate"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="../../javascript/extra.js"></script>
+      
+    
+  </body>
+</html>

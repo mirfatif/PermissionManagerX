@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Redirecting…</title>
+
+  <!-- Fallback meta refresh (for browsers without JS): go to help root -->
+  <meta http-equiv="refresh" content="5;url=https://mirfatif.github.io/PermissionManagerX/help/" />
+
+  <style>
+    body {
+      display: flex;
+      min-height: 100vh;
+      margin: 0;
+      align-items: center;
+      justify-content: center;
+      color: #111827;
+    }
+
+    .card {
+      background: white;
+      padding: 1.25rem 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(17, 24, 39, 0.08);
+      max-width: 720px;
+      text-align: left;
+    }
+
+    a {
+      color: #0366d6;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card" role="main">
+    <h1>Redirecting…</h1>
+    <p id="message">If your browser doesn't redirect automatically, <a href="https://mirfatif.github.io/PermissionManagerX/help/">click here</a>.</p>
+  </main>
+
+  <script>
+    (function () {
+      var origin = location.origin || (location.protocol + '//' + location.host);
+      var parts = location.pathname.split('/');
+      var helpIndex = parts.indexOf('help');
+
+      var target;
+
+      if (helpIndex !== -1 && parts[helpIndex + 1] === 'en') {
+        // Remove the 'en' segment immediately after 'help'
+        parts.splice(helpIndex + 1, 1);
+        var newPath = parts.join('/') || '/';
+        target = origin + newPath + (location.search || '') + (location.hash || '');
+      } else if (helpIndex !== -1 && parts[helpIndex + 1] === 'cn') {
+        // Replace the 'cn' segment immediately after 'help' with 'zh'
+        parts.splice(helpIndex + 1, 1, 'zh');
+        var newPath = parts.join('/') || '/';
+        target = origin + newPath + (location.search || '') + (location.hash || '');
+      } else {
+        target = origin + '/PermissionManagerX/help/';
+      }
+
+      document.getElementById('message').textContent = 'Redirecting to: ' + target;
+      location.replace(target);
+    })();
+  </script>
+</body>
+
+</html>
